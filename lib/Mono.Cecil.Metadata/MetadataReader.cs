@@ -153,7 +153,7 @@ namespace Mono.Cecil.Metadata {
                 StringBuilder buffer = new StringBuilder ();
                 for (int i = 1, index = 1 ; i < heap.Data.Length ; i++) {
                     char cur = br.ReadChar ();
-                    if (cur == '\0' && buffer.Length > 1) {
+                    if (cur == '\0' && buffer.Length > 0) {
                         heap [(uint) index] = buffer.ToString ();
                         buffer = new StringBuilder ();
                         index = i + 1;
