@@ -339,8 +339,13 @@ namespace Mono.Cecil.Implem {
                         member = methref;
                     }
                     break;
-                case TokenType.ModuleRef :
                 case TokenType.Method :
+                    // really not sure about this
+                    MethodDefinition methdef = GetMethodDefAt ((int) mrefRow.Class.RID);
+                    member = new MethodReference (methdef.Name, methdef.DeclaringType, methdef.HasThis,
+                                                                methdef.ExplicitThis, methdef.CallingConvention);
+                    break;
+                case TokenType.ModuleRef :
                     break; //TODO: implement that
                 }
 
