@@ -146,8 +146,12 @@ namespace Mono.Cecil.Implem {
                     int type = br.ReadInt32 ();
                     if (IsToken (type, TokenType.TypeDef))
                         instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (type));
-                    else
+                    else if (IsToken (type, TokenType.TypeRef))
                         instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (type));
+                    else if (IsToken (type, TokenType.TypeSpec))
+                        instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (type));
+                    else
+                        throw new ReflectionException ("Wrong token for InlineType Operand: {0}", type.ToString ("x8"));
                     break;
                 case OperandType.InlineTok :
                     int token = br.ReadInt32 ();
@@ -155,12 +159,16 @@ namespace Mono.Cecil.Implem {
                         instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (token));
                     else if (IsToken (token, TokenType.TypeRef))
                         instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (token));
+                    else if (IsToken (token, TokenType.TypeSpec))
+                    instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token));
+                    else if (IsToken (token, TokenType.Field))
+                        instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (token));
                     else if (IsToken (token, TokenType.Method))
                         instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (token));
                     else if (IsToken (token, TokenType.MemberRef))
                         instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token));
                     else
-                        throw new ReflectionException ("Wrong token following ldtoken");
+                        throw new ReflectionException ("Wrong token following ldtoken: {0}", token.ToString ("x8"));
                     break;
                 }
 

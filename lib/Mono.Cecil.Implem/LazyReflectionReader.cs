@@ -51,6 +51,25 @@ namespace Mono.Cecil.Implem {
             interfs.Loaded = true;
         }
 
+        public override void Visit (IExternTypeCollection externs)
+        {
+            ExternTypeCollection ext = externs as ExternTypeCollection;
+            if (ext.Loaded)
+                return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ExportedTypeTable))) {
+                ext.Loaded = true;
+                return;
+            }
+
+            ExportedTypeTable etTable = m_root.Streams.TablesHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
+            for (int i = 0; i < etTable.Rows.Count; i++) {
+                ExportedTypeRow etRow = etTable [i];
+
+                //TODO: WRITE HERE
+            }
+        }
+
         public override void Visit (IOverrideCollection meths)
         {
             OverrideCollection methods = meths as OverrideCollection;

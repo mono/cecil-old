@@ -29,6 +29,7 @@ namespace Mono.Cecil.Implem {
         private ResourceCollection m_res;
         private TypeDefinitionCollection m_types;
         private TypeReferenceCollection m_refs;
+        private ExternTypeCollection m_externs;
         private CustomAttributeCollection m_customAttrs;
 
         private AssemblyDefinition m_asm;
@@ -68,6 +69,14 @@ namespace Mono.Cecil.Implem {
 
         public ITypeReferenceCollection TypeReferences {
             get { return m_refs; }
+        }
+
+        public IExternTypeCollection ExternTypes {
+            get {
+                if (m_externs == null)
+                    m_externs = new ExternTypeCollection (this);
+                return m_externs;
+            }
         }
 
         public ICustomAttributeCollection CustomAttributes {

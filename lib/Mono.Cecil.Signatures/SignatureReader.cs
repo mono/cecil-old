@@ -163,7 +163,7 @@ namespace Mono.Cecil.Signatures {
                 methodDef.MethCallConv |= MethodCallingConvention.VarArg;
             methodDef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
             methodDef.RetType = this.ReadRetType (m_blobData, start, out start);
-            methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start, out start);
+            methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start);
         }
 
         public void Visit (MethodRefSig methodRef)
@@ -306,14 +306,13 @@ namespace Mono.Cecil.Signatures {
             sentinelpos = -1;
 
             for (int i = 0; i < length; i++) {
-                int buf = start;
-                Utilities.ReadCompressedInteger (data, start, out start);
-                start = buf;
+                int curs = start;
+                int flag = Utilities.ReadCompressedInteger (data, start, out start);
 
-                if ((start & (int) ElementType.Sentinel) != 0)
+                if ((flag & (int) ElementType.Sentinel) != 0)
                     sentinelpos = i;
 
-                ret [i] = this.ReadParameter (data, start, out start);
+                ret [i] = this.ReadParameter (data, curs, out start);
             }
 
             return ret;
@@ -323,6 +322,7 @@ namespace Mono.Cecil.Signatures {
         {
             Param p = new Param ();
             start = pos;
+
             p.CustomMods = this.ReadCustomMods (data, start, out start);
             int curs = start;
             ElementType flag = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
@@ -364,9 +364,10 @@ namespace Mono.Cecil.Signatures {
                 PTR p = new PTR ();
                 int buf = start;
                 int flag = Utilities.ReadCompressedInteger (data, start, out start);
-                p.Void = (flag & (int) ElementType.Void) != 0;
-                if (!p.Void)
-                    start = buf;
+                p.Void = flag == (int) ElementType.Void;
+                if (p.Void)
+                    return p;
+                start = buf;
                 p.CustomMods = this.ReadCustomMods (data, start, out start);
                 p.PtrType = this.ReadType (data, start, out start);
                 return p;

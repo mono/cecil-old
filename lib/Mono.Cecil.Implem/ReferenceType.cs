@@ -37,7 +37,7 @@ namespace Mono.Cecil.Implem {
         }
 
         public override string FullName {
-            get { return string.Concat (base.FullName, "&"); }
+            get { return string.Concat (m_type.FullName, "&"); }
         }
 
         public ReferenceType (ITypeReference type) : base (string.Empty, string.Empty)

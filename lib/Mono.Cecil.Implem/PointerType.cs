@@ -37,7 +37,7 @@ namespace Mono.Cecil.Implem {
         }
 
         public override string FullName {
-            get { return string.Concat (base.FullName, "*"); }
+            get { return string.Concat (m_pointedType.FullName, "*"); }
         }
 
         public PointerType (ITypeReference pType) : base (string.Empty, string.Empty)

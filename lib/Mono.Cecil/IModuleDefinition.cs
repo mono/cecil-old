@@ -30,5 +30,6 @@ namespace Mono.Cecil {
         void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
 
         ITypeDefinitionCollection Types { get; }
+        IExternTypeCollection ExternTypes { get; }
     }
 }

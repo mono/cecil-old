@@ -78,6 +78,11 @@ namespace Mono.Cecil.Implem {
             return m_typeRefs [rid - 1];
         }
 
+        public ITypeReference GetTypeSpecAt (int rid)
+        {
+            return m_typeSpecs [rid - 1];
+        }
+
         public FieldDefinition GetFieldDefAt (int rid)
         {
             return m_fields [rid - 1];
@@ -303,7 +308,8 @@ namespace Mono.Cecil.Implem {
 
                 for (int j = (int) tdefTable [index].MethodList; j < next; j++) {
                     MethodRow methRow = methTable [j - 1];
-                    MethodSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
+                    MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
+
                     MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
                                                                   methRow.RVA, methRow.Flags, methRow.ImplFlags,
                                                                   msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
@@ -391,7 +397,7 @@ namespace Mono.Cecil.Implem {
                                                                 methdef.ExplicitThis, methdef.CallingConvention);
                     break;
                 case TokenType.ModuleRef :
-                    break; //TODO: implement that
+                    break; //TODO: implement that, or not
                 }
 
                 m_memberRefs [i] = member;
@@ -411,6 +417,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public virtual void Visit (IInterfaceCollection interfaces)
+        {
+        }
+
+        public virtual void Visit (IExternTypeCollection externs)
         {
         }
 
@@ -627,6 +637,8 @@ namespace Mono.Cecil.Implem {
                 return at;
             case ElementType.Ptr :
                 PTR pointer = t as PTR;
+                if (pointer.Void)
+                    return new PointerType (SearchCoreType ("System.Void"));
                 return new PointerType (GetTypeRefFromSig (pointer.PtrType));
             case ElementType.FnPtr :
                 // not very sure of this
@@ -652,7 +664,7 @@ namespace Mono.Cecil.Implem {
             case ElementType.Boolean :
                 return br.ReadByte () == 1;
             case ElementType.Char :
-                return br.ReadChar ();
+                return (char) br.ReadUInt16 ();
             case ElementType.I1 :
                 return br.ReadSByte ();
             case ElementType.I2 :

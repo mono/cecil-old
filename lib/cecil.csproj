@@ -77,6 +77,7 @@
         <Compile Include="Mono.Cecil.Implem\EventDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ExceptionHandler.cs"/>
         <Compile Include="Mono.Cecil.Implem\ExceptionHandlerCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ExternTypeCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldReference.cs"/>
@@ -235,6 +236,7 @@
         <Compile Include="Mono.Cecil\IEmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil\IEvent.cs"/>
         <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IExternTypeCollection.cs"/>
         <Compile Include="Mono.Cecil\IField.cs"/>
         <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IFieldLayoutInfo.cs"/>
