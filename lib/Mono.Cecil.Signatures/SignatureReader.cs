@@ -14,6 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     using System;
     using System.Collections;
+    using System.IO;
 
     using Mono.Cecil;
     using Mono.Cecil.Metadata;
@@ -365,29 +366,30 @@ namespace Mono.Cecil.Signatures {
 
         private CustomAttrib ReadCustomAttrib (byte [] data, int pos, IMethodReference ctor)
         {
+            BinaryReader br = new BinaryReader (new MemoryStream (data, pos, data.Length - pos));
             CustomAttrib ca = new CustomAttrib (ctor);
-            ca.Prolog = BitConverter.ToUInt16 (data, pos); pos += 2;
+            ca.Prolog = br.ReadUInt16 ();
             if (ca.Prolog != CustomAttrib.StdProlog)
                 throw new MetadataFormatException ("Non standard prolog for custom attribute");
 
             ca.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
             for (int i = 0; i < ca.FixedArgs.Length; i++)
-                ca.FixedArgs [i] = this.ReadFixedArg (data, ref pos);
+                ca.FixedArgs [i] = this.ReadFixedArg (br);
 
-            ca.NumNamed = BitConverter.ToUInt16 (data, pos); pos += 2;
+            ca.NumNamed = br.ReadUInt16 ();
             ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
             for (int i = 0; i < ca.NumNamed; i++)
-                ca.NamedArgs [i] = this.ReadNamedArg (data, ref pos);
+                ca.NamedArgs [i] = this.ReadNamedArg (br);
 
             return ca;
         }
 
-        private CustomAttrib.FixedArg ReadFixedArg (byte [] data, ref int pos)
+        private CustomAttrib.FixedArg ReadFixedArg (BinaryReader br)
         {
             return null;
         }
 
-        private CustomAttrib.NamedArg ReadNamedArg (byte [] data, ref int pos)
+        private CustomAttrib.NamedArg ReadNamedArg (BinaryReader br)
         {
             return null;
         }
