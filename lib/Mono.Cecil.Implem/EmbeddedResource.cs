@@ -20,15 +20,20 @@ namespace Mono.Cecil.Implem {
         private byte [] m_data;
 
         public byte [] Data {
-            get { return m_data; }
+            get {
+                if (m_data != null)
+                    this.Module.Loader.LoadEmbeddedResource (this);
+                return m_data;
+            }
             set { m_data = value; }
         }
 
-        public EmbeddedResource (string name, ManifestResourceAttributes attributes) : base (name, attributes)
+        public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : base (name, attributes, owner)
         {
         }
 
-        public EmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data) : base (name, attributes)
+        public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner, byte [] data) :
+            base (name, attributes, owner)
         {
             m_data = data;
         }

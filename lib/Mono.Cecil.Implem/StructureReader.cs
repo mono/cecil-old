@@ -86,29 +86,43 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IResourceCollection resources)
         {
-            ManifestResourceTable mrt = m_img.MetadataRoot.Streams.TablesHeap [typeof(ManifestResourceTable)] as ManifestResourceTable;
-            if (mrt != null) {
-                foreach (ManifestResourceRow mrr in mrt.Rows) {
-                    EmbeddedResource er = new EmbeddedResource (
-                        m_img.MetadataRoot.Streams.StringsHeap [mrr.Name], mrr.Flags);
+            if (!m_img.MetadataRoot.Streams.TablesHeap.HasTable (typeof (ManifestResourceTable)))
+                return;
 
-                    (resources as ResourceCollection) [er.Name] = er;
+            ModuleDefinition module = resources.Container as ModuleDefinition;
+
+            ManifestResourceTable mrTable = m_img.MetadataRoot.Streams.TablesHeap [typeof(ManifestResourceTable)] as ManifestResourceTable;
+            FileTable fTable = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
+
+            BinaryReader br = m_ir.GetReader ();
+
+            for (int i = 0; i < mrTable.Rows.Count; i++) {
+                ManifestResourceRow mrRow = mrTable [i];
+                if (mrRow.Implementation.RID == 0) {
+                    EmbeddedResource eres = new EmbeddedResource (
+                        m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags, module);
+
+                    br.BaseStream.Position = m_img.ResolveVirtualAddress (
+                        m_img.CLIHeader.Resources.VirtualAddress);
+                    br.BaseStream.Position += mrRow.Offset;
+
+                    eres.Data = br.ReadBytes (br.ReadInt32 ());
+
+                    (resources as ResourceCollection) [eres.Name] = eres;
+                    continue;
                 }
-            }
 
-            FileTable ft = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
-            if (ft != null && ft.Rows.Count > 0) {
-                foreach (FileRow fr in ft.Rows) {
-                    if (fr.Flags == Mono.Cecil.FileAttributes.ContainsNoMetaData) {
-                        LinkedResource lr = new LinkedResource (
-                            m_img.MetadataRoot.Streams.StringsHeap [fr.Name],
-                            ManifestResourceAttributes.Public,
-                            new FileInfo (m_img.MetadataRoot.Streams.StringsHeap [fr.Name]).FullName);
-
-                        lr.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fr.HashValue);
-
-                        (resources as ResourceCollection) [lr.Name] = lr;
-                    }
+                switch (mrRow.Implementation.TokenType) {
+                case TokenType.File :
+                    FileRow fRow = fTable [(int) mrRow.Implementation.RID - 1];
+                    LinkedResource lres = new LinkedResource (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
+                                              module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
+                    lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
+                    (resources as ResourceCollection) [lres.Name] = lres;
+                    break;
+                case TokenType.AssemblyRef :
+                    // not sure how to implement this
+                    break;
                 }
             }
         }

@@ -130,12 +130,12 @@ namespace Mono.Cecil.Implem {
 
         public void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
         {
-            m_res [name] = new EmbeddedResource (name, attributes, data);
+            m_res [name] = new EmbeddedResource (name, attributes, this, data);
         }
 
         public void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
         {
-            m_res [name] = new LinkedResource (name, attributes, file);
+            m_res [name] = new LinkedResource (name, attributes, this, file);
         }
 
         public void Accept (IReflectionStructureVisitor visitor)

@@ -17,8 +17,13 @@ namespace Mono.Cecil.Implem {
 
     internal abstract class Resource :  IResource {
 
+        private ModuleDefinition m_module;
         private string m_name;
         private ManifestResourceAttributes m_attributes;
+
+        public ModuleDefinition Module {
+            get { return m_module; }
+        }
 
         public string Name {
             get { return m_name; }
@@ -30,10 +35,15 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        protected Resource(string name, ManifestResourceAttributes attributes)
+        protected Resource(string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : this (owner)
         {
             m_name = name;
             m_attributes = attributes;
+        }
+
+        private Resource (ModuleDefinition owner)
+        {
+            m_module = owner;
         }
 
         public abstract void Accept(IReflectionStructureVisitor visitor);
