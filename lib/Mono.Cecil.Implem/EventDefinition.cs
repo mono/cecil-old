@@ -21,9 +21,11 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_eventType;
         private EventAttributes m_attributes;
 
-        private IMethodReference m_addMeth;
-        private IMethodReference m_invMeth;
-        private IMethodReference m_remMeth;
+        private IMethodDefinition m_addMeth;
+        private IMethodDefinition m_invMeth;
+        private IMethodDefinition m_remMeth;
+
+        private bool m_readed;
 
         public ITypeReference EventType {
             get { return m_eventType; }
@@ -35,19 +37,33 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        public IMethodReference AddMethod {
-            get { return m_addMeth; }
+        public IMethodDefinition AddMethod {
+            get {
+                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadSemantic (this);
+                return m_addMeth;
+            }
             set { m_addMeth = value; }
         }
 
-        public IMethodReference InvokeMethod {
-            get { return m_invMeth; }
+        public IMethodDefinition InvokeMethod {
+            get {
+                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadSemantic (this);
+                return m_invMeth;
+            }
             set { m_invMeth = value; }
         }
 
-        public IMethodReference RemoveMethod {
-            get { return m_remMeth; }
+        public IMethodDefinition RemoveMethod {
+            get {
+                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadSemantic (this);
+                return m_remMeth;
+            }
             set { m_remMeth = value; }
+        }
+
+        public bool Readed {
+            get { return m_readed; }
+            set { m_readed = value; }
         }
 
         public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs)

@@ -20,6 +20,7 @@ namespace Mono.Cecil.Implem {
     using System.Collections.Specialized;
 
     using Mono.Cecil;
+    using Mono.Cecil.Cil;
 
     internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%> {
 

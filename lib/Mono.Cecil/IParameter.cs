@@ -15,8 +15,9 @@ namespace Mono.Cecil {
     public interface IParameterReference : IReflectionVisitable {
 
         string Name { get; set; }
+        int Sequence { get; }
         ParamAttributes Attributes { get; set; }
-        IType ParameterType { get; set; }
+        ITypeReference ParameterType { get; set; }
         object DefaultValue { get; set; }
     }
 

@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil.Metadata;
     using Mono.Cecil.Signatures;
 
-    internal sealed class ReflectionReader : IReflectionVisitor {
+    internal sealed class ReflectionReader : IReflectionVisitor, ISemanticReader {
 
         private ModuleDefinition m_module;
         private ImageReader m_reader;
@@ -195,6 +195,32 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IParameterDefinitionCollection parameters)
         {
+            ParameterDefinitionCollection parms = parameters as ParameterDefinitionCollection;
+            if (parms.Loaded)
+                return;
+
+            MethodDefinition meth = parms.Container as MethodDefinition;
+            int index = Array.IndexOf (m_meths, meth) + 1, cursor;
+            MethodTable methTable = m_root.Streams.TablesHeap [typeof(MethodTable)] as MethodTable;
+            ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
+            MethodRow currentMeth = methTable [index];
+            cursor = (int) currentMeth.ParamList;
+            if (cursor == 0)
+                return;
+
+            MethodDefSig msig = meth.Signature;
+            for (int i = 0; i < msig.ParamCount; i++) {
+                ParamRow prow = paramTable [cursor++];
+                Param p = msig.Parameters [i];
+
+                // add parameter here
+            }
+
+            parms.Loaded = true;
+        }
+
+        public void Visit (IParameterDefinition parameter)
+        {
         }
 
         public void Visit (IMethodDefinitionCollection methods)
@@ -265,9 +291,6 @@ namespace Mono.Cecil.Implem {
                                                             GetTypeDefOrRef (erow.EventType), erow.EventFlags);
 
                 events [edef.Name] = edef;
-
-                // read invoke, add & remove methods
-                // should they be lazy loaded to avoid loading of methods ?
             }
 
             evts.Loaded = true;
@@ -345,9 +368,6 @@ namespace Mono.Cecil.Implem {
                 PropertyDefinition pdef = new PropertyDefinition (m_root.Streams.StringsHeap [prow.Name],
                                                                   dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
 
-                // read set & get method
-                // should they be lazy loaded to avoid loading of methods ?
-
                 properties [pdef.Name] = pdef;
             }
 
@@ -356,6 +376,26 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IPropertyDefinition property)
         {
+        }
+
+        public void ReadSemantic (EventDefinition evt)
+        {
+            if (evt.Readed)
+                return;
+
+            // read semantic here
+
+            evt.Readed = true;
+        }
+
+        public void ReadSemantic (PropertyDefinition prop)
+        {
+            if (prop.Readed)
+                return;
+
+            // read semantic here
+
+            prop.Readed = true;
         }
 
         public ITypeReference GetTypeRefFromSig (SigType t)
@@ -425,6 +465,7 @@ namespace Mono.Cecil.Implem {
             case ElementType.SzArray :
             case ElementType.FnPtr :
             case ElementType.Ptr :
+                //TODO: implement that
                 break;
             }
             return ret;

@@ -22,18 +22,29 @@ namespace Mono.Cecil.Implem {
         private ParameterDefinitionCollection m_parameters;
         private PropertyAttributes m_attributes;
 
-        private IMethodReference m_getMeth;
-        private IMethodReference m_setMeth;
+        private IMethodDefinition m_getMeth;
+        private IMethodDefinition m_setMeth;
+
+        private bool m_readed = false;
 
         public ITypeReference PropertyType {
             get { return m_propertyType; }
             set { m_propertyType = value; }
         }
 
+        public bool Readed {
+            get { return m_readed; }
+            set { m_readed = value; }
+        }
+
         public IParameterDefinitionCollection Parameters {
             get {
-                if (m_parameters == null)
-                    m_parameters = new ParameterDefinitionCollection (this);
+                if (m_parameters == null) {
+                    if (this.GetMethod != null)
+                        m_parameters = this.GetMethod.Parameters as ParameterDefinitionCollection;
+                    else
+                        m_parameters = new ParameterDefinitionCollection (this);
+                }
                 return m_parameters;
             }
         }
@@ -43,13 +54,19 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        public IMethodReference GetMethod {
-            get { return m_getMeth; }
+        public IMethodDefinition GetMethod {
+            get {
+                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadSemantic (this);
+                return m_getMeth;
+            }
             set { m_getMeth = value; }
         }
 
-        public IMethodReference SetMethod {
-            get { return m_setMeth; }
+        public IMethodDefinition SetMethod {
+            get {
+                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadSemantic (this);
+                return m_setMeth;
+            }
             set { m_setMeth = value; }
         }
 

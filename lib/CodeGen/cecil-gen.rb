@@ -74,7 +74,9 @@ doc.root.each_element("/cecil/collections//collection") { |node|
         node.attribute("visit").value,
         (node.attribute("name").nil? ? nil : node.attribute("name").value),
         (node.attribute("lazyload").nil? ? false : node.attribute("lazyload").value == "true"),
-        (node.attribute("pathtoloader").nil? ? nil : node.attribute("pathtoloader").value)))
+        (node.attribute("pathtoloader").nil? ? nil : node.attribute("pathtoloader").value),
+        node.attribute("target").value,
+        (node.attribute("indexed").nil? ? false : node.attribute("indexed").value == "true")))
 }
 
 $compiler = ERuby::Compiler.new()
@@ -151,10 +153,11 @@ cecil_compile("../Mono.Cecil.Cil/OpCodes.cs", "./templates/OpCodes.cs")
 
 $colls.each { |coll|
     $cur_coll = coll
-    files = [ "../Mono.Cecil/" + coll.intf + ".cs",
+    files = [ "../#{coll.target}/" + coll.intf + ".cs",
         "../Mono.Cecil.Implem/" + coll.name + ".cs" ]
-    templates = [ "./templates/ICollection.cs", "./templates/CollectionImplem.cs" ]
-    templates[1] = "./templates/LzCollectionImplem.cs" if coll.lazyload
+    type = coll.indexed ? "Indexed" : "Named"
+    templates = [ "./templates/I#{type}Collection.cs", "./templates/#{type}CollectionImplem.cs" ]
+    templates[1] = "./templates/Lz#{type}CollectionImplem.cs" if coll.lazyload
     files.each_with_index { |file, i|
 
         cecil_compile(file, templates[i])

@@ -22,7 +22,7 @@ namespace Mono.Cecil {
 
         PropertyAttributes Attributes { get; set; }
 
-        IMethodReference GetMethod { get; set; }
-        IMethodReference SetMethod { get; set; }
+        IMethodDefinition GetMethod { get; set; }
+        IMethodDefinition SetMethod { get; set; }
     }
 }

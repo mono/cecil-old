@@ -78,6 +78,7 @@
         <Compile Include="Mono.Cecil.Implem\Instruction.cs"/>
         <Compile Include="Mono.Cecil.Implem\InstructionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ISemanticReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\MemberDefinition.cs"/>
@@ -89,6 +90,7 @@
         <Compile Include="Mono.Cecil.Implem\ModuleReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ParameterDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>

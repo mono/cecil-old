@@ -19,6 +19,7 @@ namespace Mono.Cecil {
         MethodAttributes Attributes { get; set; }
         MethodImplAttributes ImplAttributes { get; set; }
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
+        IParameterDefinitionCollection Parameters { get; }
     }
 
     public interface IMethodDefinition : IMemberDefinition, IMethodReference, IReflectionVisitable {

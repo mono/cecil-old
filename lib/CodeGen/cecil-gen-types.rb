@@ -137,8 +137,10 @@ module Cecil
         attr_reader(:visitThis)
         attr_reader(:lazyload)
         attr_reader(:pathtoloader)
+        attr_reader(:target)
+        attr_reader(:indexed)
 
-        def initialize(type, container, visit, name, lazyload, pathtoloader)
+        def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false)
             @type = type
             @intf = (name.nil? ? type : name) + "Collection"
             @name = @intf[1..@intf.length]
@@ -149,6 +151,8 @@ module Cecil
             @visitThis = "Visit"
             @lazyload = lazyload
             @pathtoloader = pathtoloader
+            @target = target
+            @indexed = indexed
         end
     end
 

@@ -24,6 +24,10 @@ namespace Mono.Cecil.Implem {
             get { return m_reflectReader; }
         }
 
+        public ISemanticReader SemanticReader {
+            get { return m_reflectReader; }
+        }
+
         public ICodeVisitor CodeReader {
             get { return m_codeReader; }
         }

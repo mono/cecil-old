@@ -24,6 +24,7 @@ namespace Mono.Cecil.Implem {
         private MethodAttributes m_attributes;
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
+        private ParameterDefinitionCollection m_parameters;
 
         private MethodBody m_body;
         private MethodDefSig m_signature;
@@ -43,6 +44,14 @@ namespace Mono.Cecil.Implem {
         public MethodSemanticsAttributes SemanticsAttributes {
             get { return m_semAttrs; }
             set { m_semAttrs = value; }
+        }
+
+        public IParameterDefinitionCollection Parameters {
+            get {
+                if (m_parameters == null)
+                    m_parameters = new ParameterDefinitionCollection (this);
+                return m_parameters;
+            }
         }
 
         public MethodDefSig Signature {
@@ -85,6 +94,7 @@ namespace Mono.Cecil.Implem {
         public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
+            m_parameters.Accept (visitor);
             m_overrides.Accept (visitor);
         }
     }

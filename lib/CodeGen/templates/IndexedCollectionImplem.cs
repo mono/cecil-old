@@ -17,23 +17,18 @@ namespace Mono.Cecil.Implem {
 
     using System;
     using System.Collections;
-    using System.Collections.Specialized;
 
     using Mono.Cecil;
+    using Mono.Cecil.Cil;
 
-    internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
+    internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%> {
 
-        private IDictionary m_items;
+        private IList m_items;
         private <%=$cur_coll.container_impl%> m_container;
 
-        private bool m_loaded;
-
-        public <%=$cur_coll.type%> this [string name] {
-            get {
-                <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
-                return m_items [name] as <%=$cur_coll.type%>;
-            }
-            set { m_items [name] = value; }
+        public <%=$cur_coll.type%> this [int index] {
+            get { return m_items [index] as <%=$cur_coll.type%>; }
+            set { m_items [index] = value; }
         }
 
         public <%=$cur_coll.container%> Container {
@@ -41,10 +36,7 @@ namespace Mono.Cecil.Implem {
         }
 
         public int Count {
-            get {
-                <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
-                return m_items.Count;
-            }
+            get { return m_items.Count; }
         }
 
         public bool IsSynchronized {
@@ -55,15 +47,15 @@ namespace Mono.Cecil.Implem {
             get { return this; }
         }
 
-        public bool Loaded {
-            get { return m_loaded; }
-            set { m_loaded = value; }
-        }
-
         public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
         {
             m_container = container;
-            m_items = new ListDictionary ();
+            m_items = new ArrayList ();
+        }
+        
+        public void Add (<%=$cur_coll.type%> value)
+        {
+            m_items.Add (value);
         }
 
         public void Clear ()
@@ -75,6 +67,26 @@ namespace Mono.Cecil.Implem {
         {
             return m_items.Contains (value);
         }
+        
+        public int IndexOf (<%=$cur_coll.type%> value)
+        {
+            return m_items.IndexOf (value);
+        }
+
+        public void Insert (int index, <%=$cur_coll.type%> value)
+        {
+            m_items.Insert (index, value);
+        }
+
+        public void Remove (<%=$cur_coll.type%> value)
+        {
+            m_items.Remove (value);
+        }
+
+        public void RemoveAt (int index)
+        {
+            m_items.Remove (index);
+        }
 
         public void Remove (<%=$cur_coll.type%> value)
         {
@@ -83,13 +95,11 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
             return m_items.Values.GetEnumerator ();
         }
 

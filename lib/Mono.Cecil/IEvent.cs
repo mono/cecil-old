@@ -21,8 +21,8 @@ namespace Mono.Cecil {
 
         EventAttributes Attributes { get; set; }
 
-        IMethodReference AddMethod { get; set; }
-        IMethodReference InvokeMethod { get; set; }
-        IMethodReference RemoveMethod { get; set; }
+        IMethodDefinition AddMethod { get; set; }
+        IMethodDefinition InvokeMethod { get; set; }
+        IMethodDefinition RemoveMethod { get; set; }
     }
 }

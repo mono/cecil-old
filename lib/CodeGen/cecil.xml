@@ -644,19 +644,22 @@
         that will be used in the Reflection ns
     -->
     <collections>
-        <collection type="IAssemblyNameReference" container="IModuleDefinition" visit="IReflectionStructure" />
-        <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" />
-        <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" />
-        <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" />
-        <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Loader" />
-        <collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" />
-        <collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="m_container.Module.Loader" />
-        <collection type="IParameterDefinition" container="IMemberDefinition" visit="IReflection" lazyload="true" pathtoloader="((TypeDefinition)m_container.DeclaringType).Module.Loader" />
-        <collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="((TypeDefinition)m_container.DeclaringType).Module.Loader" />
-        <collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader" />
-        <collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader" />
-        <collection type="IFieldDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader" />
-        <collection type="IPropertyDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader" />
+        <collection type="IAssemblyNameReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
+        <collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IParameterDefinition" container="IMemberDefinition" visit="IReflection" lazyload="true" pathtoloader="((TypeDefinition) m_container.DeclaringType).Module.Loader.ReflectionReader" indexed="true" target="Mono.Cecil" />
+        <collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="((TypeDefinition) m_container.DeclaringType).Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IFieldDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IPropertyDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
+        <collection type="IInstruction" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
+        <collection type="IExceptionHandler" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
+        <collection type="IVariableDefinition" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
     </collections>
 
 </cecil>
