@@ -32,11 +32,13 @@ namespace Mono.Tools {
 			Console.WriteLine ("where options are:");
 			Console.WriteLine (" -output filename  Output information into specified file.");
 			Console.WriteLine (" -decl             Show declarative security attributes on classes and methods.");
+			Console.WriteLine (" -xml              Output in XML format");
 			Console.WriteLine (" -help             Show help informations (this text)");
 			Console.WriteLine ();
 		}
 
 		static bool declarative = false;
+		static bool xmloutput = false;
 
 		static void ShowPermissionSet (TextWriter tw, string header, PermissionSet ps)
 		{
@@ -66,6 +68,11 @@ namespace Mono.Tools {
 				case "-OUTPUT":
 				case "--OUTPUT":
 					tw = (TextWriter) new StreamWriter (args [++i]);
+					break;
+				case "/XML":
+				case "-XML":
+				case "--XML":
+					xmloutput = true;
 					break;
 				case "/HELP":
 				case "/H":
@@ -149,6 +156,73 @@ namespace Mono.Tools {
 			return true;
 		}
 
+		static void AddAttribute (SecurityElement se, string attr, string value)
+		{
+			value = value.Replace ("&", "&amp;");
+			se.AddAttribute (attr, value);
+		}
+
+		static SecurityElement AddSecurityXml (ISecurityDeclarationCollection declarations)
+		{
+			SecurityElement se = new SecurityElement ("Actions");
+			foreach (ISecurityDeclaration declsec in declarations) {
+				SecurityElement child = new SecurityElement ("Action");
+				AddAttribute (child, "Name", declsec.Action.ToString ());
+				child.AddChild (declsec.PermissionSet.ToXml ());
+				se.AddChild (child);
+			}
+			return se;
+		}
+
+		static bool ProcessAssemblyXml (TextWriter tw, IAssemblyDefinition ad)
+		{
+			SecurityElement se = new SecurityElement ("DeclarativeSecurityPermissions");
+			se.AddAttribute ("AssemblyName", ad.Name.FullName);
+
+			if (ad.SecurityDeclarations.Count > 0) {
+				SecurityElement assembly = new SecurityElement ("Assembly");
+				assembly.AddChild (AddSecurityXml (ad.SecurityDeclarations));
+				se.AddChild (assembly);
+			}
+
+			foreach (IModuleDefinition module in ad.Modules) {
+
+				foreach (ITypeDefinition type in module.Types) {
+
+					SecurityElement klass = new SecurityElement ("Class");
+					SecurityElement methods = new SecurityElement ("Methods");
+
+					SecurityElement typelem = null;
+					if (type.SecurityDeclarations.Count > 0) {
+						typelem = AddSecurityXml (type.SecurityDeclarations);
+					}
+
+					foreach (IMethodDefinition method in type.Methods) {
+						if (method.SecurityDeclarations.Count > 0) {
+							if (typelem == null)
+								typelem = AddSecurityXml (type.SecurityDeclarations);
+
+							SecurityElement meth = new SecurityElement ("Method");
+							AddAttribute (meth, "Name", method.ToString ());
+							meth.AddChild (AddSecurityXml (method.SecurityDeclarations));
+							methods.AddChild (meth);
+						}
+					}
+
+					if (typelem != null) {
+						AddAttribute (klass, "Name", type.ToString ());
+						klass.AddChild (typelem);
+						if ((methods.Children != null) && (methods.Children.Count > 0))
+							klass.AddChild (methods);
+						se.AddChild (klass);
+					}
+				}
+			}
+
+			tw.WriteLine (se.ToString ());
+			return true;
+		}
+
 		[STAThread]
 		static int Main (string[] args) 
 		{
@@ -166,9 +240,19 @@ namespace Mono.Tools {
 				string assemblyName = args [args.Length - 1];
 				IAssemblyDefinition ad = AssemblyFactory.GetAssembly (assemblyName, LoadingType.Lazy);
 				if (ad != null) {
-					bool complete = (declarative ?
-						ProcessAssemblyComplete (tw, ad) :
-						ProcessAssemblyOnly (tw, ad));
+					bool complete = false;
+					
+					if (declarative) {
+						// full output (assembly+classes+methods)
+						complete = ProcessAssemblyComplete (tw, ad);
+					} else if (xmloutput) {
+						// full output in XML (for easier diffs after c14n)
+						complete = ProcessAssemblyXml (tw, ad);
+					} else {
+						// default (assembly only)
+						complete = ProcessAssemblyOnly (tw, ad);
+					}
+
 					if (!complete) {
 						Console.Error.WriteLine ("Couldn't reflect informations.");
 						return 1;
