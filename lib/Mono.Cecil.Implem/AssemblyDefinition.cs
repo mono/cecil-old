@@ -15,7 +15,6 @@ namespace Mono.Cecil.Implem {
     using System;
 
     using Mono.Cecil;
-    using Mono.Cecil.Metadata;
 
     internal class AssemblyDefinition : IAssemblyDefinition {
 

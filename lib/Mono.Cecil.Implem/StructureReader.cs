@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Implem {
 
     using System;
-    using System.Collections;
     using System.IO;
 
     using Mono.Cecil;

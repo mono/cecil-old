@@ -12,7 +12,6 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil.Binary;
     using Mono.Cecil.Cil;
 
     internal sealed class LazyLoader {

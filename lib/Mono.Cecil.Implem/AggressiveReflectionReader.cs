@@ -26,18 +26,20 @@ namespace Mono.Cecil.Implem {
 
         public override void Visit (ITypeDefinitionCollection types)
         {
-            if (!((TypeDefinitionCollection)types).Loaded) {
-                base.Visit (types);
-                ReadClassLayoutInfos ();
-                ReadFieldLayoutInfos ();
-                ReadPInvokeInfos ();
-                ReadProperties ();
-                ReadEvents ();
-                ReadSemantics ();
-                ReadInterfaces ();
-                ReadOverrides ();
-                ReadSecurityDeclarations ();
-            }
+            if (((TypeDefinitionCollection)types).Loaded)
+                return;
+
+            base.Visit (types);
+            ReadClassLayoutInfos ();
+            ReadFieldLayoutInfos ();
+            ReadPInvokeInfos ();
+            ReadProperties ();
+            ReadEvents ();
+            ReadSemantics ();
+            ReadInterfaces ();
+            ReadOverrides ();
+            ReadSecurityDeclarations ();
+            ReadCustomAttributes ();
         }
 
         private void ReadClassLayoutInfos ()
@@ -235,6 +237,35 @@ namespace Mono.Cecil.Implem {
 
                 owner.SecurityDeclarations.Add (dec);
                 ((SecurityDeclarationCollection)owner.SecurityDeclarations).Loaded = true;
+            }
+        }
+
+        private void ReadCustomAttributes ()
+        {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (CustomAttributeTable)))
+                return;
+
+            CustomAttributeTable caTable = m_root.Streams.TablesHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
+            for (int i = 0; i < caTable.Rows.Count; i++) {
+                CustomAttributeRow caRow = caTable [i];
+                IMethodReference ctor;
+                if (caRow.Type.TokenType == TokenType.Method)
+                    ctor = GetMethodDefAt ((int) caRow.Type.RID);
+                else
+                    ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
+
+                object t = null;
+                switch (caRow.Parent.TokenType) {
+                case TokenType.MemberRef :
+                    t = GetMemberRefAt ((int) caRow.Parent.RID);
+                    break;
+                case TokenType.Property :
+                    t = m_properties [caRow.Parent.RID - 1];
+                    break;
+                }
+
+                CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
+                //TODO: end
             }
         }
     }

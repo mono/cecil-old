@@ -15,7 +15,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Metadata;
 
-    public abstract class Resource :  IResource {
+    internal abstract class Resource :  IResource {
 
         private string m_name;
         private ManifestResourceAttributes m_attributes;

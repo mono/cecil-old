@@ -16,7 +16,7 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    public sealed class SecurityDeclaration :  ISecurityDeclaration {
+    internal sealed class SecurityDeclaration :  ISecurityDeclaration {
 
         private SecurityAction m_action;
         private PermissionSet m_permSet;

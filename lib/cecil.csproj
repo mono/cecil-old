@@ -35,7 +35,6 @@
         <Compile Include="Mono.Cecil.Binary\IHeader.cs"/>
         <Compile Include="Mono.Cecil.Binary\Image.cs"/>
         <Compile Include="Mono.Cecil.Binary\ImageCharacteristics.cs"/>
-        <Compile Include="Mono.Cecil.Binary\ImageFormatException.cs"/>
         <Compile Include="Mono.Cecil.Binary\ImageReader.cs"/>
         <Compile Include="Mono.Cecil.Binary\PEFileHeader.cs"/>
         <Compile Include="Mono.Cecil.Binary\PEOptionalHeader.cs"/>
@@ -71,6 +70,7 @@
         <Compile Include="Mono.Cecil.Implem\AssemblyName.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\CodeReader.cs"/>
+        <Compile Include="Mono.Cecil.Implem\CustomAttributeCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\EventDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\EventDefinitionCollection.cs"/>
@@ -108,7 +108,6 @@
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReferenceType.cs"/>
-        <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
         <Compile Include="Mono.Cecil.Implem\ResourceCollection.cs"/>
@@ -155,7 +154,6 @@
         <Compile Include="Mono.Cecil.Metadata\InterfaceImpl.cs"/>
         <Compile Include="Mono.Cecil.Metadata\ManifestResource.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MemberRef.cs"/>
-        <Compile Include="Mono.Cecil.Metadata\MetadataFormatException.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataHeap.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataReader.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataRoot.cs"/>
@@ -233,6 +231,9 @@
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil\IClassLayoutInfo.cs"/>
+        <Compile Include="Mono.Cecil\ICustomAttribute.cs"/>
+        <Compile Include="Mono.Cecil\ICustomAttributeCollection.cs"/>
+        <Compile Include="Mono.Cecil\ICustomAttributeProvider.cs"/>
         <Compile Include="Mono.Cecil\IEmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil\IEvent.cs"/>
         <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
@@ -243,6 +244,7 @@
         <Compile Include="Mono.Cecil\IHasSecurity.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
+        <Compile Include="Mono.Cecil\ImageFormatException.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
         <Compile Include="Mono.Cecil\IMethod.cs"/>
         <Compile Include="Mono.Cecil\IMethodDefinitionCollection.cs"/>
@@ -276,6 +278,7 @@
         <Compile Include="Mono.Cecil\ITypeReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil\LoadingType.cs"/>
         <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs"/>
+        <Compile Include="Mono.Cecil\MetadataFormatException.cs"/>
         <Compile Include="Mono.Cecil\MethodAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodCallingConvention.cs"/>
         <Compile Include="Mono.Cecil\MethodImplAttributes.cs"/>
@@ -283,6 +286,7 @@
         <Compile Include="Mono.Cecil\ParamAttributes.cs"/>
         <Compile Include="Mono.Cecil\PInvokeAttributes.cs"/>
         <Compile Include="Mono.Cecil\PropertyAttributes.cs"/>
+        <Compile Include="Mono.Cecil\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil\SecurityAction.cs"/>
         <Compile Include="Mono.Cecil\TypeAttributes.cs"/>
         <Compile Include="Mono.Xml\MiniParser.cs"/>

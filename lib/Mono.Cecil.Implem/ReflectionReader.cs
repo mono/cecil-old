@@ -59,7 +59,7 @@ namespace Mono.Cecil.Implem {
             m_module = module;
             m_reader = m_module.Reader;
             m_root = m_reader.Image.MetadataRoot;
-            m_sigReader = new SignatureReader (m_root);
+            m_sigReader = new SignatureReader (m_root, this);
             m_secParser = new SecurityParser ();
             m_isCorlib = m_reader.Image.FileInformation.Name == "mscorlib.dll";
         }
@@ -126,7 +126,7 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        private ITypeReference SearchCoreType (string fullName)
+        public ITypeReference SearchCoreType (string fullName)
         {
             if (m_isCorlib)
                 return m_module.Types [fullName];
@@ -427,6 +427,14 @@ namespace Mono.Cecil.Implem {
         }
 
         public virtual void Visit (ISecurityDeclaration secDecl)
+        {
+        }
+
+        public virtual void Visit (ICustomAttributeCollection customAttrs)
+        {
+        }
+
+        public virtual void Visit (ICustomAttribute customAttr)
         {
         }
 

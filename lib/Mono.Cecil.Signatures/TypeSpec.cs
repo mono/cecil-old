@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Implem;
+    using Mono.Cecil;
 
     internal class TypeSpec {
 

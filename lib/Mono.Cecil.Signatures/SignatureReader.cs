@@ -16,13 +16,16 @@ namespace Mono.Cecil.Signatures {
     using System.Collections;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Text;
 
     using Mono.Cecil;
+    using Mono.Cecil.Implem;
     using Mono.Cecil.Metadata;
 
     internal sealed class SignatureReader : ISignatureVisitor {
 
         private MetadataRoot m_root;
+        private ReflectionReader m_reflectReader;
         private byte [] m_blobData;
 
         // flyweights
@@ -34,10 +37,11 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_localVars;
         private IDictionary m_customAttribs;
 
-        public SignatureReader (MetadataRoot root)
+        public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
         {
             m_root = root;
             m_blobData = m_root.Streams.BlobHeap.Data;
+            m_reflectReader = reflectReader;
 
             m_fieldSigs = new HybridDictionary ();
             m_propSigs = new HybridDictionary ();
@@ -121,7 +125,7 @@ namespace Mono.Cecil.Signatures {
         {
             CustomAttrib ca = m_customAttribs [index] as CustomAttrib;
             if (ca == null) {
-                ca = ReadCustomAttrib (m_blobData, (int) index, ctor);
+                ca = ReadCustomAttrib ((int) index, ctor);
                 m_customAttribs [index] = ca;
             }
             return ca;
@@ -434,34 +438,278 @@ namespace Mono.Cecil.Signatures {
             return cm;
         }
 
-        private CustomAttrib ReadCustomAttrib (byte [] data, int pos, IMethodReference ctor)
+        private CustomAttrib ReadCustomAttrib (int pos, IMethodReference ctor)
         {
-            BinaryReader br = new BinaryReader (new MemoryStream (data, pos, data.Length - pos));
+            int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
+            byte [] data = new byte [length];
+            Buffer.BlockCopy (m_blobData, start, data, 0, length);
+            BinaryReader br = new BinaryReader (new MemoryStream (data));
             CustomAttrib ca = new CustomAttrib (ctor);
             ca.Prolog = br.ReadUInt16 ();
             if (ca.Prolog != CustomAttrib.StdProlog)
                 throw new MetadataFormatException ("Non standard prolog for custom attribute");
 
-            ca.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
+            ca.FixedArgs = new CustomAttrib.FixedArg [ctor.Parameters.Count];
             for (int i = 0; i < ca.FixedArgs.Length; i++)
-                ca.FixedArgs [i] = this.ReadFixedArg (br);
+                ca.FixedArgs [i] = this.ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType, ctor.Parameters [i].ParameterType);
 
             ca.NumNamed = br.ReadUInt16 ();
             ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
             for (int i = 0; i < ca.NumNamed; i++)
-                ca.NamedArgs [i] = this.ReadNamedArg (br);
+                ca.NamedArgs [i] = this.ReadNamedArg (data, br);
 
             return ca;
         }
 
-        private CustomAttrib.FixedArg ReadFixedArg (BinaryReader br)
+        private CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br, bool array, object param)
         {
-            return null;
+            CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
+            if (array) {
+                fa.SzArray = true;
+                fa.NumElem = br.ReadUInt32 ();
+                if (fa.NumElem == 0 || fa.NumElem == 0xffffffff) {
+                    fa.Elems = new CustomAttrib.Elem [0];
+                    return fa;
+                }
+
+                fa.Elems = new CustomAttrib.Elem [fa.NumElem];
+                for (int i = 0; i < fa.NumElem; i++)
+                    fa.Elems [i] = ReadElem (data, br, param);
+            } else
+                fa.Elems = new CustomAttrib.Elem [] { ReadElem (data, br, param) };
+
+            return fa;
         }
 
-        private CustomAttrib.NamedArg ReadNamedArg (BinaryReader br)
+        private CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br)
         {
-            return null;
+            CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
+            byte kind = br.ReadByte ();
+            if (kind == 0x53) { // field
+                na.Field = true;
+                na.Property = false;
+            } else if (kind == 0x54) { // property
+                na.Field = false;
+                na.Property = true;
+            } else
+                throw new MetadataFormatException ("Wrong kind of namedarg found: 0x" + kind.ToString("x2"));
+
+            bool array = false;
+            na.FieldOrPropType = (ElementType) br.ReadByte ();
+            if (na.FieldOrPropType == ElementType.SzArray) {
+                na.FieldOrPropType = (ElementType) br.ReadByte ();
+                array = true;
+            }
+
+            int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+            br.BaseStream.Position = next;
+            na.FieldOrPropName = Encoding.UTF8.GetString (br.ReadBytes (length));
+            na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType);
+            return na;
+        }
+
+        // i hate this construction, should find something better
+        private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param)
+        {
+            if (param is ITypeReference)
+                return ReadElem (data, br, param as ITypeReference);
+            else if (param is ElementType)
+                return ReadElem (data, br, (ElementType) param);
+            else
+                throw new MetadataFormatException ("Wrong parameter for ReadElem: " + param.GetType ().FullName);
+        }
+
+        // elem in fixed args, we know the ITypeReference
+        private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ITypeReference elemType)
+        {
+            CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+
+            if (elemType.FullName == "System.Object") {
+                ElementType elementType = (ElementType) br.ReadByte ();
+                elem = ReadElem (data, br, elementType);
+                elem.String = elem.Simple = elem.Type = false;
+                elem.BoxedValueType = true;
+                elem.FieldOrPropType = elementType;
+                return elem;
+            }
+
+            elem.ElemType = elemType;
+
+            if (elemType.FullName == "System.Type" || elemType.FullName == "System.String") {
+                switch (elemType.FullName) {
+                case "System.String" :
+                    elem.String = true;
+                    elem.BoxedValueType = elem.Simple = elem.Type = false;
+                    break;
+                case "System.Type" :
+                    elem.Type = true;
+                    elem.BoxedValueType = elem.Simple = elem.String = false;
+                    break;
+                }
+
+                if (data [br.BaseStream.Position] == 0xff) { // null
+                    elem.Value = null;
+                    br.BaseStream.Position++;
+                } else {
+                    int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+                    br.BaseStream.Position = next;
+                    elem.Value = Encoding.UTF8.GetString (br.ReadBytes (length));
+                }
+
+                return elem;
+            }
+
+            elem.String = elem.Type = elem.BoxedValueType = false;
+
+            switch (elemType.FullName) {
+            case "System.Boolean" :
+                elem.Value = br.ReadByte () == 1;
+                break;
+            case "System.Char" :
+                elem.Value = br.ReadChar ();
+                break;
+            case "System.Single" :
+                elem.Value = br.ReadSingle ();
+                break;
+            case "System.Double" :
+                elem.Value = br.ReadDouble ();
+                break;
+            case "System.Byte" :
+                elem.Value = br.ReadByte ();
+                break;
+            case "System.Int16" :
+                elem.Value = br.ReadInt16 ();
+                break;
+            case "System.Int32" :
+                elem.Value = br.ReadInt32 ();
+                break;
+            case "System.Int64" :
+                elem.Value = br.ReadInt64 ();
+                break;
+            case "System.SByte" :
+                elem.Value = br.ReadSByte ();
+                break;
+            case "System.UInt16" :
+                elem.Value = br.ReadUInt16 ();
+                break;
+            case "System.UInt32" :
+                elem.Value = br.ReadUInt32 ();
+                break;
+            case "System.UInt64" :
+                elem.Value = br.ReadUInt64 ();
+                break;
+            default : // enum
+                elem.Value = br.ReadInt32 (); // buggy, but how can i know the underlying system type ?
+                break;
+            }
+
+            elem.Simple = true;
+            return elem;
+        }
+
+        // elem in named args, only have an ElementType
+        private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType)
+        {
+            CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+            if (elemType == ElementType.Object) {
+                ElementType elementType = (ElementType) br.ReadByte ();
+                elem = ReadElem (data, br, elementType);
+                elem.String = elem.Simple = elem.Type = false;
+                elem.BoxedValueType = true;
+                elem.FieldOrPropType = elementType;
+                return elem;
+            }
+
+            if (elemType == ElementType.Type || elemType == ElementType.String) { // type or string
+                switch (elemType) {
+                case ElementType.String :
+                    elem.String = true;
+                    elem.BoxedValueType = elem.Simple = elem.Type = false;
+                    break;
+                case ElementType.Type :
+                    elem.Type = true;
+                    elem.BoxedValueType = elem.Simple = elem.String = false;
+                    break;
+                }
+
+                if (data [br.BaseStream.Position] == 0xff) { // null
+                    elem.Value = null;
+                    br.BaseStream.Position++;
+                } else {
+                    int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+                    br.BaseStream.Position = next;
+                    elem.Value = Encoding.UTF8.GetString (br.ReadBytes (length));
+                }
+
+                return elem;
+            }
+
+            elem.String = elem.Type = elem.BoxedValueType = false;
+
+            switch (elemType) {
+            case ElementType.Boolean :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Boolean");
+                elem.Value = br.ReadByte () == 1;
+                break;
+            case ElementType.Char :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Char");
+                elem.Value = br.ReadChar ();
+                break;
+            case ElementType.R4 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Single");
+                elem.Value = br.ReadSingle ();
+                break;
+            case ElementType.R8 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Double");
+                elem.Value = br.ReadDouble ();
+                break;
+            case ElementType.I1 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Byte");
+                elem.Value = br.ReadByte ();
+                break;
+            case ElementType.I2 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int16");
+                elem.Value = br.ReadInt16 ();
+                break;
+            case ElementType.I4 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int32");
+                elem.Value = br.ReadInt32 ();
+                break;
+            case ElementType.I8 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int64");
+                elem.Value = br.ReadInt64 ();
+                break;
+            case ElementType.U1 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.SByte");
+                elem.Value = br.ReadSByte ();
+                break;
+            case ElementType.U2 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt16");
+                elem.Value = br.ReadUInt16 ();
+                break;
+            case ElementType.U4 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt32");
+                elem.Value = br.ReadUInt32 ();
+                break;
+            case ElementType.U8 :
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt64");
+                elem.Value = br.ReadUInt64 ();
+                break;
+            case ElementType.Enum :
+                int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+                br.BaseStream.Position = next;
+                string type = Encoding.UTF8.GetString (br.ReadBytes (length));
+                elem.ElemType = m_reflectReader.Module.Types [type];
+                if (elem.ElemType == null)
+                    elem.ElemType = m_reflectReader.Module.TypeReferences [type];
+                elem.Value = br.ReadInt32 ();
+                break;
+            default :
+                throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem");
+            }
+
+            elem.Simple = true;
+            return elem;
         }
     }
 }

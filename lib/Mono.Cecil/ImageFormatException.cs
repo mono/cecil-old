@@ -10,22 +10,26 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Binary {
+namespace Mono.Cecil {
 
     using System;
 
     public class ImageFormatException : Exception {
 
         internal ImageFormatException () : base()
-        {}
+        {
+        }
 
         internal ImageFormatException (string message) : base(message)
-        {}
+        {
+        }
 
         internal ImageFormatException (string message, params string[] parameters) : base(string.Format(message, parameters))
-        {}
+        {
+        }
 
         internal ImageFormatException (string message, Exception inner) : base(message, inner)
-        {}
+        {
+        }
     }
 }

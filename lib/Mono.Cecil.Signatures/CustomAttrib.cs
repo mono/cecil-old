@@ -79,20 +79,28 @@ namespace Mono.Cecil.Signatures {
         internal class Elem {
 
             private bool m_simple;
-            private bool m_strOrType;
+            private bool m_string;
+            private bool m_type;
             private bool m_boxedVt;
 
             private ElementType m_fieldOrPropType;
             private object m_value;
+
+            private ITypeReference m_elemType;
 
             public bool Simple {
                 get { return m_simple; }
                 set { m_simple = value; }
             }
 
-            public bool StrOrType {
-                get { return m_strOrType; }
-                set { m_strOrType = value; }
+            public bool String {
+                get { return m_string; }
+                set { m_string = value; }
+            }
+
+            public bool Type {
+                get { return m_type; }
+                set { m_type = value; }
             }
 
             public bool BoxedValueType {
@@ -108,6 +116,11 @@ namespace Mono.Cecil.Signatures {
             public object Value {
                 get { return m_value; }
                 set { m_value = value; }
+            }
+
+            public ITypeReference ElemType {
+                get { return m_elemType; }
+                set { m_elemType = value; }
             }
         }
 

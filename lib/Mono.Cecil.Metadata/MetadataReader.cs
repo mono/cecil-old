@@ -16,6 +16,7 @@ namespace Mono.Cecil.Metadata {
     using System.IO;
     using System.Text;
 
+    using Mono.Cecil;
     using Mono.Cecil.Binary;
 
     internal sealed class MetadataReader : IMetadataVisitor {
@@ -63,9 +64,8 @@ namespace Mono.Cecil.Metadata {
                 int read = 0;
                 while (read < length) {
                     byte cur = (byte)m_binaryReader.ReadSByte ();
-                    if (cur == 0) {
+                    if (cur == 0)
                         break;
-                    }
                     buffer [read++] = cur;
                 }
                 version = new byte [read];

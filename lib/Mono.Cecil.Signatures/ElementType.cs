@@ -44,6 +44,10 @@ namespace Mono.Cecil.Signatures {
         Internal    = 0x21,   // Implemented within the CLI
         Modifier    = 0x40,   // Or'd with following element types
         Sentinel    = 0x41,   // Sentinel for varargs method signature
-        Pinned      = 0x45    // Denotes a local variable that points at a pinned object
+        Pinned      = 0x45,   // Denotes a local variable that points at a pinned object
+
+        // special undocumented constants
+        Type        = 0x50,
+        Enum        = 0x55
     }
 }

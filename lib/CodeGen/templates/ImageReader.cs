@@ -18,6 +18,7 @@ namespace Mono.Cecil.Binary {
     using System;
     using System.IO;
 
+    using Mono.Cecil;
     using Mono.Cecil.Metadata;
 
     internal sealed class ImageReader : IBinaryVisitor {
