@@ -133,7 +133,7 @@ namespace Mono.Cecil.Implem {
 
             ModuleRow mr = mt.Rows [0] as ModuleRow;
             string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
-            ModuleDefinition main = new ModuleDefinition (name, true, m_asmDef, m_ir);
+            ModuleDefinition main = new ModuleDefinition (name, m_asmDef, m_ir, true);
             main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
             modules [name] = m_module = main;
 
@@ -153,7 +153,7 @@ namespace Mono.Cecil.Implem {
                                 throw new ReflectionException ("Can not read module : " + name);
 
                             mr = mt.Rows [0] as ModuleRow;
-                            ModuleDefinition modext = new ModuleDefinition (name, false, m_asmDef, module);
+                            ModuleDefinition modext = new ModuleDefinition (name, m_asmDef, module, false);
                             modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 
                             modules [name] = modext;

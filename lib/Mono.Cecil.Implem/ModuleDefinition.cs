@@ -76,11 +76,11 @@ namespace Mono.Cecil.Implem {
             get { return m_loader; }
         }
 
-        public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, true, asm, reader)
+        public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, asm, reader, false)
         {
         }
 
-        public ModuleDefinition (string name, bool main, AssemblyDefinition asm, ImageReader reader)
+        public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader, bool main)
         {
             if (asm == null)
                 throw new ArgumentException ("asm");
