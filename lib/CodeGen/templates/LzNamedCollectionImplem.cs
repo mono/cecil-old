@@ -63,12 +63,16 @@ namespace Mono.Cecil.Implem {
             get { return m_loaded; }
             set { m_loaded = value; }
         }
-
-        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader)
+        
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
         {
             m_container = container;
-            m_loader = loader;
             m_items = new ListDictionary ();
+        }        
+
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader) : this (container)
+        {
+            m_loader = loader;
         }
 
         public void Clear ()
