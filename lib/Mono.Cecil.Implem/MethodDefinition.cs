@@ -17,6 +17,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Binary;
     using Mono.Cecil.Cil;
+    using Mono.Cecil.Signatures;
 
     internal sealed class MethodDefinition : MemberDefinition, IMethodDefinition {
 
@@ -25,6 +26,7 @@ namespace Mono.Cecil.Implem {
         private MethodSemanticsAttributes m_semAttrs;
 
         private MethodBody m_body;
+        private MethodDefSig m_signature;
         private RVA m_rva;
         private OverrideCollection m_overrides;
 
@@ -43,10 +45,20 @@ namespace Mono.Cecil.Implem {
             set { m_semAttrs = value; }
         }
 
+        public MethodDefSig Signature {
+            get { return m_signature; }
+            set { m_signature = value; }
+        }
+
+        public RVA RVA {
+            get { return m_rva; }
+            set { m_rva = value; }
+        }
+
         public IMethodBody Body {
             get {
                 if (m_body == null && m_rva != RVA.Zero)
-                    m_body = new MethodBody (this, m_rva);
+                    m_body = new MethodBody (this);
                 return m_body;
             }
         }
@@ -59,9 +71,11 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public MethodDefinition (string name, TypeDefinition decType, RVA rva, MethodAttributes attrs, MethodImplAttributes implAttrs)
+        public MethodDefinition (string name, TypeDefinition decType, MethodDefSig signature,
+                                 RVA rva, MethodAttributes attrs, MethodImplAttributes implAttrs)
         {
             this.Name = name;
+            m_signature = signature;
             m_rva = rva;
             m_attributes = attrs;
             m_implAttrs = implAttrs;

@@ -100,6 +100,7 @@
         <Compile Include="Mono.Cecil.Implem\TypeDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeReference.cs"/>
+        <Compile Include="Mono.Cecil.Implem\TypeReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\Utilities.cs"/>
         <Compile Include="Mono.Cecil.Implem\VariableDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\VariableDefinitionCollection.cs"/>
@@ -240,6 +241,7 @@
         <Compile Include="Mono.Cecil\ITypeDefinition.cs"/>
         <Compile Include="Mono.Cecil\ITypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\ITypeReference.cs"/>
+        <Compile Include="Mono.Cecil\ITypeReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodImplAttributes.cs"/>

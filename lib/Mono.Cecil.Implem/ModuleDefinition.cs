@@ -28,6 +28,7 @@ namespace Mono.Cecil.Implem {
         private ModuleReferenceCollection m_modRefs;
         private ResourceCollection m_res;
         private TypeDefinitionCollection m_types;
+        private TypeReferenceCollection m_refs;
 
         private AssemblyDefinition m_asm;
         private ImageReader m_reader;
@@ -64,6 +65,10 @@ namespace Mono.Cecil.Implem {
             get { return m_types; }
         }
 
+        public ITypeReferenceCollection TypeReferences {
+            get { return m_refs; }
+        }
+
         public AssemblyDefinition Assembly {
             get { return m_asm; }
         }
@@ -91,12 +96,13 @@ namespace Mono.Cecil.Implem {
             m_name = name;
             m_main = main;
             m_reader = reader;
-            m_loader = new LazyLoader (reader);
+            m_loader = new LazyLoader (this);
             m_mvid = new Guid ();
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);
             m_res = new ResourceCollection (this);
             m_types = new TypeDefinitionCollection (this);
+            m_refs = new TypeReferenceCollection (this);
         }
 
         public void DefineModuleReference (string module)

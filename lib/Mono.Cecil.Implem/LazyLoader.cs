@@ -28,9 +28,9 @@ namespace Mono.Cecil.Implem {
             get { return m_codeReader; }
         }
 
-        public LazyLoader (ImageReader reader)
+        public LazyLoader (ModuleDefinition module)
         {
-            m_reflectReader = new ReflectionReader (reader);
+            m_reflectReader = new ReflectionReader (module);
             m_codeReader = new CodeReader ();
         }
     }

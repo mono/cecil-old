@@ -15,13 +15,13 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Binary;
     using Mono.Cecil.Cil;
+    using Mono.Cecil.Signatures;
 
     internal sealed class MethodBody : IMethodBody {
 
         private MethodDefinition m_method;
         private int m_maxStack;
         private int m_codeSize;
-        private RVA m_rva;
 
         private InstructionCollection m_instructions;
         private ExceptionHandlerCollection m_exceptions;
@@ -39,11 +39,6 @@ namespace Mono.Cecil.Implem {
         public int CodeSize {
             get { return m_codeSize; }
             set { m_codeSize = value; }
-        }
-
-        public RVA RVA {
-            get { return m_rva; }
-            set { m_rva = value; }
         }
 
         public IInstructionCollection Instructions {
@@ -73,11 +68,6 @@ namespace Mono.Cecil.Implem {
         public MethodBody (MethodDefinition meth)
         {
             m_method = meth;
-        }
-
-        public MethodBody (MethodDefinition meth, RVA rva) : this (meth)
-        {
-            m_rva = rva;
         }
 
         public void Accept (ICodeVisitor visitor)

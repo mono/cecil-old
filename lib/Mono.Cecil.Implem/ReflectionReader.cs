@@ -21,18 +21,24 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class ReflectionReader : IReflectionVisitor {
 
+        private ModuleDefinition m_module;
         private ImageReader m_reader;
         private SignatureReader m_sigReader;
         private MetadataRoot m_root;
 
         private TypeDefinition [] m_types;
         private TypeReference [] m_refs;
+        private MethodDefinition [] m_meths;
 
-        public ReflectionReader (ImageReader sr)
+        private bool m_isCorlib;
+
+        public ReflectionReader (ModuleDefinition module)
         {
-            m_reader = sr;
-            m_root = sr.Image.MetadataRoot;
+            m_module = module;
+            m_reader = m_module.Reader;
+            m_root = m_reader.Image.MetadataRoot;
             m_sigReader = new SignatureReader (m_root);
+            m_isCorlib = m_reader.Image.FileInformation.Name == "mscorlib.dll";
         }
 
         public TypeDefinition GetTypeDefAt (int rid)
@@ -74,6 +80,14 @@ namespace Mono.Cecil.Implem {
             default :
                 return null;
             }
+        }
+
+        private ITypeReference SearchType (string fullName)
+        {
+            if (m_isCorlib)
+                return m_module.Types [fullName];
+
+            return m_module.TypeReferences [fullName];
         }
 
         public void Visit (ITypeDefinitionCollection types)
@@ -121,6 +135,7 @@ namespace Mono.Cecil.Implem {
                         m_root.Streams.StringsHeap [type.Namespace]);
 
                     m_refs [i] = t;
+                    ((ModuleDefinition)tdc.Container).TypeReferences [t.FullName] = t;
                 }
             } else
                 m_refs = new TypeReference [0];
@@ -141,6 +156,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (ITypeDefinition type)
+        {
+        }
+
+        public void Visit (ITypeReferenceCollection refs)
         {
         }
 
@@ -193,10 +212,14 @@ namespace Mono.Cecil.Implem {
             else
                 next = (int) (tdefTable [index + 1]).MethodList;
 
+            if (m_meths == null)
+                m_meths = new MethodDefinition [methTable.Rows.Count];
+
             for (int i = (int) tdefTable [index].FieldList; i < next; i++) {
                 MethodRow methRow = methTable [i - 1];
 
                 // write here :)
+                // save it too with m_meths [i] = method;
             }
 
             meths.Loaded = true;
@@ -341,28 +364,69 @@ namespace Mono.Cecil.Implem {
             switch (t.ElementType) {
             case ElementType.Class :
                 CLASS c = t as CLASS;
-                switch (c.Type.TokenType) {
-                case TokenType.TypeDef :
-                    ret = GetTypeDefAt ((int) c.Type.RID);
-                    break;
-                case TokenType.TypeRef :
-                    ret = GetTypeRefAt ((int) c.Type.RID);
-                    break;
-                }
+                ret = GetTypeDefOrRef (c.Type);
                 break;
             case ElementType.ValueType :
                 VALUETYPE vt = t as VALUETYPE;
-                switch (vt.Type.TokenType) {
-                case TokenType.TypeDef :
-                    ret = GetTypeDefAt ((int) vt.Type.RID);
-                    break;
-                case TokenType.TypeRef :
-                    ret = GetTypeRefAt ((int) vt.Type.RID);
-                    break;
-                }
+                ret = GetTypeDefOrRef (vt.Type);
+                break;
+            case ElementType.String :
+                ret = SearchType ("System.String");
+                break;
+            case ElementType.Object :
+                ret = SearchType ("System.Object");
+                break;
+            case ElementType.Void :
+                ret = SearchType ("System.Void");
+                break;
+            case ElementType.Boolean :
+                ret = SearchType ("System.Boolean");
+                break;
+            case ElementType.Char :
+                ret = SearchType ("System.Char");
+                break;
+            case ElementType.I1 :
+                ret = SearchType ("System.SByte");
+                break;
+            case ElementType.U1 :
+                ret = SearchType ("System.Byte");
+                break;
+            case ElementType.I2 :
+                ret = SearchType ("System.Int16");
+                break;
+            case ElementType.U2 :
+                ret = SearchType ("System.UInt16");
+                break;
+            case ElementType.I4 :
+                ret = SearchType ("System.Int32");
+                break;
+            case ElementType.U4 :
+                ret = SearchType ("System.UInt32");
+                break;
+            case ElementType.I8 :
+                ret = SearchType ("System.Int64");
+                break;
+            case ElementType.U8 :
+                ret = SearchType ("System.UInt64");
+                break;
+            case ElementType.R4 :
+                ret = SearchType ("System.Single");
+                break;
+            case ElementType.R8 :
+                ret = SearchType ("System.Double");
+                break;
+            case ElementType.I :
+                ret = SearchType ("System.IntPtr");
+                break;
+            case ElementType.U :
+                ret = SearchType ("System.UIntPtr");
+                break;
+            case ElementType.Array :
+            case ElementType.SzArray :
+            case ElementType.FnPtr :
+            case ElementType.Ptr :
                 break;
             }
-            //TODO: continue this with all element types
             return ret;
         }
     }

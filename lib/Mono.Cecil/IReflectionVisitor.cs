@@ -16,6 +16,7 @@ namespace Mono.Cecil {
 
         void Visit (ITypeDefinitionCollection types);
         void Visit (ITypeDefinition type);
+        void Visit (ITypeReferenceCollection refs);
         void Visit (ITypeReference type);
         void Visit (IInterfaceCollection interfaces);
         void Visit (IOverrideCollection meth);
