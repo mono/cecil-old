@@ -21,6 +21,8 @@ namespace Mono.Cecil.Implem {
         private IList m_parameters;
         private IDictionary m_fields;
         private IDictionary m_properties;
+        private IDictionary m_fieldTypes;
+        private IDictionary m_propTypes;
 
         public IMethodReference Constructor {
             get { return m_ctor; }
@@ -37,16 +39,20 @@ namespace Mono.Cecil.Implem {
 
         public IDictionary Fields {
             get {
-                if (m_fields == null)
+                if (m_fields == null) {
                     m_fields = new HybridDictionary ();
+                    m_fieldTypes = new HybridDictionary ();
+                }
                 return m_fields;
             }
         }
 
         public IDictionary Properties {
             get {
-                if (m_properties == null)
+                if (m_properties == null) {
                     m_properties = new HybridDictionary ();
+                    m_propTypes = new HybridDictionary ();
+                }
                 return m_properties;
             }
         }
@@ -54,6 +60,26 @@ namespace Mono.Cecil.Implem {
         public CustomAttribute (IMethodReference ctor)
         {
             m_ctor = ctor;
+        }
+
+        public ITypeReference GetFieldType (string fieldName)
+        {
+            return m_fieldTypes [fieldName] as ITypeReference;
+        }
+
+        public ITypeReference GetPropertyType (string propertyName)
+        {
+            return m_propTypes [propertyName] as ITypeReference;
+        }
+
+        public void SetFieldType (string fieldName, ITypeReference type)
+        {
+            m_fieldTypes [fieldName] = type;
+        }
+
+        public void SetPropertyType (string propertyName, ITypeReference type)
+        {
+            m_propTypes [propertyName] = type;
         }
 
         public void Accept (IReflectionVisitor visitor)

@@ -489,6 +489,17 @@ namespace Mono.Cecil.Implem {
                 return fa.Elems [0].Value;
         }
 
+        private ITypeReference GetFixedArgType (CustomAttrib.FixedArg fa)
+        {
+            if (fa.SzArray) {
+                if (fa.NumElem == 0)
+                    return new ArrayType (SearchCoreType ("System.Object"));
+                else
+                    return new ArrayType (fa.Elems [0].ElemType);
+            } else
+                return fa.Elems [0].ElemType;
+        }
+
         protected CustomAttribute BuildCustomAttribute (IMethodReference ctor, CustomAttrib sig)
         {
             CustomAttribute cattr = new CustomAttribute (ctor);
@@ -499,11 +510,13 @@ namespace Mono.Cecil.Implem {
 
             foreach (CustomAttrib.NamedArg na in sig.NamedArgs) {
                 object value = GetFixedArgValue (na.FixedArg);
-                if (na.Field)
+                if (na.Field) {
                     cattr.Fields [na.FieldOrPropName] = value;
-                else if (na.Property)
+                    cattr.SetFieldType (na.FieldOrPropName, GetFixedArgType (na.FixedArg));
+                } else if (na.Property) {
                     cattr.Properties [na.FieldOrPropName] = value;
-                else
+                    cattr.SetPropertyType (na.FieldOrPropName, GetFixedArgType (na.FixedArg));
+                } else
                     throw new ReflectionException ("Non valid named arg");
             }
 

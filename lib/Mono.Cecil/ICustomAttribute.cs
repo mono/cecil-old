@@ -20,5 +20,8 @@ namespace Mono.Cecil {
         IList ConstructorParameters { get; }
         IDictionary Fields { get; }
         IDictionary Properties { get; }
+
+        ITypeReference GetFieldType (string fieldName);
+        ITypeReference GetPropertyType (string propertyName);
     }
 }

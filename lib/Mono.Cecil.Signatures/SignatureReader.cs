@@ -648,10 +648,12 @@ namespace Mono.Cecil.Signatures {
                 case ElementType.String :
                     elem.String = true;
                     elem.BoxedValueType = elem.Simple = elem.Type = false;
+                    elem.ElemType = m_reflectReader.SearchCoreType ("System.String");
                     break;
                 case ElementType.Type :
                     elem.Type = true;
                     elem.BoxedValueType = elem.Simple = elem.String = false;
+                    elem.ElemType = m_reflectReader.SearchCoreType ("System.Type");
                     break;
                 }
 
