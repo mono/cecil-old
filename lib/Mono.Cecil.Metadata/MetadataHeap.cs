@@ -56,21 +56,8 @@ namespace Mono.Cecil.Metadata {
 
         protected virtual byte [] ReadBytesFromStream (uint pos)
         {
-            int length = 0, start = (int) pos;
-            if ((m_data [pos] & 0x80) == 0) {
-                length = m_data [pos];
-                start++;
-            } else if ((m_data [pos] & 0x40) == 0) {
-                length = (m_data [start] & ~0x80) << 8;
-                length |= m_data [pos + 1];
-                start += 2;
-            } else {
-                length = (m_data [start] & ~0xc0) << 24;
-                length |= m_data [pos + 1] << 16;
-                length |= m_data [pos + 2] << 8;
-                length |= m_data [pos + 3];
-                start += 4;
-            }
+            int start;
+            int length = Utilities.ReadCompressedInteger (m_data, (int)pos, out start);
             byte[] buffer = new byte [length];
             Buffer.BlockCopy (m_data, start, buffer, 0, length);
             return buffer;

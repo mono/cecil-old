@@ -27,7 +27,7 @@
         <type name="Mono.Cecil.MethodAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.MethodImplAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.MethodSemanticsAttributes" underlying="ushort" size="2" />
-        <type name="Mono.Cecil.Metadata.ElementType" underlying="ushort" size="2" />
+        <type name="Mono.Cecil.Signatures.ElementType" underlying="ushort" size="2" />
         <type name="Mono.Cecil.Metadata.MetadataToken" underlying="uint" size="4" />
     </types>
 
@@ -185,7 +185,7 @@
                 <column name="Parent" type="uint" target="TypeDef" />
             </table>
             <table name="Constant" rid="0x0b">
-                <column name="Type" type="Mono.Cecil.Metadata.ElementType" />
+                <column name="Type" type="Mono.Cecil.Signatures.ElementType" />
                 <column name="Parent" type="Mono.Cecil.Metadata.MetadataToken" target="HasConstant" />
                 <column name="Value" type="uint" target="BlobHeap" />
             </table>

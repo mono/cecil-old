@@ -10,7 +10,7 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Metadata {
+namespace Mono.Cecil.Signatures {
 
     internal enum ElementType : ushort {
         End         = 0x00,   // Marks end of a list
