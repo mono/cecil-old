@@ -312,6 +312,27 @@ namespace Mono.Cecil.Implem {
             props.Loaded = true;
         }
 
+        public override void Visit (IPropertyDefinition property)
+        {
+            //TODO: read constant
+        }
+
+        public override void Visit (ITypeDefinition type)
+        {
+            //TODO: read type layout
+        }
+
+        public override void Visit (IFieldDefinition field)
+        {
+            //TODO: read field layout
+            //TODO: read constant
+        }
+
+        public override void Visit (IParameterDefinition parameter)
+        {
+            //TODO: read constant
+        }
+
         public override void ReadMethods (EventDefinition evt)
         {
             if (evt.Readed)

@@ -12,9 +12,6 @@
 
 namespace Mono.Cecil.Binary {
 
-    using Mono.Cecil.Metadata;
-
-    [ColumnSize (4)]
     internal struct RVA {
 
         public static readonly RVA Zero = new RVA(0);

@@ -12,7 +12,6 @@
 
 namespace Mono.Cecil.Metadata {
 
-    [ColumnSize (4)]
     internal struct MetadataToken {
 
         private uint m_rid;

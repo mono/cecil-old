@@ -14,7 +14,6 @@ namespace Mono.Cecil.Binary {
 
     using Mono.Cecil.Metadata;
 
-    [ColumnSize (8)]
     internal struct DataDirectory {
 
         public static readonly DataDirectory Zero = new DataDirectory(RVA.Zero, 0);
