@@ -37,7 +37,7 @@ namespace Mono.Cecil.Metadata {
             set { m_strings [offset] = value; }
         }
 
-        public UserStringsHeap (MetadataStream stream) : base(stream)
+        public UserStringsHeap (MetadataStream stream) : base(stream, "#US")
         {
             m_strings = new HybridDictionary ();
         }

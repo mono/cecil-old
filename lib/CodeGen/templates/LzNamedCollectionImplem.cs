@@ -17,7 +17,6 @@ namespace Mono.Cecil.Implem {
 
     using System;
     using System.Collections;
-    using System.Collections.Specialized;
 
     using Mono.Cecil;
     using Mono.Cecil.Cil;
@@ -67,7 +66,7 @@ namespace Mono.Cecil.Implem {
         public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
         {
             m_container = container;
-            m_items = new HybridDictionary ();
+            m_items = new Hashtable ();
         }        
 
         public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader) : this (container)

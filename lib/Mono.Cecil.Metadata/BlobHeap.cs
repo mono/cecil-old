@@ -33,7 +33,7 @@ namespace Mono.Cecil.Metadata {
             return new BinaryReader (new MemoryStream (Read (index)));
         }
 
-        public BlobHeap (MetadataStream stream) : base (stream)
+        public BlobHeap (MetadataStream stream) : base (stream, "#Blob")
         {
         }
 

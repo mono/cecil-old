@@ -29,7 +29,7 @@ namespace Mono.Cecil.Metadata {
             set { m_indexSize = value; }
         }
 
-        public StringsHeap (MetadataStream stream) : base (stream)
+        public StringsHeap (MetadataStream stream) : base (stream, "#Strings")
         {
             m_strings = new SortedList ();
         }

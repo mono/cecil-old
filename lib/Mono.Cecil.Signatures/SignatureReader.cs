@@ -14,7 +14,6 @@ namespace Mono.Cecil.Signatures {
 
     using System;
     using System.Collections;
-    using System.Collections.Specialized;
     using System.IO;
     using System.Text;
 
@@ -43,12 +42,12 @@ namespace Mono.Cecil.Signatures {
             m_blobData = m_root.Streams.BlobHeap.Data;
             m_reflectReader = reflectReader;
 
-            m_fieldSigs = new HybridDictionary ();
-            m_propSigs = new HybridDictionary ();
-            m_customAttribs = new HybridDictionary ();
-            m_methodsDefSigs = new HybridDictionary ();
-            m_methodsRefSigs = new HybridDictionary ();
-            m_localVars = new HybridDictionary ();
+            m_fieldSigs = new Hashtable ();
+            m_propSigs = new Hashtable ();
+            m_customAttribs = new Hashtable ();
+            m_methodsDefSigs = new Hashtable ();
+            m_methodsRefSigs = new Hashtable ();
+            m_localVars = new Hashtable ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -99,7 +98,7 @@ namespace Mono.Cecil.Signatures {
         {
             TypeSpec ts = null;
             if (m_typeSpecs == null)
-                m_typeSpecs = new HybridDictionary ();
+                m_typeSpecs = new Hashtable ();
             else
                 ts = m_typeSpecs [index] as TypeSpec;
 

@@ -19,15 +19,21 @@ namespace Mono.Cecil.Metadata {
     internal abstract class MetadataHeap : IMetadataVisitable  {
 
         private MetadataStream m_stream;
+        private string m_name;
         private byte [] m_data;
+
+        public string Name {
+            get { return m_name; }
+        }
 
         public byte [] Data {
             get { return m_data; }
             set { m_data = value; }
         }
 
-        protected MetadataHeap (MetadataStream stream)
+        protected MetadataHeap (MetadataStream stream, string name)
         {
+            m_name = name;
             m_stream = stream;
         }
 
