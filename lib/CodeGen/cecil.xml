@@ -204,7 +204,7 @@
             </table>
             <table name="Event" rid="0x14">
                 <column name="EventFlags" type="Mono.Cecil.EventAttributes" />
-                <column name="Name" type="uint" />
+                <column name="Name" type="uint" target="StringsHeap" />
                 <column name="EventType" type="Mono.Cecil.Metadata.MetadataToken" target="TypeDefOrRef" />
             </table>
             <table name="ExportedType" rid="0x27">
