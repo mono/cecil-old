@@ -300,18 +300,38 @@ namespace Mono.Cecil.Implem {
                     MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
                                                                   methRow.RVA, methRow.Flags, methRow.ImplFlags,
                                                                   msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
+                    int prms;
+                    if (j == methTable.Rows.Count)
+                        prms = paramTable.Rows.Count + 1;
+                    else
+                        prms = (int) (methTable [j]).ParamList;
 
-                    for (int k = 0, l = (int) methRow.ParamList; k < msig.ParamCount; k++) {
-                        ParamRow prow = paramTable [l - 1];
-                        Param psig = msig.Parameters [k];
-                        ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, psig);
+                    ParameterDefinition retparam = null;
+
+                    for (int k = (int) methRow.ParamList, l = 0; k < prms; k++) {
+                        ParamRow prow = paramTable [k - 1];
+                        if (prow.Sequence == 0) { // this is a fake parameter meaning a return type
+                            retparam = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+                            retparam.Method = mdef;
+                            m_parameters [k - 1] = retparam;
+                            continue;
+                        }
+                        Param psig = msig.Parameters [l];
+                        ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name],
+                                                                             prow.Sequence, prow.Flags, psig);
                         pdef.Method = mdef;
                         mdef.Parameters.Add (pdef);
-                        m_parameters [l - 1] = pdef; l++;
+                        m_parameters [k - 1] = pdef; l++;
                     }
 
                     mdef.ReturnType = GetMethodReturnType (msig);
-                    (mdef.ReturnType as MethodReturnType).Method = mdef;
+                    MethodReturnType mrt = mdef.ReturnType as MethodReturnType;
+                    mrt.Method = mdef;
+                    if (retparam != null) {
+                        mrt.CustomAttributeOwner = retparam;
+                        mrt.CustomAttributeOwner.ParameterType = mrt.ReturnType;
+                    }
+
                     m_meths [j - 1] = mdef;
                     ((MethodDefinitionCollection)dec.Methods).Loaded = true;
                     dec.Methods.Add (mdef);

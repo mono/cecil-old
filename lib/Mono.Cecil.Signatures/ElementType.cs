@@ -48,6 +48,7 @@ namespace Mono.Cecil.Signatures {
 
         // special undocumented constants
         Type        = 0x50,
+        Boxed       = 0x51,
         Enum        = 0x55
     }
 }

@@ -501,10 +501,32 @@ namespace Mono.Cecil.Signatures {
                 array = true;
             }
 
-            int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+            int next, length;
+            bool resetenum = false;
+            string enumType = null;
+
+            if (na.FieldOrPropType == ElementType.Enum) {
+                length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+                br.BaseStream.Position = next;
+                enumType = Encoding.UTF8.GetString (br.ReadBytes (length));
+                na.FieldOrPropType = ElementType.I4; // hack there, we should know the underlying type
+                resetenum = true;
+            }
+
+            length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
             br.BaseStream.Position = next;
             na.FieldOrPropName = Encoding.UTF8.GetString (br.ReadBytes (length));
+
             na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType);
+
+            if (resetenum) {
+                na.FieldOrPropType = ElementType.Enum;
+                ITypeReference enu = m_reflectReader.Module.Types [enumType];
+                if (enu == null)
+                    enu = m_reflectReader.Module.TypeReferences [enumType];
+                na.FixedArg.Elems [0].ElemType = enu;
+            }
+
             return na;
         }
 
@@ -611,7 +633,8 @@ namespace Mono.Cecil.Signatures {
         private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType)
         {
             CustomAttrib.Elem elem = new CustomAttrib.Elem ();
-            if (elemType == ElementType.Object) {
+
+            if (elemType == ElementType.Boxed) {
                 ElementType elementType = (ElementType) br.ReadByte ();
                 elem = ReadElem (data, br, elementType);
                 elem.String = elem.Simple = elem.Type = false;
@@ -705,7 +728,7 @@ namespace Mono.Cecil.Signatures {
                 elem.Value = br.ReadInt32 ();
                 break;
             default :
-                throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem");
+                throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}", ((byte) elemType).ToString("x2"));
             }
 
             elem.Simple = true;
