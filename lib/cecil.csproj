@@ -225,11 +225,13 @@
         <Compile Include="Mono.Cecil\IAssemblyDefinition.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>
+        <Compile Include="Mono.Cecil\IClassLayoutInfo.cs"/>
         <Compile Include="Mono.Cecil\IEmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil\IEvent.cs"/>
         <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IField.cs"/>
         <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IFieldLayoutInfo.cs"/>
         <Compile Include="Mono.Cecil\IFunctionPointerType.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>

@@ -174,7 +174,31 @@ namespace Mono.Cecil.Implem {
                 this.Visit (type.Methods);
             }
 
+            //ReadClassLayoutInfos ();
+            //ReadFieldLayoutInfos ();
+
             tdc.Loaded = true;
+        }
+
+        private void ReadClassLayoutInfos ()
+        {
+            ClassLayoutTable clTable = m_root.Streams.TablesHeap [typeof (ClassLayoutTable)] as ClassLayoutTable;
+            for (int i = 0; i < clTable.Rows.Count; i++) {
+                ClassLayoutRow clRow = clTable [i];
+                TypeDefinition type = GetTypeDefAt ((int) clRow.Parent);
+                type.PackingSize = clRow.PackingSize;
+                type.ClassSize = clRow.ClassSize;
+            }
+        }
+
+        private void ReadFieldLayoutInfos ()
+        {
+            FieldLayoutTable flTable = m_root.Streams.TablesHeap [typeof (FieldLayoutTable)] as FieldLayoutTable;
+            for (int i = 0; i < flTable.Rows.Count; i++) {
+                FieldLayoutRow flRow = flTable [i];
+                FieldDefinition field = m_fields [flRow.Field - 1];
+                field.Offset = flRow.Offset;
+            }
         }
 
         public void Visit (ITypeDefinition type)

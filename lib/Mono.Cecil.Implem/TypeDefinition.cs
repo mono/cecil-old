@@ -16,10 +16,14 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal sealed class TypeDefinition : TypeReference, ITypeDefinition {
+    internal sealed class TypeDefinition : TypeReference, ITypeDefinition, IClassLayoutInfo {
 
         private TypeAttributes m_attributes;
         private ITypeReference m_baseType;
+
+        private bool m_hasInfo;
+        private ushort m_packingSize;
+        private uint m_classSize;
 
         private ModuleDefinition m_module;
 
@@ -37,6 +41,30 @@ namespace Mono.Cecil.Implem {
         public ITypeReference BaseType {
             get { return m_baseType; }
             set { m_baseType = value; }
+        }
+
+        public IClassLayoutInfo LayoutInfo {
+            get { return this; }
+        }
+
+        public bool HasLayoutInfo {
+            get { return m_hasInfo; }
+        }
+
+        public ushort PackingSize {
+            get { return m_packingSize; }
+            set {
+                m_hasInfo = true;
+                m_packingSize = value;
+            }
+        }
+
+        public uint ClassSize {
+            get { return m_classSize; }
+            set {
+                m_hasInfo = true;
+                m_classSize = value;
+            }
         }
 
         public IInterfaceCollection Interfaces {
@@ -85,6 +113,7 @@ namespace Mono.Cecil.Implem {
 
         public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) : base (name, ns)
         {
+            m_hasInfo = false;
             m_attributes = attrs;
             m_module = module;
         }

@@ -55,7 +55,7 @@ namespace Mono.Cecil.Implem {
                 methBody.CodeSize = br.ReadInt32 ();
                 methBody.LocalVarToken = br.ReadInt32 ();
                 body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
-                Visit (methBody);
+                Visit (methBody.Variables);
                 ReadCilBody (methBody, br.ReadBytes (methBody.CodeSize));
                 if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
                     ReadExceptionHandlers (methBody, br);

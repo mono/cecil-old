@@ -20,6 +20,7 @@ namespace Mono.Cecil {
     public interface IFieldDefinition : IMemberDefinition, IFieldReference, IReflectionVisitable {
 
         FieldAttributes Attributes { get; set; }
+        IFieldLayoutInfo LayoutInfo { get; }
         object Value { get;  set; }
     }
 }

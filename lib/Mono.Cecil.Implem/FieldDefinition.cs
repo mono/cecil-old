@@ -16,12 +16,31 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal sealed class FieldDefinition : MemberDefinition, IFieldDefinition {
+    internal sealed class FieldDefinition : MemberDefinition, IFieldDefinition, IFieldLayoutInfo {
 
         private ITypeReference m_fieldType;
         private FieldAttributes m_attributes;
 
+        private bool m_hasInfo;
+        private uint m_offset;
+
         private object m_value;
+
+        public IFieldLayoutInfo LayoutInfo {
+            get { return this; }
+        }
+
+        public bool HasLayoutInfo {
+            get { return m_hasInfo; }
+        }
+
+        public uint Offset {
+            get { return m_offset; }
+            set {
+                m_hasInfo = true;
+                m_offset = value;
+            }
+        }
 
         public ITypeReference FieldType {
             get { return m_fieldType; }
@@ -40,6 +59,7 @@ namespace Mono.Cecil.Implem {
 
         public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs)
         {
+            m_hasInfo = false;
             this.Name = name;
             m_fieldType = fieldType;
             m_attributes = attrs;

@@ -17,6 +17,7 @@ namespace Mono.Cecil {
         TypeAttributes Attributes { get; set; }
         ITypeReference BaseType { get; set; }
         IInterfaceCollection Interfaces { get; }
+        IClassLayoutInfo LayoutInfo { get; }
 
         IMethodDefinitionCollection Methods { get; }
         IFieldDefinitionCollection Fields { get; }
