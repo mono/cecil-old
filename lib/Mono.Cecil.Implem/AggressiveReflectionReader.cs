@@ -41,6 +41,7 @@ namespace Mono.Cecil.Implem {
             ReadSecurityDeclarations ();
             ReadCustomAttributes ();
             ReadConstants ();
+            ReadExternTypes ();
 
             m_events = null;
             m_properties = null;
@@ -274,7 +275,7 @@ namespace Mono.Cecil.Implem {
                     owner = this.Module.Assembly.CustomAttributes;
                     break;
                 case TokenType.Module :
-                    owner = this.Module.CustomAttributes; // not sure of this, take care to multi modules asm
+                    owner = this.Module.CustomAttributes;
                     break;
                 case TokenType.TypeDef :
                     owner = GetTypeDefAt ((int) caRow.Parent.RID).CustomAttributes;
@@ -329,6 +330,11 @@ namespace Mono.Cecil.Implem {
                     break;
                 }
             }
+        }
+
+        private void ReadExternTypes ()
+        {
+            base.Visit (Module.ExternTypes as ExternTypeCollection);
         }
     }
 }

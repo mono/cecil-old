@@ -444,6 +444,44 @@ namespace Mono.Cecil.Implem {
 
         public virtual void Visit (IExternTypeCollection externs)
         {
+            ExternTypeCollection ext = externs as ExternTypeCollection;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ExportedTypeTable))) {
+                ext.Loaded = true;
+                return;
+            }
+
+            ExportedTypeTable etTable = m_root.Streams.TablesHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
+            ITypeReference [] buffer = new ITypeReference [etTable.Rows.Count];
+
+            for (int i = 0; i < etTable.Rows.Count; i++) {
+                ExportedTypeRow etRow = etTable [i];
+                if (etRow.Implementation.TokenType != TokenType.File)
+                    continue;
+
+                string name = m_root.Streams.StringsHeap [etRow.TypeName];
+                string ns = m_root.Streams.StringsHeap [etRow.TypeNamespace];
+                if (ns.Length == 0)
+                    buffer [i] = Module.TypeReferences [name];
+                else
+                    buffer [i] = Module.TypeReferences [string.Concat (ns, '.', name)];
+            }
+
+            for (int i = 0; i < etTable.Rows.Count; i++) {
+                ExportedTypeRow etRow = etTable [i];
+                if (etRow.Implementation.TokenType != TokenType.ExportedType)
+                    continue;
+
+                ITypeReference owner = buffer [etRow.Implementation.RID - 1];
+                string name = m_root.Streams.StringsHeap [etRow.TypeName];
+                buffer [i] = Module.TypeReferences [string.Concat (owner.FullName, '/', name)];
+            }
+
+            for (int i = 0; i < buffer.Length; i++) {
+                ITypeReference curs = buffer [i];
+                if (curs != null)
+                    ext [curs.FullName] = curs;
+            }
         }
 
         public virtual void Visit (IOverrideCollection meth)
