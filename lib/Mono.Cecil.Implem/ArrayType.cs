@@ -23,7 +23,7 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_elementsType;
         private ArrayDimensionCollection m_dimensions;
 
-        public ITypeReference ElementsType {
+        public ITypeReference ElementType {
             get { return m_elementsType; }
             set { m_elementsType = value; }
         }

@@ -29,6 +29,7 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_propSigs;
         private IDictionary m_typeSpecs;
         private IDictionary m_methodsDefSigs;
+        private IDictionary m_localVars;
         private IDictionary m_customAttribs;
 
         public SignatureReader (MetadataRoot root)
@@ -40,6 +41,7 @@ namespace Mono.Cecil.Signatures {
             m_propSigs = new Hashtable ();
             m_customAttribs = new Hashtable ();
             m_methodsDefSigs = new Hashtable ();
+            m_localVars = new Hashtable ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -89,6 +91,17 @@ namespace Mono.Cecil.Signatures {
             }
 
             return ts;
+        }
+
+        public LocalVarSig GetLocalVarSig (uint index)
+        {
+            LocalVarSig lv = m_localVars [index] as LocalVarSig;
+            if (lv == null) {
+                lv = new LocalVarSig (index);
+                lv.Accept (this);
+                m_localVars [index] = lv;
+            }
+            return lv;
         }
 
         public CustomAttrib GetCustomAttrib (uint index, IMethodReference ctor)
@@ -170,28 +183,37 @@ namespace Mono.Cecil.Signatures {
             Utilities.ReadCompressedInteger (m_blobData, (int) localvar.BlobIndex, out start);
             localvar.CallingConvention = m_blobData [start];
             localvar.Local = (localvar.CallingConvention & 0x7) != 0;
-            localvar.LocalVariables = this.ReadLocalVariables (localvar.Count, m_blobData, start + 1);
+            localvar.Count = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
+            localvar.LocalVariables = this.ReadLocalVariables (localvar.Count, m_blobData, start);
         }
 
         private LocalVarSig.LocalVariable [] ReadLocalVariables (int length, byte [] data, int pos)
         {
+            int start = pos;
             LocalVarSig.LocalVariable [] types = new LocalVarSig.LocalVariable [length];
             for (int i = 0; i < length; i++)
-                types [i] = this.ReadLocalVariable (data, pos);
+                types [i] = this.ReadLocalVariable (data, start, out start);
             return types;
         }
 
-        private LocalVarSig.LocalVariable ReadLocalVariable (byte [] data, int pos)
+        private LocalVarSig.LocalVariable ReadLocalVariable (byte [] data, int pos, out int start)
         {
+            start = pos;
             LocalVarSig.LocalVariable lv = new LocalVarSig.LocalVariable ();
-            int start = pos;
-            int flag = Utilities.ReadCompressedInteger (data, start, out start);
-            if ((flag & (int) ElementType.Pinned) != 0) {
-                lv.Constraint |= Constraint.Pinned;
-                flag = Utilities.ReadCompressedInteger (data, start, out start);
+            lv.ByRef = false;
+            int cursor;
+            while (true) {
+                cursor = start;
+                int current = Utilities.ReadCompressedInteger (data, start, out start);
+                if (current == (int) ElementType.Pinned) // the only possible constraint
+                    lv.Constraint |= Constraint.Pinned;
+                else if (current == (int) ElementType.ByRef)
+                    lv.ByRef = true;
+                else {
+                    lv.Type = this.ReadType (data, cursor, out start);
+                    break;
+                }
             }
-            lv.ByRef = (flag & (int) ElementType.ByRef) != 0;
-            lv.Type = this.ReadType (data, start, out start);
             return lv;
         }
 

@@ -17,7 +17,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Signatures;
 
-    internal sealed class FunctionPointer : TypeReference, IFunctionPointer {
+    internal sealed class FunctionPointerType : TypeReference, IFunctionPointerType {
 
         private bool m_hasThis;
         private bool m_explicitThis;
@@ -64,7 +64,7 @@ namespace Mono.Cecil.Implem {
             get { return string.Concat ("function", Utilities.ParametersSignature(m_parameters)); }
         }
 
-        public FunctionPointer (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
+        public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
                                 ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
         {
             m_hasThis = hasThis;

@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IArrayType : ITypeReference {
-        IArrayDimensionCollection Dimensions { get; }
-        ITypeReference ElementType { get; set; }
+    public interface IPointerType : ITypeReference {
+
+        ITypeReference ElementType { get; }
     }
 }

@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IFunctionPointer : ITypeReference, IMethodSignature {
+    public interface IReferenceType : ITypeReference {
+
+        ITypeReference ElementType { get; }
     }
 }

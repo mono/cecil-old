@@ -77,7 +77,7 @@
         <Compile Include="Mono.Cecil.Implem\ExceptionHandlerCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\FunctionPointer.cs"/>
+        <Compile Include="Mono.Cecil.Implem\FunctionPointerType.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
         <Compile Include="Mono.Cecil.Implem\IMethodsReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Instruction.cs"/>
@@ -97,10 +97,11 @@
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\Pointer.cs"/>
+        <Compile Include="Mono.Cecil.Implem\PinnedType.cs"/>
+        <Compile Include="Mono.Cecil.Implem\PointerType.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\Reference.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ReferenceType.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
@@ -229,7 +230,7 @@
         <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IField.cs"/>
         <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil\IFunctionPointer.cs"/>
+        <Compile Include="Mono.Cecil\IFunctionPointerType.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
@@ -244,10 +245,11 @@
         <Compile Include="Mono.Cecil\IOverrideCollection.cs"/>
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil\IPointer.cs"/>
+        <Compile Include="Mono.Cecil\IPinnedType.cs"/>
+        <Compile Include="Mono.Cecil\IPointerType.cs"/>
         <Compile Include="Mono.Cecil\IProperty.cs"/>
         <Compile Include="Mono.Cecil\IPropertyDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil\IReference.cs"/>
+        <Compile Include="Mono.Cecil\IReferenceType.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs"/>
         <Compile Include="Mono.Cecil\IReflectionVisitable.cs"/>

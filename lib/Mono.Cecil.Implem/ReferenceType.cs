@@ -17,32 +17,32 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Signatures;
 
-    internal sealed class Pointer : TypeReference, IPointer {
+    internal sealed class ReferenceType : TypeReference, IReferenceType {
 
-        private ITypeReference m_pointedType;
+        private ITypeReference m_type;
 
         public override string Name {
-            get { return m_pointedType.Name; }
-            set { m_pointedType.Name = value; }
+            get { return m_type.Name; }
+            set { m_type.Name = value; }
         }
 
         public override string Namespace {
-            get { return m_pointedType.Namespace; }
-            set { m_pointedType.Namespace = value; }
+            get { return m_type.Namespace; }
+            set { m_type.Namespace = value; }
         }
 
-        public ITypeReference PointedType {
-            get { return m_pointedType; }
-            set { m_pointedType = value; }
+        public ITypeReference ElementType {
+            get { return m_type; }
+            set { m_type = value; }
         }
 
         public override string FullName {
-            get { return string.Concat (base.FullName, "*"); }
+            get { return string.Concat (base.FullName, "&"); }
         }
 
-        public Pointer (ITypeReference pType) : base (string.Empty, string.Empty)
+        public ReferenceType (ITypeReference type) : base (string.Empty, string.Empty)
         {
-            m_pointedType = pType;
+            m_type = type;
         }
     }
 }

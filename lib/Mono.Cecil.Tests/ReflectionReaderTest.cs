@@ -18,6 +18,7 @@ namespace Mono.Cecil.Tests {
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;
+    using Mono.Cecil.Cil;
     using Mono.Cecil.Metadata;
 
     using NUnit.Framework;
@@ -71,31 +72,27 @@ namespace Mono.Cecil.Tests {
                     }
 
                     foreach (IMethodDefinition meth in ctrl.Methods) {
-                        Console.Write ("method: ");
-                        Console.Write (meth.ReturnType.ReturnType.FullName);
-                        Console.Write (" ");
-                        Console.Write (meth.DeclaringType.FullName);
-                        Console.Write ("::");
-                        Console.Write (meth.Name);
-                        Console.Write ("(");
-                        for (int i = 0; i < meth.Parameters.Count; i++) {
-                            IParameterDefinition param = meth.Parameters [i];
-                            Console.Write (param.ParameterType.FullName);
-                            Console.Write (" ");
-                            Console.Write (param.Name);
-                            if (i < meth.Parameters.Count - 1)
-                                Console.Write (", ");
+
+                        if (meth.Name == ".ctor") {
+                            Console.WriteLine ("ctor: " + meth.ToString ());
+                            Console.WriteLine ("accessing body, reading code size: " + meth.Body.CodeSize);
+                        } else if (meth.Name == "FillNamedControlsTable") {
+                            Console.WriteLine ("FillNamedControlsTable: " + meth.ToString ());
+                            Console.WriteLine ("accessing body, reading code size: " + meth.Body.CodeSize);
+                            Console.WriteLine ("max stack: " + meth.Body.MaxStack);
+                            foreach (IVariableDefinition var in meth.Body.Variables) {
+                                Console.WriteLine ("  var: {0} {1}", var.Name, var.Variable.FullName);
+                            }
                         }
-                        Console.WriteLine (")");
                     }
 
-                    foreach (IPropertyDefinition prop in ctrl.Properties) {
+                    /*foreach (IPropertyDefinition prop in ctrl.Properties) {
                         Console.WriteLine ("property: " + prop.Name);
                     }
 
                     foreach (IEventDefinition evt in ctrl.Events) {
                         Console.WriteLine ("event: " + evt.Name);
-                    }
+                    }*/
                 }
             }
         }

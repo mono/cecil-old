@@ -35,7 +35,7 @@ namespace Mono.Cecil.Implem {
         public LazyLoader (ModuleDefinition module)
         {
             m_reflectReader = new ReflectionReader (module);
-            m_codeReader = new CodeReader ();
+            m_codeReader = new CodeReader (m_reflectReader);
         }
     }
 }

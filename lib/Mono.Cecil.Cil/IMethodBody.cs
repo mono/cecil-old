@@ -15,6 +15,7 @@ namespace Mono.Cecil.Cil {
     public interface IMethodBody : ICodeVisitable {
         int MaxStack { get; set; }
         int CodeSize { get; set; }
+        bool InitLocals { get; set; }
         IMethodDefinition Method { get; }
         IInstructionCollection Instructions { get; }
         IExceptionHandlerCollection ExceptionHandlers { get; }

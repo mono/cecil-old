@@ -81,8 +81,10 @@ namespace Mono.Cecil.Implem {
 
         public IMethodBody Body {
             get {
-                if (m_body == null && m_rva != RVA.Zero)
+                if (m_body == null && m_rva != RVA.Zero) {
                     m_body = new MethodBody (this);
+                    ((TypeDefinition)this.DeclaringType).Module.Loader.CodeReader.Visit (m_body);
+                }
                 return m_body;
             }
         }

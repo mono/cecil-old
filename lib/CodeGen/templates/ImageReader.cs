@@ -117,7 +117,7 @@ namespace Mono.Cecil.Binary {
 
         public void Terminate (Image img)
         {
-            m_binaryReader.Close();
+            //m_binaryReader.Close();
         }
     }
 }

@@ -35,6 +35,18 @@ namespace Mono.Cecil.Implem {
 
         private bool m_isCorlib;
 
+        public ModuleDefinition Module {
+            get { return m_module; }
+        }
+
+        public SignatureReader SigReader {
+            get { return m_sigReader; }
+        }
+
+        public MetadataRoot MetadataRoot {
+            get { return m_root; }
+        }
+
         public ReflectionReader (ModuleDefinition module)
         {
             m_module = module;
@@ -255,13 +267,13 @@ namespace Mono.Cecil.Implem {
                     Param psig = msig.Parameters [j];
 
                     ParameterDefinition pdef = new ParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, null);
-                    pdef.ParameterType = psig.ByRef ? new Reference (GetTypeRefFromSig (psig.Type)) : GetTypeRefFromSig (psig.Type);
+                    pdef.ParameterType = psig.ByRef ? new ReferenceType (GetTypeRefFromSig (psig.Type)) : GetTypeRefFromSig (psig.Type);
                     mdef.Parameters.Add (pdef);
                 }
 
                 mdef.ReturnType = GetMethodReturnType (msig);
                 m_meths [i - 1] = mdef;
-                meths [Utilities.MethodSignature (mdef)] = mdef;
+                meths.Add (mdef);
             }
 
             meths.Loaded = true;
@@ -452,7 +464,7 @@ namespace Mono.Cecil.Implem {
             if (msig.RetType.Void)
                 retType = SearchCoreType ("System.Void");
             else if (msig.RetType.ByRef)
-                retType = new Reference (GetTypeRefFromSig (msig.RetType.Type));
+                retType = new ReferenceType (GetTypeRefFromSig (msig.RetType.Type));
             else
                 retType = GetTypeRefFromSig (msig.RetType.Type);
             return new MethodReturnType (retType);
@@ -511,7 +523,7 @@ namespace Mono.Cecil.Implem {
                 return at;
             case ElementType.Ptr :
                 PTR pointer = t as PTR;
-                return new Pointer (GetTypeRefFromSig (pointer.PtrType));
+                return new PointerType (GetTypeRefFromSig (pointer.PtrType));
             case ElementType.FnPtr :
                 // not very sure of this
                 FNPTR funcptr = t as FNPTR;
@@ -519,10 +531,10 @@ namespace Mono.Cecil.Implem {
                 for (int i = 0; i < funcptr.Method.ParamCount; i++) {
                     Param p = funcptr.Method.Parameters [i];
                     ParameterDefinition pdef = new ParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), null);
-                    pdef.ParameterType = p.ByRef ? new Reference (GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
+                    pdef.ParameterType = p.ByRef ? new ReferenceType (GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
                     parameters.Add (pdef);
                 }
-                return new FunctionPointer (funcptr.Method.HasThis, funcptr.Method.ExplicitThis, funcptr.Method.MethCallConv,
+                return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis, funcptr.Method.MethCallConv,
                                             parameters, GetMethodReturnType (funcptr.Method));
             }
             return null;

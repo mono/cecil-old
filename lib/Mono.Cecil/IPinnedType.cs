@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface IReference : ITypeReference {
+    public interface IPinnedType : ITypeReference {
 
         ITypeReference Type { get; }
     }

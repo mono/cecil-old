@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
         private MethodDefinition m_method;
         private int m_maxStack;
         private int m_codeSize;
+        private bool m_initLocals;
+        private int m_localVarToken;
 
         private InstructionCollection m_instructions;
         private ExceptionHandlerCollection m_exceptions;
@@ -41,38 +43,42 @@ namespace Mono.Cecil.Implem {
             set { m_codeSize = value; }
         }
 
+        public bool InitLocals {
+            get { return m_initLocals; }
+            set { m_initLocals = value; }
+        }
+
+        public int LocalVarToken {
+            get { return m_localVarToken; }
+            set { m_localVarToken = value; }
+        }
+
         public IInstructionCollection Instructions {
-            get {
-                if (m_instructions == null)
-                    m_instructions = new InstructionCollection (this);
-                return m_instructions;
-            }
+            get { return m_instructions; }
         }
 
         public IExceptionHandlerCollection ExceptionHandlers {
-            get {
-                if (m_exceptions == null)
-                    m_exceptions = new ExceptionHandlerCollection (this);
-                return m_exceptions;
-            }
+            get { return m_exceptions; }
         }
 
         public IVariableDefinitionCollection Variables {
-            get {
-                if (m_variables == null)
-                    m_variables = new VariableDefinitionCollection (this);
-                return m_variables;
-            }
+            get { return m_variables; }
         }
 
         public MethodBody (MethodDefinition meth)
         {
             m_method = meth;
+            m_instructions = new InstructionCollection (this);
+            m_exceptions = new ExceptionHandlerCollection (this);
+            m_variables = new VariableDefinitionCollection (this);
         }
 
         public void Accept (ICodeVisitor visitor)
         {
             visitor.Visit (this);
+            m_variables.Accept (visitor);
+            m_instructions.Accept (visitor);
+            m_exceptions.Accept (visitor);
         }
     }
 }
