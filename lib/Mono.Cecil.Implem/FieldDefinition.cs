@@ -60,7 +60,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this);
+                    m_customAttrs = new CustomAttributeCollection (this, (this.DeclaringType as TypeDefinition).Module.Loader);
                 return m_customAttrs;
             }
         }

@@ -50,7 +50,7 @@ namespace Mono.Cecil.Implem {
         public ISecurityDeclarationCollection SecurityDeclarations {
             get {
                 if (m_secDecls == null)
-                    m_secDecls = new SecurityDeclarationCollection (this);
+                    m_secDecls = new SecurityDeclarationCollection (this, (this.DeclaringType as TypeDefinition).Module.Loader);
                 return m_secDecls;
             }
         }
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this);
+                    m_customAttrs = new CustomAttributeCollection (this, (this.DeclaringType as TypeDefinition).Module.Loader);
                 return m_customAttrs;
             }
         }
@@ -92,7 +92,7 @@ namespace Mono.Cecil.Implem {
         public IOverrideCollection Overrides {
             get {
                 if (m_overrides == null)
-                    m_overrides = new OverrideCollection (this);
+                    m_overrides = new OverrideCollection (this, (this.DeclaringType as TypeDefinition).Module.Loader);
                 return m_overrides;
             }
         }

@@ -301,10 +301,13 @@ namespace Mono.Cecil.Implem {
                     for (int k = 0, l = (int) methRow.ParamList; k < msig.ParamCount; k++) {
                         ParamRow prow = paramTable [l - 1]; l++;
                         Param psig = msig.Parameters [k];
-                        mdef.Parameters.Add (BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, psig));
+                        ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, psig);
+                        pdef.Method = mdef;
+                        mdef.Parameters.Add (pdef);
                     }
 
                     mdef.ReturnType = GetMethodReturnType (msig);
+                    (mdef.ReturnType as MethodReturnType).Method = mdef;
                     m_meths [j - 1] = mdef;
                     ((MethodDefinitionCollection)dec.Methods).Loaded = true;
                     dec.Methods.Add (mdef);
@@ -337,9 +340,12 @@ namespace Mono.Cecil.Implem {
                         MethodReference methref = new MethodReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
                                                       ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
                         methref.ReturnType = GetMethodReturnType (ms);
+                        (methref.ReturnType as MethodReturnType).Method = methref;
                         for (int j = 0; j < ms.ParamCount; j++) {
                             Param p = ms.Parameters [j];
-                            methref.Parameters.Add (BuildParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), p));
+                            ParameterDefinition pdef = BuildParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), p);
+                            pdef.Method = methref;
+                            methref.Parameters.Add (pdef);
                         }
                         member = methref;
                     }

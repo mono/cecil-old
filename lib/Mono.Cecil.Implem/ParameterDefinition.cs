@@ -22,6 +22,7 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_paramType;
         private object m_def;
 
+        private MethodReference m_method;
         private CustomAttributeCollection m_customAttrs;
 
         public string Name {
@@ -49,9 +50,16 @@ namespace Mono.Cecil.Implem {
             set { m_def = value; }
         }
 
+        public MethodReference Method {
+            get { return m_method; }
+            set { m_method = value; }
+        }
+
         public ICustomAttributeCollection CustomAttributes {
             get {
-                if (m_customAttrs == null)
+                if (m_customAttrs == null && m_method != null)
+                    m_customAttrs = new CustomAttributeCollection (this, (m_method.DeclaringType as TypeDefinition).Module.Loader);
+                else if (m_customAttrs == null)
                     m_customAttrs = new CustomAttributeCollection (this);
                 return m_customAttrs;
             }

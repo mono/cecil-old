@@ -26,12 +26,14 @@ namespace Mono.Cecil.Implem {
 
         private IDictionary m_items;
         private <%=$cur_coll.container_impl%> m_container;
+        private LazyLoader m_loader;
 
         private bool m_loaded;
 
         public <%=$cur_coll.type%> this [string name] {
             get {
-                <%=$cur_coll.pathtoloader%>.Visit (this);
+                if (m_loader != null)
+                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
                 return m_items [name] as <%=$cur_coll.type%>;
             }
             set { m_items [name] = value; }
@@ -43,7 +45,8 @@ namespace Mono.Cecil.Implem {
 
         public int Count {
             get {
-                <%=$cur_coll.pathtoloader%>.Visit (this);
+                if (m_loader != null)
+                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
                 return m_items.Count;
             }
         }
@@ -61,9 +64,10 @@ namespace Mono.Cecil.Implem {
             set { m_loaded = value; }
         }
 
-        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader)
         {
             m_container = container;
+            m_loader = loader;
             m_items = new ListDictionary ();
         }
 
@@ -84,13 +88,15 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            <%=$cur_coll.pathtoloader%>.Visit (this);
+            if (m_loader != null)
+                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            <%=$cur_coll.pathtoloader%>.Visit (this);
+            if (m_loader != null)
+                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
             return m_items.Values.GetEnumerator ();
         }
 

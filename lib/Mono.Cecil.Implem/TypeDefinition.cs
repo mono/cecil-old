@@ -72,7 +72,7 @@ namespace Mono.Cecil.Implem {
         public IInterfaceCollection Interfaces {
             get {
                 if (m_interfaces == null)
-                    m_interfaces = new InterfaceCollection (this);
+                    m_interfaces = new InterfaceCollection (this, m_module.Loader);
                 return m_interfaces;
             }
         }
@@ -80,7 +80,7 @@ namespace Mono.Cecil.Implem {
         public IMethodDefinitionCollection Methods {
             get {
                 if (m_methods == null)
-                    m_methods = new MethodDefinitionCollection (this);
+                    m_methods = new MethodDefinitionCollection (this, m_module.Loader);
                 return m_methods;
             }
         }
@@ -88,7 +88,7 @@ namespace Mono.Cecil.Implem {
         public IFieldDefinitionCollection Fields {
             get {
                 if (m_fields == null)
-                    m_fields = new FieldDefinitionCollection (this);
+                    m_fields = new FieldDefinitionCollection (this, m_module.Loader);
                 return m_fields;
             }
         }
@@ -96,7 +96,7 @@ namespace Mono.Cecil.Implem {
         public IEventDefinitionCollection Events {
             get {
                 if (m_events == null)
-                    m_events = new EventDefinitionCollection (this);
+                    m_events = new EventDefinitionCollection (this, m_module.Loader);
                 return m_events;
             }
         }
@@ -104,7 +104,7 @@ namespace Mono.Cecil.Implem {
         public IPropertyDefinitionCollection Properties {
             get {
                 if (m_properties == null)
-                    m_properties = new PropertyDefinitionCollection (this);
+                    m_properties = new PropertyDefinitionCollection (this, m_module.Loader);
                 return m_properties;
             }
         }
@@ -112,7 +112,7 @@ namespace Mono.Cecil.Implem {
         public ISecurityDeclarationCollection SecurityDeclarations {
             get {
                 if (m_secDecls == null)
-                    m_secDecls = new SecurityDeclarationCollection (this);
+                    m_secDecls = new SecurityDeclarationCollection (this, m_module.Loader);
                 return m_secDecls;
             }
         }
@@ -120,7 +120,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this);
+                    m_customAttrs = new CustomAttributeCollection (this, m_module.Loader);
                 return m_customAttrs;
             }
         }

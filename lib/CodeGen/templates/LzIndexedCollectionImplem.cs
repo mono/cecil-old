@@ -25,12 +25,14 @@ namespace Mono.Cecil.Implem {
 
         private IList m_items;
         private <%=$cur_coll.container_impl%> m_container;
+        private LazyLoader m_loader;
 
         private bool m_loaded;
 
         public <%=$cur_coll.type%> this [int index] {
             get {
-                <%=$cur_coll.pathtoloader%>.Visit (this);
+                if (m_loader != null)
+                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
                 return m_items [index] as <%=$cur_coll.type%>;
             }
             set { m_items [index] = value; }
@@ -42,7 +44,8 @@ namespace Mono.Cecil.Implem {
 
         public int Count {
             get {
-                <%=$cur_coll.pathtoloader%>.Visit (this);
+                if (m_loader != null)
+                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
                 return m_items.Count;
             }
         }
@@ -64,6 +67,11 @@ namespace Mono.Cecil.Implem {
         {
             m_container = container;
             m_items = new ArrayList ();
+        }        
+
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader) : this (container)
+        {
+            m_loader = loader;
         }
         
         public void Add (<%=$cur_coll.type%> value)
@@ -83,7 +91,8 @@ namespace Mono.Cecil.Implem {
         
         public int IndexOf (<%=$cur_coll.type%> value)
         {
-            <%=$cur_coll.pathtoloader%>.Visit (this);
+            if (m_loader != null)
+                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
             return m_items.IndexOf (value);
         }
 
@@ -104,13 +113,15 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            <%=$cur_coll.pathtoloader%>.Visit (this);
+            if (m_loader != null)
+                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
             m_items.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            <%=$cur_coll.pathtoloader%>.Visit (this);
+            if (m_loader != null)
+                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
             return m_items.GetEnumerator ();
         }
 

@@ -73,7 +73,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this);
+                    m_customAttrs = new CustomAttributeCollection (this, m_loader);
                 return m_customAttrs;
             }
         }
@@ -110,7 +110,7 @@ namespace Mono.Cecil.Implem {
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);
             m_res = new ResourceCollection (this);
-            m_types = new TypeDefinitionCollection (this);
+            m_types = new TypeDefinitionCollection (this, m_loader);
             m_refs = new TypeReferenceCollection (this);
         }
 

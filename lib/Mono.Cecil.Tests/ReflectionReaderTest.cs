@@ -32,7 +32,7 @@ namespace Mono.Cecil.Tests {
         public void SetUp ()
         {
             if (m_asmdef == null)
-                m_asmdef = AssemblyFactory.GetAssembly (@"c:\root\System.Web.dll", LoadingType.Aggressive);
+                m_asmdef = AssemblyFactory.GetAssembly (@"c:\root\System.Web.dll", LoadingType.Lazy);
         }
 
         [Test]
