@@ -73,32 +73,47 @@ $compiler = ERuby::Compiler.new()
 
 def cecil_compile(file, template)
 
-    ext = ".tmp"
-    
-    File.open(file + ext, File::CREAT|File::WRONLY) { |temp_file|
-        $> = temp_file
-        File.open(template) { |tpl|
-            eval($compiler.compile_file(tpl))
+    if (!File.exists?(file))
+
+        File.open(file, File::CREAT|File::WRONLY) { |cur_file|
+            $> = cur_file
+            File.open(template) { |tpl|
+                eval($compiler.compile_file(tpl))
+            }
+            $> = STDOUT
         }
-        $> = STDOUT
-    }
-    
-    save = Array.new
-    
-    [file, file + ext].each { |fileloc|    
-        File.open(fileloc, File::RDONLY) { |f|
-            buf = f.readlines.join
-            buf = buf[buf.index("*/"), buf.length]
-            save.push(buf)
-        }
-    }
-    
-    if (save[0] != save[1]) then
-        File.delete(file) if File.exists?(file)
-        File.rename(file + ext, file)
-        puts("#Modified: #{file}")
+
+        puts("#Created: #{file}")
+
     else
-        File.delete(file + ext)
+
+        ext = ".tmp"
+
+        File.open(file + ext, File::CREAT|File::WRONLY) { |temp_file|
+            $> = temp_file
+            File.open(template) { |tpl|
+                eval($compiler.compile_file(tpl))
+            }
+            $> = STDOUT
+        }
+
+        save = Array.new
+
+        [file, file + ext].each { |fileloc|
+            File.open(fileloc, File::RDONLY) { |f|
+                buf = f.readlines.join
+                buf = buf[buf.index("*/"), buf.length]
+                save.push(buf)
+            }
+        }
+
+        if (save[0] != save[1]) then
+            File.delete(file) if File.exists?(file)
+            File.rename(file + ext, file)
+            puts("#Modified: #{file}")
+        else
+            File.delete(file + ext)
+        end
     end
 end
 

@@ -65,6 +65,7 @@
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
         <Compile Include="Mono.Cecil.Implem\ResourceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\StructureReader.cs"/>
+        <Compile Include="Mono.Cecil.Implem\TypeCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyOS.cs"/>
@@ -155,6 +156,8 @@
         <Compile Include="Mono.Cecil\IReflectionVisitor.cs"/>
         <Compile Include="Mono.Cecil\IResource.cs"/>
         <Compile Include="Mono.Cecil\IResourceCollection.cs"/>
+        <Compile Include="Mono.Cecil\IType.cs"/>
+        <Compile Include="Mono.Cecil\ITypeCollection.cs"/>
         <Compile Include="Mono.Cecil\ITypeDefinition.cs"/>
         <Compile Include="Mono.Cecil\ITypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs"/>
@@ -166,6 +169,7 @@
         <Compile Include="Mono.Cecil\PropertyAttributes.cs"/>
         <Compile Include="Mono.Cecil\TypeAttributes.cs"/>
     </ItemGroup>
+    <ItemGroup/>
     <ItemGroup/>
     <ItemGroup/>
     <ItemGroup/>

@@ -12,10 +12,10 @@
 
 namespace Mono.Cecil {
 
-    public interface ITypeDefinition : IType {
+    public interface IType : IReflectionVisitable {
 
-        IType BaseType { get; set; }
-        ITypeCollection Interfaces { get; }
-        ITypeDefinitionCollection NestedTypes { get; }
+        string Name { get; set; }
+        string Namespace { get; set; }
+        TypeAttributes Attributes { get; set; }
     }
 }
