@@ -226,6 +226,11 @@ namespace Mono.Cecil.Implem {
                 tdc [type.FullName] = type;
             }
 
+            for (int i = 0; i < m_typeRefs.Length; i++) {
+                TypeReference type = m_typeRefs [i];
+                (m_module.TypeReferences as TypeReferenceCollection) [type.FullName] = type;
+            }
+
             ReadTypeSpecs ();
 
             // set base types

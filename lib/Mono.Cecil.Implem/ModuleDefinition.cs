@@ -74,7 +74,7 @@ namespace Mono.Cecil.Implem {
         public IExternTypeCollection ExternTypes {
             get {
                 if (m_externs == null)
-                    m_externs = new ExternTypeCollection (this);
+                    m_externs = new ExternTypeCollection (this, m_loader);
                 return m_externs;
             }
         }
