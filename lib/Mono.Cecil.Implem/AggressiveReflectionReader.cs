@@ -106,9 +106,9 @@ namespace Mono.Cecil.Implem {
                 if (i < pmapTable.Rows.Count - 1)
                     end = (int) pmapTable [i + 1].PropertyList;
                 else
-                    end = propsTable.Rows.Count;
+                    end = propsTable.Rows.Count + 1;
 
-                for (int j = start; j <= end; j++) {
+                for (int j = start; j < end; j++) {
                     PropertyRow prow = propsTable [j - 1];
                     PropertySig psig = m_sigReader.GetPropSig (prow.Type);
                     PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
