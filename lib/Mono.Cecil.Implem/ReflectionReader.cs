@@ -61,13 +61,13 @@ namespace Mono.Cecil.Implem {
             if (token.RID == 0)
                 return null;
 
-            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             switch (token.TokenType) {
             case TokenType.TypeDef :
                 return GetTypeDefAt ((int) token.RID);
             case TokenType.TypeRef :
                 return GetTypeRefAt ((int) token.RID);
             case TokenType.TypeSpec :
+                TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
                 TypeSpecRow tsRow = tsTable [(int) token.RID];
                 TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
                 return this.GetTypeRefFromSig (ts.Type);
