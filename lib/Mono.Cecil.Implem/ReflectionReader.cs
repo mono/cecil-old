@@ -201,6 +201,16 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IOverrideCollection meth)
         {
+            MethodImplTable implTable = m_root.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
+
+            int index = Array.IndexOf (m_meths, meth.Container) + 1;
+            for (int i = 0; i < implTable.Rows.Count; i++) {
+                MethodImplRow implRow = implTable [i];
+                if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
+                    if (implRow.MethodDeclaration.TokenType == TokenType.Method)
+                        meth.Add (m_meths [implRow.MethodDeclaration.RID - 1]);
+                }
+            }
         }
 
         public void Visit (IParameterDefinitionCollection parameters)

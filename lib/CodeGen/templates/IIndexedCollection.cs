@@ -21,6 +21,8 @@ namespace <%=$cur_coll.target%> {
 
         <%=$cur_coll.type%> this [int index] { get; set; }
         
+        <%=$cur_coll.container%> Container { get; }
+        
         void Add (<%=$cur_coll.type%> value);
         void Clear ();
         bool Contains (<%=$cur_coll.type%> value);
