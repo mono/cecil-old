@@ -159,24 +159,10 @@ namespace Mono.Cecil.Implem {
             int rid = GetRidForTypeDef (implementor);
 
             InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
-            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intRow = intfsTable [i];
                 if (intRow.Class == rid) {
-                    ITypeReference interf = null;
-                    switch (intRow.Interface.TokenType) {
-                    case TokenType.TypeDef :
-                        interf = GetTypeDefAt ((int) intRow.Interface.RID);
-                        break;
-                    case TokenType.TypeRef :
-                        interf = GetTypeRefAt ((int) intRow.Interface.RID);
-                        break;
-                    case TokenType.TypeSpec :
-                        TypeSpecRow tsRow = tsTable [(int) intRow.Interface.RID];
-                        TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
-                        interf = this.GetTypeRefFromSig (ts.Type);
-                        break;
-                    }
+                    ITypeReference interf = GetTypeDefOrRef (intRow.Interface);
                     interfaces [interf.FullName] = interf;
                 }
             }
