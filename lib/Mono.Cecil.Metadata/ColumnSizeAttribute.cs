@@ -10,11 +10,12 @@
  *
  *****************************************************************************/
 
+
 namespace Mono.Cecil.Metadata {
 
     using System;
 
-    [AttributeUsage (AttributesTarget.Class)]
+    [AttributeUsage (AttributeTargets.Struct)]
     internal class ColumnSizeAttribute : Attribute {
 
         private int m_size;
