@@ -13,8 +13,5 @@
 namespace Mono.Cecil.Metadata {
 
     public interface IMetadataRow : IMetadataRowVisitable {
-
-        int Size { get; }
-        int Columns { get; }
     }
 }
