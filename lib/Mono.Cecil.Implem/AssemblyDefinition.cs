@@ -19,10 +19,10 @@ namespace Mono.Cecil.Implem {
 
     internal class AssemblyDefinition : IAssemblyDefinition {
 
-        private AssemblyName m_asmName;
+        private AssemblyNameDefinition m_asmName;
         private ModuleDefinitionCollection m_modules;
 
-        public IAssemblyName Name {
+        public IAssemblyNameDefinition Name {
             get { return m_asmName; }
         }
 
@@ -30,7 +30,7 @@ namespace Mono.Cecil.Implem {
             get { return m_modules; }
         }
 
-        public AssemblyDefinition (AssemblyName name)
+        public AssemblyDefinition (AssemblyNameDefinition name)
         {
             if (name == null)
                 throw new ArgumentException ("name");

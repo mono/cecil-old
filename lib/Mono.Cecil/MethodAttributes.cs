@@ -15,7 +15,7 @@ namespace Mono.Cecil {
     using System;
 
     [Flags]
-    internal enum MethodAttributes : ushort {
+    public enum MethodAttributes : ushort {
         MemberAccessMask     = 0x0007,
         Compilercontrolled   = 0x0000,    // Member not referenceable
         Private              = 0x0001,    // Accessible only by the parent type
@@ -24,23 +24,23 @@ namespace Mono.Cecil {
         Family               = 0x0004,    // Accessible only by type and sub-types
         FamORAssem           = 0x0005,    // Accessibly by sub-types anywhere, plus anyone in assembly
         Public               = 0x0006,    // Accessibly by anyone who has visibility to this scope
-    
+
         Static               = 0x0010,    // Defined on type, else per instance
         Final                = 0x0020,    // Method may not be overridden
         Virtual              = 0x0040,    // Method is virtual
         HideBySig            = 0x0080,    // Method hides by name+sig, else just by name
-    
+
         VtableLayoutMask     = 0x0100,    // Use this mask to retrieve vtable attributes
         ReuseSlot            = 0x0000,    // Method reuses existing slot in vtable
         NewSlot              = 0x0100,    // Method always gets a new slot in the vtable
-    
+
         Abstract             = 0x0400,    // Method does not provide an implementation
         SpecialName          = 0x0800,    // Method is special
-    
+
         // Interop Attributes
         PInvokeImpl          = 0x2000,    // Implementation is forwarded through PInvoke
         UnmanagedExport      = 0x0008,    // Reserved: shall be zero for conforming implementations
-    
+
         // Additional flags
         RTSpecialName        = 0x1000,    // CLI provides 'special' behavior, depending upon the name of the method
         HasSecurity          = 0x4000,    // Method has security associate with it

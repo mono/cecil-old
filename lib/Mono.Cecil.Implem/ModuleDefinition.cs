@@ -54,6 +54,10 @@ namespace Mono.Cecil.Implem {
             get { return m_res; }
         }
 
+        public ITypeDefinitionCollection Types {
+            get { throw new NotImplementedException (); } //TODO
+        }
+
         public ModuleDefinition (string name) : this (name, true)
         {}
 

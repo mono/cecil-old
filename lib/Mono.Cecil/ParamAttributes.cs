@@ -15,7 +15,7 @@ namespace Mono.Cecil {
     using System;
 
     [Flags]
-    internal enum ParamAttributes : ushort {
+    public enum ParamAttributes : ushort {
         In                 = 0x0001,    // Param is [In]
         Out                = 0x0002,    // Param is [Out]
         Optional           = 0x0004,    // Param is optional

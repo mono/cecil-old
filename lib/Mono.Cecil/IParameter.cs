@@ -12,11 +12,14 @@
 
 namespace Mono.Cecil {
 
-    public interface IAssemblyDefinition : IReflectionStructureVisitable {
+    public interface IParameterReference : IReflectionVisitable {
 
-        IAssemblyNameDefinition Name { get; }
+        string Name { get; set; }
+        ParamAttributes Attributes { get; set; }
+        IType ParameterType { get; set; }
+        object DefaultValue { get; set; }
+    }
 
-        IModuleDefinitionCollection Modules { get; }
+    public interface IParameterDefinition : IParameterReference {
     }
 }
-

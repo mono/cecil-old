@@ -123,14 +123,16 @@ module Cecil
         attr_reader(:container)
         attr_reader(:visitable)
         attr_reader(:visitor)
+        attr_reader(:visitThis)
 
-        def initialize(type, container, visit)
+        def initialize(type, container, visit, name)
             @type = type
-            @intf = type + "Collection"
+            @intf = (name.nil? ? type : name) + "Collection"
             @name = @intf[1..@intf.length]
             @container = container
             @visitable = visit + "Visitable"
             @visitor = visit + "Visitor"
+            @visitThis = "Visit"
         end
     end
 

@@ -43,7 +43,7 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public void Visit (IAssemblyName name)
+        public void Visit (IAssemblyNameDefinition name)
         {
             AssemblyTable atable = m_img.MetadataRoot.Streams.TablesHeap [typeof(AssemblyTable)] as AssemblyTable;
             AssemblyRow arow = atable [0];

@@ -66,7 +66,8 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
 
 doc.root.each_element("/cecil/collections//collection") { |node|
     $colls.push(Cecil::Collection.new(node.attribute("type").value, node.attribute("container").value,
-        node.attribute("visit").value))
+        node.attribute("visit").value,
+        (node.attribute("name").nil? ? nil : node.attribute("name").value)))
 }
 
 $compiler = ERuby::Compiler.new()

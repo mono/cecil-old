@@ -47,7 +47,8 @@ namespace Mono.Cecil.Implem {
             get { return this; }
         }
 
-        public <%=$cur_coll.name%> (<%=$cur_coll.container%> container) {
+        public <%=$cur_coll.name%> (<%=$cur_coll.container%> container)
+        {
             m_container = container;
             m_items = new ListDictionary();
         }
@@ -69,7 +70,7 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            m_items.CopyTo (ary, index);
+            m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
@@ -79,11 +80,11 @@ namespace Mono.Cecil.Implem {
 
         public void Accept (<%=$cur_coll.visitor%> visitor)
         {
-            visitor.Visit (this);
+            visitor.<%=$cur_coll.visitThis%> (this);
             <%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
             m_items.Values.CopyTo (items, 0);
             for (int i = 0; i < items.Length; i++)
-                items[i].Accept(visitor);
+                items [i].Accept (visitor);
         }
     }
 }

@@ -21,17 +21,17 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal class AssemblyNameReferenceCollection : IAssemblyNameReferenceCollection {
+    internal class OverrideCollection : IOverrideCollection {
 
         private IDictionary m_items;
-        private IModuleDefinition m_container;
+        private IMethodDefinition m_container;
 
-        public IAssemblyNameReference this [string name] {
-            get { return m_items [name] as IAssemblyNameReference; }
+        public IMethod this [string name] {
+            get { return m_items [name] as IMethod; }
             set { m_items [name] = value; }
         }
 
-        public IModuleDefinition Container {
+        public IMethodDefinition Container {
             get { return m_container; }
         }
 
@@ -47,7 +47,7 @@ namespace Mono.Cecil.Implem {
             get { return this; }
         }
 
-        public AssemblyNameReferenceCollection (IModuleDefinition container)
+        public OverrideCollection (IMethodDefinition container)
         {
             m_container = container;
             m_items = new ListDictionary();
@@ -58,12 +58,12 @@ namespace Mono.Cecil.Implem {
             m_items.Clear ();
         }
 
-        public bool Contains (IAssemblyNameReference value)
+        public bool Contains (IMethod value)
         {
             return m_items.Contains (value);
         }
 
-        public void Remove (IAssemblyNameReference value)
+        public void Remove (IMethod value)
         {
             m_items.Remove (value);
         }
@@ -78,10 +78,10 @@ namespace Mono.Cecil.Implem {
             return m_items.Values.GetEnumerator ();
         }
 
-        public void Accept (IReflectionStructureVisitor visitor)
+        public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
-            IAssemblyNameReference [] items = new IAssemblyNameReference [m_items.Count];
+            IMethod [] items = new IMethod [m_items.Count];
             m_items.Values.CopyTo (items, 0);
             for (int i = 0; i < items.Length; i++)
                 items [i].Accept (visitor);

@@ -28,5 +28,7 @@ namespace Mono.Cecil {
         IResourceCollection Resources { get; }
         void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
         void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
+
+        ITypeDefinitionCollection Types { get; }
     }
 }

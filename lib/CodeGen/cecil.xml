@@ -631,7 +631,9 @@
         <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" />
         <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" />
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" />
-        <collection type="IType" container="ITypeDefinition" visit="IReflection" />
+        <collection type="IType" container="ITypeDefinition" visit="IReflection" name="IInterface" />
+        <collection type="IParameterDefinition" container="IMethodDefinition" visit="IReflection" />
+        <collection type="IMethod" container="IMethodDefinition" visit="IReflection" name="IOverride" />
         <!--
         <collection type="IMethodDefinition" />
         <collection type="IMethodReference" />

@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Metadata;
 
-    internal class AssemblyName : IAssemblyName {
+    internal class AssemblyNameReference : IAssemblyNameReference {
 
         private string m_name;
         private string m_culture;
@@ -108,10 +108,10 @@ namespace Mono.Cecil.Implem {
             set { m_hashAlgo = value; }
         }
 
-        public AssemblyName () : this(string.Empty, string.Empty, null)
+        public AssemblyNameReference () : this(string.Empty, string.Empty, null)
         {}
 
-        public AssemblyName (string name, string culture, Version version)
+        public AssemblyNameReference (string name, string culture, Version version)
         {
             if (name == null)
                 throw new ArgumentException ("name");
@@ -129,12 +129,12 @@ namespace Mono.Cecil.Implem {
         }
     }
 
-    internal class AssemblyNameReference : AssemblyName, IAssemblyNameReference {
+    internal class AssemblyNameDefinition : AssemblyNameReference, IAssemblyNameDefinition {
 
-        public AssemblyNameReference () : base()
+        public AssemblyNameDefinition () : base()
         {}
 
-        public AssemblyNameReference (string name, string culture, Version version) : base(name, culture, version)
+        public AssemblyNameDefinition (string name, string culture, Version version) : base(name, culture, version)
         {}
 
         public override void Accept (IReflectionStructureVisitor visitor)

@@ -14,16 +14,16 @@ namespace Mono.Cecil {
 
     using System;
 
-    public interface IAssemblyName : IReflectionStructureVisitable {
+    public interface IAssemblyNameReference : IReflectionStructureVisitable {
 
         string Name { get; set; }
         string Culture { get; set; }
         string FullName { get; }
         Version Version { get; set; }
         byte [] PublicKey { get; set; }
-        byte [] PublicKeyToken { get; set; }
+        byte [] PublicKeyToken { get; }
         AssemblyHashAlgorithm HashAlgorithm { get; set; }
     }
 
-    public interface IAssemblyNameReference : IAssemblyName {}
+    public interface IAssemblyNameDefinition : IAssemblyNameReference {}
 }

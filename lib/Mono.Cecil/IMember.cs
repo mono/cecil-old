@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil {
 
-    public interface IAssemblyDefinition : IReflectionStructureVisitable {
+    public interface IMemberReference {
 
-        IAssemblyNameDefinition Name { get; }
-
-        IModuleDefinitionCollection Modules { get; }
+        string Name { get; set; }
+        IType DeclaringType { get; }
     }
-}
 
+    public interface IMemberDefinition : IMemberReference {}
+}
