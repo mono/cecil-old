@@ -229,9 +229,11 @@ namespace Mono.Cecil.Implem {
 
             for (int i = (int) tdefTable [index].MethodList; i < next; i++) {
                 MethodRow methRow = methTable [i - 1];
-                MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
-                                                              methRow.RVA, methRow.Flags, methRow.ImplFlags);
                 MethodSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
+                MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
+                                                              methRow.RVA, methRow.Flags, methRow.ImplFlags,
+                                                              msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
+
 
                 for (int j = 0, k = (int) methRow.ParamList; j < msig.ParamCount; j++) {
                     ParamRow prow = paramTable [k - 1]; k++;

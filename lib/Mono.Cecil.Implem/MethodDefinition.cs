@@ -96,7 +96,8 @@ namespace Mono.Cecil.Implem {
         }
 
         public MethodDefinition (string name, TypeDefinition decType, RVA rva,
-                                 MethodAttributes attrs, MethodImplAttributes implAttrs)
+                                 MethodAttributes attrs, MethodImplAttributes implAttrs,
+                                 bool hasThis, bool explicitThis, MethodCallingConvention callConv)
         {
             this.Name = name;
             m_rva = rva;
@@ -104,6 +105,9 @@ namespace Mono.Cecil.Implem {
             m_implAttrs = implAttrs;
             SetDeclaringType (decType);
             m_parameters = new ParameterDefinitionCollection (this);
+            m_hasThis = hasThis;
+            m_explicitThis = explicitThis;
+            m_callConv = callConv;
         }
 
         public void Accept (IReflectionVisitor visitor)
