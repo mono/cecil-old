@@ -27,6 +27,7 @@ namespace Mono.Cecil.Implem {
         private byte [] m_publicKey;
         private byte [] m_publicKeyToken;
         private AssemblyHashAlgorithm m_hashAlgo;
+        private byte [] m_hash;
 
         public string Name {
             get { return m_name; }
@@ -108,8 +109,14 @@ namespace Mono.Cecil.Implem {
             set { m_hashAlgo = value; }
         }
 
+        public virtual byte [] Hash {
+            get { return m_hash; }
+            set { m_hash = value; }
+        }
+
         public AssemblyNameReference () : this(string.Empty, string.Empty, null)
-        {}
+        {
+        }
 
         public AssemblyNameReference (string name, string culture, Version version)
         {
@@ -131,11 +138,17 @@ namespace Mono.Cecil.Implem {
 
     internal class AssemblyNameDefinition : AssemblyNameReference, IAssemblyNameDefinition {
 
+        public override byte [] Hash {
+            get { return new byte [0]; }
+        }
+
         public AssemblyNameDefinition () : base()
-        {}
+        {
+        }
 
         public AssemblyNameDefinition (string name, string culture, Version version) : base(name, culture, version)
-        {}
+        {
+        }
 
         public override void Accept (IReflectionStructureVisitor visitor)
         {

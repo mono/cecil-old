@@ -74,6 +74,7 @@ namespace Mono.Cecil.Implem {
                         new Version (arefrow.MajorVersion, arefrow.MinorVersion,
                                      arefrow.BuildNumber, arefrow.RevisionNumber));
                     aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arefrow.PublicKeyOrToken);
+                    aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arefrow.HashValue);
                     (names as AssemblyNameReferenceCollection).Add (aname);
                 }
             }
