@@ -101,7 +101,11 @@ def cecil_compile(file, template)
 
         [file, file + ext].each { |fileloc|
             File.open(fileloc, File::RDONLY) { |f|
-                buf = f.readlines.join
+                buf = f.readlines
+                buf.each { |line|
+                    line.chop!()
+                }
+                buf = buf.join
                 buf = buf[buf.index("*/"), buf.length]
                 save.push(buf)
             }
