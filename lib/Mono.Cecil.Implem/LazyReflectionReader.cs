@@ -170,7 +170,18 @@ namespace Mono.Cecil.Implem {
 
         public override void Visit (IPInvokeInfo pinvk)
         {
-            //TODO: that
+            MethodDefinition meth = pinvk.Method as MethodDefinition;
+            int index = GetRidForMethodDef (meth);
+
+            ImplMapTable imTable = m_root.Streams.TablesHeap [typeof (ImplMapTable)] as ImplMapTable;
+            for (int i = 0; i < imTable.Rows.Count; i++) {
+                ImplMapRow imRow = imTable [i];
+                if (imRow.MemberForwarded.RID == index) {
+                    meth.PInvokeInfo = new PInvokeInfo (meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
+                                                        Module.ModuleReferences [(int) imRow.ImportScope - 1]);
+                    break;
+                }
+            }
         }
 
         public override void Visit (IPropertyDefinitionCollection properties)
