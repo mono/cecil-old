@@ -16,11 +16,21 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class MethodReturnType : IMethodReturnType {
 
+        private CustomAttributeCollection m_customAttrs;
+
         private ITypeReference m_returnType;
 
         public ITypeReference ReturnType {
             get { return m_returnType; }
             set { m_returnType = value; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public MethodReturnType (ITypeReference retType)

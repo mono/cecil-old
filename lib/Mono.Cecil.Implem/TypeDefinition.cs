@@ -33,6 +33,7 @@ namespace Mono.Cecil.Implem {
         private EventDefinitionCollection m_events;
         private PropertyDefinitionCollection m_properties;
         private SecurityDeclarationCollection m_secDecls;
+        private CustomAttributeCollection m_customAttrs;
 
         public TypeAttributes Attributes {
             get { return m_attributes; }
@@ -113,6 +114,14 @@ namespace Mono.Cecil.Implem {
                 if (m_secDecls == null)
                     m_secDecls = new SecurityDeclarationCollection (this);
                 return m_secDecls;
+            }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
             }
         }
 

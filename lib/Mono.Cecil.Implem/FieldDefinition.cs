@@ -19,6 +19,8 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_fieldType;
         private FieldAttributes m_attributes;
 
+        private CustomAttributeCollection m_customAttrs;
+
         private bool m_hasInfo;
         private uint m_offset;
 
@@ -53,6 +55,14 @@ namespace Mono.Cecil.Implem {
         public object Value {
             get { return m_value; }
             set { m_value = value; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs) : base (name, decType)

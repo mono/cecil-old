@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface IMethodReturnType {
+    public interface IMethodReturnType : ICustomAttributeProvider {
 
         ITypeReference ReturnType { get; set; }
     }

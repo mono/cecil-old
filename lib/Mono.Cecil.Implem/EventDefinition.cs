@@ -21,6 +21,8 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_eventType;
         private EventAttributes m_attributes;
 
+        private CustomAttributeCollection m_customAttrs;
+
         private IMethodDefinition m_addMeth;
         private IMethodDefinition m_invMeth;
         private IMethodDefinition m_remMeth;
@@ -64,6 +66,14 @@ namespace Mono.Cecil.Implem {
         public bool Readed {
             get { return m_readed; }
             set { m_readed = value; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs) : base (name, decType)

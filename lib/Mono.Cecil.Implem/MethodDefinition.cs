@@ -25,6 +25,7 @@ namespace Mono.Cecil.Implem {
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
         private SecurityDeclarationCollection m_secDecls;
+        private CustomAttributeCollection m_customAttrs;
 
         private MethodBody m_body;
         private RVA m_rva;
@@ -51,6 +52,14 @@ namespace Mono.Cecil.Implem {
                 if (m_secDecls == null)
                     m_secDecls = new SecurityDeclarationCollection (this);
                 return m_secDecls;
+            }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
             }
         }
 

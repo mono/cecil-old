@@ -17,7 +17,7 @@ namespace Mono.Cecil {
     public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
     }
 
-    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity {
+    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity, ICustomAttributeProvider {
 
         MethodAttributes Attributes { get; set; }
         MethodImplAttributes ImplAttributes { get; set; }

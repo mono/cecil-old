@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
         private ITypeReference m_paramType;
         private object m_def;
 
+        private CustomAttributeCollection m_customAttrs;
+
         public string Name {
             get { return m_name; }
             set { m_name = value; }
@@ -45,6 +47,14 @@ namespace Mono.Cecil.Implem {
         public object DefaultValue {
             get { return m_def; }
             set { m_def = value; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public ParameterDefinition (string name, int seq, ParamAttributes attrs, ITypeReference paramType)

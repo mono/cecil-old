@@ -29,6 +29,7 @@ namespace Mono.Cecil.Implem {
         private ResourceCollection m_res;
         private TypeDefinitionCollection m_types;
         private TypeReferenceCollection m_refs;
+        private CustomAttributeCollection m_customAttrs;
 
         private AssemblyDefinition m_asm;
         private ImageReader m_reader;
@@ -67,6 +68,14 @@ namespace Mono.Cecil.Implem {
 
         public ITypeReferenceCollection TypeReferences {
             get { return m_refs; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public AssemblyDefinition Assembly {

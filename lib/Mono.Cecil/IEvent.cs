@@ -17,7 +17,7 @@ namespace Mono.Cecil {
         ITypeReference EventType { get; set; }
     }
 
-    public interface IEventDefinition : IMemberDefinition, IEventReference, IReflectionVisitable {
+    public interface IEventDefinition : IMemberDefinition, IEventReference, ICustomAttributeProvider, IReflectionVisitable {
 
         EventAttributes Attributes { get; set; }
 

@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
         private ParameterDefinitionCollection m_parameters;
         private PropertyAttributes m_attributes;
 
+        private CustomAttributeCollection m_customAttrs;
+
         private IMethodDefinition m_getMeth;
         private IMethodDefinition m_setMeth;
 
@@ -52,6 +54,14 @@ namespace Mono.Cecil.Implem {
         public PropertyAttributes Attributes {
             get { return m_attributes; }
             set { m_attributes = value; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public IMethodDefinition GetMethod {

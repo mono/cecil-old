@@ -21,6 +21,6 @@ namespace Mono.Cecil {
         object DefaultValue { get; set; }
     }
 
-    public interface IParameterDefinition : IParameterReference {
+    public interface IParameterDefinition : IParameterReference, ICustomAttributeProvider {
     }
 }

@@ -21,6 +21,7 @@ namespace Mono.Cecil.Implem {
         private AssemblyNameDefinition m_asmName;
         private ModuleDefinitionCollection m_modules;
         private SecurityDeclarationCollection m_secDecl;
+        private CustomAttributeCollection m_customAttrs;
 
         private StructureReader m_sr;
         private LoadingType m_loadingType;
@@ -38,6 +39,14 @@ namespace Mono.Cecil.Implem {
                 if (m_secDecl == null)
                     m_secDecl = new SecurityDeclarationCollection (this);
                 return m_secDecl;
+            }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
             }
         }
 

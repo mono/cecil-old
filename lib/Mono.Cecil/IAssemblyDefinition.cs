@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface IAssemblyDefinition : IHasSecurity, IReflectionStructureVisitable {
+    public interface IAssemblyDefinition : ICustomAttributeProvider, IHasSecurity, IReflectionStructureVisitable {
 
         IAssemblyNameDefinition Name { get; }
 
@@ -20,4 +20,3 @@ namespace Mono.Cecil {
         IModuleDefinition MainModule { get; }
     }
 }
-
