@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity, ICustomAttributeProvider {
+    public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
 
         TypeAttributes Attributes { get; set; }
         ITypeReference BaseType { get; set; }

@@ -22,6 +22,10 @@ namespace Mono.Cecil.Implem {
         private string m_namespace;
         private ITypeReference m_decType;
 
+        private CustomAttributeCollection m_customAttrs;
+
+        protected ModuleDefinition m_module;
+
         public virtual string Name {
             get { return m_name; }
             set { m_name = value; }
@@ -35,6 +39,20 @@ namespace Mono.Cecil.Implem {
         public virtual ITypeReference DeclaringType {
             get { return m_decType; }
             set { m_decType = value; }
+        }
+
+        public ModuleDefinition Module {
+            get { return m_module; }
+        }
+
+        public ICustomAttributeCollection CustomAttributes {
+            get {
+                if (m_customAttrs == null && m_module != null)
+                    m_customAttrs = new CustomAttributeCollection (this, m_module.Loader);
+                else if (m_customAttrs == null && m_module == null)
+                    m_customAttrs = new CustomAttributeCollection (this);
+                return m_customAttrs;
+            }
         }
 
         public virtual string FullName {
@@ -53,6 +71,11 @@ namespace Mono.Cecil.Implem {
         {
             m_name = name;
             m_namespace = ns;
+        }
+
+        public TypeReference (string name, string ns, ModuleDefinition module) : this (name, ns)
+        {
+            m_module = module;
         }
 
         public virtual void Accept (IReflectionVisitor visitor)

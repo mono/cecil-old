@@ -142,6 +142,9 @@ namespace Mono.Cecil.Implem {
             } else if (customAttrs.Container is TypeDefinition) {
                 rid = GetRidForTypeDef (customAttrs.Container as TypeDefinition);
                 target = TokenType.TypeDef;
+            } else if (customAttrs.Container is TypeReference) {
+                rid = Array.IndexOf (m_typeRefs, customAttrs.Container) + 1;
+                target = TokenType.TypeRef;
             } else if (customAttrs.Container is FieldDefinition) {
                 rid = Array.IndexOf (m_fields, customAttrs.Container) + 1;
                 target = TokenType.Field;

@@ -279,6 +279,9 @@ namespace Mono.Cecil.Implem {
                 case TokenType.TypeDef :
                     owner = GetTypeDefAt ((int) caRow.Parent.RID).CustomAttributes;
                     break;
+                case TokenType.TypeRef :
+                    owner = GetTypeRefAt ((int) caRow.Parent.RID).CustomAttributes;
+                    break;
                 case TokenType.Field :
                     owner = GetFieldDefAt ((int) caRow.Parent.RID).CustomAttributes;
                     break;
@@ -298,7 +301,8 @@ namespace Mono.Cecil.Implem {
                     //TODO: support other ?
                     break;
                 }
-                (owner as CustomAttributeCollection).Add (cattr);
+                if (owner != null)
+                    (owner as CustomAttributeCollection).Add (cattr);
             }
         }
 

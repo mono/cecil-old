@@ -188,7 +188,8 @@ namespace Mono.Cecil.Implem {
                     TypeRefRow type = typesRef [i];
                     TypeReference t = new TypeReference (
                         m_root.Streams.StringsHeap [type.Name],
-                        m_root.Streams.StringsHeap [type.Namespace]);
+                        m_root.Streams.StringsHeap [type.Namespace],
+                        m_module);
 
                     m_typeRefs [i] = t;
                     (m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;

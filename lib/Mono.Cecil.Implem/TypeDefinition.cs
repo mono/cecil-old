@@ -25,15 +25,12 @@ namespace Mono.Cecil.Implem {
         private ushort m_packingSize;
         private uint m_classSize;
 
-        private ModuleDefinition m_module;
-
         private InterfaceCollection m_interfaces;
         private MethodDefinitionCollection m_methods;
         private FieldDefinitionCollection m_fields;
         private EventDefinitionCollection m_events;
         private PropertyDefinitionCollection m_properties;
         private SecurityDeclarationCollection m_secDecls;
-        private CustomAttributeCollection m_customAttrs;
 
         public TypeAttributes Attributes {
             get { return m_attributes; }
@@ -117,23 +114,10 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public ICustomAttributeCollection CustomAttributes {
-            get {
-                if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this, m_module.Loader);
-                return m_customAttrs;
-            }
-        }
-
-        public ModuleDefinition Module {
-            get { return m_module; }
-        }
-
-        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) : base (name, ns)
+        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) : base (name, ns, module)
         {
             m_hasInfo = false;
             m_attributes = attrs;
-            m_module = module;
         }
 
         public override void Accept (IReflectionVisitor visitor)

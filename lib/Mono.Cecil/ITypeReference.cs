@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface ITypeReference : IType, IMemberReference {
+    public interface ITypeReference : IType, IMemberReference, ICustomAttributeProvider {
         string Namespace { get; set; }
 
         string FullName { get; }

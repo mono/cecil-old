@@ -98,7 +98,7 @@ namespace Mono.Cecil.Implem {
             FileTable ft = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
             if (ft != null && ft.Rows.Count > 0) {
                 foreach (FileRow fr in ft.Rows) {
-                    if ((fr.Flags & Mono.Cecil.FileAttributes.ContainsNoMetaData) > 0) {
+                    if (fr.Flags == Mono.Cecil.FileAttributes.ContainsNoMetaData) {
                         LinkedResource lr = new LinkedResource (
                             m_img.MetadataRoot.Streams.StringsHeap [fr.Name],
                             ManifestResourceAttributes.Public,
@@ -141,14 +141,14 @@ namespace Mono.Cecil.Implem {
             FileTable ftable = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
             if (ftable != null && ftable.Rows.Count > 0) {
                 foreach (FileRow frow in ftable.Rows) {
-                    if ((frow.Flags & Mono.Cecil.FileAttributes.ContainsMetaData) != 0) {
+                    if (frow.Flags == Mono.Cecil.FileAttributes.ContainsMetaData) {
                         name = m_img.MetadataRoot.Streams.StringsHeap [frow.Name];
-                        FileInfo location = new FileInfo (name);
+                        FileInfo location = new FileInfo (string.Concat (m_img.FileInformation.DirectoryName, Path.DirectorySeparatorChar, name));
                         if (!File.Exists (location.FullName))
                             throw new FileNotFoundException ("Module not found : " + name);
 
                         try {
-                            ImageReader module = new ImageReader (new FileInfo (name).FullName);
+                            ImageReader module = new ImageReader (location.FullName);
                             mt = module.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
                             if (mt == null || mt.Rows.Count != 1)
                                 throw new ReflectionException ("Can not read module : " + name);
