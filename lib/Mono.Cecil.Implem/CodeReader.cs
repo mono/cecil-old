@@ -176,13 +176,16 @@ namespace Mono.Cecil.Implem {
                     ExceptionHandler eh = new ExceptionHandler ();
                     eh.Type = (ExceptionHandlerType) (br.ReadInt16 () & 0x7);
                     eh.TryOffset = br.ReadInt16 ();
-                    eh.TryLength = br.ReadInt16 ();
+                    eh.TryLength = br.ReadByte ();
                     eh.HandlerOffset = br.ReadInt16 ();
-                    eh.HandlerLength = br.ReadInt16 ();
+                    eh.HandlerLength = br.ReadByte ();
                     switch (eh.Type) {
                     case (ExceptionHandlerType.Catch) :
-                        MetadataToken type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef, (uint) br.ReadInt32 ());
-                        eh.CatchType = m_reflectReader.GetTypeDefOrRef (type);
+                        int token = br.ReadInt32 ();
+                        if (IsToken (token, TokenType.TypeDef))
+                            eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
+                        else
+                            eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
                         break;
                     case (ExceptionHandlerType.Filter) :
                         eh.FilterOffset = br.ReadInt32 ();
@@ -207,8 +210,11 @@ namespace Mono.Cecil.Implem {
                     eh.HandlerLength = br.ReadInt32 ();
                     switch (eh.Type) {
                     case (ExceptionHandlerType.Catch) :
-                        MetadataToken type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef, (uint) br.ReadInt32 ());
-                        eh.CatchType = m_reflectReader.GetTypeDefOrRef (type);
+                        int token = br.ReadInt32 ();
+                        if (IsToken (token, TokenType.TypeDef))
+                            eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
+                        else
+                            eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
                         break;
                     case (ExceptionHandlerType.Filter) :
                         eh.FilterOffset = br.ReadInt32 ();
