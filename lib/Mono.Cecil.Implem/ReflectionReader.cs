@@ -153,13 +153,15 @@ namespace Mono.Cecil.Implem {
 
             // nested types
             NestedClassTable nested = m_root.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
-            for (int i = 0; i < nested.Rows.Count; i++) {
-                NestedClassRow row = nested [i];
+            if (m_root.Streams.TablesHeap.HasTable (typeof(NestedClassTable))) {
+                for (int i = 0; i < nested.Rows.Count; i++) {
+                    NestedClassRow row = nested [i];
 
-                TypeDefinition parent = GetTypeDefAt ((int) row.EnclosingClass);
-                TypeDefinition child = GetTypeDefAt ((int) row.NestedClass);
+                    TypeDefinition parent = GetTypeDefAt ((int) row.EnclosingClass);
+                    TypeDefinition child = GetTypeDefAt ((int) row.NestedClass);
 
-                child.DeclaringType = parent;
+                    child.DeclaringType = parent;
+                }
             }
 
             // type ref reading
@@ -192,19 +194,24 @@ namespace Mono.Cecil.Implem {
                 tdc [type.FullName] = type;
             }
 
+            tdc.Loaded = true;
+
             // ok, I've thought a lot before doing that
             // if I do not load the two primitives that are field and methods here
             // i'll run into big troubles as soon a lazy loaded stuff reference it
             // such as methods body or an override collection
             ReadAllFields ();
             ReadAllMethods ();
-
-            tdc.Loaded = true;
         }
 
         private void ReadAllFields ()
         {
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+            if (!m_root.Streams.TablesHeap.HasTable(typeof (FieldTable))) {
+                m_fields = new FieldDefinition [0];
+                return;
+            }
+
             FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
             m_fields = new FieldDefinition [fldTable.Rows.Count];
 
@@ -233,6 +240,12 @@ namespace Mono.Cecil.Implem {
         private void ReadAllMethods ()
         {
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+
+            if (!m_root.Streams.TablesHeap.HasTable(typeof (MethodTable))) {
+                m_meths = new MethodDefinition [0];
+                return;
+            }
+
             MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
             ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
             m_meths = new MethodDefinition [methTable.Rows.Count];

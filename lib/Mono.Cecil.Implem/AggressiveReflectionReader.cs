@@ -42,6 +42,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadClassLayoutInfos ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ClassLayoutTable)))
+                return;
+
             ClassLayoutTable clTable = MetadataRoot.Streams.TablesHeap [typeof (ClassLayoutTable)] as ClassLayoutTable;
             for (int i = 0; i < clTable.Rows.Count; i++) {
                 ClassLayoutRow clRow = clTable [i];
@@ -53,6 +56,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadFieldLayoutInfos ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (FieldLayoutTable)))
+                return;
+
             FieldLayoutTable flTable = MetadataRoot.Streams.TablesHeap [typeof (FieldLayoutTable)] as FieldLayoutTable;
             for (int i = 0; i < flTable.Rows.Count; i++) {
                 FieldLayoutRow flRow = flTable [i];
@@ -63,6 +69,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadPInvokeInfos ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ImplMapTable)))
+                return;
+
             ImplMapTable imTable = MetadataRoot.Streams.TablesHeap [typeof (ImplMapTable)] as ImplMapTable;
             for (int i = 0; i < imTable.Rows.Count; i++) {
                 ImplMapRow imRow = imTable [i];
@@ -76,6 +85,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadProperties ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (PropertyTable)))
+                return;
+
             PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
             PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
             m_properties = new PropertyDefinition [propsTable.Rows.Count];
@@ -102,6 +114,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadEvents ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (EventTable)))
+                return;
+
             EventTable evtTable = m_root.Streams.TablesHeap [typeof (EventTable)] as EventTable;
             EventMapTable emapTable = m_root.Streams.TablesHeap [typeof (EventMapTable)] as EventMapTable;
             m_events = new EventDefinition [evtTable.Rows.Count];
@@ -127,6 +142,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadSemantics ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable)))
+                return;
+
             MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
             for (int i = 0; i < semTable.Rows.Count; i++) {
                 MethodSemanticsRow semRow = semTable [i];
@@ -157,6 +175,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadInterfaces ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (InterfaceImplTable)))
+                return;
+
             InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intfsRow = intfsTable [i];
@@ -168,6 +189,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadOverrides ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodImplTable)))
+                return;
+
             MethodImplTable implTable = m_root.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
             for (int i = 0; i < implTable.Rows.Count; i++) {
                 MethodImplRow implRow = implTable [i];
@@ -186,6 +210,9 @@ namespace Mono.Cecil.Implem {
 
         private void ReadSecurityDeclarations ()
         {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (DeclSecurityTable)))
+                return;
+
             DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
             for (int i = 0; i < dsTable.Rows.Count; i++) {
                 DeclSecurityRow dsRow = dsTable [i];

@@ -30,6 +30,11 @@ namespace Mono.Cecil.Implem {
             if (interfs != null && interfs.Loaded)
                 return;
 
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (InterfaceImplTable))) {
+                interfs.Loaded = true;
+                return;
+            }
+
             TypeDefinition implementor = interfaces.Container as TypeDefinition;
 
             int rid = GetRidForTypeDef (implementor);
@@ -46,16 +51,25 @@ namespace Mono.Cecil.Implem {
             interfs.Loaded = true;
         }
 
-        public override void Visit (IOverrideCollection meth)
+        public override void Visit (IOverrideCollection meths)
         {
+            OverrideCollection methods = meths as OverrideCollection;
+            if (methods.Loaded)
+                return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodImplTable))) {
+                methods.Loaded = true;
+                return;
+            }
+
             MethodImplTable implTable = MetadataRoot.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
 
-            int index = GetRidForMethodDef (meth.Container as MethodDefinition);
+            int index = GetRidForMethodDef (meths.Container as MethodDefinition);
             for (int i = 0; i < implTable.Rows.Count; i++) {
                 MethodImplRow implRow = implTable [i];
                 if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
                     if (implRow.MethodDeclaration.TokenType == TokenType.Method)
-                        meth.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
+                        meths.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
                     //else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
                     //TODO: handle this case
                 }
@@ -67,6 +81,11 @@ namespace Mono.Cecil.Implem {
             SecurityDeclarationCollection secDeclarations = secDecls as SecurityDeclarationCollection;
             if (secDeclarations.Loaded)
                 return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (DeclSecurityTable))) {
+                secDeclarations.Loaded = true;
+                return;
+            }
 
             DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
             int rid = 0;
@@ -105,6 +124,12 @@ namespace Mono.Cecil.Implem {
             EventDefinitionCollection evts = events as EventDefinitionCollection;
             if (evts.Loaded)
                 return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (EventTable))) {
+                m_events = new EventDefinition [0];
+                evts.Loaded = true;
+                return;
+            }
 
             TypeDefinition dec = evts.Container as TypeDefinition;
             int rid = GetRidForTypeDef (dec), next;
@@ -149,6 +174,12 @@ namespace Mono.Cecil.Implem {
             if (props.Loaded)
                 return;
 
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (PropertyTable))) {
+                m_properties = new PropertyDefinition [0];
+                props.Loaded = true;
+                return;
+            }
+
             TypeDefinition dec = props.Container as TypeDefinition;
             int rid = GetRidForTypeDef (dec), next;
             PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
@@ -191,6 +222,11 @@ namespace Mono.Cecil.Implem {
             if (evt.Readed)
                 return;
 
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable))) {
+                evt.Readed = true;
+                return;
+            }
+
             int index = Array.IndexOf (m_events, evt) + 1;
 
             MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
@@ -215,6 +251,11 @@ namespace Mono.Cecil.Implem {
         {
             if (prop.Readed)
                 return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable))) {
+                prop.Readed = true;
+                return;
+            }
 
             int index = Array.IndexOf (m_properties, prop) + 1;
 
