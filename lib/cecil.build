@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project name="Cecil" default="cecil" basedir=".">
+
+    <property name="debug" value="true" />
+    <property name="version" value="0.0.1" />
+    <property name="outdir" value="bin" />
+    <property name="src-name" value="Cecil-${version}-src.zip" />
+    <property name="bin-name" value="Cecil-${version}-bin.zip" />
+
+    <fileset id="all-files">
+        <includes name="./**/*.cs" />
+        <excludes name="CodeGen/**/*.*" />
+    </fileset>
+    
+    <target name="clean">
+        <foreach item="Folder" property="f">
+            <in>
+                <items>
+                    <includes name="**/bin" />
+                    <includes name="**/obj" />
+                    <includes name="${outdir}" />
+                </items>
+            </in>
+            <do>
+                <delete dir="${f}" failonerror="false"/>
+            </do>
+        </foreach>
+    </target>
+    
+    <target name="init">
+        <mkdir dir="${outdir}" />
+    </target>
+    
+    <target name="cecil" depends="init">
+        <csc output="${outdir}/Mono.Cecil.dll" 
+             target="library" debug="${debug}" unsafe="false" optimize="false">
+            <sources refid="all-files"/>
+            <references>
+                <includes name="D:\tools\nunit\bin\nunit.framework.dll" />
+            </references>
+        </csc>
+    </target>
+    
+    <target name="codegen">
+        <exec program="ruby" commandline="cecil-gen.rb" workingdir="CodeGen" />
+    </target>
+    
+</project>

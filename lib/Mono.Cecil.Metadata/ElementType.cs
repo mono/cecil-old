@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * on the ChangeLog entries.
+ *
+ * Authors :
+ *   Jb Evain   (jb.evain@dotnetguru.org)
+ *
+ * This is a free software distributed under a MIT/X11 license
+ * See LICENSE.MIT file for more details
+ *
+ *****************************************************************************/
+
+namespace Mono.Cecil.Metadata {
+
+    internal enum ElementType : ushort {
+        End         = 0x00,   // Marks end of a list
+        Void        = 0x01,
+        Boolean     = 0x02,
+        Char        = 0x03,
+        I1          = 0x04,
+        U1          = 0x05,
+        I2          = 0x06,
+        U2          = 0x07,
+        I4          = 0x08,
+        U4          = 0x09,
+        I8          = 0x0a,
+        U8          = 0x0b,
+        R4          = 0x0c,
+        R8          = 0x0d,
+        String      = 0x0e,
+        Ptr         = 0x0f,   // Followed by <type> token
+        ByRef       = 0x10,   // Followed by <type> token
+        ValueType   = 0x11,   // Followed by <type> token
+        Class       = 0x12,   // Followed by <type> token
+        Array       = 0x14,   // <type> <rank> <boundsCount> <bound1>  <loCount> <lo1>
+        TypedByRef  = 0x16,
+        I           = 0x18,   // System.IntPtr
+        U           = 0x19,   // System.UIntPtr
+        FnPtr       = 0x1b,   // Followed by full method signature
+        Object      = 0x1c,   // System.Object
+        SzArray     = 0x1d,   // Single-dim array with 0 lower bound
+        CModReqD    = 0x1f,   // Required modifier : followed by a TypeDef or TypeRef token
+        CModOpt     = 0x20,   // Optional modifier : followed by a TypeDef or TypeRef token
+        Internal    = 0x21,   // Implemented within the CLI
+        Modifier    = 0x40,   // Or'd with following element types
+        Sentinel    = 0x41,   // Sentinel for varargs method signature
+        Pinned      = 0x45    // Denotes a local variable that points at a pinned object
+    }
+}
