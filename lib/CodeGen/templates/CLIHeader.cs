@@ -17,24 +17,15 @@ namespace Mono.Cecil.Binary {
 
     internal sealed class CLIHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>        private <%=f.type%> <%=f.field_name%>;<% print("\n") } %>
-        private byte [] m_imageHash;
-
-<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%> {
-            get { return <%=f.field_name%>; }
-            set { <%=f.field_name%> = value; }
-        }
-<% print("\n") } %>        public byte [] ImageHash {
-            get { return m_imageHash; }
-            set { m_imageHash = value; }
-        }
+<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+        public byte [] ImageHash;
 
         public CLIHeader ()
         {
         }
 
         public void SetDefaultValues ()
-        {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+        {<% header.fields.each { |f| print("\n            " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
         }
 
         public void Accept (IBinaryVisitor visitor)

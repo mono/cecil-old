@@ -18,17 +18,14 @@ namespace Mono.Cecil.Binary {
 
     internal sealed class PEFileHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>        private <%=f.type%> <%=f.field_name%>;<% print("\n") } %>
-<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%> {
-            get { return <%=f.field_name%>; }
-            set { <%=f.field_name%> = value; }
-        }
-<% print("\n") } %>        public PEFileHeader ()
+<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+
+        public PEFileHeader ()
         {
         }
 
         public void SetDefaultValues ()
-        {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+        {<% header.fields.each { |f| print("\n            " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
         }
 
         public void Accept (IBinaryVisitor visitor)

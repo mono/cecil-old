@@ -13,54 +13,21 @@
 namespace Mono.Cecil.Metadata {
 
     using System;
+    using System.Collections;
 
-    [Heap ("#~")]
     internal class TablesHeap : MetadataHeap {
 
-        private uint m_reserved;
-        private byte m_majorVersion;
-        private byte m_minorVersion;
-        private byte m_heapSizes;
-        private byte m_reserved2;
-        private long m_valid;
-        private long m_sorted;
+        public uint Reserved;
+        public byte MajorVersion;
+        public byte MinorVersion;
+        public byte HeapSizes;
+        public byte Reserved2;
+        public long Valid;
+        public long Sorted;
 
         private TableCollection m_tables;
 
-        public uint Reserved {
-            get { return m_reserved; }
-            set { m_reserved = value; }
-        }
-
-        public byte MajorVersion {
-            get { return m_majorVersion; }
-            set { m_majorVersion = value; }
-        }
-
-        public byte MinorVersion {
-            get { return m_minorVersion; }
-            set { m_minorVersion = value; }
-        }
-
-        public byte HeapSizes {
-            get { return m_heapSizes; }
-            set { m_heapSizes = value; }
-        }
-
-        public byte Reserved2 {
-            get { return m_reserved2; }
-            set { m_reserved2 = value; }
-        }
-
-        public long Valid {
-            get { return m_valid; }
-            set { m_valid = value; }
-        }
-
-        public long Sorted {
-            get { return m_sorted; }
-            set { m_sorted = value; }
-        }
+        private static IDictionary m_tidCache;
 
         public TableCollection Tables {
             get { return m_tables; }
@@ -74,11 +41,13 @@ namespace Mono.Cecil.Metadata {
         }
 
         public TablesHeap (MetadataStream stream) : base(stream)
-        {}
+        {
+            m_tidCache = new Hashtable (46);
+        }
 
         public bool HasTable (Type table)
         {
-            return (m_valid & (1L << GetTableId (table))) != 0;
+            return (Valid & (1L << GetTableId (table))) != 0;
         }
 
         public override void Accept (IMetadataVisitor visitor)
@@ -88,11 +57,17 @@ namespace Mono.Cecil.Metadata {
 
         public static ushort GetTableId (Type table)
         {
-            RIdAttribute [] id = table.GetCustomAttributes (
+            object id = m_tidCache [table];
+            if (id != null)
+                return (ushort) id;
+
+            RIdAttribute [] rid = table.GetCustomAttributes (
                 typeof(RIdAttribute), false) as RIdAttribute [];
 
-            if (id != null && id.Length == 1)
-                return (ushort)id [0].Id;
+            if (rid != null && rid.Length == 1) {
+                m_tidCache [table] = (ushort) rid [0].Id;
+                return (ushort) rid [0].Id;
+            }
 
             throw new ArgumentException ("No RId attribute found on type");
 

@@ -130,8 +130,6 @@
         <Compile Include="Mono.Cecil.Metadata\BlobHeap.cs"/>
         <Compile Include="Mono.Cecil.Metadata\ClassLayout.cs"/>
         <Compile Include="Mono.Cecil.Metadata\CodedIndex.cs"/>
-        <Compile Include="Mono.Cecil.Metadata\ColumnAttribute.cs"/>
-        <Compile Include="Mono.Cecil.Metadata\ColumnSizeAttribute.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Constant.cs"/>
         <Compile Include="Mono.Cecil.Metadata\CultureUtils.cs"/>
         <Compile Include="Mono.Cecil.Metadata\CustomAttribute.cs"/>
@@ -147,7 +145,6 @@
         <Compile Include="Mono.Cecil.Metadata\GenericParam.cs"/>
         <Compile Include="Mono.Cecil.Metadata\GenericParamConstraint.cs"/>
         <Compile Include="Mono.Cecil.Metadata\GuidHeap.cs"/>
-        <Compile Include="Mono.Cecil.Metadata\HeapAttribute.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataRow.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataVisitable.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataVisitor.cs"/>

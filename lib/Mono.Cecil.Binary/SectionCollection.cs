@@ -25,27 +25,6 @@ namespace Mono.Cecil.Binary {
             set { m_items [index] = value; }
         }
 
-        public Section this [string name]
-        {
-            get {
-                foreach (Section sect in this) {
-                    if (sect.Name == name)
-                        return sect;
-                }
-                return null;
-            }
-            set {
-                int pos = -1;
-                for (int i = 0; i < m_items.Count; i++) {
-                    if (this [i].Name == name) {
-                        pos = i;
-                        break;
-                    }
-                }
-                this [pos] = value;
-            }
-        }
-
         public int Count {
             get { return m_items.Count; }
         }

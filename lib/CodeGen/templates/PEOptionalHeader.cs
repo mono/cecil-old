@@ -17,30 +17,15 @@ namespace Mono.Cecil.Binary {
 
     internal sealed class PEOptionalHeader : IHeader, IBinaryVisitable {
 
-        private StandardFieldsHeader m_standardFields;
-        private NTSpecificFieldsHeader m_ntSpecificFields;
-        private DataDirectoriesHeader m_dataDirectories;
-
-        public StandardFieldsHeader StandardFields {
-            get { return m_standardFields; }
-            set { m_standardFields = value; }
-        }
-
-        public NTSpecificFieldsHeader NTSpecificFields {
-            get { return m_ntSpecificFields; }
-            set { m_ntSpecificFields = value; }
-        }
-
-        public DataDirectoriesHeader DataDirectories {
-            get { return m_dataDirectories; }
-            set { m_dataDirectories = value; }
-        }
+        public StandardFieldsHeader StandardFields;
+        public NTSpecificFieldsHeader NTSpecificFields;
+        public DataDirectoriesHeader DataDirectories;
 
         public PEOptionalHeader ()
         {
-            m_standardFields = new StandardFieldsHeader ();
-            m_ntSpecificFields = new NTSpecificFieldsHeader ();
-            m_dataDirectories = new DataDirectoriesHeader ();
+            StandardFields = new StandardFieldsHeader ();
+            NTSpecificFields = new NTSpecificFieldsHeader ();
+            DataDirectories = new DataDirectoriesHeader ();
         }
 
         public void SetDefaultValues ()
@@ -51,25 +36,20 @@ namespace Mono.Cecil.Binary {
         {
             visitor.Visit (this);
 
-            m_standardFields.Accept (visitor);
-            m_ntSpecificFields.Accept (visitor);
-            m_dataDirectories.Accept (visitor);
+            StandardFields.Accept (visitor);
+            NTSpecificFields.Accept (visitor);
+            DataDirectories.Accept (visitor);
         }
         <% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
         public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            private <%=f.type%> <%=f.field_name%>;<% print("\n") } %>
-
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%> {
-                get { return <%=f.field_name%>; }
-                set { <%=f.field_name%> = value; }
-            }
-<% print("\n") } %>            public StandardFieldsHeader ()
+<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+            public StandardFieldsHeader ()
             {
             }
 
             public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
             }
 
             public void Accept (IBinaryVisitor visitor)
@@ -80,18 +60,13 @@ namespace Mono.Cecil.Binary {
         <% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
         public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            private <%=f.type%> <%=f.field_name%>;<% print("\n") } %>
-
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%> {
-                get { return <%=f.field_name%>; }
-                set { <%=f.field_name%> = value; }
-            }
-<% print("\n") } %>            public NTSpecificFieldsHeader ()
+<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+            public NTSpecificFieldsHeader ()
             {
             }
 
             public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
             }
 
             public void Accept (IBinaryVisitor visitor)
@@ -102,18 +77,13 @@ namespace Mono.Cecil.Binary {
         <% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
         public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            private <%=f.type%> <%=f.field_name%>;<% print("\n") } %>
-
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%> {
-                get { return <%=f.field_name%>; }
-                set { <%=f.field_name%> = value; }
-            }
-<% print("\n") } %>            public DataDirectoriesHeader ()
+<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+            public DataDirectoriesHeader ()
             {
             }
 
             public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
             }
 
             public void Accept (IBinaryVisitor visitor)

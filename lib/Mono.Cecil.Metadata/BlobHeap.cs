@@ -14,7 +14,6 @@ namespace Mono.Cecil.Metadata {
 
     using System.IO;
 
-    [Heap ("#Blob")]
     internal class BlobHeap : MetadataHeap {
 
         private int m_indexSize;

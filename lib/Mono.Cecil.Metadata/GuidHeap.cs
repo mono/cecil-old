@@ -15,7 +15,6 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    [Heap ("#GUID")]
     internal class GuidHeap : MetadataHeap {
 
         private readonly IDictionary m_guids;

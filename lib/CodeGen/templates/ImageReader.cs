@@ -92,7 +92,6 @@ namespace Mono.Cecil.Binary {
             sect.Name = read == 0 ? string.Empty : new string (name);
             m_binaryReader.BaseStream.Position += 8 - read - 1;
 <% cur_header.fields.each { |field| %>            sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
-            m_image.Sections [sect.Name] = sect;
         }
 <% cur_header = $headers["CLIHeader"] %>
         public void Visit (CLIHeader header)
