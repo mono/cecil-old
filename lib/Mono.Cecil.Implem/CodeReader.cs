@@ -41,7 +41,7 @@ namespace Mono.Cecil.Implem {
 
             // lets read the method
             int flags = br.ReadByte ();
-            switch (flags & 0x7) {
+            switch (flags & 0x3) {
             case (int) MethodHeaders.TinyFormat :
                 methBody.CodeSize = flags >> 2;
                 methBody.MaxStack = 8;
