@@ -112,8 +112,10 @@ namespace Mono.Cecil.Implem {
                     PropertySig psig = m_sigReader.GetPropSig (prow.Type);
                     PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
                                                                       owner, this.GetTypeRefFromSig (psig.Type), prow.Flags);
-                    owner.Properties [pdef.Name] = pdef;
-                    ((PropertyDefinitionCollection)owner.Properties).Loaded = true;
+
+                    PropertyDefinitionCollection props = owner.Properties as PropertyDefinitionCollection;
+                    props [pdef.Name] = pdef;
+                    props.Loaded = true;
                     m_properties [j - 1] = pdef;
                 }
             }
@@ -140,8 +142,10 @@ namespace Mono.Cecil.Implem {
                     EventRow erow = evtTable [j - 1];
                     EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], owner,
                                                                 GetTypeDefOrRef (erow.EventType), erow.EventFlags);
-                    owner.Events [edef.Name] = edef;
-                    ((EventDefinitionCollection)owner.Events).Loaded = true;
+
+                    EventDefinitionCollection evts = owner.Events as EventDefinitionCollection;
+                    evts.Loaded = true;
+                    evts [edef.Name] = edef;
                     m_events [j - 1] = edef;
                 }
             }
@@ -189,7 +193,7 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intfsRow = intfsTable [i];
                 TypeDefinition owner = GetTypeDefAt ((int)intfsRow.Class);
-                owner.Interfaces.Add (GetTypeDefOrRef (intfsRow.Interface));
+                (owner.Interfaces as InterfaceCollection).Add (GetTypeDefOrRef (intfsRow.Interface));
                 ((InterfaceCollection)owner.Interfaces).Loaded = true;
             }
         }
@@ -206,10 +210,10 @@ namespace Mono.Cecil.Implem {
                     MethodDefinition owner = GetMethodDefAt ((int) implRow.MethodBody.RID);
                     switch (implRow.MethodDeclaration.TokenType) {
                     case TokenType.Method :
-                        owner.Overrides.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
+                        (owner.Overrides as OverrideCollection).Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
                         break;
                     case TokenType.MemberRef :
-                        owner.Overrides.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
+                        (owner.Overrides as OverrideCollection).Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
                         break;
                     }
                     ((OverrideCollection)owner.Overrides).Loaded = true;
@@ -240,8 +244,10 @@ namespace Mono.Cecil.Implem {
                     break;
                 }
 
-                owner.SecurityDeclarations.Add (dec);
-                ((SecurityDeclarationCollection)owner.SecurityDeclarations).Loaded = true;
+                SecurityDeclarationCollection secDecls = owner.SecurityDeclarations as SecurityDeclarationCollection;
+
+                secDecls.Add (dec);
+                secDecls.Loaded = true;
             }
         }
 
@@ -262,42 +268,37 @@ namespace Mono.Cecil.Implem {
                 CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
                 CustomAttribute cattr = BuildCustomAttribute (ctor, ca);
 
-                ICustomAttributeProvider owner = null;
+                ICustomAttributeCollection owner = null;
                 switch (caRow.Parent.TokenType) {
                 case TokenType.Assembly :
-                    this.Module.Assembly.CustomAttributes.Add (cattr);
+                    owner = this.Module.Assembly.CustomAttributes;
                     break;
                 case TokenType.Module :
-                    this.Module.CustomAttributes.Add (cattr); // not sure of this, take care to multi modules asm
+                    owner = this.Module.CustomAttributes; // not sure of this, take care to multi modules asm
                     break;
                 case TokenType.TypeDef :
-                    owner = GetTypeDefAt ((int) caRow.Parent.RID);
-                    owner.CustomAttributes.Add (cattr);
+                    owner = GetTypeDefAt ((int) caRow.Parent.RID).CustomAttributes;
                     break;
                 case TokenType.Field :
-                    owner = GetFieldDefAt ((int) caRow.Parent.RID);
-                    owner.CustomAttributes.Add (cattr);
+                    owner = GetFieldDefAt ((int) caRow.Parent.RID).CustomAttributes;
                     break;
                 case TokenType.Method :
-                    owner = GetMethodDefAt ((int) caRow.Parent.RID);
-                    owner.CustomAttributes.Add (cattr);
+                    owner = GetMethodDefAt ((int) caRow.Parent.RID).CustomAttributes;
                     break;
                 case TokenType.Property :
-                    owner = m_properties [caRow.Parent.RID - 1];
-                    owner.CustomAttributes.Add (cattr);
+                    owner = m_properties [caRow.Parent.RID - 1].CustomAttributes;
                     break;
                 case TokenType.Event :
-                    owner = m_properties [caRow.Parent.RID - 1];
-                    owner.CustomAttributes.Add (cattr);
+                    owner = m_properties [caRow.Parent.RID - 1].CustomAttributes;
                     break;
                 case TokenType.Param :
-                    owner = m_parameters [caRow.Parent.RID - 1];
-                    owner.CustomAttributes.Add (cattr);
+                    owner = m_parameters [caRow.Parent.RID - 1].CustomAttributes;
                     break;
                 default :
                     //TODO: support other ?
                     break;
                 }
+                (owner as CustomAttributeCollection).Add (cattr);
             }
         }
 

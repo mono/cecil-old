@@ -65,7 +65,7 @@ namespace Mono.Cecil.Implem {
             m_function = new MethodReference ("function", this, hasThis, explicitThis, callConv);
             m_function.ReturnType = retType;
             foreach (ParameterDefinition param in parameters)
-                m_function.Parameters.Add (param);
+                (m_function.Parameters as ParameterDefinitionCollection).Add (param);
         }
     }
 }

@@ -74,7 +74,7 @@ namespace Mono.Cecil.Implem {
                         new Version (arefrow.MajorVersion, arefrow.MinorVersion,
                                      arefrow.BuildNumber, arefrow.RevisionNumber));
                     aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arefrow.PublicKeyOrToken);
-                    names [aname.Name] = aname;
+                    (names as AssemblyNameReferenceCollection).Add (aname);
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace Mono.Cecil.Implem {
                     EmbeddedResource er = new EmbeddedResource (
                         m_img.MetadataRoot.Streams.StringsHeap [mrr.Name], mrr.Flags);
 
-                    resources [er.Name] = er;
+                    (resources as ResourceCollection) [er.Name] = er;
                 }
             }
 
@@ -106,7 +106,7 @@ namespace Mono.Cecil.Implem {
 
                         lr.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fr.HashValue);
 
-                        resources [lr.Name] = lr;
+                        (resources as ResourceCollection) [lr.Name] = lr;
                     }
                 }
             }
@@ -133,8 +133,10 @@ namespace Mono.Cecil.Implem {
             ModuleRow mr = mt.Rows [0] as ModuleRow;
             string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
             ModuleDefinition main = new ModuleDefinition (name, m_asmDef, m_ir, true);
+            ModuleDefinitionCollection mods = modules as ModuleDefinitionCollection;
             main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
-            modules [name] = m_module = main;
+            mods.Add (main);
+            m_module = main;
 
             FileTable ftable = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
             if (ftable != null && ftable.Rows.Count > 0) {
@@ -155,7 +157,7 @@ namespace Mono.Cecil.Implem {
                             ModuleDefinition modext = new ModuleDefinition (name, m_asmDef, module, false);
                             modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 
-                            modules [name] = modext;
+                            mods.Add (modext);
                         } catch (ReflectionException) {
                             throw;
                         } catch (Exception e) {
@@ -176,7 +178,7 @@ namespace Mono.Cecil.Implem {
             ModuleRefTable mrt = mod.Reader.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleRefTable)] as ModuleRefTable;
             if (mrt != null && mrt.Rows.Count > 0)
                 foreach (ModuleRefRow mrr in mrt.Rows)
-                    modules.Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrr.Name]));
+                    (modules as ModuleReferenceCollection).Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrr.Name]));
         }
     }
 }

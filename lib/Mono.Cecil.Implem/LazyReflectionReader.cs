@@ -44,7 +44,7 @@ namespace Mono.Cecil.Implem {
                 InterfaceImplRow intRow = intfsTable [i];
                 if (intRow.Class == rid) {
                     ITypeReference interf = GetTypeDefOrRef (intRow.Interface);
-                    interfaces.Add (interf);
+                    (interfaces as InterfaceCollection).Add (interf);
                 }
             }
 
@@ -69,9 +69,9 @@ namespace Mono.Cecil.Implem {
                 MethodImplRow implRow = implTable [i];
                 if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
                     if (implRow.MethodDeclaration.TokenType == TokenType.Method)
-                        meths.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
+                        methods.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
                     else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
-                        meths.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
+                        methods.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
                 }
             }
         }
@@ -106,12 +106,12 @@ namespace Mono.Cecil.Implem {
                 switch (dsRow.Parent.TokenType) {
                 case TokenType.Assembly :
                     if (target == TokenType.Assembly)
-                        secDecls.Add (BuildSecurityDeclaration (dsRow));
+                        secDeclarations.Add (BuildSecurityDeclaration (dsRow));
                     break;
                 case TokenType.Method :
                 case TokenType.TypeDef :
                     if (dsRow.Parent.TokenType == target && dsRow.Parent.RID == rid)
-                        secDecls.Add (BuildSecurityDeclaration (dsRow));
+                        secDeclarations.Add (BuildSecurityDeclaration (dsRow));
                     break;
                 }
             }
@@ -191,7 +191,7 @@ namespace Mono.Cecil.Implem {
                     break;
                 }
                 if (ca != null) {
-                    customAttrs.Add (ca);
+                    customAttributes.Add (ca);
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Mono.Cecil.Implem {
                 EventRow erow = evtTable [i - 1];
                 EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
                                                             GetTypeDefOrRef (erow.EventType), erow.EventFlags);
-                events [edef.Name] = edef;
+                evts [edef.Name] = edef;
                 m_events [i - 1] = edef;
             }
 
@@ -305,7 +305,7 @@ namespace Mono.Cecil.Implem {
                 PropertySig psig = m_sigReader.GetPropSig (prow.Type);
                 PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
                                                                   dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
-                properties [pdef.Name] = pdef;
+                props [pdef.Name] = pdef;
                 m_properties [i - 1] = pdef;
             }
 

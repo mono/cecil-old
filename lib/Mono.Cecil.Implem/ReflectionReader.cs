@@ -139,7 +139,7 @@ namespace Mono.Cecil.Implem {
                 if (parts.Length != 2)
                     throw new ReflectionException ("Unvalid core type name");
                 coreType = new TypeReference (parts [1], parts [0]);
-                m_module.TypeReferences [coreType.FullName] = coreType;
+                (m_module.TypeReferences as TypeReferenceCollection) [coreType.FullName] = coreType;
             }
             return coreType;
         }
@@ -191,7 +191,7 @@ namespace Mono.Cecil.Implem {
                         m_root.Streams.StringsHeap [type.Namespace]);
 
                     m_typeRefs [i] = t;
-                    ((ModuleDefinition)tdc.Container).TypeReferences [t.FullName] = t;
+                    (m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;
                 }
             } else
                 m_typeRefs = new TypeReference [0];
@@ -263,8 +263,11 @@ namespace Mono.Cecil.Implem {
                     FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
                     FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
                                                                 dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
-                    dec.Fields [fdef.Name] = fdef;
-                    ((FieldDefinitionCollection)dec.Fields).Loaded = true;
+
+                    FieldDefinitionCollection flds = dec.Fields as FieldDefinitionCollection;
+
+                    flds.Loaded = true;
+                    flds [fdef.Name] = fdef;
                     m_fields [j - 1] = fdef;
                 }
             }
@@ -320,7 +323,7 @@ namespace Mono.Cecil.Implem {
                         ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name],
                                                                              prow.Sequence, prow.Flags, psig);
                         pdef.Method = mdef;
-                        mdef.Parameters.Add (pdef);
+                        (mdef.Parameters as ParameterDefinitionCollection).Add (pdef);
                         m_parameters [k - 1] = pdef; l++;
                     }
 
@@ -333,8 +336,11 @@ namespace Mono.Cecil.Implem {
                     }
 
                     m_meths [j - 1] = mdef;
-                    ((MethodDefinitionCollection)dec.Methods).Loaded = true;
-                    dec.Methods.Add (mdef);
+
+                    MethodDefinitionCollection methDefs = dec.Methods as MethodDefinitionCollection;
+
+                    methDefs.Loaded = true;
+                    methDefs.Add (mdef);
                 }
             }
         }
@@ -369,7 +375,7 @@ namespace Mono.Cecil.Implem {
                             Param p = ms.Parameters [j];
                             ParameterDefinition pdef = BuildParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), p);
                             pdef.Method = methref;
-                            methref.Parameters.Add (pdef);
+                            (methref.Parameters as ParameterDefinitionCollection).Add (pdef);
                         }
                         member = methref;
                     }
@@ -613,7 +619,7 @@ namespace Mono.Cecil.Implem {
             case ElementType.SzArray :
                 SZARRAY szary = t as SZARRAY;
                 ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type));
-                at.Dimensions.Add (new ArrayDimension (0, 0));
+                (at.Dimensions as ArrayDimensionCollection).Add (new ArrayDimension (0, 0));
                 return at;
             case ElementType.Ptr :
                 PTR pointer = t as PTR;

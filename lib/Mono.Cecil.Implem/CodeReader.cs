@@ -164,7 +164,7 @@ namespace Mono.Cecil.Implem {
                     break;
                 }
 
-                body.Instructions.Add (instr);
+                (body.Instructions as InstructionCollection).Add (instr);
             }
         }
 
@@ -200,7 +200,7 @@ namespace Mono.Cecil.Implem {
                         br.ReadInt32 ();
                         break;
                     }
-                    body.ExceptionHandlers.Add (eh);
+                    (body.ExceptionHandlers as ExceptionHandlerCollection).Add (eh);
                 }
             } else {
                 br.BaseStream.Position--;
@@ -229,7 +229,7 @@ namespace Mono.Cecil.Implem {
                         br.ReadInt32 ();
                         break;
                     }
-                    body.ExceptionHandlers.Add (eh);
+                    (body.ExceptionHandlers as ExceptionHandlerCollection).Add (eh);
                 }
             }
 
@@ -270,7 +270,7 @@ namespace Mono.Cecil.Implem {
                     varType = new ReferenceType (varType);
                 if ((lv.Constraint & Constraint.Pinned) != 0)
                     varType = new PinnedType (varType);
-                variables.Add (new VariableDefinition (string.Concat ("V_", i), meth, varType));
+                (variables as VariableDefinitionCollection).Add (new VariableDefinition (string.Concat ("V_", i), meth, varType));
             }
         }
 

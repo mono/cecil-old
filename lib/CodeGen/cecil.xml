@@ -645,9 +645,9 @@
         that will be used in the Reflection ns
     -->
     <collections>
-        <collection type="IAssemblyNameReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IAssemblyNameReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" indexed="true" />
         <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" indexed="true" target="Mono.Cecil" />
-        <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" indexed="true" target="Mono.Cecil" />
         <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="ReflectionReader" target="Mono.Cecil" />
         <collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
