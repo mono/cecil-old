@@ -22,13 +22,18 @@ namespace Mono.Cecil.Cil {
         private OpCodes()
         {
         }
-<% $ops.each { |op| %>
-        public static readonly OpCode <%=op.field_name%> = new OpCode (
+<% $ops.each { |op|
+     if (!op.requ.nil?) then
+         puts("#if #{op.requ.to_s}")
+     end %>        public static readonly OpCode <%=op.field_name%> = new OpCode (
             "<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>, <%=op.flowcontrol%>,
             <%=op.opcodetype%>, <%=op.operandtype%>,
             <%=op.stackbehaviourpop%>, <%=op.stackbehaviourpush%>);
-<% } %>
-        public sealed class Cache {
+<%
+     if (!op.requ.nil?) then
+         puts("#endif")
+     end
+     print("\n") } %>        public sealed class Cache {
 
             public static readonly Cache Instance = new Cache ();
 
@@ -37,8 +42,13 @@ namespace Mono.Cecil.Cil {
             private Cache ()
             {
                 m_cache = new Hashtable ();
-<% $ops.each { |op| %>                m_cache ["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
-<% } %>            }
+<% $ops.each { |op|
+     if (!op.requ.nil?) then
+         puts("#if #{op.requ.to_s}")
+     end %>                m_cache ["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
+<% if (!op.requ.nil?) then
+         puts("#endif")
+     end } %>            }
 
             public OpCode this [string name] {
                 get { return (OpCode) m_cache [name]; }

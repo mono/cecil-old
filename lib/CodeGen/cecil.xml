@@ -579,6 +579,9 @@
             <opcode name="stelem.r4" op1="0xff" op2="0xa0" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineNone" stackbehaviourpop="Popref_popi_popr4" stackbehaviourpush="Push0" />
             <opcode name="stelem.r8" op1="0xff" op2="0xa1" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineNone" stackbehaviourpop="Popref_popi_popr8" stackbehaviourpush="Push0" />
             <opcode name="stelem.ref" op1="0xff" op2="0xa2" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineNone" stackbehaviourpop="Popref_popi_popref" stackbehaviourpush="Push0" />
+            <opcode name="ldelem.any" op1="0xff" op2="0xa3" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineType" stackbehaviourpop="Popi" stackbehaviourpush="Push1" require="NET_2_0" />
+            <opcode name="stelem.any" op1="0xff" op2="0xa4" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineType" stackbehaviourpop="Popref_popi_popref" stackbehaviourpush="Push0" require="NET_2_0" />
+            <opcode name="unbox.any" op1="0xff" op2="0xa5" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineType" stackbehaviourpop="Popref" stackbehaviourpush="Push1" require="NET_2_0" />
             <opcode name="conv.ovf.i1" op1="0xff" op2="0xb3" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1" stackbehaviourpush="Pushi" />
             <opcode name="conv.ovf.u1" op1="0xff" op2="0xb4" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1" stackbehaviourpush="Pushi" />
             <opcode name="conv.ovf.i2" op1="0xff" op2="0xb5" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1" stackbehaviourpush="Pushi" />

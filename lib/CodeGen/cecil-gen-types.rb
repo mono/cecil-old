@@ -146,7 +146,7 @@ module Cecil
         end
     end
 
-    class OpCode
+    class OpCode < Evolutive
 
         attr_reader(:name)
         attr_reader(:field_name)
@@ -159,7 +159,8 @@ module Cecil
         attr_reader(:stackbehaviourpop)
         attr_reader(:stackbehaviourpush)
 
-        def initialize(name, op1, op2, flowcontrol, opcodetype, operandtype, stackbehaviourpop, stackbehaviourpush)
+        def initialize(name, op1, op2, flowcontrol, opcodetype, operandtype, stackbehaviourpop, stackbehaviourpush, requ)
+            super(requ)
             @name = name
             @field_name = name_to_prop(name)
             @op1 = op1 ; @op2 = op2

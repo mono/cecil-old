@@ -65,7 +65,8 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
     $ops.push(Cecil::OpCode.new(node.attribute("name").value, node.attribute("op1").value,
         node.attribute("op2").value, node.attribute("flowcontrol").value,
         node.attribute("opcodetype").value, node.attribute("operandtype").value,
-        node.attribute("stackbehaviourpop").value, node.attribute("stackbehaviourpush").value))
+        node.attribute("stackbehaviourpop").value, node.attribute("stackbehaviourpush").value,
+        node.attribute("require").nil? ? nil : node.attribute("require").value))
 }
 
 doc.root.each_element("/cecil/collections//collection") { |node|
