@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil {
 
-    public interface ITypeDefinition : ITypeReference {
+    public interface ITypeDefinition : ITypeReference, IMemberDefinition {
 
         IType BaseType { get; set; }
         IInterfaceCollection Interfaces { get; }

@@ -16,7 +16,7 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal sealed class TypeDefinition : ITypeDefinition, IMemberDefinition {
+    internal sealed class TypeDefinition : ITypeDefinition {
 
         private string m_name;
         private string m_namespace;
