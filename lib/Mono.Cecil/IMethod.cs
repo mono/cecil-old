@@ -21,7 +21,7 @@ namespace Mono.Cecil {
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
     }
 
-    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IReflectionVisitable {
+    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity {
 
         IOverrideCollection Overrides { get; }
         IMethodBody Body { get; }

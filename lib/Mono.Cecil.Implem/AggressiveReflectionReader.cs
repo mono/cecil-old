@@ -36,6 +36,7 @@ namespace Mono.Cecil.Implem {
                 ReadSemantics ();
                 ReadInterfaces ();
                 ReadOverrides ();
+                ReadSecurityDeclarations ();
             }
         }
 
@@ -134,10 +135,6 @@ namespace Mono.Cecil.Implem {
                 switch (semRow.Association.TokenType) {
                 case TokenType.Event :
                     EventDefinition evt = m_events [semRow.Association.RID - 1];
-                    if (evt == null) {
-                        Console.WriteLine ("warning: event not found {0}", semRow.Association.RID - 1);
-                        continue;
-                    }
                     if ((semRow.Semantics & MethodSemanticsAttributes.AddOn) != 0)
                         evt.AddMethod = semMeth;
                     else if ((semRow.Semantics & MethodSemanticsAttributes.Fire) != 0)
@@ -148,10 +145,6 @@ namespace Mono.Cecil.Implem {
                     break;
                 case TokenType.Property :
                     PropertyDefinition prop = m_properties [semRow.Association.RID - 1];
-                    if (prop == null) {
-                        Console.WriteLine ("warning: property not found {0}", semRow.Association.RID - 1);
-                        continue;
-                    }
                     if ((semRow.Semantics & MethodSemanticsAttributes.Getter) != 0)
                         prop.GetMethod = semMeth;
                     else if ((semRow.Semantics & MethodSemanticsAttributes.Setter) != 0)
@@ -175,7 +168,7 @@ namespace Mono.Cecil.Implem {
 
         private void ReadOverrides ()
         {
-            MethodImplTable implTable = MetadataRoot.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
+            MethodImplTable implTable = m_root.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
             for (int i = 0; i < implTable.Rows.Count; i++) {
                 MethodImplRow implRow = implTable [i];
                 if (implRow.MethodBody.TokenType == TokenType.Method) {
@@ -188,6 +181,31 @@ namespace Mono.Cecil.Implem {
                     }
                     ((OverrideCollection)owner.Overrides).Loaded = true;
                 }
+            }
+        }
+
+        private void ReadSecurityDeclarations ()
+        {
+            DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
+            for (int i = 0; i < dsTable.Rows.Count; i++) {
+                DeclSecurityRow dsRow = dsTable [i];
+                SecurityDeclaration dec = BuildSecurityDeclaration (dsRow);
+
+                IHasSecurity owner = null;
+                switch (dsRow.Parent.TokenType) {
+                case TokenType.Assembly :
+                    owner = this.Module.Assembly;
+                    break;
+                case TokenType.TypeDef :
+                    owner = GetTypeDefAt ((int) dsRow.Parent.RID);
+                    break;
+                case TokenType.Method :
+                    owner = GetMethodDefAt ((int) dsRow.Parent.RID);
+                    break;
+                }
+
+                owner.SecurityDeclarations.Add (dec);
+                ((SecurityDeclarationCollection)owner.SecurityDeclarations).Loaded = true;
             }
         }
     }

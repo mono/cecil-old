@@ -326,12 +326,27 @@ namespace Mono.Cecil.Implem {
         {
         }
 
+        public virtual void Visit (ISecurityDeclarationCollection secDecls)
+        {
+        }
+
+        public virtual void Visit (ISecurityDeclaration secDecl)
+        {
+        }
+
         public virtual void ReadMethods (EventDefinition evt)
         {
         }
 
         public virtual void ReadMethods (PropertyDefinition prop)
         {
+        }
+
+        protected SecurityDeclaration BuildSecurityDeclaration (DeclSecurityRow dsRow)
+        {
+            SecurityDeclaration dec = new SecurityDeclaration (dsRow.Action);
+            //TODO: spouliot write here :)
+            return dec;
         }
 
         private MethodReturnType GetMethodReturnType (MethodSig msig)

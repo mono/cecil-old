@@ -62,6 +62,44 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public override void Visit (ISecurityDeclarationCollection secDecls)
+        {
+            SecurityDeclarationCollection secDeclarations = secDecls as SecurityDeclarationCollection;
+            if (secDeclarations.Loaded)
+                return;
+
+            DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
+            int rid = 0;
+            TokenType target;
+            if (secDecls.Container is AssemblyDefinition)
+                target = TokenType.Assembly;
+            else if (secDecls.Container is TypeDefinition) {
+                target = TokenType.TypeDef;
+                rid = GetRidForTypeDef (secDecls.Container as TypeDefinition);
+            } else { // MethodDefinition
+                target = TokenType.Method;
+                rid = GetRidForMethodDef (secDecls.Container as MethodDefinition);
+            }
+
+            for (int i = 0; i < dsTable.Rows.Count; i++) {
+                DeclSecurityRow dsRow = dsTable [i];
+
+                switch (dsRow.Parent.TokenType) {
+                case TokenType.Assembly :
+                    if (target == TokenType.Assembly)
+                        secDecls.Add (BuildSecurityDeclaration (dsRow));
+                    break;
+                case TokenType.Method :
+                case TokenType.TypeDef :
+                    if (dsRow.Parent.TokenType == target && dsRow.Parent.RID == rid)
+                        secDecls.Add (BuildSecurityDeclaration (dsRow));
+                    break;
+                }
+            }
+
+            secDeclarations.Loaded = true;
+        }
+
         public override void Visit (IEventDefinitionCollection events)
         {
             EventDefinitionCollection evts = events as EventDefinitionCollection;

@@ -30,5 +30,7 @@ namespace Mono.Cecil {
         void Visit (IFieldDefinition field);
         void Visit (IPropertyDefinitionCollection properties);
         void Visit (IPropertyDefinition property);
+        void Visit (ISecurityDeclarationCollection secDecls);
+        void Visit (ISecurityDeclaration secDecl);
     }
 }

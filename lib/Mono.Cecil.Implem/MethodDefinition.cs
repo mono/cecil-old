@@ -25,6 +25,7 @@ namespace Mono.Cecil.Implem {
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
         private ParameterDefinitionCollection m_parameters;
+        private SecurityDeclarationCollection m_secDecls;
         private MethodReturnType m_returnType;
 
         private bool m_hasThis;
@@ -68,6 +69,14 @@ namespace Mono.Cecil.Implem {
 
         public IParameterDefinitionCollection Parameters {
             get { return m_parameters; }
+        }
+
+        public ISecurityDeclarationCollection SecurityDeclarations {
+            get {
+                if (m_secDecls == null)
+                    m_secDecls = new SecurityDeclarationCollection (this);
+                return m_secDecls;
+            }
         }
 
         public IMethodReturnType ReturnType {

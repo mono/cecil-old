@@ -109,6 +109,8 @@
         <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
         <Compile Include="Mono.Cecil.Implem\ResourceCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\SecurityDeclaration.cs"/>
+        <Compile Include="Mono.Cecil.Implem\SecurityDeclarationCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\StructureReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
@@ -236,6 +238,7 @@
         <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IFieldLayoutInfo.cs"/>
         <Compile Include="Mono.Cecil\IFunctionPointerType.cs"/>
+        <Compile Include="Mono.Cecil\IHasSecurity.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
@@ -262,6 +265,8 @@
         <Compile Include="Mono.Cecil\IReflectionVisitor.cs"/>
         <Compile Include="Mono.Cecil\IResource.cs"/>
         <Compile Include="Mono.Cecil\IResourceCollection.cs"/>
+        <Compile Include="Mono.Cecil\ISecurityDeclaration.cs"/>
+        <Compile Include="Mono.Cecil\ISecurityDeclarationCollection.cs"/>
         <Compile Include="Mono.Cecil\IType.cs"/>
         <Compile Include="Mono.Cecil\ITypeDefinition.cs"/>
         <Compile Include="Mono.Cecil\ITypeDefinitionCollection.cs"/>

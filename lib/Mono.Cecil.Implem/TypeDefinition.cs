@@ -32,6 +32,7 @@ namespace Mono.Cecil.Implem {
         private FieldDefinitionCollection m_fields;
         private EventDefinitionCollection m_events;
         private PropertyDefinitionCollection m_properties;
+        private SecurityDeclarationCollection m_secDecls;
 
         public TypeAttributes Attributes {
             get { return m_attributes; }
@@ -104,6 +105,14 @@ namespace Mono.Cecil.Implem {
                 if (m_properties == null)
                     m_properties = new PropertyDefinitionCollection (this);
                 return m_properties;
+            }
+        }
+
+        public ISecurityDeclarationCollection SecurityDeclarations {
+            get {
+                if (m_secDecls == null)
+                    m_secDecls = new SecurityDeclarationCollection (this);
+                return m_secDecls;
             }
         }
 

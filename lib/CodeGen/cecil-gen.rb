@@ -76,7 +76,8 @@ doc.root.each_element("/cecil/collections//collection") { |node|
         (node.attribute("lazyload").nil? ? false : node.attribute("lazyload").value == "true"),
         (node.attribute("pathtoloader").nil? ? nil : node.attribute("pathtoloader").value),
         node.attribute("target").value,
-        (node.attribute("indexed").nil? ? false : node.attribute("indexed").value == "true")))
+        (node.attribute("indexed").nil? ? false : node.attribute("indexed").value == "true"),
+        (node.attribute("usecontainerinterface").nil? ? false : node.attribute("usecontainerinterface").value == "true")))
 }
 
 $compiler = ERuby::Compiler.new()
