@@ -41,7 +41,7 @@ doc.root.each_element("/cecil/headers//header") { |node|
 doc.root.each_element("/cecil/metadata/tables//table") { |node|
     table = Cecil::Table.new(node.attribute("name").value,
         node.attribute("rid").value,
-        node.attribute("require").nil? ? nil : node.attribute("require").value)
+        node.attribute("requires").nil? ? nil : node.attribute("requires").value)
     node.each_element("column") { |col|
         column = Cecil::Column.new(col.attribute("name").value,
             $types[col.attribute("type").value],
@@ -54,7 +54,7 @@ doc.root.each_element("/cecil/metadata/tables//table") { |node|
 doc.root.each_element("/cecil/metadata/codedindexes//codedindex") { |node|
     ci = Cecil::CodedIndex.new(node.attribute("name").value,
         node.attribute("size").value,
-        node.attribute("require").nil? ? nil : node.attribute("require").value)
+        node.attribute("requires").nil? ? nil : node.attribute("requires").value)
     node.each_element("table") { |table|
         ci.add_table(table.attribute("name").value, table.attribute("tag").value)
     }
@@ -66,7 +66,7 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
         node.attribute("op2").value, node.attribute("flowcontrol").value,
         node.attribute("opcodetype").value, node.attribute("operandtype").value,
         node.attribute("stackbehaviourpop").value, node.attribute("stackbehaviourpush").value,
-        node.attribute("require").nil? ? nil : node.attribute("require").value))
+        node.attribute("requires").nil? ? nil : node.attribute("requires").value))
 }
 
 doc.root.each_element("/cecil/collections//collection") { |node|
