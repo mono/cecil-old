@@ -162,9 +162,11 @@
         <Compile Include="Mono.Cecil.Signatures\ISignatureVisitable.cs"/>
         <Compile Include="Mono.Cecil.Signatures\ISignatureVisitor.cs"/>
         <Compile Include="Mono.Cecil.Signatures\LocalVarSig.cs"/>
+        <Compile Include="Mono.Cecil.Signatures\MarshalSpec.cs"/>
         <Compile Include="Mono.Cecil.Signatures\MethodDefSig.cs"/>
         <Compile Include="Mono.Cecil.Signatures\MethodRefSig.cs"/>
         <Compile Include="Mono.Cecil.Signatures\MethodSig.cs"/>
+        <Compile Include="Mono.Cecil.Signatures\NativeType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Param.cs"/>
         <Compile Include="Mono.Cecil.Signatures\PropertySig.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Ptr.cs"/>
@@ -173,6 +175,7 @@
         <Compile Include="Mono.Cecil.Signatures\SignatureReader.cs"/>
         <Compile Include="Mono.Cecil.Signatures\SigType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\SzArray.cs"/>
+        <Compile Include="Mono.Cecil.Signatures\TypeSpec.cs"/>
         <Compile Include="Mono.Cecil.Signatures\ValueType.cs"/>
         <Compile Include="Mono.Cecil.Tests\AbstractReaderTest.cs"/>
         <Compile Include="Mono.Cecil.Tests\BinaryReaderTest.cs"/>

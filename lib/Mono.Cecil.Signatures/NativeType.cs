@@ -12,17 +12,22 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class FNPTR : SigType {
-
-        private MethodSig m_method;
-
-        public MethodSig Method {
-            get { return m_method; }
-            set { m_method = value; }
-        }
-
-        public FNPTR () : base (ElementType.FnPtr)
-        {
-        }
+    internal enum NativeType {
+        Boolean = 0x02,
+        I1 = 0x03,
+        U1 = 0x04,
+        I2 = 0x05,
+        U2 = 0x06,
+        I4 = 0x07,
+        U4 = 0x08,
+        I8 = 0x09,
+        U8 = 0x0a,
+        R4 = 0x0b,
+        R8 = 0x0c,
+        LPSTR = 0x14,
+        INT = 0x1f,
+        UINT = 0x20,
+        FUNC = 0x26,
+        ARRAY = 0x2a
     }
 }

@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class Array : SigType {
+    internal sealed class ARRAY : SigType {
 
         private SigType m_type;
         private ArrayShape m_aryShape;
@@ -27,7 +27,7 @@ namespace Mono.Cecil.Signatures {
             set { m_aryShape = value; }
         }
 
-        public Array () : base (ElementType.Array)
+        public ARRAY () : base (ElementType.Array)
         {
         }
     }

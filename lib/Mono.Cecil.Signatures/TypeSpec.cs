@@ -12,19 +12,28 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+    using Mono.Cecil.Implem;
 
-    internal sealed class CLASS : SigType {
+    internal class TypeSpec {
 
-        private MetadataToken m_type;
+        private SigType m_type;
 
-        public MetadataToken Type {
+        public SigType Type {
             get { return m_type; }
             set { m_type = value; }
         }
 
-        public CLASS () : base (ElementType.Class)
+        public TypeSpec (SigType type)
         {
+            switch (type.ElementType) {
+            case ElementType.Ptr :
+            case ElementType.FnPtr :
+            case ElementType.Array :
+            case ElementType.SzArray :
+                return;
+            default :
+                throw new ReflectionException ("Non valid TypeSpec");
+            }
         }
     }
 }

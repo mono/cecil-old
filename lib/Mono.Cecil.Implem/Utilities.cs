@@ -29,5 +29,10 @@ namespace Mono.Cecil.Implem {
 
             return string.Concat (t.Namespace, ".", t.Name);
         }
+
+        public static string FieldSignature (IFieldReference f)
+        {
+            return string.Concat (f.DeclaringType.FullName, "::", f.Name);
+        }
     }
 }

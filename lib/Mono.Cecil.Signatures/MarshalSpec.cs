@@ -12,17 +12,19 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class FNPTR : SigType {
+    internal class MarshalSpec {
 
-        private MethodSig m_method;
+        private NativeType m_natType;
+        // array
 
-        public MethodSig Method {
-            get { return m_method; }
-            set { m_method = value; }
+        public NativeType NativeType {
+            get { return m_natType; }
+            set { m_natType = value; }
         }
 
-        public FNPTR () : base (ElementType.FnPtr)
+        public MarshalSpec (NativeType nt)
         {
+            m_natType = nt;
         }
     }
 }

@@ -17,10 +17,12 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil;
     using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
+    using Mono.Cecil.Signatures;
 
     internal sealed class ReflectionReader : IReflectionVisitor {
 
         private ImageReader m_reader;
+        private SignatureReader m_sigReader;
         private MetadataRoot m_root;
 
         private TypeDefinition [] m_types;
@@ -30,6 +32,7 @@ namespace Mono.Cecil.Implem {
         {
             m_reader = sr;
             m_root = sr.Image.MetadataRoot;
+            m_sigReader = new SignatureReader (m_root);
         }
 
         public void Visit (ITypeDefinitionCollection types)
@@ -44,7 +47,7 @@ namespace Mono.Cecil.Implem {
             TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
             m_types = new TypeDefinition [typesTable.Rows.Count - 1];
             for (int i = 1; i < typesTable.Rows.Count; i++) {
-                TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
+                TypeDefRow type = typesTable [i];
                 TypeDefinition t = new TypeDefinition (
                     m_root.Streams.StringsHeap [type.Name],
                     m_root.Streams.StringsHeap [type.Namespace],
@@ -56,7 +59,7 @@ namespace Mono.Cecil.Implem {
             // nested types
             NestedClassTable nested = m_root.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
             for (int i = 0; i < nested.Rows.Count; i++) {
-                NestedClassRow row = nested.Rows [i] as NestedClassRow;
+                NestedClassRow row = nested [i];
 
                 TypeDefinition parent = m_types [row.EnclosingClass - 2];
                 TypeDefinition child = m_types [row.NestedClass - 2];
@@ -71,7 +74,7 @@ namespace Mono.Cecil.Implem {
                 m_refs = new TypeReference [typesRef.Rows.Count];
 
                 for (int i = 0; i < typesRef.Rows.Count; i++) {
-                    TypeRefRow type = typesRef.Rows [i] as TypeRefRow;
+                    TypeRefRow type = typesRef [i];
                     TypeReference t = new TypeReference (
                         m_root.Streams.StringsHeap [type.Name],
                         m_root.Streams.StringsHeap [type.Namespace]);
@@ -83,7 +86,7 @@ namespace Mono.Cecil.Implem {
 
             // set base types
             for (int i = 1; i < typesTable.Rows.Count; i++) {
-                TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
+                TypeDefRow type = typesTable [i];
                 TypeDefinition child = m_types [i - 1];
 
                 if (type.Extends.RID != 0) {
@@ -129,7 +132,7 @@ namespace Mono.Cecil.Implem {
 
             InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
-                InterfaceImplRow intRow = intfsTable.Rows [i] as InterfaceImplRow;
+                InterfaceImplRow intRow = intfsTable [i];
                 if ((intRow.Class - 2) == index) {
                     ITypeReference interf = null;
                     switch (intRow.Interface.TokenType) {
@@ -176,6 +179,29 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IFieldDefinitionCollection fields)
         {
+            FieldDefinitionCollection flds = fields as FieldDefinitionCollection;
+            if (flds.Loaded)
+                return;
+
+            TypeDefinition dec = flds.Container as TypeDefinition;
+            int index = Array.IndexOf (m_types, dec), next;
+            TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+            FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
+            if ((index + 2) == (tdefTable.Rows.Count))
+                next = fldTable.Rows.Count + 1;
+            else
+                next = (int) (tdefTable [index + 2]).FieldList;
+
+            for (int i = (int) tdefTable [index + 1].FieldList; i < next; i++) {
+                FieldRow frow = fldTable [i - 1];
+
+                FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
+                FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
+                                                            dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
+                fields [fdef.Name] = fdef;
+            }
+
+            flds.Loaded = true;
         }
 
         public void Visit (IFieldDefinition field)
@@ -184,10 +210,82 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IPropertyDefinitionCollection properties)
         {
+            PropertyDefinitionCollection props = properties as PropertyDefinitionCollection;
+            if (props.Loaded)
+                return;
+
+            TypeDefinition dec = props.Container as TypeDefinition;
+            int index = Array.IndexOf (m_types, dec), next;
+            PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
+
+            PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
+            PropertyMapRow thisRow = null, nextRow = null;
+            for (int i = 0; i < pmapTable.Rows.Count; i++) {
+                if (pmapTable [i].Parent == index + 2) {
+                    thisRow = pmapTable [i];
+                    continue;
+                } else if (pmapTable [i].Parent == index + 3) {
+                    nextRow = pmapTable [i];
+                }
+            }
+
+            if (thisRow == null)
+                return;
+
+            if (nextRow == null)
+                next = propsTable.Rows.Count;
+            else
+                next = (int) nextRow.PropertyList;
+
+            for (int i = (int) thisRow.PropertyList; i < next; i++) {
+                PropertyRow prow = propsTable [i];
+
+                PropertySig psig = m_sigReader.GetPropSig (prow.Type);
+
+                PropertyDefinition pdef = new PropertyDefinition (m_root.Streams.StringsHeap [prow.Name],
+                                                                  dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
+
+                // read set & get method
+                // should they be lazy loaded to avoid loading of methods ?
+
+                properties [pdef.Name] = pdef;
+            }
+
+            props.Loaded = true;
         }
 
         public void Visit (IPropertyDefinition property)
         {
+        }
+
+        public ITypeReference GetTypeRefFromSig (SigType t)
+        {
+            ITypeReference ret = null;
+            switch (t.ElementType) {
+            case ElementType.Class :
+                CLASS c = t as CLASS;
+                switch (c.Type.TokenType) {
+                case TokenType.TypeDef :
+                    ret = m_types [c.Type.RID - 2];
+                    break;
+                case TokenType.TypeRef :
+                    ret = m_refs [c.Type.RID - 1];
+                    break;
+                }
+                break;
+            case ElementType.ValueType :
+                VALUETYPE vt = t as VALUETYPE;
+                switch (vt.Type.TokenType) {
+                case TokenType.TypeDef :
+                    ret = m_types [vt.Type.RID - 2];
+                    break;
+                case TokenType.TypeRef :
+                    ret = m_refs [vt.Type.RID - 1];
+                    break;
+                }
+                break;
+            }
+            return ret;
         }
     }
 }

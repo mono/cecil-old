@@ -21,5 +21,6 @@ namespace Mono.Cecil {
         IMethodDefinitionCollection Methods { get; }
         IFieldDefinitionCollection Fields { get; }
         IEventDefinitionCollection Events { get; }
+        IPropertyDefinitionCollection Properties { get; }
     }
 }

@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class SzArray : SigType {
+    internal sealed class SZARRAY : SigType {
 
         private CustomMod [] m_customMods;
         private SigType m_type;
@@ -27,7 +27,7 @@ namespace Mono.Cecil.Signatures {
             set { m_type = value; }
         }
 
-        public SzArray () : base (ElementType.SzArray)
+        public SZARRAY () : base (ElementType.SzArray)
         {
         }
     }

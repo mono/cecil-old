@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class Ptr : SigType {
+    internal sealed class PTR : SigType {
 
         private CustomMod [] m_customMods;
         private SigType m_ptrType;
@@ -33,7 +33,7 @@ namespace Mono.Cecil.Signatures {
             set { m_void = value; }
         }
 
-        public Ptr () : base (ElementType.Ptr)
+        public PTR () : base (ElementType.Ptr)
         {
         }
     }

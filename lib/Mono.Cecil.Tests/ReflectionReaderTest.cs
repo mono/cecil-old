@@ -53,9 +53,9 @@ namespace Mono.Cecil.Tests {
                     Console.WriteLine ("module ref : {0}", mr.Name);
                 }
 
-                foreach (ITypeDefinition type in def.Types) {
+                /*foreach (ITypeDefinition type in def.Types) {
                     Console.WriteLine (type.FullName);
-                }
+                }*/
 
                 if (def.Main) {
                     ITypeDefinition array = def.Types ["System.Web.UI.Control"];
@@ -65,6 +65,14 @@ namespace Mono.Cecil.Tests {
                     foreach (ITypeReference interf in array.Interfaces) {
                         Console.WriteLine (interf.FullName);
                     }
+
+                    /*foreach (IFieldDefinition field in array.Fields) {
+                        Console.WriteLine ("field: " + field.Name);
+                    }
+
+                    foreach (IPropertyDefinition prop in array.Properties) {
+                        Console.WriteLine ("property: " + prop.Name);
+                    }*/
                 }
             }
         }

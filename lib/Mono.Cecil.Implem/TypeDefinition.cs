@@ -29,6 +29,7 @@ namespace Mono.Cecil.Implem {
         private MethodDefinitionCollection m_methods;
         private FieldDefinitionCollection m_fields;
         private EventDefinitionCollection m_events;
+        private PropertyDefinitionCollection m_properties;
 
         private ITypeReference m_declaringType;
 
@@ -90,6 +91,14 @@ namespace Mono.Cecil.Implem {
                 if (m_events == null)
                     m_events = new EventDefinitionCollection (this);
                 return m_events;
+            }
+        }
+
+        public IPropertyDefinitionCollection Properties {
+            get {
+                if (m_properties == null)
+                    m_properties = new PropertyDefinitionCollection (this);
+                return m_properties;
             }
         }
 

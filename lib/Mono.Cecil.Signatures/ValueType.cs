@@ -14,7 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     using Mono.Cecil.Metadata;
 
-    internal sealed class ValueType : SigType {
+    internal sealed class VALUETYPE : SigType {
 
         private MetadataToken m_type;
 
@@ -23,7 +23,7 @@ namespace Mono.Cecil.Signatures {
             set { m_type = value; }
         }
 
-        public ValueType () : base (ElementType.ValueType)
+        public VALUETYPE () : base (ElementType.ValueType)
         {
         }
     }
