@@ -19,6 +19,7 @@
         <type name="Mono.Cecil.TypeAttributes" underlying="uint" size="4" />
         <type name="Mono.Cecil.FieldAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.FileAttributes" underlying="uint" size="4" />
+        <type name="Mono.Cecil.GenericParamAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.PInvokeAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.ParamAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.PropertyAttributes" underlying="ushort" size="2" />
@@ -236,6 +237,16 @@
                 <column name="Name" type="uint" target="StringsHeap" />
                 <column name="HashValue" type="uint" target="BlobHeap" />
             </table>
+            <table name="GenericParam" rid="0x2a" require="NET_2_0">
+                <column name="Number" type="ushort" />
+                <column name="Flags" type="Mono.Cecil.GenericParamAttributes" />
+                <column name="Owner" type="Mono.Cecil.Metadata.MetadataToken" target="TypeOrMethodDef" />
+                <column name="Name" type="uint" target="StringsHeap" />
+            </table>
+            <table name="GenericParamConstraint" rid="0x2c" require="NET_2_0">
+                <column name="Owner" type="uint" target="GenericParam" />
+                <column name="Constraint" type="Mono.Cecil.Metadata.MetadataToken" target="TypeDefOrRef" />
+            </table>
             <table name="ImplMap" rid="0x1c">
                 <column name="MappingFlags" type="Mono.Cecil.PInvokeAttributes" />
                 <column name="MemberForwarded" type="Mono.Cecil.Metadata.MetadataToken" target="MemberForwarded" />
@@ -397,6 +408,10 @@
                 <table name="ModuleRef" tag="1" />
                 <table name="AssemblyRef" tag="2" />
                 <table name="TypeRef" tag="3" />
+            </codedindex>
+            <codedindex name="TypeOrMethodDef" size="1" require="NET_2_0">
+                <table name="TypeDef" tag="0" />
+                <table name="Method" tag="1" />
             </codedindex>
         </codedindexes>
 
@@ -634,12 +649,7 @@
         <collection type="IType" container="ITypeDefinition" visit="IReflection" name="IInterface" />
         <collection type="IParameterDefinition" container="IMethodDefinition" visit="IReflection" />
         <collection type="IMethod" container="IMethodDefinition" visit="IReflection" name="IOverride" />
-        <!--
-        <collection type="IMethodDefinition" />
-        <collection type="IMethodReference" />
-        <collection type="ITypeDefinition" />
-        <collection type="ITypeReference" />
-        -->
+        <collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" />
     </collections>
 
 </cecil>

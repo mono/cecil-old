@@ -3,6 +3,15 @@
 
 module Cecil
 
+    class Evolutive # abstract
+
+        attr_reader(:requ)
+
+        def initialize(requ)
+            @requ = requ
+        end
+    end
+
     class FieldWorker # abstract
 
         attr_reader(:field_name)
@@ -72,7 +81,7 @@ module Cecil
         end
     end
 
-    class Table
+    class Table < Evolutive
 
         attr_reader(:ref_ns)
         attr_reader(:rid)
@@ -81,7 +90,8 @@ module Cecil
         attr_reader(:row_name)
         attr_reader(:columns)
 
-        def initialize(name, rid)
+        def initialize(name, rid, requ)
+            super(requ)
             @name = name
             @table_name = name + "Table"
             @row_name = name + "Row"
@@ -208,13 +218,14 @@ module Cecil
         end
     end
 
-    class CodedIndex
+    class CodedIndex < Evolutive
 
         attr_reader(:name)
         attr_reader(:size)
         attr_reader(:tables)
 
-        def initialize(name, size)
+        def initialize(name, size, requ)
+            super(requ)
             @name = name
             @size = size
             @tables = Array.new

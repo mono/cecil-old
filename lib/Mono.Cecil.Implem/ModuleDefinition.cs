@@ -55,7 +55,7 @@ namespace Mono.Cecil.Implem {
         }
 
         public ITypeDefinitionCollection Types {
-            get { throw new NotImplementedException (); } //TODO
+            get { throw new NotImplementedException (); } //TODO implement type loading
         }
 
         public ModuleDefinition (string name) : this (name, true)

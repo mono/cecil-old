@@ -12,7 +12,13 @@
  * <%=Time.now%>
  *
  *****************************************************************************/
-
+<%
+    if (!$cur_table.requ.nil?) then
+        print("\n")
+        print("#if #{$cur_table.requ.to_s}")
+        print("\n")
+    end
+%>
 namespace Mono.Cecil.Metadata {
 <% $cur_table.ref_ns.each { |ns| %>
     using <%=ns%>;
@@ -64,3 +70,9 @@ namespace Mono.Cecil.Metadata {
         }
     }
 }
+<%
+    if (!$cur_table.requ.nil?) then
+    print("\n")
+    print("#endif")
+    end
+%>

@@ -10,12 +10,19 @@
  *
  *****************************************************************************/
 
+#if NET_2_0
+
 namespace Mono.Cecil {
 
-    public interface IResource : IReflectionStructureVisitable {
+    using System;
 
-        string Name { get; set; }
-        ManifestResourceAttributes Attributes { get; set; }
+    [Flags]
+    internal enum GenericParamAttributes : ushort {
+        VarianceMask  = 0x0003,
+        NonVariant    = 0x0000,
+        Covariant     = 0x0001,
+        Contravariant = 0x0002
     }
 }
 
+#endif

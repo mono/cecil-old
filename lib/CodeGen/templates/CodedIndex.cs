@@ -17,7 +17,14 @@ namespace Mono.Cecil.Metadata {
 
     internal enum CodedIndex {
 <% $coded_indexes.each { |ci|
+     if (!ci.requ.nil?) then
+         puts("#if #{ci.requ.to_s}")
+     end
 %>        <%=ci.name%><% if ci != $coded_indexes.last %>,<% end %>
-<% }
+<%
+     if (!ci.requ.nil?) then
+         puts("#endif")
+     end
+   }
 %>    }
 }

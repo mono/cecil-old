@@ -58,6 +58,7 @@
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReference.cs"/>
@@ -93,6 +94,8 @@
         <Compile Include="Mono.Cecil.Metadata\FieldMarshal.cs"/>
         <Compile Include="Mono.Cecil.Metadata\FieldRVA.cs"/>
         <Compile Include="Mono.Cecil.Metadata\File.cs"/>
+        <Compile Include="Mono.Cecil.Metadata\GenericParam.cs"/>
+        <Compile Include="Mono.Cecil.Metadata\GenericParamConstraint.cs"/>
         <Compile Include="Mono.Cecil.Metadata\GuidHeap.cs"/>
         <Compile Include="Mono.Cecil.Metadata\HeapAttribute.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataRow.cs"/>
@@ -143,6 +146,7 @@
         <Compile Include="Mono.Cecil\EventAttributes.cs"/>
         <Compile Include="Mono.Cecil\FieldAttributes.cs"/>
         <Compile Include="Mono.Cecil\FileAttributes.cs"/>
+        <Compile Include="Mono.Cecil\GenericParamAttributes.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyDefinition.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>
@@ -151,6 +155,7 @@
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
         <Compile Include="Mono.Cecil\IMethod.cs"/>
+        <Compile Include="Mono.Cecil\IMethodDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil\IModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IModuleReference.cs"/>
