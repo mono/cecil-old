@@ -12,11 +12,14 @@
 
 namespace Mono.Cecil {
 
-    using System;
+    public interface IFieldReference : IMemberReference, IReflectionVisitable {
 
-    [Flags]
-    public enum EventAttributes : ushort {
-        SpecialName     = 0x0200,    // Event is special
-        RTSpecialName   = 0x0400     // CLI provides 'special' behavior, depending upon the name of the event
+        ITypeReference FieldType { get; set; }
+    }
+
+    public interface IFieldDefinition : IMemberDefinition, IFieldReference, IReflectionVisitable {
+
+        FieldAttributes Attributes { get; set; }
+        object Value { get;  set; }
     }
 }

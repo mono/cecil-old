@@ -27,6 +27,8 @@ namespace Mono.Cecil.Implem {
 
         private InterfaceCollection m_interfaces;
         private MethodDefinitionCollection m_methods;
+        private FieldDefinitionCollection m_fields;
+        private EventDefinitionCollection m_events;
 
         private ITypeReference m_declaringType;
 
@@ -72,6 +74,22 @@ namespace Mono.Cecil.Implem {
                 if (m_methods == null)
                     m_methods = new MethodDefinitionCollection (this);
                 return m_methods;
+            }
+        }
+
+        public IFieldDefinitionCollection Fields {
+            get {
+                if (m_fields == null)
+                    m_fields = new FieldDefinitionCollection (this);
+                return m_fields;
+            }
+        }
+
+        public IEventDefinitionCollection Events {
+            get {
+                if (m_events == null)
+                    m_events = new EventDefinitionCollection (this);
+                return m_events;
             }
         }
 

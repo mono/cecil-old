@@ -56,6 +56,10 @@
         <Compile Include="Mono.Cecil.Implem\AssemblyName.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
+        <Compile Include="Mono.Cecil.Implem\EventDefinition.cs"/>
+        <Compile Include="Mono.Cecil.Implem\EventDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
+        <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
@@ -69,6 +73,8 @@
         <Compile Include="Mono.Cecil.Implem\ModuleReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
+        <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
@@ -159,6 +165,10 @@
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil\IEmbeddedResource.cs"/>
+        <Compile Include="Mono.Cecil\IEvent.cs"/>
+        <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IField.cs"/>
+        <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
@@ -171,6 +181,8 @@
         <Compile Include="Mono.Cecil\IOverrideCollection.cs"/>
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IProperty.cs"/>
+        <Compile Include="Mono.Cecil\IPropertyDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs"/>
         <Compile Include="Mono.Cecil\IReflectionVisitable.cs"/>

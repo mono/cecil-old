@@ -22,5 +22,11 @@ namespace Mono.Cecil {
         void Visit (IParameterDefinitionCollection parameters);
         void Visit (IMethodDefinitionCollection methods);
         void Visit (IMethodDefinition method);
+        void Visit (IEventDefinitionCollection events);
+        void Visit (IEventDefinition evt);
+        void Visit (IFieldDefinitionCollection fields);
+        void Visit (IFieldDefinition field);
+        void Visit (IPropertyDefinitionCollection properties);
+        void Visit (IPropertyDefinition property);
     }
 }

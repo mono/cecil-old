@@ -19,5 +19,7 @@ namespace Mono.Cecil {
         IInterfaceCollection Interfaces { get; }
 
         IMethodDefinitionCollection Methods { get; }
+        IFieldDefinitionCollection Fields { get; }
+        IEventDefinitionCollection Events { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace Mono.Cecil {
     using System;
 
     [Flags]
-    internal enum PropertyAttributes : ushort {
+    public enum PropertyAttributes : ushort {
         SpecialName     = 0x0200,    // Property is special
         RTSpecialName   = 0x0400,    // Runtime(metadata internal APIs) should check name encoding
         HasDefault      = 0x1000,    // Property has default

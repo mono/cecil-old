@@ -81,7 +81,7 @@ namespace Mono.Cecil.Implem {
             } else
                 m_refs = new TypeReference [0];
 
-            // lets set base types
+            // set base types
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
                 TypeDefinition child = m_types [i - 1];
@@ -163,6 +163,30 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (IMethodDefinition method)
+        {
+        }
+
+        public void Visit (IEventDefinitionCollection events)
+        {
+        }
+
+        public void Visit (IEventDefinition evt)
+        {
+        }
+
+        public void Visit (IFieldDefinitionCollection fields)
+        {
+        }
+
+        public void Visit (IFieldDefinition field)
+        {
+        }
+
+        public void Visit (IPropertyDefinitionCollection properties)
+        {
+        }
+
+        public void Visit (IPropertyDefinition property)
         {
         }
     }

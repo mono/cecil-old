@@ -12,15 +12,11 @@
 
 namespace Mono.Cecil {
 
-    public interface IMethod : IMemberReference, IReflectionVisitable {
+    public interface IMethodReference : IMemberReference, IReflectionVisitable {
 
         MethodAttributes Attributes { get; set; }
         MethodImplAttributes ImplAttributes { get; set; }
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
-    }
-
-    public interface IMethodReference : IMethod, IReflectionVisitable {
-
     }
 
     public interface IMethodDefinition : IMemberDefinition, IMethodReference, IReflectionVisitable {
