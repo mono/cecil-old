@@ -37,6 +37,7 @@ namespace Mono.Cecil.Implem {
         protected FieldDefinition [] m_fields;
         protected EventDefinition [] m_events;
         protected PropertyDefinition [] m_properties;
+        protected MemberReference [] m_memberRefs;
 
         private bool m_isCorlib;
 
@@ -127,7 +128,15 @@ namespace Mono.Cecil.Implem {
             if (m_isCorlib)
                 return m_module.Types [fullName];
 
-            return m_module.TypeReferences [fullName];
+            ITypeReference coreType =  m_module.TypeReferences [fullName];
+            if (coreType == null) {
+                string [] parts = fullName.Split ('.');
+                if (parts.Length != 2)
+                    throw new ReflectionException ("Unvalid core type name");
+                coreType = new TypeReference (parts [1], parts [0]);
+                m_module.TypeReferences [coreType.FullName] = coreType;
+            }
+            return coreType;
         }
 
         public virtual void Visit (ITypeDefinitionCollection types)
@@ -289,6 +298,29 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        private void ReadMemberReferences ()
+        {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MemberRefTable)))
+                return;
+
+            MemberRefTable mrefTable = m_root.Streams.TablesHeap [typeof (MemberRefTable)] as MemberRefTable;
+            m_memberRefs = new MemberReference [mrefTable.Rows.Count];
+            for (int i = 0; i < mrefTable.Rows.Count; i++) {
+                MemberRefRow mrefRow = mrefTable [i];
+
+                IMemberReference owner = null;
+                switch (mrefRow.Class.TokenType) {
+                case TokenType.TypeDef :
+                case TokenType.TypeRef :
+                case TokenType.TypeSpec :
+                    owner = GetTypeDefOrRef (mrefRow.Class);
+                    break;
+                case TokenType.ModuleRef :
+                case TokenType.Method :
+                    break; //TODO: implement that
+                }
+            }
+        }
 
         public virtual void Visit (ITypeDefinition type)
         {
