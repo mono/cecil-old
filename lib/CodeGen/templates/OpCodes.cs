@@ -22,6 +22,7 @@ namespace Mono.Cecil.Cil {
         private OpCodes()
         {
         }
+
 <% $ops.each { |op| %>        public static readonly OpCode <%=op.field_name%> = new OpCode (
             "<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>, <%=op.flowcontrol%>,
             <%=op.opcodetype%>, <%=op.operandtype%>,
