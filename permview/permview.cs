@@ -144,17 +144,6 @@ namespace Mono.Tools {
 							ShowSecurity (tw, "Method " + method.ToString (), method.SecurityDeclarations);
 						}
 					}
-
-					foreach (IPropertyDefinition property in type.Properties) {
-						IMethodDefinition get = property.GetMethod;
-						if ((get != null) && (get.SecurityDeclarations.Count > 0)) {
-							ShowSecurity (tw, get.ToString (), get.SecurityDeclarations);
-						}
-						IMethodDefinition set = property.SetMethod;
-						if ((set != null) && (set.SecurityDeclarations.Count > 0)) {
-							ShowSecurity (tw, set.ToString (), set.SecurityDeclarations);
-						}
-					}
 				}
 			}
 			return true;
