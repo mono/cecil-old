@@ -54,7 +54,6 @@
         <Compile Include="Mono.Cecil.Cil\IInstruction.cs"/>
         <Compile Include="Mono.Cecil.Cil\IInstructionCollection.cs"/>
         <Compile Include="Mono.Cecil.Cil\IMethodBody.cs"/>
-        <Compile Include="Mono.Cecil.Cil\Instruction.cs"/>
         <Compile Include="Mono.Cecil.Cil\IVariable.cs"/>
         <Compile Include="Mono.Cecil.Cil\IVariableDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Cil\OpCode.cs"/>
@@ -69,10 +68,12 @@
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\EventDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\EventDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ExceptionHandler.cs"/>
         <Compile Include="Mono.Cecil.Implem\ExceptionHandlerCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
+        <Compile Include="Mono.Cecil.Implem\Instruction.cs"/>
         <Compile Include="Mono.Cecil.Implem\InstructionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
@@ -98,6 +99,7 @@
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\Utilities.cs"/>
+        <Compile Include="Mono.Cecil.Implem\VariableDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\VariableDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyOS.cs"/>
