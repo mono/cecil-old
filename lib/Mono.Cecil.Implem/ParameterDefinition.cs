@@ -20,7 +20,7 @@ namespace Mono.Cecil.Implem {
         private int m_sequence;
         private ParamAttributes m_attributes;
         private ITypeReference m_paramType;
-        private object m_def;
+        private object m_const;
 
         private MethodReference m_method;
         private CustomAttributeCollection m_customAttrs;
@@ -45,9 +45,9 @@ namespace Mono.Cecil.Implem {
             set { m_paramType = value; }
         }
 
-        public object DefaultValue {
-            get { return m_def; }
-            set { m_def = value; }
+        public object Constant {
+            get { return m_const; }
+            set { m_const = value; }
         }
 
         public MethodReference Method {

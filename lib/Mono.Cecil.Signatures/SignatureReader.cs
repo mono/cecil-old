@@ -664,8 +664,8 @@ namespace Mono.Cecil.Signatures {
                 elem.Value = br.ReadDouble ();
                 break;
             case ElementType.I1 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Byte");
-                elem.Value = br.ReadByte ();
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.SByte");
+                elem.Value = br.ReadSByte ();
                 break;
             case ElementType.I2 :
                 elem.ElemType = m_reflectReader.SearchCoreType ("System.Int16");
@@ -680,8 +680,8 @@ namespace Mono.Cecil.Signatures {
                 elem.Value = br.ReadInt64 ();
                 break;
             case ElementType.U1 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.SByte");
-                elem.Value = br.ReadSByte ();
+                elem.ElemType = m_reflectReader.SearchCoreType ("System.Byte");
+                elem.Value = br.ReadByte ();
                 break;
             case ElementType.U2 :
                 elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt16");

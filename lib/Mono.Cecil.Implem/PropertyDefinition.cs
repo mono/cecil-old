@@ -29,6 +29,8 @@ namespace Mono.Cecil.Implem {
 
         private bool m_readed = false;
 
+        private object m_const;
+
         public ITypeReference PropertyType {
             get { return m_propertyType; }
             set { m_propertyType = value; }
@@ -78,6 +80,11 @@ namespace Mono.Cecil.Implem {
                 return m_setMeth;
             }
             set { m_setMeth = value; }
+        }
+
+        public object Constant {
+            get { return m_const; }
+            set { m_const = value; }
         }
 
         public PropertyDefinition (string name, TypeDefinition decType, ITypeReference propType, PropertyAttributes attrs) : base (name, decType)

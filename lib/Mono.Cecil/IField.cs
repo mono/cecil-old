@@ -21,6 +21,6 @@ namespace Mono.Cecil {
 
         FieldAttributes Attributes { get; set; }
         IFieldLayoutInfo LayoutInfo { get; }
-        object Value { get;  set; }
+        object Constant { get;  set; }
     }
 }

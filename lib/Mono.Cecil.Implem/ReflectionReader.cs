@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.IO;
     using System.Security;
     using System.Security.Permissions;
     using System.Text;
@@ -598,6 +599,46 @@ namespace Mono.Cecil.Implem {
                                             parameters, GetMethodReturnType (funcptr.Method));
             }
             return null;
+        }
+
+        protected object GetConstant (uint pos, ElementType elemType)
+        {
+            BinaryReader br = m_root.Streams.BlobHeap.GetReader (pos);
+
+            switch (elemType) {
+            case ElementType.Boolean :
+                return br.ReadByte () == 1;
+            case ElementType.Char :
+                return br.ReadChar ();
+            case ElementType.I1 :
+                return br.ReadSByte ();
+            case ElementType.I2 :
+                return br.ReadInt16 ();
+            case ElementType.I4 :
+                return br.ReadInt32 ();
+            case ElementType.I8 :
+                return br.ReadInt64 ();
+            case ElementType.U1 :
+                return br.ReadByte ();
+            case ElementType.U2 :
+                return br.ReadUInt16 ();
+            case ElementType.U4 :
+                return br.ReadUInt32 ();
+            case ElementType.U8 :
+                return br.ReadUInt64 ();
+            case ElementType.R4 :
+                return br.ReadSingle ();
+            case ElementType.R8 :
+                return br.ReadDouble ();
+            case ElementType.String :
+                int next, length = Utilities.ReadCompressedInteger (m_root.Streams.BlobHeap.Data, (int) br.BaseStream.Position, out next);
+                br.BaseStream.Position = next;
+                return Encoding.UTF8.GetString (br.ReadBytes (length));
+            case ElementType.Class :
+                return null;
+            default :
+                throw new ReflectionException ("Non valid element in constant table");
+            }
         }
     }
 }

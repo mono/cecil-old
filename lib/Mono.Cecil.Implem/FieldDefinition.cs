@@ -24,7 +24,7 @@ namespace Mono.Cecil.Implem {
         private bool m_hasInfo;
         private uint m_offset;
 
-        private object m_value;
+        private object m_const;
 
         public IFieldLayoutInfo LayoutInfo {
             get { return this; }
@@ -52,9 +52,9 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        public object Value {
-            get { return m_value; }
-            set { m_value = value; }
+        public object Constant {
+            get { return m_const; }
+            set { m_const = value; }
         }
 
         public ICustomAttributeCollection CustomAttributes {

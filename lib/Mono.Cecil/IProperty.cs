@@ -24,5 +24,7 @@ namespace Mono.Cecil {
 
         IMethodDefinition GetMethod { get; set; }
         IMethodDefinition SetMethod { get; set; }
+
+        object Constant { get; set; }
     }
 }

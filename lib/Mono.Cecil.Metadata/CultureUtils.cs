@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Globalization;
 
-    public sealed class CultureUtils {
+    internal sealed class CultureUtils {
 
         private static string [] cultures = new string [] {
             "ar-SA", "ar-IQ", "ar-EG", "ar-LY",

@@ -40,6 +40,7 @@ namespace Mono.Cecil.Implem {
             ReadOverrides ();
             ReadSecurityDeclarations ();
             ReadCustomAttributes ();
+            ReadConstants ();
 
             m_events = null;
             m_properties = null;
@@ -295,6 +296,31 @@ namespace Mono.Cecil.Implem {
                     break;
                 default :
                     //TODO: support other ?
+                    break;
+                }
+            }
+        }
+
+        private void ReadConstants ()
+        {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ConstantTable)))
+                return;
+
+            ConstantTable csTable = m_root.Streams.TablesHeap [typeof (ConstantTable)] as ConstantTable;
+            for (int i = 0; i < csTable.Rows.Count; i++) {
+                ConstantRow csRow = csTable [i];
+
+                object constant = GetConstant (csRow.Value, csRow.Type);
+
+                switch (csRow.Parent.TokenType) {
+                case TokenType.Field :
+                    m_fields [csRow.Parent.RID - 1].Constant = constant;
+                    break;
+                case TokenType.Property :
+                    m_properties [csRow.Parent.RID - 1].Constant = constant;
+                    break;
+                case TokenType.Param :
+                    m_parameters [csRow.Parent.RID - 1].Constant = constant;
                     break;
                 }
             }

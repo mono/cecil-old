@@ -18,7 +18,7 @@ namespace Mono.Cecil {
         int Sequence { get; }
         ParamAttributes Attributes { get; set; }
         ITypeReference ParameterType { get; set; }
-        object DefaultValue { get; set; }
+        object Constant { get; set; }
     }
 
     public interface IParameterDefinition : IParameterReference, ICustomAttributeProvider {
