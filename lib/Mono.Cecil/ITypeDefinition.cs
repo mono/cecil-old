@@ -14,8 +14,10 @@ namespace Mono.Cecil {
 
     public interface ITypeDefinition : ITypeReference, IMemberDefinition {
 
+        TypeAttributes Attributes { get; set; }
         IType BaseType { get; set; }
         IInterfaceCollection Interfaces { get; }
+        INestedTypesCollection NestedTypes { get; }
 
         IMethodDefinitionCollection Methods { get; }
     }

@@ -23,6 +23,7 @@ namespace Mono.Cecil.Implem {
         private TypeAttributes m_attributes;
         private IType m_baseType;
 
+        private NestedTypesCollection m_nestedTypes;
         private InterfaceCollection m_interfaces;
         private MethodDefinitionCollection m_methods;
 
@@ -62,14 +63,8 @@ namespace Mono.Cecil.Implem {
             set { m_declaringType = value; }
         }
 
-        public TypeDefinition (string name, string ns, TypeAttributes attrs)
-        {
-            m_name = name;
-            m_namespace = ns;
-            m_attributes = attrs;
-
-            m_interfaces = new InterfaceCollection (this);
-            m_methods = new MethodDefinitionCollection (this);
+        public INestedTypesCollection NestedTypes {
+            get { return m_nestedTypes; }
         }
 
         public IInterfaceCollection Interfaces {
@@ -78,6 +73,17 @@ namespace Mono.Cecil.Implem {
 
         public IMethodDefinitionCollection Methods {
             get { return m_methods; }
+        }
+
+        public TypeDefinition (string name, string ns, TypeAttributes attrs)
+        {
+            m_name = name;
+            m_namespace = ns;
+            m_attributes = attrs;
+
+            m_nestedTypes = new NestedTypesCollection (this);
+            m_interfaces = new InterfaceCollection (this);
+            m_methods = new MethodDefinitionCollection (this);
         }
 
         public void Accept (IReflectionVisitor visitor)

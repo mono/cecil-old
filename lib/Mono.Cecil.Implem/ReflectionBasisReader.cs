@@ -21,6 +21,7 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (ITypeDefinitionCollection types)
         {
+            //TODO: optimize this
             TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
             if (tdc != null && tdc.Loaded)
                 return;
@@ -30,21 +31,69 @@ namespace Mono.Cecil.Implem {
 
             MetadataRoot mr = sr.Image.MetadataRoot;
 
-            TypeDefTable tdt = mr.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-            foreach (TypeDefRow type in tdt.Rows) {
+            TypeDefTable typesTable = mr.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+
+            TypeDefinition [] typeDefs = new TypeDefinition [typesTable.Rows.Count - 1];
+
+            for (int i = 1; i < typesTable.Rows.Count; i++) {
+                TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
                 TypeDefinition t = new TypeDefinition (
                     mr.Streams.StringsHeap [type.Name],
                     mr.Streams.StringsHeap [type.Namespace],
                     type.Flags);
-                types [t.FullName] = t;
+
+                typeDefs [i - 1] = t;
             }
 
-            //TODO: read nested types
+            NestedClassTable nested = mr.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
+
+            for (int i = 0; i < nested.Rows.Count; i++) {
+                NestedClassRow row = nested.Rows [i] as NestedClassRow;
+
+                TypeDefinition parent = typeDefs [row.EnclosingClass - 2];
+                TypeDefinition child = typeDefs [row.NestedClass - 2];
+
+                child.DeclaringType = parent;
+                parent.NestedTypes [child.Name] = child;
+            }
+
+            /*for (int i = 0; i < typesTable.Rows.Count; i++) {
+                TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
+                TypeDefinition child = typeDefs [i];
+
+                if (type.Extends.RID != 0) {
+                    switch (type.Extends.TokenType) {
+                    case TokenType.TypeDef :
+                        //child.BaseType = typeDefs [type.Extends.RID];
+                        break;
+                    case TokenType.TypeRef :
+                        //TODO: implement type ref reading
+                        break;
+                    case TokenType.TypeSpec :
+                        //TODO: implement this...
+                        break;
+                    }
+                }
+            }*/
+
+            for (int i = 0; i < typeDefs.Length; i++) {
+                TypeDefinition type =typeDefs [i];
+                tdc [type.FullName] = type;
+            }
+
 
             tdc.Loaded = true;
         }
 
         public void Visit (ITypeDefinition type)
+        {
+        }
+
+        public void Visit (ITypeReference type)
+        {
+        }
+
+        public void Visit (INestedTypesCollection nestedTypes)
         {
         }
 

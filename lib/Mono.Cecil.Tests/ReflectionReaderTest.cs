@@ -55,6 +55,14 @@ namespace Mono.Cecil.Tests {
                 foreach (ITypeDefinition type in def.Types) {
                     Console.WriteLine (type.FullName);
                 }
+
+                if (def.Main) {
+                    Console.WriteLine ("Array nested classes :");
+                    ITypeDefinition array = def.Types ["System.Array"];
+                    foreach (ITypeDefinition nc in array.NestedTypes) {
+                        Console.WriteLine (nc.FullName);
+                    }
+                }
             }
         }
     }

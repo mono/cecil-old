@@ -46,9 +46,8 @@ namespace Mono.Cecil.Implem {
         {
             m_asmDef = asm;
             AssemblyTable atable = m_img.MetadataRoot.Streams.TablesHeap [typeof(AssemblyTable)] as AssemblyTable;
-            if (atable == null || atable.Rows == null || atable.Rows [0] == null) {
+            if (atable == null || atable.Rows == null || atable.Rows [0] == null)
                 throw new ReflectionException ("Can not create an AssemblyDefinition");
-            }
         }
 
         public void Visit (IAssemblyNameDefinition name)
@@ -83,7 +82,8 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (IAssemblyNameReference name)
-        {}
+        {
+        }
 
         public void Visit (IResourceCollection resources)
         {
@@ -123,13 +123,16 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (IEmbeddedResource res)
-        {}
+        {
+        }
 
         public void Visit (ILinkedResource res)
-        {}
+        {
+        }
 
         public void Visit (IModuleDefinition module)
-        {}
+        {
+        }
 
         public void Visit (IModuleDefinitionCollection modules)
         {
@@ -175,7 +178,8 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (IModuleReference module)
-        {}
+        {
+        }
 
         public void Visit (IModuleReferenceCollection modules)
         {

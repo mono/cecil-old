@@ -65,6 +65,7 @@
         <Compile Include="Mono.Cecil.Implem\ModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReferenceCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\NestedTypesCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionBasisReader.cs"/>
@@ -74,6 +75,7 @@
         <Compile Include="Mono.Cecil.Implem\StructureReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\TypeReference.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyOS.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyProcessor.cs"/>
@@ -164,6 +166,7 @@
         <Compile Include="Mono.Cecil\IModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IModuleReference.cs"/>
         <Compile Include="Mono.Cecil\IModuleReferenceCollection.cs"/>
+        <Compile Include="Mono.Cecil\INestedTypesCollection.cs"/>
         <Compile Include="Mono.Cecil\IOverrideCollection.cs"/>
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>

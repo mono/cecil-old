@@ -648,6 +648,7 @@
         <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" />
         <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" />
         <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" />
+        <collection type="ITypeDefinition" container="ITypeDefinition" visit="IReflection" name="INestedTypes" />
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" />
         <collection type="IType" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" />
         <collection type="IParameterDefinition" container="IMethodDefinition" visit="IReflection" lazyload="true" />
