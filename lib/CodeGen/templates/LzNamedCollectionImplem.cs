@@ -67,7 +67,7 @@ namespace Mono.Cecil.Implem {
         public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
         {
             m_container = container;
-            m_items = new ListDictionary ();
+            m_items = new HybridDictionary ();
         }        
 
         public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader) : this (container)
