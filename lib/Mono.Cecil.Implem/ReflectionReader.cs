@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil.Metadata;
     using Mono.Cecil.Signatures;
 
-    internal sealed class ReflectionReader : IReflectionVisitor, ISemanticReader {
+    internal sealed class ReflectionReader : IReflectionVisitor, IMethodsReader {
 
         private ModuleDefinition m_module;
         private ImageReader m_reader;
@@ -82,7 +82,7 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        private ITypeReference SearchType (string fullName)
+        private ITypeReference SearchCoreType (string fullName)
         {
             if (m_isCorlib)
                 return m_module.Types [fullName];
@@ -286,10 +286,8 @@ namespace Mono.Cecil.Implem {
 
             for (int i = (int) thisRow.EventList; i < next; i++) {
                 EventRow erow = evtTable [i - 1];
-
                 EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
                                                             GetTypeDefOrRef (erow.EventType), erow.EventFlags);
-
                 events [edef.Name] = edef;
             }
 
@@ -317,7 +315,6 @@ namespace Mono.Cecil.Implem {
 
             for (int i = (int) tdefTable [index].FieldList; i < next; i++) {
                 FieldRow frow = fldTable [i - 1];
-
                 FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
                 FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
                                                             dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
@@ -362,12 +359,9 @@ namespace Mono.Cecil.Implem {
 
             for (int i = (int) thisRow.PropertyList; i < next; i++) {
                 PropertyRow prow = propsTable [i - 1];
-
                 PropertySig psig = m_sigReader.GetPropSig (prow.Type);
-
                 PropertyDefinition pdef = new PropertyDefinition (m_root.Streams.StringsHeap [prow.Name],
                                                                   dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
-
                 properties [pdef.Name] = pdef;
             }
 
@@ -378,7 +372,7 @@ namespace Mono.Cecil.Implem {
         {
         }
 
-        public void ReadSemantic (EventDefinition evt)
+        public void ReadMethods (EventDefinition evt)
         {
             if (evt.Readed)
                 return;
@@ -388,7 +382,7 @@ namespace Mono.Cecil.Implem {
             evt.Readed = true;
         }
 
-        public void ReadSemantic (PropertyDefinition prop)
+        public void ReadMethods (PropertyDefinition prop)
         {
             if (prop.Readed)
                 return;
@@ -411,55 +405,55 @@ namespace Mono.Cecil.Implem {
                 ret = GetTypeDefOrRef (vt.Type);
                 break;
             case ElementType.String :
-                ret = SearchType ("System.String");
+                ret = SearchCoreType ("System.String");
                 break;
             case ElementType.Object :
-                ret = SearchType ("System.Object");
+                ret = SearchCoreType ("System.Object");
                 break;
             case ElementType.Void :
-                ret = SearchType ("System.Void");
+                ret = SearchCoreType ("System.Void");
                 break;
             case ElementType.Boolean :
-                ret = SearchType ("System.Boolean");
+                ret = SearchCoreType ("System.Boolean");
                 break;
             case ElementType.Char :
-                ret = SearchType ("System.Char");
+                ret = SearchCoreType ("System.Char");
                 break;
             case ElementType.I1 :
-                ret = SearchType ("System.SByte");
+                ret = SearchCoreType ("System.SByte");
                 break;
             case ElementType.U1 :
-                ret = SearchType ("System.Byte");
+                ret = SearchCoreType ("System.Byte");
                 break;
             case ElementType.I2 :
-                ret = SearchType ("System.Int16");
+                ret = SearchCoreType ("System.Int16");
                 break;
             case ElementType.U2 :
-                ret = SearchType ("System.UInt16");
+                ret = SearchCoreType ("System.UInt16");
                 break;
             case ElementType.I4 :
-                ret = SearchType ("System.Int32");
+                ret = SearchCoreType ("System.Int32");
                 break;
             case ElementType.U4 :
-                ret = SearchType ("System.UInt32");
+                ret = SearchCoreType ("System.UInt32");
                 break;
             case ElementType.I8 :
-                ret = SearchType ("System.Int64");
+                ret = SearchCoreType ("System.Int64");
                 break;
             case ElementType.U8 :
-                ret = SearchType ("System.UInt64");
+                ret = SearchCoreType ("System.UInt64");
                 break;
             case ElementType.R4 :
-                ret = SearchType ("System.Single");
+                ret = SearchCoreType ("System.Single");
                 break;
             case ElementType.R8 :
-                ret = SearchType ("System.Double");
+                ret = SearchCoreType ("System.Double");
                 break;
             case ElementType.I :
-                ret = SearchType ("System.IntPtr");
+                ret = SearchCoreType ("System.IntPtr");
                 break;
             case ElementType.U :
-                ret = SearchType ("System.UIntPtr");
+                ret = SearchCoreType ("System.UIntPtr");
                 break;
             case ElementType.Array :
             case ElementType.SzArray :

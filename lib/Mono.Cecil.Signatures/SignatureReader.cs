@@ -75,6 +75,11 @@ namespace Mono.Cecil.Signatures {
             return ts;
         }
 
+        public CustomAttrib GetCustomAttrib (uint index)
+        {
+            return null;
+        }
+
         public void Visit (MethodDefSig methodDef)
         {
             int start;

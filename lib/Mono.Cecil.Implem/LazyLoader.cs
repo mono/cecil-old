@@ -24,7 +24,7 @@ namespace Mono.Cecil.Implem {
             get { return m_reflectReader; }
         }
 
-        public ISemanticReader SemanticReader {
+        public IMethodsReader SemanticReader {
             get { return m_reflectReader; }
         }
 

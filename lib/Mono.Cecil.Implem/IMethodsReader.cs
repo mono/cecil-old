@@ -12,9 +12,9 @@
 
 namespace Mono.Cecil.Implem {
 
-    internal interface ISemanticReader {
+    internal interface IMethodsReader {
 
-        void ReadSemantic (EventDefinition evt);
-        void ReadSemantic (PropertyDefinition prop);
+        void ReadMethods (EventDefinition evt);
+        void ReadMethods (PropertyDefinition prop);
     }
 }

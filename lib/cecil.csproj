@@ -75,10 +75,10 @@
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
+        <Compile Include="Mono.Cecil.Implem\IMethodsReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Instruction.cs"/>
         <Compile Include="Mono.Cecil.Implem\InstructionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\ISemanticReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\MemberDefinition.cs"/>
@@ -176,6 +176,7 @@
         <Compile Include="Mono.Cecil.Signatures\CallingConvention.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Class.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Constraint.cs"/>
+        <Compile Include="Mono.Cecil.Signatures\CustomAttrib.cs"/>
         <Compile Include="Mono.Cecil.Signatures\CustomMod.cs"/>
         <Compile Include="Mono.Cecil.Signatures\ElementType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\FieldSig.cs"/>
