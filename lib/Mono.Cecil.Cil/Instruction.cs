@@ -10,9 +10,11 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Cil {
+namespace Mono.Cecil.Implem {
 
-    internal struct Instruction : IInstruction {
+    using Mono.Cecil.Cil;
+
+    internal class Instruction : IInstruction {
 
         private int m_offset;
         private OpCode m_opCode;
