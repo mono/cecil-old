@@ -13,17 +13,22 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.Security;
+    using System.Security.Permissions;
+    using System.Text;
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
     using Mono.Cecil.Signatures;
+    using Mono.Xml;
 
     internal abstract class ReflectionReader : IReflectionVisitor, IMethodsReader {
 
         private ModuleDefinition m_module;
         private ImageReader m_reader;
         protected SignatureReader m_sigReader;
+        protected SecurityParser m_secParser;
         protected MetadataRoot m_root;
 
         protected TypeDefinition [] m_types;
@@ -53,6 +58,7 @@ namespace Mono.Cecil.Implem {
             m_reader = m_module.Reader;
             m_root = m_reader.Image.MetadataRoot;
             m_sigReader = new SignatureReader (m_root);
+            m_secParser = new SecurityParser ();
             m_isCorlib = m_reader.Image.FileInformation.Name == "mscorlib.dll";
         }
 
@@ -345,7 +351,13 @@ namespace Mono.Cecil.Implem {
         protected SecurityDeclaration BuildSecurityDeclaration (DeclSecurityRow dsRow)
         {
             SecurityDeclaration dec = new SecurityDeclaration (dsRow.Action);
-            //TODO: spouliot write here :)
+            if (m_root.Header.MajorVersion < 2) {
+                PermissionSet permset = new PermissionSet (PermissionState.None);
+                m_secParser.Reset ();
+                m_secParser.LoadXml (Encoding.Unicode.GetString (m_root.Streams.BlobHeap.Read (dsRow.PermissionSet)));
+                permset.FromXml (m_secParser.ToXml ());
+                dec.PermissionSet = permset;
+            } //TODO: else
             return dec;
         }
 

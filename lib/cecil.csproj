@@ -283,6 +283,8 @@
         <Compile Include="Mono.Cecil\PropertyAttributes.cs"/>
         <Compile Include="Mono.Cecil\SecurityAction.cs"/>
         <Compile Include="Mono.Cecil\TypeAttributes.cs"/>
+        <Compile Include="Mono.Xml\MiniParser.cs"/>
+        <Compile Include="Mono.Xml\SecurityParser.cs"/>
     </ItemGroup>
     <ItemGroup/>
     <ItemGroup/>
