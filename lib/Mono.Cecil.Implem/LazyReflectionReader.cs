@@ -170,21 +170,9 @@ namespace Mono.Cecil.Implem {
                 CustomAttribute ca = null;
                 IMethodReference ctor = null;
 
-                if (caRow.Parent.TokenType == target && caRow.Parent.RID == rid) {
-                    if (caRow.Type.TokenType == TokenType.Method)
-                        ctor = GetMethodDefAt ((int) caRow.Type.RID);
-                    else
-                        ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
-                }
-
                 switch (caRow.Parent.TokenType) {
                 case TokenType.Assembly :
                 case TokenType.Module :
-                    if (caRow.Parent.TokenType == target) {
-                        sig = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
-                        ca = BuildCustomAttribute (ctor, sig);
-                    }
-                    break;
                 case TokenType.TypeDef :
                 case TokenType.Field :
                 case TokenType.Method :
@@ -192,6 +180,11 @@ namespace Mono.Cecil.Implem {
                 case TokenType.Property :
                 case TokenType.Param :
                     if (caRow.Parent.TokenType == target && caRow.Parent.RID == rid) {
+                        if (caRow.Type.TokenType == TokenType.Method)
+                            ctor = GetMethodDefAt ((int) caRow.Type.RID);
+                        else
+                            ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
+
                         sig = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
                         ca = BuildCustomAttribute (ctor, sig);
                     }
