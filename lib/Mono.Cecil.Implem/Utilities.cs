@@ -51,6 +51,7 @@ namespace Mono.Cecil.Implem {
                     sb.Append (",");
             }
             sb.Append (")");
+            return sb.ToString ();
         }
     }
 }

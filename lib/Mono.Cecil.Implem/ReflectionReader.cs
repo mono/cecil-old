@@ -440,7 +440,9 @@ namespace Mono.Cecil.Implem {
                 return new ArrayType (GetTypeRefFromSig (ary.Type), ary.Shape);
             case ElementType.SzArray :
                 SZARRAY szary = t as SZARRAY;
-                return new ArrayType (GetTypeRefFromSig (szary.Type));
+                ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type));
+                at.Dimensions.Add (new ArrayDimension (0, 0));
+                return at;
             case ElementType.Ptr :
                 PTR pointer = t as PTR;
                 return new Pointer (GetTypeRefFromSig (pointer.PtrType));

@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.Text;
 
     using Mono.Cecil;
     using Mono.Cecil.Signatures;
@@ -43,15 +44,21 @@ namespace Mono.Cecil.Implem {
 
         public override string FullName {
             get {
-                string fname = string.Concat (base.FullName, "[");
-                foreach (ArrayDimension dim in m_dimensions) {
+                StringBuilder sb = new StringBuilder ();
+                sb.Append (base.FullName);
+                sb.Append ("[");
+                for (int i = 0; i < m_dimensions.Count; i++) {
+                    IArrayDimension dim = m_dimensions [i];
                     string rank = dim.ToString ();
-                    if (rank.Length == 0)
-                        fname = string.Concat (fname, ",");
-                    else
-                        fname = string.Concat (fname, ", ", rank);
+                    if (i < m_dimensions.Count - 1)
+                        sb.Append (",");
+                    if (rank.Length > 0) {
+                        sb.Append (" ");
+                        sb.Append (rank);
+                    }
                 }
-                return string.Concat (fname, "]");
+                sb.Append ("]");
+                return sb.ToString ();
             }
         }
 
