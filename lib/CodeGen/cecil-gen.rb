@@ -72,7 +72,8 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
 doc.root.each_element("/cecil/collections//collection") { |node|
     $colls.push(Cecil::Collection.new(node.attribute("type").value, node.attribute("container").value,
         node.attribute("visit").value,
-        (node.attribute("name").nil? ? nil : node.attribute("name").value)))
+        (node.attribute("name").nil? ? nil : node.attribute("name").value),
+        (node.attribute("lazyload").nil? ? false : node.attribute("lazyload").value == "true")))
 }
 
 $compiler = ERuby::Compiler.new()
@@ -152,6 +153,7 @@ $colls.each { |coll|
     files = [ "../Mono.Cecil/" + coll.intf + ".cs",
         "../Mono.Cecil.Implem/" + coll.name + ".cs" ]
     templates = [ "./templates/ICollection.cs", "./templates/CollectionImplem.cs" ]
+    templates[1] = "./templates/LzCollectionImplem.cs" if coll.lazyload
     files.each_with_index { |file, i|
 
         cecil_compile(file, templates[i])

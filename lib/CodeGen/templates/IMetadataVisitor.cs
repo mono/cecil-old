@@ -34,16 +34,8 @@ namespace Mono.Cecil.Metadata {
     internal interface IMetadataTableVisitor {
         void Visit (TableCollection coll);
 
-<% $tables.each { |table| 
-     if (!table.requ.nil?) then
-         puts("#if #{table.requ.to_s}")
-     end
-    %>        void Visit (<%= table.table_name %> table);
-<%
-     if (!table.requ.nil?) then
-         puts("#endif")
-     end
-     } %>
+<% $tables.each { |table| %>        void Visit (<%= table.table_name %> table);
+<% } %>
         void Terminate (TableCollection coll);
         IMetadataRowVisitor GetRowVisitor();
 }
@@ -51,16 +43,8 @@ namespace Mono.Cecil.Metadata {
     internal interface IMetadataRowVisitor {
         void Visit (RowCollection coll);
 
-<% $tables.each { |table| 
-     if (!table.requ.nil?) then
-         puts("#if #{table.requ.to_s}")
-     end
-    %>        void Visit(<%= table.row_name %> row);
-<%
-     if (!table.requ.nil?) then
-         puts("#endif")
-     end
-     } %>
+<% $tables.each { |table| %>        void Visit(<%= table.row_name %> row);
+<% } %>
         void Terminate (RowCollection coll);
     }
 }

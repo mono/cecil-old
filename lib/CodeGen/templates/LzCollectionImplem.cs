@@ -21,13 +21,18 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%> {
+    internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
 
         private IDictionary m_items;
         private <%=$cur_coll.container%> m_container;
+            
+        private bool m_loaded;
 
         public <%=$cur_coll.type%> this [string name] {
-            get { return m_items [name] as <%=$cur_coll.type%>; }
+            get {
+                LazyLoader.Instance.LazyLoadByName (this, name);
+                return m_items [name] as <%=$cur_coll.type%>;
+            }
             set { m_items [name] = value; }
         }
 
@@ -36,7 +41,7 @@ namespace Mono.Cecil.Implem {
         }
 
         public int Count {
-            get { return m_items.Count; }
+            get { return LazyLoader.Instance.GetCount (this); }
         }
 
         public bool IsSynchronized {
@@ -45,6 +50,11 @@ namespace Mono.Cecil.Implem {
 
         public object SyncRoot {
             get { return this; }
+        }
+        
+        public bool Loaded {
+            get { return m_loaded; }
+            set { m_loaded = value; }
         }
 
         public <%=$cur_coll.name%> (<%=$cur_coll.container%> container)
@@ -70,11 +80,13 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
+            this.Accept (LazyLoader.Instance.BasisReader);
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
+            this.Accept (LazyLoader.Instance.BasisReader);
             return m_items.Values.GetEnumerator ();
         }
 

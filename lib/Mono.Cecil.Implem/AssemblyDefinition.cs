@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
         private AssemblyNameDefinition m_asmName;
         private ModuleDefinitionCollection m_modules;
 
+        private StructureReader m_sr;
+
         public IAssemblyNameDefinition Name {
             get { return m_asmName; }
         }
@@ -30,12 +32,19 @@ namespace Mono.Cecil.Implem {
             get { return m_modules; }
         }
 
-        public AssemblyDefinition (AssemblyNameDefinition name)
+        public StructureReader StructureReader {
+            get { return m_sr; }
+        }
+
+        public AssemblyDefinition (AssemblyNameDefinition name, StructureReader sr)
         {
+            if (sr == null)
+                throw new ArgumentException ("sr");
             if (name == null)
                 throw new ArgumentException ("name");
 
             m_asmName = name;
+            m_sr = sr;
             m_modules = new ModuleDefinitionCollection (this);
         }
 

@@ -26,6 +26,9 @@ namespace Mono.Cecil.Implem {
         private AssemblyNameReferenceCollection m_asmRefs;
         private ModuleReferenceCollection m_modRefs;
         private ResourceCollection m_res;
+        private TypeDefinitionCollection m_types;
+
+        private AssemblyDefinition m_asm;
 
         public string Name {
             get { return m_name; }
@@ -55,23 +58,31 @@ namespace Mono.Cecil.Implem {
         }
 
         public ITypeDefinitionCollection Types {
-            get { throw new NotImplementedException (); } //TODO implement type loading
+            get { return m_types; }
         }
 
-        public ModuleDefinition (string name) : this (name, true)
+        public AssemblyDefinition Assembly {
+            get { return m_asm; }
+        }
+
+        public ModuleDefinition (string name, AssemblyDefinition asm) : this (name, true, asm)
         {}
 
-        public ModuleDefinition (string name, bool main)
+        public ModuleDefinition (string name, bool main, AssemblyDefinition asm)
         {
+            if (asm == null)
+                throw new ArgumentException ("asm");
             if (name == null || name.Length == 0)
                 throw new ArgumentException ("name");
 
+            m_asm = asm;
             m_name = name;
             m_main = main;
             m_mvid = new Guid ();
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);
             m_res = new ResourceCollection (this);
+            m_types = new TypeDefinitionCollection (this);
         }
 
         public void DefineModuleReference (string module)

@@ -17,5 +17,7 @@ namespace Mono.Cecil {
         string Name { get; set; }
         string Namespace { get; set; }
         TypeAttributes Attributes { get; set; }
+
+        string FullName { get; }
     }
 }

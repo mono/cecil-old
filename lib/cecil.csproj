@@ -56,7 +56,9 @@
         <Compile Include="Mono.Cecil.Implem\AssemblyName.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinition.cs"/>
@@ -65,10 +67,12 @@
         <Compile Include="Mono.Cecil.Implem\ModuleReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ReflectionBasisReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
         <Compile Include="Mono.Cecil.Implem\ResourceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\StructureReader.cs"/>
+        <Compile Include="Mono.Cecil.Implem\TypeDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyOS.cs"/>

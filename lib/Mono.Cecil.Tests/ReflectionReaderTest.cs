@@ -51,6 +51,10 @@ namespace Mono.Cecil.Tests {
                 foreach (IModuleReference mr in def.ModuleReferences) {
                     Console.WriteLine ("module ref : {0}", mr.Name);
                 }
+
+                foreach (ITypeDefinition type in def.Types) {
+                    Console.WriteLine (type.FullName);
+                }
             }
         }
     }

@@ -134,8 +134,9 @@ module Cecil
         attr_reader(:visitable)
         attr_reader(:visitor)
         attr_reader(:visitThis)
+        attr_reader(:lazyload)
 
-        def initialize(type, container, visit, name)
+        def initialize(type, container, visit, name, lazyload)
             @type = type
             @intf = (name.nil? ? type : name) + "Collection"
             @name = @intf[1..@intf.length]
@@ -143,6 +144,7 @@ module Cecil
             @visitable = visit + "Visitable"
             @visitor = visit + "Visitor"
             @visitThis = "Visit"
+            @lazyload = lazyload
         end
     end
 

@@ -71,36 +71,20 @@ namespace Mono.Cecil.Metadata {
 %>
         public void Visit (TableCollection coll)
         {
-<% stables.each { |table| 
-     if (!table.requ.nil?) then
-         puts("#if #{table.requ.to_s}")
-     end
-    %>            if (m_heap.HasTable (typeof (<%=table.table_name%>))) {
+<% stables.each { |table|  %>            if (m_heap.HasTable (typeof (<%=table.table_name%>))) {
                 coll.Add (new <%=table.table_name%> ());
                 ReadNumberOfRows (typeof (<%=table.table_name%>));
             }
-<%
-     if (!table.requ.nil?) then
-         puts("#endif")
-     end
-     } %>        }
+<% } %>        }
 
-<% $tables.each { |table|
-     if (!table.requ.nil?) then
-         puts("#if #{table.requ.to_s}")
-     end%>        public void Visit (<%=table.table_name%> table)
+<% $tables.each { |table| %>        public void Visit (<%=table.table_name%> table)
         {
             table.Rows = new RowCollection (table);
             int number = GetNumberOfRows (typeof (<%=table.table_name%>));
             for (int i = 0; i < number; i++)
                 table.Rows.Add (new <%=table.row_name%> ());
         }
-<% 
-     if (!table.requ.nil?) then
-         puts("#endif")
-     end
-     print("\n")
-     } %>        public void Terminate(TableCollection coll)
+<% print("\n"); } %>        public void Terminate(TableCollection coll)
         {
         }
     }

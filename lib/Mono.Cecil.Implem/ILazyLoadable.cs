@@ -10,15 +10,14 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil {
+namespace Mono.Cecil.Implem {
 
-    using System;
+    using System.Collections;
 
-    [Flags]
-    internal enum GenericParamAttributes : ushort {
-        VarianceMask  = 0x0003,
-        NonVariant    = 0x0000,
-        Covariant     = 0x0001,
-        Contravariant = 0x0002
+    internal interface ILazyLoadable {
+        bool Loaded { get; set; }
+    }
+
+    internal interface ILazyLoadableCollection : ICollection {
     }
 }

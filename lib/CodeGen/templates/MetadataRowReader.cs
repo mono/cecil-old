@@ -50,22 +50,13 @@ namespace Mono.Cecil.Metadata {
             int res = 0;
             ArrayList tables = new ArrayList ();
             switch (ci) {
-<% $coded_indexes.each { |ci|
-     if (!ci.requ.nil?) then
-         puts("#if #{ci.requ.to_s}")
-     end
-%>            case CodedIndex.<%=ci.name%> :
+<% $coded_indexes.each { |ci| %>            case CodedIndex.<%=ci.name%> :
                 bits = <%=ci.size%>;
 <%    ci.tables.each { |tbl|
 %>                tables.Add (typeof (<%=tbl.name%>Table));
 <%    }
 %>                break;
-<%
-     if (!ci.requ.nil?) then
-         puts("#endif")
-     end
-    }
- %>           }
+<% } %>           }
             foreach (Type t in tables) {
                 int rows = m_mtrv.GetNumberOfRows (t);
                 if (rows > max) max = rows;
@@ -91,11 +82,7 @@ namespace Mono.Cecil.Metadata {
         {
             uint rid = 0;
             switch (cidx) {
-<% $coded_indexes.each { |ci|
-     if (!ci.requ.nil?) then
-         puts("#if #{ci.requ.to_s}")
-     end
-%>            case CodedIndex.<%=ci.name%> :
+<% $coded_indexes.each { |ci| %>            case CodedIndex.<%=ci.name%> :
                 rid = data >> <%=ci.size%>;
                 switch (data & <%=(2 ** ci.size.to_i - 1).to_s%>) {
 <%    ci.tables.each { |tbl|
@@ -111,21 +98,14 @@ namespace Mono.Cecil.Metadata {
 %>                default :
                     throw new MetadataFormatException("Non valid tag for <%=ci.name%>");
                 }
-<%
-     if (!ci.requ.nil?) then
-         puts("#endif")
-     end}
-%>            default :
+<% } %>            default :
                 throw new MetadataFormatException ("Non valid CodedIndex");
             }
         }
 
         public void Visit (RowCollection coll) {}
 
-<% $tables.each { |table|
-     if (!table.requ.nil?) then
-         puts("#if #{table.requ.to_s}")
-     end %>        public void Visit (<%=table.row_name%> row)
+<% $tables.each { |table| %>        public void Visit (<%=table.row_name%> row)
         {
 <% table.columns.each { |col|
  if (col.target.nil?)
@@ -143,12 +123,7 @@ namespace Mono.Cecil.Metadata {
 %>            row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (typeof (<%=col.target%>Table)));
 <% end
 }%>        }
-<%
-     if (!table.requ.nil?) then
-         puts("#endif")
-     end
-     print("\n")
-    } %>        public void Terminate (RowCollection coll)
+<%  print("\n") ; } %>        public void Terminate (RowCollection coll)
         {
         }
     }
