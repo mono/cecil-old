@@ -18,12 +18,17 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class MethodBody : IMethodBody {
 
+        private MethodDefinition m_method;
         private int m_maxStack;
         private RVA m_rva;
 
         private InstructionCollection m_instructions;
         private ExceptionHandlerCollection m_exceptions;
         private VariableDefinitionCollection m_variables;
+
+        public IMethodDefinition Method {
+            get { return m_method; }
+        }
 
         public int MaxStack {
             get { return m_maxStack; }
@@ -59,11 +64,12 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public MethodBody ()
+        public MethodBody (MethodDefinition meth)
         {
+            m_method = meth;
         }
 
-        public MethodBody (RVA rva)
+        public MethodBody (MethodDefinition meth, RVA rva) : this (meth)
         {
             m_rva = rva;
         }

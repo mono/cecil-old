@@ -46,7 +46,7 @@ namespace Mono.Cecil.Implem {
         public IMethodBody Body {
             get {
                 if (m_body == null && m_rva != RVA.Zero)
-                    m_body = new MethodBody (m_rva);
+                    m_body = new MethodBody (this, m_rva);
                 return m_body;
             }
         }

@@ -17,19 +17,26 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil.Cil;
 
-    internal class InstructionCollection : IInstructionCollection, ICodeVisitable {
+    internal class InstructionCollection : IInstructionCollection, ILazyLoadableCollection, ICodeVisitable {
 
         private IList m_items;
         private MethodBody m_container;
+        private bool m_loaded;
 
         public IInstruction this [int index]
         {
-            get { return m_items [index] as IInstruction; }
+            get {
+                ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
+                return m_items [index] as IInstruction;
+            }
             set { m_items [index] = value; }
         }
 
         public int Count {
-            get { return m_items.Count; }
+            get {
+                ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
+                return m_items.Count;
+            }
         }
 
         public bool IsSynchronized {
@@ -39,9 +46,14 @@ namespace Mono.Cecil.Implem {
         public object SyncRoot {
             get { return this; }
         }
-        
+
         public IMethodBody Container {
             get { return m_container; }
+        }
+
+        public bool Loaded {
+            get { return m_loaded; }
+            set { m_loaded = value; }
         }
 
         public InstructionCollection (MethodBody container)
@@ -62,11 +74,13 @@ namespace Mono.Cecil.Implem {
 
         public bool Contains (IInstruction value)
         {
+            ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
             return m_items.Contains (value);
         }
 
         public int IndexOf (IInstruction value)
         {
+            ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
             return m_items.IndexOf (value);
         }
 
@@ -87,11 +101,13 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
+            ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
             m_items.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
+            ((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader.Visit (this);
             return m_items.GetEnumerator ();
         }
 
