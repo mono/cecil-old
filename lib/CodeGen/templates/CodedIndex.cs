@@ -15,7 +15,7 @@
 
 namespace Mono.Cecil.Metadata {
 
-    internal enum CodedIndex {
+    public enum CodedIndex {
 <% $coded_indexes.each { |ci| %>        <%=ci.name%><% if ci != $coded_indexes.last %>,<% end %>
 <% }
 %>    }

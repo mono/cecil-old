@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using Mono.Cecil.Metadata;
+
     internal sealed class FNPTR : SigType {
 
         public MethodSig Method;

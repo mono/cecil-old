@@ -15,12 +15,12 @@
 <% header = $headers["Section"] %>
 namespace Mono.Cecil.Binary {
 
-    internal sealed class Section : IHeader, IBinaryVisitable {
+    public sealed class Section : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
         public string Name;
 
-        public Section ()
+        internal Section ()
         {
         }
 

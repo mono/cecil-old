@@ -11,8 +11,8 @@
  *****************************************************************************/
 
 namespace Mono.Cecil.Metadata {
-    
-    internal interface IMetadataTable : IMetadataTableVisitable {
+
+    public interface IMetadataTable : IMetadataTableVisitable {
         RowCollection Rows { get; set; }
     }
 }

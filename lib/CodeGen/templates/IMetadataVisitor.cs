@@ -15,7 +15,7 @@
 
 namespace Mono.Cecil.Metadata {
 
-    internal interface IMetadataVisitor {
+    public interface IMetadataVisitor {
         void Visit (MetadataRoot root);
         void Visit (MetadataRoot.MetadataRootHeader header);
         void Visit (MetadataStreamCollection streams);
@@ -31,7 +31,7 @@ namespace Mono.Cecil.Metadata {
         void Terminate (MetadataRoot root);
     }
 
-    internal interface IMetadataTableVisitor {
+    public interface IMetadataTableVisitor {
         void Visit (TableCollection coll);
 
 <% $tables.each { |table| %>        void Visit (<%= table.table_name %> table);
@@ -40,7 +40,7 @@ namespace Mono.Cecil.Metadata {
         IMetadataRowVisitor GetRowVisitor();
 }
 
-    internal interface IMetadataRowVisitor {
+    public interface IMetadataRowVisitor {
         void Visit (RowCollection coll);
 
 <% $tables.each { |table| %>        void Visit(<%= table.row_name %> row);

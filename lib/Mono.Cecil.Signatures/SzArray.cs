@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using Mono.Cecil.Metadata;
+
     internal sealed class SZARRAY : SigType {
 
         public SigType Type;

@@ -15,13 +15,13 @@
 
 namespace Mono.Cecil.Binary {
 
-    internal sealed class PEOptionalHeader : IHeader, IBinaryVisitable {
+    public sealed class PEOptionalHeader : IHeader, IBinaryVisitable {
 
         public StandardFieldsHeader StandardFields;
         public NTSpecificFieldsHeader NTSpecificFields;
         public DataDirectoriesHeader DataDirectories;
 
-        public PEOptionalHeader ()
+        internal PEOptionalHeader ()
         {
             StandardFields = new StandardFieldsHeader ();
             NTSpecificFields = new NTSpecificFieldsHeader ();
@@ -44,7 +44,7 @@ namespace Mono.Cecil.Binary {
         public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            public StandardFieldsHeader ()
+            internal StandardFieldsHeader ()
             {
             }
 
@@ -61,7 +61,7 @@ namespace Mono.Cecil.Binary {
         public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            public NTSpecificFieldsHeader ()
+            internal NTSpecificFieldsHeader ()
             {
             }
 
@@ -78,7 +78,7 @@ namespace Mono.Cecil.Binary {
         public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            public DataDirectoriesHeader ()
+            internal DataDirectoriesHeader ()
             {
             }
 

@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Metadata {
 
-    internal class MetadataStream : IMetadataVisitable {
+    public class MetadataStream : IMetadataVisitable {
 
         private MetadataStreamHeader m_header;
         private MetadataHeap m_heap;
@@ -29,7 +29,7 @@ namespace Mono.Cecil.Metadata {
             set { m_heap = value; }
         }
 
-        public MetadataStream (MetadataRoot root)
+        internal MetadataStream (MetadataRoot root)
         {
             m_root = root;
         }
@@ -43,34 +43,19 @@ namespace Mono.Cecil.Metadata {
                 m_heap.Accept (visitor);
         }
 
-        internal class MetadataStreamHeader : IMetadataVisitable {
+        public class MetadataStreamHeader : IMetadataVisitable {
 
-            private uint m_offset;
-            private uint m_size;
-            private string m_name;
+            public uint Offset;
+            public uint Size;
+            public string Name;
 
             private MetadataStream m_stream;
-
-            public uint Offset {
-                get { return m_offset; }
-                set { m_offset = value; }
-            }
-
-            public uint Size {
-                get { return m_size; }
-                set { m_size = value; }
-            }
-
-            public string Name {
-                get { return m_name; }
-                set { m_name = value; }
-            }
 
             public MetadataStream Stream {
                 get { return m_stream; }
             }
 
-            public MetadataStreamHeader (MetadataStream stream)
+            internal MetadataStreamHeader (MetadataStream stream)
             {
                 m_stream = stream;
             }

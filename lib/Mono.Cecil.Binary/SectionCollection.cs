@@ -15,7 +15,7 @@ namespace Mono.Cecil.Binary {
     using System;
     using System.Collections;
 
-    internal class SectionCollection : ICollection, IBinaryVisitable {
+    public class SectionCollection : ICollection, IBinaryVisitable {
 
         private IList m_items;
 
@@ -37,17 +37,17 @@ namespace Mono.Cecil.Binary {
             get { return this; }
         }
 
-        public SectionCollection ()
+        internal SectionCollection ()
         {
             m_items = new ArrayList (4);
         }
 
-        public void Add (Section value)
+        internal void Add (Section value)
         {
             m_items.Add (value);
         }
 
-        public void Clear ()
+        internal void Clear ()
         {
             m_items.Clear ();
         }
@@ -62,17 +62,17 @@ namespace Mono.Cecil.Binary {
             return m_items.IndexOf (value);
         }
 
-        public void Insert (int index, Section value)
+        internal void Insert (int index, Section value)
         {
             m_items.Insert (index, value);
         }
 
-        public void Remove (Section value)
+        internal void Remove (Section value)
         {
             m_items.Remove (value);
         }
 
-        public void RemoveAt (int index)
+        internal void RemoveAt (int index)
         {
             m_items.Remove (index);
         }

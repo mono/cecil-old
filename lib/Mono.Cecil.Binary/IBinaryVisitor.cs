@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Binary {
 
-    internal interface IBinaryVisitor {
+    public interface IBinaryVisitor {
         void Visit (Image img);
         void Visit (DOSHeader header);
         void Visit (PEFileHeader header);

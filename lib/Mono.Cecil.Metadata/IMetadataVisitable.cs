@@ -12,15 +12,15 @@
 
 namespace Mono.Cecil.Metadata {
 
-    internal interface IMetadataVisitable {
+    public interface IMetadataVisitable {
         void Accept (IMetadataVisitor visitor);
     }
 
-    internal interface IMetadataTableVisitable {
+    public interface IMetadataTableVisitable {
         void Accept (IMetadataTableVisitor visitor);
     }
 
-    internal interface IMetadataRowVisitable {
+    public interface IMetadataRowVisitable {
         void Accept (IMetadataRowVisitor visitor);
     }
 }

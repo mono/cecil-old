@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Metadata {
 
-    internal interface IMetadataRow : IMetadataRowVisitable {
+    public interface IMetadataRow : IMetadataRowVisitable {
 
         int Size { get; }
         int Columns { get; }

@@ -16,11 +16,10 @@
 <% header = $headers["PEFileHeader"] %>
 namespace Mono.Cecil.Binary {
 
-    internal sealed class PEFileHeader : IHeader, IBinaryVisitable {
+    public sealed class PEFileHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-
-        public PEFileHeader ()
+        internal PEFileHeader ()
         {
         }
 

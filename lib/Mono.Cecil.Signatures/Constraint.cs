@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using Mono.Cecil.Metadata;
+
     internal enum Constraint : byte {
         None = 0x0,
         Pinned = (byte) ElementType.Pinned

@@ -15,7 +15,7 @@ namespace Mono.Cecil {
     using System;
 
     [Flags]
-    internal enum GenericParamAttributes : ushort {
+    public enum GenericParamAttributes : ushort {
         VarianceMask  = 0x0003,
         NonVariant    = 0x0000,
         Covariant     = 0x0001,

@@ -10,9 +10,9 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Signatures {
+namespace Mono.Cecil.Metadata {
 
-    internal enum ElementType {
+    public enum ElementType {
         End         = 0x00,   // Marks end of a list
         Void        = 0x01,
         Boolean     = 0x02,

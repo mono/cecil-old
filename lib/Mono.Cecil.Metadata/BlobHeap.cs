@@ -14,13 +14,12 @@ namespace Mono.Cecil.Metadata {
 
     using System.IO;
 
-    internal class BlobHeap : MetadataHeap {
+    public class BlobHeap : MetadataHeap {
 
-        private int m_indexSize;
+        public int IndexSize;
 
-        public int IndexSize {
-            get { return m_indexSize; }
-            set { m_indexSize = value; }
+        internal BlobHeap (MetadataStream stream) : base (stream, "#Blob")
+        {
         }
 
         public byte [] Read (uint index)
@@ -31,10 +30,6 @@ namespace Mono.Cecil.Metadata {
         public BinaryReader GetReader (uint index)
         {
             return new BinaryReader (new MemoryStream (Read (index)));
-        }
-
-        public BlobHeap (MetadataStream stream) : base (stream, "#Blob")
-        {
         }
 
         public override void Accept (IMetadataVisitor visitor)

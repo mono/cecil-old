@@ -17,7 +17,7 @@ namespace Mono.Cecil.Metadata {
     using System.Collections.Specialized;
     using System.Text;
 
-    internal class UserStringsHeap : MetadataHeap {
+    public class UserStringsHeap : MetadataHeap {
 
         private readonly IDictionary m_strings;
 
@@ -30,14 +30,15 @@ namespace Mono.Cecil.Metadata {
                 string us = m_strings [offset] as string;
                 if (us == null) {
                     us = ReadStringAt (offset);
-                    m_strings [offset] = us;
+                    if (us != null && us.Length != 0)
+                        m_strings [offset] = us;
                 }
                 return us;
             }
             set { m_strings [offset] = value; }
         }
 
-        public UserStringsHeap (MetadataStream stream) : base(stream, "#US")
+        internal UserStringsHeap (MetadataStream stream) : base(stream, "#US")
         {
             m_strings = new HybridDictionary ();
         }

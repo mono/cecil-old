@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    internal class TableCollection : ICollection, IMetadataTableVisitable {
+    public class TableCollection : ICollection, IMetadataTableVisitable {
 
         private IList m_items;
         private IDictionary m_index;
@@ -67,19 +67,19 @@ namespace Mono.Cecil.Metadata {
             get { return m_heap; }
         }
 
-        public TableCollection (TablesHeap heap)
+        internal TableCollection (TablesHeap heap)
         {
             m_heap = heap;
             m_items = new ArrayList ();
             m_index = new Hashtable ();
         }
 
-        public void Add (IMetadataTable value)
+        internal void Add (IMetadataTable value)
         {
             m_items.Add (value);
         }
 
-        public void Clear ()
+        internal void Clear ()
         {
             m_items.Clear ();
         }
@@ -94,17 +94,17 @@ namespace Mono.Cecil.Metadata {
             return m_items.IndexOf (value);
         }
 
-        public void Insert (int index, IMetadataTable value)
+        internal void Insert (int index, IMetadataTable value)
         {
             m_items.Insert (index, value);
         }
 
-        public void Remove (IMetadataTable value)
+        internal void Remove (IMetadataTable value)
         {
             m_items.Remove (value);
         }
 
-        public void RemoveAt (int index)
+        internal void RemoveAt (int index)
         {
             m_items.Remove (index);
         }

@@ -14,7 +14,7 @@ namespace Mono.Cecil.Binary {
 
     using Mono.Cecil.Metadata;
 
-    internal struct DataDirectory {
+    public struct DataDirectory {
 
         public static readonly DataDirectory Zero = new DataDirectory(RVA.Zero, 0);
 
@@ -39,7 +39,7 @@ namespace Mono.Cecil.Binary {
 
         public override int GetHashCode ()
         {
-            return (m_virtualAddress.GetHashCode () ^ (int)(m_size << 1));
+            return (m_virtualAddress.GetHashCode () ^ (int) m_size << 1);
         }
 
         public override bool Equals (object other)

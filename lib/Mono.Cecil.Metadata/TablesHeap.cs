@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    internal class TablesHeap : MetadataHeap {
+    public class TablesHeap : MetadataHeap {
 
         public uint Reserved;
         public byte MajorVersion;
@@ -40,7 +40,7 @@ namespace Mono.Cecil.Metadata {
             set { m_tables [GetTableId (table)] = value; }
         }
 
-        public TablesHeap (MetadataStream stream) : base(stream, "#~")
+        internal TablesHeap (MetadataStream stream) : base(stream, "#~")
         {
             m_tidCache = new Hashtable (46);
         }

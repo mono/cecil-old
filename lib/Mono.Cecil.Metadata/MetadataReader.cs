@@ -37,7 +37,7 @@ namespace Mono.Cecil.Metadata {
         public void Visit (MetadataRoot root)
         {
             m_root = root;
-            root.Header = new MetadataRoot.MetadataRootHeader (root);
+            root.Header = new MetadataRoot.MetadataRootHeader ();
             root.Streams = new MetadataStreamCollection (root);
         }
 
@@ -48,7 +48,7 @@ namespace Mono.Cecil.Metadata {
 
             header.Signature = m_binaryReader.ReadUInt32 ();
 
-            if (header.Signature != 0x424a5342)
+            if (header.Signature != MetadataRoot.MetadataRootHeader.StandardSignature)
                 throw new MetadataFormatException ("Wrong magic number");
 
             header.MajorVersion = m_binaryReader.ReadUInt16 ();
@@ -69,7 +69,7 @@ namespace Mono.Cecil.Metadata {
                     buffer [read++] = cur;
                 }
                 version = new byte [read];
-                Array.Copy (buffer, version, read);
+                Buffer.BlockCopy (buffer, 0, version, 0, read);
                 header.Version = Encoding.UTF8.GetString (version);
 
                 pos += length - headpos + 3;

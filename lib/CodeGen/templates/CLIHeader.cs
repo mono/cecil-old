@@ -15,12 +15,12 @@
 <% header = $headers["CLIHeader"] %>
 namespace Mono.Cecil.Binary {
 
-    internal sealed class CLIHeader : IHeader, IBinaryVisitable {
+    public sealed class CLIHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
         public byte [] ImageHash;
 
-        public CLIHeader ()
+        internal CLIHeader ()
         {
         }
 

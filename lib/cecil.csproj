@@ -135,6 +135,7 @@
         <Compile Include="Mono.Cecil.Metadata\CultureUtils.cs"/>
         <Compile Include="Mono.Cecil.Metadata\CustomAttribute.cs"/>
         <Compile Include="Mono.Cecil.Metadata\DeclSecurity.cs"/>
+        <Compile Include="Mono.Cecil.Metadata\ElementType.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Event.cs"/>
         <Compile Include="Mono.Cecil.Metadata\EventMap.cs"/>
         <Compile Include="Mono.Cecil.Metadata\ExportedType.cs"/>
@@ -147,6 +148,7 @@
         <Compile Include="Mono.Cecil.Metadata\GenericParamConstraint.cs"/>
         <Compile Include="Mono.Cecil.Metadata\GuidHeap.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataRow.cs"/>
+        <Compile Include="Mono.Cecil.Metadata\IMetadataTable.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataVisitable.cs"/>
         <Compile Include="Mono.Cecil.Metadata\IMetadataVisitor.cs"/>
         <Compile Include="Mono.Cecil.Metadata\ImplMap.cs"/>
@@ -159,7 +161,6 @@
         <Compile Include="Mono.Cecil.Metadata\MetadataRowReader.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataStream.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataStreamCollection.cs"/>
-        <Compile Include="Mono.Cecil.Metadata\MetadataTable.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataTableReader.cs"/>
         <Compile Include="Mono.Cecil.Metadata\MetadataToken.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Method.cs"/>
@@ -189,7 +190,6 @@
         <Compile Include="Mono.Cecil.Signatures\Constraint.cs"/>
         <Compile Include="Mono.Cecil.Signatures\CustomAttrib.cs"/>
         <Compile Include="Mono.Cecil.Signatures\CustomMod.cs"/>
-        <Compile Include="Mono.Cecil.Signatures\ElementType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\FieldSig.cs"/>
         <Compile Include="Mono.Cecil.Signatures\FnPtr.cs"/>
         <Compile Include="Mono.Cecil.Signatures\InputOutputItem.cs"/>

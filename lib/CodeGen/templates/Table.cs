@@ -19,7 +19,7 @@ namespace Mono.Cecil.Metadata {
 <% }
 %>
     [RId (<%=$cur_table.rid%>)]
-    internal sealed class <%=$cur_table.table_name%> : IMetadataTable {
+    public sealed class <%=$cur_table.table_name%> : IMetadataTable {
 
         private RowCollection m_rows;
 
@@ -33,6 +33,10 @@ namespace Mono.Cecil.Metadata {
             set { m_rows = value; }
         }
 
+        internal <%=$cur_table.table_name%> ()
+        {
+        }
+
         public void Accept (IMetadataTableVisitor visitor)
         {
             visitor.Visit (this);
@@ -40,7 +44,7 @@ namespace Mono.Cecil.Metadata {
         }
     }
 
-    internal sealed class <%=$cur_table.row_name%> : IMetadataRow {
+    public sealed class <%=$cur_table.row_name%> : IMetadataRow {
 
         public static readonly int RowSize = <%=$cur_table.row_size%>;
         public static readonly int RowColumns = <%=$cur_table.columns.length%>;
@@ -52,6 +56,10 @@ namespace Mono.Cecil.Metadata {
 
         public int Columns {
             get { return <%=$cur_table.row_name%>.RowColumns; }
+        }
+
+        internal <%=$cur_table.row_name%> ()
+        {
         }
 
         public void Accept (IMetadataRowVisitor visitor)

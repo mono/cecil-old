@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using Mono.Cecil.Binary;
 
-    internal sealed class MetadataRoot : IMetadataVisitable {
+    public sealed class MetadataRoot : IMetadataVisitable {
 
         private MetadataRootHeader m_header;
         private Image m_image;
@@ -31,7 +31,7 @@ namespace Mono.Cecil.Metadata {
             set { m_streams = value; }
         }
 
-        public MetadataRoot (Image img)
+        internal MetadataRoot (Image img)
         {
             m_image = img;
         }
@@ -53,63 +53,27 @@ namespace Mono.Cecil.Metadata {
 
         public sealed class MetadataRootHeader : IHeader, IMetadataVisitable {
 
-            private uint m_signature;
-            private ushort m_minorVersion;
-            private ushort m_majorVersion;
-            private uint m_reserved;
-            private string m_version;
-            private ushort m_flags;
-            private ushort m_streams;
+            public const uint StandardSignature = 0x424A5342;
 
-            private MetadataRoot m_owner;
+            public uint Signature;
+            public ushort MinorVersion;
+            public ushort MajorVersion;
+            public uint Reserved;
+            public string Version;
+            public ushort Flags;
+            public ushort Streams;
 
-            public uint Signature {
-                get { return m_signature; }
-                set { m_signature = value; }
-            }
-
-            public ushort MinorVersion {
-                get { return m_minorVersion; }
-                set { m_minorVersion = value; }
-            }
-
-            public ushort MajorVersion {
-                get { return m_majorVersion; }
-                set { m_majorVersion = value; }
-            }
-
-            public uint Reserved {
-                get { return m_reserved; }
-                set { m_reserved = value; }
-            }
-
-            public string Version {
-                get { return m_version; }
-                set { m_version = value; }
-            }
-
-            public ushort Flags {
-                get { return m_flags; }
-                set { m_flags = value; }
-            }
-
-            public ushort Streams {
-                get { return m_streams; }
-                set { m_streams = value; }
-            }
-
-            public MetadataRootHeader (MetadataRoot owner)
+            internal MetadataRootHeader ()
             {
-                m_owner = owner;
             }
 
             public void SetDefaultValues ()
             {
-                m_signature = 0x424A5342;
-                m_majorVersion = 1;
-                m_minorVersion = 0;
-                m_reserved = 0;
-                m_flags = 0;
+                Signature = StandardSignature;
+                MajorVersion = 1; // TODO produce 1.0, 1.1, or 2.0 ...
+                MinorVersion = 0;
+                Reserved = 0;
+                Flags = 0;
             }
 
             public void Accept (IMetadataVisitor visitor)

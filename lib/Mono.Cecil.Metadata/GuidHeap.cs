@@ -15,18 +15,14 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    internal class GuidHeap : MetadataHeap {
+    public class GuidHeap : MetadataHeap {
+
+        public int IndexSize;
 
         private readonly IDictionary m_guids;
-        private int m_indexSize;
 
         public IDictionary Guids {
             get { return m_guids; }
-        }
-
-        public int IndexSize {
-            get { return m_indexSize; }
-            set { m_indexSize = value; }
         }
 
         public GuidHeap (MetadataStream stream) : base (stream, "#GUID")

@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    internal class RowCollection : ICollection, IMetadataRowVisitable {
+    public class RowCollection : ICollection, IMetadataRowVisitable {
 
         private IList m_items;
 
@@ -38,13 +38,19 @@ namespace Mono.Cecil.Metadata {
             get { return this; }
         }
 
-        public RowCollection (IMetadataTable table)
+        internal RowCollection (IMetadataTable table, int size)
+        {
+            m_table = table;
+            m_items = new ArrayList (size);
+        }
+
+        internal RowCollection (IMetadataTable table)
         {
             m_table = table;
             m_items = new ArrayList ();
         }
 
-        public void Add (IMetadataRow value)
+        internal void Add (IMetadataRow value)
         {
             m_items.Add (value);
         }

@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using Mono.Cecil.Metadata;
+
     internal class SigType {
 
         public ElementType ElementType;

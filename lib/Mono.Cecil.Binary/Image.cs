@@ -17,7 +17,7 @@ namespace Mono.Cecil.Binary {
 
     using Mono.Cecil.Metadata;
 
-    internal sealed class Image : IBinaryVisitable {
+    public sealed class Image : IBinaryVisitable {
 
         private DOSHeader m_dosHeader;
         private PEFileHeader m_peFileHeader;
@@ -33,32 +33,26 @@ namespace Mono.Cecil.Binary {
 
         public DOSHeader DOSHeader {
             get { return m_dosHeader; }
-            set { m_dosHeader = value; }
         }
 
         public PEFileHeader PEFileHeader {
             get { return m_peFileHeader; }
-            set { m_peFileHeader = value; }
         }
 
         public PEOptionalHeader PEOptionalHeader {
             get { return m_peOptionalHeader; }
-            set { m_peOptionalHeader = value; }
         }
 
         public SectionCollection Sections {
             get { return m_sections; }
-            set { m_sections = value; }
         }
 
         public CLIHeader CLIHeader {
             get { return m_cliHeader; }
-            set { m_cliHeader = value; }
         }
 
         public MetadataRoot MetadataRoot {
             get { return m_mdRoot; }
-            set { m_mdRoot = value; }
         }
 
         public FileInfo FileInformation {

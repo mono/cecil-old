@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    internal class MetadataStreamCollection : ICollection, IMetadataVisitable {
+    public class MetadataStreamCollection : ICollection, IMetadataVisitable {
 
         private IList m_items;
 
@@ -102,12 +102,12 @@ namespace Mono.Cecil.Metadata {
             return heap;
         }
 
-        public void Add (MetadataStream value)
+        internal void Add (MetadataStream value)
         {
             m_items.Add (value);
         }
 
-        public void Clear ()
+        internal void Clear ()
         {
             m_items.Clear ();
         }
@@ -122,17 +122,17 @@ namespace Mono.Cecil.Metadata {
             return m_items.IndexOf (value);
         }
 
-        public void Insert (int index, MetadataStream value)
+        internal void Insert (int index, MetadataStream value)
         {
             m_items.Insert (index, value);
         }
 
-        public void Remove (MetadataStream value)
+        internal void Remove (MetadataStream value)
         {
             m_items.Remove (value);
         }
 
-        public void RemoveAt (int index)
+        internal void RemoveAt (int index)
         {
             m_items.Remove (index);
         }
