@@ -90,9 +90,6 @@ namespace Mono.Cecil.Implem {
                 switch (op.OperandType) {
                 case OperandType.InlineNone :
                     break;
-                case OperandType.InlineBrTarget :
-                    instr.Operand = br.ReadInt32 ();
-                    break;
                 case OperandType.InlineSwitch :
                     uint length = br.ReadUInt32 ();
                     int [] branches = new int [length];
@@ -100,10 +97,17 @@ namespace Mono.Cecil.Implem {
                         branches [i] = br.ReadInt32 ();
                     instr.Operand = branches;
                     break;
-                case OperandType.ShortInlineVar :
                 case OperandType.ShortInlineBrTarget :
+                    byte sbrtgt = br.ReadByte ();
+                    instr.Operand = start + sbrtgt;
+                    break;
                 case OperandType.ShortInlineI :
+                case OperandType.ShortInlineVar :
                     instr.Operand = br.ReadByte ();
+                    break;
+                case OperandType.InlineBrTarget :
+                    int brtgt = br.ReadInt32 ();
+                    instr.Operand = start + brtgt;
                     break;
                 case OperandType.InlineSig :
                 case OperandType.InlineVar :
@@ -158,7 +162,7 @@ namespace Mono.Cecil.Implem {
                     break;
                 }
 
-                // resolve branches & switchs
+                body.Instructions.Add (instr);
             }
         }
 
@@ -250,9 +254,12 @@ namespace Mono.Cecil.Implem {
         public void Visit (IVariableDefinitionCollection variables)
         {
             MethodBody body = variables.Container as MethodBody;
+            if (body.LocalVarToken == 0)
+                return;
+
             MethodDefinition meth = body.Method as MethodDefinition;
             StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
-            StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken)];
+            StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken) - 1];
             LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
             for (int i = 0; i < sig.Count; i++) {
                 LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
