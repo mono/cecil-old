@@ -39,6 +39,7 @@ namespace Mono.Cecil.Implem {
         protected EventDefinition [] m_events;
         protected PropertyDefinition [] m_properties;
         protected MemberReference [] m_memberRefs;
+        protected ParameterDefinition [] m_parameters;
 
         private bool m_isCorlib;
 
@@ -280,6 +281,7 @@ namespace Mono.Cecil.Implem {
             MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
             ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
             m_meths = new MethodDefinition [methTable.Rows.Count];
+            m_parameters = new ParameterDefinition [paramTable.Rows.Count];
 
             for (int i = 0; i < m_typeDefs.Length; i++) {
                 TypeDefinition dec = m_typeDefs [i];
@@ -299,11 +301,12 @@ namespace Mono.Cecil.Implem {
                                                                   msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
 
                     for (int k = 0, l = (int) methRow.ParamList; k < msig.ParamCount; k++) {
-                        ParamRow prow = paramTable [l - 1]; l++;
+                        ParamRow prow = paramTable [l - 1];
                         Param psig = msig.Parameters [k];
                         ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, psig);
                         pdef.Method = mdef;
                         mdef.Parameters.Add (pdef);
+                        m_parameters [l - 1] = pdef; l++;
                     }
 
                     mdef.ReturnType = GetMethodReturnType (msig);
@@ -450,6 +453,39 @@ namespace Mono.Cecil.Implem {
 
         public virtual void ReadMethods (PropertyDefinition prop)
         {
+        }
+
+        private object GetFixedArgValue (CustomAttrib.FixedArg fa)
+        {
+            if (fa.SzArray) {
+                object [] vals = new object [fa.NumElem];
+                for (int j = 0; j < vals.Length; j++) {
+                    vals [j] = fa.Elems [j].Value;
+                }
+                return vals;
+            } else
+                return fa.Elems [0].Value;
+        }
+
+        protected CustomAttribute BuildCustomAttribute (IMethodReference ctor, CustomAttrib sig)
+        {
+            CustomAttribute cattr = new CustomAttribute (ctor);
+
+            foreach (CustomAttrib.FixedArg fa in sig.FixedArgs) {
+                cattr.ConstructorParameters.Add (GetFixedArgValue (fa));
+            }
+
+            foreach (CustomAttrib.NamedArg na in sig.NamedArgs) {
+                object value = GetFixedArgValue (na.FixedArg);
+                if (na.Field)
+                    cattr.Fields [na.FieldOrPropName] = value;
+                else if (na.Property)
+                    cattr.Properties [na.FieldOrPropName] = value;
+                else
+                    throw new ReflectionException ("Non valid named arg");
+            }
+
+            return cattr;
         }
 
         protected ParameterDefinition BuildParameterDefinition (string name, int sequence, ParamAttributes attrs, Param psig)

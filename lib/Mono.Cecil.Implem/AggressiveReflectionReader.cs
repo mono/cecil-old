@@ -254,18 +254,45 @@ namespace Mono.Cecil.Implem {
                 else
                     ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
 
-                object t = null;
+                CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
+                CustomAttribute cattr = BuildCustomAttribute (ctor, ca);
+
+                ICustomAttributeProvider owner = null;
                 switch (caRow.Parent.TokenType) {
-                case TokenType.MemberRef :
-                    t = GetMemberRefAt ((int) caRow.Parent.RID);
+                case TokenType.Assembly :
+                    this.Module.Assembly.CustomAttributes.Add (cattr);
+                    break;
+                case TokenType.Module :
+                    this.Module.CustomAttributes.Add (cattr); // not sure of this, take care to multi modules asm
+                    break;
+                case TokenType.TypeDef :
+                    owner = GetTypeDefAt ((int) caRow.Parent.RID);
+                    owner.CustomAttributes.Add (cattr);
+                    break;
+                case TokenType.Field :
+                    owner = GetFieldDefAt ((int) caRow.Parent.RID);
+                    owner.CustomAttributes.Add (cattr);
+                    break;
+                case TokenType.Method :
+                    owner = GetMethodDefAt ((int) caRow.Parent.RID);
+                    owner.CustomAttributes.Add (cattr);
                     break;
                 case TokenType.Property :
-                    t = m_properties [caRow.Parent.RID - 1];
+                    owner = m_properties [caRow.Parent.RID - 1];
+                    owner.CustomAttributes.Add (cattr);
+                    break;
+                case TokenType.Event :
+                    owner = m_properties [caRow.Parent.RID - 1];
+                    owner.CustomAttributes.Add (cattr);
+                    break;
+                case TokenType.Param :
+                    owner = m_parameters [caRow.Parent.RID - 1];
+                    owner.CustomAttributes.Add (cattr);
+                    break;
+                default :
+                    //TODO: support other ?
                     break;
                 }
-
-                CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
-                //TODO: end
             }
         }
     }
