@@ -70,6 +70,7 @@
         <Compile Include="Mono.Cecil.Implem\AssemblyName.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyNameReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\CodeReader.cs"/>
+        <Compile Include="Mono.Cecil.Implem\CustomAttribute.cs"/>
         <Compile Include="Mono.Cecil.Implem\CustomAttributeCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\EmbeddedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\EventDefinition.cs"/>

@@ -12,9 +12,13 @@
 
 namespace Mono.Cecil {
 
+    using System.Collections;
+
     public interface ICustomAttribute : IReflectionVisitable {
 
         IMethodReference Constructor { get; }
-        //TODO: parameters, fiels, properties
+        IList ConstructorParameters { get; }
+        IDictionary Fields { get; }
+        IDictionary Properties { get; }
     }
 }
