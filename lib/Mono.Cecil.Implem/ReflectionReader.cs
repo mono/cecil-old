@@ -191,10 +191,16 @@ namespace Mono.Cecil.Implem {
 
                 for (int i = 0; i < typesRef.Rows.Count; i++) {
                     TypeRefRow type = typesRef [i];
+                    IMetadataScope scope = null;
+                    if (type.ResolutionScope.TokenType == TokenType.Assembly)
+                        scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
+                    else if (type.ResolutionScope.TokenType == TokenType.ModuleRef)
+                        scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+
                     TypeReference t = new TypeReference (
                         m_root.Streams.StringsHeap [type.Name],
                         m_root.Streams.StringsHeap [type.Namespace],
-                        m_module);
+                        m_module, scope);
 
                     m_typeRefs [i] = t;
                     (m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;

@@ -114,7 +114,8 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) : base (name, ns, module)
+        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
+            base (name, ns, module, module.Assembly.Name)
         {
             m_hasInfo = false;
             m_attributes = attrs;

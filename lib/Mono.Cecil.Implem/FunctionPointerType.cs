@@ -55,6 +55,10 @@ namespace Mono.Cecil.Implem {
             set { throw new InvalidOperationException (); }
         }
 
+        public override IMetadataScope Scope {
+            get { return m_function.DeclaringType.Scope; }
+        }
+
         public override string FullName {
             get { return m_function.ToString (); }
         }

@@ -31,6 +31,10 @@ namespace Mono.Cecil.Implem {
             set { m_pointedType.Namespace = value; }
         }
 
+        public override IMetadataScope Scope {
+            get { return m_pointedType.Scope; }
+        }
+
         public ITypeReference ElementType {
             get { return m_pointedType; }
             set { m_pointedType = value; }

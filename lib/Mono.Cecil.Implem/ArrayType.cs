@@ -42,6 +42,10 @@ namespace Mono.Cecil.Implem {
             set { m_elementsType.Namespace = value; }
         }
 
+        public override IMetadataScope Scope {
+            get { return m_elementsType.Scope; }
+        }
+
         public override string FullName {
             get {
                 StringBuilder sb = new StringBuilder ();

@@ -246,6 +246,7 @@
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\ImageFormatException.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
+        <Compile Include="Mono.Cecil\IMetadataScope.cs"/>
         <Compile Include="Mono.Cecil\IMethod.cs"/>
         <Compile Include="Mono.Cecil\IMethodDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IMethodReturnType.cs"/>

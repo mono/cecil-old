@@ -21,6 +21,7 @@ namespace Mono.Cecil.Implem {
         private string m_name;
         private string m_namespace;
         private ITypeReference m_decType;
+        private IMetadataScope m_scope;
 
         private CustomAttributeCollection m_customAttrs;
 
@@ -55,6 +56,14 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public virtual IMetadataScope Scope {
+            get {
+                if (m_decType != null)
+                    return m_decType.Scope;
+                return m_scope;
+            }
+        }
+
         public virtual string FullName {
             get {
                 if (m_decType != null)
@@ -73,9 +82,10 @@ namespace Mono.Cecil.Implem {
             m_namespace = ns;
         }
 
-        public TypeReference (string name, string ns, ModuleDefinition module) : this (name, ns)
+        public TypeReference (string name, string ns, ModuleDefinition module, IMetadataScope scope) : this (name, ns)
         {
             m_module = module;
+            m_scope = scope;
         }
 
         public virtual void Accept (IReflectionVisitor visitor)

@@ -68,6 +68,8 @@ namespace Mono.Cecil.Implem {
 
                 //TODO: WRITE HERE
             }
+
+            ext.Loaded = true;
         }
 
         public override void Visit (IOverrideCollection meths)
