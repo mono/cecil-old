@@ -119,6 +119,9 @@ namespace Mono.Cecil.Implem {
             visitor.Visit (this);
 
             m_interfaces.Accept (visitor);
+            m_fields.Accept (visitor);
+            m_properties.Accept (visitor);
+            m_events.Accept (visitor);
             m_methods.Accept (visitor);
         }
 

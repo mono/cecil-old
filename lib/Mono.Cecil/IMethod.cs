@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil {
 
+    using Mono.Cecil.Cil;
+
     public interface IMethodReference : IMemberReference, IReflectionVisitable {
 
         MethodAttributes Attributes { get; set; }
@@ -22,5 +24,6 @@ namespace Mono.Cecil {
     public interface IMethodDefinition : IMemberDefinition, IMethodReference, IReflectionVisitable {
 
         IOverrideCollection Overrides { get; }
+        IMethodBody Body { get; }
     }
 }

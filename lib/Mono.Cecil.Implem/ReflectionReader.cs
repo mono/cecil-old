@@ -180,6 +180,26 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IMethodDefinitionCollection methods)
         {
+            MethodDefinitionCollection meths = methods as MethodDefinitionCollection;
+            if (meths.Loaded)
+                return;
+
+            TypeDefinition dec = meths.Container as TypeDefinition;
+            int index = GetRidForTypeDef (dec) - 1, next;
+            TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+            MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
+            if (index == tdefTable.Rows.Count - 1)
+                next = methTable.Rows.Count + 1;
+            else
+                next = (int) (tdefTable [index + 1]).MethodList;
+
+            for (int i = (int) tdefTable [index].FieldList; i < next; i++) {
+                MethodRow methRow = methTable [i - 1];
+
+                // write here :)
+            }
+
+            meths.Loaded = true;
         }
 
         public void Visit (IMethodDefinition method)

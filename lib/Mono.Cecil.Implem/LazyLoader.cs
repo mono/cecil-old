@@ -12,26 +12,26 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-    using System.Collections;
-
-    using Mono.Cecil;
     using Mono.Cecil.Binary;
-    using Mono.Cecil.Metadata;
+    using Mono.Cecil.Cil;
 
     internal sealed class LazyLoader {
 
         private ReflectionReader m_reflectReader;
+        private CodeReader m_codeReader;
 
         public IReflectionVisitor ReflectionReader {
             get { return m_reflectReader; }
         }
 
-        //TODO: here will goes a code reader
+        public ICodeVisitor CodeReader {
+            get { return m_codeReader; }
+        }
 
         public LazyLoader (ImageReader reader)
         {
             m_reflectReader = new ReflectionReader (reader);
+            m_codeReader = new CodeReader ();
         }
     }
 }

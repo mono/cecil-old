@@ -12,13 +12,13 @@
 
 namespace Mono.Cecil.Cil {
 
-    public struct Instruction {
+    internal struct Instruction : IInstruction {
 
-        private uint m_offset;
+        private int m_offset;
         private OpCode m_opCode;
         private object m_operand;
 
-        public uint Offset {
+        public int Offset {
             get { return m_offset; }
         }
 
@@ -30,11 +30,16 @@ namespace Mono.Cecil.Cil {
             get { return m_operand; }
         }
 
-        internal Instruction (uint offset, OpCode opCode, object operand)
+        internal Instruction (int offset, OpCode opCode, object operand)
         {
             m_offset = offset;
             m_opCode = opCode;
             m_operand = operand;
+        }
+
+        public void Accept (ICodeVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

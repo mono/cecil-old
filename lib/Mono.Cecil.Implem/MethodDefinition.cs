@@ -15,6 +15,8 @@ namespace Mono.Cecil.Implem {
     using System;
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
+    using Mono.Cecil.Cil;
 
     internal sealed class MethodDefinition : MemberDefinition, IMethodDefinition {
 
@@ -22,6 +24,8 @@ namespace Mono.Cecil.Implem {
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
 
+        private MethodBody m_body;
+        private RVA m_rva;
         private OverrideCollection m_overrides;
 
         public MethodAttributes Attributes {
@@ -39,18 +43,35 @@ namespace Mono.Cecil.Implem {
             set { m_semAttrs = value; }
         }
 
+        public IMethodBody Body {
+            get {
+                if (m_body == null && m_rva != RVA.Zero)
+                    m_body = new MethodBody (m_rva);
+                return m_body;
+            }
+        }
+
         public IOverrideCollection Overrides {
             get {
                 if (m_overrides == null)
                     m_overrides = new OverrideCollection (this);
-
                 return m_overrides;
             }
+        }
+
+        public MethodDefinition (string name, TypeDefinition decType, RVA rva, MethodAttributes attrs, MethodImplAttributes implAttrs)
+        {
+            this.Name = name;
+            m_rva = rva;
+            m_attributes = attrs;
+            m_implAttrs = implAttrs;
+            SetDeclaringType (decType);
         }
 
         public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
+            m_overrides.Accept (visitor);
         }
     }
 }
