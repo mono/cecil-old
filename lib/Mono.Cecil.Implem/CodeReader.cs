@@ -95,11 +95,13 @@ namespace Mono.Cecil.Implem {
                     int [] branches = new int [length];
                     for (int i = 0; i < length; i++)
                         branches [i] = br.ReadInt32 ();
+                    for (int i = 0; i < length; i++)
+                        branches [i] = Convert.ToInt32 (br.BaseStream.Position - start + branches [i]);
                     instr.Operand = branches;
                     break;
                 case OperandType.ShortInlineBrTarget :
                     byte sbrtgt = br.ReadByte ();
-                    instr.Operand = start + sbrtgt;
+                    instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt);
                     break;
                 case OperandType.ShortInlineI :
                 case OperandType.ShortInlineVar :
@@ -107,7 +109,7 @@ namespace Mono.Cecil.Implem {
                     break;
                 case OperandType.InlineBrTarget :
                     int brtgt = br.ReadInt32 ();
-                    instr.Operand = start + brtgt;
+                    instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + brtgt);
                     break;
                 case OperandType.InlineSig :
                 case OperandType.InlineVar :
