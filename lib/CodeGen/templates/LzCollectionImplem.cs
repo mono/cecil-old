@@ -30,7 +30,7 @@ namespace Mono.Cecil.Implem {
 
         public <%=$cur_coll.type%> this [string name] {
             get {
-                LazyLoader.Instance.LazyLoadByName (this, name);
+                LazyLoader.Instance.BasisReader.Visit (this);
                 return m_items [name] as <%=$cur_coll.type%>;
             }
             set { m_items [name] = value; }
@@ -80,13 +80,13 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            this.Accept (LazyLoader.Instance.BasisReader);
+            LazyLoader.Instance.BasisReader.Visit (this);
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            this.Accept (LazyLoader.Instance.BasisReader);
+            LazyLoader.Instance.BasisReader.Visit (this);
             return m_items.Values.GetEnumerator ();
         }
 

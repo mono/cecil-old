@@ -37,12 +37,6 @@ namespace Mono.Cecil.Implem {
             m_basisReader = new ReflectionBasisReader ();
         }
 
-        public void LazyLoadByName (IReflectionVisitable target, string name)
-        {
-            //TODO: implement lazy loading of a visitable by name
-            throw new NotImplementedException ();
-        }
-
         public int GetCount (ILazyLoadableCollection coll)
         {
             if (coll.Loaded)
