@@ -24,8 +24,8 @@ namespace Mono.Cecil.Implem {
         private string m_name;
         private string m_culture;
         private Version m_version;
-        private byte[] m_publicKey;
-        private byte[] m_publicKeyToken;
+        private byte [] m_publicKey;
+        private byte [] m_publicKeyToken;
         private AssemblyHashAlgorithm m_hashAlgo;
 
         public string Name {
@@ -36,8 +36,8 @@ namespace Mono.Cecil.Implem {
         public string Culture {
             get { return m_culture; }
             set {
-                if (!CultureUtils.IsValid(value)) {
-                    throw new ArgumentException("Culture");
+                if (!CultureUtils.IsValid (value)) {
+                    throw new ArgumentException ("Culture");
                 }
                 m_culture = value;
             }
@@ -48,7 +48,7 @@ namespace Mono.Cecil.Implem {
             set { m_version = value; }
         }
 
-        public byte[] PublicKey {
+        public byte [] PublicKey {
             get { return m_publicKey; }
             set {
                 m_publicKey = value;
@@ -56,20 +56,20 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public byte[] PublicKeyToken {
+        public byte [] PublicKeyToken {
             get {
                 if ((m_publicKeyToken == null) && (m_publicKey != null)) {
                     HashAlgorithm ha = null;
                     switch (m_hashAlgo) {
-                        case AssemblyHashAlgorithm.Reserved:
-                            ha = MD5.Create (); break;
-                        default:
-                            // None default to SHA1
-                            ha = SHA1.Create (); break;
+                    case AssemblyHashAlgorithm.Reserved:
+                        ha = MD5.Create (); break;
+                    default:
+                        // None default to SHA1
+                        ha = SHA1.Create (); break;
                     }
                     byte[] hash = ha.ComputeHash (m_publicKey);
                     // we need the last 8 bytes in reverse order
-                    m_publicKeyToken = new byte[8];
+                    m_publicKeyToken = new byte [8];
                     Array.Copy (hash, (hash.Length - 8), m_publicKeyToken, 0, 8);
                     Array.Reverse (m_publicKeyToken, 0, 8);
                 }
@@ -80,26 +80,26 @@ namespace Mono.Cecil.Implem {
 
         public string FullName {
             get {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder ();
                 string sep = ", ";
-                sb.Append(m_name);
+                sb.Append (m_name);
                 if (m_version != null) {
-                    sb.Append(sep);
-                    sb.Append(m_version.ToString());
+                    sb.Append (sep);
+                    sb.Append (m_version.ToString ());
                 }
-                sb.Append(sep);
-                sb.Append("Culture=");
-                sb.Append(m_culture == string.Empty ? "neutral" : m_culture);
-                sb.Append(sep);
-                sb.Append("PublicKeyToken=");
+                sb.Append (sep);
+                sb.Append ("Culture=");
+                sb.Append (m_culture == string.Empty ? "neutral" : m_culture);
+                sb.Append (sep);
+                sb.Append ("PublicKeyToken=");
                 if (this.PublicKeyToken != null && m_publicKeyToken.Length > 0) {
                     for (int i = 0 ; i < m_publicKeyToken.Length ; i++) {
-                        sb.Append(m_publicKeyToken[i].ToString("x2"));
+                        sb.Append (m_publicKeyToken [i].ToString ("x2"));
                     }
                 } else {
-                    sb.Append("null");
+                    sb.Append ("null");
                 }
-                return sb.ToString();
+                return sb.ToString ();
             }
         }
 
@@ -108,33 +108,38 @@ namespace Mono.Cecil.Implem {
             set { m_hashAlgo = value; }
         }
 
-        public AssemblyName() : this(string.Empty, string.Empty, null) {}
+        public AssemblyName () : this(string.Empty, string.Empty, null)
+        {}
 
-        public AssemblyName(string name, string culture, Version version) {
-            if (name == null) {
-                throw new ArgumentException("name");
-            }
-            if (culture == null || !CultureUtils.IsValid(culture)) {
-                throw new ArgumentException("culture");
-            }
+        public AssemblyName (string name, string culture, Version version)
+        {
+            if (name == null)
+                throw new ArgumentException ("name");
+            if (culture == null || !CultureUtils.IsValid (culture))
+                throw new ArgumentException ("culture");
             m_name = name;
             m_culture = culture;
             m_version = version;
             m_hashAlgo = AssemblyHashAlgorithm.None;
         }
 
-        public virtual void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public virtual void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 
     internal class AssemblyNameReference : AssemblyName, IAssemblyNameReference {
 
-        public AssemblyNameReference() : base() {}
-        public AssemblyNameReference(string name, string culture, Version version) : base(name, culture, version) {}
+        public AssemblyNameReference () : base()
+        {}
 
-        public override void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public AssemblyNameReference (string name, string culture, Version version) : base(name, culture, version)
+        {}
+
+        public override void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

@@ -29,10 +29,11 @@ namespace Mono.Cecil.Tests {
         }
 
         [SetUp]
-        public void SetUpTest() {
+        public void SetUpTest ()
+        {
             if (m_image == null) {
-                ImageReader ir = new ImageReader(@"D:\test.exe");
-                m_image = ir.GetImage();
+                ImageReader ir = new ImageReader (@"D:\test.exe");
+                m_image = ir.GetImage ();
                 //m_image = Image.GetImage(@"D:\hello.exe");
                 //m_image = Image.GetImage(@"D:\a.netmodule");
                 //m_image = Image.GetImage(@"D:\b.exe");

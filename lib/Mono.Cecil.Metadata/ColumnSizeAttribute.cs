@@ -14,16 +14,18 @@ namespace Mono.Cecil.Metadata {
 
     using System;
 
+    [AttributeUsage (AttributesTarget.Class)]
     internal class ColumnSizeAttribute : Attribute {
 
         private int m_size;
 
-        public ColumnSizeAttribute(int size) {
-            m_size = size;
-        }
-
         public int Size {
             get { return m_size; }
+        }
+
+        public ColumnSizeAttribute (int size)
+        {
+            m_size = size;
         }
     }
 }

@@ -21,32 +21,32 @@ namespace Mono.Cecil.Metadata {
         private IDictionary m_index;
 
         private TablesHeap m_heap;
-        
-        public IMetadataTable this[int index] {
-            get { return m_items[index] as IMetadataTable; }
-            set { m_items[index] = value; }
+
+        public IMetadataTable this [int index] {
+            get { return m_items [index] as IMetadataTable; }
+            set { m_items [index] = value; }
         }
 
-        public IMetadataTable this[ushort id] {
+        public IMetadataTable this [ushort id]
+        {
             get {
-                if (m_index[id] != null) {
-                    return m_items[(int)m_index[id]] as IMetadataTable;
-                } else {
-                    for (int i = 0 ; i < m_items.Count ; i++) {
-                        IMetadataTable table = m_items[i] as IMetadataTable;
-                        if (TablesHeap.GetTableId(table.GetType()) == id) {
-                            m_index[id] = i;
-                            return table;
-                        }
+                if (m_index [id] != null)
+                    return m_items [(int)m_index [id]] as IMetadataTable;
+
+                for (int i = 0; i < m_items.Count; i++) {
+                    IMetadataTable table = m_items [i] as IMetadataTable;
+                    if (TablesHeap.GetTableId (table.GetType ()) == id) {
+                        m_index [id] = i;
+                        return table;
                     }
-                    return null;
                 }
+                return null;
             }
             set {
-                int index = IndexOf(value);
+                int index = IndexOf (value);
                 if (index > -1) {
-                    m_items[index] = value;
-                    m_index[id] = index;
+                    m_items [index] = value;
+                    m_index [id] = index;
                 }
             }
         }
@@ -62,61 +62,71 @@ namespace Mono.Cecil.Metadata {
         public object SyncRoot {
             get { return this; }
         }
-        
+
         public TablesHeap Heap {
             get { return m_heap; }
         }
 
-        public TableCollection(TablesHeap heap) {
+        public TableCollection (TablesHeap heap)
+        {
             m_heap = heap;
-            m_items = new ArrayList();
-            m_index = new Hashtable();
+            m_items = new ArrayList ();
+            m_index = new Hashtable ();
         }
 
-        public void Add(IMetadataTable value) {
-            m_items.Add(value);
+        public void Add (IMetadataTable value)
+        {
+            m_items.Add (value);
         }
 
-        public void Clear() {
-            m_items.Clear();
+        public void Clear ()
+        {
+            m_items.Clear ();
         }
 
-        public bool Contains(IMetadataTable value) {
-            return m_items.Contains(value);
+        public bool Contains (IMetadataTable value)
+        {
+            return m_items.Contains (value);
         }
 
-        public int IndexOf(IMetadataTable value) {
-            return m_items.IndexOf(value);
+        public int IndexOf (IMetadataTable value)
+        {
+            return m_items.IndexOf (value);
         }
 
-        public void Insert(int index, IMetadataTable value) {
-            m_items.Insert(index, value);
+        public void Insert (int index, IMetadataTable value)
+        {
+            m_items.Insert (index, value);
         }
 
-        public void Remove(IMetadataTable value) {
-            m_items.Remove(value);
+        public void Remove (IMetadataTable value)
+        {
+            m_items.Remove (value);
         }
 
-        public void RemoveAt(int index) {
-            m_items.Remove(index);
+        public void RemoveAt (int index)
+        {
+            m_items.Remove (index);
         }
 
-        public void CopyTo(Array ary, int index) {
-            m_items.CopyTo(ary, index);
+        public void CopyTo (Array ary, int index)
+        {
+            m_items.CopyTo (ary, index);
         }
 
-        public IEnumerator GetEnumerator() {
-            return m_items.GetEnumerator();
+        public IEnumerator GetEnumerator ()
+        {
+            return m_items.GetEnumerator ();
         }
 
-        public void Accept(IMetadataTableVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IMetadataTableVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            for (int i = 0 ; i < m_items.Count ; i++) {
-                this[i].Accept(visitor);
-            }
-            
-            visitor.Terminate(this);
+            for (int i = 0; i < m_items.Count; i++)
+                this [i].Accept (visitor);
+
+            visitor.Terminate (this);
         }
     }
 }

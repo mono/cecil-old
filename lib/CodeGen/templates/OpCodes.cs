@@ -19,26 +19,29 @@ namespace Mono.Cecil.Cil {
 
     public sealed class OpCodes {
 
-        private OpCodes() {}
+        private OpCodes()
+        {
+        }
 <% $ops.each { |op| %>
-        public static readonly OpCode <%=op.field_name%> = new OpCode(
+        public static readonly OpCode <%=op.field_name%> = new OpCode (
             "<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>, <%=op.flowcontrol%>,
             <%=op.opcodetype%>, <%=op.operandtype%>,
             <%=op.stackbehaviourpop%>, <%=op.stackbehaviourpush%>);
 <% } %>
         public sealed class Cache {
 
-            public static readonly Cache Instance = new Cache();
+            public static readonly Cache Instance = new Cache ();
 
             private IDictionary m_cache;
 
-            private Cache() {
-                m_cache = new Hashtable();
-<% $ops.each { |op| %>                m_cache["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
+            private Cache ()
+            {
+                m_cache = new Hashtable ();
+<% $ops.each { |op| %>                m_cache ["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
 <% } %>            }
 
-            public OpCode this[string name] {
-                get { return (OpCode)m_cache[name]; }
+            public OpCode this [string name] {
+                get { return (OpCode) m_cache [name]; }
             }
         }
     }

@@ -14,8 +14,11 @@ namespace Mono.Cecil.Metadata {
 
     using System;
 
-    [AttributeUsage(AttributeTargets.Field)]
+    [AttributeUsage (AttributeTargets.Field)]
     internal class ColumnAttribute : Attribute {
-        public ColumnAttribute() {}
+
+        public ColumnAttribute ()
+        {
+        }
     }
 }

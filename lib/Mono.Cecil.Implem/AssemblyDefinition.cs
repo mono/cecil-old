@@ -30,19 +30,21 @@ namespace Mono.Cecil.Implem {
             get { return m_modules; }
         }
 
-        public AssemblyDefinition(AssemblyName name) {
-            if (name == null) {
-                throw new ArgumentException("name");
-            }
+        public AssemblyDefinition (AssemblyName name)
+        {
+            if (name == null)
+                throw new ArgumentException ("name");
+
             m_asmName = name;
-            m_modules = new ModuleDefinitionCollection(this);
+            m_modules = new ModuleDefinitionCollection (this);
         }
 
-        public void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            m_asmName.Accept(visitor);
-            m_modules.Accept(visitor);
+            m_asmName.Accept (visitor);
+            m_modules.Accept (visitor);
         }
     }
 }

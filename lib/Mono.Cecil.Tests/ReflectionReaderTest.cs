@@ -28,26 +28,28 @@ namespace Mono.Cecil.Tests {
         private IAssemblyDefinition m_asmdef;
 
         [SetUp]
-        public void SetUp() {
-            m_asmdef = AssemblyFactory.GetAssembly(@"D:\mscorlib.dll");
+        public void SetUp ()
+        {
+            m_asmdef = AssemblyFactory.GetAssembly (@"D:\mscorlib.dll");
         }
 
         [Test]
-        public void PourVoir() {
-            Console.WriteLine(m_asmdef.Name.FullName);
-            Console.WriteLine("modules : {0}", m_asmdef.Modules.Count);
+        public void PourVoir ()
+        {
+            Console.WriteLine (m_asmdef.Name.FullName);
+            Console.WriteLine ("modules : {0}", m_asmdef.Modules.Count);
             foreach (IModuleDefinition def in m_asmdef.Modules) {
-                Console.WriteLine("module name : {0}", def.Name);
-                Console.WriteLine("module guid : {0}", def.Mvid.ToString());
+                Console.WriteLine ("module name : {0}", def.Name);
+                Console.WriteLine ("module guid : {0}", def.Mvid.ToString ());
 
-                Console.WriteLine("asm refs : {0}", def.AssemblyReferences.Count);
+                Console.WriteLine ("asm refs : {0}", def.AssemblyReferences.Count);
                 foreach (IAssemblyNameReference name in def.AssemblyReferences) {
-                    Console.WriteLine("asm ref : {0}", name.FullName);
+                    Console.WriteLine ("asm ref : {0}", name.FullName);
                 }
 
-                Console.WriteLine("module ref : {0}", def.ModuleReferences.Count);
+                Console.WriteLine ("module ref : {0}", def.ModuleReferences.Count);
                 foreach (IModuleReference mr in def.ModuleReferences) {
-                    Console.WriteLine("module ref : {0}", mr.Name);
+                    Console.WriteLine ("module ref : {0}", mr.Name);
                 }
             }
         }

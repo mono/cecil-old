@@ -54,38 +54,44 @@ namespace Mono.Cecil.Implem {
             get { return m_res; }
         }
 
-        public ModuleDefinition(string name) : this(name, true) {}
+        public ModuleDefinition (string name) : this (name, true)
+        {}
 
-        public ModuleDefinition(string name, bool main) {
-            if (name == null || name.Length == 0) {
-                throw new ArgumentException("name");
-            }
+        public ModuleDefinition (string name, bool main)
+        {
+            if (name == null || name.Length == 0)
+                throw new ArgumentException ("name");
+
             m_name = name;
             m_main = main;
-            m_mvid = new Guid();
-            m_modRefs = new ModuleReferenceCollection(this);
-            m_asmRefs = new AssemblyNameReferenceCollection(this);
-            m_res = new ResourceCollection(this);
+            m_mvid = new Guid ();
+            m_modRefs = new ModuleReferenceCollection (this);
+            m_asmRefs = new AssemblyNameReferenceCollection (this);
+            m_res = new ResourceCollection (this);
         }
 
-        public void DefineModuleReference(string module) {
-            m_modRefs[module] = new ModuleReference(module);
+        public void DefineModuleReference (string module)
+        {
+            m_modRefs [module] = new ModuleReference (module);
         }
 
-        public void DefineEmbeddedResource(string name, ManifestResourceAttributes attributes, byte[] data) {
-            m_res[name] = new EmbeddedResource(name, attributes, data);
+        public void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
+        {
+            m_res [name] = new EmbeddedResource (name, attributes, data);
         }
 
-        public void DefineLinkedResource(string name, ManifestResourceAttributes attributes, string file) {
-            m_res[name] = new LinkedResource(name, attributes, file);
+        public void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
+        {
+            m_res [name] = new LinkedResource (name, attributes, file);
         }
 
-        public void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            m_asmRefs.Accept(visitor);
-            m_modRefs.Accept(visitor);
-            m_res.Accept(visitor);
+            m_asmRefs.Accept (visitor);
+            m_modRefs.Accept (visitor);
+            m_res.Accept (visitor);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using System;
 
-    [Heap("#~")]
+    [Heap ("#~")]
     internal class TablesHeap : MetadataHeap {
 
         private uint m_reserved;
@@ -67,29 +67,35 @@ namespace Mono.Cecil.Metadata {
             set { m_tables = value; }
         }
 
-        public IMetadataTable this[Type table] {
-            get { return m_tables[GetTableId(table)] as IMetadataTable; }
-            set { m_tables[GetTableId(table)] = value; }
+        public IMetadataTable this [Type table]
+        {
+            get { return m_tables [GetTableId (table)] as IMetadataTable; }
+            set { m_tables [GetTableId (table)] = value; }
         }
 
-        public TablesHeap(MetadataStream stream) : base(stream) {}
+        public TablesHeap (MetadataStream stream) : base(stream)
+        {}
 
-        public bool HasTable(Type table) {
-            return (m_valid & (1L << GetTableId(table))) != 0;
+        public bool HasTable (Type table)
+        {
+            return (m_valid & (1L << GetTableId (table))) != 0;
         }
 
-        public override void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
         }
-        
-        public static ushort GetTableId(Type table) {
-            RIdAttribute[] id = table.GetCustomAttributes(
-                typeof(RIdAttribute), false) as RIdAttribute[];
-            if (id != null && id.Length == 1) {
-                return (ushort)id[0].Id;
-            } else {
-                throw new ArgumentException("No RId attribute found on type");
-            }
+
+        public static ushort GetTableId (Type table)
+        {
+            RIdAttribute [] id = table.GetCustomAttributes (
+                typeof(RIdAttribute), false) as RIdAttribute [];
+
+            if (id != null && id.Length == 1)
+                return (ushort)id [0].Id;
+
+            throw new ArgumentException ("No RId attribute found on type");
+
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using System.Collections;
 
-    [Heap("#US")]
+    [Heap ("#US")]
     internal class UserStringsHeap : MetadataHeap {
 
         private readonly IList m_strings;
@@ -23,12 +23,14 @@ namespace Mono.Cecil.Metadata {
             get { return m_strings; }
         }
 
-        public UserStringsHeap(MetadataStream stream) : base(stream) {
-            m_strings = new ArrayList();
+        public UserStringsHeap (MetadataStream stream) : base(stream)
+        {
+            m_strings = new ArrayList ();
         }
 
-        public override void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

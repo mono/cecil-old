@@ -13,7 +13,7 @@
 namespace Mono.Cecil.Binary {
 
     internal interface IBinaryVisitable {
-        void Accept(IBinaryVisitor visitor);
+        void Accept (IBinaryVisitor visitor);
     }
 }
 

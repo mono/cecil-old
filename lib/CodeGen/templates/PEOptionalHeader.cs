@@ -36,20 +36,24 @@ namespace Mono.Cecil.Binary {
             set { m_dataDirectories = value; }
         }
 
-        public PEOptionalHeader() {
-            m_standardFields = new StandardFieldsHeader();
-            m_ntSpecificFields = new NTSpecificFieldsHeader();
-            m_dataDirectories = new DataDirectoriesHeader();
+        public PEOptionalHeader ()
+        {
+            m_standardFields = new StandardFieldsHeader ();
+            m_ntSpecificFields = new NTSpecificFieldsHeader ();
+            m_dataDirectories = new DataDirectoriesHeader ();
         }
 
-        public void SetDefaultValues() {}
+        public void SetDefaultValues ()
+        {
+        }
 
-        public void Accept(IBinaryVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IBinaryVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            m_standardFields.Accept(visitor);
-            m_ntSpecificFields.Accept(visitor);
-            m_dataDirectories.Accept(visitor);
+            m_standardFields.Accept (visitor);
+            m_ntSpecificFields.Accept (visitor);
+            m_dataDirectories.Accept (visitor);
         }
         <% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
         public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
@@ -60,13 +64,17 @@ namespace Mono.Cecil.Binary {
                 get { return <%=f.field_name%>; }
                 set { <%=f.field_name%> = value; }
             }
-<% print("\n") } %>            public StandardFieldsHeader() {}
-
-            public void SetDefaultValues() {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+<% print("\n") } %>            public StandardFieldsHeader ()
+            {
             }
 
-            public void Accept(IBinaryVisitor visitor) {
-                visitor.Visit(this);
+            public void SetDefaultValues ()
+            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            }
+
+            public void Accept (IBinaryVisitor visitor)
+            {
+                visitor.Visit (this);
             }
         }
         <% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
@@ -78,13 +86,17 @@ namespace Mono.Cecil.Binary {
                 get { return <%=f.field_name%>; }
                 set { <%=f.field_name%> = value; }
             }
-<% print("\n") } %>            public NTSpecificFieldsHeader() {}
-
-            public void SetDefaultValues() {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+<% print("\n") } %>            public NTSpecificFieldsHeader ()
+            {
             }
 
-            public void Accept(IBinaryVisitor visitor) {
-                visitor.Visit(this);
+            public void SetDefaultValues ()
+            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            }
+
+            public void Accept (IBinaryVisitor visitor)
+            {
+                visitor.Visit (this);
             }
         }
         <% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
@@ -96,13 +108,17 @@ namespace Mono.Cecil.Binary {
                 get { return <%=f.field_name%>; }
                 set { <%=f.field_name%> = value; }
             }
-<% print("\n") } %>            public DataDirectoriesHeader() {}
-
-            public void SetDefaultValues() {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+<% print("\n") } %>            public DataDirectoriesHeader ()
+            {
             }
 
-            public void Accept(IBinaryVisitor visitor) {
-                visitor.Visit(this);
+            public void SetDefaultValues ()
+            {<% header.fields.each { |f| print("\n                " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+            }
+
+            public void Accept (IBinaryVisitor visitor)
+            {
+                visitor.Visit (this);
             }
         }
     }

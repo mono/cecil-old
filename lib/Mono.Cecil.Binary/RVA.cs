@@ -14,7 +14,7 @@ namespace Mono.Cecil.Binary {
 
     using Mono.Cecil.Metadata;
 
-    [ColumnSize(4)]
+    [ColumnSize (4)]
     internal struct RVA {
 
         public static readonly RVA Zero = new RVA(0);
@@ -26,66 +26,80 @@ namespace Mono.Cecil.Binary {
             set { m_rva = value; }
         }
 
-        public RVA(uint rva) {
+        public RVA (uint rva)
+        {
             m_rva = rva;
         }
-        
-        public override int GetHashCode() {
+
+        public override int GetHashCode ()
+        {
             return (int)m_rva;
         }
 
-        public override bool Equals(object other) {
+        public override bool Equals (object other)
+        {
             if (other is RVA) {
                 return this.m_rva == ((RVA)other).m_rva;
             }
             return false;
         }
-        
-        public override string ToString() {
-            return string.Format("0x{0}", m_rva.ToString("X"));
+
+        public override string ToString ()
+        {
+            return string.Format ("0x{0}", m_rva.ToString ("X"));
         }
 
-        public static bool operator ==(RVA one, RVA other) {
-            return one.Equals(other);
+        public static bool operator == (RVA one, RVA other)
+        {
+            return one.Equals (other);
         }
 
-        public static bool operator !=(RVA one, RVA other) {
-            return !one.Equals(other);
+        public static bool operator != (RVA one, RVA other)
+        {
+            return !one.Equals (other);
         }
 
-        public static bool operator <(RVA one, RVA other) {
+        public static bool operator < (RVA one, RVA other)
+        {
             return (one.m_rva < other.m_rva);
         }
 
-        public static bool operator >(RVA one, RVA other) {
+        public static bool operator > (RVA one, RVA other)
+        {
             return (one.m_rva > other.m_rva);
         }
 
-        public static bool operator <=(RVA one, RVA other) {
+        public static bool operator <= (RVA one, RVA other)
+        {
             return one.m_rva <= other.m_rva;
         }
 
-        public static bool operator >=(RVA one, RVA other) {
+        public static bool operator >= (RVA one, RVA other)
+        {
             return (one.m_rva >= other.m_rva);
         }
 
-        public static RVA operator + (RVA rva, uint x) {
+        public static RVA operator + (RVA rva, uint x)
+        {
             return new RVA (rva.m_rva + x);
         }
 
-        public static RVA operator - (RVA rva, uint x) {
+        public static RVA operator - (RVA rva, uint x)
+        {
             return new RVA (rva.m_rva - x);
         }
 
-        public static implicit operator RVA(uint val) {
+        public static implicit operator RVA (uint val)
+        {
             if (val == 0) {
                 return RVA.Zero;
             } else {
-                return new RVA(val);
+                return new RVA (val);
             }
         }
 
-        public static implicit operator uint(RVA rva) {
+        public static implicit operator uint (RVA rva)
+        {
             return rva.m_rva;
         }
     }

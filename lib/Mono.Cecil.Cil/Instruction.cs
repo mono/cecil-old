@@ -30,7 +30,8 @@ namespace Mono.Cecil.Cil {
             get { return m_operand; }
         }
 
-        internal Instruction(uint offset, OpCode opCode, object operand) {
+        internal Instruction (uint offset, OpCode opCode, object operand)
+        {
             m_offset = offset;
             m_opCode = opCode;
             m_operand = operand;

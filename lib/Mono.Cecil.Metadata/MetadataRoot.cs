@@ -31,23 +31,26 @@ namespace Mono.Cecil.Metadata {
             set { m_streams = value; }
         }
 
-        public MetadataRoot(Image img) {
+        public MetadataRoot (Image img)
+        {
             m_image = img;
         }
 
-        public Image GetImage() {
+        public Image GetImage ()
+        {
             return m_image;
         }
 
-        public void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
-            
-            m_header.Accept(visitor);
-            m_streams.Accept(visitor);
-            
-            visitor.Terminate(this);
+        public void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
+
+            m_header.Accept (visitor);
+            m_streams.Accept (visitor);
+
+            visitor.Terminate (this);
         }
-        
+
         public sealed class MetadataRootHeader : IHeader, IMetadataVisitable {
 
             private uint m_signature;
@@ -95,11 +98,13 @@ namespace Mono.Cecil.Metadata {
                 set { m_streams = value; }
             }
 
-            public MetadataRootHeader(MetadataRoot owner) {
+            public MetadataRootHeader (MetadataRoot owner)
+            {
                 m_owner = owner;
             }
 
-            public void SetDefaultValues() {
+            public void SetDefaultValues ()
+            {
                 m_signature = 0x424A5342;
                 m_majorVersion = 1;
                 m_minorVersion = 0;
@@ -107,8 +112,9 @@ namespace Mono.Cecil.Metadata {
                 m_flags = 0;
             }
 
-            public void Accept(IMetadataVisitor visitor) {
-                visitor.Visit(this);
+            public void Accept (IMetadataVisitor visitor)
+            {
+                visitor.Visit (this);
             }
         }
     }

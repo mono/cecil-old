@@ -13,17 +13,17 @@
 namespace Mono.Cecil.Binary {
 
     internal interface IBinaryVisitor {
-        void Visit(Image img);
-        void Visit(DOSHeader header);
-        void Visit(PEFileHeader header);
-        void Visit(PEOptionalHeader header);
-        void Visit(PEOptionalHeader.StandardFieldsHeader header);
-        void Visit(PEOptionalHeader.NTSpecificFieldsHeader header);
-        void Visit(PEOptionalHeader.DataDirectoriesHeader header);
-        void Visit(SectionCollection coll);
-        void Visit(Section section);
-        void Visit(CLIHeader header);
-        
-        void Terminate(Image img);
+        void Visit (Image img);
+        void Visit (DOSHeader header);
+        void Visit (PEFileHeader header);
+        void Visit (PEOptionalHeader header);
+        void Visit (PEOptionalHeader.StandardFieldsHeader header);
+        void Visit (PEOptionalHeader.NTSpecificFieldsHeader header);
+        void Visit (PEOptionalHeader.DataDirectoriesHeader header);
+        void Visit (SectionCollection coll);
+        void Visit (Section section);
+        void Visit (CLIHeader header);
+
+        void Terminate (Image img);
     }
 }

@@ -65,50 +65,51 @@ namespace Mono.Cecil.Binary {
             get { return m_img; }
         }
 
-        private Image(FileInfo img) {
+        private Image (FileInfo img)
+        {
             m_img = img;
-            m_dosHeader = new DOSHeader();
-            m_peFileHeader = new PEFileHeader();
-            m_peOptionalHeader = new PEOptionalHeader();
-            m_sections = new SectionCollection();
-            m_cliHeader = new CLIHeader();
-            m_mdRoot = new MetadataRoot(this);
+            m_dosHeader = new DOSHeader ();
+            m_peFileHeader = new PEFileHeader ();
+            m_peOptionalHeader = new PEOptionalHeader ();
+            m_sections = new SectionCollection ();
+            m_cliHeader = new CLIHeader ();
+            m_mdRoot = new MetadataRoot (this);
         }
 
-        public long ResolveVirtualAddress(RVA rva) {
+        public long ResolveVirtualAddress (RVA rva)
+        {
             foreach (Section sect in this.Sections) {
                 if (rva >= sect.VirtualAddress &&
-                    rva < sect.VirtualAddress + sect.SizeOfRawData) {
+                    rva < sect.VirtualAddress + sect.SizeOfRawData)
 
                     return rva + sect.PointerToRawData - sect.VirtualAddress;
-                }
             }
             return 0;
         }
 
-        public void Accept(IBinaryVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IBinaryVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            m_dosHeader.Accept(visitor);
-            m_peFileHeader.Accept(visitor);
-            m_peOptionalHeader.Accept(visitor);
+            m_dosHeader.Accept (visitor);
+            m_peFileHeader.Accept (visitor);
+            m_peOptionalHeader.Accept (visitor);
 
-            m_sections.Accept(visitor);
+            m_sections.Accept (visitor);
 
-            m_cliHeader.Accept(visitor);
+            m_cliHeader.Accept (visitor);
 
-            visitor.Terminate(this);
+            visitor.Terminate (this);
         }
 
-        public static Image GetImage(string file) {
-            if (file == null || file.Length == 0) {
-                throw new ArgumentException("file");
-            }
-            FileInfo img = new FileInfo(file);
-            if (!File.Exists(img.FullName)) {
-                throw new FileNotFoundException(img.FullName);
-            }
-            Image ret = new Image(img);
+        public static Image GetImage (string file)
+        {
+            if (file == null || file.Length == 0)
+                throw new ArgumentException ("file");
+            FileInfo img = new FileInfo (file);
+            if (!File.Exists (img.FullName))
+                throw new FileNotFoundException (img.FullName);
+            Image ret = new Image (img);
             return ret;
         }
     }

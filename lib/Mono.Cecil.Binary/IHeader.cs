@@ -13,6 +13,6 @@
 namespace Mono.Cecil.Binary {
 
     internal interface IHeader {
-        void SetDefaultValues();
+        void SetDefaultValues ();
     }
 }

@@ -26,9 +26,9 @@ namespace Mono.Cecil.Implem {
         private IDictionary m_items;
         private <%=$cur_coll.container%> m_container;
 
-        public <%=$cur_coll.type%> this[string name] {
-            get { return m_items[name] as <%=$cur_coll.type%>; }
-            set { m_items[name] = value; }
+        public <%=$cur_coll.type%> this [string name] {
+            get { return m_items [name] as <%=$cur_coll.type%>; }
+            set { m_items [name] = value; }
         }
 
         public <%=$cur_coll.container%> Container {
@@ -47,38 +47,43 @@ namespace Mono.Cecil.Implem {
             get { return this; }
         }
 
-        public <%=$cur_coll.name%>(<%=$cur_coll.container%> container) {
+        public <%=$cur_coll.name%> (<%=$cur_coll.container%> container) {
             m_container = container;
             m_items = new ListDictionary();
         }
 
-        public void Clear() {
-            m_items.Clear();
+        public void Clear ()
+        {
+            m_items.Clear ();
         }
 
-        public bool Contains(<%=$cur_coll.type%> value) {
-            return m_items.Contains(value);
+        public bool Contains (<%=$cur_coll.type%> value)
+        {
+            return m_items.Contains (value);
         }
 
-        public void Remove(<%=$cur_coll.type%> value) {
-            m_items.Remove(value);
+        public void Remove (<%=$cur_coll.type%> value)
+        {
+            m_items.Remove (value);
         }
 
-        public void CopyTo(Array ary, int index) {
-            m_items.CopyTo(ary, index);
+        public void CopyTo (Array ary, int index)
+        {
+            m_items.CopyTo (ary, index);
         }
 
-        public IEnumerator GetEnumerator() {
-            return m_items.Values.GetEnumerator();
+        public IEnumerator GetEnumerator ()
+        {
+            return m_items.Values.GetEnumerator ();
         }
 
-        public void Accept(<%=$cur_coll.visitor%> visitor) {
-            visitor.Visit(this);
-            <%=$cur_coll.type%>[] items = new <%=$cur_coll.type%>[m_items.Count];
-            m_items.Values.CopyTo(items, 0);
-            for (int i = 0 ; i < items.Length ; i++) {
+        public void Accept (<%=$cur_coll.visitor%> visitor)
+        {
+            visitor.Visit (this);
+            <%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
+            m_items.Values.CopyTo (items, 0);
+            for (int i = 0; i < items.Length; i++)
                 items[i].Accept(visitor);
-            }
         }
     }
 }

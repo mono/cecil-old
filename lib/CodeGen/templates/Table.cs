@@ -18,14 +18,14 @@ namespace Mono.Cecil.Metadata {
     using <%=ns%>;
 <% }
 %>
-    [RId(<%=$cur_table.rid%>)]
+    [RId (<%=$cur_table.rid%>)]
     internal sealed class <%=$cur_table.table_name%> : IMetadataTable {
 
         private RowCollection m_rows;
 
-        public <%=$cur_table.row_name%> this[int index] {
-            get { return m_rows[index] as <%=$cur_table.row_name%>; }
-            set { m_rows[index] = value; }
+        public <%=$cur_table.row_name%> this [int index] {
+            get { return m_rows [index] as <%=$cur_table.row_name%>; }
+            set { m_rows [index] = value; }
         }
 
         public RowCollection Rows {
@@ -33,9 +33,10 @@ namespace Mono.Cecil.Metadata {
             set { m_rows = value; }
         }
 
-        public void Accept(IMetadataTableVisitor visitor) {
-            visitor.Visit(this);
-            this.Rows.Accept(visitor.GetRowVisitor());
+        public void Accept (IMetadataTableVisitor visitor)
+        {
+            visitor.Visit (this);
+            this.Rows.Accept (visitor.GetRowVisitor ());
         }
     }
 
@@ -57,8 +58,9 @@ namespace Mono.Cecil.Metadata {
             get { return <%=$cur_table.row_name%>.RowColumns; }
         }
 
-        public void Accept(IMetadataRowVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IMetadataRowVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

@@ -17,22 +17,25 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class EmbeddedResource : Resource, IEmbeddedResource {
 
-        private byte[] m_data;
+        private byte [] m_data;
 
-        public byte[] Data {
+        public byte [] Data {
             get { return m_data; }
             set { m_data = value; }
         }
 
-        public EmbeddedResource(string name, ManifestResourceAttributes attributes) : base(name, attributes) {}
-        
-        public EmbeddedResource(string name, ManifestResourceAttributes attributes, byte[] data) : base(name, attributes) {
+        public EmbeddedResource (string name, ManifestResourceAttributes attributes) : base (name, attributes)
+        {
+        }
+
+        public EmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data) : base (name, attributes)
+        {
             m_data = data;
         }
 
-        public override void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }
-

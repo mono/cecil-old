@@ -16,10 +16,17 @@ namespace Mono.Cecil.Implem  {
 
     public class ReflectionException : Exception {
 
-        internal ReflectionException() : base() {}
-        internal ReflectionException(string message) : base(message) {}
-        internal ReflectionException(string message, params string[] parameters) : base(string.Format(message, parameters)) {}
-        internal ReflectionException(string message, Exception inner) : base(message, inner) {}
+        internal ReflectionException () : base ()
+        {}
+
+        internal ReflectionException (string message) : base (message)
+        {}
+
+        internal ReflectionException (string message, params string [] parameters) : base (string.Format (message, parameters))
+        {}
+
+        internal ReflectionException (string message, Exception inner) : base (message, inner)
+        {}
     }
 }
 

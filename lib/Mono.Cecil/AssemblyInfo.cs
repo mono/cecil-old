@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright(
     "(c)2004, DotNetGuru - All rights reserved - No warranties extended")]
 [assembly: AssemblyTrademark("DotNetGuru")]
-[assembly: AssemblyCulture("neutral")]
+[assembly: AssemblyCulture("")]
 
 [assembly: CLSCompliant(false)]
 [assembly: ComVisible(false)]

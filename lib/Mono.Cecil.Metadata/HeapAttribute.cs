@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using System;
 
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage (AttributeTargets.Class)]
     internal class HeapAttribute : Attribute {
 
         private string m_name;

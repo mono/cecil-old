@@ -29,13 +29,17 @@ namespace Mono.Cecil.Binary {
             set { m_imageHash = value; }
         }
 
-        public CLIHeader() {}
-
-        public void SetDefaultValues() {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+        public CLIHeader ()
+        {
         }
 
-        public void Accept(IBinaryVisitor visitor) {
-            visitor.Visit(this);
+        public void SetDefaultValues ()
+        {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+        }
+
+        public void Accept (IBinaryVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

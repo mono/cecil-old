@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using System.IO;
 
-    [Heap("#Blob")]
+    [Heap ("#Blob")]
     internal class BlobHeap : MetadataHeap {
 
         private int m_indexSize;
@@ -24,18 +24,23 @@ namespace Mono.Cecil.Metadata {
             set { m_indexSize = value; }
         }
 
-        public byte[] Read(uint index) {
-            return ReadBytesFromStream(index);
+        public byte [] Read (uint index)
+        {
+            return ReadBytesFromStream (index);
         }
 
-        public BinaryReader GetReader(uint index) {
-            return new BinaryReader(new MemoryStream(Read(index)));
+        public BinaryReader GetReader (uint index)
+        {
+            return new BinaryReader (new MemoryStream (Read (index)));
         }
 
-        public BlobHeap(MetadataStream stream) : base(stream) {}
+        public BlobHeap (MetadataStream stream) : base (stream)
+        {
+        }
 
-        public override void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

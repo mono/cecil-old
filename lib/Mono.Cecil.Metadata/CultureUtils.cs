@@ -17,7 +17,7 @@ namespace Mono.Cecil.Metadata {
 
     public sealed class CultureUtils {
 
-        private static string[] cultures = new string[] {
+        private static string [] cultures = new string [] {
             "ar-SA", "ar-IQ", "ar-EG", "ar-LY",
             "ar-DZ", "ar-MA", "ar-TN", "ar-OM",
             "ar-YE", "ar-SY", "ar-JO", "ar-LB",
@@ -55,30 +55,31 @@ namespace Mono.Cecil.Metadata {
             string.Empty
         };
 
-        public static bool IsValid(string culture) {
-            if (culture == null) {
-                throw new ArgumentException("culture");
-            }
+        public static bool IsValid (string culture)
+        {
+            if (culture == null)
+                throw new ArgumentException ("culture");
+
             foreach (string cult in cultures) {
-                if (culture.ToLower() == cult.ToLower()) {
+                if (culture.ToLower () == cult.ToLower ())
                     return true;
-                }
             }
+
             return false;
         }
 
-        public static CultureInfo GetCultureInfo(string culture) {
-            if (IsValid(culture)) {
+        public static CultureInfo GetCultureInfo (string culture)
+        {
+            if (IsValid (culture)) {
                 if (culture.Length == 0 || culture == "neutral") {
                     return CultureInfo.InvariantCulture;
-                } else {
-                    foreach (CultureInfo ci in CultureInfo.GetCultures(
-                        CultureTypes.AllCultures)) {
+                }
 
-                        if (ci.Name == culture) {
-                            return ci;
-                        }
-                    }
+                foreach (CultureInfo ci in CultureInfo.GetCultures (
+                    CultureTypes.AllCultures)) {
+
+                    if (ci.Name == culture)
+                        return ci;
                 }
             }
             return CultureInfo.InvariantCulture;

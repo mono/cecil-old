@@ -15,7 +15,7 @@ namespace Mono.Cecil.Metadata {
     using System;
     using System.Collections;
 
-    [Heap("#GUID")]
+    [Heap ("#GUID")]
     internal class GuidHeap : MetadataHeap {
 
         private readonly IDictionary m_guids;
@@ -30,35 +30,35 @@ namespace Mono.Cecil.Metadata {
             set { m_indexSize = value; }
         }
 
-        public GuidHeap(MetadataStream stream) : base(stream) {
-            m_guids = new Hashtable();
+        public GuidHeap (MetadataStream stream) : base (stream)
+        {
+            m_guids = new Hashtable ();
         }
 
-        public Guid this[uint index] {
+        public Guid this [uint index] {
             get {
-                if (index == 0) {
-                    return new Guid(new byte[16]);
-                }
+                if (index == 0)
+                    return new Guid (new byte [16]);
 
-                int idx = (int)index - 1;
+                int idx = (int) index - 1;
 
-                if (m_guids.Contains(idx)) {
-                    return (Guid)m_guids[idx];
-                }
+                if (m_guids.Contains (idx))
+                    return (Guid) m_guids [idx];
 
-                if (idx + 16 > this.Data.Length) {
-                    throw new IndexOutOfRangeException();
-                }
-                byte[] buffer = new byte[16];
-                Buffer.BlockCopy(this.Data, idx, buffer, 0, 16);
-                Guid res = new Guid(buffer);
-                m_guids[idx] = res;
+                if (idx + 16 > this.Data.Length)
+                    throw new IndexOutOfRangeException ();
+
+                byte[] buffer = new byte [16];
+                Buffer.BlockCopy (this.Data, idx, buffer, 0, 16);
+                Guid res = new Guid (buffer);
+                m_guids [idx] = res;
                 return res;
             }
         }
 
-        public override void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

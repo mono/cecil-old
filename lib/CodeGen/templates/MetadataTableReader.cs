@@ -26,37 +26,42 @@ namespace Mono.Cecil.Metadata {
         private MetadataRowReader m_mrrv;
         private BinaryReader m_binaryReader;
 
-        public readonly IDictionary Rows = new Hashtable(<%=$tables.length%>);
+        public readonly IDictionary Rows = new Hashtable (<%=$tables.length%>);
 
-        public MetadataTableReader(MetadataReader mrv) {
-            m_metadataRoot = mrv.GetMetadataRoot();
+        public MetadataTableReader (MetadataReader mrv)
+        {
+            m_metadataRoot = mrv.GetMetadataRoot ();
             m_heap = m_metadataRoot.Streams.TablesHeap;
-            m_binaryReader = new BinaryReader(new MemoryStream(m_heap.Data));
+            m_binaryReader = new BinaryReader (new MemoryStream (m_heap.Data));
             m_binaryReader.BaseStream.Position = 24;
-            m_mrrv = new MetadataRowReader(this);
+            m_mrrv = new MetadataRowReader (this);
         }
 
-        public MetadataRoot GetMetadataRoot() {
+        public MetadataRoot GetMetadataRoot ()
+        {
             return m_metadataRoot;
         }
 
-        public BinaryReader GetReader() {
+        public BinaryReader GetReader ()
+        {
             return m_binaryReader;
         }
 
-        public IMetadataRowVisitor GetRowVisitor() {
+        public IMetadataRowVisitor GetRowVisitor ()
+        {
             return m_mrrv;
         }
 
-        private void ReadNumberOfRows(Type table) {
-            this.Rows[table] = m_binaryReader.ReadInt32();
+        private void ReadNumberOfRows (Type table)
+        {
+            this.Rows [table] = m_binaryReader.ReadInt32 ();
         }
 
-        public int GetNumberOfRows(Type table) {
-            object n = this.Rows[table];
-            if (n != null) {
-                return (int)n;
-            }
+        public int GetNumberOfRows (Type table)
+        {
+            object n = this.Rows [table];
+            if (n != null)
+                return (int) n;
             return 0;
         }
 <%
@@ -64,22 +69,23 @@ namespace Mono.Cecil.Metadata {
         eval(a.rid) <=> eval(b.rid)
     }
 %>
-        public void Visit(TableCollection coll) {
-<% stables.each { |table| %>            if (m_heap.HasTable(typeof(<%=table.table_name%>))) {
-                coll.Add(new <%=table.table_name%>());
-                ReadNumberOfRows(typeof(<%=table.table_name%>));
+        public void Visit (TableCollection coll)
+        {
+<% stables.each { |table| %>            if (m_heap.HasTable (typeof (<%=table.table_name%>))) {
+                coll.Add (new <%=table.table_name%> ());
+                ReadNumberOfRows (typeof (<%=table.table_name%>));
             }
 <% } %>        }
 
-<% $tables.each { |table| %>        public void Visit(<%=table.table_name%> table) {
-            table.Rows = new RowCollection(table);
-            int number = GetNumberOfRows(typeof(<%=table.table_name%>));
-            for (int i = 0 ; i < number ; i++) {
-                table.Rows.Add(new <%=table.row_name%>());
-            }
+<% $tables.each { |table| %>        public void Visit (<%=table.table_name%> table)
+        {
+            table.Rows = new RowCollection (table);
+            int number = GetNumberOfRows (typeof (<%=table.table_name%>));
+            for (int i = 0; i < number; i++)
+                table.Rows.Add (new <%=table.row_name%> ());
         }
-<% print("\n") ; } %>        public void Terminate(TableCollection coll) {
-            m_binaryReader.Close();
+<% print("\n") ; } %>        public void Terminate(TableCollection coll)
+        {
         }
     }
 }

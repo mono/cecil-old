@@ -14,15 +14,15 @@ namespace Mono.Cecil.Metadata {
 
     using System.Collections;
 
-    [Heap("#Strings")]
+    [Heap ("#Strings")]
     internal class StringsHeap : MetadataHeap {
 
         private readonly IDictionary m_strings;
         private int m_indexSize;
 
-        public string this[uint index] {
-            get { return m_strings[index] == null ? string.Empty : m_strings[index] as string; }
-            set { m_strings[index] = value; }
+        public string this [uint index] {
+            get { return m_strings [index] == null ? string.Empty : m_strings [index] as string; }
+            set { m_strings [index] = value; }
         }
 
         public int IndexSize {
@@ -30,12 +30,14 @@ namespace Mono.Cecil.Metadata {
             set { m_indexSize = value; }
         }
 
-        public StringsHeap(MetadataStream stream) : base(stream) {
-            m_strings = new SortedList();
+        public StringsHeap (MetadataStream stream) : base (stream)
+        {
+            m_strings = new SortedList ();
         }
 
-        public override void Accept(IMetadataVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IMetadataVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

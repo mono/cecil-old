@@ -19,12 +19,12 @@ namespace Mono.Cecil {
 
     public interface <%=$cur_coll.intf%> : ICollection, <%=$cur_coll.visitable%> {
 
-        <%=$cur_coll.type%> this[string name] { get; set; }
+        <%=$cur_coll.type%> this [string name] { get; set; }
 
         <%=$cur_coll.container%> Container { get; }
 
-        void Clear();
-        bool Contains(<%=$cur_coll.type%> value);
-        void Remove(<%=$cur_coll.type%> value);
+        void Clear ();
+        bool Contains (<%=$cur_coll.type%> value);
+        void Remove (<%=$cur_coll.type%> value);
     }
 }

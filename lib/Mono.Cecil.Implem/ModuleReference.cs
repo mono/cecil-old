@@ -23,12 +23,14 @@ namespace Mono.Cecil.Implem {
             set { m_name = value; }
         }
 
-        public ModuleReference(string name) {
+        public ModuleReference (string name)
+        {
             m_name = name;
         }
 
-        public void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

@@ -13,7 +13,7 @@
 namespace Mono.Cecil.Cil {
 
     public struct OpCode {
-        
+
         private string m_name;
         private byte m_op1;
         private byte m_op2;
@@ -30,7 +30,7 @@ namespace Mono.Cecil.Cil {
         }
 
         public short Value {
-            get { return m_size == 1 ? m_op2 : (short)((m_op1 << 8) | m_op2); }
+            get { return m_size == 1 ? m_op2 : (short) ((m_op1 << 8) | m_op2); }
         }
 
         public FlowControl FlowControl {
@@ -52,11 +52,11 @@ namespace Mono.Cecil.Cil {
         public StackBehaviour StackBehaviourPush {
             get { return m_stackBehaviourPush; }
         }
-        
-        internal OpCode(string name, byte op1, byte op2, int size, FlowControl flowControl,
+
+        internal OpCode (string name, byte op1, byte op2, int size, FlowControl flowControl,
             OpCodeType opCodeType, OperandType operandType,
-            StackBehaviour pop, StackBehaviour push) {
-            
+            StackBehaviour pop, StackBehaviour push)
+        {
             m_name = name;
             m_op1 = op1;
             m_op2 = op2;
@@ -68,11 +68,13 @@ namespace Mono.Cecil.Cil {
             m_stackBehaviourPush = push;
         }
 
-        public override int GetHashCode () {
+        public override int GetHashCode ()
+        {
             return Value;
         }
 
-        public override bool Equals(object obj) {
+        public override bool Equals(object obj)
+        {
             if (obj == null || !(obj is OpCode))
                 return false;
             OpCode v = (OpCode)obj;

@@ -29,13 +29,17 @@ namespace Mono.Cecil.Binary {
             get { return <%=f.field_name%>; }
             set { <%=f.field_name%> = value; }
         }
-<% print("\n") } %>        public Section() {}
-
-        public void SetDefaultValues() {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+<% print("\n") } %>        public Section ()
+        {
         }
 
-        public void Accept(IBinaryVisitor visitor) {
-            visitor.Visit(this);
+        public void SetDefaultValues ()
+        {<% header.fields.each { |f| print("\n            " +  f.field_name + " = " + f.default + ";") unless f.default.nil? } %>
+        }
+
+        public void Accept (IBinaryVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

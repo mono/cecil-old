@@ -20,10 +20,10 @@ namespace Mono.Cecil.Metadata {
         private IList m_items;
 
         private IMetadataTable m_table;
-        
-        public IMetadataRow this[int index] {
-            get { return m_items[index] as IMetadataRow; }
-            set { m_items[index] = value; }
+
+        public IMetadataRow this [int index] {
+            get { return m_items [index] as IMetadataRow; }
+            set { m_items [index] = value; }
         }
 
         public int Count {
@@ -37,56 +37,66 @@ namespace Mono.Cecil.Metadata {
         public object SyncRoot {
             get { return this; }
         }
-        
-        public RowCollection(IMetadataTable table) {
+
+        public RowCollection (IMetadataTable table)
+        {
             m_table = table;
-            m_items = new ArrayList();
+            m_items = new ArrayList ();
         }
 
-        public void Add(IMetadataRow value) {
-            m_items.Add(value);
+        public void Add (IMetadataRow value)
+        {
+            m_items.Add (value);
         }
 
-        public void Clear() {
-            m_items.Clear();
+        public void Clear ()
+        {
+            m_items.Clear ();
         }
 
-        public bool Contains(IMetadataRow value) {
-            return m_items.Contains(value);
+        public bool Contains (IMetadataRow value)
+        {
+            return m_items.Contains (value);
         }
 
-        public int IndexOf(IMetadataRow value) {
-            return m_items.IndexOf(value);
+        public int IndexOf (IMetadataRow value)
+        {
+            return m_items.IndexOf (value);
         }
 
-        public void Insert(int index, IMetadataRow value) {
-            m_items.Insert(index, value);
+        public void Insert (int index, IMetadataRow value)
+        {
+            m_items.Insert (index, value);
         }
 
-        public void Remove(IMetadataRow value) {
-            m_items.Remove(value);
+        public void Remove (IMetadataRow value)
+        {
+            m_items.Remove (value);
         }
 
-        public void RemoveAt(int index) {
-            m_items.Remove(index);
+        public void RemoveAt (int index)
+        {
+            m_items.Remove (index);
         }
 
-        public void CopyTo(Array ary, int index) {
-            m_items.CopyTo(ary, index);
+        public void CopyTo (Array ary, int index)
+        {
+            m_items.CopyTo (ary, index);
         }
 
-        public IEnumerator GetEnumerator() {
-            return m_items.GetEnumerator();
+        public IEnumerator GetEnumerator ()
+        {
+            return m_items.GetEnumerator ();
         }
 
-        public void Accept(IMetadataRowVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IMetadataRowVisitor visitor)
+        {
+            visitor.Visit (this);
 
-            for (int i = 0 ; i < m_items.Count ; i++) {
-                this[i].Accept(visitor);
-            }
-            
-            visitor.Terminate(this);
+            for (int i = 0; i < m_items.Count; i++)
+                this [i].Accept (visitor);
+
+            visitor.Terminate (this);
         }
     }
 }

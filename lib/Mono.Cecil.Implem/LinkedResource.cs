@@ -17,10 +17,10 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class LinkedResource : Resource, ILinkedResource {
 
-        private byte[] m_hash;
+        private byte [] m_hash;
         private string m_file;
 
-        public byte[] Hash {
+        public byte [] Hash {
             get { return m_hash; }
             set { m_hash = value; }
         }
@@ -30,12 +30,14 @@ namespace Mono.Cecil.Implem {
             set { m_file = value; }
         }
 
-        public LinkedResource(string name, ManifestResourceAttributes attributes, string file) : base(name, attributes) {
+        public LinkedResource (string name, ManifestResourceAttributes attributes, string file) : base (name, attributes)
+        {
             m_file = file;
         }
 
-        public override void Accept(IReflectionStructureVisitor visitor) {
-            visitor.Visit(this);
+        public override void Accept (IReflectionStructureVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

@@ -30,7 +30,8 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        protected Resource(string name, ManifestResourceAttributes attributes) {
+        protected Resource(string name, ManifestResourceAttributes attributes)
+        {
             m_name = name;
             m_attributes = attributes;
         }

@@ -14,17 +14,17 @@ namespace Mono.Cecil.Binary {
 
     internal sealed class DOSHeader : IHeader, IBinaryVisitable {
 
-        private byte[] m_start;
-        private byte[] m_end;
+        private byte [] m_start;
+        private byte [] m_end;
 
         private uint lfanew;
 
-        public byte[] Start {
+        public byte [] Start {
             get { return m_start; }
             set { m_start = value; }
         }
 
-        public byte[] End {
+        public byte [] End {
             get { return m_end; }
             set { m_end = value; }
         }
@@ -34,10 +34,12 @@ namespace Mono.Cecil.Binary {
             set { lfanew = value; }
         }
 
-        public DOSHeader() {}
+        public DOSHeader ()
+        {}
 
-        public void SetDefaultValues() {
-            m_start = new byte[60] {
+        public void SetDefaultValues ()
+        {
+            m_start = new byte [60] {
                 0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00,
                 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff,
                 0x00, 0x00, 0xb8, 0x00, 0x00, 0x00, 0x00,
@@ -49,7 +51,7 @@ namespace Mono.Cecil.Binary {
                 0x00, 0x00, 0x00, 0x00
             };
             lfanew = 128;
-            m_end = new byte[64] {
+            m_end = new byte [64] {
                 0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09,
                 0xcd, 0x21, 0xb8, 0x01, 0x4c, 0xcd, 0x21,
                 0x54, 0x68, 0x69, 0x73, 0x20, 0x70, 0x72,
@@ -63,8 +65,9 @@ namespace Mono.Cecil.Binary {
             };
         }
 
-        public void Accept(IBinaryVisitor visitor) {
-            visitor.Visit(this);
+        public void Accept (IBinaryVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }
