@@ -40,6 +40,10 @@ namespace Mono.Cecil.Implem {
             ReadOverrides ();
             ReadSecurityDeclarations ();
             ReadCustomAttributes ();
+
+            m_events = null;
+            m_properties = null;
+            m_parameters = null;
         }
 
         private void ReadClassLayoutInfos ()

@@ -32,7 +32,7 @@ namespace Mono.Cecil.Tests {
         public void SetUp ()
         {
             if (m_asmdef == null)
-                m_asmdef = AssemblyFactory.GetAssembly (@"c:\root\System.Web.dll", LoadingType.Lazy);
+                m_asmdef = AssemblyFactory.GetAssembly (@"c:\root\System.Web.dll", LoadingType.Aggressive);
         }
 
         [Test]
@@ -88,6 +88,10 @@ namespace Mono.Cecil.Tests {
 
                     foreach (IEventDefinition evt in ctrl.Events) {
                         Console.WriteLine ("event: " + evt.ToString ());
+                    }
+
+                    foreach (ICustomAttribute ca in ctrl.CustomAttributes) {
+                        Console.WriteLine ("custom attr: " + ca.Constructor.ToString ());
                     }
                 }
             }

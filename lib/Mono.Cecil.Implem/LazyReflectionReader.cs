@@ -119,6 +119,92 @@ namespace Mono.Cecil.Implem {
             secDeclarations.Loaded = true;
         }
 
+        public override void Visit (ICustomAttributeCollection customAttrs)
+        {
+            CustomAttributeCollection customAttributes = customAttrs as CustomAttributeCollection;
+            if (customAttributes.Loaded)
+                return;
+
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (CustomAttributeTable))) {
+                customAttributes.Loaded = true;
+                return;
+            }
+
+            CustomAttributeTable caTable = m_root.Streams.TablesHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
+            int rid = 0;
+            TokenType target;
+            if (customAttrs.Container is AssemblyDefinition) {
+                rid =1;
+                target = TokenType.Assembly;
+            } else if (customAttrs.Container is ModuleDefinition) {
+                rid = 1;
+                target = TokenType.Module;
+            } else if (customAttrs.Container is TypeDefinition) {
+                rid = GetRidForTypeDef (customAttrs.Container as TypeDefinition);
+                target = TokenType.TypeDef;
+            } else if (customAttrs.Container is FieldDefinition) {
+                rid = Array.IndexOf (m_fields, customAttrs.Container) + 1;
+                target = TokenType.Field;
+            } else if (customAttrs.Container is MethodDefinition) {
+                rid = GetRidForMethodDef (customAttrs.Container as MethodDefinition);
+                target = TokenType.Method;
+            } else if (customAttrs.Container is PropertyDefinition) {
+                rid = Array.IndexOf (m_properties, customAttrs.Container) + 1;
+                target = TokenType.Property;
+            } else if (customAttrs.Container is EventDefinition) {
+                rid = Array.IndexOf (m_events, customAttrs.Container) + 1;
+                target = TokenType.Event;
+            } else if (customAttrs.Container is ParameterDefinition) {
+                rid = Array.IndexOf (m_parameters, customAttrs.Container) + 1;
+                target = TokenType.Param;
+            } else {
+                //TODO: support other ?
+                customAttributes.Loaded = true;
+                return;
+            }
+
+            for (int i = 0; i < caTable.Rows.Count; i++) {
+                CustomAttributeRow caRow = caTable [i];
+
+                CustomAttrib sig = null;
+                CustomAttribute ca = null;
+                IMethodReference ctor = null;
+
+                if (caRow.Parent.TokenType == target && caRow.Parent.RID == rid) {
+                    if (caRow.Type.TokenType == TokenType.Method)
+                        ctor = GetMethodDefAt ((int) caRow.Type.RID);
+                    else
+                        ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
+                }
+
+                switch (caRow.Parent.TokenType) {
+                case TokenType.Assembly :
+                case TokenType.Module :
+                    if (caRow.Parent.TokenType == target) {
+                        sig = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
+                        ca = BuildCustomAttribute (ctor, sig);
+                    }
+                    break;
+                case TokenType.TypeDef :
+                case TokenType.Field :
+                case TokenType.Method :
+                case TokenType.Event :
+                case TokenType.Property :
+                case TokenType.Param :
+                    if (caRow.Parent.TokenType == target && caRow.Parent.RID == rid) {
+                        sig = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
+                        ca = BuildCustomAttribute (ctor, sig);
+                    }
+                    break;
+                }
+                if (ca != null) {
+                    customAttrs.Add (ca);
+                }
+            }
+
+            customAttributes.Loaded = true;
+        }
+
         public override void Visit (IEventDefinitionCollection events)
         {
             EventDefinitionCollection evts = events as EventDefinitionCollection;

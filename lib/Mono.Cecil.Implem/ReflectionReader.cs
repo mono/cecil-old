@@ -457,6 +457,7 @@ namespace Mono.Cecil.Implem {
 
         private object GetFixedArgValue (CustomAttrib.FixedArg fa)
         {
+            // instead of returning the values, should get the type string to get an ityperef
             if (fa.SzArray) {
                 object [] vals = new object [fa.NumElem];
                 for (int j = 0; j < vals.Length; j++) {
