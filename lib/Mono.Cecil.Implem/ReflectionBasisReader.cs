@@ -57,14 +57,14 @@ namespace Mono.Cecil.Implem {
                 parent.NestedTypes [child.Name] = child;
             }
 
-            /*for (int i = 0; i < typesTable.Rows.Count; i++) {
+            for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
-                TypeDefinition child = typeDefs [i];
+                TypeDefinition child = typeDefs [i - 1];
 
                 if (type.Extends.RID != 0) {
                     switch (type.Extends.TokenType) {
                     case TokenType.TypeDef :
-                        //child.BaseType = typeDefs [type.Extends.RID];
+                        child.BaseType = typeDefs [type.Extends.RID - 2];
                         break;
                     case TokenType.TypeRef :
                         //TODO: implement type ref reading
@@ -74,10 +74,10 @@ namespace Mono.Cecil.Implem {
                         break;
                     }
                 }
-            }*/
+            }
 
             for (int i = 0; i < typeDefs.Length; i++) {
-                TypeDefinition type =typeDefs [i];
+                TypeDefinition type = typeDefs [i];
                 tdc [type.FullName] = type;
             }
 
