@@ -39,9 +39,6 @@ namespace Mono.Cecil.Implem {
             if (atable == null || atable.Rows == null || atable.Rows[0] == null) {
                 throw new ReflectionException("Can not create an AssemblyDefinition");
             }
-
-            AssemblyRow arow = atable.Rows[0] as AssemblyRow;
-            asm.HashAlgorithm = arow.HashAlgId;
         }
 
         public void Visit(IAssemblyName name){

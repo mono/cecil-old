@@ -50,30 +50,28 @@ namespace Mono.Cecil.Implem {
 
         public byte[] PublicKey {
             get { return m_publicKey; }
-            set { 
-                    m_publicKey = value;
-                    m_publicKeyToken = null;
-	    }
+            set {
+                m_publicKey = value;
+                m_publicKeyToken = null;
+            }
         }
 
         public byte[] PublicKeyToken {
             get {
                 if ((m_publicKeyToken == null) && (m_publicKey != null)) {
-                        HashAlgorithm ha = null;
-                        switch (m_hashAlgo) {
+                    HashAlgorithm ha = null;
+                    switch (m_hashAlgo) {
                         case AssemblyHashAlgorithm.Reserved:
-                                ha = MD5.Create ();
-                                break;
+                            ha = MD5.Create (); break;
                         default:
-                                // None default to SHA1
-                                ha = SHA1.Create ();
-                                break;
-                        }
-                        byte[] hash = ha.ComputeHash (m_publicKey);
-                        // we need the last 8 bytes in reverse order
-                        m_publicKeyToken = new byte[8];
-                        Array.Copy (hash, (hash.Length - 8), m_publicKeyToken, 0, 8);
-                        Array.Reverse (m_publicKeyToken, 0, 8);
+                            // None default to SHA1
+                            ha = SHA1.Create (); break;
+                    }
+                    byte[] hash = ha.ComputeHash (m_publicKey);
+                    // we need the last 8 bytes in reverse order
+                    m_publicKeyToken = new byte[8];
+                    Array.Copy (hash, (hash.Length - 8), m_publicKeyToken, 0, 8);
+                    Array.Reverse (m_publicKeyToken, 0, 8);
                 }
                 return m_publicKeyToken;
             }
@@ -94,7 +92,7 @@ namespace Mono.Cecil.Implem {
                 sb.Append(m_culture == string.Empty ? "neutral" : m_culture);
                 sb.Append(sep);
                 sb.Append("PublicKeyToken=");
-                if (PublicKeyToken != null && m_publicKeyToken.Length > 0) {
+                if (this.PublicKeyToken != null && m_publicKeyToken.Length > 0) {
                     for (int i = 0 ; i < m_publicKeyToken.Length ; i++) {
                         sb.Append(m_publicKeyToken[i].ToString("x2"));
                     }
@@ -122,6 +120,7 @@ namespace Mono.Cecil.Implem {
             m_name = name;
             m_culture = culture;
             m_version = version;
+            m_hashAlgo = AssemblyHashAlgorithm.None;
         }
 
         public virtual void Accept(IReflectionStructureVisitor visitor) {

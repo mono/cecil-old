@@ -20,16 +20,10 @@ namespace Mono.Cecil.Implem {
     internal class AssemblyDefinition : IAssemblyDefinition {
 
         private AssemblyName m_asmName;
-        private AssemblyHashAlgorithm m_hashAlgo;
         private ModuleDefinitionCollection m_modules;
 
         public IAssemblyName Name {
             get { return m_asmName; }
-        }
-
-        public AssemblyHashAlgorithm HashAlgorithm {
-            get { return m_hashAlgo; }
-            set { m_hashAlgo = value; }
         }
 
         public IModuleDefinitionCollection Modules {
@@ -41,7 +35,6 @@ namespace Mono.Cecil.Implem {
                 throw new ArgumentException("name");
             }
             m_asmName = name;
-            m_hashAlgo = AssemblyHashAlgorithm.None;
             m_modules = new ModuleDefinitionCollection(this);
         }
 

@@ -15,7 +15,6 @@ namespace Mono.Cecil {
     public interface IAssemblyDefinition : IReflectionStructureVisitable {
 
         IAssemblyName Name { get; }
-        AssemblyHashAlgorithm HashAlgorithm { get;  set; }
 
         IModuleDefinitionCollection Modules { get; }
     }
