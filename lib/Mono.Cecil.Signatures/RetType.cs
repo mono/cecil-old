@@ -14,11 +14,6 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class RetType : InputOutputItem {
 
-        private bool m_void;
-
-        public bool Void {
-            get { return m_void; }
-            set { m_void = value; }
-        }
+        public bool Void;
     }
 }

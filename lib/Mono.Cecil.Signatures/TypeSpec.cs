@@ -16,12 +16,7 @@ namespace Mono.Cecil.Signatures {
 
     internal class TypeSpec {
 
-        private SigType m_type;
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public SigType Type;
 
         public TypeSpec (SigType type)
         {
@@ -30,7 +25,7 @@ namespace Mono.Cecil.Signatures {
             case ElementType.FnPtr :
             case ElementType.Array :
             case ElementType.SzArray :
-                m_type = type;
+                Type = type;
                 return;
             default :
                 throw new ReflectionException ("Non valid TypeSpec");

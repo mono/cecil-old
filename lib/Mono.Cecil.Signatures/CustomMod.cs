@@ -22,17 +22,7 @@ namespace Mono.Cecil.Signatures {
             REQD = (byte) ElementType.CModReqD
         }
 
-        private CMODType m_cmod;
-        private MetadataToken m_typeDefOrRef;
-
-        public CMODType CMOD {
-            get { return m_cmod; }
-            set { m_cmod = value; }
-        }
-
-        public MetadataToken TypeDefOrRef {
-            get { return m_typeDefOrRef; }
-            set { m_typeDefOrRef = value; }
-        }
+        public CMODType CMOD;
+        public MetadataToken TypeDefOrRef;
     }
 }

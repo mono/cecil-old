@@ -14,29 +14,9 @@ namespace Mono.Cecil.Signatures {
 
     internal abstract class InputOutputItem {
 
-        private CustomMod [] m_customMods;
-        private bool m_byRef;
-        private SigType m_type;
-        private bool m_typedByRef;
-
-        public CustomMod [] CustomMods {
-            get { return m_customMods; }
-            set { m_customMods = value; }
-        }
-
-        public bool ByRef {
-            get { return m_byRef; }
-            set { m_byRef = value; }
-        }
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
-
-        public bool TypedByRef {
-            get { return m_typedByRef; }
-            set { m_typedByRef = value; }
-        }
+        public CustomMod [] CustomMods;
+        public bool ByRef;
+        public SigType Type;
+        public bool TypedByRef;
     }
 }

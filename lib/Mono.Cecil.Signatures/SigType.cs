@@ -14,16 +14,11 @@ namespace Mono.Cecil.Signatures {
 
     internal class SigType {
 
-        private ElementType m_elementType;
-
-        public ElementType ElementType {
-            get { return m_elementType; }
-            set { m_elementType = value; }
-        }
+        public ElementType ElementType;
 
         public SigType (ElementType elem)
         {
-            m_elementType = elem;
+            ElementType = elem;
         }
     }
 }

@@ -14,18 +14,8 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class ARRAY : SigType {
 
-        private SigType m_type;
-        private ArrayShape m_aryShape;
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
-
-        public ArrayShape Shape {
-            get { return m_aryShape; }
-            set { m_aryShape = value; }
-        }
+        public SigType Type;
+        public ArrayShape Shape;
 
         public ARRAY () : base (ElementType.Array)
         {

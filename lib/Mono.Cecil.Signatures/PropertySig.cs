@@ -14,30 +14,10 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class PropertySig : Signature {
 
-        private bool m_property;
-        private int m_paramCount;
-        private SigType m_type;
-        private Param [] m_parameters;
-
-        public bool Property {
-            get { return m_property; }
-            set { m_property = value; }
-        }
-
-        public int ParamCount {
-            get { return m_paramCount; }
-            set { m_paramCount = value; }
-        }
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
-
-        public Param [] Parameters {
-            get { return m_parameters; }
-            set { m_parameters = value; }
-        }
+        public bool Property;
+        public int ParamCount;
+        public SigType Type;
+        public Param [] Parameters;
 
         public PropertySig () : base ()
         {

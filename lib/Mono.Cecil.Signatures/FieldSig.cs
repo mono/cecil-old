@@ -14,24 +14,9 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class FieldSig : Signature {
 
-        private bool m_field;
-        private CustomMod [] m_customMods;
-        private SigType m_type;
-
-        public bool Field {
-            get { return m_field; }
-            set { m_field = value; }
-        }
-
-        public CustomMod [] CustomMods {
-            get { return m_customMods; }
-            set { m_customMods = value; }
-        }
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public bool Field;
+        public CustomMod [] CustomMods;
+        public SigType Type;
 
         public FieldSig () : base ()
         {

@@ -14,12 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class MethodRefSig : MethodSig {
 
-        private int m_sentinel;
-
-        public int Sentinel {
-            get { return m_sentinel; }
-            set { m_sentinel = value; }
-        }
+        public int Sentinel;
 
         public MethodRefSig () : this (0)
         {
@@ -27,7 +22,7 @@ namespace Mono.Cecil.Signatures {
 
         public MethodRefSig (uint blobIndex) : base (blobIndex)
         {
-            m_sentinel = -1;
+            Sentinel = -1;
         }
 
         public override void Accept (ISignatureVisitor visitor)

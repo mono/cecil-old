@@ -14,18 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class SZARRAY : SigType {
 
-        private CustomMod [] m_customMods;
-        private SigType m_type;
-
-        public CustomMod [] CustomMods {
-            get { return m_customMods; }
-            set { m_customMods = value; }
-        }
-
-        public SigType Type {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public SigType Type;
 
         public SZARRAY () : base (ElementType.SzArray)
         {

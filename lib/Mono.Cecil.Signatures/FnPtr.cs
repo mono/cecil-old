@@ -14,12 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class FNPTR : SigType {
 
-        private MethodSig m_method;
-
-        public MethodSig Method {
-            get { return m_method; }
-            set { m_method = value; }
-        }
+        public MethodSig Method;
 
         public FNPTR () : base (ElementType.FnPtr)
         {
