@@ -10,17 +10,15 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Signatures {
+namespace Mono.Cecil {
 
-    using System;
+    public interface IMethodSignature {
 
-    [Flags]
-    internal enum CallingConvention : byte {
-        Default  = 0x0,
-        C        = 0x1,
-        StdCall  = 0x2,
-        ThisCall = 0x3,
-        FastCall = 0x4,
-        VarArg   = 0x5
+        bool HasThis { get; set; }
+        bool ExplicitThis { get; set; }
+        MethodCallingConvention CallingConvention { get; set; }
+
+        IParameterDefinitionCollection Parameters { get; }
+        IMethodReturnType ReturnType { get; set; }
     }
 }

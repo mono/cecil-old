@@ -173,7 +173,6 @@
         <Compile Include="Mono.Cecil.Metadata\Utilities.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Array.cs"/>
         <Compile Include="Mono.Cecil.Signatures\ArrayShape.cs"/>
-        <Compile Include="Mono.Cecil.Signatures\CallingConvention.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Class.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Constraint.cs"/>
         <Compile Include="Mono.Cecil.Signatures\CustomAttrib.cs"/>
@@ -212,6 +211,7 @@
         <Compile Include="Mono.Cecil\FieldAttributes.cs"/>
         <Compile Include="Mono.Cecil\FileAttributes.cs"/>
         <Compile Include="Mono.Cecil\GenericParamAttributes.cs"/>
+        <Compile Include="Mono.Cecil\IArray.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyDefinition.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>
@@ -220,11 +220,14 @@
         <Compile Include="Mono.Cecil\IEventDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IField.cs"/>
         <Compile Include="Mono.Cecil\IFieldDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IFunctionPointer.cs"/>
         <Compile Include="Mono.Cecil\IInterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil\ILinkedResource.cs"/>
         <Compile Include="Mono.Cecil\IMember.cs"/>
         <Compile Include="Mono.Cecil\IMethod.cs"/>
         <Compile Include="Mono.Cecil\IMethodDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IMethodReturnType.cs"/>
+        <Compile Include="Mono.Cecil\IMethodSignature.cs"/>
         <Compile Include="Mono.Cecil\IModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil\IModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IModuleReference.cs"/>
@@ -232,6 +235,7 @@
         <Compile Include="Mono.Cecil\IOverrideCollection.cs"/>
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IPointer.cs"/>
         <Compile Include="Mono.Cecil\IProperty.cs"/>
         <Compile Include="Mono.Cecil\IPropertyDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs"/>
@@ -247,6 +251,7 @@
         <Compile Include="Mono.Cecil\ITypeReferenceCollection.cs"/>
         <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodAttributes.cs"/>
+        <Compile Include="Mono.Cecil\MethodCallingConvention.cs"/>
         <Compile Include="Mono.Cecil\MethodImplAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodSemanticsAttributes.cs"/>
         <Compile Include="Mono.Cecil\ParamAttributes.cs"/>

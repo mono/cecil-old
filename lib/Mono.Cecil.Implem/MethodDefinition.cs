@@ -46,12 +46,32 @@ namespace Mono.Cecil.Implem {
             set { m_semAttrs = value; }
         }
 
+        public bool HasThis {
+            get { return m_signature.HasThis; }
+            set { m_signature.HasThis = value; }
+        }
+
+        public bool ExplicitThis {
+            get { return m_signature.ExplicitThis; }
+            set { m_signature.ExplicitThis = value; }
+        }
+
+        public MethodCallingConvention CallingConvention {
+            get { return m_signature.MethCallConv; }
+            set { m_signature.MethCallConv = value; }
+        }
+
         public IParameterDefinitionCollection Parameters {
             get {
                 if (m_parameters == null)
                     m_parameters = new ParameterDefinitionCollection (this);
                 return m_parameters;
             }
+        }
+
+        public IMethodReturnType ReturnType {
+            get { return null; }
+            set { value = value; }
         }
 
         public MethodDefSig Signature {

@@ -14,12 +14,11 @@ namespace Mono.Cecil {
 
     using Mono.Cecil.Cil;
 
-    public interface IMethodReference : IMemberReference, IReflectionVisitable {
+    public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
 
         MethodAttributes Attributes { get; set; }
         MethodImplAttributes ImplAttributes { get; set; }
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
-        IParameterDefinitionCollection Parameters { get; }
     }
 
     public interface IMethodDefinition : IMemberDefinition, IMethodReference, IReflectionVisitable {

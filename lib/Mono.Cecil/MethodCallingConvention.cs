@@ -9,14 +9,18 @@
  * See LICENSE.MIT file for more details
  *
  *****************************************************************************/
-
 namespace Mono.Cecil {
 
     using System;
 
     [Flags]
-    public enum FileAttributes : uint {
-        ContainsMetaData    = 0x0000,    // This is not a resource file
-        ContainsNoMetaData  = 0x0001,    // This is a resource file or other non-metadata-containing file
+    public enum MethodCallingConvention : byte {
+        Default  = 0x0,
+        C        = 0x1,
+        StdCall  = 0x2,
+        ThisCall = 0x3,
+        FastCall = 0x4,
+        VarArg   = 0x5
     }
 }
+

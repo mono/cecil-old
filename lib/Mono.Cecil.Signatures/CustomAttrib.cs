@@ -12,12 +12,22 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using Mono.Cecil;
+
     internal class CustomAttrib {
+
+        public const ushort StdProlog = 0x0001;
+
+        private IMethodReference m_constructor;
 
         private ushort m_prolog;
         private FixedArg [] m_fixedArgs;
         private ushort m_numNamed;
         private NamedArg [] m_namedArgs;
+
+        public IMethodReference Constructor {
+            get { return m_constructor; }
+        }
 
         public ushort Prolog {
             get { return m_prolog; }
@@ -37,6 +47,11 @@ namespace Mono.Cecil.Signatures {
         public NamedArg [] NamedArgs {
             get { return m_namedArgs; }
             set { m_namedArgs = value; }
+        }
+
+        public CustomAttrib (IMethodReference ctor)
+        {
+            m_constructor = ctor;
         }
 
         internal class FixedArg {

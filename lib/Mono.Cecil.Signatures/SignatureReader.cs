@@ -27,6 +27,7 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_fieldSigs;
         private IDictionary m_propSigs;
         private IDictionary m_typeSpecs;
+        private IDictionary m_customAttribs;
 
         public SignatureReader (MetadataRoot root)
         {
@@ -35,6 +36,7 @@ namespace Mono.Cecil.Signatures {
 
             m_fieldSigs = new Hashtable ();
             m_propSigs = new Hashtable ();
+            m_customAttribs = new Hashtable ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -75,9 +77,14 @@ namespace Mono.Cecil.Signatures {
             return ts;
         }
 
-        public CustomAttrib GetCustomAttrib (uint index)
+        public CustomAttrib GetCustomAttrib (uint index, IMethodReference ctor)
         {
-            return null;
+            CustomAttrib ca = m_customAttribs [index] as CustomAttrib;
+            if (ca == null) {
+                ca = ReadCustomAttrib (m_blobData, (int) index, ctor);
+                m_customAttribs [index] = ca;
+            }
+            return ca;
         }
 
         public void Visit (MethodDefSig methodDef)
@@ -88,9 +95,9 @@ namespace Mono.Cecil.Signatures {
             methodDef.HasThis = (methodDef.CallingConvention & 0x20) != 0;
             methodDef.ExplicitThis = (methodDef.CallingConvention & 0x40) != 0;
             if ((methodDef.CallingConvention & 0x0) != 0)
-                methodDef.CallConv |= CallingConvention.Default;
+                methodDef.MethCallConv |= MethodCallingConvention.Default;
             if ((methodDef.CallingConvention & 0x5) != 0)
-                methodDef.CallConv |= CallingConvention.VarArg;
+                methodDef.MethCallConv |= MethodCallingConvention.VarArg;
             methodDef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
             methodDef.RetType = this.ReadRetType (m_blobData, start, out start);
             methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start, out start);
@@ -104,17 +111,17 @@ namespace Mono.Cecil.Signatures {
             methodRef.HasThis = (methodRef.CallingConvention & 0x20) != 0;
             methodRef.ExplicitThis = (methodRef.CallingConvention & 0x40) != 0;
             if ((methodRef.CallingConvention & 0x0) != 0)
-                methodRef.CallConv |= CallingConvention.Default;
+                methodRef.MethCallConv |= MethodCallingConvention.Default;
             if ((methodRef.CallingConvention & 0x1) != 0)
-                methodRef.CallConv |= CallingConvention.C;
+                methodRef.MethCallConv |= MethodCallingConvention.C;
             if ((methodRef.CallingConvention & 0x2) != 0)
-                methodRef.CallConv |= CallingConvention.StdCall;
+                methodRef.MethCallConv |= MethodCallingConvention.StdCall;
             if ((methodRef.CallingConvention & 0x3) != 0)
-                methodRef.CallConv |= CallingConvention.ThisCall;
+                methodRef.MethCallConv |= MethodCallingConvention.ThisCall;
             if ((methodRef.CallingConvention & 0x4) != 0)
-                methodRef.CallConv |= CallingConvention.FastCall;
+                methodRef.MethCallConv |= MethodCallingConvention.FastCall;
             if ((methodRef.CallingConvention & 0x5) != 0)
-                methodRef.CallConv |= CallingConvention.VarArg;
+                methodRef.MethCallConv |= MethodCallingConvention.VarArg;
             methodRef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
             methodRef.RetType = this.ReadRetType (m_blobData, start, out start);
             methodRef.Parameters = this.ReadParameters (methodRef.ParamCount, m_blobData, start, out start, true);
@@ -354,6 +361,35 @@ namespace Mono.Cecil.Signatures {
             cm.TypeDefOrRef = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef,
                                                           (uint) Utilities.ReadCompressedInteger (data, start, out start));
             return cm;
+        }
+
+        private CustomAttrib ReadCustomAttrib (byte [] data, int pos, IMethodReference ctor)
+        {
+            CustomAttrib ca = new CustomAttrib (ctor);
+            ca.Prolog = BitConverter.ToUInt16 (data, pos); pos += 2;
+            if (ca.Prolog != CustomAttrib.StdProlog)
+                throw new MetadataFormatException ("Non standard prolog for custom attribute");
+
+            ca.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
+            for (int i = 0; i < ca.FixedArgs.Length; i++)
+                ca.FixedArgs [i] = this.ReadFixedArg (data, ref pos);
+
+            ca.NumNamed = BitConverter.ToUInt16 (data, pos); pos += 2;
+            ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
+            for (int i = 0; i < ca.NumNamed; i++)
+                ca.NamedArgs [i] = this.ReadNamedArg (data, ref pos);
+
+            return ca;
+        }
+
+        private CustomAttrib.FixedArg ReadFixedArg (byte [] data, ref int pos)
+        {
+            return null;
+        }
+
+        private CustomAttrib.NamedArg ReadNamedArg (byte [] data, ref int pos)
+        {
+            return null;
         }
     }
 }

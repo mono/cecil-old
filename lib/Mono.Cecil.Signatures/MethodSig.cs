@@ -10,13 +10,15 @@
  *
  *****************************************************************************/
 
+using Mono.Cecil;
+
 namespace Mono.Cecil.Signatures {
 
     internal abstract class MethodSig : Signature {
 
         private bool m_hasThis;
         private bool m_explicitThis;
-        private CallingConvention m_callConv;
+        private MethodCallingConvention m_callConv;
         private int m_paramCount;
         private RetType m_retType;
         private Param [] m_parameters;
@@ -31,7 +33,7 @@ namespace Mono.Cecil.Signatures {
             set { m_explicitThis = value; }
         }
 
-        public CallingConvention CallConv {
+        public MethodCallingConvention MethCallConv {
             get { return m_callConv; }
             set { m_callConv = value; }
         }
