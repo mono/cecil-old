@@ -56,6 +56,8 @@
         <Compile Include="Mono.Cecil.Cil\IMethodBody.cs"/>
         <Compile Include="Mono.Cecil.Cil\IVariable.cs"/>
         <Compile Include="Mono.Cecil.Cil\IVariableDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Cil\MethodDataSection.cs"/>
+        <Compile Include="Mono.Cecil.Cil\MethodHeader.cs"/>
         <Compile Include="Mono.Cecil.Cil\OpCode.cs"/>
         <Compile Include="Mono.Cecil.Cil\OpCodes.cs"/>
         <Compile Include="Mono.Cecil.Cil\OpCodeType.cs"/>

@@ -12,10 +12,10 @@
 
 namespace Mono.Cecil.Cil {
 
-    public enum ExceptionHandlerType {
-        Catch = 0x0000,
-        Filter = 0x0001,
-        Finally = 0x0002,
-        Fault = 0x0004
+    internal enum MethodHeaders : ushort {
+        TinyFormat = 0x2,
+        FatFormat = 0x3,
+        MoreSects = 0x8,
+        InitLocals = 0x10
     }
 }

@@ -20,6 +20,7 @@ namespace Mono.Cecil.Implem {
 
         private MethodDefinition m_method;
         private int m_maxStack;
+        private int m_codeSize;
         private RVA m_rva;
 
         private InstructionCollection m_instructions;
@@ -33,6 +34,11 @@ namespace Mono.Cecil.Implem {
         public int MaxStack {
             get { return m_maxStack; }
             set { m_maxStack = value; }
+        }
+
+        public int CodeSize {
+            get { return m_codeSize; }
+            set { m_codeSize = value; }
         }
 
         public RVA RVA {
