@@ -26,6 +26,7 @@ namespace Mono.Cecil.Signatures {
         // flyweights
         private IDictionary m_fieldSigs;
         private IDictionary m_propSigs;
+        private IDictionary m_typeSpecs;
 
         public SignatureReader (MetadataRoot root)
         {
@@ -56,6 +57,22 @@ namespace Mono.Cecil.Signatures {
                 m_propSigs [index] = p;
             }
             return p;
+        }
+
+        public TypeSpec GetTypeSpec (uint index)
+        {
+            TypeSpec ts = null;
+            if (m_typeSpecs == null)
+                m_typeSpecs = new Hashtable ();
+            else
+                ts = m_typeSpecs [index] as TypeSpec;
+
+            if (ts == null) {
+                ts = ReadTypeSpec (m_blobData, (int) index);
+                m_typeSpecs [index] = ts;
+            }
+
+            return ts;
         }
 
         public void Visit (MethodDefSig methodDef)
@@ -150,6 +167,13 @@ namespace Mono.Cecil.Signatures {
             lv.ByRef = (flag & (int) ElementType.ByRef) != 0;
             lv.Type = this.ReadType (data, start, out start);
             return lv;
+        }
+
+        private TypeSpec ReadTypeSpec (byte [] data, int pos)
+        {
+            int start = pos;
+            SigType t = this.ReadType (data, start, out start);
+            return new TypeSpec (t);
         }
 
         private RetType ReadRetType (byte [] data, int pos, out int start)

@@ -85,6 +85,7 @@ namespace Mono.Cecil.Implem {
                 m_refs = new TypeReference [0];
 
             // set base types
+            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
                 TypeDefinition child = m_types [i - 1];
@@ -98,7 +99,9 @@ namespace Mono.Cecil.Implem {
                         child.BaseType = m_refs [type.Extends.RID - 1];
                         break;
                     case TokenType.TypeSpec :
-                        //TODO: implement this...
+                        TypeSpecRow tsRow = tsTable [(int) type.Extends.RID];
+                        TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
+                        child.BaseType = this.GetTypeRefFromSig (ts.Type);
                         break;
                     }
                 }
@@ -131,6 +134,7 @@ namespace Mono.Cecil.Implem {
             int index = Array.IndexOf (m_types, implementor);
 
             InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
+            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intRow = intfsTable [i];
                 if ((intRow.Class - 2) == index) {
@@ -143,7 +147,9 @@ namespace Mono.Cecil.Implem {
                         interf = m_refs [intRow.Interface.RID - 1];
                         break;
                     case TokenType.TypeSpec :
-                        //TODO: implement this...
+                        TypeSpecRow tsRow = tsTable [(int) intRow.Interface.RID];
+                        TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
+                        interf = this.GetTypeRefFromSig (ts.Type);
                         break;
                     }
                     interfaces [interf.FullName] = interf;
@@ -285,6 +291,7 @@ namespace Mono.Cecil.Implem {
                 }
                 break;
             }
+            //TODO: continue this with all element types
             return ret;
         }
     }
