@@ -66,12 +66,10 @@ namespace Mono.Cecil.Implem {
             set { m_readed = value; }
         }
 
-        public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs)
+        public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs) : base (name, decType)
         {
-            this.Name = name;
             m_eventType = eventType;
             m_attributes = attrs;
-            SetDeclaringType (decType);
         }
 
         public void Accept (IReflectionVisitor visitor)

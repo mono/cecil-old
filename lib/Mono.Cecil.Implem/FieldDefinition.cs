@@ -57,13 +57,11 @@ namespace Mono.Cecil.Implem {
             set { m_value = value; }
         }
 
-        public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs)
+        public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs) : base (name, decType)
         {
             m_hasInfo = false;
-            this.Name = name;
             m_fieldType = fieldType;
             m_attributes = attrs;
-            SetDeclaringType (decType);
         }
 
         public void Accept (IReflectionVisitor visitor)

@@ -88,6 +88,7 @@
         <Compile Include="Mono.Cecil.Implem\LazyReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\MemberDefinition.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MemberReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodBody.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>

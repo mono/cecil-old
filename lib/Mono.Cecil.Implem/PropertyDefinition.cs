@@ -70,12 +70,10 @@ namespace Mono.Cecil.Implem {
             set { m_setMeth = value; }
         }
 
-        public PropertyDefinition (string name, TypeDefinition decType, ITypeReference propType, PropertyAttributes attrs)
+        public PropertyDefinition (string name, TypeDefinition decType, ITypeReference propType, PropertyAttributes attrs) : base (name, decType)
         {
-            this.Name = name;
             m_propertyType = propType;
             m_attributes = attrs;
-            SetDeclaringType (decType);
         }
 
         public void Accept (IReflectionVisitor visitor)

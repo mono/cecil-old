@@ -31,8 +31,8 @@ namespace Mono.Cecil.Implem {
         protected SecurityParser m_secParser;
         protected MetadataRoot m_root;
 
-        protected TypeDefinition [] m_types;
-        protected TypeReference [] m_refs;
+        protected TypeDefinition [] m_typeDefs;
+        protected TypeReference [] m_typeRefs;
         protected MethodDefinition [] m_meths;
         protected FieldDefinition [] m_fields;
         protected EventDefinition [] m_events;
@@ -65,13 +65,13 @@ namespace Mono.Cecil.Implem {
         public TypeDefinition GetTypeDefAt (int rid)
         {
             // 0 based - <Module> type
-            return m_types [rid - 2];
+            return m_typeDefs [rid - 2];
         }
 
         public TypeReference GetTypeRefAt (int rid)
         {
             // 0 based
-            return m_refs [rid - 1];
+            return m_typeRefs [rid - 1];
         }
 
         public FieldDefinition GetFieldDefAt (int rid)
@@ -95,7 +95,7 @@ namespace Mono.Cecil.Implem {
 
         public int GetRidForTypeDef (TypeDefinition typeDef)
         {
-            int index = Array.IndexOf (m_types, typeDef);
+            int index = Array.IndexOf (m_typeDefs, typeDef);
             if (index == -1)
                 return 0;
 
@@ -140,7 +140,7 @@ namespace Mono.Cecil.Implem {
 
             // type def reading
             TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-            m_types = new TypeDefinition [typesTable.Rows.Count - 1];
+            m_typeDefs = new TypeDefinition [typesTable.Rows.Count - 1];
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
                 TypeDefinition t = new TypeDefinition (
@@ -148,7 +148,7 @@ namespace Mono.Cecil.Implem {
                     m_root.Streams.StringsHeap [type.Namespace],
                     type.Flags, def);
 
-                m_types [i - 1] = t;
+                m_typeDefs [i - 1] = t;
             }
 
             // nested types
@@ -168,7 +168,7 @@ namespace Mono.Cecil.Implem {
             if (m_root.Streams.TablesHeap.HasTable(typeof (TypeRefTable))) {
                 TypeRefTable typesRef = m_root.Streams.TablesHeap [typeof (TypeRefTable)] as TypeRefTable;
 
-                m_refs = new TypeReference [typesRef.Rows.Count];
+                m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
                 for (int i = 0; i < typesRef.Rows.Count; i++) {
                     TypeRefRow type = typesRef [i];
@@ -176,21 +176,21 @@ namespace Mono.Cecil.Implem {
                         m_root.Streams.StringsHeap [type.Name],
                         m_root.Streams.StringsHeap [type.Namespace]);
 
-                    m_refs [i] = t;
+                    m_typeRefs [i] = t;
                     ((ModuleDefinition)tdc.Container).TypeReferences [t.FullName] = t;
                 }
             } else
-                m_refs = new TypeReference [0];
+                m_typeRefs = new TypeReference [0];
 
             // set base types
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
-                TypeDefinition child = m_types [i - 1];
+                TypeDefinition child = m_typeDefs [i - 1];
                 child.BaseType = GetTypeDefOrRef (type.Extends);
             }
 
-            for (int i = 0; i < m_types.Length; i++) {
-                TypeDefinition type = m_types [i];
+            for (int i = 0; i < m_typeDefs.Length; i++) {
+                TypeDefinition type = m_typeDefs [i];
                 tdc [type.FullName] = type;
             }
 
@@ -215,8 +215,8 @@ namespace Mono.Cecil.Implem {
             FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
             m_fields = new FieldDefinition [fldTable.Rows.Count];
 
-            for (int i = 0; i < m_types.Length; i++) {
-                TypeDefinition dec = m_types [i];
+            for (int i = 0; i < m_typeDefs.Length; i++) {
+                TypeDefinition dec = m_typeDefs [i];
 
                 int index = i + 1, next; // avoid a call to GetRidForTypeDef
 
@@ -250,8 +250,8 @@ namespace Mono.Cecil.Implem {
             ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
             m_meths = new MethodDefinition [methTable.Rows.Count];
 
-            for (int i = 0; i < m_types.Length; i++) {
-                TypeDefinition dec = m_types [i];
+            for (int i = 0; i < m_typeDefs.Length; i++) {
+                TypeDefinition dec = m_typeDefs [i];
 
                 int index = i + 1, next; // avoid a call to GetRidForTypeDef
 

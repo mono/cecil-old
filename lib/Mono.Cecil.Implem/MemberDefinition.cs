@@ -12,27 +12,12 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-
     using Mono.Cecil;
 
-    internal abstract class MemberDefinition : IMemberDefinition {
+    internal abstract class MemberDefinition : MemberReference, IMemberDefinition {
 
-        private string m_name;
-        private TypeDefinition m_decType;
-
-        public string Name {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        public ITypeReference DeclaringType {
-            get { return m_decType; }
-        }
-
-        public void SetDeclaringType (TypeDefinition decType)
+        public MemberDefinition (string name, TypeDefinition declaringType) : base (name, declaringType)
         {
-            m_decType = decType;
         }
     }
 }

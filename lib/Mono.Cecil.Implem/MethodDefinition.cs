@@ -114,13 +114,11 @@ namespace Mono.Cecil.Implem {
 
         public MethodDefinition (string name, TypeDefinition decType, RVA rva,
                                  MethodAttributes attrs, MethodImplAttributes implAttrs,
-                                 bool hasThis, bool explicitThis, MethodCallingConvention callConv)
+                                 bool hasThis, bool explicitThis, MethodCallingConvention callConv) : base (name, decType)
         {
-            this.Name = name;
             m_rva = rva;
             m_attributes = attrs;
             m_implAttrs = implAttrs;
-            SetDeclaringType (decType);
             m_parameters = new ParameterDefinitionCollection (this);
             m_hasThis = hasThis;
             m_explicitThis = explicitThis;
