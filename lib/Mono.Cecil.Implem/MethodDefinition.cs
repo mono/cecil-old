@@ -34,6 +34,7 @@ namespace Mono.Cecil.Implem {
         private MethodBody m_body;
         private RVA m_rva;
         private OverrideCollection m_overrides;
+        private PInvokeInfo m_pinvoke;
 
         public MethodAttributes Attributes {
             get { return m_attributes; }
@@ -87,6 +88,11 @@ namespace Mono.Cecil.Implem {
                 }
                 return m_body;
             }
+        }
+
+        public IPInvokeInfo PInvokeInfo {
+            get { return m_pinvoke; }
+            set { m_pinvoke = value as PInvokeInfo; }
         }
 
         public IOverrideCollection Overrides {

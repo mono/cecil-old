@@ -25,5 +25,6 @@ namespace Mono.Cecil {
 
         IOverrideCollection Overrides { get; }
         IMethodBody Body { get; }
+        IPInvokeInfo PInvokeInfo { get; }
     }
 }

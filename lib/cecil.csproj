@@ -98,6 +98,7 @@
         <Compile Include="Mono.Cecil.Implem\ParameterDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\PinnedType.cs"/>
+        <Compile Include="Mono.Cecil.Implem\PInvokeInfo.cs"/>
         <Compile Include="Mono.Cecil.Implem\PointerType.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
@@ -248,6 +249,7 @@
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IPinnedType.cs"/>
+        <Compile Include="Mono.Cecil\IPInvokeInfo.cs"/>
         <Compile Include="Mono.Cecil\IPointerType.cs"/>
         <Compile Include="Mono.Cecil\IProperty.cs"/>
         <Compile Include="Mono.Cecil\IPropertyDefinitionCollection.cs"/>

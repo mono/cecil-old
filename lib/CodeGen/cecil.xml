@@ -645,7 +645,7 @@
     -->
     <collections>
         <collection type="IAssemblyNameReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
-        <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
+        <collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" indexed="true" target="Mono.Cecil" />
         <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
         <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Loader.ReflectionReader" target="Mono.Cecil" />

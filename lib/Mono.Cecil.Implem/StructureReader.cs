@@ -175,12 +175,9 @@ namespace Mono.Cecil.Implem {
         {
             ModuleDefinition mod = modules.Container as ModuleDefinition;
             ModuleRefTable mrt = mod.Reader.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleRefTable)] as ModuleRefTable;
-            if (mrt != null && mrt.Rows.Count > 0) {
-                foreach (ModuleRefRow mrr in mrt.Rows) {
-                    string name = m_img.MetadataRoot.Streams.StringsHeap [mrr.Name];
-                    modules [name] = new ModuleReference (name);
-                }
-            }
+            if (mrt != null && mrt.Rows.Count > 0)
+                foreach (ModuleRefRow mrr in mrt.Rows)
+                    modules.Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrr.Name]));
         }
     }
 }

@@ -107,7 +107,7 @@ namespace Mono.Cecil.Implem {
 
         public void DefineModuleReference (string module)
         {
-            m_modRefs [module] = new ModuleReference (module);
+            m_modRefs.Add (new ModuleReference (module));
         }
 
         public void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)

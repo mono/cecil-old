@@ -176,6 +176,7 @@ namespace Mono.Cecil.Implem {
 
             ReadClassLayoutInfos ();
             ReadFieldLayoutInfos ();
+            ReadPInvokeInfos ();
 
             tdc.Loaded = true;
         }
@@ -199,6 +200,20 @@ namespace Mono.Cecil.Implem {
                 FieldDefinition field = m_fields [flRow.Field - 1];
                 field.Offset = flRow.Offset;
             }
+        }
+
+        private void ReadPInvokeInfos ()
+        {
+            ImplMapTable imTable = m_root.Streams.TablesHeap [typeof (ImplMapTable)] as ImplMapTable;
+            for (int i = 0; i < imTable.Rows.Count; i++) {
+                ImplMapRow imRow = imTable [i];
+                if (imRow.MemberForwarded.TokenType == TokenType.Method) { // should always be true
+                    MethodDefinition meth = m_meths [imRow.MemberForwarded.RID - 1];
+                    meth.PInvokeInfo = new PInvokeInfo (imRow.MappingFlags, m_root.Streams.StringsHeap [imRow.ImportName],
+                                                        m_module.ModuleReferences [(int) imRow.ImportScope - 1]);
+                }
+            }
+
         }
 
         public void Visit (ITypeDefinition type)
