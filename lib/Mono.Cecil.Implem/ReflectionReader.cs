@@ -272,7 +272,12 @@ namespace Mono.Cecil.Implem {
                         Param psig = msig.Parameters [k];
 
                         ParameterDefinition pdef = new ParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, null);
-                        pdef.ParameterType = psig.ByRef ? new ReferenceType (GetTypeRefFromSig (psig.Type)) : GetTypeRefFromSig (psig.Type);
+                        if (psig.ByRef)
+                            pdef.ParameterType = new ReferenceType (GetTypeRefFromSig (psig.Type));
+                        else if (psig.TypedByRef)
+                            pdef.ParameterType = SearchCoreType ("System.TypedReference");
+                        else
+                            pdef.ParameterType = GetTypeRefFromSig (psig.Type);
                         mdef.Parameters.Add (pdef);
                     }
 
@@ -381,6 +386,8 @@ namespace Mono.Cecil.Implem {
                 retType = SearchCoreType ("System.Void");
             else if (msig.RetType.ByRef)
                 retType = new ReferenceType (GetTypeRefFromSig (msig.RetType.Type));
+            else if (msig.RetType.TypedByRef)
+                retType = SearchCoreType ("System.TypedReference");
             else
                 retType = GetTypeRefFromSig (msig.RetType.Type);
             return new MethodReturnType (retType);
@@ -429,6 +436,8 @@ namespace Mono.Cecil.Implem {
                 return SearchCoreType ("System.IntPtr");
             case ElementType.U :
                 return SearchCoreType ("System.UIntPtr");
+            case ElementType.TypedByRef :
+                return SearchCoreType ("System.TypedReference");
             case ElementType.Array :
                 ARRAY ary = t as ARRAY;
                 return new ArrayType (GetTypeRefFromSig (ary.Type), ary.Shape);
