@@ -1,0 +1,5 @@
+2005-03-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ChangeLog: Track changes to permview;
+	* permview.cs: Permview tool based on Cecil;
+	* README: Warning about non supported tool;
