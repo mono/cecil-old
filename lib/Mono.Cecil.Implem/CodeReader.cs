@@ -57,8 +57,9 @@ namespace Mono.Cecil.Implem {
                 body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
                 Visit (methBody.Variables);
                 ReadCilBody (methBody, br);
-                if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
-                    ReadExceptionHandlers (methBody, br);
+                if ((fatflags & (int) MethodHeaders.MoreSects) != 0) {
+                    ReadSection (methBody, br);
+                }
                 return;
             }
         }
@@ -75,16 +76,17 @@ namespace Mono.Cecil.Implem {
 
         private void ReadCilBody (MethodBody body, BinaryReader br)
         {
-            long start = br.BaseStream.Position;
+            long start = br.BaseStream.Position, offset;
             while (br.BaseStream.Position < start + body.CodeSize) {
                 OpCode op;
+                offset = br.BaseStream.Position - start;
                 int cursor = br.ReadByte ();
                 if (cursor == 0xfe)
                     op = OpCodes.Cache.Instance.TwoBytesOpCode [br.ReadByte ()];
                 else
                     op = OpCodes.Cache.Instance.OneByteOpCode [cursor];
 
-                Instruction instr = new Instruction (cursor, op);
+                Instruction instr = new Instruction ((int) offset, op);
                 switch (op.OperandType) {
                 case OperandType.InlineNone :
                     break;
@@ -160,9 +162,67 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        private void ReadExceptionHandlers (MethodBody body, BinaryReader br)
+        private void ReadSection (MethodBody body, BinaryReader br)
         {
+            if (br.BaseStream.Position % 4 != 0)
+                br.BaseStream.Position += (4 - (br.BaseStream.Position % 4));
 
+            byte flags = br.ReadByte ();
+            if ((flags & (byte) MethodDataSection.FatFormat) == 0) {
+                int length = br.ReadByte () / 12;
+                br.ReadBytes (2);
+
+                for (int i = 0; i < length; i++) {
+                    ExceptionHandler eh = new ExceptionHandler ();
+                    eh.Type = (ExceptionHandlerType) (br.ReadInt16 () & 0x7);
+                    eh.TryOffset = br.ReadInt16 ();
+                    eh.TryLength = br.ReadInt16 ();
+                    eh.HandlerOffset = br.ReadInt16 ();
+                    eh.HandlerLength = br.ReadInt16 ();
+                    switch (eh.Type) {
+                    case (ExceptionHandlerType.Catch) :
+                        MetadataToken type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef, (uint) br.ReadInt32 ());
+                        eh.CatchType = m_reflectReader.GetTypeDefOrRef (type);
+                        break;
+                    case (ExceptionHandlerType.Filter) :
+                        eh.FilterOffset = br.ReadInt32 ();
+                        break;
+                    default :
+                        br.ReadInt32 ();
+                        break;
+                    }
+                    body.ExceptionHandlers.Add (eh);
+                }
+            } else {
+                br.BaseStream.Position--;
+                int length = (br.ReadInt32 () >> 8) / 24;
+                if ((flags & (int) MethodDataSection.EHTable) == 0)
+                    br.ReadBytes (length * 24);
+                for (int i = 0; i < length; i++) {
+                    ExceptionHandler eh = new ExceptionHandler ();
+                    eh.Type = (ExceptionHandlerType) (br.ReadInt32 () & 0x7);
+                    eh.TryOffset = br.ReadInt32 ();
+                    eh.TryLength = br.ReadInt32 ();
+                    eh.HandlerOffset = br.ReadInt32 ();
+                    eh.HandlerLength = br.ReadInt32 ();
+                    switch (eh.Type) {
+                    case (ExceptionHandlerType.Catch) :
+                        MetadataToken type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef, (uint) br.ReadInt32 ());
+                        eh.CatchType = m_reflectReader.GetTypeDefOrRef (type);
+                        break;
+                    case (ExceptionHandlerType.Filter) :
+                        eh.FilterOffset = br.ReadInt32 ();
+                        break;
+                    default :
+                        br.ReadInt32 ();
+                        break;
+                    }
+                    body.ExceptionHandlers.Add (eh);
+                }
+            }
+
+            if ((flags & (byte) MethodDataSection.MoreSects) != 0)
+                ReadSection (body, br);
         }
 
         public void Visit (IInstructionCollection instructions)
