@@ -32,7 +32,7 @@ namespace Mono.Cecil.Implem {
 
         private static string MemberSignature (IMemberReference member)
         {
-            return string.Concat (TypeFullName(member.DeclaringType), "::", member.Name);
+            return string.Concat (member.DeclaringType.FullName, "::", member.Name);
         }
 
         public static string FieldSignature (IFieldReference f)
@@ -54,7 +54,7 @@ namespace Mono.Cecil.Implem {
         {
             string sig = "(";
             for (int i = 0; i < parameters.Count; i++) {
-                sig += TypeFullName(parameters [i].ParameterType);
+                sig += parameters [i].ParameterType.FullName;
                 if (i < parameters.Count - 1)
                     sig += ",";
             }

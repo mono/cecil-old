@@ -33,6 +33,7 @@ namespace Mono.Cecil.Implem {
 
         protected TypeDefinition [] m_typeDefs;
         protected TypeReference [] m_typeRefs;
+        protected ITypeReference [] m_typeSpecs;
         protected MethodDefinition [] m_meths;
         protected FieldDefinition [] m_fields;
         protected EventDefinition [] m_events;
@@ -114,10 +115,7 @@ namespace Mono.Cecil.Implem {
             case TokenType.TypeRef :
                 return GetTypeRefAt ((int) token.RID);
             case TokenType.TypeSpec :
-                TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
-                TypeSpecRow tsRow = tsTable [(int) token.RID];
-                TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
-                return this.GetTypeRefFromSig (ts.Type);
+                return m_typeSpecs [token.RID - 1];
             default :
                 return null;
             }
@@ -191,6 +189,15 @@ namespace Mono.Cecil.Implem {
             } else
                 m_typeRefs = new TypeReference [0];
 
+            tdc.Loaded = true;
+
+            for (int i = 0; i < m_typeDefs.Length; i++) {
+                TypeDefinition type = m_typeDefs [i];
+                tdc [type.FullName] = type;
+            }
+
+            ReadTypeSpecs ();
+
             // set base types
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
@@ -198,20 +205,29 @@ namespace Mono.Cecil.Implem {
                 child.BaseType = GetTypeDefOrRef (type.Extends);
             }
 
-            for (int i = 0; i < m_typeDefs.Length; i++) {
-                TypeDefinition type = m_typeDefs [i];
-                tdc [type.FullName] = type;
-            }
-
-            tdc.Loaded = true;
-
             // ok, I've thought a lot before doing that
             // if I do not load the two primitives that are field and methods here
             // i'll run into big troubles as soon a lazy loaded stuff reference it
             // such as methods body or an override collection
+
             ReadAllFields ();
             ReadAllMethods ();
             ReadMemberReferences ();
+        }
+
+        private void ReadTypeSpecs ()
+        {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (TypeSpecTable)))
+                return;
+
+            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
+            m_typeSpecs = new ITypeReference [tsTable.Rows.Count];
+            for (int i = 0; i < tsTable.Rows.Count; i++) {
+                TypeSpecRow tsRow = tsTable [i];
+                TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
+                ITypeReference tspec = GetTypeRefFromSig (ts.Type);
+                m_typeSpecs [i] = tspec;
+            }
         }
 
         private void ReadAllFields ()
@@ -306,6 +322,7 @@ namespace Mono.Cecil.Implem {
                 switch (mrefRow.Class.TokenType) {
                 case TokenType.TypeDef :
                 case TokenType.TypeRef :
+                case TokenType.TypeSpec :
                     if (sig is FieldSig) {
                         FieldSig fs = sig as FieldSig;
                         member = new FieldReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
@@ -322,7 +339,6 @@ namespace Mono.Cecil.Implem {
                         member = methref;
                     }
                     break;
-                case TokenType.TypeSpec :
                 case TokenType.ModuleRef :
                 case TokenType.Method :
                     break; //TODO: implement that

@@ -103,7 +103,6 @@ namespace Mono.Cecil.Signatures {
                 ts = ReadTypeSpec (m_blobData, (int) index);
                 m_typeSpecs [index] = ts;
             }
-
             return ts;
         }
 
@@ -144,7 +143,6 @@ namespace Mono.Cecil.Signatures {
             case TokenType.ModuleRef :
             case TokenType.Method :
                 return GetMethodDefSig (index);
-
             }
             return null;
         }
@@ -255,6 +253,7 @@ namespace Mono.Cecil.Signatures {
         private TypeSpec ReadTypeSpec (byte [] data, int pos)
         {
             int start = pos;
+            Utilities.ReadCompressedInteger (data, start, out start);
             SigType t = this.ReadType (data, start, out start);
             return new TypeSpec (t);
         }

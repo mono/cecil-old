@@ -30,9 +30,9 @@ namespace Mono.Cecil.Signatures {
             case ElementType.FnPtr :
             case ElementType.Array :
             case ElementType.SzArray :
+                m_type = type;
                 return;
             default :
-                System.Console.WriteLine ("unvalid typespec: " + type.ElementType);
                 throw new ReflectionException ("Non valid TypeSpec");
             }
         }
