@@ -657,9 +657,9 @@
         <collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
         <collection type="IFieldDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
         <collection type="IPropertyDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />
-        <collection type="IInstruction" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
-        <collection type="IExceptionHandler" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
-        <collection type="IVariableDefinition" container="IMethodBody" visit="ICode" lazyload="true" pathtoloader="((TypeDefinition) m_container.Method.DeclaringType).Module.Loader.CodeReader" indexed="true" target="Mono.Cecil.Cil" />
+        <collection type="IInstruction" container="IMethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
+        <collection type="IExceptionHandler" container="IMethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
+        <collection type="IVariableDefinition" container="IMethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
         <collection type="IArrayDimension" container="IArrayType" target="Mono.Cecil" indexed="true" />
     </collections>
 

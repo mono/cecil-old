@@ -209,6 +209,8 @@ namespace Mono.Cecil.Implem {
                 if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
                     if (implRow.MethodDeclaration.TokenType == TokenType.Method)
                         meth.Add (m_meths [implRow.MethodDeclaration.RID - 1]);
+                    //else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
+                    //TODO: handle this case
                 }
             }
         }
