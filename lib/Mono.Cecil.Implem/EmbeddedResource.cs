@@ -20,11 +20,7 @@ namespace Mono.Cecil.Implem {
         private byte [] m_data;
 
         public byte [] Data {
-            get {
-                if (m_data != null)
-                    this.Module.Loader.LoadEmbeddedResource (this);
-                return m_data;
-            }
+            get { return m_data; }
             set { m_data = value; }
         }
 
