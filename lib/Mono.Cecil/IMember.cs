@@ -15,7 +15,7 @@ namespace Mono.Cecil {
     public interface IMemberReference {
 
         string Name { get; set; }
-        IType DeclaringType { get; }
+        ITypeReference DeclaringType { get; }
     }
 
     public interface IMemberDefinition : IMemberReference {}

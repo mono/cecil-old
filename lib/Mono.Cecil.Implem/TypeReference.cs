@@ -20,19 +20,31 @@ namespace Mono.Cecil.Implem {
 
         private string m_name;
         private string m_namespace;
+        private ITypeReference m_decType;
 
-        public String Name {
+        public string Name {
             get { return m_name; }
             set { m_name = value; }
         }
 
-        public String Namespace {
+        public string Namespace {
             get { return m_namespace; }
             set { m_namespace = value; }
         }
 
+        public ITypeReference DeclaringType {
+            get { return m_decType; }
+            set { m_decType = value; }
+        }
+
         public String FullName {
-            get { throw new NotImplementedException (); }
+            get { return Utilities.TypeFullName (this); }
+        }
+
+        public TypeReference (string name, string ns)
+        {
+            m_name = name;
+            m_namespace = ns;
         }
 
         public void Accept (IReflectionVisitor visitor)

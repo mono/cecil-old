@@ -30,7 +30,8 @@ namespace Mono.Cecil.Tests {
         [SetUp]
         public void SetUp ()
         {
-            m_asmdef = AssemblyFactory.GetAssembly (@"D:\mscorlib.dll");
+            if (m_asmdef == null)
+                m_asmdef = AssemblyFactory.GetAssembly (@"D:\System.Web.dll");
         }
 
         [Test]
@@ -57,14 +58,11 @@ namespace Mono.Cecil.Tests {
                 }
 
                 if (def.Main) {
-                    ITypeDefinition array = def.Types ["System.Array"];
-                    Console.WriteLine ("Array base type: " + array.BaseType.FullName);
+                    ITypeDefinition array = def.Types ["System.Web.UI.Control"];
+                    Console.WriteLine ("Control base type: " + array.BaseType.FullName);
 
-                    ITypeDefinition arrayEnum = def.Types ["System.Array/ArrayEnumerator"];
-                    Console.WriteLine ("ArrayEnum dec type: " + arrayEnum.DeclaringType.FullName);
-
-                    Console.WriteLine ("Array implements :");
-                    foreach (IType interf in array.Interfaces) {
+                    Console.WriteLine ("Control implements :");
+                    foreach (ITypeReference interf in array.Interfaces) {
                         Console.WriteLine (interf.FullName);
                     }
                 }

@@ -649,9 +649,9 @@
         <collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" />
         <collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" />
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Loader" />
-        <collection type="IType" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="m_container.Module.Loader" />
+        <collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="m_container.Module.Loader" />
         <collection type="IParameterDefinition" container="IMethodDefinition" visit="IReflection" lazyload="true" pathtoloader="((TypeDefinition)m_container.DeclaringType).Module.Loader" />
-        <collection type="IMethod" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="((TypeDefinition)m_container.DeclaringType).Module.Loader" />
+        <collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="((TypeDefinition)m_container.DeclaringType).Module.Loader" />
         <collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader" />
     </collections>
 

@@ -29,7 +29,7 @@ namespace Mono.Cecil.Implem {
             set { m_name = value; }
         }
 
-        public IType DeclaringType {
+        public ITypeReference DeclaringType {
             get { return m_decType; }
         }
 

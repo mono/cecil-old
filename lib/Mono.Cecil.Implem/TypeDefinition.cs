@@ -21,14 +21,14 @@ namespace Mono.Cecil.Implem {
         private string m_name;
         private string m_namespace;
         private TypeAttributes m_attributes;
-        private IType m_baseType;
+        private ITypeReference m_baseType;
 
         private ModuleDefinition m_module;
 
         private InterfaceCollection m_interfaces;
         private MethodDefinitionCollection m_methods;
 
-        private IType m_declaringType;
+        private ITypeReference m_declaringType;
 
         public string Name {
             get { return m_name; }
@@ -45,24 +45,16 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
-        public IType BaseType {
+        public ITypeReference BaseType {
             get { return m_baseType; }
             set { m_baseType = value; }
         }
 
         public string FullName {
-            get {
-                if (m_declaringType != null)
-                    return string.Format ("{0}/{1}", m_declaringType.FullName, m_name);
-
-                if (m_namespace == null || m_namespace.Length == 0)
-                    return m_name;
-
-                return string.Format ("{0}.{1}", m_namespace, m_name);
-            }
+            get { return Utilities.TypeFullName (this); }
         }
 
-        public IType DeclaringType {
+        public ITypeReference DeclaringType {
             get { return m_declaringType; }
             set { m_declaringType = value; }
         }

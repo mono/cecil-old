@@ -22,7 +22,9 @@ namespace Mono.Cecil.Implem {
 
         private ImageReader m_reader;
         private MetadataRoot m_root;
+
         private TypeDefinition [] m_types;
+        private TypeReference [] m_refs;
 
         public ReflectionReader (ImageReader sr)
         {
@@ -32,17 +34,15 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (ITypeDefinitionCollection types)
         {
-            //TODO: optimize this
             TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
             if (tdc != null && tdc.Loaded)
                 return;
 
             ModuleDefinition def = tdc.Container as ModuleDefinition;
 
+            // type def reading
             TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-
             m_types = new TypeDefinition [typesTable.Rows.Count - 1];
-
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
                 TypeDefinition t = new TypeDefinition (
@@ -53,8 +53,8 @@ namespace Mono.Cecil.Implem {
                 m_types [i - 1] = t;
             }
 
+            // nested types
             NestedClassTable nested = m_root.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
-
             for (int i = 0; i < nested.Rows.Count; i++) {
                 NestedClassRow row = nested.Rows [i] as NestedClassRow;
 
@@ -64,6 +64,24 @@ namespace Mono.Cecil.Implem {
                 child.DeclaringType = parent;
             }
 
+            // type ref reading
+            if (m_root.Streams.TablesHeap.HasTable(typeof (TypeRefTable))) {
+                TypeRefTable typesRef = m_root.Streams.TablesHeap [typeof (TypeRefTable)] as TypeRefTable;
+
+                m_refs = new TypeReference [typesRef.Rows.Count];
+
+                for (int i = 0; i < typesRef.Rows.Count; i++) {
+                    TypeRefRow type = typesRef.Rows [i] as TypeRefRow;
+                    TypeReference t = new TypeReference (
+                        m_root.Streams.StringsHeap [type.Name],
+                        m_root.Streams.StringsHeap [type.Namespace]);
+
+                    m_refs [i] = t;
+                }
+            } else
+                m_refs = new TypeReference [0];
+
+            // lets set base types
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
                 TypeDefinition child = m_types [i - 1];
@@ -74,7 +92,7 @@ namespace Mono.Cecil.Implem {
                         child.BaseType = m_types [type.Extends.RID - 2];
                         break;
                     case TokenType.TypeRef :
-                        //TODO: implement type ref reading
+                        child.BaseType = m_refs [type.Extends.RID - 1];
                         break;
                     case TokenType.TypeSpec :
                         //TODO: implement this...
@@ -113,18 +131,19 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intRow = intfsTable.Rows [i] as InterfaceImplRow;
                 if ((intRow.Class - 2) == index) {
+                    ITypeReference interf = null;
                     switch (intRow.Interface.TokenType) {
                     case TokenType.TypeDef :
-                        TypeDefinition interf = m_types [intRow.Interface.RID - 2];
-                        interfaces [interf.FullName] = interf;
+                        interf = m_types [intRow.Interface.RID - 2];
                         break;
                     case TokenType.TypeRef :
-                        //TODO: implement type ref reading
+                        interf = m_refs [intRow.Interface.RID - 1];
                         break;
                     case TokenType.TypeSpec :
                         //TODO: implement this...
                         break;
                     }
+                    interfaces [interf.FullName] = interf;
                 }
             }
 

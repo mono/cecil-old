@@ -77,6 +77,7 @@
         <Compile Include="Mono.Cecil.Implem\TypeDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeReference.cs"/>
+        <Compile Include="Mono.Cecil.Implem\Utilities.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyOS.cs"/>
         <Compile Include="Mono.Cecil.Metadata\AssemblyProcessor.cs"/>

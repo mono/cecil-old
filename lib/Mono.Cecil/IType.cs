@@ -13,10 +13,5 @@
 namespace Mono.Cecil {
 
     public interface IType : IReflectionVisitable {
-
-        string Name { get; set; }
-        string Namespace { get; set; }
-
-        string FullName { get; }
     }
 }
