@@ -18,6 +18,6 @@ namespace Mono.Cecil.Implem {
         bool Loaded { get; set; }
     }
 
-    internal interface ILazyLoadableCollection : ICollection {
+    internal interface ILazyLoadableCollection : ILazyLoadable, ICollection {
     }
 }

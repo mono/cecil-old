@@ -10,7 +10,6 @@
  *
  *****************************************************************************/
 
-
 namespace Mono.Cecil.Implem {
 
     using System;
@@ -46,6 +45,8 @@ namespace Mono.Cecil.Implem {
 
         public int GetCount (ILazyLoadableCollection coll)
         {
+            if (coll.Loaded)
+                return coll.Count;
             //TODO: implement get count from ILazyLoadableCollection
             throw new NotImplementedException ();
         }
