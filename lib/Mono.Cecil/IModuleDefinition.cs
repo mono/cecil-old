@@ -23,10 +23,10 @@ namespace Mono.Cecil {
         IAssemblyNameReferenceCollection AssemblyReferences { get; }
 
         IModuleReferenceCollection ModuleReferences { get; }
-        void DefineModuleReference(string module);
+        void DefineModuleReference (string module);
 
         IResourceCollection Resources { get; }
-        void DefineEmbeddedResource(string name, ManifestResourceAttributes attributes, byte[] data);
-        void DefineLinkedResource(string name, ManifestResourceAttributes attributes, string file);
+        void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
+        void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
     }
 }

@@ -14,7 +14,7 @@ namespace Mono.Cecil {
 
     public interface ILinkedResource : IResource {
 
-        byte[] Hash { get; }
+        byte [] Hash { get; }
         string File { get; set; }
     }
 }

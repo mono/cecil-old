@@ -20,8 +20,8 @@ namespace Mono.Cecil {
         string Culture { get; set; }
         string FullName { get; }
         Version Version { get; set; }
-        byte[] PublicKey { get; set; }
-        byte[] PublicKeyToken { get; set; }
+        byte [] PublicKey { get; set; }
+        byte [] PublicKeyToken { get; set; }
         AssemblyHashAlgorithm HashAlgorithm { get; set; }
     }
 

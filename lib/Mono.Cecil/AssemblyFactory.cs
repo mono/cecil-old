@@ -21,14 +21,16 @@ namespace Mono.Cecil {
 
     public class AssemblyFactory {
 
-        private AssemblyFactory() {}
+        private AssemblyFactory ()
+        {}
 
-        public static IAssemblyDefinition GetAssembly(string file) {
-            ImageReader brv = new ImageReader(file);
-            StructureReader srv = new StructureReader(brv);
-            AssemblyDefinition asm = new AssemblyDefinition(new AssemblyName());
+        public static IAssemblyDefinition GetAssembly (string file)
+        {
+            ImageReader brv = new ImageReader (file);
+            StructureReader srv = new StructureReader (brv);
+            AssemblyDefinition asm = new AssemblyDefinition (new AssemblyName ());
 
-            asm.Accept(srv);
+            asm.Accept (srv);
             return asm;
         }
     }

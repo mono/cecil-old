@@ -14,9 +14,9 @@ namespace Mono.Cecil {
 
     public interface IReflectionVisitor {
 
-        void Visit(ITypeDefinitionCollection types);
-        void Visit(ITypeDefinition type);
-        void Visit(ITypeCollection types);
-        void Visit(IType type);
+        void Visit (ITypeDefinitionCollection types);
+        void Visit (ITypeDefinition type);
+        void Visit (ITypeCollection types);
+        void Visit (IType type);
     }
 }
