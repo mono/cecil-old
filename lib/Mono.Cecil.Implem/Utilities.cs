@@ -42,16 +42,19 @@ namespace Mono.Cecil.Implem {
 
         public static string MethodSignature (IMethodReference meth)
         {
-            StringBuilder sb = new StringBuilder ();
-            sb.Append (MemberSignature (meth));
-            sb.Append ("(");
-            for (int i = 0; i < meth.Parameters.Count; i++) {
-                sb.Append (TypeFullName(meth.Parameters [i].ParameterType));
-                if (i < meth.Parameters.Count - 1)
-                    sb.Append (",");
+            return string.Concat (TypeFullName(meth.ReturnType.ReturnType), " ",
+                                  MemberSignature (meth), ParametersSignature (meth.Parameters));
+        }
+
+        public static string ParametersSignature (IParameterDefinitionCollection parameters)
+        {
+            string sig = "(";
+            for (int i = 0; i < parameters.Count; i++) {
+                sig += TypeFullName(parameters [i].ParameterType);
+                if (i < parameters.Count - 1)
+                    sig += ",";
             }
-            sb.Append (")");
-            return sb.ToString ();
+            return string.Concat (sig, ")");
         }
     }
 }

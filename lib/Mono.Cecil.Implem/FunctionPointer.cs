@@ -19,30 +19,35 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class FunctionPointer : TypeReference, IFunctionPointer {
 
-        private IMethodReference m_pointedFunc;
+        private bool m_hasThis;
+        private bool m_explicitThis;
+        private MethodCallingConvention m_callingConv;
+
+        private ParameterDefinitionCollection m_parameters;
+        private IMethodReturnType m_retType;
 
         public bool HasThis {
-            get { return m_pointedFunc.HasThis; }
-            set { m_pointedFunc.HasThis = value; }
+            get { return m_hasThis; }
+            set { m_hasThis = value; }
         }
 
         public bool ExplicitThis {
-            get { return m_pointedFunc.ExplicitThis; }
-            set { m_pointedFunc.ExplicitThis = value; }
+            get { return m_explicitThis; }
+            set { m_explicitThis = value; }
         }
 
         public MethodCallingConvention CallingConvention {
-            get { return m_pointedFunc.CallingConvention; }
-            set { m_pointedFunc.CallingConvention = value; }
+            get { return m_callingConv; }
+            set { m_callingConv = value; }
         }
 
         public IParameterDefinitionCollection Parameters {
-            get { return m_pointedFunc.Parameters; }
+            get { return m_parameters; }
         }
 
         public IMethodReturnType ReturnType {
-            get { return m_pointedFunc.ReturnType; }
-            set { m_pointedFunc.ReturnType = value; }
+            get { return m_retType; }
+            set { m_retType = value; }
         }
 
         public override string Name {
@@ -56,12 +61,17 @@ namespace Mono.Cecil.Implem {
         }
 
         public override string FullName {
-            get { return Utilities.MethodSignature(m_pointedFunc); }
+            get { return string.Concat ("function", Utilities.ParametersSignature(m_parameters)); }
         }
 
-        public FunctionPointer (IMethodReference pFunc) : base (string.Empty, string.Empty)
+        public FunctionPointer (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
+                                ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
         {
-            m_pointedFunc = pFunc;
+            m_hasThis = hasThis;
+            m_explicitThis = explicitThis;
+            m_callingConv = callConv;
+            m_parameters = parameters;
+            m_retType = retType;
         }
     }
 }

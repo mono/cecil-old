@@ -150,6 +150,13 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < m_types.Length; i++) {
                 TypeDefinition type = m_types [i];
                 tdc [type.FullName] = type;
+
+                // ok, I've thought a lot before doing that
+                // if I do not load the two primitives that are field and methods here
+                // i'll run into big troubles as soon a lazy loaded stuff reference it
+                // such as methods body or an override collection
+                this.Visit (type.Fields);
+                this.Visit (type.Methods);
             }
 
             tdc.Loaded = true;
@@ -447,12 +454,24 @@ namespace Mono.Cecil.Implem {
                 PTR pointer = t as PTR;
                 return new Pointer (GetTypeRefFromSig (pointer.PtrType));
             case ElementType.FnPtr :
+                // not very sure of this
                 FNPTR funcptr = t as FNPTR;
-                // houston ...
-                // not funny thing here, because methods sigs does not provides informations
-                // on the type defining the method. So if the method is not already loaded, we'll
-                // have to walk on every methods of every type until the good method is found
-                return null;
+                ParameterDefinitionCollection parameters = new ParameterDefinitionCollection (null);
+                for (int i = 0; i < funcptr.Method.ParamCount; i++) {
+                    Param p = funcptr.Method.Parameters [i];
+                    ParameterDefinition pdef = new ParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), null);
+                    pdef.ParameterType = p.ByRef ? new Reference (GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
+                    parameters.Add (pdef);
+                }
+                ITypeReference retType = null;
+                if (funcptr.Method.RetType.Void)
+                    retType = SearchCoreType ("System.Void");
+                else if (funcptr.Method.RetType.ByRef)
+                    retType = new Reference (GetTypeRefFromSig (funcptr.Method.RetType.Type));
+                else
+                    retType = GetTypeRefFromSig (funcptr.Method.RetType.Type);
+                return new FunctionPointer (funcptr.Method.HasThis, funcptr.Method.ExplicitThis, funcptr.Method.MethCallConv,
+                                            parameters, new MethodReturnType (retType));
             }
             return null;
         }

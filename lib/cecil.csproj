@@ -89,6 +89,7 @@
         <Compile Include="Mono.Cecil.Implem\MethodBody.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MethodReturnType.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReference.cs"/>
@@ -99,6 +100,7 @@
         <Compile Include="Mono.Cecil.Implem\Pointer.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\Reference.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
@@ -245,6 +247,7 @@
         <Compile Include="Mono.Cecil\IPointer.cs"/>
         <Compile Include="Mono.Cecil\IProperty.cs"/>
         <Compile Include="Mono.Cecil\IPropertyDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IReference.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs"/>
         <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs"/>
         <Compile Include="Mono.Cecil\IReflectionVisitable.cs"/>
