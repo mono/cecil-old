@@ -201,7 +201,9 @@ namespace Mono.Cecil.Implem {
                     case TokenType.Method :
                         owner.Overrides.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
                         break;
-                    //TODO: handle memberref
+                    case TokenType.MemberRef :
+                        owner.Overrides.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
+                        break;
                     }
                     ((OverrideCollection)owner.Overrides).Loaded = true;
                 }

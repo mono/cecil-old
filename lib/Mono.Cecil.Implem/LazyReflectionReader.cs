@@ -70,8 +70,8 @@ namespace Mono.Cecil.Implem {
                 if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
                     if (implRow.MethodDeclaration.TokenType == TokenType.Method)
                         meths.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
-                    //else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
-                    //TODO: handle this case
+                    else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
+                        meths.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
                 }
             }
         }
