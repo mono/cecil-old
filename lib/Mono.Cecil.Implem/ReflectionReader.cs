@@ -202,28 +202,6 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IParameterDefinitionCollection parameters)
         {
-            ParameterDefinitionCollection parms = parameters as ParameterDefinitionCollection;
-            if (parms.Loaded)
-                return;
-
-            MethodDefinition meth = parms.Container as MethodDefinition;
-            int index = Array.IndexOf (m_meths, meth) + 1, cursor;
-            MethodTable methTable = m_root.Streams.TablesHeap [typeof(MethodTable)] as MethodTable;
-            ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
-            MethodRow currentMeth = methTable [index];
-            cursor = (int) currentMeth.ParamList;
-            if (cursor == 0)
-                return;
-
-            MethodDefSig msig = meth.Signature;
-            for (int i = 0; i < msig.ParamCount; i++) {
-                ParamRow prow = paramTable [cursor++];
-                Param p = msig.Parameters [i];
-
-                // add parameter here
-            }
-
-            parms.Loaded = true;
         }
 
         public void Visit (IParameterDefinition parameter)
@@ -240,6 +218,7 @@ namespace Mono.Cecil.Implem {
             int index = GetRidForTypeDef (dec) - 1, next;
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
             MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
+            ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
             if (index == tdefTable.Rows.Count - 1)
                 next = methTable.Rows.Count + 1;
             else
@@ -250,9 +229,22 @@ namespace Mono.Cecil.Implem {
 
             for (int i = (int) tdefTable [index].MethodList; i < next; i++) {
                 MethodRow methRow = methTable [i - 1];
+                MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
+                                                              methRow.RVA, methRow.Flags, methRow.ImplFlags);
+                MethodSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
 
-                // write here :)
-                // save it too with m_meths [i] = method;
+                for (int j = 0, k = (int) methRow.ParamList; j < msig.ParamCount; j++) {
+                    ParamRow prow = paramTable [k - 1]; k++;
+                    Param psig = msig.Parameters [j];
+
+                    ParameterDefinition pdef = new ParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, null);
+                    pdef.ParameterType = psig.ByRef ? new Reference (GetTypeRefFromSig (psig.Type)) : GetTypeRefFromSig (psig.Type);
+                    mdef.Parameters.Add (pdef);
+                }
+
+                mdef.ReturnType = GetMethodReturnType (msig);
+                m_meths [i - 1] = mdef;
+                meths [Utilities.MethodSignature (mdef)] = mdef;
             }
 
             meths.Loaded = true;
@@ -399,6 +391,18 @@ namespace Mono.Cecil.Implem {
             prop.Readed = true;
         }
 
+        private MethodReturnType GetMethodReturnType (MethodSig msig)
+        {
+            ITypeReference retType = null;
+            if (msig.RetType.Void)
+                retType = SearchCoreType ("System.Void");
+            else if (msig.RetType.ByRef)
+                retType = new Reference (GetTypeRefFromSig (msig.RetType.Type));
+            else
+                retType = GetTypeRefFromSig (msig.RetType.Type);
+            return new MethodReturnType (retType);
+        }
+
         public ITypeReference GetTypeRefFromSig (SigType t)
         {
             switch (t.ElementType) {
@@ -463,15 +467,8 @@ namespace Mono.Cecil.Implem {
                     pdef.ParameterType = p.ByRef ? new Reference (GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
                     parameters.Add (pdef);
                 }
-                ITypeReference retType = null;
-                if (funcptr.Method.RetType.Void)
-                    retType = SearchCoreType ("System.Void");
-                else if (funcptr.Method.RetType.ByRef)
-                    retType = new Reference (GetTypeRefFromSig (funcptr.Method.RetType.Type));
-                else
-                    retType = GetTypeRefFromSig (funcptr.Method.RetType.Type);
                 return new FunctionPointer (funcptr.Method.HasThis, funcptr.Method.ExplicitThis, funcptr.Method.MethCallConv,
-                                            parameters, new MethodReturnType (retType));
+                                            parameters, GetMethodReturnType (funcptr.Method));
             }
             return null;
         }

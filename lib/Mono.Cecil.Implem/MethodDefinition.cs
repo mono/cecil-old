@@ -25,9 +25,13 @@ namespace Mono.Cecil.Implem {
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
         private ParameterDefinitionCollection m_parameters;
+        private MethodReturnType m_returnType;
+
+        private bool m_hasThis;
+        private bool m_explicitThis;
+        private MethodCallingConvention m_callConv;
 
         private MethodBody m_body;
-        private MethodDefSig m_signature;
         private RVA m_rva;
         private OverrideCollection m_overrides;
 
@@ -47,36 +51,27 @@ namespace Mono.Cecil.Implem {
         }
 
         public bool HasThis {
-            get { return m_signature.HasThis; }
-            set { m_signature.HasThis = value; }
+            get { return m_hasThis; }
+            set { m_hasThis = value; }
         }
 
         public bool ExplicitThis {
-            get { return m_signature.ExplicitThis; }
-            set { m_signature.ExplicitThis = value; }
+            get { return m_explicitThis; }
+            set { m_explicitThis = value; }
         }
 
         public MethodCallingConvention CallingConvention {
-            get { return m_signature.MethCallConv; }
-            set { m_signature.MethCallConv = value; }
+            get { return m_callConv; }
+            set { m_callConv = value; }
         }
 
         public IParameterDefinitionCollection Parameters {
-            get {
-                if (m_parameters == null)
-                    m_parameters = new ParameterDefinitionCollection (this);
-                return m_parameters;
-            }
+            get { return m_parameters; }
         }
 
         public IMethodReturnType ReturnType {
-            get { return null; }
-            set { value = value; }
-        }
-
-        public MethodDefSig Signature {
-            get { return m_signature; }
-            set { m_signature = value; }
+            get { return m_returnType; }
+            set { m_returnType = value as MethodReturnType; }
         }
 
         public RVA RVA {
@@ -100,15 +95,15 @@ namespace Mono.Cecil.Implem {
             }
         }
 
-        public MethodDefinition (string name, TypeDefinition decType, MethodDefSig signature,
-                                 RVA rva, MethodAttributes attrs, MethodImplAttributes implAttrs)
+        public MethodDefinition (string name, TypeDefinition decType, RVA rva,
+                                 MethodAttributes attrs, MethodImplAttributes implAttrs)
         {
             this.Name = name;
-            m_signature = signature;
             m_rva = rva;
             m_attributes = attrs;
             m_implAttrs = implAttrs;
             SetDeclaringType (decType);
+            m_parameters = new ParameterDefinitionCollection (this);
         }
 
         public void Accept (IReflectionVisitor visitor)
@@ -116,6 +111,11 @@ namespace Mono.Cecil.Implem {
             visitor.Visit (this);
             m_parameters.Accept (visitor);
             m_overrides.Accept (visitor);
+        }
+
+        public override string ToString ()
+        {
+            return Utilities.FullMethodSignature (this);
         }
     }
 }

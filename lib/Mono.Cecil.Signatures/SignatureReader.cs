@@ -28,6 +28,7 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_fieldSigs;
         private IDictionary m_propSigs;
         private IDictionary m_typeSpecs;
+        private IDictionary m_methodsDefSigs;
         private IDictionary m_customAttribs;
 
         public SignatureReader (MetadataRoot root)
@@ -38,6 +39,7 @@ namespace Mono.Cecil.Signatures {
             m_fieldSigs = new Hashtable ();
             m_propSigs = new Hashtable ();
             m_customAttribs = new Hashtable ();
+            m_methodsDefSigs = new Hashtable ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -60,6 +62,17 @@ namespace Mono.Cecil.Signatures {
                 m_propSigs [index] = p;
             }
             return p;
+        }
+
+        public MethodSig GetMethodDefSig (uint index)
+        {
+            MethodDefSig m = m_methodsDefSigs [index] as MethodDefSig;
+            if (m == null) {
+                m = new MethodDefSig (index);
+                m.Accept (this);
+                m_methodsDefSigs [index] = m;
+            }
+            return m;
         }
 
         public TypeSpec GetTypeSpec (uint index)
@@ -194,6 +207,7 @@ namespace Mono.Cecil.Signatures {
             RetType rt = new RetType ();
             start = pos;
             rt.CustomMods = this.ReadCustomMods (data, start, out start);
+            int curs = start;
             ElementType flag = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
             switch (flag) {
             case ElementType.Void :
@@ -211,7 +225,7 @@ namespace Mono.Cecil.Signatures {
                 break;
             default :
                 rt.TypedByRef = rt.Void = rt.ByRef = false;
-                rt.Type = this.ReadType (data, start, out start);
+                rt.Type = this.ReadType (data, curs, out start);
                 break;
             }
             return rt;
@@ -252,6 +266,7 @@ namespace Mono.Cecil.Signatures {
             Param p = new Param ();
             start = pos;
             p.CustomMods = this.ReadCustomMods (data, start, out start);
+            int curs = start;
             ElementType flag = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
             switch (flag) {
             case ElementType.TypedByRef :
@@ -266,7 +281,7 @@ namespace Mono.Cecil.Signatures {
             default :
                 p.TypedByRef = false;
                 p.ByRef = false;
-                p.Type = this.ReadType (data, start, out start);
+                p.Type = this.ReadType (data, curs, out start);
                 break;
             }
             return p;

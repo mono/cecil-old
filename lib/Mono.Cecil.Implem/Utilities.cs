@@ -42,8 +42,12 @@ namespace Mono.Cecil.Implem {
 
         public static string MethodSignature (IMethodReference meth)
         {
-            return string.Concat (TypeFullName(meth.ReturnType.ReturnType), " ",
-                                  MemberSignature (meth), ParametersSignature (meth.Parameters));
+            return string.Concat (meth.Name, ParametersSignature (meth.Parameters));
+        }
+
+        public static string FullMethodSignature (IMethodReference meth)
+        {
+            return string.Concat (meth.ReturnType.ReturnType.FullName, " ", MemberSignature(meth), ParametersSignature(meth.Parameters));
         }
 
         public static string ParametersSignature (IParameterDefinitionCollection parameters)

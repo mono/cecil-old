@@ -67,7 +67,26 @@ namespace Mono.Cecil.Tests {
                     }
 
                     foreach (IFieldDefinition field in ctrl.Fields) {
-                        Console.WriteLine ("field: " + field.Name);
+                        Console.WriteLine ("field: {0} {1}", field.FieldType.FullName, field.Name);
+                    }
+
+                    foreach (IMethodDefinition meth in ctrl.Methods) {
+                        Console.Write ("method: ");
+                        Console.Write (meth.ReturnType.ReturnType.FullName);
+                        Console.Write (" ");
+                        Console.Write (meth.DeclaringType.FullName);
+                        Console.Write ("::");
+                        Console.Write (meth.Name);
+                        Console.Write ("(");
+                        for (int i = 0; i < meth.Parameters.Count; i++) {
+                            IParameterDefinition param = meth.Parameters [i];
+                            Console.Write (param.ParameterType.FullName);
+                            Console.Write (" ");
+                            Console.Write (param.Name);
+                            if (i < meth.Parameters.Count - 1)
+                                Console.Write (", ");
+                        }
+                        Console.WriteLine (")");
                     }
 
                     foreach (IPropertyDefinition prop in ctrl.Properties) {
