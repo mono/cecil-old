@@ -19,18 +19,12 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil.Cil;
     using Mono.Cecil.Signatures;
 
-    internal sealed class MethodDefinition : MemberDefinition, IMethodDefinition {
+    internal sealed class MethodDefinition : MethodReference, IMethodDefinition {
 
         private MethodAttributes m_attributes;
         private MethodImplAttributes m_implAttrs;
         private MethodSemanticsAttributes m_semAttrs;
-        private ParameterDefinitionCollection m_parameters;
         private SecurityDeclarationCollection m_secDecls;
-        private MethodReturnType m_returnType;
-
-        private bool m_hasThis;
-        private bool m_explicitThis;
-        private MethodCallingConvention m_callConv;
 
         private MethodBody m_body;
         private RVA m_rva;
@@ -52,36 +46,12 @@ namespace Mono.Cecil.Implem {
             set { m_semAttrs = value; }
         }
 
-        public bool HasThis {
-            get { return m_hasThis; }
-            set { m_hasThis = value; }
-        }
-
-        public bool ExplicitThis {
-            get { return m_explicitThis; }
-            set { m_explicitThis = value; }
-        }
-
-        public MethodCallingConvention CallingConvention {
-            get { return m_callConv; }
-            set { m_callConv = value; }
-        }
-
-        public IParameterDefinitionCollection Parameters {
-            get { return m_parameters; }
-        }
-
         public ISecurityDeclarationCollection SecurityDeclarations {
             get {
                 if (m_secDecls == null)
                     m_secDecls = new SecurityDeclarationCollection (this);
                 return m_secDecls;
             }
-        }
-
-        public IMethodReturnType ReturnType {
-            get { return m_returnType; }
-            set { m_returnType = value as MethodReturnType; }
         }
 
         public RVA RVA {
@@ -100,7 +70,13 @@ namespace Mono.Cecil.Implem {
         }
 
         public IPInvokeInfo PInvokeInfo {
-            get { return m_pinvoke; }
+            get {
+                if (m_pinvoke == null && (m_attributes & MethodAttributes.PInvokeImpl) != 0) {
+                    m_pinvoke = new PInvokeInfo (this);
+                    ((TypeDefinition)this.DeclaringType).Module.Loader.ReflectionReader.Visit (m_pinvoke);
+                }
+                return m_pinvoke;
+            }
             set { m_pinvoke = value as PInvokeInfo; }
         }
 
@@ -114,27 +90,19 @@ namespace Mono.Cecil.Implem {
 
         public MethodDefinition (string name, TypeDefinition decType, RVA rva,
                                  MethodAttributes attrs, MethodImplAttributes implAttrs,
-                                 bool hasThis, bool explicitThis, MethodCallingConvention callConv) : base (name, decType)
+                                 bool hasThis, bool explicitThis, MethodCallingConvention callConv) : base (name, decType, hasThis, explicitThis, callConv)
         {
             m_rva = rva;
             m_attributes = attrs;
             m_implAttrs = implAttrs;
-            m_parameters = new ParameterDefinitionCollection (this);
-            m_hasThis = hasThis;
-            m_explicitThis = explicitThis;
-            m_callConv = callConv;
         }
 
-        public void Accept (IReflectionVisitor visitor)
+        public override void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
-            m_parameters.Accept (visitor);
+            m_secDecls.Accept (visitor);
             m_overrides.Accept (visitor);
-        }
-
-        public override string ToString ()
-        {
-            return Utilities.FullMethodSignature (this);
+            this.Parameters.Accept (visitor);
         }
     }
 }

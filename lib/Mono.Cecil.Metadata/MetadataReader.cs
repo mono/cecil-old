@@ -140,7 +140,6 @@ namespace Mono.Cecil.Metadata {
         {
             this.VisitHeap (heap);
 
-
             if (heap.Data.Length < 1 && heap.Data [0] != 0)
                 throw new MetadataFormatException ("Malformed #Strings heap");
 

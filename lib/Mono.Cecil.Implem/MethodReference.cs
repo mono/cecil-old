@@ -13,13 +13,14 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.Text;
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;
     using Mono.Cecil.Cil;
     using Mono.Cecil.Signatures;
 
-    internal sealed class MethodReference : MemberReference, IMethodReference {
+    internal class MethodReference : MemberReference, IMethodReference {
 
         private ParameterDefinitionCollection m_parameters;
         private MethodReturnType m_returnType;
@@ -61,13 +62,24 @@ namespace Mono.Cecil.Implem {
             m_callConv = callConv;
         }
 
-        public void Accept (IReflectionVisitor visitor)
+        public virtual void Accept (IReflectionVisitor visitor)
         {
         }
 
         public override string ToString ()
         {
-            return Utilities.FullMethodSignature (this);
+            StringBuilder sb = new StringBuilder ();
+            sb.Append (m_returnType.ReturnType.FullName);
+            sb.Append (" ");
+            sb.Append (base.ToString ());
+            sb.Append ("(");
+            for (int i = 0; i < m_parameters.Count; i++) {
+                sb.Append (m_parameters [i].ParameterType.FullName);
+                if (i < m_parameters.Count - 1)
+                    sb.Append (",");
+            }
+            sb.Append (")");
+            return sb.ToString ();
         }
     }
 }

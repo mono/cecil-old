@@ -30,13 +30,18 @@ namespace Mono.Cecil.Implem {
 
         public object Operand {
             get { return m_operand; }
+            set { m_operand = value; }
         }
 
-        internal Instruction (int offset, OpCode opCode, object operand)
+        public Instruction (int offset, OpCode opCode, object operand) : this (offset, opCode)
+        {
+            m_operand = operand;
+        }
+
+        public Instruction (int offset, OpCode opCode)
         {
             m_offset = offset;
             m_opCode = opCode;
-            m_operand = operand;
         }
 
         public void Accept (ICodeVisitor visitor)

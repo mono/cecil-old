@@ -33,5 +33,10 @@ namespace Mono.Cecil.Implem {
             m_name = name;
             m_decType = declaringType;
         }
+
+        public override string ToString ()
+        {
+            return string.Concat (m_decType.FullName, "::", m_name);
+        }
     }
 }

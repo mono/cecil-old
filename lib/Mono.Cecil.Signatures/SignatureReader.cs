@@ -69,7 +69,7 @@ namespace Mono.Cecil.Signatures {
             return p;
         }
 
-        public MethodSig GetMethodDefSig (uint index)
+        public MethodDefSig GetMethodDefSig (uint index)
         {
             MethodDefSig m = m_methodsDefSigs [index] as MethodDefSig;
             if (m == null) {
@@ -80,7 +80,7 @@ namespace Mono.Cecil.Signatures {
             return m;
         }
 
-        public MethodSig GetMethodRefSig (uint index)
+        public MethodRefSig GetMethodRefSig (uint index)
         {
             MethodRefSig m = m_methodsRefSigs [index] as MethodRefSig;
             if (m == null) {

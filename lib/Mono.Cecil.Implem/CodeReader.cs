@@ -45,7 +45,7 @@ namespace Mono.Cecil.Implem {
             case (int) MethodHeaders.TinyFormat :
                 methBody.CodeSize = flags >> 2;
                 methBody.MaxStack = 8;
-                ReadCilBody (methBody, br.ReadBytes (body.CodeSize));
+                ReadCilBody (methBody, br);
                 return;
             case (int) MethodHeaders.FatFormat :
                 br.BaseStream.Position--;
@@ -56,16 +56,108 @@ namespace Mono.Cecil.Implem {
                 methBody.LocalVarToken = br.ReadInt32 ();
                 body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
                 Visit (methBody.Variables);
-                ReadCilBody (methBody, br.ReadBytes (methBody.CodeSize));
+                ReadCilBody (methBody, br);
                 if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
                     ReadExceptionHandlers (methBody, br);
                 return;
             }
         }
 
-        private void ReadCilBody (MethodBody body, byte [] data)
+        private int GetRid (int token)
         {
+            return token & 0x00ffffff;
+        }
 
+        private bool IsToken (int token, TokenType t)
+        {
+            return token >> 24 == (int) t >> 24;
+        }
+
+        private void ReadCilBody (MethodBody body, BinaryReader br)
+        {
+            long start = br.BaseStream.Position;
+            while (br.BaseStream.Position < start + body.CodeSize) {
+                OpCode op;
+                int cursor = br.ReadByte ();
+                if (cursor == 0xfe)
+                    op = OpCodes.Cache.Instance.TwoBytesOpCode [br.ReadByte ()];
+                else
+                    op = OpCodes.Cache.Instance.OneByteOpCode [cursor];
+
+                Instruction instr = new Instruction (cursor, op);
+                switch (op.OperandType) {
+                case OperandType.InlineNone :
+                    break;
+                case OperandType.InlineBrTarget :
+                    instr.Operand = br.ReadInt32 ();
+                    break;
+                case OperandType.InlineSwitch :
+                    uint length = br.ReadUInt32 ();
+                    int [] branches = new int [length];
+                    for (int i = 0; i < length; i++)
+                        branches [i] = br.ReadInt32 ();
+                    instr.Operand = branches;
+                    break;
+                case OperandType.ShortInlineVar :
+                case OperandType.ShortInlineBrTarget :
+                case OperandType.ShortInlineI :
+                    instr.Operand = br.ReadByte ();
+                    break;
+                case OperandType.InlineSig :
+                case OperandType.InlineVar :
+                case OperandType.InlineI :
+                    instr.Operand = br.ReadInt32 ();
+                    break;
+                case OperandType.InlineI8 :
+                    instr.Operand = br.ReadInt64 ();
+                    break;
+                case OperandType.ShortInlineR :
+                    instr.Operand = br.ReadSingle ();
+                    break;
+                case OperandType.InlineR :
+                    instr.Operand = br.ReadDouble ();
+                    break;
+                case OperandType.InlineString :
+                    instr.Operand = m_root.Streams.UserStringsHeap [GetRid (br.ReadInt32 ())];
+                    break;
+                case OperandType.InlineField :
+                    int field = br.ReadInt32 ();
+                    if (IsToken (field, TokenType.Field))
+                        instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (field));
+                    else
+                        instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (field));
+                    break;
+                case OperandType.InlineMethod :
+                    int meth = br.ReadInt32 ();
+                    if (IsToken (meth, TokenType.Method))
+                        instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (meth));
+                    else
+                        instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth));
+                    break;
+                case OperandType.InlineType :
+                    int type = br.ReadInt32 ();
+                    if (IsToken (type, TokenType.TypeDef))
+                        instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (type));
+                    else
+                        instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (type));
+                    break;
+                case OperandType.InlineTok :
+                    int token = br.ReadInt32 ();
+                    if (IsToken (token, TokenType.TypeDef))
+                        instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (token));
+                    else if (IsToken (token, TokenType.TypeRef))
+                        instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (token));
+                    else if (IsToken (token, TokenType.Method))
+                        instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (token));
+                    else if (IsToken (token, TokenType.MemberRef))
+                        instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token));
+                    else
+                        throw new ReflectionException ("Wrong token following ldtoken");
+                    break;
+                }
+
+                // resolve branches & switchs
+            }
         }
 
         private void ReadExceptionHandlers (MethodBody body, BinaryReader br)
@@ -94,7 +186,7 @@ namespace Mono.Cecil.Implem {
             MethodBody body = variables.Container as MethodBody;
             MethodDefinition meth = body.Method as MethodDefinition;
             StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
-            StandAloneSigRow sasRow = sasTable [(body.LocalVarToken & 0xffffff) - 1];
+            StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken)];
             LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
             for (int i = 0; i < sig.Count; i++) {
                 LocalVarSig.LocalVariable lv = sig.LocalVariables [i];

@@ -12,7 +12,9 @@
 
 namespace Mono.Cecil {
 
-    public interface IPInvokeInfo {
+    public interface IPInvokeInfo : IReflectionVisitable {
+
+        IMethodDefinition Method { get; }
 
         PInvokeAttributes Attributes { get; set; }
         string EntryPoint { get; set; }

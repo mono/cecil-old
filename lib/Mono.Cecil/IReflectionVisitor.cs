@@ -24,6 +24,7 @@ namespace Mono.Cecil {
         void Visit (IParameterDefinition parameter);
         void Visit (IMethodDefinitionCollection methods);
         void Visit (IMethodDefinition method);
+        void Visit (IPInvokeInfo pinvk);
         void Visit (IEventDefinitionCollection events);
         void Visit (IEventDefinition evt);
         void Visit (IFieldDefinitionCollection fields);

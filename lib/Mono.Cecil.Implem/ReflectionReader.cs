@@ -86,6 +86,11 @@ namespace Mono.Cecil.Implem {
             return m_meths [rid - 1];
         }
 
+        public MemberReference GetMemberRefAt (int rid)
+        {
+            return m_memberRefs [rid - 1];
+        }
+
         public int GetRidForMethodDef (MethodDefinition meth)
         {
             int index = Array.IndexOf (m_meths, meth);
@@ -386,6 +391,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public virtual void Visit (IMethodDefinition method)
+        {
+        }
+
+        public virtual void Visit (IPInvokeInfo pinvk)
         {
         }
 

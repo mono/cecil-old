@@ -137,10 +137,5 @@ namespace Mono.Cecil.Implem {
             m_events.Accept (visitor);
             m_methods.Accept (visitor);
         }
-
-        public override string ToString ()
-        {
-            return this.FullName;
-        }
     }
 }

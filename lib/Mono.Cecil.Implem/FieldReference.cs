@@ -31,5 +31,10 @@ namespace Mono.Cecil.Implem {
         public void Accept (IReflectionVisitor visitor)
         {
         }
+
+        public override string ToString ()
+        {
+            return string.Concat (m_fieldType.FullName, " ", base.ToString ());
+        }
     }
 }

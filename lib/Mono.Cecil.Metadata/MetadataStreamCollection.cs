@@ -69,6 +69,10 @@ namespace Mono.Cecil.Metadata {
             get { return this ["#~"].Heap as TablesHeap; }
         }
 
+        public UserStringsHeap UserStringsHeap {
+            get { return this ["#US"].Heap as UserStringsHeap; }
+        }
+
         public MetadataStreamCollection (MetadataRoot root)
         {
             m_root = root;

@@ -19,39 +19,34 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class FunctionPointerType : TypeReference, IFunctionPointerType {
 
-        private bool m_hasThis;
-        private bool m_explicitThis;
-        private MethodCallingConvention m_callingConv;
-
-        private ParameterDefinitionCollection m_parameters;
-        private IMethodReturnType m_retType;
+        private MethodReference m_function;
 
         public bool HasThis {
-            get { return m_hasThis; }
-            set { m_hasThis = value; }
+            get { return m_function.HasThis; }
+            set { m_function.HasThis = value; }
         }
 
         public bool ExplicitThis {
-            get { return m_explicitThis; }
-            set { m_explicitThis = value; }
+            get { return m_function.ExplicitThis; }
+            set { m_function.ExplicitThis = value; }
         }
 
         public MethodCallingConvention CallingConvention {
-            get { return m_callingConv; }
-            set { m_callingConv = value; }
+            get { return m_function.CallingConvention; }
+            set { m_function.CallingConvention = value; }
         }
 
         public IParameterDefinitionCollection Parameters {
-            get { return m_parameters; }
+            get { return m_function.Parameters; }
         }
 
         public IMethodReturnType ReturnType {
-            get { return m_retType; }
-            set { m_retType = value; }
+            get { return m_function.ReturnType; }
+            set { m_function.ReturnType = value; }
         }
 
         public override string Name {
-            get { return string.Empty; }
+            get { return m_function.Name; }
             set { throw new InvalidOperationException (); }
         }
 
@@ -61,17 +56,16 @@ namespace Mono.Cecil.Implem {
         }
 
         public override string FullName {
-            get { return string.Concat ("function", Utilities.ParametersSignature(m_parameters)); }
+            get { return m_function.ToString (); }
         }
 
         public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
                                 ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
         {
-            m_hasThis = hasThis;
-            m_explicitThis = explicitThis;
-            m_callingConv = callConv;
-            m_parameters = parameters;
-            m_retType = retType;
+            m_function = new MethodReference ("function", this, hasThis, explicitThis, callConv);
+            m_function.ReturnType = retType;
+            foreach (ParameterDefinition param in parameters)
+                m_function.Parameters.Add (param);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Mono.Cecil.Implem {
                 ImplMapRow imRow = imTable [i];
                 if (imRow.MemberForwarded.TokenType == TokenType.Method) { // should always be true
                     MethodDefinition meth = GetMethodDefAt ((int) imRow.MemberForwarded.RID - 1);
-                    meth.PInvokeInfo = new PInvokeInfo (imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
+                    meth.PInvokeInfo = new PInvokeInfo (meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
                                                         Module.ModuleReferences [(int) imRow.ImportScope - 1]);
                 }
             }

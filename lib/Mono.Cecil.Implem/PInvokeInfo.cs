@@ -16,9 +16,15 @@ namespace Mono.Cecil.Implem {
 
     internal sealed class PInvokeInfo : IPInvokeInfo {
 
+        private MethodDefinition m_meth;
+
         private PInvokeAttributes m_attributes;
         private string m_entryPoint;
         private IModuleReference m_module;
+
+        public IMethodDefinition Method {
+            get { return m_meth; }
+        }
 
         public PInvokeAttributes Attributes {
             get { return m_attributes; }
@@ -35,11 +41,21 @@ namespace Mono.Cecil.Implem {
             set { m_module = value; }
         }
 
-        public PInvokeInfo (PInvokeAttributes attrs, string entryPoint, IModuleReference mod)
+        public PInvokeInfo (MethodDefinition meth)
+        {
+            m_meth = meth;
+        }
+
+        public PInvokeInfo (MethodDefinition meth, PInvokeAttributes attrs, string entryPoint, IModuleReference mod) : this (meth)
         {
             m_attributes = attrs;
             m_entryPoint = entryPoint;
             m_module = mod;
+        }
+
+        public void Accept (IReflectionVisitor visitor)
+        {
+            visitor.Visit (this);
         }
     }
 }

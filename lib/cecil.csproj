@@ -119,7 +119,6 @@
         <Compile Include="Mono.Cecil.Implem\TypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\TypeReferenceCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\Utilities.cs"/>
         <Compile Include="Mono.Cecil.Implem\VariableDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\VariableDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Metadata\Assembly.cs"/>

@@ -32,16 +32,43 @@ namespace Mono.Cecil.Cil {
             public static readonly Cache Instance = new Cache ();
 
             private IDictionary m_cache;
+            private OpCode [] m_oneByteOpCode;
+            private OpCode [] m_twoBytesOpCodes;
+                
+            public OpCode this [string name] {
+                get { return (OpCode) m_cache [name]; }
+            }
+            
+            internal OpCode [] OneByteOpCode {
+                get { return m_oneByteOpCode; }
+            }
+            
+            internal OpCode [] TwoBytesOpCode {
+                get { return m_twoBytesOpCodes; }
+            }
 
             private Cache ()
             {
                 m_cache = new Hashtable ();
+<%
+    oboc = Array.new
+    tboc = Array.new
+    $ops.each { |op|
+        if op.op1 == "0xff"
+            oboc.push(op)
+        else
+            tboc.push(op)
+        end
+    }
+%>                m_oneByteOpCode = new OpCode [<%=oboc[oboc.length - 1].op2%> + 1];
+                m_twoBytesOpCodes = new OpCode [<%=tboc[tboc.length - 1].op2%> + 1];
+
+<% oboc.each { |op| %>                m_oneByteOpCode [<%=op.op2%>] = OpCodes.<%=op.field_name%>;
+<% }
+   tboc.each { |op| %>                m_twoBytesOpCodes [<%=op.op2%>] = OpCodes.<%=op.field_name%>;
+<% } %>
 <% $ops.each { |op| %>                m_cache ["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
 <% } %>            }
-
-            public OpCode this [string name] {
-                get { return (OpCode) m_cache [name]; }
-            }
         }
     }
 }

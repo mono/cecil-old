@@ -38,7 +38,15 @@ namespace Mono.Cecil.Implem {
         }
 
         public virtual string FullName {
-            get { return Utilities.TypeFullName (this); }
+            get {
+                if (m_decType != null)
+                    return string.Concat (m_decType.FullName, "/", m_name);
+
+                if (m_namespace == null || m_namespace.Length == 0)
+                    return m_name;
+
+                return string.Concat (m_namespace, ".", m_name);
+            }
         }
 
         public TypeReference (string name, string ns)
@@ -50,6 +58,11 @@ namespace Mono.Cecil.Implem {
         public virtual void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
+        }
+
+        public override string ToString ()
+        {
+            return this.FullName;
         }
     }
 }

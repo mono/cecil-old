@@ -168,6 +168,11 @@ namespace Mono.Cecil.Implem {
             evts.Loaded = true;
         }
 
+        public override void Visit (IPInvokeInfo pinvk)
+        {
+            //TODO: that
+        }
+
         public override void Visit (IPropertyDefinitionCollection properties)
         {
             PropertyDefinitionCollection props = properties as PropertyDefinitionCollection;

@@ -68,30 +68,26 @@ namespace Mono.Cecil.Tests {
                     }
 
                     foreach (IFieldDefinition field in ctrl.Fields) {
-                        Console.WriteLine ("field: {0} {1}", field.FieldType.FullName, field.Name);
+                        Console.WriteLine ("field: " + field.ToString ());
                     }
 
                     foreach (IMethodDefinition meth in ctrl.Methods) {
 
-                        if (meth.Name == ".ctor") {
-                            Console.WriteLine ("ctor: " + meth.ToString ());
-                            Console.WriteLine ("accessing body, reading code size: " + meth.Body.CodeSize);
-                        } else if (meth.Name == "FillNamedControlsTable") {
-                            Console.WriteLine ("FillNamedControlsTable: " + meth.ToString ());
-                            Console.WriteLine ("accessing body, reading code size: " + meth.Body.CodeSize);
-                            Console.WriteLine ("max stack: " + meth.Body.MaxStack);
-                            foreach (IVariableDefinition var in meth.Body.Variables) {
-                                Console.WriteLine ("  var: {0} {1}", var.Name, var.Variable.FullName);
-                            }
+                        try {
+                            Console.WriteLine ("cursor on meth: " + meth.ToString ());
+                            int a = meth.Body.CodeSize;
+                            Console.WriteLine ("codesize readed: " + a);
+                        } catch (Exception e) {
+                            Console.WriteLine ("encountered a exception: " + e);
                         }
                     }
 
                     foreach (IPropertyDefinition prop in ctrl.Properties) {
-                        Console.WriteLine ("property: " + prop.Name);
+                        Console.WriteLine ("property: " + prop.ToString ());
                     }
 
                     foreach (IEventDefinition evt in ctrl.Events) {
-                        Console.WriteLine ("event: " + evt.Name);
+                        Console.WriteLine ("event: " + evt.ToString ());
                     }
                 }
             }
