@@ -101,6 +101,34 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IInterfaceCollection interfaces)
         {
+            InterfaceCollection interfs = interfaces as InterfaceCollection;
+            if (interfs != null && interfs.Loaded)
+                return;
+
+            TypeDefinition implementor = interfaces.Container as TypeDefinition;
+
+            int index = Array.IndexOf (m_types, implementor);
+
+            InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
+            for (int i = 0; i < intfsTable.Rows.Count; i++) {
+                InterfaceImplRow intRow = intfsTable.Rows [i] as InterfaceImplRow;
+                if ((intRow.Class - 2) == index) {
+                    switch (intRow.Interface.TokenType) {
+                    case TokenType.TypeDef :
+                        TypeDefinition interf = m_types [intRow.Interface.RID - 2];
+                        interfaces [interf.FullName] = interf;
+                        break;
+                    case TokenType.TypeRef :
+                        //TODO: implement type ref reading
+                        break;
+                    case TokenType.TypeSpec :
+                        //TODO: implement this...
+                        break;
+                    }
+                }
+            }
+
+            interfs.Loaded = true;
         }
 
         public void Visit (IOverrideCollection meth)

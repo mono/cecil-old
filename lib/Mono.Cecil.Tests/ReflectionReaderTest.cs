@@ -62,6 +62,11 @@ namespace Mono.Cecil.Tests {
 
                     ITypeDefinition arrayEnum = def.Types ["System.Array/ArrayEnumerator"];
                     Console.WriteLine ("ArrayEnum dec type: " + arrayEnum.DeclaringType.FullName);
+
+                    Console.WriteLine ("Array implements :");
+                    foreach (IType interf in array.Interfaces) {
+                        Console.WriteLine (interf.FullName);
+                    }
                 }
             }
         }
