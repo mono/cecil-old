@@ -29,6 +29,9 @@ namespace Mono.Cecil.Implem {
         private TypeDefinition [] m_types;
         private TypeReference [] m_refs;
         private MethodDefinition [] m_meths;
+        private FieldDefinition [] m_fields;
+        private EventDefinition [] m_events;
+        private PropertyDefinition [] m_properties;
 
         private bool m_isCorlib;
 
@@ -266,6 +269,9 @@ namespace Mono.Cecil.Implem {
             int rid = GetRidForTypeDef (dec), next;
             EventTable evtTable = m_root.Streams.TablesHeap [typeof (EventTable)] as EventTable;
 
+            if (m_events == null)
+                m_events = new EventDefinition [evtTable.Rows.Count];
+
             EventMapTable evtMapTable = m_root.Streams.TablesHeap [typeof (EventMapTable)] as EventMapTable;
             EventMapRow thisRow = null, nextRow = null;
             for (int i = 0; i < evtMapTable.Rows.Count; i++) {
@@ -290,6 +296,7 @@ namespace Mono.Cecil.Implem {
                 EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
                                                             GetTypeDefOrRef (erow.EventType), erow.EventFlags);
                 events [edef.Name] = edef;
+                m_events [i - 1] = edef;
             }
 
             evts.Loaded = true;
@@ -309,6 +316,8 @@ namespace Mono.Cecil.Implem {
             int index = GetRidForTypeDef (dec) - 1, next;
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
             FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
+            if (m_fields == null)
+                m_fields = new FieldDefinition [fldTable.Rows.Count];
             if (index == tdefTable.Rows.Count - 1)
                 next = fldTable.Rows.Count + 1;
             else
@@ -320,6 +329,7 @@ namespace Mono.Cecil.Implem {
                 FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
                                                             dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
                 fields [fdef.Name] = fdef;
+                m_fields [i - 1] = fdef;
             }
 
             flds.Loaded = true;
@@ -338,6 +348,8 @@ namespace Mono.Cecil.Implem {
             TypeDefinition dec = props.Container as TypeDefinition;
             int rid = GetRidForTypeDef (dec), next;
             PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
+            if (m_properties == null)
+                m_properties = new PropertyDefinition [propsTable.Rows.Count];
 
             PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
             PropertyMapRow thisRow = null, nextRow = null;
@@ -364,6 +376,7 @@ namespace Mono.Cecil.Implem {
                 PropertyDefinition pdef = new PropertyDefinition (m_root.Streams.StringsHeap [prow.Name],
                                                                   dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
                 properties [pdef.Name] = pdef;
+                m_properties [i - 1] = pdef;
             }
 
             props.Loaded = true;
@@ -378,7 +391,22 @@ namespace Mono.Cecil.Implem {
             if (evt.Readed)
                 return;
 
-            // read semantic here
+            int index = Array.IndexOf (m_events, evt) + 1;
+
+            MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
+            for (int i = 0; i < semTable.Rows.Count; i++) {
+                MethodSemanticsRow semRow = semTable [i];
+                MethodDefinition semMeth = m_meths [semRow.Method - 1];
+                if (semRow.Association.TokenType == TokenType.Event && semRow.Association.RID == index) {
+                    semMeth.SemanticsAttributes = semRow.Semantics;
+                    if ((semRow.Semantics & MethodSemanticsAttributes.AddOn) != 0)
+                        evt.AddMethod = semMeth;
+                    else if ((semRow.Semantics & MethodSemanticsAttributes.Fire) != 0)
+                        evt.InvokeMethod = semMeth;
+                    else if ((semRow.Semantics & MethodSemanticsAttributes.RemoveOn) != 0)
+                        evt.RemoveMethod = semMeth;
+                }
+            }
 
             evt.Readed = true;
         }
@@ -388,7 +416,20 @@ namespace Mono.Cecil.Implem {
             if (prop.Readed)
                 return;
 
-            // read semantic here
+            int index = Array.IndexOf (m_properties, prop) + 1;
+
+            MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
+            for (int i = 0; i < semTable.Rows.Count; i++) {
+                MethodSemanticsRow semRow = semTable [i];
+                MethodDefinition semMeth = m_meths [semRow.Method - 1];
+                if (semRow.Association.TokenType == TokenType.Property && semRow.Association.RID == index) {
+                    semMeth.SemanticsAttributes = semRow.Semantics;
+                    if ((semRow.Semantics & MethodSemanticsAttributes.Getter) != 0)
+                        prop.GetMethod = semMeth;
+                    else if ((semRow.Semantics & MethodSemanticsAttributes.Setter) != 0)
+                        prop.SetMethod = semMeth;
+                }
+            }
 
             prop.Readed = true;
         }
