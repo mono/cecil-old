@@ -32,9 +32,14 @@ namespace Mono.Cecil.Implem {
             get { return m_codeReader; }
         }
 
-        public LazyLoader (ModuleDefinition module)
+        public LazyLoader (ModuleDefinition module, LoadingType lt)
         {
-            m_reflectReader = new ReflectionReader (module);
+            if (lt == LoadingType.Aggressive)
+                m_reflectReader = new AggressiveReflectionReader (module);
+            else if (lt == LoadingType.Lazy)
+                m_reflectReader = new LazyReflectionReader (module);
+            else
+                throw new ReflectionException ("Unknow loading type");
             m_codeReader = new CodeReader (m_reflectReader);
         }
     }

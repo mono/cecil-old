@@ -96,7 +96,7 @@ namespace Mono.Cecil.Implem {
             m_name = name;
             m_main = main;
             m_reader = reader;
-            m_loader = new LazyLoader (this);
+            m_loader = new LazyLoader (this, asm.LoadingType);
             m_mvid = new Guid ();
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);

@@ -17,6 +17,7 @@ namespace Mono.Cecil {
         IAssemblyNameDefinition Name { get; }
 
         IModuleDefinitionCollection Modules { get; }
+        IModuleDefinition MainModule { get; }
     }
 }
 

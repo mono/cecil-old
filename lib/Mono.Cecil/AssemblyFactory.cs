@@ -12,26 +12,28 @@
 
 namespace Mono.Cecil {
 
-    using System;
-    using System.IO;
-
     using Mono.Cecil.Binary;
-    using Mono.Cecil.Metadata;
     using Mono.Cecil.Implem;
 
     public class AssemblyFactory {
 
         private AssemblyFactory ()
-        {}
+        {
+        }
 
-        public static IAssemblyDefinition GetAssembly (string file)
+        public static IAssemblyDefinition GetAssembly (string file, LoadingType loadType)
         {
             ImageReader brv = new ImageReader (file);
             StructureReader srv = new StructureReader (brv);
-            AssemblyDefinition asm = new AssemblyDefinition (new AssemblyNameDefinition (), srv);
+            AssemblyDefinition asm = new AssemblyDefinition (new AssemblyNameDefinition (), srv, loadType);
 
             asm.Accept (srv);
             return asm;
+        }
+
+        public static IAssemblyDefinition GetAssembly (string file)
+        {
+            return GetAssembly (file, LoadingType.Lazy);
         }
     }
 }

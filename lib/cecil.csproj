@@ -63,6 +63,7 @@
         <Compile Include="Mono.Cecil.Cil\OpCodeType.cs"/>
         <Compile Include="Mono.Cecil.Cil\OperandType.cs"/>
         <Compile Include="Mono.Cecil.Cil\StackBehaviour.cs"/>
+        <Compile Include="Mono.Cecil.Implem\AggressiveReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\ArrayDimension.cs"/>
         <Compile Include="Mono.Cecil.Implem\ArrayDimensionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ArrayType.cs"/>
@@ -84,6 +85,7 @@
         <Compile Include="Mono.Cecil.Implem\InstructionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
+        <Compile Include="Mono.Cecil.Implem\LazyReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
         <Compile Include="Mono.Cecil.Implem\MemberDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodBody.cs"/>
@@ -265,6 +267,7 @@
         <Compile Include="Mono.Cecil\ITypeDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\ITypeReference.cs"/>
         <Compile Include="Mono.Cecil\ITypeReferenceCollection.cs"/>
+        <Compile Include="Mono.Cecil\LoadingType.cs"/>
         <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodAttributes.cs"/>
         <Compile Include="Mono.Cecil\MethodCallingConvention.cs"/>

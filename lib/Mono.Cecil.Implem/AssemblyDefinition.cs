@@ -23,6 +23,7 @@ namespace Mono.Cecil.Implem {
         private ModuleDefinitionCollection m_modules;
 
         private StructureReader m_sr;
+        private LoadingType m_loadingType;
 
         public IAssemblyNameDefinition Name {
             get { return m_asmName; }
@@ -32,11 +33,25 @@ namespace Mono.Cecil.Implem {
             get { return m_modules; }
         }
 
+        public IModuleDefinition MainModule {
+            get {
+                foreach (IModuleDefinition mod in m_modules)
+                    if (mod.Main)
+                        return mod;
+                throw new ReflectionException ("No main module defined");
+            }
+        }
+
         public StructureReader Reader {
             get { return m_sr; }
         }
 
-        public AssemblyDefinition (AssemblyNameDefinition name, StructureReader sr)
+        public LoadingType LoadingType {
+            get { return m_loadingType; }
+            set { m_loadingType = value; }
+        }
+
+        public AssemblyDefinition (AssemblyNameDefinition name, StructureReader sr, LoadingType lt)
         {
             if (sr == null)
                 throw new ArgumentException ("sr");
@@ -45,6 +60,7 @@ namespace Mono.Cecil.Implem {
 
             m_asmName = name;
             m_sr = sr;
+            m_loadingType = lt;
             m_modules = new ModuleDefinitionCollection (this);
         }
 
