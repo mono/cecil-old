@@ -14,6 +14,7 @@ namespace Mono.Cecil.Signatures {
 
     using System;
     using System.Collections;
+    using System.Collections.Specialized;
     using System.IO;
 
     using Mono.Cecil;
@@ -29,6 +30,7 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_propSigs;
         private IDictionary m_typeSpecs;
         private IDictionary m_methodsDefSigs;
+        private IDictionary m_methodsRefSigs;
         private IDictionary m_localVars;
         private IDictionary m_customAttribs;
 
@@ -37,11 +39,12 @@ namespace Mono.Cecil.Signatures {
             m_root = root;
             m_blobData = m_root.Streams.BlobHeap.Data;
 
-            m_fieldSigs = new Hashtable ();
-            m_propSigs = new Hashtable ();
-            m_customAttribs = new Hashtable ();
-            m_methodsDefSigs = new Hashtable ();
-            m_localVars = new Hashtable ();
+            m_fieldSigs = new HybridDictionary ();
+            m_propSigs = new HybridDictionary ();
+            m_customAttribs = new HybridDictionary ();
+            m_methodsDefSigs = new HybridDictionary ();
+            m_methodsRefSigs = new HybridDictionary ();
+            m_localVars = new HybridDictionary ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -77,11 +80,22 @@ namespace Mono.Cecil.Signatures {
             return m;
         }
 
+        public MethodSig GetMethodRefSig (uint index)
+        {
+            MethodRefSig m = m_methodsRefSigs [index] as MethodRefSig;
+            if (m == null) {
+                m = new MethodRefSig (index);
+                m.Accept (this);
+                m_methodsRefSigs [index] = m;
+            }
+            return m;
+        }
+
         public TypeSpec GetTypeSpec (uint index)
         {
             TypeSpec ts = null;
             if (m_typeSpecs == null)
-                m_typeSpecs = new Hashtable ();
+                m_typeSpecs = new HybridDictionary ();
             else
                 ts = m_typeSpecs [index] as TypeSpec;
 
@@ -112,6 +126,27 @@ namespace Mono.Cecil.Signatures {
                 m_customAttribs [index] = ca;
             }
             return ca;
+        }
+
+        public Signature GetMemberRefSig (TokenType tt, uint index)
+        {
+            int start, callconv;
+            Utilities.ReadCompressedInteger (m_blobData, (int) index, out start);
+            callconv = m_blobData [start];
+            bool field = (callconv & 0x7) != 0;
+            if (field)
+                return GetFieldSig (index);
+            switch (tt) {
+            case TokenType.TypeDef :
+            case TokenType.TypeRef :
+            case TokenType.TypeSpec :
+                return GetMethodRefSig (index);
+            case TokenType.ModuleRef :
+            case TokenType.Method :
+                return GetMethodDefSig (index);
+
+            }
+            return null;
         }
 
         public void Visit (MethodDefSig methodDef)
@@ -151,9 +186,9 @@ namespace Mono.Cecil.Signatures {
                 methodRef.MethCallConv |= MethodCallingConvention.VarArg;
             methodRef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
             methodRef.RetType = this.ReadRetType (m_blobData, start, out start);
-            methodRef.Parameters = this.ReadParameters (methodRef.ParamCount, m_blobData, start, out start, true);
-            methodRef.ParamsBeyondSentinel = this.ReadParameters (methodRef.ParamCount - methodRef.Parameters.Length,
-                                                                  m_blobData, start, out start, false);
+            int sentpos;
+            methodRef.Parameters = this.ReadParameters (methodRef.ParamCount, m_blobData, start, out sentpos);
+            methodRef.Sentinel = sentpos;
         }
 
         public void Visit (FieldSig field)
@@ -174,7 +209,7 @@ namespace Mono.Cecil.Signatures {
             property.Property = (property.CallingConvention & 0x8) != 0;
             property.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
             property.Type = this.ReadType (m_blobData, start, out start);
-            property.Parameters = this.ReadParameters (property.ParamCount, m_blobData, start, out start);
+            property.Parameters = this.ReadParameters (property.ParamCount, m_blobData, start);
         }
 
         public void Visit (LocalVarSig localvar)
@@ -253,31 +288,30 @@ namespace Mono.Cecil.Signatures {
             return rt;
         }
 
-        private Param [] ReadParameters (int length, byte [] data, int pos, out int start)
+        private Param [] ReadParameters (int length, byte [] data, int pos)
         {
-            return ReadParameters (length, data, pos, out start, false);
+            Param [] ret = new Param [length];
+            int start = pos;
+            for (int i = 0; i < length; i++)
+                ret [i] = this.ReadParameter (data, start, out start);
+            return ret;
         }
 
-        private Param [] ReadParameters (int length, byte [] data, int pos, out int start, bool sentinel)
+        private Param [] ReadParameters (int length, byte [] data, int pos, out int sentinelpos)
         {
-            Param [] ret;
-            start = pos;
+            Param [] ret = new Param [length];
+            int start = pos;
+            sentinelpos = -1;
 
-            if (sentinel) {
-                ArrayList parameters = new ArrayList ();
-                for (int i = 0; i < length; i++) {
-                    int buf = start;
-                    int head = Utilities.ReadCompressedInteger (data, start, out start);
-                    start = buf;
-                    if ((head & (int)ElementType.Sentinel) != 0)
-                        break;
-                    parameters [i] = this.ReadParameter (data, start, out start);
-                }
-                ret = parameters.ToArray (typeof (Param)) as Param [];
-            } else {
-                ret = new Param [length];
-                for (int i = 0; i < length; i++)
-                    ret [i] = this.ReadParameter (data, start, out start);
+            for (int i = 0; i < length; i++) {
+                int buf = start;
+                Utilities.ReadCompressedInteger (data, start, out start);
+                start = buf;
+
+                if ((start & (int) ElementType.Sentinel) != 0)
+                    sentinelpos = i;
+
+                ret [i] = this.ReadParameter (data, start, out start);
             }
 
             return ret;

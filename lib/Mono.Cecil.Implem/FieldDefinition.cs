@@ -12,8 +12,6 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-
     using Mono.Cecil;
 
     internal sealed class FieldDefinition : MemberDefinition, IFieldDefinition, IFieldLayoutInfo {

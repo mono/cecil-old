@@ -15,13 +15,13 @@ namespace Mono.Cecil {
     using Mono.Cecil.Cil;
 
     public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
+    }
+
+    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity {
 
         MethodAttributes Attributes { get; set; }
         MethodImplAttributes ImplAttributes { get; set; }
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
-    }
-
-    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity {
 
         IOverrideCollection Overrides { get; }
         IMethodBody Body { get; }

@@ -78,6 +78,7 @@
         <Compile Include="Mono.Cecil.Implem\ExceptionHandlerCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\FieldReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\FunctionPointerType.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
         <Compile Include="Mono.Cecil.Implem\IMethodsReader.cs"/>
@@ -92,6 +93,7 @@
         <Compile Include="Mono.Cecil.Implem\MethodBody.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MethodReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodReturnType.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinitionCollection.cs"/>

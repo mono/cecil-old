@@ -652,7 +652,7 @@
         <collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Loader.ReflectionReader" target="Mono.Cecil" />
         <collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
         <collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" indexed="true" target="Mono.Cecil" />
-        <collection type="IParameterDefinition" container="IMemberDefinition" visit="IReflection" indexed="true" target="Mono.Cecil" />
+        <collection type="IParameterDefinition" container="IMemberReference" visit="IReflection" indexed="true" target="Mono.Cecil" />
         <collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="((TypeDefinition) m_container.DeclaringType).Module.Loader.ReflectionReader" indexed="true" target="Mono.Cecil" />
         <collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" indexed="true" target="Mono.Cecil" />
         <collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="m_container.Module.Loader.ReflectionReader" target="Mono.Cecil" />

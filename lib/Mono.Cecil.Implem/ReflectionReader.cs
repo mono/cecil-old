@@ -211,6 +211,7 @@ namespace Mono.Cecil.Implem {
             // such as methods body or an override collection
             ReadAllFields ();
             ReadAllMethods ();
+            ReadMemberReferences ();
         }
 
         private void ReadAllFields ()
@@ -279,15 +280,7 @@ namespace Mono.Cecil.Implem {
                     for (int k = 0, l = (int) methRow.ParamList; k < msig.ParamCount; k++) {
                         ParamRow prow = paramTable [l - 1]; l++;
                         Param psig = msig.Parameters [k];
-
-                        ParameterDefinition pdef = new ParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, null);
-                        if (psig.ByRef)
-                            pdef.ParameterType = new ReferenceType (GetTypeRefFromSig (psig.Type));
-                        else if (psig.TypedByRef)
-                            pdef.ParameterType = SearchCoreType ("System.TypedReference");
-                        else
-                            pdef.ParameterType = GetTypeRefFromSig (psig.Type);
-                        mdef.Parameters.Add (pdef);
+                        mdef.Parameters.Add (BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name], prow.Sequence, prow.Flags, psig));
                     }
 
                     mdef.ReturnType = GetMethodReturnType (msig);
@@ -308,17 +301,34 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < mrefTable.Rows.Count; i++) {
                 MemberRefRow mrefRow = mrefTable [i];
 
-                IMemberReference owner = null;
+                MemberReference member = null;
+                Signature sig = m_sigReader.GetMemberRefSig (mrefRow.Class.TokenType, mrefRow.Signature);
                 switch (mrefRow.Class.TokenType) {
                 case TokenType.TypeDef :
                 case TokenType.TypeRef :
-                case TokenType.TypeSpec :
-                    owner = GetTypeDefOrRef (mrefRow.Class);
+                    if (sig is FieldSig) {
+                        FieldSig fs = sig as FieldSig;
+                        member = new FieldReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
+                                                     GetTypeRefFromSig (fs.Type));
+                    } else {
+                        MethodSig ms = sig as MethodSig;
+                        MethodReference methref = new MethodReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
+                                                      ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+                        methref.ReturnType = GetMethodReturnType (ms);
+                        for (int j = 0; j < ms.ParamCount; j++) {
+                            Param p = ms.Parameters [j];
+                            methref.Parameters.Add (BuildParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), p));
+                        }
+                        member = methref;
+                    }
                     break;
+                case TokenType.TypeSpec :
                 case TokenType.ModuleRef :
                 case TokenType.Method :
                     break; //TODO: implement that
                 }
+
+                m_memberRefs [i] = member;
             }
         }
 
@@ -396,6 +406,18 @@ namespace Mono.Cecil.Implem {
 
         public virtual void ReadMethods (PropertyDefinition prop)
         {
+        }
+
+        protected ParameterDefinition BuildParameterDefinition (string name, int sequence, ParamAttributes attrs, Param psig)
+        {
+            ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
+            if (psig.ByRef)
+                ret.ParameterType = new ReferenceType (GetTypeRefFromSig (psig.Type));
+            else if (psig.TypedByRef)
+                ret.ParameterType = SearchCoreType ("System.TypedReference");
+            else
+                ret.ParameterType = GetTypeRefFromSig (psig.Type);
+            return ret;
         }
 
         protected SecurityDeclaration BuildSecurityDeclaration (DeclSecurityRow dsRow)
