@@ -58,21 +58,25 @@ namespace Mono.Cecil.Tests {
                 }*/
 
                 if (def.Main) {
-                    ITypeDefinition array = def.Types ["System.Web.UI.Control"];
-                    Console.WriteLine ("Control base type: " + array.BaseType.FullName);
+                    ITypeDefinition ctrl = def.Types ["System.Web.UI.Control"];
+                    Console.WriteLine ("Control base type: " + ctrl.BaseType.FullName);
 
                     Console.WriteLine ("Control implements :");
-                    foreach (ITypeReference interf in array.Interfaces) {
+                    foreach (ITypeReference interf in ctrl.Interfaces) {
                         Console.WriteLine (interf.FullName);
                     }
 
-                    /*foreach (IFieldDefinition field in array.Fields) {
+                    foreach (IFieldDefinition field in ctrl.Fields) {
                         Console.WriteLine ("field: " + field.Name);
                     }
 
-                    foreach (IPropertyDefinition prop in array.Properties) {
+                    foreach (IPropertyDefinition prop in ctrl.Properties) {
                         Console.WriteLine ("property: " + prop.Name);
-                    }*/
+                    }
+
+                    foreach (IEventDefinition evt in ctrl.Events) {
+                        Console.WriteLine ("event: " + evt.Name);
+                    }
                 }
             }
         }

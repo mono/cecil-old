@@ -56,6 +56,26 @@ namespace Mono.Cecil.Implem {
             return index + 2;
         }
 
+        public ITypeReference GetTypeDefOrRef (MetadataToken token)
+        {
+            if (token.RID == 0)
+                return null;
+
+            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
+            switch (token.TokenType) {
+            case TokenType.TypeDef :
+                return GetTypeDefAt ((int) token.RID);
+            case TokenType.TypeRef :
+                return GetTypeRefAt ((int) token.RID);
+            case TokenType.TypeSpec :
+                TypeSpecRow tsRow = tsTable [(int) token.RID];
+                TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
+                return this.GetTypeRefFromSig (ts.Type);
+            default :
+                return null;
+            }
+        }
+
         public void Visit (ITypeDefinitionCollection types)
         {
             TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
@@ -106,26 +126,10 @@ namespace Mono.Cecil.Implem {
                 m_refs = new TypeReference [0];
 
             // set base types
-            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
                 TypeDefinition child = m_types [i - 1];
-
-                if (type.Extends.RID != 0) {
-                    switch (type.Extends.TokenType) {
-                    case TokenType.TypeDef :
-                        child.BaseType = GetTypeDefAt ((int) type.Extends.RID);
-                        break;
-                    case TokenType.TypeRef :
-                        child.BaseType = GetTypeRefAt ((int) type.Extends.RID);
-                        break;
-                    case TokenType.TypeSpec :
-                        TypeSpecRow tsRow = tsTable [(int) type.Extends.RID];
-                        TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
-                        child.BaseType = this.GetTypeRefFromSig (ts.Type);
-                        break;
-                    }
-                }
+                child.BaseType = GetTypeDefOrRef (type.Extends);
             }
 
             for (int i = 0; i < m_types.Length; i++) {
@@ -198,6 +202,46 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IEventDefinitionCollection events)
         {
+            EventDefinitionCollection evts = events as EventDefinitionCollection;
+            if (evts.Loaded)
+                return;
+
+            TypeDefinition dec = evts.Container as TypeDefinition;
+            int rid = GetRidForTypeDef (dec), next;
+            EventTable evtTable = m_root.Streams.TablesHeap [typeof (EventTable)] as EventTable;
+
+            EventMapTable evtMapTable = m_root.Streams.TablesHeap [typeof (EventMapTable)] as EventMapTable;
+            EventMapRow thisRow = null, nextRow = null;
+            for (int i = 0; i < evtMapTable.Rows.Count; i++) {
+                if (evtMapTable [i].Parent == rid) {
+                    thisRow = evtMapTable [i];
+                    if (i < evtMapTable.Rows.Count - 1)
+                        nextRow = evtMapTable [i + 1];
+                    break;
+                }
+            }
+
+            if (thisRow == null)
+                return;
+
+            if (nextRow == null)
+                next = evtTable.Rows.Count;
+            else
+                next = (int) nextRow.EventList;
+
+            for (int i = (int) thisRow.EventList; i < next; i++) {
+                EventRow erow = evtTable [i - 1];
+
+                EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
+                                                            GetTypeDefOrRef (erow.EventType), erow.EventFlags);
+
+                events [edef.Name] = edef;
+
+                // read invoke, add & remove methods
+                // should they be lazy loaded to avoid loading of methods ?
+            }
+
+            evts.Loaded = true;
         }
 
         public void Visit (IEventDefinition evt)
@@ -211,15 +255,15 @@ namespace Mono.Cecil.Implem {
                 return;
 
             TypeDefinition dec = flds.Container as TypeDefinition;
-            int rid = GetRidForTypeDef (dec), next;
+            int index = GetRidForTypeDef (dec) - 1, next;
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
             FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
-            if (rid == tdefTable.Rows.Count)
+            if (index == tdefTable.Rows.Count - 1)
                 next = fldTable.Rows.Count + 1;
             else
-                next = (int) (tdefTable [rid]).FieldList;
+                next = (int) (tdefTable [index + 1]).FieldList;
 
-            for (int i = (int) tdefTable [rid - 1].FieldList; i < next; i++) {
+            for (int i = (int) tdefTable [index].FieldList; i < next; i++) {
                 FieldRow frow = fldTable [i - 1];
 
                 FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
@@ -242,7 +286,7 @@ namespace Mono.Cecil.Implem {
                 return;
 
             TypeDefinition dec = props.Container as TypeDefinition;
-            int rid= GetRidForTypeDef (dec), next;
+            int rid = GetRidForTypeDef (dec), next;
             PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
 
             PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
@@ -250,9 +294,9 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < pmapTable.Rows.Count; i++) {
                 if (pmapTable [i].Parent == rid) {
                     thisRow = pmapTable [i];
-                    continue;
-                } else if (pmapTable [i].Parent == rid + 1) {
-                    nextRow = pmapTable [i];
+                    if (i < pmapTable.Rows.Count - 1)
+                        nextRow = pmapTable [i + 1];
+                    break;
                 }
             }
 
@@ -265,7 +309,7 @@ namespace Mono.Cecil.Implem {
                 next = (int) nextRow.PropertyList;
 
             for (int i = (int) thisRow.PropertyList; i < next; i++) {
-                PropertyRow prow = propsTable [i];
+                PropertyRow prow = propsTable [i - 1];
 
                 PropertySig psig = m_sigReader.GetPropSig (prow.Type);
 
