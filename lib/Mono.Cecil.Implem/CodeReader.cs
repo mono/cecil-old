@@ -160,7 +160,7 @@ namespace Mono.Cecil.Implem {
                     else if (IsToken (token, TokenType.TypeRef))
                         instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (token));
                     else if (IsToken (token, TokenType.TypeSpec))
-                    instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token));
+                        instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token));
                     else if (IsToken (token, TokenType.Field))
                         instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (token));
                     else if (IsToken (token, TokenType.Method))

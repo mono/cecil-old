@@ -199,6 +199,17 @@ namespace Mono.Cecil.Implem {
                     m_typeRefs [i] = t;
                     (m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;
                 }
+
+                // nested type ref
+
+                for (int i = 0; i < typesRef.Rows.Count; i++) {
+                    TypeRefRow type = typesRef [i];
+                    if (type.ResolutionScope.TokenType != TokenType.TypeRef)
+                        continue;
+
+                    TypeReference child = m_typeRefs [i];
+                    child.DeclaringType = GetTypeRefAt ((int) type.ResolutionScope.RID);
+                }
             } else
                 m_typeRefs = new TypeReference [0];
 
