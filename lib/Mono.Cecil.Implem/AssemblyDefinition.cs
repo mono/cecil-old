@@ -32,7 +32,7 @@ namespace Mono.Cecil.Implem {
             get { return m_modules; }
         }
 
-        public StructureReader StructureReader {
+        public StructureReader Reader {
             get { return m_sr; }
         }
 

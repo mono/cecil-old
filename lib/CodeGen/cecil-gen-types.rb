@@ -131,20 +131,24 @@ module Cecil
         attr_reader(:intf)
         attr_reader(:name)
         attr_reader(:container)
+        attr_reader(:container_impl)
         attr_reader(:visitable)
         attr_reader(:visitor)
         attr_reader(:visitThis)
         attr_reader(:lazyload)
+        attr_reader(:pathtoloader)
 
-        def initialize(type, container, visit, name, lazyload)
+        def initialize(type, container, visit, name, lazyload, pathtoloader)
             @type = type
             @intf = (name.nil? ? type : name) + "Collection"
             @name = @intf[1..@intf.length]
             @container = container
+            @container_impl = @container[1..@container.length]
             @visitable = visit + "Visitable"
             @visitor = visit + "Visitor"
             @visitThis = "Visit"
             @lazyload = lazyload
+            @pathtoloader = pathtoloader
         end
     end
 

@@ -15,6 +15,7 @@ namespace Mono.Cecil.Implem {
     using System;
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
 
     internal sealed class ModuleDefinition : IModuleDefinition {
@@ -29,6 +30,8 @@ namespace Mono.Cecil.Implem {
         private TypeDefinitionCollection m_types;
 
         private AssemblyDefinition m_asm;
+        private ImageReader m_reader;
+        private LazyLoader m_loader;
 
         public string Name {
             get { return m_name; }
@@ -65,10 +68,19 @@ namespace Mono.Cecil.Implem {
             get { return m_asm; }
         }
 
-        public ModuleDefinition (string name, AssemblyDefinition asm) : this (name, true, asm)
-        {}
+        public ImageReader Reader {
+            get { return m_reader; }
+        }
 
-        public ModuleDefinition (string name, bool main, AssemblyDefinition asm)
+        public LazyLoader Loader {
+            get { return m_loader; }
+        }
+
+        public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, true, asm, reader)
+        {
+        }
+
+        public ModuleDefinition (string name, bool main, AssemblyDefinition asm, ImageReader reader)
         {
             if (asm == null)
                 throw new ArgumentException ("asm");
@@ -78,6 +90,8 @@ namespace Mono.Cecil.Implem {
             m_asm = asm;
             m_name = name;
             m_main = main;
+            m_reader = reader;
+            m_loader = new LazyLoader (reader);
             m_mvid = new Guid ();
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);

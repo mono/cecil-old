@@ -16,33 +16,22 @@ namespace Mono.Cecil.Implem {
     using System.Collections;
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
 
     internal sealed class LazyLoader {
 
-        public static readonly LazyLoader Instance = new LazyLoader ();
+        private ReflectionReader m_reflectReader;
 
-        private ReflectionBasisReader m_basisReader;
-
-        public IReflectionVisitor BasisReader {
-            get { return m_basisReader; }
+        public IReflectionVisitor ReflectionReader {
+            get { return m_reflectReader; }
         }
 
-        public IReflectionVisitor CompleteReader {
-            get { throw new NotImplementedException (); }
-        }
+        //TODO: here will goes a code reader
 
-        private LazyLoader ()
+        public LazyLoader (ImageReader reader)
         {
-            m_basisReader = new ReflectionBasisReader ();
-        }
-
-        public int GetCount (ILazyLoadableCollection coll)
-        {
-            if (coll.Loaded)
-                return coll.Count;
-            //TODO: implement get count from ILazyLoadableCollection
-            throw new NotImplementedException ();
+            m_reflectReader = new ReflectionReader (reader);
         }
     }
 }

@@ -24,16 +24,15 @@ namespace Mono.Cecil.Binary {
 
         private BinaryReader m_binaryReader;
         private Image m_image;
+            
+        public Image Image {
+            get { return m_image; }
+        }
 
         public ImageReader (string file)
         {
             m_image = Image.GetImage (file);
             m_image.Accept (this);
-        }
-
-        public Image GetImage ()
-        {
-            return m_image;
         }
 
         public BinaryReader GetReader ()

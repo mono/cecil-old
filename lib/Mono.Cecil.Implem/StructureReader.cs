@@ -24,8 +24,8 @@ namespace Mono.Cecil.Implem {
 
         private ImageReader m_ir;
         private Image m_img;
-        private IDictionary m_modules; // IDictionary<string, Image>
-        private IAssemblyDefinition m_asmDef;
+        private AssemblyDefinition m_asmDef;
+        private ModuleDefinition m_module;
 
         public ImageReader ImageReader {
             get { return m_ir; }
@@ -38,13 +38,12 @@ namespace Mono.Cecil.Implem {
         public StructureReader (ImageReader ir)
         {
             m_ir = ir;
-            m_img = ir.GetImage ();
-            m_modules = new Hashtable ();
+            m_img = ir.Image;
         }
 
         public void Visit (IAssemblyDefinition asm)
         {
-            m_asmDef = asm;
+            m_asmDef = asm as AssemblyDefinition;
             AssemblyTable atable = m_img.MetadataRoot.Streams.TablesHeap [typeof(AssemblyTable)] as AssemblyTable;
             if (atable == null || atable.Rows == null || atable.Rows [0] == null)
                 throw new ReflectionException ("Can not create an AssemblyDefinition");
@@ -93,14 +92,6 @@ namespace Mono.Cecil.Implem {
                     EmbeddedResource er = new EmbeddedResource (
                         m_img.MetadataRoot.Streams.StringsHeap [mrr.Name], mrr.Flags);
 
-                    if (mrr.Implementation.RID == 0) {
-                        //er.Data = m_img.MetadataRoot.Streams.BlobHeap[mrr.Offset];
-                    } else if (mrr.Implementation.TokenType == TokenType.File) {
-                        // TODO resolve modules
-                    } else if (mrr.Implementation.TokenType == TokenType.AssemblyRef) {
-                        // TODO resolve assembly
-                    }
-
                     resources [er.Name] = er;
                 }
             }
@@ -137,14 +128,14 @@ namespace Mono.Cecil.Implem {
         public void Visit (IModuleDefinitionCollection modules)
         {
             ModuleTable mt = m_img.MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
-            if (mt == null || mt.Rows.Count != 1) {
+            if (mt == null || mt.Rows.Count != 1)
                 throw new ReflectionException ("Can not read main module");
-            }
+
             ModuleRow mr = mt.Rows [0] as ModuleRow;
             string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
-            ModuleDefinition main = new ModuleDefinition (name, true, m_asmDef as AssemblyDefinition);
+            ModuleDefinition main = new ModuleDefinition (name, true, m_asmDef, m_ir);
             main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
-            modules [name] = main;
+            modules [name] = m_module = main;
 
             FileTable ftable = m_img.MetadataRoot.Streams.TablesHeap [typeof(FileTable)] as FileTable;
             if (ftable != null && ftable.Rows.Count > 0) {
@@ -157,15 +148,14 @@ namespace Mono.Cecil.Implem {
 
                         try {
                             ImageReader module = new ImageReader (new FileInfo (name).FullName);
-                            mt = module.GetImage ().MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
+                            mt = module.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
                             if (mt == null || mt.Rows.Count != 1)
                                 throw new ReflectionException ("Can not read module : " + name);
 
                             mr = mt.Rows [0] as ModuleRow;
-                            ModuleDefinition modext = new ModuleDefinition (name, false, m_asmDef as AssemblyDefinition);
-                            modext.Mvid = module.GetImage ().MetadataRoot.Streams.GuidHeap [mr.Mvid];
+                            ModuleDefinition modext = new ModuleDefinition (name, false, m_asmDef, module);
+                            modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 
-                            m_modules [name] = module;
                             modules [name] = modext;
                         } catch (ReflectionException) {
                             throw;
@@ -183,21 +173,11 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IModuleReferenceCollection modules)
         {
-            IModuleDefinition cur = modules.Container;
-            Image current = m_img;
-            if (!cur.Main) {
-                foreach (string mod in m_modules.Keys) {
-                    if (mod == cur.Name) {
-                        current = m_modules [mod] as Image;
-                        break;
-                    }
-                }
-            }
-
-            ModuleRefTable mrt = current.MetadataRoot.Streams.TablesHeap [typeof(ModuleRefTable)] as ModuleRefTable;
+            ModuleDefinition mod = modules.Container as ModuleDefinition;
+            ModuleRefTable mrt = mod.Reader.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleRefTable)] as ModuleRefTable;
             if (mrt != null && mrt.Rows.Count > 0) {
                 foreach (ModuleRefRow mrr in mrt.Rows) {
-                    string name = current.MetadataRoot.Streams.StringsHeap [mrr.Name];
+                    string name = m_img.MetadataRoot.Streams.StringsHeap [mrr.Name];
                     modules [name] = new ModuleReference (name);
                 }
             }

@@ -23,7 +23,8 @@ namespace Mono.Cecil.Implem {
         private TypeAttributes m_attributes;
         private IType m_baseType;
 
-        private NestedTypesCollection m_nestedTypes;
+        private ModuleDefinition m_module;
+
         private InterfaceCollection m_interfaces;
         private MethodDefinitionCollection m_methods;
 
@@ -66,27 +67,32 @@ namespace Mono.Cecil.Implem {
             set { m_declaringType = value; }
         }
 
-        public INestedTypesCollection NestedTypes {
-            get { return m_nestedTypes; }
-        }
-
         public IInterfaceCollection Interfaces {
-            get { return m_interfaces; }
+            get {
+                if (m_interfaces == null)
+                    m_interfaces = new InterfaceCollection (this);
+                return m_interfaces;
+            }
         }
 
         public IMethodDefinitionCollection Methods {
-            get { return m_methods; }
+            get {
+                if (m_methods == null)
+                    m_methods = new MethodDefinitionCollection (this);
+                return m_methods;
+            }
         }
 
-        public TypeDefinition (string name, string ns, TypeAttributes attrs)
+        public ModuleDefinition Module {
+            get { return m_module; }
+        }
+
+        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module)
         {
             m_name = name;
             m_namespace = ns;
             m_attributes = attrs;
-
-            m_nestedTypes = new NestedTypesCollection (this);
-            m_interfaces = new InterfaceCollection (this);
-            m_methods = new MethodDefinitionCollection (this);
+            m_module = module;
         }
 
         public void Accept (IReflectionVisitor visitor)
@@ -95,6 +101,11 @@ namespace Mono.Cecil.Implem {
 
             m_interfaces.Accept (visitor);
             m_methods.Accept (visitor);
+        }
+
+        public override string ToString ()
+        {
+            return this.FullName;
         }
     }
 }

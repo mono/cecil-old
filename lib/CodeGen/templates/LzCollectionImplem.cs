@@ -24,13 +24,13 @@ namespace Mono.Cecil.Implem {
     internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
 
         private IDictionary m_items;
-        private <%=$cur_coll.container%> m_container;
-            
+        private <%=$cur_coll.container_impl%> m_container;
+
         private bool m_loaded;
 
         public <%=$cur_coll.type%> this [string name] {
             get {
-                LazyLoader.Instance.BasisReader.Visit (this);
+                <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
                 return m_items [name] as <%=$cur_coll.type%>;
             }
             set { m_items [name] = value; }
@@ -41,7 +41,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public int Count {
-            get { return LazyLoader.Instance.GetCount (this); }
+            get {
+                <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
+                return m_items.Count;
+            }
         }
 
         public bool IsSynchronized {
@@ -51,13 +54,13 @@ namespace Mono.Cecil.Implem {
         public object SyncRoot {
             get { return this; }
         }
-        
+
         public bool Loaded {
             get { return m_loaded; }
             set { m_loaded = value; }
         }
 
-        public <%=$cur_coll.name%> (<%=$cur_coll.container%> container)
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
         {
             m_container = container;
             m_items = new ListDictionary ();
@@ -80,13 +83,13 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            LazyLoader.Instance.BasisReader.Visit (this);
+            <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            LazyLoader.Instance.BasisReader.Visit (this);
+            <%=$cur_coll.pathtoloader%>.ReflectionReader.Visit (this);
             return m_items.Values.GetEnumerator ();
         }
 

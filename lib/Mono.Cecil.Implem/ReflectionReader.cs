@@ -15,9 +15,20 @@ namespace Mono.Cecil.Implem {
     using System;
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
 
-    internal sealed class ReflectionBasisReader : IReflectionVisitor {
+    internal sealed class ReflectionReader : IReflectionVisitor {
+
+        private ImageReader m_reader;
+        private MetadataRoot m_root;
+        private TypeDefinition [] m_types;
+
+        public ReflectionReader (ImageReader sr)
+        {
+            m_reader = sr;
+            m_root = sr.Image.MetadataRoot;
+        }
 
         public void Visit (ITypeDefinitionCollection types)
         {
@@ -27,44 +38,40 @@ namespace Mono.Cecil.Implem {
                 return;
 
             ModuleDefinition def = tdc.Container as ModuleDefinition;
-            StructureReader sr = def.Assembly.StructureReader;
 
-            MetadataRoot mr = sr.Image.MetadataRoot;
+            TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
 
-            TypeDefTable typesTable = mr.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-
-            TypeDefinition [] typeDefs = new TypeDefinition [typesTable.Rows.Count - 1];
+            m_types = new TypeDefinition [typesTable.Rows.Count - 1];
 
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
                 TypeDefinition t = new TypeDefinition (
-                    mr.Streams.StringsHeap [type.Name],
-                    mr.Streams.StringsHeap [type.Namespace],
-                    type.Flags);
+                    m_root.Streams.StringsHeap [type.Name],
+                    m_root.Streams.StringsHeap [type.Namespace],
+                    type.Flags, def);
 
-                typeDefs [i - 1] = t;
+                m_types [i - 1] = t;
             }
 
-            NestedClassTable nested = mr.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
+            NestedClassTable nested = m_root.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
 
             for (int i = 0; i < nested.Rows.Count; i++) {
                 NestedClassRow row = nested.Rows [i] as NestedClassRow;
 
-                TypeDefinition parent = typeDefs [row.EnclosingClass - 2];
-                TypeDefinition child = typeDefs [row.NestedClass - 2];
+                TypeDefinition parent = m_types [row.EnclosingClass - 2];
+                TypeDefinition child = m_types [row.NestedClass - 2];
 
                 child.DeclaringType = parent;
-                parent.NestedTypes [child.Name] = child;
             }
 
             for (int i = 1; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable.Rows [i] as TypeDefRow;
-                TypeDefinition child = typeDefs [i - 1];
+                TypeDefinition child = m_types [i - 1];
 
                 if (type.Extends.RID != 0) {
                     switch (type.Extends.TokenType) {
                     case TokenType.TypeDef :
-                        child.BaseType = typeDefs [type.Extends.RID - 2];
+                        child.BaseType = m_types [type.Extends.RID - 2];
                         break;
                     case TokenType.TypeRef :
                         //TODO: implement type ref reading
@@ -76,8 +83,8 @@ namespace Mono.Cecil.Implem {
                 }
             }
 
-            for (int i = 0; i < typeDefs.Length; i++) {
-                TypeDefinition type = typeDefs [i];
+            for (int i = 0; i < m_types.Length; i++) {
+                TypeDefinition type = m_types [i];
                 tdc [type.FullName] = type;
             }
 
@@ -89,10 +96,6 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (ITypeReference type)
-        {
-        }
-
-        public void Visit (INestedTypesCollection nestedTypes)
         {
         }
 
@@ -109,6 +112,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public void Visit (IMethodDefinitionCollection methods)
+        {
+        }
+
+        public void Visit (IMethodDefinition method)
         {
         }
     }

@@ -17,10 +17,10 @@ namespace Mono.Cecil {
         void Visit (ITypeDefinitionCollection types);
         void Visit (ITypeDefinition type);
         void Visit (ITypeReference type);
-        void Visit (INestedTypesCollection nestedTypes);
         void Visit (IInterfaceCollection interfaces);
         void Visit (IOverrideCollection meth);
         void Visit (IParameterDefinitionCollection parameters);
         void Visit (IMethodDefinitionCollection methods);
+        void Visit (IMethodDefinition method);
     }
 }

@@ -60,16 +60,17 @@
         <Compile Include="Mono.Cecil.Implem\InterfaceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\LazyLoader.cs"/>
         <Compile Include="Mono.Cecil.Implem\LinkedResource.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MemberDefinition.cs"/>
+        <Compile Include="Mono.Cecil.Implem\MethodDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\MethodDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReference.cs"/>
         <Compile Include="Mono.Cecil.Implem\ModuleReferenceCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\NestedTypesCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
-        <Compile Include="Mono.Cecil.Implem\ReflectionBasisReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ReflectionReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Resource.cs"/>
         <Compile Include="Mono.Cecil.Implem\ResourceCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\StructureReader.cs"/>
@@ -166,7 +167,6 @@
         <Compile Include="Mono.Cecil\IModuleDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil\IModuleReference.cs"/>
         <Compile Include="Mono.Cecil\IModuleReferenceCollection.cs"/>
-        <Compile Include="Mono.Cecil\INestedTypesCollection.cs"/>
         <Compile Include="Mono.Cecil\IOverrideCollection.cs"/>
         <Compile Include="Mono.Cecil\IParameter.cs"/>
         <Compile Include="Mono.Cecil\IParameterDefinitionCollection.cs"/>

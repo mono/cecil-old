@@ -33,7 +33,7 @@ namespace Mono.Cecil.Tests {
         {
             if (m_image == null) {
                 ImageReader ir = new ImageReader (@"D:\hello.exe");
-                m_image = ir.GetImage ();
+                m_image = ir.Image;
                 //m_image = Image.GetImage(@"D:\hello.exe");
                 //m_image = Image.GetImage(@"D:\a.netmodule");
                 //m_image = Image.GetImage(@"D:\b.exe");
