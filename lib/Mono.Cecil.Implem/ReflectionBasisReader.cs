@@ -81,7 +81,6 @@ namespace Mono.Cecil.Implem {
                 tdc [type.FullName] = type;
             }
 
-
             tdc.Loaded = true;
         }
 

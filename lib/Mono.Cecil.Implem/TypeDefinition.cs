@@ -54,6 +54,9 @@ namespace Mono.Cecil.Implem {
                 if (m_declaringType != null)
                     return string.Format ("{0}/{1}", m_declaringType.FullName, m_name);
 
+                if (m_namespace == null || m_namespace.Length == 0)
+                    return m_name;
+
                 return string.Format ("{0}.{1}", m_namespace, m_name);
             }
         }
