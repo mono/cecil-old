@@ -55,28 +55,11 @@ namespace Mono.Cecil.Implem {
                 methBody.CodeSize = br.ReadInt32 ();
                 methBody.LocalVarToken = br.ReadInt32 ();
                 body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
-                ReadLocalVars (methBody);
+                Visit (methBody);
                 ReadCilBody (methBody, br.ReadBytes (methBody.CodeSize));
                 if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
                     ReadExceptionHandlers (methBody, br);
                 return;
-            }
-        }
-
-        private void ReadLocalVars (MethodBody body)
-        {
-            MethodDefinition meth = body.Method as MethodDefinition;
-            StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
-            StandAloneSigRow sasRow = sasTable [(body.LocalVarToken & 0xffffff) - 1];
-            LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
-            for (int i = 0; i < sig.Count; i++) {
-                LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
-                ITypeReference varType = m_reflectReader.GetTypeRefFromSig(lv.Type);
-                if (lv.ByRef)
-                    varType = new ReferenceType (varType);
-                if ((lv.Constraint & Constraint.Pinned) != 0)
-                    varType = new PinnedType (varType);
-                body.Variables.Add (new VariableDefinition (string.Concat ("V_", i), meth, varType));
             }
         }
 
@@ -108,6 +91,20 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IVariableDefinitionCollection variables)
         {
+            MethodBody body = variables.Container as MethodBody;
+            MethodDefinition meth = body.Method as MethodDefinition;
+            StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
+            StandAloneSigRow sasRow = sasTable [(body.LocalVarToken & 0xffffff) - 1];
+            LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
+            for (int i = 0; i < sig.Count; i++) {
+                LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
+                ITypeReference varType = m_reflectReader.GetTypeRefFromSig(lv.Type);
+                if (lv.ByRef)
+                    varType = new ReferenceType (varType);
+                if ((lv.Constraint & Constraint.Pinned) != 0)
+                    varType = new PinnedType (varType);
+                variables.Add (new VariableDefinition (string.Concat ("V_", i), meth, varType));
+            }
         }
 
         public void Visit (IVariableDefinition var)
