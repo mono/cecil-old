@@ -27,6 +27,7 @@
         <type name="Mono.Cecil.MethodAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.MethodImplAttributes" underlying="ushort" size="2" />
         <type name="Mono.Cecil.MethodSemanticsAttributes" underlying="ushort" size="2" />
+        <type name="Mono.Cecil.SecurityAction" underlying="short" size="2" />
         <type name="Mono.Cecil.Signatures.ElementType" underlying="ushort" size="2" />
         <type name="Mono.Cecil.Metadata.MetadataToken" underlying="uint" size="4" />
     </types>
@@ -195,7 +196,7 @@
                 <column name="Value" type="uint" target="BlobHeap" />
             </table>
             <table name="DeclSecurity" rid="0x0e">
-                <column name="Action" type="short" />
+                <column name="Action" type="Mono.Cecil.SecurityAction" />
                 <column name="Parent" type="Mono.Cecil.Metadata.MetadataToken" target="HasDeclSecurity" />
                 <column name="PermissionSet" type="uint" target="BlobHeap" />
             </table>

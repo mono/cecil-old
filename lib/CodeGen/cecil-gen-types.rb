@@ -59,6 +59,10 @@ module Cecil
                     "new DataDirectory (\n                new RVA (" + inst + ".ReadUInt32 ()),\n                " + inst + ".ReadUInt32 ())"
                 else
                     "(" + @objtype.name + ")" + case @objtype.underlying
+                        when "int"
+                            inst + ".ReadInt32 ()";
+                        when "short"
+                            inst + ".ReadInt16 ()";
                         when "ushort"
                             inst + ".ReadUInt16 ()";
                         when "uint"

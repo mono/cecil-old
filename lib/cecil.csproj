@@ -276,6 +276,7 @@
         <Compile Include="Mono.Cecil\ParamAttributes.cs"/>
         <Compile Include="Mono.Cecil\PInvokeAttributes.cs"/>
         <Compile Include="Mono.Cecil\PropertyAttributes.cs"/>
+        <Compile Include="Mono.Cecil\SecurityAction.cs"/>
         <Compile Include="Mono.Cecil\TypeAttributes.cs"/>
     </ItemGroup>
     <ItemGroup/>
