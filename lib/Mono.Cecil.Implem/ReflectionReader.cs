@@ -35,6 +35,27 @@ namespace Mono.Cecil.Implem {
             m_sigReader = new SignatureReader (m_root);
         }
 
+        public TypeDefinition GetTypeDefAt (int rid)
+        {
+            // 0 based - <Module> type
+            return m_types [rid - 2];
+        }
+
+        public TypeReference GetTypeRefAt (int rid)
+        {
+            // 0 based
+            return m_refs [rid - 1];
+        }
+
+        public int GetRidForTypeDef (TypeDefinition typeDef)
+        {
+            int index = Array.IndexOf (m_types, typeDef);
+            if (index == -1)
+                return 0;
+
+            return index + 2;
+        }
+
         public void Visit (ITypeDefinitionCollection types)
         {
             TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
@@ -61,8 +82,8 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < nested.Rows.Count; i++) {
                 NestedClassRow row = nested [i];
 
-                TypeDefinition parent = m_types [row.EnclosingClass - 2];
-                TypeDefinition child = m_types [row.NestedClass - 2];
+                TypeDefinition parent = GetTypeDefAt ((int) row.EnclosingClass);
+                TypeDefinition child = GetTypeDefAt ((int) row.NestedClass);
 
                 child.DeclaringType = parent;
             }
@@ -93,10 +114,10 @@ namespace Mono.Cecil.Implem {
                 if (type.Extends.RID != 0) {
                     switch (type.Extends.TokenType) {
                     case TokenType.TypeDef :
-                        child.BaseType = m_types [type.Extends.RID - 2];
+                        child.BaseType = GetTypeDefAt ((int) type.Extends.RID);
                         break;
                     case TokenType.TypeRef :
-                        child.BaseType = m_refs [type.Extends.RID - 1];
+                        child.BaseType = GetTypeRefAt ((int) type.Extends.RID);
                         break;
                     case TokenType.TypeSpec :
                         TypeSpecRow tsRow = tsTable [(int) type.Extends.RID];
@@ -131,20 +152,20 @@ namespace Mono.Cecil.Implem {
 
             TypeDefinition implementor = interfaces.Container as TypeDefinition;
 
-            int index = Array.IndexOf (m_types, implementor);
+            int rid = GetRidForTypeDef (implementor);
 
             InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
             TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intRow = intfsTable [i];
-                if ((intRow.Class - 2) == index) {
+                if (intRow.Class == rid) {
                     ITypeReference interf = null;
                     switch (intRow.Interface.TokenType) {
                     case TokenType.TypeDef :
-                        interf = m_types [intRow.Interface.RID - 2];
+                        interf = GetTypeDefAt ((int) intRow.Interface.RID);
                         break;
                     case TokenType.TypeRef :
-                        interf = m_refs [intRow.Interface.RID - 1];
+                        interf = GetTypeRefAt ((int) intRow.Interface.RID);
                         break;
                     case TokenType.TypeSpec :
                         TypeSpecRow tsRow = tsTable [(int) intRow.Interface.RID];
@@ -190,15 +211,15 @@ namespace Mono.Cecil.Implem {
                 return;
 
             TypeDefinition dec = flds.Container as TypeDefinition;
-            int index = Array.IndexOf (m_types, dec), next;
+            int rid = GetRidForTypeDef (dec), next;
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
             FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
-            if ((index + 2) == (tdefTable.Rows.Count))
+            if (rid == tdefTable.Rows.Count)
                 next = fldTable.Rows.Count + 1;
             else
-                next = (int) (tdefTable [index + 2]).FieldList;
+                next = (int) (tdefTable [rid]).FieldList;
 
-            for (int i = (int) tdefTable [index + 1].FieldList; i < next; i++) {
+            for (int i = (int) tdefTable [rid - 1].FieldList; i < next; i++) {
                 FieldRow frow = fldTable [i - 1];
 
                 FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
@@ -221,16 +242,16 @@ namespace Mono.Cecil.Implem {
                 return;
 
             TypeDefinition dec = props.Container as TypeDefinition;
-            int index = Array.IndexOf (m_types, dec), next;
+            int rid= GetRidForTypeDef (dec), next;
             PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
 
             PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
             PropertyMapRow thisRow = null, nextRow = null;
             for (int i = 0; i < pmapTable.Rows.Count; i++) {
-                if (pmapTable [i].Parent == index + 2) {
+                if (pmapTable [i].Parent == rid) {
                     thisRow = pmapTable [i];
                     continue;
-                } else if (pmapTable [i].Parent == index + 3) {
+                } else if (pmapTable [i].Parent == rid + 1) {
                     nextRow = pmapTable [i];
                 }
             }
@@ -272,10 +293,10 @@ namespace Mono.Cecil.Implem {
                 CLASS c = t as CLASS;
                 switch (c.Type.TokenType) {
                 case TokenType.TypeDef :
-                    ret = m_types [c.Type.RID - 2];
+                    ret = GetTypeDefAt ((int) c.Type.RID);
                     break;
                 case TokenType.TypeRef :
-                    ret = m_refs [c.Type.RID - 1];
+                    ret = GetTypeRefAt ((int) c.Type.RID);
                     break;
                 }
                 break;
@@ -283,10 +304,10 @@ namespace Mono.Cecil.Implem {
                 VALUETYPE vt = t as VALUETYPE;
                 switch (vt.Type.TokenType) {
                 case TokenType.TypeDef :
-                    ret = m_types [vt.Type.RID - 2];
+                    ret = GetTypeDefAt ((int) vt.Type.RID);
                     break;
                 case TokenType.TypeRef :
-                    ret = m_refs [vt.Type.RID - 1];
+                    ret = GetTypeRefAt ((int) vt.Type.RID);
                     break;
                 }
                 break;
