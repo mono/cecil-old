@@ -170,6 +170,7 @@
         <Compile Include="Mono.Cecil.Signatures\Ptr.cs"/>
         <Compile Include="Mono.Cecil.Signatures\RetType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\Signature.cs"/>
+        <Compile Include="Mono.Cecil.Signatures\SignatureReader.cs"/>
         <Compile Include="Mono.Cecil.Signatures\SigType.cs"/>
         <Compile Include="Mono.Cecil.Signatures\SzArray.cs"/>
         <Compile Include="Mono.Cecil.Signatures\ValueType.cs"/>

@@ -18,6 +18,5 @@ namespace Mono.Cecil.Signatures {
         void Visit (FieldSig field);
         void Visit (PropertySig property);
         void Visit (LocalVarSig localvar);
-        void Visit (LocalVarSig.LocalVarSigType localvarType);
     }
 }

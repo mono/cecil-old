@@ -17,10 +17,26 @@ namespace Mono.Cecil.Signatures {
     internal abstract class Signature : ISignatureVisitable {
 
         private uint m_callingConvention;
+        private uint m_blobIndex;
 
         public uint CallingConvention {
             get { return m_callingConvention; }
             set { m_callingConvention = value; }
+        }
+
+        public uint BlobIndex {
+            get { return m_blobIndex; }
+            set { m_blobIndex = value; }
+        }
+
+        public Signature (uint blobIndex)
+        {
+            m_blobIndex = blobIndex;
+        }
+
+        public Signature ()
+        {
+            m_blobIndex = 0;
         }
 
         public abstract void Accept (ISignatureVisitor visitor);

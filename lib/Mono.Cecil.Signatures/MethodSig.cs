@@ -17,7 +17,7 @@ namespace Mono.Cecil.Signatures {
         private bool m_hasThis;
         private bool m_explicitThis;
         private CallingConvention m_callConv;
-        private uint m_paramCount;
+        private int m_paramCount;
         private RetType m_retType;
         private Param [] m_parameters;
 
@@ -31,12 +31,12 @@ namespace Mono.Cecil.Signatures {
             set { m_explicitThis = value; }
         }
 
-        public CallingConvention CallCon {
+        public CallingConvention CallConv {
             get { return m_callConv; }
             set { m_callConv = value; }
         }
 
-        public uint ParamCount {
+        public int ParamCount {
             get { return m_paramCount; }
             set { m_paramCount = value; }
         }
@@ -49,6 +49,14 @@ namespace Mono.Cecil.Signatures {
         public Param [] Parameters {
             get { return m_parameters; }
             set { m_parameters = value; }
+        }
+
+        public MethodSig () : base ()
+        {
+        }
+
+        public MethodSig (uint blobIndex) : base (blobIndex)
+        {
         }
     }
 }

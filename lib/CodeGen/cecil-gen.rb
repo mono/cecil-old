@@ -141,7 +141,7 @@ $tables.each { |table|
 }
 $cur_table = nil
 
-[ "MetadataTableReader.cs", "MetadataRowReader.cs", "CodedIndex.cs" ].each { |file|
+[ "MetadataTableReader.cs", "MetadataRowReader.cs", "CodedIndex.cs", "Utilities.cs" ].each { |file|
     cecil_compile("../Mono.Cecil.Metadata/" + file, "./templates/" + file)
 }
 

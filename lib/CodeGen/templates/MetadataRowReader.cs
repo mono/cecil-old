@@ -78,31 +78,6 @@ namespace Mono.Cecil.Metadata {
             }
         }
 
-        private MetadataToken GetMetadataToken (CodedIndex cidx, uint data)
-        {
-            uint rid = 0;
-            switch (cidx) {
-<% $coded_indexes.each { |ci| %>            case CodedIndex.<%=ci.name%> :
-                rid = data >> <%=ci.size%>;
-                switch (data & <%=(2 ** ci.size.to_i - 1).to_s%>) {
-<%    ci.tables.each { |tbl|
-        name = tbl.name
-        if (name == "DeclSecurity")
-            name = "Permission"
-        elsif (name == "StandAloneSig")
-            name = "Signature"
-        end
-%>                case <%=tbl.tag%> :
-                    return new MetadataToken (TokenType.<%=name%>, rid);
-<%    }
-%>                default :
-                    throw new MetadataFormatException("Non valid tag for <%=ci.name%>");
-                }
-<% } %>            default :
-                throw new MetadataFormatException ("Non valid CodedIndex");
-            }
-        }
-
         public void Visit (RowCollection coll) {}
 
 <% $tables.each { |table| %>        public void Visit (<%=table.row_name%> row)
@@ -117,7 +92,7 @@ namespace Mono.Cecil.Metadata {
 <% elsif (col.target == "GuidHeap")
 %>            row.<%=col.property_name%> = ReadByIndexSize (m_metadataRoot.Streams.GuidHeap.IndexSize);
 <% elsif (col.type == "MetadataToken")
-%>            row.<%=col.property_name%> = GetMetadataToken (CodedIndex.<%=col.target%>,
+%>            row.<%=col.property_name%> = Utilities.GetMetadataToken (CodedIndex.<%=col.target%>,
                 ReadByIndexSize (GetCodedIndexSize (CodedIndex.<%=col.target%>)));
 <% else
 %>            row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (typeof (<%=col.target%>Table)));

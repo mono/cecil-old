@@ -15,7 +15,7 @@ namespace Mono.Cecil.Signatures {
     internal sealed class PropertySig : Signature {
 
         private bool m_property;
-        private uint m_paramCount;
+        private int m_paramCount;
         private SigType m_type;
         private Param [] m_parameters;
 
@@ -24,7 +24,7 @@ namespace Mono.Cecil.Signatures {
             set { m_property = value; }
         }
 
-        public uint ParamCount {
+        public int ParamCount {
             get { return m_paramCount; }
             set { m_paramCount = value; }
         }
@@ -37,6 +37,14 @@ namespace Mono.Cecil.Signatures {
         public Param [] Parameters {
             get { return m_parameters; }
             set { m_parameters = value; }
+        }
+
+        public PropertySig () : base ()
+        {
+        }
+
+        public PropertySig (uint blobIndex) : base (blobIndex)
+        {
         }
 
         public override void Accept (ISignatureVisitor visitor)

@@ -27,6 +27,14 @@ namespace Mono.Cecil.Signatures {
             set { m_paramsBeyondSentinel = value; }
         }
 
+        public MethodRefSig () : base ()
+        {
+        }
+
+        public MethodRefSig (uint blobIndex) : base (blobIndex)
+        {
+        }
+
         public override void Accept (ISignatureVisitor visitor)
         {
             visitor.Visit (this);

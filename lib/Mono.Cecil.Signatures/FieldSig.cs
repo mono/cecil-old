@@ -33,6 +33,14 @@ namespace Mono.Cecil.Signatures {
             set { m_type = value; }
         }
 
+        public FieldSig () : base ()
+        {
+        }
+
+        public FieldSig (uint blobIndex) : base (blobIndex)
+        {
+        }
+
         public override void Accept (ISignatureVisitor visitor)
         {
             visitor.Visit (this);

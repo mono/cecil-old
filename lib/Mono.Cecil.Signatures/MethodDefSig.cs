@@ -14,6 +14,14 @@ namespace Mono.Cecil.Signatures {
 
     internal sealed class MethodDefSig : MethodSig {
 
+        public MethodDefSig () : base ()
+        {
+        }
+
+        public MethodDefSig (uint blobIndex) : base (blobIndex)
+        {
+        }
+
         public override void Accept (ISignatureVisitor visitor)
         {
             visitor.Visit (this);

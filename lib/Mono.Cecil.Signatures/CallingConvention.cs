@@ -12,6 +12,9 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using System;
+
+    [Flags]
     internal enum CallingConvention : byte {
         Default  = 0x0,
         C        = 0x1,
