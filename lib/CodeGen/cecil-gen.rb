@@ -75,10 +75,12 @@ def cecil_compile(file, template)
 
     ext = ".tmp"
     
-    File.open(file + ext, File::CREAT|File::WRONLY) { |f|
-        $> = f
-        eval($compiler.compile_file(File.open(template)))
-        $> = $stdout
+    File.open(file + ext, File::CREAT|File::WRONLY) { |temp_file|
+        $> = temp_file
+        File.open(template) { |tpl|
+            eval($compiler.compile_file(tpl))
+        }
+        $> = STDOUT
     }
     
     save = Array.new
@@ -94,6 +96,7 @@ def cecil_compile(file, template)
     if (save[0] != save[1]) then
         File.delete(file) if File.exists?(file)
         File.rename(file + ext, file)
+        puts("#Modified: #{file}")
     else
         File.delete(file + ext)
     end
