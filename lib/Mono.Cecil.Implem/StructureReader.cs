@@ -55,6 +55,7 @@ namespace Mono.Cecil.Implem {
             name.Version = new Version(
                 arow.MajorVersion, arow.MinorVersion,
                 arow.BuildNumber, arow.RevisionNumber);
+            name.HashAlgorithm = arow.HashAlgId;
         }
 
         public void Visit(IAssemblyNameReferenceCollection names){

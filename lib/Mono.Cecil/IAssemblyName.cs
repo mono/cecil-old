@@ -22,6 +22,7 @@ namespace Mono.Cecil {
         Version Version { get; set; }
         byte[] PublicKey { get; set; }
         byte[] PublicKeyToken { get; set; }
+        AssemblyHashAlgorithm HashAlgorithm { get; set; }
     }
 
     public interface IAssemblyNameReference : IAssemblyName {}
