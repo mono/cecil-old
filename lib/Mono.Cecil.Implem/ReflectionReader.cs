@@ -277,7 +277,7 @@ namespace Mono.Cecil.Implem {
         {
             TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
 
-            if (!m_root.Streams.TablesHeap.HasTable(typeof (MethodTable))) {
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodTable))) {
                 m_meths = new MethodDefinition [0];
                 return;
             }
@@ -285,7 +285,10 @@ namespace Mono.Cecil.Implem {
             MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
             ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
             m_meths = new MethodDefinition [methTable.Rows.Count];
-            m_parameters = new ParameterDefinition [paramTable.Rows.Count];
+            if (!m_root.Streams.TablesHeap.HasTable (typeof (ParamTable)))
+                m_parameters = new ParameterDefinition [0];
+            else
+                m_parameters = new ParameterDefinition [paramTable.Rows.Count];
 
             for (int i = 0; i < m_typeDefs.Length; i++) {
                 TypeDefinition dec = m_typeDefs [i];
@@ -305,7 +308,7 @@ namespace Mono.Cecil.Implem {
                                                                   msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
                     int prms;
                     if (j == methTable.Rows.Count)
-                        prms = paramTable.Rows.Count + 1;
+                        prms = m_parameters.Length + 1;
                     else
                         prms = (int) (methTable [j]).ParamList;
 
