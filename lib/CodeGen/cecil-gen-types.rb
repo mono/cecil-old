@@ -146,9 +146,11 @@ module Cecil
             @name = @intf[1..@intf.length]
             @container = container
             @container_impl = @container[1..@container.length]
-            @visitable = visit + "Visitable"
-            @visitor = visit + "Visitor"
-            @visitThis = "Visit"
+            if (!visit.nil?) then
+                @visitable = visit + "Visitable"
+                @visitor = visit + "Visitor"
+                @visitThis = "Visit"
+            end
             @lazyload = lazyload
             @pathtoloader = pathtoloader
             @target = target

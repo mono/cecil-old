@@ -241,7 +241,7 @@ namespace Mono.Cecil.Implem {
             if (m_meths == null)
                 m_meths = new MethodDefinition [methTable.Rows.Count];
 
-            for (int i = (int) tdefTable [index].FieldList; i < next; i++) {
+            for (int i = (int) tdefTable [index].MethodList; i < next; i++) {
                 MethodRow methRow = methTable [i - 1];
 
                 // write here :)
@@ -394,75 +394,65 @@ namespace Mono.Cecil.Implem {
 
         public ITypeReference GetTypeRefFromSig (SigType t)
         {
-            ITypeReference ret = null;
             switch (t.ElementType) {
             case ElementType.Class :
                 CLASS c = t as CLASS;
-                ret = GetTypeDefOrRef (c.Type);
-                break;
+                return GetTypeDefOrRef (c.Type);
             case ElementType.ValueType :
                 VALUETYPE vt = t as VALUETYPE;
-                ret = GetTypeDefOrRef (vt.Type);
-                break;
+                return GetTypeDefOrRef (vt.Type);
             case ElementType.String :
-                ret = SearchCoreType ("System.String");
-                break;
+                return SearchCoreType ("System.String");
             case ElementType.Object :
-                ret = SearchCoreType ("System.Object");
-                break;
+                return SearchCoreType ("System.Object");
             case ElementType.Void :
-                ret = SearchCoreType ("System.Void");
-                break;
+                return SearchCoreType ("System.Void");
             case ElementType.Boolean :
-                ret = SearchCoreType ("System.Boolean");
-                break;
+                return SearchCoreType ("System.Boolean");
             case ElementType.Char :
-                ret = SearchCoreType ("System.Char");
-                break;
+                return SearchCoreType ("System.Char");
             case ElementType.I1 :
-                ret = SearchCoreType ("System.SByte");
-                break;
+                return SearchCoreType ("System.SByte");
             case ElementType.U1 :
-                ret = SearchCoreType ("System.Byte");
-                break;
+                return SearchCoreType ("System.Byte");
             case ElementType.I2 :
-                ret = SearchCoreType ("System.Int16");
-                break;
+                return SearchCoreType ("System.Int16");
             case ElementType.U2 :
-                ret = SearchCoreType ("System.UInt16");
-                break;
+                return SearchCoreType ("System.UInt16");
             case ElementType.I4 :
-                ret = SearchCoreType ("System.Int32");
-                break;
+                return SearchCoreType ("System.Int32");
             case ElementType.U4 :
-                ret = SearchCoreType ("System.UInt32");
-                break;
+                return SearchCoreType ("System.UInt32");
             case ElementType.I8 :
-                ret = SearchCoreType ("System.Int64");
-                break;
+                return SearchCoreType ("System.Int64");
             case ElementType.U8 :
-                ret = SearchCoreType ("System.UInt64");
-                break;
+                return SearchCoreType ("System.UInt64");
             case ElementType.R4 :
-                ret = SearchCoreType ("System.Single");
-                break;
+                return SearchCoreType ("System.Single");
             case ElementType.R8 :
-                ret = SearchCoreType ("System.Double");
-                break;
+                return SearchCoreType ("System.Double");
             case ElementType.I :
-                ret = SearchCoreType ("System.IntPtr");
-                break;
+                return SearchCoreType ("System.IntPtr");
             case ElementType.U :
-                ret = SearchCoreType ("System.UIntPtr");
-                break;
+                return SearchCoreType ("System.UIntPtr");
             case ElementType.Array :
+                ARRAY ary = t as ARRAY;
+                return new ArrayType (GetTypeRefFromSig (ary.Type), ary.Shape);
             case ElementType.SzArray :
-            case ElementType.FnPtr :
+                SZARRAY szary = t as SZARRAY;
+                return new ArrayType (GetTypeRefFromSig (szary.Type));
             case ElementType.Ptr :
-                //TODO: implement that
-                break;
+                PTR pointer = t as PTR;
+                return new Pointer (GetTypeRefFromSig (pointer.PtrType));
+            case ElementType.FnPtr :
+                FNPTR funcptr = t as FNPTR;
+                // houston ...
+                // not funny thing here, because methods sigs does not provides informations
+                // on the type defining the method. So if the method is not already loaded, we'll
+                // have to walk on every methods of every type until the good method is found
+                return null;
             }
-            return ret;
+            return null;
         }
     }
 }

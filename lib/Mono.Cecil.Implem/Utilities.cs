@@ -30,9 +30,27 @@ namespace Mono.Cecil.Implem {
             return string.Concat (t.Namespace, ".", t.Name);
         }
 
+        private static string MemberSignature (IMemberReference member)
+        {
+            return string.Concat (TypeFullName(member.DeclaringType), "::", member.Name);
+        }
+
         public static string FieldSignature (IFieldReference f)
         {
-            return string.Concat (f.DeclaringType.FullName, "::", f.Name);
+            return Utilities.MemberSignature (f);
+        }
+
+        public static string MethodSignature (IMethodReference meth)
+        {
+            StringBuilder sb = new StringBuilder ();
+            sb.Append (MemberSignature (meth));
+            sb.Append ("(");
+            for (int i = 0; i < meth.Parameters.Count; i++) {
+                sb.Append (TypeFullName(meth.Parameters [i].ParameterType));
+                if (i < meth.Parameters.Count - 1)
+                    sb.Append (",");
+            }
+            sb.Append (")");
         }
     }
 }

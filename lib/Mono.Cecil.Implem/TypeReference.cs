@@ -16,28 +16,28 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal sealed class TypeReference : ITypeReference {
+    internal class TypeReference : ITypeReference {
 
         private string m_name;
         private string m_namespace;
         private ITypeReference m_decType;
 
-        public string Name {
+        public virtual string Name {
             get { return m_name; }
             set { m_name = value; }
         }
 
-        public string Namespace {
+        public virtual string Namespace {
             get { return m_namespace; }
             set { m_namespace = value; }
         }
 
-        public ITypeReference DeclaringType {
+        public virtual ITypeReference DeclaringType {
             get { return m_decType; }
             set { m_decType = value; }
         }
 
-        public String FullName {
+        public virtual string FullName {
             get { return Utilities.TypeFullName (this); }
         }
 
@@ -47,7 +47,7 @@ namespace Mono.Cecil.Implem {
             m_namespace = ns;
         }
 
-        public void Accept (IReflectionVisitor visitor)
+        public virtual void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
         }

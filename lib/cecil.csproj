@@ -63,6 +63,9 @@
         <Compile Include="Mono.Cecil.Cil\OpCodeType.cs"/>
         <Compile Include="Mono.Cecil.Cil\OperandType.cs"/>
         <Compile Include="Mono.Cecil.Cil\StackBehaviour.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ArrayDimension.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ArrayDimensionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\ArrayType.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyName.cs"/>
         <Compile Include="Mono.Cecil.Implem\AssemblyNameReferenceCollection.cs"/>
@@ -74,6 +77,7 @@
         <Compile Include="Mono.Cecil.Implem\ExceptionHandlerCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\FieldDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\FunctionPointer.cs"/>
         <Compile Include="Mono.Cecil.Implem\ILazyLoadable.cs"/>
         <Compile Include="Mono.Cecil.Implem\IMethodsReader.cs"/>
         <Compile Include="Mono.Cecil.Implem\Instruction.cs"/>
@@ -92,6 +96,7 @@
         <Compile Include="Mono.Cecil.Implem\OverrideCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\ParameterDefinitionCollection.cs"/>
+        <Compile Include="Mono.Cecil.Implem\Pointer.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinition.cs"/>
         <Compile Include="Mono.Cecil.Implem\PropertyDefinitionCollection.cs"/>
         <Compile Include="Mono.Cecil.Implem\ReflectionException.cs"/>
@@ -211,7 +216,9 @@
         <Compile Include="Mono.Cecil\FieldAttributes.cs"/>
         <Compile Include="Mono.Cecil\FileAttributes.cs"/>
         <Compile Include="Mono.Cecil\GenericParamAttributes.cs"/>
-        <Compile Include="Mono.Cecil\IArray.cs"/>
+        <Compile Include="Mono.Cecil\IArrayDimension.cs"/>
+        <Compile Include="Mono.Cecil\IArrayDimensionCollection.cs"/>
+        <Compile Include="Mono.Cecil\IArrayType.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyDefinition.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyName.cs"/>
         <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs"/>

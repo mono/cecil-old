@@ -12,8 +12,9 @@
 
 namespace Mono.Cecil {
 
-    public interface IArray : ITypeReference {
-        // dimensions
-        ITypeReference ElementsType { get; }
+    public interface IArrayDimension {
+
+        int LowerBound { get; set; }
+        int UpperBound { get; set; }
     }
 }

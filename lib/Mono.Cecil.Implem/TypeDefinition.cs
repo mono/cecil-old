@@ -16,10 +16,8 @@ namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
 
-    internal sealed class TypeDefinition : ITypeDefinition {
+    internal sealed class TypeDefinition : TypeReference, ITypeDefinition {
 
-        private string m_name;
-        private string m_namespace;
         private TypeAttributes m_attributes;
         private ITypeReference m_baseType;
 
@@ -31,18 +29,6 @@ namespace Mono.Cecil.Implem {
         private EventDefinitionCollection m_events;
         private PropertyDefinitionCollection m_properties;
 
-        private ITypeReference m_declaringType;
-
-        public string Name {
-            get { return m_name; }
-            set { m_name = value; }
-        }
-
-        public string Namespace {
-            get { return m_namespace; }
-            set { m_namespace = value; }
-        }
-
         public TypeAttributes Attributes {
             get { return m_attributes; }
             set { m_attributes = value; }
@@ -51,15 +37,6 @@ namespace Mono.Cecil.Implem {
         public ITypeReference BaseType {
             get { return m_baseType; }
             set { m_baseType = value; }
-        }
-
-        public string FullName {
-            get { return Utilities.TypeFullName (this); }
-        }
-
-        public ITypeReference DeclaringType {
-            get { return m_declaringType; }
-            set { m_declaringType = value; }
         }
 
         public IInterfaceCollection Interfaces {
@@ -106,15 +83,13 @@ namespace Mono.Cecil.Implem {
             get { return m_module; }
         }
 
-        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module)
+        public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) : base (name, ns)
         {
-            m_name = name;
-            m_namespace = ns;
             m_attributes = attrs;
             m_module = module;
         }
 
-        public void Accept (IReflectionVisitor visitor)
+        public override void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
 

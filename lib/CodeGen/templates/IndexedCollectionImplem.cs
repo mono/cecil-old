@@ -88,28 +88,23 @@ namespace Mono.Cecil.Implem {
             m_items.Remove (index);
         }
 
-        public void Remove (<%=$cur_coll.type%> value)
-        {
-            m_items.Remove (value);
-        }
-
         public void CopyTo (Array ary, int index)
         {
-            m_items.Values.CopyTo (ary, index);
+            m_items.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            return m_items.Values.GetEnumerator ();
+            return m_items.GetEnumerator ();
         }
-
+<% if !$cur_coll.visitor.nil? then %>
         public void Accept (<%=$cur_coll.visitor%> visitor)
         {
             visitor.<%=$cur_coll.visitThis%> (this);
             <%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-            m_items.Values.CopyTo (items, 0);
+            m_items.CopyTo (items, 0);
             for (int i = 0; i < items.Length; i++)
                 items [i].Accept (visitor);
         }
-    }
+<% end %>    }
 }

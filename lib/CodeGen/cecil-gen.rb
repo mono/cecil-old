@@ -71,7 +71,7 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
 
 doc.root.each_element("/cecil/collections//collection") { |node|
     $colls.push(Cecil::Collection.new(node.attribute("type").value, node.attribute("container").value,
-        node.attribute("visit").value,
+        (node.attribute("visit").nil? ? nil : node.attribute("visit").value),
         (node.attribute("name").nil? ? nil : node.attribute("name").value),
         (node.attribute("lazyload").nil? ? false : node.attribute("lazyload").value == "true"),
         (node.attribute("pathtoloader").nil? ? nil : node.attribute("pathtoloader").value),

@@ -78,7 +78,7 @@ namespace Mono.Cecil.Implem {
         {
             return m_items.Values.GetEnumerator ();
         }
-
+<% if !$cur_coll.visitor.nil? then %>
         public void Accept (<%=$cur_coll.visitor%> visitor)
         {
             visitor.<%=$cur_coll.visitThis%> (this);
@@ -87,5 +87,5 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < items.Length; i++)
                 items [i].Accept (visitor);
         }
-    }
+<% end %>    }
 }
