@@ -6,7 +6,7 @@
         <ProductVersion>8.0.30703</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
         <ProjectGuid>{77D65EDE-C545-4538-971E-1BC861474493}</ProjectGuid>
-        <OutputType>Exe</OutputType>
+        <OutputType>Library</OutputType>
         <RootNamespace>cecil</RootNamespace>
         <AssemblyName>cecil</AssemblyName>
         <WarningLevel>4</WarningLevel>
