@@ -174,8 +174,8 @@ namespace Mono.Cecil.Implem {
                 this.Visit (type.Methods);
             }
 
-            //ReadClassLayoutInfos ();
-            //ReadFieldLayoutInfos ();
+            ReadClassLayoutInfos ();
+            ReadFieldLayoutInfos ();
 
             tdc.Loaded = true;
         }
