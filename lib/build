@@ -1,1 +1,1 @@
-/devel/bin/mcs -t:library -out:./bin/Mono.Cecil.dll Mono.Cecil/*.cs Mono.Cecil.Binary/*.cs Mono.Cecil.Cil/*.cs Mono.Cecil.Implem/*.cs Mono.Cecil.Metadata/*.cs
+mcs -g -t:library -out:./bin/Mono.Cecil.dll Mono.Cecil/*.cs Mono.Cecil.Binary/*.cs Mono.Cecil.Cil/*.cs Mono.Cecil.Implem/*.cs Mono.Cecil.Metadata/*.cs
