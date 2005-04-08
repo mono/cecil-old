@@ -14,7 +14,7 @@ namespace Mono.Cecil.Metadata {
 
     using System;
 
-    [System.AttributeUsage (System.AttributeTargets.Class)]
+    [AttributeUsage (AttributeTargets.Class)]
     internal class RIdAttribute : Attribute {
 
         private int m_id;
