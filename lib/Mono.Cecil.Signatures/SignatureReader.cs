@@ -135,8 +135,7 @@ namespace Mono.Cecil.Signatures {
             int start, callconv;
             Utilities.ReadCompressedInteger (m_blobData, (int) index, out start);
             callconv = m_blobData [start];
-            bool field = (callconv & 0x7) != 0;
-            if (field)
+            if ((callconv & 0x7) != 0) // field ?
                 return GetFieldSig (index);
             switch (tt) {
             case TokenType.TypeDef :
@@ -467,6 +466,7 @@ namespace Mono.Cecil.Signatures {
             if (array) {
                 fa.SzArray = true;
                 fa.NumElem = br.ReadUInt32 ();
+
                 if (fa.NumElem == 0 || fa.NumElem == 0xffffffff) {
                     fa.Elems = new CustomAttrib.Elem [0];
                     return fa;
@@ -546,7 +546,9 @@ namespace Mono.Cecil.Signatures {
         {
             CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
-            if (elemType.FullName == "System.Object") {
+            string elemName = string.Concat (elemType.Namespace, '.', elemType.Name);
+
+            if (elemName == "System.Object") {
                 ElementType elementType = (ElementType) br.ReadByte ();
                 elem = ReadElem (data, br, elementType);
                 elem.String = elem.Simple = elem.Type = false;
@@ -557,7 +559,7 @@ namespace Mono.Cecil.Signatures {
 
             elem.ElemType = elemType;
 
-            if (elemType.FullName == "System.Type" || elemType.FullName == "System.String") {
+            if (elemName == "System.Type" || elemName == "System.String") {
                 switch (elemType.FullName) {
                 case "System.String" :
                     elem.String = true;
@@ -583,7 +585,7 @@ namespace Mono.Cecil.Signatures {
 
             elem.String = elem.Type = elem.BoxedValueType = false;
 
-            switch (elemType.FullName) {
+            switch (elemName) {
             case "System.Boolean" :
                 elem.Value = br.ReadByte () == 1;
                 break;
