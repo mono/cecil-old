@@ -13,7 +13,7 @@
 namespace Mono.Cecil {
 
     public enum NativeType {
-        Boolean = 0x02,
+        BOOLEAN = 0x02,
         I1 = 0x03,
         U1 = 0x04,
         I2 = 0x05,
@@ -28,6 +28,28 @@ namespace Mono.Cecil {
         INT = 0x1f,
         UINT = 0x20,
         FUNC = 0x26,
-        ARRAY = 0x2a
+        ARRAY = 0x2a,
+
+        // Msft specific
+        CURRENCY = 0x0f,
+        BSTR = 0x13,
+        LPWSTR = 0x15,
+        LPTSTR = 0x16,
+        FIXEDSYSSTRING = 0x17,
+        IUNKNOWN = 0x19,
+        IDISPATCH = 0x1a,
+        STRUCT = 0x1b,
+        INTF = 0x1c,
+        SAFEARRAY = 0x1d,
+        FIXEDARRAY = 0x1e,
+        BYVALSTR = 0x22,
+        ANSIBSTR = 0x23,
+        TBSTR = 0x24,
+        VARIANTBOOL = 0x25,
+        ASANY = 0x28,
+        LPSTRUCT = 0x2b,
+        CUSTOMMARSHALER = 0x2c,
+        ERROR = 0x2d,
+        MAX = 0x50
     }
 }

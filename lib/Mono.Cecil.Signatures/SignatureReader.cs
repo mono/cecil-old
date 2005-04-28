@@ -749,13 +749,44 @@ namespace Mono.Cecil.Signatures {
         {
             int start;
             MarshalSpec ms = new MarshalSpec ((NativeType) Utilities.ReadCompressedInteger (data, 0, out start));
-            if (ms.IsArray) {
-                ms.SpecArray.NativeInstrinsic = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
-                ms.SpecArray.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
-                ms.SpecArray.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
-                ms.SpecArray.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+            switch (ms.NativeInstrinsic) {
+            case NativeType.ARRAY:
+                MarshalSpec.Array ar = new MarshalSpec.Array ();
+                ar.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+                ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
+                ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
+                ar.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+                ms.Spec = ar;
+                break;
+            case NativeType.CUSTOMMARSHALER:
+                MarshalSpec.CustomMarshaler cm = new MarshalSpec.CustomMarshaler ();
+                cm.Guid = ReadUTF8String (data, start, out start);
+                cm.UnmanagedType = ReadUTF8String (data, start, out start);
+                cm.ManagedType = ReadUTF8String (data, start, out start);
+                cm.Cookie = ReadUTF8String (data, start, out start);
+                ms.Spec = cm;
+                break;
+            case NativeType.FIXEDARRAY:
+                MarshalSpec.FixedArray fa = new MarshalSpec.FixedArray ();
+                fa.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+                fa.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+                ms.Spec = fa;
+                break;
+            case NativeType.SAFEARRAY:
+                MarshalSpec.SafeArray sa = new MarshalSpec.SafeArray ();
+                sa.ArrayElemType = (VariantType) Utilities.ReadCompressedInteger (data, start, out start);
+                ms.Spec = sa;
+                break;
             }
             return ms;
+        }
+
+        private string ReadUTF8String (byte [] data, int pos, out int start)
+        {
+            int length = Utilities.ReadCompressedInteger (data, pos, out start);
+            byte [] str = new byte [length];
+            Buffer.BlockCopy (data, start, str, 0, length);
+            return Encoding.UTF8.GetString (str);
         }
     }
 }

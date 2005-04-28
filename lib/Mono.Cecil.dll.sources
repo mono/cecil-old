@@ -28,6 +28,7 @@
 ./Mono.Cecil/IInterfaceCollection.cs
 ./Mono.Cecil/ILinkedResource.cs
 ./Mono.Cecil/ImageFormatException.cs
+./Mono.Cecil/IMarshalSpec.cs
 ./Mono.Cecil/IMember.cs
 ./Mono.Cecil/IMetadataScope.cs
 ./Mono.Cecil/IMethod.cs
@@ -77,6 +78,7 @@
 ./Mono.Cecil/ReflectionException.cs
 ./Mono.Cecil/SecurityAction.cs
 ./Mono.Cecil/TypeAttributes.cs
+./Mono.Cecil/VariantType.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
 ./Mono.Cecil.Binary/DataDirectory.cs
 ./Mono.Cecil.Binary/DOSHeader.cs

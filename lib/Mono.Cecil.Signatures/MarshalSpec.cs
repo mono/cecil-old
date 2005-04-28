@@ -12,36 +12,45 @@
 
 namespace Mono.Cecil.Signatures {
 
+    using System;
+
     using Mono.Cecil;
 
     internal class MarshalSpec {
 
         public NativeType NativeInstrinsic;
-        public MarshalSpecArray SpecArray;
-
-        public bool IsArray {
-            get { return this.NativeInstrinsic == NativeType.ARRAY; }
-        }
+        public ValueType Spec;
 
         public MarshalSpec (NativeType nt)
         {
             this.NativeInstrinsic = nt;
         }
 
-        internal struct MarshalSpecArray {
+        internal struct Array {
 
-            public NativeType NativeInstrinsic;
+            public NativeType ArrayElemType;
             public int ParamNum;
             public int ElemMult;
             public int NumElem;
+        }
 
-            public MarshalSpecArray (NativeType nt, int paramNum, int elemMult, int numElem)
-            {
-                this.NativeInstrinsic = nt;
-                this.ParamNum = paramNum;
-                this.ElemMult = elemMult;
-                this.NumElem = numElem;
-            }
+        internal struct CustomMarshaler {
+
+            public string Guid;
+            public string UnmanagedType;
+            public string ManagedType;
+            public string Cookie;
+        }
+
+        internal struct FixedArray {
+
+            public int NumElem;
+            public NativeType ArrayElemType;
+        }
+
+        internal struct SafeArray {
+
+            public VariantType ArrayElemType;
         }
     }
 }
