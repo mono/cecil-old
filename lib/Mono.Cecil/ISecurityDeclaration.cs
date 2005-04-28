@@ -18,5 +18,7 @@ namespace Mono.Cecil {
 
         SecurityAction Action { get; set; }
         PermissionSet PermissionSet { get; set; }
+
+        byte [] GetAsByteArray ();
     }
 }

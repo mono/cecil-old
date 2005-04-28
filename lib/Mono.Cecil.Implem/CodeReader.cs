@@ -178,8 +178,8 @@ namespace Mono.Cecil.Implem {
 
         private void ReadSection (MethodBody body, BinaryReader br)
         {
-            if (br.BaseStream.Position % 4 != 0)
-                br.BaseStream.Position += (4 - (br.BaseStream.Position % 4));
+            br.BaseStream.Position += 3;
+            br.BaseStream.Position &= ~3;
 
             byte flags = br.ReadByte ();
             if ((flags & (byte) MethodDataSection.FatFormat) == 0) {
@@ -194,14 +194,14 @@ namespace Mono.Cecil.Implem {
                     eh.HandlerOffset = br.ReadInt16 ();
                     eh.HandlerLength = br.ReadByte ();
                     switch (eh.Type) {
-                    case (ExceptionHandlerType.Catch) :
+                    case ExceptionHandlerType.Catch :
                         int token = br.ReadInt32 ();
                         if (IsToken (token, TokenType.TypeDef))
                             eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
                         else
                             eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
                         break;
-                    case (ExceptionHandlerType.Filter) :
+                    case ExceptionHandlerType.Filter :
                         eh.FilterOffset = br.ReadInt32 ();
                         break;
                     default :
@@ -223,14 +223,14 @@ namespace Mono.Cecil.Implem {
                     eh.HandlerOffset = br.ReadInt32 ();
                     eh.HandlerLength = br.ReadInt32 ();
                     switch (eh.Type) {
-                    case (ExceptionHandlerType.Catch) :
+                    case ExceptionHandlerType.Catch :
                         int token = br.ReadInt32 ();
                         if (IsToken (token, TokenType.TypeDef))
                             eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
                         else
                             eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
                         break;
-                    case (ExceptionHandlerType.Filter) :
+                    case ExceptionHandlerType.Filter :
                         eh.FilterOffset = br.ReadInt32 ();
                         break;
                     default :

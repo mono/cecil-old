@@ -13,10 +13,11 @@
 namespace Mono.Cecil.Implem {
 
     using System.Security;
+    using System.Text;
 
     using Mono.Cecil;
 
-    internal sealed class SecurityDeclaration :  ISecurityDeclaration {
+    internal sealed class SecurityDeclaration : ISecurityDeclaration {
 
         private SecurityAction m_action;
         private PermissionSet m_permSet;
@@ -34,6 +35,13 @@ namespace Mono.Cecil.Implem {
         public SecurityDeclaration (SecurityAction action)
         {
             m_action = action;
+        }
+
+        public byte [] GetAsByteArray ()
+        {
+            if (m_permSet != null)
+                return Encoding.Unicode.GetBytes (m_permSet.ToXml ().ToString ());
+            return new byte [0];
         }
 
         public void Accept (IReflectionVisitor visitor)

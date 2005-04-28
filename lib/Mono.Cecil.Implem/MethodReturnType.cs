@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Implem {
 
+    using System.Reflection;
+
     using Mono.Cecil;
 
     internal sealed class MethodReturnType : IMethodReturnType {
@@ -42,6 +44,19 @@ namespace Mono.Cecil.Implem {
                     m_customAttrOwner = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
                 return m_customAttrOwner.CustomAttributes;
             }
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            (m_customAttrOwner.CustomAttributes as CustomAttributeCollection).Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        {
+            //TODO: implement this
+            return null;
         }
 
         public MethodReturnType (ITypeReference retType)

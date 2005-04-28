@@ -14,16 +14,11 @@ namespace Mono.Cecil.Metadata {
 
     using System;
     using System.Collections;
-    using System.Collections.Specialized;
     using System.Text;
 
     public class UserStringsHeap : MetadataHeap {
 
         private readonly IDictionary m_strings;
-
-        public IDictionary Strings {
-            get { return m_strings; }
-        }
 
         public string this [int offset] {
             get {
@@ -40,7 +35,7 @@ namespace Mono.Cecil.Metadata {
 
         internal UserStringsHeap (MetadataStream stream) : base(stream, "#US")
         {
-            m_strings = new HybridDictionary ();
+            m_strings = new Hashtable ();
         }
 
         private string ReadStringAt (int offset)

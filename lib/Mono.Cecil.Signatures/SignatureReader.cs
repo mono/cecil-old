@@ -149,6 +149,12 @@ namespace Mono.Cecil.Signatures {
             return null;
         }
 
+        public MarshalSpec GetMarshalSpec (uint index)
+        {
+            byte [] ms = m_root.Streams.BlobHeap.Read (index);
+            return ReadMarshalSpec (ms);
+        }
+
         public void Visit (MethodDefSig methodDef)
         {
             int start;
@@ -737,6 +743,19 @@ namespace Mono.Cecil.Signatures {
 
             elem.Simple = true;
             return elem;
+        }
+
+        private MarshalSpec ReadMarshalSpec (byte [] data)
+        {
+            int start;
+            MarshalSpec ms = new MarshalSpec ((NativeType) Utilities.ReadCompressedInteger (data, 0, out start));
+            if (ms.IsArray) {
+                ms.SpecArray.NativeInstrinsic = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+                ms.SpecArray.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
+                ms.SpecArray.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
+                ms.SpecArray.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+            }
+            return ms;
         }
     }
 }

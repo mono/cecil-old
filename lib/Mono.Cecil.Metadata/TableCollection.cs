@@ -18,7 +18,7 @@ namespace Mono.Cecil.Metadata {
     public class TableCollection : ICollection, IMetadataTableVisitable {
 
         private IList m_items;
-        private IDictionary m_index;
+        private Hashtable m_index;
 
         private TablesHeap m_heap;
 
@@ -30,8 +30,8 @@ namespace Mono.Cecil.Metadata {
         public IMetadataTable this [ushort id]
         {
             get {
-                if (m_index [id] != null)
-                    return m_items [(int)m_index [id]] as IMetadataTable;
+                if (m_index.ContainsKey (id))
+                    return m_items [(int) m_index [id]] as IMetadataTable;
 
                 for (int i = 0; i < m_items.Count; i++) {
                     IMetadataTable table = m_items [i] as IMetadataTable;

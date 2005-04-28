@@ -12,8 +12,6 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-
     using Mono.Cecil;
 
     internal sealed class PropertyDefinition : MemberDefinition, IPropertyDefinition {
@@ -91,6 +89,19 @@ namespace Mono.Cecil.Implem {
         {
             m_propertyType = propType;
             m_attributes = attrs;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
+        {
+            //TODO: implement this
+            return null;
         }
 
         public void Accept (IReflectionVisitor visitor)

@@ -82,6 +82,12 @@ namespace Mono.Cecil.Implem {
             m_propTypes [propertyName] = type;
         }
 
+        public byte [] GetAsByteArray ()
+        {
+            //TODO: implement this using a SignatureWriter
+            return new byte [0];
+        }
+
         public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);

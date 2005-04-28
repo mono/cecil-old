@@ -106,6 +106,19 @@ namespace Mono.Cecil.Implem {
             m_implAttrs = implAttrs;
         }
 
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
+        {
+            //TODO: implement this
+            return null;
+        }
+
         public override void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);

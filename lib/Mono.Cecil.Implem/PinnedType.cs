@@ -35,7 +35,7 @@ namespace Mono.Cecil.Implem {
             get { return m_pinnedType.Scope; }
         }
 
-        public ITypeReference Type {
+        public ITypeReference ElementType {
             get { return m_pinnedType; }
             set { m_pinnedType = value; }
         }

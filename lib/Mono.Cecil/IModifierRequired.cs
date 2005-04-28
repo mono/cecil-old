@@ -12,9 +12,6 @@
 
 namespace Mono.Cecil {
 
-    public interface IEmbeddedResource :  IResource {
-
-        byte [] Data { get; set; }
+    public interface IModifierRequired : IModifierType {
     }
 }
-

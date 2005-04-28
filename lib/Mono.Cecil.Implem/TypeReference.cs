@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.Reflection;
 
     using Mono.Cecil;
 
@@ -86,6 +87,19 @@ namespace Mono.Cecil.Implem {
         {
             m_module = module;
             m_scope = scope;
+        }
+
+        public virtual ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public virtual ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        {
+            //TODO: implement this
+            return null;
         }
 
         public virtual void Accept (IReflectionVisitor visitor)

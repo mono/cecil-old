@@ -9,6 +9,7 @@
  * See LICENSE.MIT file for more details
  *
  *****************************************************************************/
+
 namespace Mono.Cecil {
 
     using System;

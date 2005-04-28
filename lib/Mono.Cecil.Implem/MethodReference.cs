@@ -14,6 +14,7 @@ namespace Mono.Cecil.Implem {
 
     using System;
     using System.Text;
+    using System.Reflection;
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;

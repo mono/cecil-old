@@ -53,7 +53,7 @@ namespace Mono.Cecil.Metadata {
 
         public sealed class MetadataRootHeader : IHeader, IMetadataVisitable {
 
-            public const uint StandardSignature = 0x424A5342;
+            public const uint StandardSignature = 0x424a5342;
 
             public uint Signature;
             public ushort MinorVersion;

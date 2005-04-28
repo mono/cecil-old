@@ -287,6 +287,10 @@
                 <column name="Method" type="uint" target="Method" />
                 <column name="Association" type="Mono.Cecil.Metadata.MetadataToken" target="HasSemantics" />
             </table>
+            <table name="MethodSpec" rid="0x2b">
+                <column name="Method" type="Mono.Cecil.Metadata.MetadataToken" target="MethodDefOrRef" />
+                <column name="Instantiation" type="uint" target="BlobHeap" />
+            </table>
             <table name="Module" rid="0x00">
                 <column name="Generation" type="ushort" />
                 <column name="Name" type="uint" target="StringsHeap" />

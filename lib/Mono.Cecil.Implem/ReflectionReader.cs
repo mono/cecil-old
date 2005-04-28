@@ -68,8 +68,7 @@ namespace Mono.Cecil.Implem {
 
         public TypeDefinition GetTypeDefAt (int rid)
         {
-            // 0 based - <Module> type
-            return m_typeDefs [rid - 2];
+            return m_typeDefs [rid - 1];
         }
 
         public TypeReference GetTypeRefAt (int rid)
@@ -101,19 +100,13 @@ namespace Mono.Cecil.Implem {
         public int GetRidForMethodDef (MethodDefinition meth)
         {
             int index = Array.IndexOf (m_meths, meth);
-            if (index == -1)
-                return 0;
-
-            return index + 1;
+            return index == - 1 ? 0 : index + 1;
         }
 
         public int GetRidForTypeDef (TypeDefinition typeDef)
         {
             int index = Array.IndexOf (m_typeDefs, typeDef);
-            if (index == -1)
-                return 0;
-
-            return index + 2;
+            return index == - 1 ? 0 : index + 1;
         }
 
         public ITypeReference GetTypeDefOrRef (MetadataToken token)
@@ -159,15 +152,15 @@ namespace Mono.Cecil.Implem {
 
             // type def reading
             TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-            m_typeDefs = new TypeDefinition [typesTable.Rows.Count - 1];
-            for (int i = 1; i < typesTable.Rows.Count; i++) {
+            m_typeDefs = new TypeDefinition [typesTable.Rows.Count];
+            for (int i = 0; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
                 TypeDefinition t = new TypeDefinition (
                     m_root.Streams.StringsHeap [type.Name],
                     m_root.Streams.StringsHeap [type.Namespace],
                     type.Flags, def);
 
-                m_typeDefs [i - 1] = t;
+                m_typeDefs [i] = t;
             }
 
             // nested types
@@ -279,7 +272,7 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < m_typeDefs.Length; i++) {
                 TypeDefinition dec = m_typeDefs [i];
 
-                int index = i + 1, next; // avoid a call to GetRidForTypeDef
+                int index = i, next;
 
                 if (index == tdefTable.Rows.Count - 1)
                     next = fldTable.Rows.Count + 1;
@@ -321,7 +314,7 @@ namespace Mono.Cecil.Implem {
             for (int i = 0; i < m_typeDefs.Length; i++) {
                 TypeDefinition dec = m_typeDefs [i];
 
-                int index = i + 1, next; // avoid a call to GetRidForTypeDef
+                int index = i, next;
 
                 if (index == tdefTable.Rows.Count - 1)
                     next = methTable.Rows.Count + 1;
@@ -558,12 +551,10 @@ namespace Mono.Cecil.Implem {
 
         private object GetFixedArgValue (CustomAttrib.FixedArg fa)
         {
-            // instead of returning the values, should get the type string to get an ityperef
             if (fa.SzArray) {
                 object [] vals = new object [fa.NumElem];
-                for (int j = 0; j < vals.Length; j++) {
+                for (int j = 0; j < vals.Length; j++)
                     vals [j] = fa.Elems [j].Value;
-                }
                 return vals;
             } else
                 return fa.Elems [0].Value;
@@ -584,9 +575,8 @@ namespace Mono.Cecil.Implem {
         {
             CustomAttribute cattr = new CustomAttribute (ctor);
 
-            foreach (CustomAttrib.FixedArg fa in sig.FixedArgs) {
+            foreach (CustomAttrib.FixedArg fa in sig.FixedArgs)
                 cattr.ConstructorParameters.Add (GetFixedArgValue (fa));
-            }
 
             foreach (CustomAttrib.NamedArg na in sig.NamedArgs) {
                 object value = GetFixedArgValue (na.FixedArg);
@@ -606,6 +596,7 @@ namespace Mono.Cecil.Implem {
         protected ParameterDefinition BuildParameterDefinition (string name, int sequence, ParamAttributes attrs, Param psig)
         {
             ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
+            //TODO: read custom mods
             if (psig.ByRef)
                 ret.ParameterType = new ReferenceType (GetTypeRefFromSig (psig.Type));
             else if (psig.TypedByRef)

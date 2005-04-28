@@ -10,9 +10,9 @@
  *
  *****************************************************************************/
 
-namespace Mono.Cecil.Signatures {
+namespace Mono.Cecil {
 
-    internal enum NativeType {
+    public enum NativeType {
         Boolean = 0x02,
         I1 = 0x03,
         U1 = 0x04,

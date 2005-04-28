@@ -64,9 +64,8 @@ namespace Mono.Cecil.Metadata {
 
         protected virtual byte [] ReadBytesFromStream (uint pos)
         {
-            int start;
-            int length = Utilities.ReadCompressedInteger (m_data, (int)pos, out start);
-            byte[] buffer = new byte [length];
+            int start, length = Utilities.ReadCompressedInteger (m_data, (int) pos, out start);
+            byte [] buffer = new byte [length];
             Buffer.BlockCopy (m_data, start, buffer, 0, length);
             return buffer;
         }

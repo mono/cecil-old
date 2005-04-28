@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Implem {
 
+    using System.Reflection;
+
     using Mono.Cecil;
 
     internal sealed class ParameterDefinition : IParameterDefinition {
@@ -71,6 +73,19 @@ namespace Mono.Cecil.Implem {
             m_sequence = seq;
             m_attributes = attrs;
             m_paramType = paramType;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        {
+            //TODO: implement this
+            return null;
         }
 
         public void Accept (IReflectionVisitor visitor)

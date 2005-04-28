@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
     using System;
+    using System.Reflection;
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;
@@ -35,6 +36,7 @@ namespace Mono.Cecil.Implem {
         private AssemblyDefinition m_asm;
         private ImageReader m_reader;
         private LazyLoader m_loader;
+        private StructureWriter m_writer;
 
         public string Name {
             get { return m_name; }
@@ -99,6 +101,10 @@ namespace Mono.Cecil.Implem {
             get { return m_loader; }
         }
 
+        public StructureWriter Writer {
+            get { return m_writer; }
+        }
+
         public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, asm, reader, false)
         {
         }
@@ -115,6 +121,7 @@ namespace Mono.Cecil.Implem {
             m_main = main;
             m_reader = reader;
             m_loader = new LazyLoader (this, asm.LoadingType);
+            m_writer = new StructureWriter (this);
             m_mvid = new Guid ();
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);
@@ -128,14 +135,32 @@ namespace Mono.Cecil.Implem {
             m_modRefs.Add (new ModuleReference (module));
         }
 
-        public void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
+        public IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
         {
-            m_res [name] = new EmbeddedResource (name, attributes, this, data);
+            EmbeddedResource res = new EmbeddedResource (name, attributes, this, data);
+            m_res [name] = res;
+            return res;
         }
 
-        public void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
+        public ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
         {
-            m_res [name] = new LinkedResource (name, attributes, this, file);
+            LinkedResource res = new LinkedResource (name, attributes, this, file);
+            m_res [name] = res;
+            return res;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+        {
+            CustomAttribute ca = new CustomAttribute(ctor);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        {
+            CustomAttribute ca = new CustomAttribute (m_writer.ReflectionHelper.RegisterConstructor(ctor));
+            m_customAttrs.Add (ca);
+            return ca;
         }
 
         public void Accept (IReflectionStructureVisitor visitor)

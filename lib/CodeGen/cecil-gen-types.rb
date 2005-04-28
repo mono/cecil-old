@@ -40,6 +40,16 @@ module Cecil
             name[0] = name[0].chr.downcase
             return "m_" + name
         end
+        
+        def write_binary(inst, writer)
+            return case @type
+                when "byte"
+                when "short"
+                when "uint"
+                when "int"
+                    writer + ".Write (" + @property + "." + @property_name + ")"
+            end
+        end
 
         def read_binary(inst)
             return case @type

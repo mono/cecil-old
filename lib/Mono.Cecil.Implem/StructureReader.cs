@@ -1,14 +1,14 @@
 /*
-* Copyright (c) 2004 DotNetGuru and the individuals listed
-* on the ChangeLog entries.
-*
-* Authors :
-*   Jb Evain   (jb.evain@dotnetguru.org)
-*
-* This is a free software distributed under a MIT/X11 license
-* See LICENSE.MIT file for more details
-*
-*****************************************************************************/
+ * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * on the ChangeLog entries.
+ *
+ * Authors :
+ *   Jb Evain   (jb.evain@dotnetguru.org)
+ *
+ * This is a free software distributed under a MIT/X11 license
+ * See LICENSE.MIT file for more details
+ *
+ *****************************************************************************/
 
 namespace Mono.Cecil.Implem {
 
@@ -158,7 +158,7 @@ namespace Mono.Cecil.Implem {
                 foreach (FileRow frow in ftable.Rows) {
                     if (frow.Flags == Mono.Cecil.FileAttributes.ContainsMetaData) {
                         name = m_img.MetadataRoot.Streams.StringsHeap [frow.Name];
-                        FileInfo location = new FileInfo (string.Concat (m_img.FileInformation.DirectoryName, Path.DirectorySeparatorChar, name));
+                        FileInfo location = new FileInfo (Path.Combine(m_img.FileInformation.DirectoryName, name));
                         if (!File.Exists (location.FullName))
                             throw new FileNotFoundException ("Module not found : " + name);
 

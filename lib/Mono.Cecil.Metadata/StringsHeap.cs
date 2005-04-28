@@ -18,10 +18,10 @@ namespace Mono.Cecil.Metadata {
 
         public int IndexSize;
 
-        private readonly IDictionary m_strings;
+        private Hashtable m_strings;
 
         public string this [uint index] {
-            get { return m_strings [index] == null ? string.Empty : m_strings [index] as string; }
+            get { return m_strings.ContainsKey (index) ? m_strings [index] as string : string.Empty; }
             set { m_strings [index] = value; }
         }
 

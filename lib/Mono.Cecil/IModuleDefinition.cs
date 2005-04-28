@@ -26,10 +26,14 @@ namespace Mono.Cecil {
         void DefineModuleReference (string module);
 
         IResourceCollection Resources { get; }
-        void DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
-        void DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
+        IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
+        ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
 
         ITypeDefinitionCollection Types { get; }
+        /*ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes);
+        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType);
+        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);*/
+
         IExternTypeCollection ExternTypes { get; }
     }
 }

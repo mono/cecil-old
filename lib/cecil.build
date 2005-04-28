@@ -35,9 +35,6 @@
         <csc output="${outdir}/Mono.Cecil.dll" 
              target="library" debug="${debug}" unsafe="false" optimize="false">
             <sources refid="all-files"/>
-            <references>
-                <include name="c:\root\tools\nunit\bin\nunit.framework.dll" />
-            </references>
         </csc>
     </target>
     
