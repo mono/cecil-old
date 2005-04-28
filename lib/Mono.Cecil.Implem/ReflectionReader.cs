@@ -285,6 +285,9 @@ namespace Mono.Cecil.Implem {
                     FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
                                                                 dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
 
+                    if (fsig.CustomMods.Length > 0)
+                        fdef.FieldType = GetModifierType (fsig.CustomMods, fdef.FieldType);
+
                     FieldDefinitionCollection flds = dec.Fields as FieldDefinitionCollection;
 
                     flds.Loaded = true;
@@ -596,13 +599,20 @@ namespace Mono.Cecil.Implem {
         protected ParameterDefinition BuildParameterDefinition (string name, int sequence, ParamAttributes attrs, Param psig)
         {
             ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
-            //TODO: read custom mods
+            ITypeReference paramType = null;
+
             if (psig.ByRef)
-                ret.ParameterType = new ReferenceType (GetTypeRefFromSig (psig.Type));
+                paramType = new ReferenceType (GetTypeRefFromSig (psig.Type));
             else if (psig.TypedByRef)
-                ret.ParameterType = SearchCoreType ("System.TypedReference");
+                paramType = SearchCoreType ("System.TypedReference");
             else
-                ret.ParameterType = GetTypeRefFromSig (psig.Type);
+                paramType = GetTypeRefFromSig (psig.Type);
+
+            if (psig.CustomMods.Length > 0)
+                paramType = GetModifierType (psig.CustomMods, paramType);
+
+            ret.ParameterType = paramType;
+
             return ret;
         }
 
@@ -619,6 +629,26 @@ namespace Mono.Cecil.Implem {
             return dec;
         }
 
+        protected ITypeReference GetModifierType (CustomMod [] cmods, ITypeReference type)
+        {
+            ITypeReference ret = type;
+            for (int i = cmods.Length - 1; i >= 0; i--) {
+                CustomMod cmod = cmods [i];
+                ITypeReference modType = null;
+
+                if (cmod.TypeDefOrRef.TokenType == TokenType.TypeDef)
+                    modType = GetTypeDefAt ((int) cmod.TypeDefOrRef.RID);
+                else
+                    modType = GetTypeRefAt ((int) cmod.TypeDefOrRef.RID);
+
+                if (cmod.CMOD == CustomMod.CMODType.OPT)
+                    ret = new ModifierOptional (ret, modType);
+                else if (cmod.CMOD == CustomMod.CMODType.REQD)
+                    ret = new ModifierRequired (ret, modType);
+            }
+            return ret;
+        }
+
         private MethodReturnType GetMethodReturnType (MethodSig msig)
         {
             ITypeReference retType = null;
@@ -630,6 +660,10 @@ namespace Mono.Cecil.Implem {
                 retType = SearchCoreType ("System.TypedReference");
             else
                 retType = GetTypeRefFromSig (msig.RetType.Type);
+
+            if (msig.RetType.CustomMods.Length > 0)
+                retType = GetModifierType (msig.RetType.CustomMods, retType);
+
             return new MethodReturnType (retType);
         }
 
