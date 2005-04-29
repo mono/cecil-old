@@ -21,6 +21,7 @@ namespace Mono.Cecil.Implem {
         private TypeAttributes m_attributes;
         private ITypeReference m_baseType;
 
+        private bool m_layoutLoaded;
         private bool m_hasInfo;
         private ushort m_packingSize;
         private uint m_classSize;
@@ -43,7 +44,15 @@ namespace Mono.Cecil.Implem {
         }
 
         public IClassLayoutInfo LayoutInfo {
-            get { return this; }
+            get {
+                this.Module.Loader.DetailReader.ReadLayout (this);
+                return this;
+            }
+        }
+
+        public bool LayoutLoaded {
+            get { return m_layoutLoaded; }
+            set { m_layoutLoaded = value; }
         }
 
         public bool HasLayoutInfo {

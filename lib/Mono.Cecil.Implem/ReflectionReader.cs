@@ -566,6 +566,26 @@ namespace Mono.Cecil.Implem {
         {
         }
 
+        public virtual void ReadLayout (TypeDefinition type)
+        {
+        }
+
+        public virtual void ReadLayout (FieldDefinition field)
+        {
+        }
+
+        public virtual void ReadConstant (FieldDefinition field)
+        {
+        }
+
+        public virtual void ReadConstant (PropertyDefinition prop)
+        {
+        }
+
+        public virtual void ReadConstant (ParameterDefinition param)
+        {
+        }
+
         private object GetFixedArgValue (CustomAttrib.FixedArg fa)
         {
             if (fa.SzArray) {

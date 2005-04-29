@@ -21,16 +21,26 @@ namespace Mono.Cecil.Implem {
 
         private CustomAttributeCollection m_customAttrs;
 
+        private bool m_layoutLoaded;
         private bool m_hasInfo;
         private uint m_offset;
 
+        private bool m_constLoaded;
         private object m_const;
 
         private bool m_marshalLoaded;
         private MarshalDesc m_marshalDesc;
 
         public IFieldLayoutInfo LayoutInfo {
-            get { return this; }
+            get {
+                (this.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadLayout (this);
+                return this;
+            }
+        }
+
+        public bool LayoutLoaded {
+            get { return m_layoutLoaded; }
+            set { m_layoutLoaded = value; }
         }
 
         public bool HasLayoutInfo {
@@ -55,8 +65,16 @@ namespace Mono.Cecil.Implem {
             set { m_attributes = value; }
         }
 
+        public bool ConstantLoaded {
+            get { return m_constLoaded; }
+            set { m_constLoaded = value; }
+        }
+
         public object Constant {
-            get { return m_const; }
+            get {
+                (this.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadConstant (this);
+                return m_const;
+            }
             set { m_const = value; }
         }
 

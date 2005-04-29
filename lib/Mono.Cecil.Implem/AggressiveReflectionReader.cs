@@ -172,7 +172,7 @@ namespace Mono.Cecil.Implem {
                         evt.InvokeMethod = semMeth;
                     else if ((semRow.Semantics & MethodSemanticsAttributes.RemoveOn) != 0)
                         evt.RemoveMethod = semMeth;
-                    evt.Readed = true;
+                    evt.SemanticLoaded = true;
                     break;
                 case TokenType.Property :
                     PropertyDefinition prop = m_properties [semRow.Association.RID - 1];
@@ -180,7 +180,7 @@ namespace Mono.Cecil.Implem {
                         prop.GetMethod = semMeth;
                     else if ((semRow.Semantics & MethodSemanticsAttributes.Setter) != 0)
                         prop.SetMethod = semMeth;
-                    prop.Readed = true;
+                    prop.SemanticLoaded = true;
                     break;
                 }
             }
@@ -321,13 +321,19 @@ namespace Mono.Cecil.Implem {
 
                 switch (csRow.Parent.TokenType) {
                 case TokenType.Field :
-                    m_fields [csRow.Parent.RID - 1].Constant = constant;
+                    FieldDefinition field = m_fields [csRow.Parent.RID - 1];
+                    field.Constant = constant;
+                    field.ConstantLoaded = true;
                     break;
                 case TokenType.Property :
-                    m_properties [csRow.Parent.RID - 1].Constant = constant;
+                    PropertyDefinition prop = m_properties [csRow.Parent.RID - 1];
+                    prop.Constant = constant;
+                    prop.ConstantLoaded = true;
                     break;
                 case TokenType.Param :
-                    m_parameters [csRow.Parent.RID - 1].Constant = constant;
+                    ParameterDefinition param = m_parameters [csRow.Parent.RID - 1];
+                    param.Constant = constant;
+                    param.ConstantLoaded = true;
                     break;
                 }
             }

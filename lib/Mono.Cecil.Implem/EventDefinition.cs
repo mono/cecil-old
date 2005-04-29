@@ -23,11 +23,10 @@ namespace Mono.Cecil.Implem {
 
         private CustomAttributeCollection m_customAttrs;
 
+        private bool m_semanticLoaded;
         private IMethodDefinition m_addMeth;
         private IMethodDefinition m_invMeth;
         private IMethodDefinition m_remMeth;
-
-        private bool m_readed;
 
         public ITypeReference EventType {
             get { return m_eventType; }
@@ -63,9 +62,9 @@ namespace Mono.Cecil.Implem {
             set { m_remMeth = value; }
         }
 
-        public bool Readed {
-            get { return m_readed; }
-            set { m_readed = value; }
+        public bool SemanticLoaded {
+            get { return m_semanticLoaded; }
+            set { m_semanticLoaded = value; }
         }
 
         public ICustomAttributeCollection CustomAttributes {

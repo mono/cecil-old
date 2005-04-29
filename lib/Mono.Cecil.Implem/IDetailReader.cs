@@ -19,5 +19,12 @@ namespace Mono.Cecil.Implem {
 
         void ReadMarshalSpec (ParameterDefinition param);
         void ReadMarshalSpec (FieldDefinition field);
+
+        void ReadLayout (TypeDefinition type);
+        void ReadLayout (FieldDefinition field);
+
+        void ReadConstant (FieldDefinition field);
+        void ReadConstant (PropertyDefinition prop);
+        void ReadConstant (ParameterDefinition param);
     }
 }

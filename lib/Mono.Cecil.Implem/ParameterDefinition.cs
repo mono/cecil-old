@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
         private int m_sequence;
         private ParamAttributes m_attributes;
         private ITypeReference m_paramType;
+
+        private bool m_constLoaded;
         private object m_const;
 
         private MethodReference m_method;
@@ -50,8 +52,16 @@ namespace Mono.Cecil.Implem {
             set { m_paramType = value; }
         }
 
+        public bool ConstantLoaded {
+            get { return m_constLoaded; }
+            set { m_constLoaded = value; }
+        }
+
         public object Constant {
-            get { return m_const; }
+            get {
+                (m_method.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadConstant (this);
+                return m_const;
+            }
             set { m_const = value; }
         }
 

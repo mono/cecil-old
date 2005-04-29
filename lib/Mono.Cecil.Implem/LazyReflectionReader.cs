@@ -326,34 +326,13 @@ namespace Mono.Cecil.Implem {
             props.Loaded = true;
         }
 
-        public override void Visit (IPropertyDefinition property)
-        {
-            //TODO: read constant
-        }
-
-        public override void Visit (ITypeDefinition type)
-        {
-            //TODO: read type layout
-        }
-
-        public override void Visit (IFieldDefinition field)
-        {
-            //TODO: read field layout
-            //TODO: read constant
-        }
-
-        public override void Visit (IParameterDefinition parameter)
-        {
-            //TODO: read constant
-        }
-
         public override void ReadSemantic (EventDefinition evt)
         {
-            if (evt.Readed)
+            if (evt.SemanticLoaded)
                 return;
 
             if (!m_tHeap.HasTable (typeof (MethodSemanticsTable))) {
-                evt.Readed = true;
+                evt.SemanticLoaded = true;
                 return;
             }
 
@@ -374,16 +353,16 @@ namespace Mono.Cecil.Implem {
                 }
             }
 
-            evt.Readed = true;
+            evt.SemanticLoaded = true;
         }
 
         public override void ReadSemantic (PropertyDefinition prop)
         {
-            if (prop.Readed)
+            if (prop.SemanticLoaded)
                 return;
 
             if (!m_tHeap.HasTable (typeof (MethodSemanticsTable))) {
-                prop.Readed = true;
+                prop.SemanticLoaded = true;
                 return;
             }
 
@@ -402,7 +381,7 @@ namespace Mono.Cecil.Implem {
                 }
             }
 
-            prop.Readed = true;
+            prop.SemanticLoaded = true;
         }
 
         public override void ReadMarshalSpec (ParameterDefinition param)
@@ -423,7 +402,7 @@ namespace Mono.Cecil.Implem {
             field.MarshalSpecLoaded = true;
         }
 
-        private MarshalDesc GetMarshalDesc (int rid, TokenType tt, IHasMarshalSpec container)
+        private MarshalDesc GetMarshalDesc (int rid, TokenType target, IHasMarshalSpec container)
         {
             if (!m_tHeap.HasTable (typeof (FieldMarshalTable)))
                 return null;
@@ -431,9 +410,90 @@ namespace Mono.Cecil.Implem {
             FieldMarshalTable fmTable = m_tHeap [typeof (FieldMarshalTable)] as FieldMarshalTable;
             for (int i = 0; i < fmTable.Rows.Count; i++) {
                 FieldMarshalRow fmRow = fmTable [i];
-                if (fmRow.Parent.TokenType == tt && fmRow.Parent.RID == rid) {
+                if (fmRow.Parent.TokenType == target && fmRow.Parent.RID == rid) {
                     return BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), container);
                 }
+            }
+
+            return null;
+        }
+
+        public override void ReadLayout (TypeDefinition type)
+        {
+            if (type.LayoutLoaded || !m_tHeap.HasTable (typeof (ClassLayoutTable)))
+                return;
+
+            uint rid = (uint) GetRidForTypeDef (type);
+
+            ClassLayoutTable clTable = MetadataRoot.Streams.TablesHeap [typeof (ClassLayoutTable)] as ClassLayoutTable;
+            for (int i = 0; i < clTable.Rows.Count; i++) {
+                ClassLayoutRow clRow = clTable [i];
+                if (clRow.Parent == rid) {
+                    type.ClassSize = clRow.ClassSize;
+                    type.PackingSize = clRow.PackingSize;
+                    break;
+                }
+            }
+
+            type.LayoutLoaded = true;
+        }
+
+        public override void ReadLayout (FieldDefinition field)
+        {
+            if (field.LayoutLoaded || !m_tHeap.HasTable (typeof (FieldLayoutTable)))
+                return;
+
+            uint rid = (uint) Array.IndexOf (m_fields, field) + 1;
+
+            FieldLayoutTable flTable = MetadataRoot.Streams.TablesHeap [typeof (FieldLayoutTable)] as FieldLayoutTable;
+            for (int i = 0; i < flTable.Rows.Count; i++) {
+                FieldLayoutRow flRow = flTable [i];
+                if (flRow.Field == rid) {
+                    field.Offset = flRow.Offset;
+                    break;
+                }
+            }
+
+            field.LayoutLoaded = true;
+        }
+
+        public override void ReadConstant (FieldDefinition field)
+        {
+            if (field.ConstantLoaded)
+                return;
+
+            field.Constant = GetConstant (Array.IndexOf (m_fields, field) + 1, TokenType.Field);
+            field.ConstantLoaded = true;
+        }
+
+        public override void ReadConstant (PropertyDefinition prop)
+        {
+            if (prop.ConstantLoaded)
+                return;
+
+            prop.Constant = GetConstant (Array.IndexOf (m_properties, prop) + 1, TokenType.Property);
+            prop.ConstantLoaded = true;
+        }
+
+        public override void ReadConstant (ParameterDefinition param)
+        {
+            if (param.ConstantLoaded)
+                return;
+
+            param.Constant = GetConstant (Array.IndexOf (m_parameters, param) + 1, TokenType.Param);
+            param.ConstantLoaded = true;
+        }
+
+        public object GetConstant (int rid, TokenType target)
+        {
+            if (!m_tHeap.HasTable (typeof (ConstantTable)))
+                return null;
+
+            ConstantTable csTable = m_tHeap [typeof (ConstantTable)] as ConstantTable;
+            for (int i = 0; i < csTable.Rows.Count; i++) {
+                ConstantRow csRow = csTable [i];
+                if (csRow.Parent.TokenType == target && csRow.Parent.RID == rid)
+                    return GetConstant (csRow.Value, csRow.Type);
             }
 
             return null;

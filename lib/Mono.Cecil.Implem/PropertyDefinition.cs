@@ -22,11 +22,11 @@ namespace Mono.Cecil.Implem {
 
         private CustomAttributeCollection m_customAttrs;
 
+        private bool m_semanticLoaded;
         private IMethodDefinition m_getMeth;
         private IMethodDefinition m_setMeth;
 
-        private bool m_readed = false;
-
+        private bool m_constLoaded;
         private object m_const;
 
         public ITypeReference PropertyType {
@@ -34,9 +34,9 @@ namespace Mono.Cecil.Implem {
             set { m_propertyType = value; }
         }
 
-        public bool Readed {
-            get { return m_readed; }
-            set { m_readed = value; }
+        public bool SemanticLoaded {
+            get { return m_semanticLoaded; }
+            set { m_semanticLoaded = value; }
         }
 
         public IParameterDefinitionCollection Parameters {
@@ -80,8 +80,16 @@ namespace Mono.Cecil.Implem {
             set { m_setMeth = value; }
         }
 
+        public bool ConstantLoaded {
+            get { return m_constLoaded; }
+            set { m_constLoaded = value; }
+        }
+
         public object Constant {
-            get { return m_const; }
+            get {
+                (this.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadConstant (this);
+                return m_const;
+            }
             set { m_const = value; }
         }
 
