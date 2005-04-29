@@ -35,6 +35,7 @@ namespace Mono.Cecil.Signatures {
         private IDictionary m_methodsRefSigs;
         private IDictionary m_localVars;
         private IDictionary m_customAttribs;
+        private IDictionary m_marshalSpecs;
 
         public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
         {
@@ -48,6 +49,7 @@ namespace Mono.Cecil.Signatures {
             m_methodsDefSigs = new Hashtable ();
             m_methodsRefSigs = new Hashtable ();
             m_localVars = new Hashtable ();
+            m_marshalSpecs = new Hashtable ();
         }
 
         public FieldSig GetFieldSig (uint index)
@@ -149,10 +151,15 @@ namespace Mono.Cecil.Signatures {
             return null;
         }
 
-        public MarshalSpec GetMarshalSpec (uint index)
+        public MarshalSig GetMarshalSig (uint index)
         {
-            byte [] ms = m_root.Streams.BlobHeap.Read (index);
-            return ReadMarshalSpec (ms);
+            MarshalSig ms = m_marshalSpecs [index] as MarshalSig;
+            if (ms == null) {
+                byte [] data = m_root.Streams.BlobHeap.Read (index);
+                ms = ReadMarshalSig (data);
+                m_marshalSpecs [index] = ms;
+            }
+            return ms;
         }
 
         public void Visit (MethodDefSig methodDef)
@@ -554,7 +561,7 @@ namespace Mono.Cecil.Signatures {
 
             string elemName = string.Concat (elemType.Namespace, '.', elemType.Name);
 
-            if (elemName == "System.Object") {
+            if (elemName == Constants.Object) {
                 ElementType elementType = (ElementType) br.ReadByte ();
                 elem = ReadElem (data, br, elementType);
                 elem.String = elem.Simple = elem.Type = false;
@@ -565,13 +572,13 @@ namespace Mono.Cecil.Signatures {
 
             elem.ElemType = elemType;
 
-            if (elemName == "System.Type" || elemName == "System.String") {
+            if (elemName == Constants.Type || elemName == Constants.String) {
                 switch (elemType.FullName) {
-                case "System.String" :
+                case Constants.String:
                     elem.String = true;
                     elem.BoxedValueType = elem.Simple = elem.Type = false;
                     break;
-                case "System.Type" :
+                case Constants.Type:
                     elem.Type = true;
                     elem.BoxedValueType = elem.Simple = elem.String = false;
                     break;
@@ -592,40 +599,40 @@ namespace Mono.Cecil.Signatures {
             elem.String = elem.Type = elem.BoxedValueType = false;
 
             switch (elemName) {
-            case "System.Boolean" :
+            case Constants.Boolean :
                 elem.Value = br.ReadByte () == 1;
                 break;
-            case "System.Char" :
+            case Constants.Char :
                 elem.Value = br.ReadChar ();
                 break;
-            case "System.Single" :
+            case Constants.Single :
                 elem.Value = br.ReadSingle ();
                 break;
-            case "System.Double" :
+            case Constants.Double :
                 elem.Value = br.ReadDouble ();
                 break;
-            case "System.Byte" :
+            case Constants.Byte :
                 elem.Value = br.ReadByte ();
                 break;
-            case "System.Int16" :
+            case Constants.Int16 :
                 elem.Value = br.ReadInt16 ();
                 break;
-            case "System.Int32" :
+            case Constants.Int32 :
                 elem.Value = br.ReadInt32 ();
                 break;
-            case "System.Int64" :
+            case Constants.Int64 :
                 elem.Value = br.ReadInt64 ();
                 break;
-            case "System.SByte" :
+            case Constants.SByte :
                 elem.Value = br.ReadSByte ();
                 break;
-            case "System.UInt16" :
+            case Constants.UInt16 :
                 elem.Value = br.ReadUInt16 ();
                 break;
-            case "System.UInt32" :
+            case Constants.UInt32 :
                 elem.Value = br.ReadUInt32 ();
                 break;
-            case "System.UInt64" :
+            case Constants.UInt64 :
                 elem.Value = br.ReadUInt64 ();
                 break;
             default : // enum
@@ -656,12 +663,12 @@ namespace Mono.Cecil.Signatures {
                 case ElementType.String :
                     elem.String = true;
                     elem.BoxedValueType = elem.Simple = elem.Type = false;
-                    elem.ElemType = m_reflectReader.SearchCoreType ("System.String");
+                    elem.ElemType = m_reflectReader.SearchCoreType (Constants.String);
                     break;
                 case ElementType.Type :
                     elem.Type = true;
                     elem.BoxedValueType = elem.Simple = elem.String = false;
-                    elem.ElemType = m_reflectReader.SearchCoreType ("System.Type");
+                    elem.ElemType = m_reflectReader.SearchCoreType (Constants.Type);
                     break;
                 }
 
@@ -681,51 +688,51 @@ namespace Mono.Cecil.Signatures {
 
             switch (elemType) {
             case ElementType.Boolean :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Boolean");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Boolean);
                 elem.Value = br.ReadByte () == 1;
                 break;
             case ElementType.Char :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Char");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Char);
                 elem.Value = br.ReadChar ();
                 break;
             case ElementType.R4 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Single");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Single);
                 elem.Value = br.ReadSingle ();
                 break;
             case ElementType.R8 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Double");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Double);
                 elem.Value = br.ReadDouble ();
                 break;
             case ElementType.I1 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.SByte");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.SByte);
                 elem.Value = br.ReadSByte ();
                 break;
             case ElementType.I2 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int16");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int16);
                 elem.Value = br.ReadInt16 ();
                 break;
             case ElementType.I4 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int32");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int32);
                 elem.Value = br.ReadInt32 ();
                 break;
             case ElementType.I8 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Int64");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int64);
                 elem.Value = br.ReadInt64 ();
                 break;
             case ElementType.U1 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.Byte");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.Byte);
                 elem.Value = br.ReadByte ();
                 break;
             case ElementType.U2 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt16");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt16);
                 elem.Value = br.ReadUInt16 ();
                 break;
             case ElementType.U4 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt32");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt32);
                 elem.Value = br.ReadUInt32 ();
                 break;
             case ElementType.U8 :
-                elem.ElemType = m_reflectReader.SearchCoreType ("System.UInt64");
+                elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt64);
                 elem.Value = br.ReadUInt64 ();
                 break;
             case ElementType.Enum :
@@ -745,21 +752,24 @@ namespace Mono.Cecil.Signatures {
             return elem;
         }
 
-        private MarshalSpec ReadMarshalSpec (byte [] data)
+        private MarshalSig ReadMarshalSig (byte [] data)
         {
             int start;
-            MarshalSpec ms = new MarshalSpec ((NativeType) Utilities.ReadCompressedInteger (data, 0, out start));
+            MarshalSig ms = new MarshalSig ((NativeType) Utilities.ReadCompressedInteger (data, 0, out start));
             switch (ms.NativeInstrinsic) {
             case NativeType.ARRAY:
-                MarshalSpec.Array ar = new MarshalSpec.Array ();
+                MarshalSig.Array ar = new MarshalSig.Array ();
                 ar.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+                if (start < data.Length)
                 ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
-                ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
-                ar.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+                if (start < data.Length)
+                    ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
+                if (start < data.Length)
+                    ar.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
                 ms.Spec = ar;
                 break;
             case NativeType.CUSTOMMARSHALER:
-                MarshalSpec.CustomMarshaler cm = new MarshalSpec.CustomMarshaler ();
+                MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
                 cm.Guid = ReadUTF8String (data, start, out start);
                 cm.UnmanagedType = ReadUTF8String (data, start, out start);
                 cm.ManagedType = ReadUTF8String (data, start, out start);
@@ -767,15 +777,20 @@ namespace Mono.Cecil.Signatures {
                 ms.Spec = cm;
                 break;
             case NativeType.FIXEDARRAY:
-                MarshalSpec.FixedArray fa = new MarshalSpec.FixedArray ();
+                MarshalSig.FixedArray fa = new MarshalSig.FixedArray ();
                 fa.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
                 fa.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
                 ms.Spec = fa;
                 break;
             case NativeType.SAFEARRAY:
-                MarshalSpec.SafeArray sa = new MarshalSpec.SafeArray ();
+                MarshalSig.SafeArray sa = new MarshalSig.SafeArray ();
                 sa.ArrayElemType = (VariantType) Utilities.ReadCompressedInteger (data, start, out start);
                 ms.Spec = sa;
+                break;
+            case NativeType.FIXEDSYSSTRING:
+                MarshalSig.FixedSysString fss = new MarshalSig.FixedSysString ();
+                fss.Size = Utilities.ReadCompressedInteger (data, start, out start);
+                ms.Spec = fss;
                 break;
             }
             return ms;

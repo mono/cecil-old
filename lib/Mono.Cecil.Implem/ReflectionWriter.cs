@@ -125,5 +125,10 @@ namespace Mono.Cecil.Implem {
         {
             // TODO
         }
+
+        public void Visit (IMarshalSpec marshalSpec)
+        {
+            // TODO
+        }
     }
 }

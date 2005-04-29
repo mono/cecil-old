@@ -42,6 +42,7 @@ namespace Mono.Cecil.Implem {
             ReadCustomAttributes ();
             ReadConstants ();
             ReadExternTypes ();
+            ReadMarshalSpecs ();
 
             m_events = null;
             m_properties = null;
@@ -50,7 +51,7 @@ namespace Mono.Cecil.Implem {
 
         private void ReadClassLayoutInfos ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (ClassLayoutTable)))
+            if (!m_tHeap.HasTable (typeof (ClassLayoutTable)))
                 return;
 
             ClassLayoutTable clTable = MetadataRoot.Streams.TablesHeap [typeof (ClassLayoutTable)] as ClassLayoutTable;
@@ -64,7 +65,7 @@ namespace Mono.Cecil.Implem {
 
         private void ReadFieldLayoutInfos ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (FieldLayoutTable)))
+            if (!m_tHeap.HasTable (typeof (FieldLayoutTable)))
                 return;
 
             FieldLayoutTable flTable = MetadataRoot.Streams.TablesHeap [typeof (FieldLayoutTable)] as FieldLayoutTable;
@@ -77,7 +78,7 @@ namespace Mono.Cecil.Implem {
 
         private void ReadPInvokeInfos ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (ImplMapTable)))
+            if (!m_tHeap.HasTable (typeof (ImplMapTable)))
                 return;
 
             ImplMapTable imTable = MetadataRoot.Streams.TablesHeap [typeof (ImplMapTable)] as ImplMapTable;
@@ -93,11 +94,11 @@ namespace Mono.Cecil.Implem {
 
         private void ReadProperties ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (PropertyTable)))
+            if (!m_tHeap.HasTable (typeof (PropertyTable)))
                 return;
 
-            PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
-            PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
+            PropertyTable propsTable = m_tHeap [typeof (PropertyTable)] as PropertyTable;
+            PropertyMapTable pmapTable = m_tHeap [typeof (PropertyMapTable)] as PropertyMapTable;
             m_properties = new PropertyDefinition [propsTable.Rows.Count];
             for (int i = 0; i < pmapTable.Rows.Count; i++) {
                 PropertyMapRow pmapRow = pmapTable [i];
@@ -124,11 +125,11 @@ namespace Mono.Cecil.Implem {
 
         private void ReadEvents ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (EventTable)))
+            if (!m_tHeap.HasTable (typeof (EventTable)))
                 return;
 
-            EventTable evtTable = m_root.Streams.TablesHeap [typeof (EventTable)] as EventTable;
-            EventMapTable emapTable = m_root.Streams.TablesHeap [typeof (EventMapTable)] as EventMapTable;
+            EventTable evtTable = m_tHeap [typeof (EventTable)] as EventTable;
+            EventMapTable emapTable = m_tHeap [typeof (EventMapTable)] as EventMapTable;
             m_events = new EventDefinition [evtTable.Rows.Count];
             for (int i = 0; i < emapTable.Rows.Count; i++) {
                 EventMapRow emapRow = emapTable [i];
@@ -154,10 +155,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadSemantics ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable)))
+            if (!m_tHeap.HasTable (typeof (MethodSemanticsTable)))
                 return;
 
-            MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
+            MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
             for (int i = 0; i < semTable.Rows.Count; i++) {
                 MethodSemanticsRow semRow = semTable [i];
                 MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
@@ -187,10 +188,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadInterfaces ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (InterfaceImplTable)))
+            if (!m_tHeap.HasTable (typeof (InterfaceImplTable)))
                 return;
 
-            InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
+            InterfaceImplTable intfsTable = m_tHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intfsRow = intfsTable [i];
                 TypeDefinition owner = GetTypeDefAt ((int)intfsRow.Class);
@@ -201,10 +202,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadOverrides ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodImplTable)))
+            if (!m_tHeap.HasTable (typeof (MethodImplTable)))
                 return;
 
-            MethodImplTable implTable = m_root.Streams.TablesHeap [typeof (MethodImplTable)] as MethodImplTable;
+            MethodImplTable implTable = m_tHeap [typeof (MethodImplTable)] as MethodImplTable;
             for (int i = 0; i < implTable.Rows.Count; i++) {
                 MethodImplRow implRow = implTable [i];
                 if (implRow.MethodBody.TokenType == TokenType.Method) {
@@ -224,10 +225,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadSecurityDeclarations ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (DeclSecurityTable)))
+            if (!m_tHeap.HasTable (typeof (DeclSecurityTable)))
                 return;
 
-            DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
+            DeclSecurityTable dsTable = m_tHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
             for (int i = 0; i < dsTable.Rows.Count; i++) {
                 DeclSecurityRow dsRow = dsTable [i];
                 SecurityDeclaration dec = BuildSecurityDeclaration (dsRow);
@@ -254,10 +255,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadCustomAttributes ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (CustomAttributeTable)))
+            if (!m_tHeap.HasTable (typeof (CustomAttributeTable)))
                 return;
 
-            CustomAttributeTable caTable = m_root.Streams.TablesHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
+            CustomAttributeTable caTable = m_tHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
             for (int i = 0; i < caTable.Rows.Count; i++) {
                 CustomAttributeRow caRow = caTable [i];
                 IMethodReference ctor;
@@ -309,10 +310,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadConstants ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (ConstantTable)))
+            if (!m_tHeap.HasTable (typeof (ConstantTable)))
                 return;
 
-            ConstantTable csTable = m_root.Streams.TablesHeap [typeof (ConstantTable)] as ConstantTable;
+            ConstantTable csTable = m_tHeap [typeof (ConstantTable)] as ConstantTable;
             for (int i = 0; i < csTable.Rows.Count; i++) {
                 ConstantRow csRow = csTable [i];
 
@@ -335,6 +336,29 @@ namespace Mono.Cecil.Implem {
         private void ReadExternTypes ()
         {
             base.Visit (Module.ExternTypes as ExternTypeCollection);
+        }
+
+        private void ReadMarshalSpecs ()
+        {
+            if (!m_tHeap.HasTable (typeof (FieldMarshalTable)))
+                return;
+
+            FieldMarshalTable fmTable = m_tHeap [typeof (FieldMarshalTable)] as FieldMarshalTable;
+            for (int i = 0; i < fmTable.Rows.Count; i++) {
+                FieldMarshalRow fmRow = fmTable [i];
+                switch (fmRow.Parent.TokenType) {
+                case TokenType.Field:
+                    FieldDefinition field = m_fields [fmRow.Parent.RID - 1];
+                    field.MarshalSpec = BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), field);
+                    field.MarshalSpecLoaded = true;
+                    break;
+                case TokenType.Param:
+                    ParameterDefinition param = m_parameters [fmRow.Parent.RID - 1];
+                    param.MarshalSpec = BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), param);
+                    param.MarshalSpecLoaded = true;
+                    break;
+                }
+            }
         }
     }
 }

@@ -21,6 +21,6 @@ namespace Mono.Cecil {
         object Constant { get; set; }
     }
 
-    public interface IParameterDefinition : IParameterReference, ICustomAttributeProvider {
+    public interface IParameterDefinition : IParameterReference, IHasMarshalSpec, ICustomAttributeProvider {
     }
 }

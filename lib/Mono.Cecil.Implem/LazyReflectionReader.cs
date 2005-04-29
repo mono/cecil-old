@@ -30,7 +30,7 @@ namespace Mono.Cecil.Implem {
             if (interfs != null && interfs.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (InterfaceImplTable))) {
+            if (!m_tHeap.HasTable (typeof (InterfaceImplTable))) {
                 interfs.Loaded = true;
                 return;
             }
@@ -39,7 +39,7 @@ namespace Mono.Cecil.Implem {
 
             int rid = GetRidForTypeDef (implementor);
 
-            InterfaceImplTable intfsTable = m_root.Streams.TablesHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
+            InterfaceImplTable intfsTable = m_tHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
             for (int i = 0; i < intfsTable.Rows.Count; i++) {
                 InterfaceImplRow intRow = intfsTable [i];
                 if (intRow.Class == rid) {
@@ -68,7 +68,7 @@ namespace Mono.Cecil.Implem {
             if (methods.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodImplTable))) {
+            if (!m_tHeap.HasTable (typeof (MethodImplTable))) {
                 methods.Loaded = true;
                 return;
             }
@@ -93,12 +93,12 @@ namespace Mono.Cecil.Implem {
             if (secDeclarations.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (DeclSecurityTable))) {
+            if (!m_tHeap.HasTable (typeof (DeclSecurityTable))) {
                 secDeclarations.Loaded = true;
                 return;
             }
 
-            DeclSecurityTable dsTable = m_root.Streams.TablesHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
+            DeclSecurityTable dsTable = m_tHeap [typeof (DeclSecurityTable)] as DeclSecurityTable;
             int rid = 0;
             TokenType target;
             if (secDecls.Container is AssemblyDefinition)
@@ -136,12 +136,12 @@ namespace Mono.Cecil.Implem {
             if (customAttributes.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (CustomAttributeTable))) {
+            if (!m_tHeap.HasTable (typeof (CustomAttributeTable))) {
                 customAttributes.Loaded = true;
                 return;
             }
 
-            CustomAttributeTable caTable = m_root.Streams.TablesHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
+            CustomAttributeTable caTable = m_tHeap [typeof (CustomAttributeTable)] as CustomAttributeTable;
             int rid = 0;
             TokenType target;
             if (customAttrs.Container is AssemblyDefinition) {
@@ -218,7 +218,7 @@ namespace Mono.Cecil.Implem {
             if (evts.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (EventTable))) {
+            if (!m_tHeap.HasTable (typeof (EventTable))) {
                 m_events = new EventDefinition [0];
                 evts.Loaded = true;
                 return;
@@ -226,12 +226,12 @@ namespace Mono.Cecil.Implem {
 
             TypeDefinition dec = evts.Container as TypeDefinition;
             int rid = GetRidForTypeDef (dec), next;
-            EventTable evtTable = m_root.Streams.TablesHeap [typeof (EventTable)] as EventTable;
+            EventTable evtTable = m_tHeap [typeof (EventTable)] as EventTable;
 
             if (m_events == null)
                 m_events = new EventDefinition [evtTable.Rows.Count];
 
-            EventMapTable evtMapTable = m_root.Streams.TablesHeap [typeof (EventMapTable)] as EventMapTable;
+            EventMapTable evtMapTable = m_tHeap [typeof (EventMapTable)] as EventMapTable;
             EventMapRow thisRow = null, nextRow = null;
             for (int i = 0; i < evtMapTable.Rows.Count; i++) {
                 if (evtMapTable [i].Parent == rid) {
@@ -266,7 +266,7 @@ namespace Mono.Cecil.Implem {
             MethodDefinition meth = pinvk.Method as MethodDefinition;
             int index = GetRidForMethodDef (meth);
 
-            ImplMapTable imTable = m_root.Streams.TablesHeap [typeof (ImplMapTable)] as ImplMapTable;
+            ImplMapTable imTable = m_tHeap [typeof (ImplMapTable)] as ImplMapTable;
             for (int i = 0; i < imTable.Rows.Count; i++) {
                 ImplMapRow imRow = imTable [i];
                 if (imRow.MemberForwarded.RID == index) {
@@ -283,7 +283,7 @@ namespace Mono.Cecil.Implem {
             if (props.Loaded)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (PropertyTable))) {
+            if (!m_tHeap.HasTable (typeof (PropertyTable))) {
                 m_properties = new PropertyDefinition [0];
                 props.Loaded = true;
                 return;
@@ -291,11 +291,11 @@ namespace Mono.Cecil.Implem {
 
             TypeDefinition dec = props.Container as TypeDefinition;
             int rid = GetRidForTypeDef (dec), next;
-            PropertyTable propsTable = m_root.Streams.TablesHeap [typeof (PropertyTable)] as PropertyTable;
+            PropertyTable propsTable = m_tHeap [typeof (PropertyTable)] as PropertyTable;
             if (m_properties == null)
                 m_properties = new PropertyDefinition [propsTable.Rows.Count];
 
-            PropertyMapTable pmapTable = m_root.Streams.TablesHeap [typeof (PropertyMapTable)] as PropertyMapTable;
+            PropertyMapTable pmapTable = m_tHeap [typeof (PropertyMapTable)] as PropertyMapTable;
             PropertyMapRow thisRow = null, nextRow = null;
             for (int i = 0; i < pmapTable.Rows.Count; i++) {
                 if (pmapTable [i].Parent == rid) {
@@ -347,19 +347,19 @@ namespace Mono.Cecil.Implem {
             //TODO: read constant
         }
 
-        public override void ReadMethods (EventDefinition evt)
+        public override void ReadSemantic (EventDefinition evt)
         {
             if (evt.Readed)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable))) {
+            if (!m_tHeap.HasTable (typeof (MethodSemanticsTable))) {
                 evt.Readed = true;
                 return;
             }
 
             int index = Array.IndexOf (m_events, evt) + 1;
 
-            MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
+            MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
             for (int i = 0; i < semTable.Rows.Count; i++) {
                 MethodSemanticsRow semRow = semTable [i];
                 MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
@@ -377,19 +377,19 @@ namespace Mono.Cecil.Implem {
             evt.Readed = true;
         }
 
-        public override void ReadMethods (PropertyDefinition prop)
+        public override void ReadSemantic (PropertyDefinition prop)
         {
             if (prop.Readed)
                 return;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodSemanticsTable))) {
+            if (!m_tHeap.HasTable (typeof (MethodSemanticsTable))) {
                 prop.Readed = true;
                 return;
             }
 
             int index = Array.IndexOf (m_properties, prop) + 1;
 
-            MethodSemanticsTable semTable = m_root.Streams.TablesHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
+            MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
             for (int i = 0; i < semTable.Rows.Count; i++) {
                 MethodSemanticsRow semRow = semTable [i];
                 MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
@@ -403,6 +403,40 @@ namespace Mono.Cecil.Implem {
             }
 
             prop.Readed = true;
+        }
+
+        public override void ReadMarshalSpec (ParameterDefinition param)
+        {
+            if (param.MarshalSpecLoaded)
+                return;
+
+            param.MarshalSpec = GetMarshalDesc (Array.IndexOf (m_parameters, param) + 1, TokenType.Param, param);
+            param.MarshalSpecLoaded = true;
+        }
+
+        public override void ReadMarshalSpec (FieldDefinition field)
+        {
+            if (field.MarshalSpecLoaded)
+                return;
+
+            field.MarshalSpec = GetMarshalDesc (Array.IndexOf (m_fields, field) + 1, TokenType.Field, field);
+            field.MarshalSpecLoaded = true;
+        }
+
+        private MarshalDesc GetMarshalDesc (int rid, TokenType tt, IHasMarshalSpec container)
+        {
+            if (!m_tHeap.HasTable (typeof (FieldMarshalTable)))
+                return null;
+
+            FieldMarshalTable fmTable = m_tHeap [typeof (FieldMarshalTable)] as FieldMarshalTable;
+            for (int i = 0; i < fmTable.Rows.Count; i++) {
+                FieldMarshalRow fmRow = fmTable [i];
+                if (fmRow.Parent.TokenType == tt && fmRow.Parent.RID == rid) {
+                    return BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), container);
+                }
+            }
+
+            return null;
         }
     }
 }

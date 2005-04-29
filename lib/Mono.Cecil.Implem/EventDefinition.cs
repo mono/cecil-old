@@ -41,7 +41,7 @@ namespace Mono.Cecil.Implem {
 
         public IMethodDefinition AddMethod {
             get {
-                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadMethods (this);
+                ((TypeDefinition)this.DeclaringType).Module.Loader.DetailReader.ReadSemantic (this);
                 return m_addMeth;
             }
             set { m_addMeth = value; }
@@ -49,7 +49,7 @@ namespace Mono.Cecil.Implem {
 
         public IMethodDefinition InvokeMethod {
             get {
-                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadMethods (this);
+                ((TypeDefinition)this.DeclaringType).Module.Loader.DetailReader.ReadSemantic (this);
                 return m_invMeth;
             }
             set { m_invMeth = value; }
@@ -57,7 +57,7 @@ namespace Mono.Cecil.Implem {
 
         public IMethodDefinition RemoveMethod {
             get {
-                ((TypeDefinition)this.DeclaringType).Module.Loader.SemanticReader.ReadMethods (this);
+                ((TypeDefinition)this.DeclaringType).Module.Loader.DetailReader.ReadSemantic (this);
                 return m_remMeth;
             }
             set { m_remMeth = value; }

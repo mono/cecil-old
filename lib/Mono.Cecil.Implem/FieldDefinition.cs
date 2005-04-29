@@ -26,6 +26,9 @@ namespace Mono.Cecil.Implem {
 
         private object m_const;
 
+        private bool m_marshalLoaded;
+        private MarshalDesc m_marshalDesc;
+
         public IFieldLayoutInfo LayoutInfo {
             get { return this; }
         }
@@ -65,6 +68,19 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public bool MarshalSpecLoaded {
+            get { return m_marshalLoaded; }
+            set { m_marshalLoaded = value; }
+        }
+
+        public IMarshalSpec MarshalSpec {
+            get {
+                (this.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadMarshalSpec(this);
+                return m_marshalDesc;
+            }
+            set { m_marshalDesc = value as MarshalDesc; }
+        }
+
         public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs) : base (name, decType)
         {
             m_hasInfo = false;
@@ -88,6 +104,9 @@ namespace Mono.Cecil.Implem {
         public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
+            if (m_marshalDesc != null)
+                m_marshalDesc.Accept (visitor);
+            m_customAttrs.Accept (visitor);
         }
     }
 }

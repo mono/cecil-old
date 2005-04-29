@@ -27,6 +27,9 @@ namespace Mono.Cecil.Implem {
         private MethodReference m_method;
         private CustomAttributeCollection m_customAttrs;
 
+        private bool m_marshalLoaded;
+        private MarshalDesc m_marshalDesc;
+
         public string Name {
             get { return m_name; }
             set { m_name = value; }
@@ -67,6 +70,19 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public bool MarshalSpecLoaded {
+            get { return m_marshalLoaded; }
+            set { m_marshalLoaded = value; }
+        }
+
+        public IMarshalSpec MarshalSpec {
+            get {
+                (m_method.DeclaringType as TypeDefinition).Module.Loader.DetailReader.ReadMarshalSpec(this);
+                return m_marshalDesc;
+            }
+            set { m_marshalDesc = value as MarshalDesc; }
+        }
+
         public ParameterDefinition (string name, int seq, ParamAttributes attrs, ITypeReference paramType)
         {
             m_name = name;
@@ -91,7 +107,9 @@ namespace Mono.Cecil.Implem {
         public void Accept (IReflectionVisitor visitor)
         {
             visitor.Visit (this);
+            if (m_marshalDesc != null)
+                m_marshalDesc.Accept (visitor);
+            m_customAttrs.Accept (visitor);
         }
     }
 }
-

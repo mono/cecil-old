@@ -36,5 +36,6 @@ namespace Mono.Cecil {
         void Visit (ISecurityDeclaration secDecl);
         void Visit (ICustomAttributeCollection customAttrs);
         void Visit (ICustomAttribute customAttr);
+        void Visit (IMarshalSpec marshalSpec);
     }
 }

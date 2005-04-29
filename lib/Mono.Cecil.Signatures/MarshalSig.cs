@@ -16,12 +16,12 @@ namespace Mono.Cecil.Signatures {
 
     using Mono.Cecil;
 
-    internal class MarshalSpec {
+    internal class MarshalSig {
 
         public NativeType NativeInstrinsic;
         public ValueType Spec;
 
-        public MarshalSpec (NativeType nt)
+        public MarshalSig (NativeType nt)
         {
             this.NativeInstrinsic = nt;
         }
@@ -51,6 +51,11 @@ namespace Mono.Cecil.Signatures {
         internal struct SafeArray {
 
             public VariantType ArrayElemType;
+        }
+
+        internal struct FixedSysString {
+
+            public int Size;
         }
     }
 }

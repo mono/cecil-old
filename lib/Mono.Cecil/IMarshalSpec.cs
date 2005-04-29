@@ -14,18 +14,13 @@ namespace Mono.Cecil {
 
     using System;
 
-    public interface IMarshalSpec {
+    public interface IMarshalSpec : IReflectionVisitable {
 
         NativeType NativeIntrinsic { get; }
-        bool HasMoreData { get; }
-
-        IExtendedMarshalSpec ExtendedData { get; }
+        IHasMarshalSpec Container { get; }
     }
 
-    public interface IExtendedMarshalSpec {
-    }
-
-    public interface IArrayDesc : IExtendedMarshalSpec {
+    public interface IArrayDesc : IMarshalSpec {
 
         NativeType ElemType { get; set; }
         int ParamNum { get; set; }
@@ -33,7 +28,7 @@ namespace Mono.Cecil {
         int NumElem { get; set; }
     }
 
-    public interface ICustomMarshalerDesc : IExtendedMarshalSpec {
+    public interface ICustomMarshalerDesc : IMarshalSpec {
 
         Guid Guid { get; set; }
         string UnmanagedType { get; set; }
@@ -41,15 +36,19 @@ namespace Mono.Cecil {
         string Cookie { get; set; }
     }
 
-    public interface IFixedArrayDesc : IExtendedMarshalSpec {
+    public interface IFixedArrayDesc : IMarshalSpec {
 
         int NumElem { get; set; }
         NativeType ElemType { get; set; }
     }
 
-    public interface ISafeArrayDesc : IExtendedMarshalSpec {
+    public interface ISafeArrayDesc : IMarshalSpec {
 
         VariantType ElemType { get; set; }
     }
-}
 
+    public interface IFixedSysStringDesc : IMarshalSpec {
+
+        int Size { get; set; }
+    }
+}

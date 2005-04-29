@@ -24,13 +24,14 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil.Signatures;
     using Mono.Xml;
 
-    internal abstract class ReflectionReader : IReflectionVisitor, IMethodsReader {
+    internal abstract class ReflectionReader : IReflectionVisitor, IDetailReader {
 
         private ModuleDefinition m_module;
         private ImageReader m_reader;
         protected SignatureReader m_sigReader;
         protected SecurityParser m_secParser;
         protected MetadataRoot m_root;
+        protected TablesHeap m_tHeap;
 
         protected TypeDefinition [] m_typeDefs;
         protected TypeReference [] m_typeRefs;
@@ -61,9 +62,10 @@ namespace Mono.Cecil.Implem {
             m_module = module;
             m_reader = m_module.Reader;
             m_root = m_reader.Image.MetadataRoot;
+            m_tHeap = m_root.Streams.TablesHeap;
             m_sigReader = new SignatureReader (m_root, this);
             m_secParser = new SecurityParser ();
-            m_isCorlib = m_reader.Image.FileInformation.Name == "mscorlib.dll";
+            m_isCorlib = m_reader.Image.FileInformation.Name == Constants.Corlib;
         }
 
         public TypeDefinition GetTypeDefAt (int rid)
@@ -151,7 +153,7 @@ namespace Mono.Cecil.Implem {
             ModuleDefinition def = tdc.Container as ModuleDefinition;
 
             // type def reading
-            TypeDefTable typesTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+            TypeDefTable typesTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
             m_typeDefs = new TypeDefinition [typesTable.Rows.Count];
             for (int i = 0; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
@@ -164,8 +166,8 @@ namespace Mono.Cecil.Implem {
             }
 
             // nested types
-            NestedClassTable nested = m_root.Streams.TablesHeap [typeof (NestedClassTable)] as NestedClassTable;
-            if (m_root.Streams.TablesHeap.HasTable (typeof(NestedClassTable))) {
+            NestedClassTable nested = m_tHeap [typeof (NestedClassTable)] as NestedClassTable;
+            if (m_tHeap.HasTable (typeof(NestedClassTable))) {
                 for (int i = 0; i < nested.Rows.Count; i++) {
                     NestedClassRow row = nested [i];
 
@@ -177,8 +179,8 @@ namespace Mono.Cecil.Implem {
             }
 
             // type ref reading
-            if (m_root.Streams.TablesHeap.HasTable(typeof (TypeRefTable))) {
-                TypeRefTable typesRef = m_root.Streams.TablesHeap [typeof (TypeRefTable)] as TypeRefTable;
+            if (m_tHeap.HasTable(typeof (TypeRefTable))) {
+                TypeRefTable typesRef = m_tHeap [typeof (TypeRefTable)] as TypeRefTable;
 
                 m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
@@ -245,10 +247,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadTypeSpecs ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (TypeSpecTable)))
+            if (!m_tHeap.HasTable (typeof (TypeSpecTable)))
                 return;
 
-            TypeSpecTable tsTable = m_root.Streams.TablesHeap [typeof (TypeSpecTable)] as TypeSpecTable;
+            TypeSpecTable tsTable = m_tHeap [typeof (TypeSpecTable)] as TypeSpecTable;
             m_typeSpecs = new ITypeReference [tsTable.Rows.Count];
             for (int i = 0; i < tsTable.Rows.Count; i++) {
                 TypeSpecRow tsRow = tsTable [i];
@@ -260,13 +262,13 @@ namespace Mono.Cecil.Implem {
 
         private void ReadAllFields ()
         {
-            TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
-            if (!m_root.Streams.TablesHeap.HasTable(typeof (FieldTable))) {
+            TypeDefTable tdefTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
+            if (!m_tHeap.HasTable(typeof (FieldTable))) {
                 m_fields = new FieldDefinition [0];
                 return;
             }
 
-            FieldTable fldTable = m_root.Streams.TablesHeap [typeof (FieldTable)] as FieldTable;
+            FieldTable fldTable = m_tHeap [typeof (FieldTable)] as FieldTable;
             m_fields = new FieldDefinition [fldTable.Rows.Count];
 
             for (int i = 0; i < m_typeDefs.Length; i++) {
@@ -299,17 +301,17 @@ namespace Mono.Cecil.Implem {
 
         private void ReadAllMethods ()
         {
-            TypeDefTable tdefTable = m_root.Streams.TablesHeap [typeof (TypeDefTable)] as TypeDefTable;
+            TypeDefTable tdefTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MethodTable))) {
+            if (!m_tHeap.HasTable (typeof (MethodTable))) {
                 m_meths = new MethodDefinition [0];
                 return;
             }
 
-            MethodTable methTable = m_root.Streams.TablesHeap [typeof (MethodTable)] as MethodTable;
-            ParamTable paramTable = m_root.Streams.TablesHeap [typeof (ParamTable)] as ParamTable;
+            MethodTable methTable = m_tHeap [typeof (MethodTable)] as MethodTable;
+            ParamTable paramTable = m_tHeap [typeof (ParamTable)] as ParamTable;
             m_meths = new MethodDefinition [methTable.Rows.Count];
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (ParamTable)))
+            if (!m_tHeap.HasTable (typeof (ParamTable)))
                 m_parameters = new ParameterDefinition [0];
             else
                 m_parameters = new ParameterDefinition [paramTable.Rows.Count];
@@ -375,10 +377,10 @@ namespace Mono.Cecil.Implem {
 
         private void ReadMemberReferences ()
         {
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (MemberRefTable)))
+            if (!m_tHeap.HasTable (typeof (MemberRefTable)))
                 return;
 
-            MemberRefTable mrefTable = m_root.Streams.TablesHeap [typeof (MemberRefTable)] as MemberRefTable;
+            MemberRefTable mrefTable = m_tHeap [typeof (MemberRefTable)] as MemberRefTable;
             m_memberRefs = new MemberReference [mrefTable.Rows.Count];
             for (int i = 0; i < mrefTable.Rows.Count; i++) {
                 MemberRefRow mrefRow = mrefTable [i];
@@ -442,12 +444,12 @@ namespace Mono.Cecil.Implem {
         {
             ExternTypeCollection ext = externs as ExternTypeCollection;
 
-            if (!m_root.Streams.TablesHeap.HasTable (typeof (ExportedTypeTable))) {
+            if (!m_tHeap.HasTable (typeof (ExportedTypeTable))) {
                 ext.Loaded = true;
                 return;
             }
 
-            ExportedTypeTable etTable = m_root.Streams.TablesHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
+            ExportedTypeTable etTable = m_tHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
             ITypeReference [] buffer = new ITypeReference [etTable.Rows.Count];
 
             for (int i = 0; i < etTable.Rows.Count; i++) {
@@ -544,11 +546,23 @@ namespace Mono.Cecil.Implem {
         {
         }
 
-        public virtual void ReadMethods (EventDefinition evt)
+        public virtual void Visit (IMarshalSpec marshalSpec)
         {
         }
 
-        public virtual void ReadMethods (PropertyDefinition prop)
+        public virtual void ReadSemantic (EventDefinition evt)
+        {
+        }
+
+        public virtual void ReadSemantic (PropertyDefinition prop)
+        {
+        }
+
+        public virtual void ReadMarshalSpec (ParameterDefinition param)
+        {
+        }
+
+        public virtual void ReadMarshalSpec (FieldDefinition field)
         {
         }
 
@@ -567,7 +581,7 @@ namespace Mono.Cecil.Implem {
         {
             if (fa.SzArray) {
                 if (fa.NumElem == 0)
-                    return new ArrayType (SearchCoreType ("System.Object"));
+                    return new ArrayType (SearchCoreType (Constants.Object));
                 else
                     return new ArrayType (fa.Elems [0].ElemType);
             } else
@@ -604,7 +618,7 @@ namespace Mono.Cecil.Implem {
             if (psig.ByRef)
                 paramType = new ReferenceType (GetTypeRefFromSig (psig.Type));
             else if (psig.TypedByRef)
-                paramType = SearchCoreType ("System.TypedReference");
+                paramType = SearchCoreType (Constants.TypedReference);
             else
                 paramType = GetTypeRefFromSig (psig.Type);
 
@@ -627,6 +641,43 @@ namespace Mono.Cecil.Implem {
                 dec.PermissionSet = permset;
             } //TODO: else
             return dec;
+        }
+
+        protected MarshalDesc BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
+        {
+            if (ms.Spec is MarshalSig.Array) {
+                ArrayMarshalDesc amd = new ArrayMarshalDesc (container);
+                MarshalSig.Array ar = (MarshalSig.Array) ms.Spec;
+                amd.ElemType = ar.ArrayElemType;
+                amd.NumElem = ar.NumElem;
+                amd.ParamNum = ar.ParamNum;
+                amd.ElemMult = ar.ElemMult;
+                return amd;
+            } else if (ms.Spec is MarshalSig.CustomMarshaler) {
+                CustomMarshalerDesc cmd = new CustomMarshalerDesc (container);
+                MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
+                cmd.Guid = new Guid (cmsig.Guid);
+                cmd.UnmanagedType = cmsig.UnmanagedType;
+                cmd.ManagedType = this.Module.Types [cmsig.ManagedType];
+                cmd.Cookie = cmsig.Cookie;
+                return cmd;
+            } else if (ms.Spec is MarshalSig.FixedArray) {
+                FixedArrayDesc fad = new FixedArrayDesc (container);
+                MarshalSig.FixedArray fasig = (MarshalSig.FixedArray) ms.Spec;
+                fad.ElemType = fasig.ArrayElemType;
+                fad.NumElem = fasig.NumElem;
+                return fad;
+            } else if (ms.Spec is MarshalSig.FixedSysString) {
+                FixedSysStringDesc fssc = new FixedSysStringDesc (container);
+                fssc.Size = ((MarshalSig.FixedSysString) ms.Spec).Size;
+                return fssc;
+            } else if (ms.Spec is MarshalSig.SafeArray) {
+                SafeArrayDesc sad = new SafeArrayDesc (container);
+                sad.ElemType = ((MarshalSig.SafeArray) ms.Spec).ArrayElemType;
+                return sad;
+            } else {
+                return new MarshalDesc (ms.NativeInstrinsic, container);
+            }
         }
 
         protected ITypeReference GetModifierType (CustomMod [] cmods, ITypeReference type)
@@ -653,11 +704,11 @@ namespace Mono.Cecil.Implem {
         {
             ITypeReference retType = null;
             if (msig.RetType.Void)
-                retType = SearchCoreType ("System.Void");
+                retType = SearchCoreType (Constants.Void);
             else if (msig.RetType.ByRef)
                 retType = new ReferenceType (GetTypeRefFromSig (msig.RetType.Type));
             else if (msig.RetType.TypedByRef)
-                retType = SearchCoreType ("System.TypedReference");
+                retType = SearchCoreType (Constants.TypedReference);
             else
                 retType = GetTypeRefFromSig (msig.RetType.Type);
 
@@ -677,41 +728,41 @@ namespace Mono.Cecil.Implem {
                 VALUETYPE vt = t as VALUETYPE;
                 return GetTypeDefOrRef (vt.Type);
             case ElementType.String :
-                return SearchCoreType ("System.String");
+                return SearchCoreType (Constants.String);
             case ElementType.Object :
-                return SearchCoreType ("System.Object");
+                return SearchCoreType (Constants.Object);
             case ElementType.Void :
-                return SearchCoreType ("System.Void");
+                return SearchCoreType (Constants.Void);
             case ElementType.Boolean :
-                return SearchCoreType ("System.Boolean");
+                return SearchCoreType (Constants.Boolean);
             case ElementType.Char :
-                return SearchCoreType ("System.Char");
+                return SearchCoreType (Constants.Char);
             case ElementType.I1 :
-                return SearchCoreType ("System.SByte");
+                return SearchCoreType (Constants.SByte);
             case ElementType.U1 :
-                return SearchCoreType ("System.Byte");
+                return SearchCoreType (Constants.Byte);
             case ElementType.I2 :
-                return SearchCoreType ("System.Int16");
+                return SearchCoreType (Constants.Int16);
             case ElementType.U2 :
-                return SearchCoreType ("System.UInt16");
+                return SearchCoreType (Constants.UInt16);
             case ElementType.I4 :
-                return SearchCoreType ("System.Int32");
+                return SearchCoreType (Constants.Int32);
             case ElementType.U4 :
-                return SearchCoreType ("System.UInt32");
+                return SearchCoreType (Constants.UInt32);
             case ElementType.I8 :
-                return SearchCoreType ("System.Int64");
+                return SearchCoreType (Constants.Int64);
             case ElementType.U8 :
-                return SearchCoreType ("System.UInt64");
+                return SearchCoreType (Constants.UInt64);
             case ElementType.R4 :
-                return SearchCoreType ("System.Single");
+                return SearchCoreType (Constants.Single);
             case ElementType.R8 :
-                return SearchCoreType ("System.Double");
+                return SearchCoreType (Constants.Double);
             case ElementType.I :
-                return SearchCoreType ("System.IntPtr");
+                return SearchCoreType (Constants.IntPtr);
             case ElementType.U :
-                return SearchCoreType ("System.UIntPtr");
+                return SearchCoreType (Constants.UIntPtr);
             case ElementType.TypedByRef :
-                return SearchCoreType ("System.TypedReference");
+                return SearchCoreType (Constants.TypedReference);
             case ElementType.Array :
                 ARRAY ary = t as ARRAY;
                 return new ArrayType (GetTypeRefFromSig (ary.Type), ary.Shape);
@@ -723,7 +774,7 @@ namespace Mono.Cecil.Implem {
             case ElementType.Ptr :
                 PTR pointer = t as PTR;
                 if (pointer.Void)
-                    return new PointerType (SearchCoreType ("System.Void"));
+                    return new PointerType (SearchCoreType (Constants.Void));
                 return new PointerType (GetTypeRefFromSig (pointer.PtrType));
             case ElementType.FnPtr :
                 // not very sure of this
