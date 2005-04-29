@@ -17,4 +17,3 @@ namespace Mono.Cecil {
         byte [] Data { get; set; }
     }
 }
-

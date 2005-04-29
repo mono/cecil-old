@@ -10,6 +10,7 @@
 ./Mono.Cecil/IArrayDimensionCollection.cs
 ./Mono.Cecil/IArrayType.cs
 ./Mono.Cecil/IAssemblyDefinition.cs
+./Mono.Cecil/IAssemblyLinkedResource.cs
 ./Mono.Cecil/IAssemblyName.cs
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
@@ -183,6 +184,7 @@
 ./Mono.Cecil.Implem/ArrayDimensionCollection.cs
 ./Mono.Cecil.Implem/ArrayType.cs
 ./Mono.Cecil.Implem/AssemblyDefinition.cs
+./Mono.Cecil.Implem/AssemblyLinkedResource.cs
 ./Mono.Cecil.Implem/AssemblyName.cs
 ./Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
 ./Mono.Cecil.Implem/CodeReader.cs

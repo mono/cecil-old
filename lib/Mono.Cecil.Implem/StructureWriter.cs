@@ -71,6 +71,11 @@ namespace Mono.Cecil.Implem {
             // TODO
         }
 
+        public void Visit (IAssemblyLinkedResource res)
+        {
+            // TODO
+        }
+
         public void Visit (IModuleDefinition module)
         {
             // TODO

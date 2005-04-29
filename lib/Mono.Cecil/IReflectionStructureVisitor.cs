@@ -21,6 +21,7 @@ namespace Mono.Cecil {
         void Visit (IResourceCollection resources);
         void Visit (IEmbeddedResource res);
         void Visit (ILinkedResource res);
+        void Visit (IAssemblyLinkedResource res);
         void Visit (IModuleDefinition module);
         void Visit (IModuleDefinitionCollection modules);
         void Visit (IModuleReference module);

@@ -12,9 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface ILinkedResource : IResource {
+    public interface IAssemblyLinkedResource : IResource {
 
-        byte [] Hash { get; }
-        string File { get; set; }
+        IAssemblyNameReference Assembly { get; set; }
     }
 }
