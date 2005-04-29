@@ -24,6 +24,7 @@
 ./Mono.Cecil/IFieldDefinitionCollection.cs
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
+./Mono.Cecil/IHasMarshalSpec.cs
 ./Mono.Cecil/IHasSecurity.cs
 ./Mono.Cecil/IInterfaceCollection.cs
 ./Mono.Cecil/ILinkedResource.cs
@@ -185,6 +186,7 @@
 ./Mono.Cecil.Implem/AssemblyName.cs
 ./Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
 ./Mono.Cecil.Implem/CodeReader.cs
+./Mono.Cecil.Implem/Constants.cs
 ./Mono.Cecil.Implem/CustomAttribute.cs
 ./Mono.Cecil.Implem/CustomAttributeCollection.cs
 ./Mono.Cecil.Implem/EmbeddedResource.cs
@@ -197,14 +199,15 @@
 ./Mono.Cecil.Implem/FieldDefinitionCollection.cs
 ./Mono.Cecil.Implem/FieldReference.cs
 ./Mono.Cecil.Implem/FunctionPointerType.cs
+./Mono.Cecil.Implem/IDetailReader.cs
 ./Mono.Cecil.Implem/ILazyLoadable.cs
-./Mono.Cecil.Implem/IMethodsReader.cs
 ./Mono.Cecil.Implem/Instruction.cs
 ./Mono.Cecil.Implem/InstructionCollection.cs
 ./Mono.Cecil.Implem/InterfaceCollection.cs
 ./Mono.Cecil.Implem/LazyLoader.cs
 ./Mono.Cecil.Implem/LazyReflectionReader.cs
 ./Mono.Cecil.Implem/LinkedResource.cs
+./Mono.Cecil.Implem/MarshalDesc.cs
 ./Mono.Cecil.Implem/MemberDefinition.cs
 ./Mono.Cecil.Implem/MemberReference.cs
 ./Mono.Cecil.Implem/MethodBody.cs
@@ -253,7 +256,7 @@
 ./Mono.Cecil.Signatures/ISignatureVisitable.cs
 ./Mono.Cecil.Signatures/ISignatureVisitor.cs
 ./Mono.Cecil.Signatures/LocalVarSig.cs
-./Mono.Cecil.Signatures/MarshalSpec.cs
+./Mono.Cecil.Signatures/MarshalSig.cs
 ./Mono.Cecil.Signatures/MethodDefSig.cs
 ./Mono.Cecil.Signatures/MethodRefSig.cs
 ./Mono.Cecil.Signatures/MethodSig.cs
