@@ -19,7 +19,6 @@ namespace Mono.Cecil.Metadata {
 
         private IList m_items;
 
-        private MetadataRoot m_root;
         private BlobHeap m_blobHeap;
         private GuidHeap m_guidHeap;
         private StringsHeap m_stringsHeap;
@@ -83,9 +82,8 @@ namespace Mono.Cecil.Metadata {
             }
         }
 
-        public MetadataStreamCollection (MetadataRoot root)
+        public MetadataStreamCollection ()
         {
-            m_root = root;
             m_items = new ArrayList (5);
         }
 

@@ -80,7 +80,7 @@ namespace Mono.Cecil.Metadata {
 <% $tables.each { |table| %>        public void Visit (<%=table.table_name%> table)
         {
             int number = GetNumberOfRows (typeof (<%=table.table_name%>));
-            table.Rows = new RowCollection (table, number);
+            table.Rows = new RowCollection (number);
             for (int i = 0; i < number; i++)
                 table.Rows.Add (new <%=table.row_name%> ());
         }

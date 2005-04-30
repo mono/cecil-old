@@ -17,8 +17,6 @@ namespace Mono.Cecil.Metadata {
         private MetadataStreamHeader m_header;
         private MetadataHeap m_heap;
 
-        private MetadataRoot m_root;
-
         public MetadataStreamHeader Header {
             get { return m_header; }
             set { m_header = value; }
@@ -29,9 +27,8 @@ namespace Mono.Cecil.Metadata {
             set { m_heap = value; }
         }
 
-        internal MetadataStream (MetadataRoot root)
+        internal MetadataStream ()
         {
-            m_root = root;
         }
 
         public void Accept (IMetadataVisitor visitor)

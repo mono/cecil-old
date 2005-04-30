@@ -272,3 +272,5 @@
 ./Mono.Cecil.Signatures/SzArray.cs
 ./Mono.Cecil.Signatures/TypeSpec.cs
 ./Mono.Cecil.Signatures/ValueType.cs
+./Mono.Xml/MiniParser.cs
+./Mono.Xml/SecurityParser.cs

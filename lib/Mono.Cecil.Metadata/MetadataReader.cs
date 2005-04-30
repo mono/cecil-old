@@ -38,7 +38,7 @@ namespace Mono.Cecil.Metadata {
         {
             m_root = root;
             root.Header = new MetadataRoot.MetadataRootHeader ();
-            root.Streams = new MetadataStreamCollection (root);
+            root.Streams = new MetadataStreamCollection ();
         }
 
         public void Visit (MetadataRoot.MetadataRootHeader header)
@@ -88,7 +88,7 @@ namespace Mono.Cecil.Metadata {
         public void Visit (MetadataStreamCollection coll)
         {
             for (int i = 0; i < m_root.Header.Streams; i++)
-                coll.Add (new MetadataStream (m_root));
+                coll.Add (new MetadataStream ());
         }
 
         public void Visit (MetadataStream stream)

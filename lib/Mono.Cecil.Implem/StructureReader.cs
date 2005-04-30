@@ -45,9 +45,8 @@ namespace Mono.Cecil.Implem {
         public void Visit (IAssemblyDefinition asm)
         {
             m_asmDef = asm as AssemblyDefinition;
-            AssemblyTable atable = m_tHeap [typeof(AssemblyTable)] as AssemblyTable;
-            if (atable == null || atable.Rows == null || atable.Rows [0] == null)
-                throw new ReflectionException ("Can not create an AssemblyDefinition");
+            if (!m_tHeap.HasTable (typeof (AssemblyTable)))
+                throw new ReflectionException ("No manifest assembly");
         }
 
         public void Visit (IAssemblyNameDefinition name)
@@ -67,18 +66,20 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IAssemblyNameReferenceCollection names)
         {
-            AssemblyRefTable aref = m_tHeap [typeof(AssemblyRefTable)] as AssemblyRefTable;
-            if (aref != null && aref.Rows.Count > 0) {
-                foreach (AssemblyRefRow arefrow in aref.Rows) {
-                    AssemblyNameReference aname = new AssemblyNameReference (
-                        m_img.MetadataRoot.Streams.StringsHeap [arefrow.Name],
-                        m_img.MetadataRoot.Streams.StringsHeap [arefrow.Culture],
-                        new Version (arefrow.MajorVersion, arefrow.MinorVersion,
-                                     arefrow.BuildNumber, arefrow.RevisionNumber));
-                    aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arefrow.PublicKeyOrToken);
-                    aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arefrow.HashValue);
-                    (names as AssemblyNameReferenceCollection).Add (aname);
-                }
+            if (!m_tHeap.HasTable (typeof (AssemblyRefTable)))
+                return;
+
+            AssemblyRefTable arTable = m_tHeap [typeof(AssemblyRefTable)] as AssemblyRefTable;
+            for (int i = 0; i < arTable.Rows.Count; i++) {
+                AssemblyRefRow arRow = arTable [i];
+                AssemblyNameReference aname = new AssemblyNameReference (
+                    m_img.MetadataRoot.Streams.StringsHeap [arRow.Name],
+                    m_img.MetadataRoot.Streams.StringsHeap [arRow.Culture],
+                    new Version (arRow.MajorVersion, arRow.MinorVersion,
+                                 arRow.BuildNumber, arRow.RevisionNumber));
+                aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.PublicKeyOrToken);
+                aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.HashValue);
+                (names as AssemblyNameReferenceCollection).Add (aname);
             }
         }
 
@@ -198,11 +199,14 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IModuleReferenceCollection modules)
         {
-            ModuleDefinition mod = modules.Container as ModuleDefinition;
-            ModuleRefTable mrt = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
-            if (mrt != null && mrt.Rows.Count > 0)
-                foreach (ModuleRefRow mrr in mrt.Rows)
-                    (modules as ModuleReferenceCollection).Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrr.Name]));
+            if (!m_tHeap.HasTable (typeof (ModuleRefTable)))
+                return;
+
+            ModuleRefTable mrTable = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
+            for (int i = 0; i < mrTable.Rows.Count; i++) {
+                ModuleRefRow mrRow = mrTable [i];
+                (modules as ModuleReferenceCollection).Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
+            }
         }
     }
 }

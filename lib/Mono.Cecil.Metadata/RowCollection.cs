@@ -19,8 +19,6 @@ namespace Mono.Cecil.Metadata {
 
         private IList m_items;
 
-        private IMetadataTable m_table;
-
         public IMetadataRow this [int index] {
             get { return m_items [index] as IMetadataRow; }
             set { m_items [index] = value; }
@@ -38,15 +36,13 @@ namespace Mono.Cecil.Metadata {
             get { return this; }
         }
 
-        internal RowCollection (IMetadataTable table, int size)
+        internal RowCollection (int size)
         {
-            m_table = table;
             m_items = new ArrayList (size);
         }
 
-        internal RowCollection (IMetadataTable table)
+        internal RowCollection ()
         {
-            m_table = table;
             m_items = new ArrayList ();
         }
 

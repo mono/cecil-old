@@ -42,4 +42,3 @@ namespace Mono.Cecil.Implem {
         }
     }
 }
-
