@@ -229,7 +229,7 @@ namespace Mono.Cecil.Implem {
             ReadTypeSpecs ();
 
             // set base types
-            for (int i = O; i < typesTable.Rows.Count; i++) {
+            for (int i = 0; i < typesTable.Rows.Count; i++) {
                 TypeDefRow type = typesTable [i];
                 TypeDefinition child = m_typeDefs [i];
                 child.BaseType = GetTypeDefOrRef (type.Extends);
