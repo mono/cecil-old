@@ -21,6 +21,7 @@ namespace Mono.Cecil {
         void Visit (IInterfaceCollection interfaces);
         void Visit (IExternTypeCollection externs);
         void Visit (IOverrideCollection meth);
+        void Visit (INestedTypeCollection nestedTypes);
         void Visit (IParameterDefinitionCollection parameters);
         void Visit (IParameterDefinition parameter);
         void Visit (IMethodDefinitionCollection methods);

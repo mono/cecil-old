@@ -62,6 +62,11 @@ namespace Mono.Cecil.Implem {
             // TODO
         }
 
+        public void Visit (INestedTypeCollection nestedTypes)
+        {
+            // TODO
+        }
+
         public void Visit (IParameterDefinitionCollection parameters)
         {
             // TODO

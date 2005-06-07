@@ -44,6 +44,7 @@
 ./Mono.Cecil/IModuleDefinitionCollection.cs
 ./Mono.Cecil/IModuleReference.cs
 ./Mono.Cecil/IModuleReferenceCollection.cs
+./Mono.Cecil/INestedTypeCollection.cs
 ./Mono.Cecil/IOverrideCollection.cs
 ./Mono.Cecil/IParameter.cs
 ./Mono.Cecil/IParameterDefinitionCollection.cs
@@ -230,6 +231,7 @@
 ./Mono.Cecil.Implem/ModuleDefinitionCollection.cs
 ./Mono.Cecil.Implem/ModuleReference.cs
 ./Mono.Cecil.Implem/ModuleReferenceCollection.cs
+./Mono.Cecil.Implem/NestedTypeCollection.cs
 ./Mono.Cecil.Implem/OverrideCollection.cs
 ./Mono.Cecil.Implem/ParameterDefinition.cs
 ./Mono.Cecil.Implem/ParameterDefinitionCollection.cs

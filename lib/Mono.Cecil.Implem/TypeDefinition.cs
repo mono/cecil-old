@@ -27,6 +27,7 @@ namespace Mono.Cecil.Implem {
         private uint m_classSize;
 
         private InterfaceCollection m_interfaces;
+        private NestedTypeCollection m_nestedTypes;
         private MethodDefinitionCollection m_methods;
         private FieldDefinitionCollection m_fields;
         private EventDefinitionCollection m_events;
@@ -83,6 +84,14 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public INestedTypeCollection NestedTypes {
+            get {
+                if (m_nestedTypes == null)
+                    m_nestedTypes = new NestedTypeCollection (this);
+                return m_nestedTypes;
+            }
+        }
+
         public IMethodDefinitionCollection Methods {
             get {
                 if (m_methods == null)
@@ -128,6 +137,25 @@ namespace Mono.Cecil.Implem {
         {
             m_hasInfo = false;
             m_attributes = attrs;
+        }
+
+        public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes)
+        {
+            return DefineNestedType (name, attributes, typeof (object));
+        }
+
+        public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType)
+        {
+            TypeDefinition type = new TypeDefinition (name, string.Empty, attributes, m_module);
+            type.BaseType = baseType;
+            (m_nestedTypes as NestedTypeCollection) [name] = type;
+            (m_module.Types as TypeDefinitionCollection) [type.FullName] = type;
+            return type;
+        }
+
+        public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType)
+        {
+            return DefineNestedType (name, attributes, m_module.Controller.Helper.RegisterType (baseType));
         }
 
         public IMethodDefinition DefineMethod (string name, MethodAttributes attributes)

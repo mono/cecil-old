@@ -21,6 +21,11 @@ namespace Mono.Cecil {
         IInterfaceCollection Interfaces { get; }
         IClassLayoutInfo LayoutInfo { get; }
 
+        INestedTypeCollection NestedTypes { get; }
+        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);
+        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType);
+        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType);
+
         IMethodDefinitionCollection Methods { get; }
         IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
         IMethodDefinition DefineConstructor ();

@@ -189,6 +189,7 @@ namespace Mono.Cecil.Implem {
                     TypeDefinition child = GetTypeDefAt ((int) row.NestedClass);
 
                     child.DeclaringType = parent;
+                    (parent.NestedTypes as NestedTypeCollection) [child.Name] = child;
                 }
             }
 
@@ -503,6 +504,10 @@ namespace Mono.Cecil.Implem {
         }
 
         public virtual void Visit (IOverrideCollection meth)
+        {
+        }
+
+        public virtual void Visit (INestedTypeCollection nestedTypes)
         {
         }
 

@@ -1,3 +1,18 @@
 2005-06-07  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources,
+	* CodeGen/cecil.xml,
+	* Mono.Cecil/IReflectionVisitor.cs,
+	* Mono.Cecil/INestedTypeCollection.cs,
+	* Mono.Cecil/ITypeDefinition,
+	* Mono.Cecil.Implem/ReflectionReader.cs,
+	* Mono.Cecil.Implem/ReflectionWriter.cs,
+	* Mono.Cecil.Implem/TypeDefinition.cs,
+	* Mono.Cecil.Implem/NestedTypeCollection:
+		Add a collection of nested types for type definition
+
+	* Mono.Cecil.Implem/ModuleDefinition.cs: simplify type creation
+
+2005-06-07  Jb Evain  <jbevain@gmail.com>
+
 	* ChangeLog: Cecil has now ChangeLogs. Let use them.

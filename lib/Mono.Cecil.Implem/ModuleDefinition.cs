@@ -183,9 +183,7 @@ namespace Mono.Cecil.Implem {
 
         public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes)
         {
-            TypeDefinition type = new TypeDefinition (name, ns, attributes, this);
-            m_types [type.FullName] = type;
-            return type;
+            return DefineType (name, ns, attributes, typeof (object));
         }
 
         public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType)
