@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -27,7 +27,7 @@ namespace Mono.Cecil.Metadata {
 
         private TableCollection m_tables;
 
-        private static IDictionary m_tidCache;
+        private static IDictionary m_tidCache = new Hashtable (46);
 
         public TableCollection Tables {
             get { return m_tables; }
@@ -42,7 +42,6 @@ namespace Mono.Cecil.Metadata {
 
         internal TablesHeap (MetadataStream stream) : base(stream, "#~")
         {
-            m_tidCache = new Hashtable (46);
         }
 
         public bool HasTable (Type table)

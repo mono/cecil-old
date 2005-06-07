@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -53,10 +53,23 @@ namespace Mono.Cecil.Implem {
             return ca;
         }
 
-        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
         {
-            //TODO: implement this
-            return null;
+            return DefineCustomAttribute (
+                (m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor));
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
+        {
+            CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
+            (m_customAttrOwner.CustomAttributes as CustomAttributeCollection).Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
+        {
+            return DefineCustomAttribute (
+                (m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor), data);
         }
 
         public MethodReturnType (ITypeReference retType)

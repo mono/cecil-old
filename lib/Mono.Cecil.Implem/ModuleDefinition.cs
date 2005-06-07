@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Implem {
 
     using System;
-    using System.Reflection;
 
     using Mono.Cecil;
     using Mono.Cecil.Binary;
@@ -34,9 +33,10 @@ namespace Mono.Cecil.Implem {
         private CustomAttributeCollection m_customAttrs;
 
         private AssemblyDefinition m_asm;
-        private ImageReader m_reader;
-        private LazyLoader m_loader;
-        private StructureWriter m_writer;
+        private Image m_image;
+
+        private ImageReader m_imgReader;
+        private ReflectionController m_controller;
 
         public string Name {
             get { return m_name; }
@@ -76,7 +76,7 @@ namespace Mono.Cecil.Implem {
         public IExternTypeCollection ExternTypes {
             get {
                 if (m_externs == null)
-                    m_externs = new ExternTypeCollection (this, m_loader);
+                    m_externs = new ExternTypeCollection (this, m_controller);
                 return m_externs;
             }
         }
@@ -84,7 +84,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this, m_loader);
+                    m_customAttrs = new CustomAttributeCollection (this, m_controller);
                 return m_customAttrs;
             }
         }
@@ -93,16 +93,25 @@ namespace Mono.Cecil.Implem {
             get { return m_asm; }
         }
 
-        public ImageReader Reader {
-            get { return m_reader; }
+        public ReflectionController Controller {
+            get { return m_controller; }
         }
 
-        public LazyLoader Loader {
-            get { return m_loader; }
+        public ImageReader ImageReader {
+            get { return m_imgReader; }
         }
 
-        public StructureWriter Writer {
-            get { return m_writer; }
+        public Image Image {
+            get { return m_image; }
+            set { m_image = value; }
+        }
+
+        public ModuleDefinition (string name, AssemblyDefinition asm) : this (name, asm, null, false)
+        {
+        }
+
+        public ModuleDefinition (string name, AssemblyDefinition asm, bool main) : this (name, asm, null, main)
+        {
         }
 
         public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, asm, reader, false)
@@ -112,27 +121,42 @@ namespace Mono.Cecil.Implem {
         public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader, bool main)
         {
             if (asm == null)
-                throw new ArgumentException ("asm");
+                throw new ArgumentNullException ("asm");
             if (name == null || name.Length == 0)
-                throw new ArgumentException ("name");
+                throw new ArgumentNullException ("name");
 
             m_asm = asm;
             m_name = name;
             m_main = main;
-            m_reader = reader;
-            m_loader = new LazyLoader (this, asm.LoadingType);
-            m_writer = new StructureWriter (this);
             m_mvid = new Guid ();
+
+            if (reader != null) {
+                m_image = reader.Image;
+                m_imgReader = reader;
+            } else
+                m_image = Image.CreateImage ();
+
+            m_controller = new ReflectionController (this, asm.LoadingType);
             m_modRefs = new ModuleReferenceCollection (this);
             m_asmRefs = new AssemblyNameReferenceCollection (this);
             m_res = new ResourceCollection (this);
-            m_types = new TypeDefinitionCollection (this, m_loader);
+            m_types = new TypeDefinitionCollection (this, m_controller);
             m_refs = new TypeReferenceCollection (this);
         }
 
-        public void DefineModuleReference (string module)
+        public IAssemblyNameReference DefineAssemblyReference (string name)
         {
-            m_modRefs.Add (new ModuleReference (module));
+            AssemblyNameReference asmRef = new AssemblyNameReference ();
+            asmRef.Name = name;
+            m_asmRefs.Add (asmRef);
+            return asmRef;
+        }
+
+        public IModuleReference DefineModuleReference (string module)
+        {
+            ModuleReference mod = new ModuleReference (module);
+            m_modRefs.Add (mod);
+            return mod;
         }
 
         public IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
@@ -149,6 +173,34 @@ namespace Mono.Cecil.Implem {
             return res;
         }
 
+        public IAssemblyLinkedResource DefineAssemblyLinkedResource (string name, ManifestResourceAttributes attributes,
+                                                                     IAssemblyNameReference asm)
+        {
+            AssemblyLinkedResource res = new AssemblyLinkedResource (name, attributes, this, asm as AssemblyNameReference);
+            m_res [name] = res;
+            return res;
+        }
+
+        public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes)
+        {
+            TypeDefinition type = new TypeDefinition (name, ns, attributes, this);
+            m_types [type.FullName] = type;
+            return type;
+        }
+
+        public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType)
+        {
+            TypeDefinition type = new TypeDefinition (name, ns, attributes, this);
+            type.BaseType = baseType;
+            m_types [type.FullName] = type;
+            return type;
+        }
+
+        public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType)
+        {
+            return DefineType (name, ns, attributes, m_controller.Helper.RegisterType (baseType));
+        }
+
         public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
         {
             CustomAttribute ca = new CustomAttribute(ctor);
@@ -156,11 +208,22 @@ namespace Mono.Cecil.Implem {
             return ca;
         }
 
-        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
         {
-            CustomAttribute ca = new CustomAttribute (m_writer.ReflectionHelper.RegisterConstructor(ctor));
+            return DefineCustomAttribute (m_controller.Helper.RegisterConstructor(ctor));
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
+        {
+            CustomAttribute ca = m_controller.Reader.GetCustomAttribute (ctor, data);
             m_customAttrs.Add (ca);
             return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
+        {
+            return DefineCustomAttribute (
+                m_controller.Helper.RegisterConstructor(ctor), data);
         }
 
         public void Accept (IReflectionStructureVisitor visitor)

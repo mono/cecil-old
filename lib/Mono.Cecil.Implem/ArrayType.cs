@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -70,9 +70,9 @@ namespace Mono.Cecil.Implem {
         {
             for (int i = 0; i < shape.Rank; i++) {
                 if (i < shape.NumSizes)
-                    m_dimensions.Add (new ArrayDimension (shape.LoBounds [i], shape.LoBounds [i] + shape.Sizes [i] - 1));
+                    DefineDimension (shape.LoBounds [i], shape.LoBounds [i] + shape.Sizes [i] - 1);
                 else
-                    m_dimensions.Add (new ArrayDimension (0, 0));
+                    DefineDimension ();
             }
         }
 
@@ -80,6 +80,18 @@ namespace Mono.Cecil.Implem {
         {
             m_elementsType = elementsType;
             m_dimensions = new ArrayDimensionCollection (this);
+        }
+
+        public IArrayDimension DefineDimension ()
+        {
+            return DefineDimension (0, 0);
+        }
+
+        public IArrayDimension DefineDimension (int lowerBound, int upperBound)
+        {
+            ArrayDimension dim = new ArrayDimension (lowerBound, upperBound);
+            m_dimensions.Add (dim);
+            return dim;
         }
     }
 }

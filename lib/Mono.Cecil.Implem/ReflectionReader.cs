@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -22,13 +22,13 @@ namespace Mono.Cecil.Implem {
     using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
     using Mono.Cecil.Signatures;
+
     using Mono.Xml;
 
     internal abstract class ReflectionReader : IReflectionVisitor, IDetailReader {
 
         private ModuleDefinition m_module;
         private ImageReader m_reader;
-        protected SignatureReader m_sigReader;
         protected SecurityParser m_secParser;
         protected MetadataRoot m_root;
         protected TablesHeap m_tHeap;
@@ -43,6 +43,9 @@ namespace Mono.Cecil.Implem {
         protected MemberReference [] m_memberRefs;
         protected ParameterDefinition [] m_parameters;
 
+        protected SignatureReader m_sigReader;
+        protected CodeReader m_codeReader;
+
         private bool m_isCorlib;
 
         public ModuleDefinition Module {
@@ -53,6 +56,10 @@ namespace Mono.Cecil.Implem {
             get { return m_sigReader; }
         }
 
+        public CodeReader Code {
+            get { return m_codeReader; }
+        }
+
         public MetadataRoot MetadataRoot {
             get { return m_root; }
         }
@@ -60,12 +67,13 @@ namespace Mono.Cecil.Implem {
         public ReflectionReader (ModuleDefinition module)
         {
             m_module = module;
-            m_reader = m_module.Reader;
-            m_root = m_reader.Image.MetadataRoot;
+            m_reader = m_module.ImageReader;
+            m_root = m_module.Image.MetadataRoot;
             m_tHeap = m_root.Streams.TablesHeap;
+            m_codeReader = new CodeReader (this);
             m_sigReader = new SignatureReader (m_root, this);
             m_secParser = new SecurityParser ();
-            m_isCorlib = m_reader.Image.FileInformation.Name == Constants.Corlib;
+            m_isCorlib = m_module.Image.FileInformation != null && m_module.Image.FileInformation.Name == Constants.Corlib;
         }
 
         public TypeDefinition GetTypeDefAt (int rid)
@@ -122,7 +130,7 @@ namespace Mono.Cecil.Implem {
             case TokenType.TypeRef :
                 return GetTypeRefAt ((int) token.RID);
             case TokenType.TypeSpec :
-                return m_typeSpecs [token.RID - 1];
+                return GetTypeSpecAt ((int) token.RID);
             default :
                 return null;
             }
@@ -142,6 +150,12 @@ namespace Mono.Cecil.Implem {
                 (m_module.TypeReferences as TypeReferenceCollection) [coreType.FullName] = coreType;
             }
             return coreType;
+        }
+
+        public CustomAttribute GetCustomAttribute (IMethodReference ctor, byte [] data)
+        {
+            CustomAttrib sig = m_sigReader.GetCustomAttrib (data, ctor);
+            return BuildCustomAttribute (ctor, sig);
         }
 
         public virtual void Visit (ITypeDefinitionCollection types)
@@ -187,30 +201,32 @@ namespace Mono.Cecil.Implem {
                 for (int i = 0; i < typesRef.Rows.Count; i++) {
                     TypeRefRow type = typesRef [i];
                     IMetadataScope scope = null;
-                    if (type.ResolutionScope.TokenType == TokenType.Assembly)
+                    TypeReference parent = null;
+                    switch (type.ResolutionScope.TokenType) {
+                    case TokenType.AssemblyRef :
                         scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
-                    else if (type.ResolutionScope.TokenType == TokenType.ModuleRef)
+                        break;
+                    case TokenType.ModuleRef :
                         scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+                        break;
+                    case TokenType.TypeRef :
+                        parent = GetTypeRefAt ((int) type.ResolutionScope.RID);
+                        scope = parent.Scope;
+                        break;
+                    }
 
                     TypeReference t = new TypeReference (
                         m_root.Streams.StringsHeap [type.Name],
                         m_root.Streams.StringsHeap [type.Namespace],
                         m_module, scope);
 
+                    if (parent != null)
+                        t.DeclaringType = parent;
+
                     m_typeRefs [i] = t;
                     (m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;
                 }
 
-                // nested type ref
-
-                for (int i = 0; i < typesRef.Rows.Count; i++) {
-                    TypeRefRow type = typesRef [i];
-                    if (type.ResolutionScope.TokenType != TokenType.TypeRef)
-                        continue;
-
-                    TypeReference child = m_typeRefs [i];
-                    child.DeclaringType = GetTypeRefAt ((int) type.ResolutionScope.RID);
-                }
             } else
                 m_typeRefs = new TypeReference [0];
 
@@ -373,6 +389,10 @@ namespace Mono.Cecil.Implem {
                     methDefs.Add (mdef);
                 }
             }
+
+            int eprid = (int) m_reader.Image.CLIHeader.EntryPointToken;
+            if (eprid != 0)
+                m_module.Assembly.EntryPoint = GetMethodDefAt (eprid);
         }
 
         private void ReadMemberReferences ()
@@ -417,7 +437,7 @@ namespace Mono.Cecil.Implem {
                                                                 methdef.ExplicitThis, methdef.CallingConvention);
                     break;
                 case TokenType.ModuleRef :
-                    break; //TODO: implement that, or not
+                    break; // implement that, or not
                 }
 
                 m_memberRefs [i] = member;
@@ -652,14 +672,21 @@ namespace Mono.Cecil.Implem {
 
         protected SecurityDeclaration BuildSecurityDeclaration (DeclSecurityRow dsRow)
         {
-            SecurityDeclaration dec = new SecurityDeclaration (dsRow.Action);
             if (m_root.Header.MajorVersion < 2) {
-                PermissionSet permset = new PermissionSet (PermissionState.None);
-                m_secParser.Reset ();
-                m_secParser.LoadXml (Encoding.Unicode.GetString (m_root.Streams.BlobHeap.Read (dsRow.PermissionSet)));
-                permset.FromXml (m_secParser.ToXml ());
-                dec.PermissionSet = permset;
+                return BuildSecurityDeclaration (dsRow.Action, m_root.Streams.BlobHeap.Read (dsRow.PermissionSet));
             } //TODO: else
+
+            return null;
+        }
+
+        public SecurityDeclaration BuildSecurityDeclaration (Mono.Cecil.SecurityAction action, byte [] permset)
+        {
+            SecurityDeclaration dec = new SecurityDeclaration (action);
+            PermissionSet ps = new PermissionSet (PermissionState.None);
+            m_secParser.Reset ();
+            m_secParser.LoadXml (Encoding.Unicode.GetString (permset));
+            ps.FromXml (m_secParser.ToXml ());
+            dec.PermissionSet = ps;
             return dec;
         }
 

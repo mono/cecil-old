@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -36,8 +36,8 @@ namespace Mono.Cecil.Implem {
         {
             MethodDefinition meth = body.Method as MethodDefinition;
             MethodBody methBody = body as MethodBody;
-            BinaryReader br = m_reflectReader.Module.Reader.GetReader ();
-            br.BaseStream.Position = m_reflectReader.Module.Reader.Image.ResolveVirtualAddress (meth.RVA);
+            BinaryReader br = m_reflectReader.Module.ImageReader.GetReader ();
+            br.BaseStream.Position = m_reflectReader.Module.ImageReader.Image.ResolveVirtualAddress (meth.RVA);
 
             // lets read the method
             int flags = br.ReadByte ();
@@ -92,28 +92,39 @@ namespace Mono.Cecil.Implem {
                     break;
                 case OperandType.InlineSwitch :
                     uint length = br.ReadUInt32 ();
-                    int [] branches = new int [length];
+                    Label [] branches = new Label [length];
+                    int [] buf = new int [length];
                     for (int i = 0; i < length; i++)
-                        branches [i] = br.ReadInt32 ();
+                        buf [i] = br.ReadInt32 ();
                     for (int i = 0; i < length; i++)
-                        branches [i] = Convert.ToInt32 (br.BaseStream.Position - start + branches [i]);
+                        branches [i] = new Label (Convert.ToInt32 (br.BaseStream.Position - start + buf [i]));
                     instr.Operand = branches;
                     break;
                 case OperandType.ShortInlineBrTarget :
                     byte sbrtgt = br.ReadByte ();
-                    instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt);
+                    instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt));
                     break;
                 case OperandType.ShortInlineI :
+                    instr.Operand = br.ReadByte ();
+                    break;
                 case OperandType.ShortInlineVar :
+                    instr.Operand = body.Variables [br.ReadByte ()];
+                    break;
+                case OperandType.ShortInlineParam :
                     instr.Operand = br.ReadByte ();
                     break;
                 case OperandType.InlineBrTarget :
                     int brtgt = br.ReadInt32 ();
-                    instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + brtgt);
+                    instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
                     break;
                 case OperandType.InlineSig :
-                case OperandType.InlineVar :
                 case OperandType.InlineI :
+                    instr.Operand = br.ReadInt32 ();
+                    break;
+                case OperandType.InlineVar :
+                    instr.Operand = body.Variables [br.ReadInt32 ()];
+                    break;
+                case OperandType.InlineParam :
                     instr.Operand = br.ReadInt32 ();
                     break;
                 case OperandType.InlineI8 :
@@ -187,8 +198,7 @@ namespace Mono.Cecil.Implem {
                 br.ReadBytes (2);
 
                 for (int i = 0; i < length; i++) {
-                    ExceptionHandler eh = new ExceptionHandler ();
-                    eh.Type = (ExceptionHandlerType) (br.ReadInt16 () & 0x7);
+                    ExceptionHandler eh = new ExceptionHandler ((ExceptionHandlerType) (br.ReadInt16 () & 0x7));
                     eh.TryOffset = br.ReadInt16 ();
                     eh.TryLength = br.ReadByte ();
                     eh.HandlerOffset = br.ReadInt16 ();
@@ -216,8 +226,7 @@ namespace Mono.Cecil.Implem {
                 if ((flags & (int) MethodDataSection.EHTable) == 0)
                     br.ReadBytes (length * 24);
                 for (int i = 0; i < length; i++) {
-                    ExceptionHandler eh = new ExceptionHandler ();
-                    eh.Type = (ExceptionHandlerType) (br.ReadInt32 () & 0x7);
+                    ExceptionHandler eh = new ExceptionHandler ((ExceptionHandlerType) (br.ReadInt32 () & 0x7));
                     eh.TryOffset = br.ReadInt32 ();
                     eh.TryLength = br.ReadInt32 ();
                     eh.HandlerOffset = br.ReadInt32 ();

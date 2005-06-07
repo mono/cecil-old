@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -40,8 +40,9 @@ namespace Mono.Cecil.Signatures {
         public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
         {
             m_root = root;
-            m_blobData = m_root.Streams.BlobHeap.Data;
             m_reflectReader = reflectReader;
+
+            m_blobData = m_root.Streams.BlobHeap != null ? m_root.Streams.BlobHeap.Data : new byte [0];
 
             m_fieldSigs = new Hashtable ();
             m_propSigs = new Hashtable ();
@@ -130,6 +131,12 @@ namespace Mono.Cecil.Signatures {
                 m_customAttribs [index] = ca;
             }
             return ca;
+        }
+
+        public CustomAttrib GetCustomAttrib (byte [] data, IMethodReference ctor)
+        {
+            BinaryReader br = new BinaryReader (new MemoryStream (data));
+            return ReadCustomAttrib (br, data, ctor);
         }
 
         public Signature GetMemberRefSig (TokenType tt, uint index)
@@ -455,7 +462,12 @@ namespace Mono.Cecil.Signatures {
             int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
             byte [] data = new byte [length];
             Buffer.BlockCopy (m_blobData, start, data, 0, length);
-            BinaryReader br = new BinaryReader (new MemoryStream (data));
+            return ReadCustomAttrib (new BinaryReader (new MemoryStream (data)), data, ctor);
+        }
+
+        private CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, IMethodReference ctor)
+        {
+
             CustomAttrib ca = new CustomAttrib (ctor);
             ca.Prolog = br.ReadUInt16 ();
             if (ca.Prolog != CustomAttrib.StdProlog)

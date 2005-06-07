@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -59,15 +59,19 @@ namespace Mono.Cecil.Binary {
             get { return m_img; }
         }
 
-        private Image (FileInfo img)
+        private Image ()
         {
-            m_img = img;
             m_dosHeader = new DOSHeader ();
             m_peFileHeader = new PEFileHeader ();
             m_peOptionalHeader = new PEOptionalHeader ();
             m_sections = new SectionCollection ();
             m_cliHeader = new CLIHeader ();
             m_mdRoot = new MetadataRoot (this);
+        }
+
+        private Image (FileInfo img) : this ()
+        {
+            m_img = img;
         }
 
         public long ResolveVirtualAddress (RVA rva)
@@ -96,13 +100,25 @@ namespace Mono.Cecil.Binary {
             visitor.Terminate (this);
         }
 
+        public static Image CreateImage ()
+        {
+            Image img = new Image ();
+
+            ImageInitializer init = new ImageInitializer (img);
+            img.Accept (init);
+
+            return img;
+        }
+
         public static Image GetImage (string file)
         {
             if (file == null || file.Length == 0)
                 throw new ArgumentException ("file");
+
             FileInfo img = new FileInfo (file);
             if (!File.Exists (img.FullName))
                 throw new FileNotFoundException (img.FullName);
+
             Image ret = new Image (img);
             return ret;
         }

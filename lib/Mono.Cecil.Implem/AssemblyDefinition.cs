@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -21,10 +21,12 @@ namespace Mono.Cecil.Implem {
 
         private AssemblyNameDefinition m_asmName;
         private ModuleDefinitionCollection m_modules;
-        private SecurityDeclarationCollection m_secDecl;
+        private SecurityDeclarationCollection m_secDecls;
         private CustomAttributeCollection m_customAttrs;
+        private MethodDefinition m_ep;
 
-        private StructureReader m_sr;
+        private ModuleDefinition m_mainModule;
+        private StructureReader m_reader;
         private LoadingType m_loadingType;
 
         public IAssemblyNameDefinition Name {
@@ -37,31 +39,38 @@ namespace Mono.Cecil.Implem {
 
         public ISecurityDeclarationCollection SecurityDeclarations {
             get {
-                if (m_secDecl == null)
-                    m_secDecl = new SecurityDeclarationCollection (this, (this.MainModule as ModuleDefinition).Loader);
-                return m_secDecl;
+                if (m_secDecls == null)
+                    m_secDecls = new SecurityDeclarationCollection (this, (this.MainModule as ModuleDefinition).Controller);
+                return m_secDecls;
             }
         }
 
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this, (this.MainModule as ModuleDefinition).Loader);
+                    m_customAttrs = new CustomAttributeCollection (this, (this.MainModule as ModuleDefinition).Controller);
                 return m_customAttrs;
             }
         }
 
+        public IMethodDefinition EntryPoint {
+            get { return m_ep; }
+            set { m_ep = value as MethodDefinition; }
+        }
+
         public IModuleDefinition MainModule {
             get {
-                foreach (IModuleDefinition mod in m_modules)
-                    if (mod.Main)
-                        return mod;
-                throw new ReflectionException ("No main module defined");
+                if (m_mainModule == null)
+                    foreach (ModuleDefinition module in m_modules)
+                        if (module.Main)
+                            m_mainModule = module;
+
+                return m_mainModule;
             }
         }
 
         public StructureReader Reader {
-            get { return m_sr; }
+            get { return m_reader; }
         }
 
         public LoadingType LoadingType {
@@ -69,17 +78,19 @@ namespace Mono.Cecil.Implem {
             set { m_loadingType = value; }
         }
 
-        public AssemblyDefinition (AssemblyNameDefinition name, StructureReader sr, LoadingType lt)
+        public AssemblyDefinition (AssemblyNameDefinition name)
         {
-            if (sr == null)
-                throw new ArgumentException ("sr");
             if (name == null)
-                throw new ArgumentException ("name");
+                throw new ArgumentNullException ("name");
 
             m_asmName = name;
-            m_sr = sr;
-            m_loadingType = lt;
             m_modules = new ModuleDefinitionCollection (this);
+        }
+
+        public AssemblyDefinition (AssemblyNameDefinition name, StructureReader reader, LoadingType lt) : this (name)
+        {
+            m_reader = reader;
+            m_loadingType = lt;
         }
 
         public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
@@ -89,10 +100,38 @@ namespace Mono.Cecil.Implem {
             return ca;
         }
 
-        public ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
         {
-            //TODO: implement this
-            return null;
+            return DefineCustomAttribute (
+                (this.MainModule as ModuleDefinition).Controller.Helper.RegisterConstructor(ctor));
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
+        {
+            CustomAttribute ca = (this.MainModule as ModuleDefinition).Controller.Reader.GetCustomAttribute (ctor, data);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
+        {
+            return DefineCustomAttribute (
+                (this.MainModule as ModuleDefinition).Controller.Helper.RegisterConstructor(ctor), data);
+        }
+
+        public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
+        {
+            SecurityDeclaration dec = new SecurityDeclaration (action);
+            m_secDecls.Add (dec);
+            return dec;
+        }
+
+        public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
+        {
+            SecurityDeclaration dec =
+                (this.MainModule as ModuleDefinition).Controller.Reader.BuildSecurityDeclaration (action, declaration);
+            m_secDecls.Add (dec);
+            return dec;
         }
 
         public void Accept (IReflectionStructureVisitor visitor)

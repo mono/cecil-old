@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -13,17 +13,28 @@
 namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
+    using Mono.Cecil.Metadata;
 
     internal sealed class ReflectionWriter : IReflectionVisitor {
 
+        private CodeWriter m_codeWriter;
+
+        public CodeWriter CodeWriter {
+            get { return m_codeWriter; }
+        }
+
+        public ReflectionWriter ()
+        {
+            m_codeWriter = new CodeWriter ();
+        }
+
         public void Visit (ITypeDefinitionCollection types)
         {
-            // TODO
         }
 
         public void Visit (ITypeDefinition type)
         {
-            // TODO
+
         }
 
         public void Visit (ITypeReferenceCollection refs)

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -11,6 +11,8 @@
  *****************************************************************************/
 
 namespace Mono.Cecil {
+
+    using System;
 
     public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
 
@@ -20,8 +22,20 @@ namespace Mono.Cecil {
         IClassLayoutInfo LayoutInfo { get; }
 
         IMethodDefinitionCollection Methods { get; }
+        IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
+        IMethodDefinition DefineConstructor ();
+        IMethodDefinition DefineConstructor (bool isstatic);
+
         IFieldDefinitionCollection Fields { get; }
+        IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType);
+        IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType);
+
         IEventDefinitionCollection Events { get; }
+        IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType);
+        IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType);
+
         IPropertyDefinitionCollection Properties { get; }
+        IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType);
+        IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType);
     }
 }

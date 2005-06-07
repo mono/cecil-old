@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -77,9 +77,8 @@ namespace Mono.Cecil.Metadata {
                 pos += headpos;
 
                 m_binaryReader.BaseStream.Position = pos;
-            } else {
+            } else
                 header.Version = string.Empty;
-            }
 
             header.Flags = m_binaryReader.ReadUInt16 ();
             header.Streams = m_binaryReader.ReadUInt16 ();
@@ -148,7 +147,7 @@ namespace Mono.Cecil.Metadata {
             using (BinaryReader br = new BinaryReader (new MemoryStream (heap.Data),
                                                        Encoding.UTF8)) {
 
-                br.BaseStream.Position += 1;
+                br.BaseStream.Position++;
 
                 StringBuilder buffer = new StringBuilder ();
                 for (int i = 1, index = 1 ; i < heap.Data.Length ; i++) {
@@ -157,9 +156,8 @@ namespace Mono.Cecil.Metadata {
                         heap [(uint) index] = buffer.ToString ();
                         buffer = new StringBuilder ();
                         index = i + 1;
-                    } else {
+                    } else
                         buffer.Append (cur);
-                    }
                 }
             }
         }

@@ -80,6 +80,7 @@
 ./Mono.Cecil/ReflectionException.cs
 ./Mono.Cecil/SecurityAction.cs
 ./Mono.Cecil/TypeAttributes.cs
+./Mono.Cecil/TypeFactory.cs
 ./Mono.Cecil/VariantType.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
 ./Mono.Cecil.Binary/DataDirectory.cs
@@ -89,6 +90,7 @@
 ./Mono.Cecil.Binary/IHeader.cs
 ./Mono.Cecil.Binary/Image.cs
 ./Mono.Cecil.Binary/ImageCharacteristics.cs
+./Mono.Cecil.Binary/ImageInitializer.cs
 ./Mono.Cecil.Binary/ImageReader.cs
 ./Mono.Cecil.Binary/PEFileHeader.cs
 ./Mono.Cecil.Binary/PEOptionalHeader.cs
@@ -132,6 +134,7 @@
 ./Mono.Cecil.Metadata/ManifestResource.cs
 ./Mono.Cecil.Metadata/MemberRef.cs
 ./Mono.Cecil.Metadata/MetadataHeap.cs
+./Mono.Cecil.Metadata/MetadataInitializer.cs
 ./Mono.Cecil.Metadata/MetadataReader.cs
 ./Mono.Cecil.Metadata/MetadataRoot.cs
 ./Mono.Cecil.Metadata/MetadataRowReader.cs
@@ -139,6 +142,7 @@
 ./Mono.Cecil.Metadata/MetadataStreamCollection.cs
 ./Mono.Cecil.Metadata/MetadataTableReader.cs
 ./Mono.Cecil.Metadata/MetadataToken.cs
+./Mono.Cecil.Metadata/MetadataWriter.cs
 ./Mono.Cecil.Metadata/Method.cs
 ./Mono.Cecil.Metadata/MethodImpl.cs
 ./Mono.Cecil.Metadata/MethodSemantics.cs
@@ -163,12 +167,14 @@
 ./Mono.Cecil.Metadata/Utilities.cs
 ./Mono.Cecil.Cil/ExceptionHandlerType.cs
 ./Mono.Cecil.Cil/FlowControl.cs
+./Mono.Cecil.Cil/ICilEmitter.cs
 ./Mono.Cecil.Cil/ICodeVisitable.cs
 ./Mono.Cecil.Cil/ICodeVisitor.cs
 ./Mono.Cecil.Cil/IExceptionHandler.cs
 ./Mono.Cecil.Cil/IExceptionHandlerCollection.cs
 ./Mono.Cecil.Cil/IInstruction.cs
 ./Mono.Cecil.Cil/IInstructionCollection.cs
+./Mono.Cecil.Cil/ILabel.cs
 ./Mono.Cecil.Cil/IMethodBody.cs
 ./Mono.Cecil.Cil/IVariable.cs
 ./Mono.Cecil.Cil/IVariableDefinitionCollection.cs
@@ -187,7 +193,9 @@
 ./Mono.Cecil.Implem/AssemblyLinkedResource.cs
 ./Mono.Cecil.Implem/AssemblyName.cs
 ./Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
+./Mono.Cecil.Implem/CilEmitter.cs
 ./Mono.Cecil.Implem/CodeReader.cs
+./Mono.Cecil.Implem/CodeWriter.cs
 ./Mono.Cecil.Implem/Constants.cs
 ./Mono.Cecil.Implem/CustomAttribute.cs
 ./Mono.Cecil.Implem/CustomAttributeCollection.cs
@@ -206,7 +214,7 @@
 ./Mono.Cecil.Implem/Instruction.cs
 ./Mono.Cecil.Implem/InstructionCollection.cs
 ./Mono.Cecil.Implem/InterfaceCollection.cs
-./Mono.Cecil.Implem/LazyLoader.cs
+./Mono.Cecil.Implem/Label.cs
 ./Mono.Cecil.Implem/LazyReflectionReader.cs
 ./Mono.Cecil.Implem/LinkedResource.cs
 ./Mono.Cecil.Implem/MarshalDesc.cs
@@ -231,6 +239,7 @@
 ./Mono.Cecil.Implem/PropertyDefinition.cs
 ./Mono.Cecil.Implem/PropertyDefinitionCollection.cs
 ./Mono.Cecil.Implem/ReferenceType.cs
+./Mono.Cecil.Implem/ReflectionController.cs
 ./Mono.Cecil.Implem/ReflectionHelper.cs
 ./Mono.Cecil.Implem/ReflectionReader.cs
 ./Mono.Cecil.Implem/ReflectionWriter.cs
@@ -268,6 +277,7 @@
 ./Mono.Cecil.Signatures/RetType.cs
 ./Mono.Cecil.Signatures/Signature.cs
 ./Mono.Cecil.Signatures/SignatureReader.cs
+./Mono.Cecil.Signatures/SignatureWriter.cs
 ./Mono.Cecil.Signatures/SigType.cs
 ./Mono.Cecil.Signatures/SzArray.cs
 ./Mono.Cecil.Signatures/TypeSpec.cs

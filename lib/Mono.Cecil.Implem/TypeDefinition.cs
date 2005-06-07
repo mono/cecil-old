@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -45,7 +45,7 @@ namespace Mono.Cecil.Implem {
 
         public IClassLayoutInfo LayoutInfo {
             get {
-                this.Module.Loader.DetailReader.ReadLayout (this);
+                this.Module.Controller.Reader.ReadLayout (this);
                 return this;
             }
         }
@@ -78,7 +78,7 @@ namespace Mono.Cecil.Implem {
         public IInterfaceCollection Interfaces {
             get {
                 if (m_interfaces == null)
-                    m_interfaces = new InterfaceCollection (this, m_module.Loader);
+                    m_interfaces = new InterfaceCollection (this, m_module.Controller);
                 return m_interfaces;
             }
         }
@@ -86,7 +86,7 @@ namespace Mono.Cecil.Implem {
         public IMethodDefinitionCollection Methods {
             get {
                 if (m_methods == null)
-                    m_methods = new MethodDefinitionCollection (this, m_module.Loader);
+                    m_methods = new MethodDefinitionCollection (this, m_module.Controller);
                 return m_methods;
             }
         }
@@ -94,7 +94,7 @@ namespace Mono.Cecil.Implem {
         public IFieldDefinitionCollection Fields {
             get {
                 if (m_fields == null)
-                    m_fields = new FieldDefinitionCollection (this, m_module.Loader);
+                    m_fields = new FieldDefinitionCollection (this, m_module.Controller);
                 return m_fields;
             }
         }
@@ -102,7 +102,7 @@ namespace Mono.Cecil.Implem {
         public IEventDefinitionCollection Events {
             get {
                 if (m_events == null)
-                    m_events = new EventDefinitionCollection (this, m_module.Loader);
+                    m_events = new EventDefinitionCollection (this, m_module.Controller);
                 return m_events;
             }
         }
@@ -110,7 +110,7 @@ namespace Mono.Cecil.Implem {
         public IPropertyDefinitionCollection Properties {
             get {
                 if (m_properties == null)
-                    m_properties = new PropertyDefinitionCollection (this, m_module.Loader);
+                    m_properties = new PropertyDefinitionCollection (this, m_module.Controller);
                 return m_properties;
             }
         }
@@ -118,7 +118,7 @@ namespace Mono.Cecil.Implem {
         public ISecurityDeclarationCollection SecurityDeclarations {
             get {
                 if (m_secDecls == null)
-                    m_secDecls = new SecurityDeclarationCollection (this, m_module.Loader);
+                    m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
                 return m_secDecls;
             }
         }
@@ -128,6 +128,82 @@ namespace Mono.Cecil.Implem {
         {
             m_hasInfo = false;
             m_attributes = attrs;
+        }
+
+        public IMethodDefinition DefineMethod (string name, MethodAttributes attributes)
+        {
+            MethodDefinition meth = new MethodDefinition (name, this, attributes);
+            m_methods.Add (meth);
+            return meth;
+        }
+
+        public IMethodDefinition DefineConstructor ()
+        {
+            return DefineConstructor (false);
+        }
+
+        public IMethodDefinition DefineConstructor (bool isstatic)
+        {
+            string name = null;
+            MethodAttributes attrs = MethodAttributes.SpecialName;
+            if (isstatic) {
+                name = ".cctor";
+                attrs |= MethodAttributes.Static;
+            } else
+                name = ".ctor";
+            MethodDefinition meth = new MethodDefinition (name, this, attrs);
+
+            (this.Methods as MethodDefinitionCollection).Add (meth);
+            return meth;
+        }
+
+        public IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType)
+        {
+            FieldDefinition field = new FieldDefinition (name, this, fieldType, attributes);
+            return field;
+        }
+
+        public IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType)
+        {
+            return DefineField (name, attributes, this.Module.Controller.Helper.RegisterType (fieldType));
+        }
+
+        public IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType)
+        {
+            EventDefinition evt = new EventDefinition (name, this, eventType, attributes);
+            (this.Events as EventDefinitionCollection) [name] = evt;
+            return evt;
+        }
+
+        public IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType)
+        {
+            return DefineEvent (name, attributes, this.Module.Controller.Helper.RegisterType (eventType));
+        }
+
+        public IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType)
+        {
+            PropertyDefinition prop = new PropertyDefinition (name, this, propType, attributes);
+            (this.Properties as PropertyDefinitionCollection) [name] = prop;
+            return prop;
+        }
+
+        public IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType)
+        {
+            return DefineProperty (name, attributes, this.Module.Controller.Helper.RegisterType (propType));
+        }
+
+        public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
+        {
+            SecurityDeclaration dec = new SecurityDeclaration (action);
+            (this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
+            return dec;
+        }
+
+        public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
+        {
+            SecurityDeclaration dec = this.Module.Controller.Reader.BuildSecurityDeclaration (action, declaration);
+            (this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
+            return dec;
         }
 
         public override void Accept (IReflectionVisitor visitor)

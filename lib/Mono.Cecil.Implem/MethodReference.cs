@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -61,6 +61,10 @@ namespace Mono.Cecil.Implem {
             m_hasThis = hasThis;
             m_explicitThis = explicitThis;
             m_callConv = callConv;
+        }
+
+        public MethodReference (string name, ITypeReference decType) : base (name, decType)
+        {
         }
 
         public virtual void Accept (IReflectionVisitor visitor)

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -50,7 +50,7 @@ namespace Mono.Cecil.Implem {
         public ICustomAttributeCollection CustomAttributes {
             get {
                 if (m_customAttrs == null && m_module != null)
-                    m_customAttrs = new CustomAttributeCollection (this, m_module.Loader);
+                    m_customAttrs = new CustomAttributeCollection (this, m_module.Controller);
                 else if (m_customAttrs == null && m_module == null)
                     m_customAttrs = new CustomAttributeCollection (this);
                 return m_customAttrs;
@@ -96,10 +96,22 @@ namespace Mono.Cecil.Implem {
             return ca;
         }
 
-        public virtual ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor)
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
         {
-            //TODO: implement this
-            return null;
+            return DefineCustomAttribute (m_module.Controller.Helper.RegisterConstructor(ctor));
+        }
+
+        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
+        {
+            CustomAttribute ca = m_module.Controller.Reader.GetCustomAttribute (ctor, data);
+            m_customAttrs.Add (ca);
+            return ca;
+        }
+
+        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
+        {
+            return DefineCustomAttribute (
+                m_module.Controller.Helper.RegisterConstructor(ctor), data);
         }
 
         public virtual void Accept (IReflectionVisitor visitor)

@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -21,18 +21,20 @@ namespace Mono.Cecil {
         bool Main { get; }
 
         IAssemblyNameReferenceCollection AssemblyReferences { get; }
+        IAssemblyNameReference DefineAssemblyReference (string name);
 
         IModuleReferenceCollection ModuleReferences { get; }
-        void DefineModuleReference (string module);
+        IModuleReference DefineModuleReference (string module);
 
         IResourceCollection Resources { get; }
         IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
         ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
+        IAssemblyLinkedResource DefineAssemblyLinkedResource (string name, ManifestResourceAttributes attributes, IAssemblyNameReference asm);
 
         ITypeDefinitionCollection Types { get; }
-        /*ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes);
+        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes);
         ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType);
-        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);*/
+        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);
 
         IExternTypeCollection ExternTypes { get; }
     }

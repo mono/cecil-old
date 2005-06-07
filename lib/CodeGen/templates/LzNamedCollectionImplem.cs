@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2004 DotNetGuru and the individuals listed
+ * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
  * on the ChangeLog entries.
  *
  * Authors :
- *   Jb Evain   (jb.evain@dotnetguru.org)
+ *   Jb Evain   (jbevain@gmail.com)
  *
  * This is a free software distributed under a MIT/X11 license
  * See LICENSE.MIT file for more details
@@ -25,14 +25,13 @@ namespace Mono.Cecil.Implem {
 
         private IDictionary m_items;
         private <%=$cur_coll.container_impl%> m_container;
-        private LazyLoader m_loader;
+        private ReflectionController m_controller;
 
         private bool m_loaded;
 
         public <%=$cur_coll.type%> this [string name] {
             get {
-                if (m_loader != null)
-                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
+                Load ();
                 return m_items [name] as <%=$cur_coll.type%>;
             }
             set { m_items [name] = value; }
@@ -44,8 +43,7 @@ namespace Mono.Cecil.Implem {
 
         public int Count {
             get {
-                if (m_loader != null)
-                    m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
+                Load ();
                 return m_items.Count;
             }
         }
@@ -69,9 +67,9 @@ namespace Mono.Cecil.Implem {
             m_items = new Hashtable ();
         }        
 
-        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, LazyLoader loader) : this (container)
+        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, ReflectionController controller) : this (container)
         {
-            m_loader = loader;
+            m_controller = controller;
         }
 
         public void Clear ()
@@ -91,16 +89,22 @@ namespace Mono.Cecil.Implem {
 
         public void CopyTo (Array ary, int index)
         {
-            if (m_loader != null)
-                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
+            Load ();
             m_items.Values.CopyTo (ary, index);
         }
 
         public IEnumerator GetEnumerator ()
         {
-            if (m_loader != null)
-                m_loader.<%=$cur_coll.pathtoloader%>.Visit (this);
+            Load ();
             return m_items.Values.GetEnumerator ();
+        }
+        
+        public void Load ()
+        {
+            if (m_controller != null && !m_loaded) {
+                m_controller.<%=$cur_coll.pathtoloader%>.Visit (this);
+                m_loaded = true;
+            }
         }
 
         public void Accept (<%=$cur_coll.visitor%> visitor)
