@@ -1,3 +1,8 @@
+2005-06-12  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/TypeDefinition.cs: Set the declaring type
+		to this when defining a nested type.
+
 2005-06-07  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.dll.sources,

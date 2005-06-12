@@ -148,7 +148,8 @@ namespace Mono.Cecil.Implem {
         {
             TypeDefinition type = new TypeDefinition (name, string.Empty, attributes, m_module);
             type.BaseType = baseType;
-            (m_nestedTypes as NestedTypeCollection) [name] = type;
+            type.DeclaringType = this;
+            (this.NestedTypes as NestedTypeCollection) [name] = type;
             (m_module.Types as TypeDefinitionCollection) [type.FullName] = type;
             return type;
         }
