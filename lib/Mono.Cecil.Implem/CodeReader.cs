@@ -101,7 +101,7 @@ namespace Mono.Cecil.Implem {
                     instr.Operand = branches;
                     break;
                 case OperandType.ShortInlineBrTarget :
-                    byte sbrtgt = br.ReadByte ();
+                    sbyte sbrtgt = br.ReadSByte ();
                     instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt));
                     break;
                 case OperandType.ShortInlineI :

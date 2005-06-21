@@ -3,6 +3,8 @@
 	* Mono.Cecil.Implem/ReflectionReader.cs: Correct a bug that prevents
 		assemblies to be readed if they have an entrypoint. Suggestion by
 		Mario Sopena
+	* Mono.Cecil.Imlem/CodeReader.cs: Use sbyte not to lose negatives
+		offsets. Suggestion by Vladislav Spivak
 
 2005-06-12  Jb Evain  <jbevain@gmail.com>
 
