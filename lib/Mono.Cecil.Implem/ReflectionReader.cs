@@ -391,7 +391,7 @@ namespace Mono.Cecil.Implem {
                 }
             }
 
-            int eprid = (int) m_reader.Image.CLIHeader.EntryPointToken;
+            int eprid = (int) m_reader.Image.CLIHeader.EntryPointToken & 0x00ffffff;
             if (eprid != 0)
                 m_module.Assembly.EntryPoint = GetMethodDefAt (eprid);
         }

@@ -1,3 +1,9 @@
+2005-06-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/ReflectionReader.cs: Correct a bug that prevents
+		assemblies to be readed if they have an entrypoint. Suggestion by
+		Mario Sopena
+
 2005-06-12  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/TypeDefinition.cs: Set the declaring type
