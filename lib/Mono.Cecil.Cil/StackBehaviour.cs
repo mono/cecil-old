@@ -31,6 +31,7 @@ namespace Mono.Cecil.Cil {
         Popref_popi_popr4,
         Popref_popi_popr8,
         Popref_popi_popref,
+        PopAll,
         Push0,
         Push1,
         Push1_push1,

@@ -611,8 +611,8 @@
             <opcode name="sub.ovf" op1="0xff" op2="0xda" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1_pop1" stackbehaviourpush="Push1" />
             <opcode name="sub.ovf.un" op1="0xff" op2="0xdb" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1_pop1" stackbehaviourpush="Push1" />
             <opcode name="endfinally" op1="0xff" op2="0xdc" flowcontrol="Return" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
-            <opcode name="leave" op1="0xff" op2="0xdd" flowcontrol="Branch" opcodetype="Primitive" operandtype="InlineBrTarget" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
-            <opcode name="leave.s" op1="0xff" op2="0xde" flowcontrol="Branch" opcodetype="Primitive" operandtype="ShortInlineBrTarget" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
+            <opcode name="leave" op1="0xff" op2="0xdd" flowcontrol="Branch" opcodetype="Primitive" operandtype="InlineBrTarget" stackbehaviourpop="PopAll" stackbehaviourpush="Push0" />
+            <opcode name="leave.s" op1="0xff" op2="0xde" flowcontrol="Branch" opcodetype="Primitive" operandtype="ShortInlineBrTarget" stackbehaviourpop="PopAll" stackbehaviourpush="Push0" />
             <opcode name="stind.i" op1="0xff" op2="0xdf" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Popi_popi" stackbehaviourpush="Push0" />
             <opcode name="conv.u" op1="0xff" op2="0xe0" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop1" stackbehaviourpush="Pushi" />
             <opcode name="arglist" op1="0xfe" op2="0x00" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Pop0" stackbehaviourpush="Pushi" />
