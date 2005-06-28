@@ -116,7 +116,7 @@ namespace Mono.Cecil.Implem {
         public int GetRidForTypeDef (TypeDefinition typeDef)
         {
             int index = Array.IndexOf (m_typeDefs, typeDef);
-            return index == - 1 ? 0 : index + 1;
+            return index == -1 ? 0 : index + 1;
         }
 
         public ITypeReference GetTypeDefOrRef (MetadataToken token)

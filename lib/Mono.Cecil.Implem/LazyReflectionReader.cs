@@ -310,7 +310,7 @@ namespace Mono.Cecil.Implem {
                 return;
 
             if (nextRow == null)
-                next = propsTable.Rows.Count;
+                next = propsTable.Rows.Count + 1;
             else
                 next = (int) nextRow.PropertyList;
 
