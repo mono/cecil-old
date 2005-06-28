@@ -34,15 +34,15 @@ namespace Mono.Cecil.Cil {
             private IDictionary m_cache;
             private OpCode [] m_oneByteOpCode;
             private OpCode [] m_twoBytesOpCodes;
-                
+
             public OpCode this [string name] {
                 get { return (OpCode) m_cache [name]; }
             }
-            
+
             internal OpCode [] OneByteOpCode {
                 get { return m_oneByteOpCode; }
             }
-            
+
             internal OpCode [] TwoBytesOpCode {
                 get { return m_twoBytesOpCodes; }
             }
