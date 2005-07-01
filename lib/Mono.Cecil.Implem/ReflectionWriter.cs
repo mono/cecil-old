@@ -13,19 +13,26 @@
 namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
     using Mono.Cecil.Metadata;
 
     internal sealed class ReflectionWriter : IReflectionVisitor {
 
+        private ModuleDefinition m_mod;
         private CodeWriter m_codeWriter;
+        private MetadataWriter m_mdWriter;
+        private MetadataTableWriter m_tableWriter;
 
         public CodeWriter CodeWriter {
             get { return m_codeWriter; }
         }
 
-        public ReflectionWriter ()
+        public ReflectionWriter (ModuleDefinition mod)
         {
+            m_mod = mod;
             m_codeWriter = new CodeWriter ();
+            m_mdWriter = new MetadataWriter (m_mod.Image.MetadataRoot);
+            m_tableWriter = m_mdWriter.GetTableVisitor ();
         }
 
         public void Visit (ITypeDefinitionCollection types)

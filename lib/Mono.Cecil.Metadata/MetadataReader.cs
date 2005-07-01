@@ -210,9 +210,12 @@ namespace Mono.Cecil.Metadata {
             BlobHeap bh = m_root.Streams.BlobHeap;
             TablesHeap th = m_root.Streams.TablesHeap;
 
-            sh.IndexSize = ((th.HeapSizes & 0x01) > 0) ? 4 : 2;
-            gh.IndexSize = ((th.HeapSizes & 0x02) > 0) ? 4 : 2;
-            bh.IndexSize = ((th.HeapSizes & 0x04) > 0) ? 4 : 2;
+            if (sh != null)
+                sh.IndexSize = ((th.HeapSizes & 0x01) > 0) ? 4 : 2;
+            if (gh != null)
+                gh.IndexSize = ((th.HeapSizes & 0x02) > 0) ? 4 : 2;
+            if (bh != null)
+                bh.IndexSize = ((th.HeapSizes & 0x04) > 0) ? 4 : 2;
         }
 
         public void Terminate (MetadataRoot root)

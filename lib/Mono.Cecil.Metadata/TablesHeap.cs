@@ -69,7 +69,6 @@ namespace Mono.Cecil.Metadata {
             }
 
             throw new ArgumentException ("No RId attribute found on type");
-
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Mono.Cecil.Cil {
     public interface IVariableReference : ICodeVisitable {
         IMethodDefinition Method { get; set; }
         string Name { get; set; }
+        int Index { get; }
     }
 
     public interface IVariableDefinition : IVariableReference {

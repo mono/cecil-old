@@ -13,27 +13,15 @@
 namespace Mono.Cecil.Implem {
 
     using Mono.Cecil;
+    using Mono.Cecil.Binary;
 
     internal sealed class StructureWriter : IReflectionStructureVisitor {
 
-        private ReflectionWriter m_reflectWriter;
-        private ReflectionHelper m_reflectHelper;
+        private AssemblyDefinition m_asm;
 
-        private ModuleDefinition m_module;
-
-        public ReflectionWriter ReflectionWriter {
-            get { return m_reflectWriter; }
-        }
-
-        public ReflectionHelper ReflectionHelper {
-            get { return m_reflectHelper; }
-        }
-
-        public StructureWriter (ModuleDefinition module)
+        public StructureWriter (AssemblyDefinition asm)
         {
-            m_module = module;
-            m_reflectWriter = new ReflectionWriter ();
-            m_reflectHelper = new ReflectionHelper (module);
+            m_asm = asm;
         }
 
         public void Visit (IAssemblyDefinition asm)
@@ -78,7 +66,9 @@ namespace Mono.Cecil.Implem {
 
         public void Visit (IModuleDefinition module)
         {
-            // TODO
+            ModuleDefinition mod = module as ModuleDefinition;
+            if (mod.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
+                mod.Image = Image.CreateImage ();
         }
 
         public void Visit (IModuleDefinitionCollection modules)

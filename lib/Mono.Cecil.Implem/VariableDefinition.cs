@@ -17,12 +17,18 @@ namespace Mono.Cecil.Implem {
     internal sealed class VariableDefinition : IVariableDefinition {
 
         private string m_name;
+        private int m_index;
         private MethodDefinition m_method;
         private ITypeReference m_variable;
 
         public string Name {
             get { return m_name; }
             set { m_name = value; }
+        }
+
+        public int Index {
+            get { return m_index; }
+            set { m_index = value; }
         }
 
         public IMethodDefinition Method {
@@ -35,7 +41,7 @@ namespace Mono.Cecil.Implem {
             set { m_variable = value; }
         }
 
-        public VariableDefinition (string name, MethodDefinition method, ITypeReference variable)
+        public VariableDefinition (string name, int index, MethodDefinition method, ITypeReference variable)
         {
             m_name = name;
             m_method = method;

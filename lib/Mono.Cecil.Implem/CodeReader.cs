@@ -287,7 +287,8 @@ namespace Mono.Cecil.Implem {
                     varType = new ReferenceType (varType);
                 if ((lv.Constraint & Constraint.Pinned) != 0)
                     varType = new PinnedType (varType);
-                (variables as VariableDefinitionCollection).Add (new VariableDefinition (string.Concat ("V_", i), meth, varType));
+                (variables as VariableDefinitionCollection).Add (
+                    new VariableDefinition (string.Concat ("V_", i), i, meth, varType));
             }
         }
 

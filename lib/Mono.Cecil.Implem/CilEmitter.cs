@@ -46,7 +46,7 @@ namespace Mono.Cecil.Implem {
 
         public IVariableDefinition DefineLocal (string name, ITypeReference type)
         {
-            VariableDefinition var = new VariableDefinition (name, m_meth, type);
+            VariableDefinition var = new VariableDefinition (name, m_lvars.Count, m_meth, type);
             m_lvars.Add (var);
             return var;
         }

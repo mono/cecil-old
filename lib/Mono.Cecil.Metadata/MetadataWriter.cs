@@ -21,9 +21,23 @@ namespace Mono.Cecil.Metadata {
 
     internal sealed class MetadataWriter : IMetadataVisitor {
 
-        public MetadataWriter ()
-        {
+        private MetadataRoot m_root;
+        private MetadataTableWriter m_tableWriter;
 
+        public MetadataWriter (MetadataRoot root)
+        {
+            m_root = root;
+            m_tableWriter = new MetadataTableWriter (this);
+        }
+
+        public MetadataRoot GetMetadataRoot ()
+        {
+            return m_root;
+        }
+
+        public MetadataTableWriter GetTableVisitor ()
+        {
+            return m_tableWriter;
         }
 
         public uint AddString (string str)

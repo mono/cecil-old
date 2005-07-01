@@ -1,3 +1,29 @@
+2005-07-01  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen.rb,
+	  CodeGen/templates/MetadataTableWriter.cs,
+	  CodeGen/templates/MetadataRowWriter.cs,
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs,
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs,
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		Add metadata writing visitors
+	* Mono.Cecil.Metadata/CultureUtils.cs:
+		Be sure to use every possible culture infos.
+	* Mono.Cecil.Cil/IVariable.cs,
+	  Mono.Cecil.Implem/VariableDefinition.cs,
+	  Mono.Cecil.Implem/CodeReader.cs,
+	  Mono.Cecil.Implem/CilEmitter.cs:
+		Add an index property to local variables
+	* Mono.Cecil.Metadata/MetadataReader.cs,
+	  Mono.Cecil.Metadata/MetadataRowReader.cs,
+	  CodeGen/templates/MetadataRowReader.cs,
+	  Mono.Cecil.Metadata/TablesHeap.cs:
+		Handles null heaps
+	* Mono.Cecil.Implem/StructureWriter.cs,
+	  Mono.Cecil.Implem/ReflectionController.cs,
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Assemble writing classes
+
 2005-06-28  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/ReflectionReader.cs: style

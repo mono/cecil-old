@@ -43,7 +43,7 @@ namespace Mono.Cecil.Implem {
             else
                 throw new ReflectionException ("Unknow loading type");
 
-            m_writer = new ReflectionWriter ();
+            m_writer = new ReflectionWriter (module);
             m_helper = new ReflectionHelper (module);
         }
     }

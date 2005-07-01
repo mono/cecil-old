@@ -139,9 +139,11 @@
 ./Mono.Cecil.Metadata/MetadataReader.cs
 ./Mono.Cecil.Metadata/MetadataRoot.cs
 ./Mono.Cecil.Metadata/MetadataRowReader.cs
+./Mono.Cecil.Metadata/MetadataRowWriter.cs
 ./Mono.Cecil.Metadata/MetadataStream.cs
 ./Mono.Cecil.Metadata/MetadataStreamCollection.cs
 ./Mono.Cecil.Metadata/MetadataTableReader.cs
+./Mono.Cecil.Metadata/MetadataTableWriter.cs
 ./Mono.Cecil.Metadata/MetadataToken.cs
 ./Mono.Cecil.Metadata/MetadataWriter.cs
 ./Mono.Cecil.Metadata/Method.cs

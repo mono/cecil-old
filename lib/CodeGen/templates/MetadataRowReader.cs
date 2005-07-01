@@ -28,6 +28,10 @@ namespace Mono.Cecil.Metadata {
         private MetadataRoot m_metadataRoot;
         private IDictionary m_codedIndexCache;
 
+        private int m_blobHeapIdxSz;
+        private int m_stringsHeapIdxSz;
+        private int m_guidHeapIdxSz;
+
         public MetadataRowReader (MetadataTableReader mtrv)
         {
             m_mtrv = mtrv;
@@ -78,7 +82,15 @@ namespace Mono.Cecil.Metadata {
             }
         }
 
-        public void Visit (RowCollection coll) {}
+        public void Visit (RowCollection coll)
+        {
+            m_blobHeapIdxSz = m_metadataRoot.Streams.BlobHeap != null ?
+                m_metadataRoot.Streams.BlobHeap.IndexSize : 2;
+            m_stringsHeapIdxSz = m_metadataRoot.Streams.StringsHeap != null ?
+                m_metadataRoot.Streams.StringsHeap.IndexSize : 2;
+            m_guidHeapIdxSz = m_metadataRoot.Streams.GuidHeap != null ?
+                m_metadataRoot.Streams.GuidHeap.IndexSize : 2;
+        }
 
 <% $tables.each { |table| %>        public void Visit (<%=table.row_name%> row)
         {
@@ -86,11 +98,11 @@ namespace Mono.Cecil.Metadata {
  if (col.target.nil?)
 %>            row.<%=col.property_name%> = <%=col.read_binary("m_binaryReader")%>;
 <% elsif (col.target == "BlobHeap")
-%>            row.<%=col.property_name%> = ReadByIndexSize (m_metadataRoot.Streams.BlobHeap.IndexSize);
+%>            row.<%=col.property_name%> = ReadByIndexSize (m_blobHeapIdxSz);
 <% elsif (col.target == "StringsHeap")
-%>            row.<%=col.property_name%> = ReadByIndexSize (m_metadataRoot.Streams.StringsHeap.IndexSize);
+%>            row.<%=col.property_name%> = ReadByIndexSize (m_stringsHeapIdxSz);
 <% elsif (col.target == "GuidHeap")
-%>            row.<%=col.property_name%> = ReadByIndexSize (m_metadataRoot.Streams.GuidHeap.IndexSize);
+%>            row.<%=col.property_name%> = ReadByIndexSize (m_guidHeapIdxSz);
 <% elsif (col.type == "MetadataToken")
 %>            row.<%=col.property_name%> = Utilities.GetMetadataToken (CodedIndex.<%=col.target%>,
                 ReadByIndexSize (GetCodedIndexSize (CodedIndex.<%=col.target%>)));
