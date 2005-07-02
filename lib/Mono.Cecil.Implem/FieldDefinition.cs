@@ -99,6 +99,31 @@ namespace Mono.Cecil.Implem {
             set { m_marshalDesc = value as MarshalDesc; }
         }
 
+        public bool IsLiteral {
+            get { return (m_attributes & FieldAttributes.Literal) != 0; }
+            set { m_attributes |= value ? FieldAttributes.Literal : 0; }
+        }
+
+        public bool IsReadOnly {
+            get { return (m_attributes & FieldAttributes.InitOnly) != 0; }
+            set { m_attributes |= value ? FieldAttributes.InitOnly : 0; }
+        }
+
+        public bool IsRuntimeSpecialName {
+            get { return (m_attributes & FieldAttributes.RTSpecialName) != 0; }
+            set { m_attributes |= value ? FieldAttributes.RTSpecialName : 0; }
+        }
+
+        public bool IsSpecialName {
+            get { return (m_attributes & FieldAttributes.SpecialName) != 0; }
+            set { m_attributes |= value ? FieldAttributes.SpecialName : 0; }
+        }
+
+        public bool IsStatic {
+            get { return (m_attributes & FieldAttributes.Static) != 0; }
+            set { m_attributes |= value ? FieldAttributes.Static : 0; }
+        }
+
         public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs) : base (name, decType)
         {
             m_hasInfo = false;

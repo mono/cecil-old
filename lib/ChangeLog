@@ -1,3 +1,18 @@
+2005-07-02  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/IProperty.cs
+	  Mono.Cecil/IEvent.cs
+	  Mono.Cecil/IField.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/PropertyDefinition.cs
+	  Mono.Cecil.Implem/EventDefinition.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs:
+		Add some funky sugar attributes,
+		more to come
+
 2005-07-01  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/cecil-gen.rb,

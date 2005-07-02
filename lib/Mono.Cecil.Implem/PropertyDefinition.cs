@@ -93,6 +93,16 @@ namespace Mono.Cecil.Implem {
             set { m_const = value; }
         }
 
+        public bool IsRuntimeSpecialName {
+            get { return (m_attributes & PropertyAttributes.RTSpecialName) != 0; }
+            set { m_attributes |= value ? PropertyAttributes.RTSpecialName : 0; }
+        }
+
+        public bool IsSpecialName {
+            get { return (m_attributes & PropertyAttributes.SpecialName) != 0; }
+            set { m_attributes |= value ? PropertyAttributes.SpecialName : 0; }
+        }
+
         public PropertyDefinition (string name, TypeDefinition decType, ITypeReference propType, PropertyAttributes attrs) : base (name, decType)
         {
             m_propertyType = propType;

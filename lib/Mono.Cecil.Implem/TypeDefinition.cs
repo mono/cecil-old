@@ -132,6 +132,36 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public bool IsAbstract {
+            get { return (m_attributes & TypeAttributes.Abstract) != 0; }
+            set { m_attributes |= value ? TypeAttributes.Abstract : 0; }
+        }
+
+        public bool IsBeforeFieldInit {
+            get { return (m_attributes & TypeAttributes.BeforeFieldInit) != 0; }
+            set { m_attributes |= value ? TypeAttributes.BeforeFieldInit : 0; }
+        }
+
+        public bool IsInterface {
+            get { return (m_attributes & TypeAttributes.ClassSemanticMask) == TypeAttributes.Interface; }
+            set { m_attributes |= value ? (TypeAttributes.ClassSemanticMask & TypeAttributes.Interface) : 0; }
+        }
+
+        public bool IsRuntimeSpecialName {
+            get { return (m_attributes & TypeAttributes.RTSpecialName) != 0; }
+            set { m_attributes |= value ? TypeAttributes.RTSpecialName : 0; }
+        }
+
+        public bool IsSealed {
+            get { return (m_attributes & TypeAttributes.Sealed) != 0; }
+            set { m_attributes |= value ? TypeAttributes.Sealed : 0; }
+        }
+
+        public bool IsSpecialName {
+            get { return (m_attributes & TypeAttributes.SpecialName) != 0; }
+            set { m_attributes |= value ? TypeAttributes.SpecialName : 0; }
+        }
+
         public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
             base (name, ns, module, module.Assembly.Name)
         {

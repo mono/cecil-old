@@ -98,6 +98,46 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public bool IsAbstract {
+            get { return (m_attributes & MethodAttributes.Abstract) != 0; }
+            set { m_attributes |= value ? MethodAttributes.Abstract : 0; }
+        }
+
+        public bool IsFinal {
+            get { return (m_attributes & MethodAttributes.Final) != 0; }
+            set { m_attributes |= value ? MethodAttributes.Final : 0; }
+        }
+
+        public bool IsHideBySignature {
+            get { return (m_attributes & MethodAttributes.HideBySig) != 0; }
+            set { m_attributes |= value ? MethodAttributes.HideBySig : 0; }
+        }
+
+        public bool IsNewSlot {
+            get { return (m_attributes & MethodAttributes.VtableLayoutMask) == MethodAttributes.NewSlot; }
+            set { m_attributes |= value ? (MethodAttributes.VtableLayoutMask & MethodAttributes.NewSlot) : 0; }
+        }
+
+        public bool IsRuntimeSpecialName {
+            get { return (m_attributes & MethodAttributes.RTSpecialName) != 0; }
+            set { m_attributes |= value ? MethodAttributes.RTSpecialName : 0; }
+        }
+
+        public bool IsSpecialName {
+            get { return (m_attributes & MethodAttributes.SpecialName) != 0; }
+            set { m_attributes |= value ? MethodAttributes.SpecialName : 0; }
+        }
+
+        public bool IsStatic {
+            get { return (m_attributes & MethodAttributes.Static) != 0; }
+            set { m_attributes |= value ? MethodAttributes.Static : 0; }
+        }
+
+        public bool IsVirtual {
+            get { return (m_attributes & MethodAttributes.Virtual) != 0; }
+            set { m_attributes |= value ? MethodAttributes.Virtual : 0; }
+        }
+
         public MethodDefinition (string name, TypeDefinition decType, RVA rva,
                                  MethodAttributes attrs, MethodImplAttributes implAttrs,
                                  bool hasThis, bool explicitThis, MethodCallingConvention callConv) :

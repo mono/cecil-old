@@ -22,6 +22,9 @@ namespace Mono.Cecil {
 
         PropertyAttributes Attributes { get; set; }
 
+        bool IsRuntimeSpecialName { get; set; }
+        bool IsSpecialName { get; set; }
+
         IMethodDefinition GetMethod { get; set; }
         IMethodDefinition SetMethod { get; set; }
 

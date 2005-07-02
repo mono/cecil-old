@@ -21,6 +21,13 @@ namespace Mono.Cecil {
         IInterfaceCollection Interfaces { get; }
         IClassLayoutInfo LayoutInfo { get; }
 
+        bool IsAbstract { get; set; }
+        bool IsBeforeFieldInit { get; set; }
+        bool IsInterface { get; set; }
+        bool IsRuntimeSpecialName { get; set; }
+        bool IsSealed { get; set; }
+        bool IsSpecialName { get; set; }
+
         INestedTypeCollection NestedTypes { get; }
         ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);
         ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType);

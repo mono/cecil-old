@@ -21,6 +21,9 @@ namespace Mono.Cecil {
 
         EventAttributes Attributes { get; set; }
 
+        bool IsRuntimeSpecialName { get; set; }
+        bool IsSpecialName { get; set; }
+
         IMethodDefinition AddMethod { get; set; }
         IMethodDefinition InvokeMethod { get; set; }
         IMethodDefinition RemoveMethod { get; set; }

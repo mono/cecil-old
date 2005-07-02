@@ -75,6 +75,16 @@ namespace Mono.Cecil.Implem {
             }
         }
 
+        public bool IsRuntimeSpecialName {
+            get { return (m_attributes & EventAttributes.RTSpecialName) != 0; }
+            set { m_attributes |= value ? EventAttributes.RTSpecialName : 0; }
+        }
+
+        public bool IsSpecialName {
+            get { return (m_attributes & EventAttributes.SpecialName) != 0; }
+            set { m_attributes |= value ? EventAttributes.SpecialName : 0; }
+        }
+
         public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs) : base (name, decType)
         {
             m_eventType = eventType;

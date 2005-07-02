@@ -22,5 +22,11 @@ namespace Mono.Cecil {
         FieldAttributes Attributes { get; set; }
         IFieldLayoutInfo LayoutInfo { get; }
         object Constant { get;  set; }
+
+        bool IsLiteral { get; set; }
+        bool IsReadOnly { get; set; }
+        bool IsRuntimeSpecialName { get; set; }
+        bool IsSpecialName { get; set; }
+        bool IsStatic { get; set; }
     }
 }

@@ -23,6 +23,15 @@ namespace Mono.Cecil {
         MethodImplAttributes ImplAttributes { get; set; }
         MethodSemanticsAttributes SemanticsAttributes { get; set; }
 
+        bool IsAbstract { get; set; }
+        bool IsFinal { get; set; }
+        bool IsHideBySignature { get; set; }
+        bool IsNewSlot { get; set; }
+        bool IsRuntimeSpecialName { get; set; }
+        bool IsSpecialName { get; set; }
+        bool IsStatic { get; set; }
+        bool IsVirtual { get; set; }
+
         IOverrideCollection Overrides { get; }
         IMethodBody Body { get; }
         IPInvokeInfo PInvokeInfo { get; }
