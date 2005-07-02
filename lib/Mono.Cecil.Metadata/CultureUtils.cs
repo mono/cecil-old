@@ -30,7 +30,7 @@ namespace Mono.Cecil.Metadata {
                 return;
 
             CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
-            m_cultures = new Hashtable (cultures.Length);
+            m_cultures = new Hashtable (cultures.Length + 1);
 
             foreach (CultureInfo ci in cultures)
                 m_cultures.Add (ci.Name, ci);
