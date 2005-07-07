@@ -688,7 +688,6 @@ namespace Mono.Cecil.Implem {
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
 			PermissionSet ps = new PermissionSet (PermissionState.None);
-			m_secParser.Reset ();
 			m_secParser.LoadXml (Encoding.Unicode.GetString (permset));
 			ps.FromXml (m_secParser.ToXml ());
 			dec.PermissionSet = ps;

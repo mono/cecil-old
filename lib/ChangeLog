@@ -1,6 +1,7 @@
 2005-07-07  Jb Evain  <jbevain@gmail.com>
 
 	* *.*: use Mono coding conventions
+	* Mono.Xml/*.*: update Mono.Xml from corlib
 
 2005-07-02  Jb Evain  <jbevain@gmail.com>
 

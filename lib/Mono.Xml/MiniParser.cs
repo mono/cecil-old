@@ -2,7 +2,7 @@
 // System.Security.Cryptography.MiniParser: Internal XML parser implementation
 //
 // Authors:
-//  Sergey Chaban
+//	Sergey Chaban
 //
 // Copyright (c) 2001, 2002 Wild West Software
 // Copyright (c) 2002 Sergey Chaban
@@ -35,333 +35,333 @@ using System.Globalization;
 
 namespace Mono.Xml {
 
-internal class MiniParser {
+	internal class MiniParser {
 
-	public interface IReader {
-		int Read();
-	}
-
-	public interface IAttrList {
-		int Length {get;}
-		bool IsEmpty {get;}
-		string GetName(int i);
-		string GetValue(int i);
-		string GetValue(string name);
-		void ChangeValue(string name, string newValue);
-		string[] Names {get;}
-		string[] Values {get;}
-	}
-
-	public interface IMutableAttrList : IAttrList {
-		void Clear();
-		void Add(string name, string value);
-		void CopyFrom(IAttrList attrs);
-		void Remove(int i);
-		void Remove(string name);
-	}
-
-	public interface IHandler {
-		void OnStartParsing(MiniParser parser);
-		void OnStartElement(string name, IAttrList attrs);
-		void OnEndElement(string name);
-		void OnChars(string ch);
-		void OnEndParsing(MiniParser parser);
-	}
-
-	public class HandlerAdapter : IHandler {
-		public HandlerAdapter() {}
-		public void OnStartParsing(MiniParser parser) {}
-		public void OnStartElement(string name, IAttrList attrs) {}
-		public void OnEndElement(string name) {}
-		public void OnChars(string ch) {}
-		public void OnEndParsing(MiniParser parser) {}
-	}
-
-	private enum CharKind : byte {
-		LEFT_BR	 = 0,
-		RIGHT_BR	= 1,
-		SLASH	   = 2,
-		PI_MARK	 = 3,
-		EQ		  = 4,
-		AMP		 = 5,
-		SQUOTE	  = 6,
-		DQUOTE	  = 7,
-		BANG		= 8,
-		LEFT_SQBR   = 9,
-		SPACE	   = 0xA,
-		RIGHT_SQBR  = 0xB,
-		TAB		 = 0xC,
-		CR		  = 0xD,
-		EOL		 = 0xE,
-		CHARS	   = 0xF,
-		UNKNOWN = 0x1F
-	}
-
-	private enum ActionCode : byte {
-		START_ELEM			   = 0,
-		END_ELEM				 = 1,
-		END_NAME				 = 2,
-		SET_ATTR_NAME			= 3,
-		SET_ATTR_VAL			 = 4,
-		SEND_CHARS			   = 5,
-		START_CDATA			  = 6,
-		END_CDATA				= 7,
-		ERROR					= 8,
-		STATE_CHANGE			 = 9,
-		FLUSH_CHARS_STATE_CHANGE = 0xA,
-		ACC_CHARS_STATE_CHANGE   = 0xB,
-		ACC_CDATA				= 0xC,
-		PROC_CHAR_REF			= 0xD,
-		UNKNOWN = 0xF
-	}
-
-	public class AttrListImpl : IMutableAttrList {
-		protected ArrayList names;
-		protected ArrayList values;
-
-		public AttrListImpl() : this(0) {}
-
-		public AttrListImpl(int initialCapacity) {
-			if (initialCapacity <= 0) {
-				names = new ArrayList();
-				values = new ArrayList();
-			} else {
-				names = new ArrayList(initialCapacity);
-				values = new ArrayList(initialCapacity);
-			}
+		public interface IReader {
+			int Read();
 		}
 
-		public AttrListImpl(IAttrList attrs)
-		: this(attrs != null ? attrs.Length : 0) {
-			if (attrs != null) this.CopyFrom(attrs);
+		public interface IAttrList {
+			int Length {get;}
+			bool IsEmpty {get;}
+			string GetName(int i);
+			string GetValue(int i);
+			string GetValue(string name);
+			void ChangeValue(string name, string newValue);
+			string[] Names {get;}
+			string[] Values {get;}
 		}
 
-		public int Length {
-			get {return names.Count;}
+		public interface IMutableAttrList : IAttrList {
+			void Clear();
+			void Add(string name, string value);
+			void CopyFrom(IAttrList attrs);
+			void Remove(int i);
+			void Remove(string name);
 		}
 
-		public bool IsEmpty {
-			get {return this.Length != 0;}
+		public interface IHandler {
+			void OnStartParsing(MiniParser parser);
+			void OnStartElement(string name, IAttrList attrs);
+			void OnEndElement(string name);
+			void OnChars(string ch);
+			void OnEndParsing(MiniParser parser);
 		}
 
-		public string GetName(int i) {
-			string res = null;
-			if (i >= 0 && i < this.Length) {
-				res = names[i] as string;
-			}
-			return res;
+		public class HandlerAdapter : IHandler {
+			public HandlerAdapter() {}
+			public void OnStartParsing(MiniParser parser) {}
+			public void OnStartElement(string name, IAttrList attrs) {}
+			public void OnEndElement(string name) {}
+			public void OnChars(string ch) {}
+			public void OnEndParsing(MiniParser parser) {}
 		}
 
-		public string GetValue(int i) {
-			string res = null;
-			if (i >= 0 && i < this.Length) {
-				res = values[i] as string;
-			}
-			return res;
+		private enum CharKind : byte {
+			LEFT_BR     = 0,
+			RIGHT_BR    = 1,
+			SLASH       = 2,
+			PI_MARK     = 3,
+			EQ          = 4,
+			AMP         = 5,
+			SQUOTE      = 6,
+			DQUOTE      = 7,
+			BANG        = 8,
+			LEFT_SQBR   = 9,
+			SPACE       = 0xA,
+			RIGHT_SQBR  = 0xB,
+			TAB         = 0xC,
+			CR          = 0xD,
+			EOL         = 0xE,
+			CHARS       = 0xF,
+			UNKNOWN = 0x1F
 		}
 
-		public string GetValue(string name) {
-			return this.GetValue(names.IndexOf(name));
+		private enum ActionCode : byte {
+			START_ELEM               = 0,
+			END_ELEM                 = 1,
+			END_NAME                 = 2,
+			SET_ATTR_NAME            = 3,
+			SET_ATTR_VAL             = 4,
+			SEND_CHARS               = 5,
+			START_CDATA              = 6,
+			END_CDATA                = 7,
+			ERROR                    = 8,
+			STATE_CHANGE             = 9,
+			FLUSH_CHARS_STATE_CHANGE = 0xA,
+			ACC_CHARS_STATE_CHANGE   = 0xB,
+			ACC_CDATA                = 0xC,
+			PROC_CHAR_REF            = 0xD,
+			UNKNOWN = 0xF
 		}
 
-		public void ChangeValue(string name, string newValue) {
-			int i = names.IndexOf(name);
-			if (i >= 0 && i < this.Length) {
-				values[i] = newValue;
-			}
-		}
+		public class AttrListImpl : IMutableAttrList {
+			protected ArrayList names;
+			protected ArrayList values;
 
-		public string[] Names {
-			get {return names.ToArray(typeof(string)) as string[];}
-		}
+			public AttrListImpl() : this(0) {}
 
-		public string[] Values {
-			get {return values.ToArray(typeof(string)) as string[];}
-		}
-
-		public void Clear() {
-			names.Clear();
-			values.Clear();
-		}
-
-		public void Add(string name, string value) {
-			names.Add(name);
-			values.Add(value);
-		}
-
-		public void Remove(int i) {
-			if (i >= 0) {
-				names.RemoveAt(i);
-				values.RemoveAt(i);
-			}
-		}
-
-		public void Remove(string name) {
-			this.Remove(names.IndexOf(name));
-		}
-
-		public void CopyFrom(IAttrList attrs) {
-			if (attrs != null && ((object)this == (object)attrs)) {
-				this.Clear();
-				int n = attrs.Length;
-				for (int i = 0; i < n; i++) {
-					this.Add(attrs.GetName(i), attrs.GetValue(i));
-				}
-			}
-		}
-	}
-
-	public class XMLError : Exception {
-		protected string descr;
-		protected int line, column;
-		public XMLError() : this("Unknown") {}
-		public XMLError(string descr) : this(descr, -1, -1) {}
-		public XMLError(string descr, int line, int column)
-		: base(descr) {
-			this.descr = descr;
-			this.line = line;
-			this.column = column;
-		}
-		public int Line {get {return line;}}
-		public int Column {get {return column;}}
-		public override string ToString() {
-			return (String.Format("{0} @ (line = {1}, col = {2})", descr, line, column));
-		}
-	}
-
-	private static readonly int INPUT_RANGE = 13;
-	private static readonly ushort[] tbl = {
-		(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 1), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 128),
-		(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 133), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 16), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.FLUSH_CHARS_STATE_CHANGE << 8) | 4),
-		(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.END_ELEM << 8) | 0), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
-		(ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 5), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3),
-		(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 4), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.END_NAME << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.END_NAME << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.END_NAME << 8) | 8), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
-		(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3),
-		(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
-		(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.FLUSH_CHARS_STATE_CHANGE << 8) | 1), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 10), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 7), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10),
-		(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_ELEM << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.START_ELEM << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 8), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
-		(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.SET_ATTR_NAME << 8) | 11), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 12), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130),
-		(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 13), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 10), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10),
-		(ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 11), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 132),
-		(ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.SET_ATTR_NAME << 8) | 11), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 12), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 130),
-		(ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.SEND_CHARS << 8) | 2), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 16), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 134),
-		(ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.SET_ATTR_VAL << 8) | 17), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 14), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14),
-		(ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.SET_ATTR_VAL << 8) | 17), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 15), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15),
-		(ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 18), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19),
-		(ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_ELEM << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.START_ELEM << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 17), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
-		(ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.END_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18),
-		(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19),
-		(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.UNKNOWN << 8) | 255),
-		0xFFFF
-	};
-
-	protected static string[] errors = {
-		/* 0 */ "Expected element",
-		/* 1 */ "Invalid character in tag",
-		/* 2 */ "No '='",
-		/* 3 */ "Invalid character entity",
-		/* 4 */ "Invalid attr value",
-		/* 5 */ "Empty tag",
-		/* 6 */ "No end tag",
-		/* 7 */ "Bad entity ref"
-	};
-
-	protected int line;
-	protected int col;
-	protected int[] twoCharBuff;
-	protected bool splitCData;
-
-	public MiniParser() {
-		twoCharBuff = new int[2];
-		splitCData = false;
-		Reset();
-	}
-
-	public void Reset() {
-		line = 0;
-		col = 0;
-	}
-
-	protected static bool StrEquals(string str, StringBuilder sb, int sbStart, int len) {
-		if (len != str.Length) return false;
-		for (int i = 0; i < len; i++) {
-			if (str[i] != sb[sbStart + i]) return false;
-		}
-		return true;
-	}
-
-	protected void FatalErr(string descr) {
-		throw new XMLError(descr, this.line, this.col);
-	}
-
-	protected static int Xlat(int charCode, int state) {
-		int p = state * INPUT_RANGE;
-		int n = System.Math.Min(tbl.Length - p, INPUT_RANGE);
-		for (;--n >= 0;) {
-			ushort code = tbl[p];
-			if (charCode == (code >> 12)) return (code & 0xFFF);
-			p++;
-		}
-		return 0xFFF;
-	}
-
-	public void Parse(IReader reader, IHandler handler) {
-		if (reader == null) throw new ArgumentNullException("reader");
-		if (handler == null) handler = new HandlerAdapter();
-
-		AttrListImpl attrList = new AttrListImpl();
-		string lastAttrName = null;
-		Stack tagStack = new Stack();
-		string elementName = null;
-		line = 1;
-		col = 0;
-		int currCh = 0;
-		int stateCode = 0;
-		StringBuilder sbChars = new StringBuilder();
-		bool seenCData = false;
-		bool isComment = false;
-		bool isDTD = false;
-		int bracketSwitch = 0;
-
-		handler.OnStartParsing(this);
-
-		while (true) {
-			++this.col;
-
-			currCh = reader.Read();
-
-			if (currCh == -1) {
-				if (stateCode != 0) {
-					FatalErr("Unexpected EOF");
-				}
-				break;
-			}
-
-			int charCode = "<>/?=&'\"![ ]	\r\n".IndexOf((char)currCh) & 0xF;
-			if (charCode == (int)CharKind.CR) continue; // ignore
-			// whitepace ::= (#x20 | #x9 | #xd | #xa)+
-			if (charCode == (int)CharKind.TAB) charCode = (int)CharKind.SPACE; // tab == space
-			if (charCode == (int)CharKind.EOL) {
-				this.col = 0;
-				this.line++;
-				charCode = (int)CharKind.SPACE;
-			}
-
-			int actionCode = MiniParser.Xlat(charCode, stateCode);
-			stateCode = actionCode & 0xFF;
-			// Ignore newline inside attribute value.
-			if (currCh == '\n' && (stateCode == 0xE || stateCode == 0xF)) continue;
-			actionCode >>= 8;
-
-			if (stateCode >= 0x80) {
-				if (stateCode == 0xFF) {
-					FatalErr("State dispatch error.");
+			public AttrListImpl(int initialCapacity) {
+				if (initialCapacity <= 0) {
+					names = new ArrayList();
+					values = new ArrayList();
 				} else {
-					FatalErr(errors[stateCode ^ 0x80]);
+					names = new ArrayList(initialCapacity);
+					values = new ArrayList(initialCapacity);
 				}
 			}
 
-			switch (actionCode) {
+			public AttrListImpl(IAttrList attrs)
+			: this(attrs != null ? attrs.Length : 0) {
+				if (attrs != null) this.CopyFrom(attrs);
+			}
+
+			public int Length {
+				get {return names.Count;}
+			}
+
+			public bool IsEmpty {
+				get {return this.Length != 0;}
+			}
+
+			public string GetName(int i) {
+				string res = null;
+				if (i >= 0 && i < this.Length) {
+					res = names[i] as string;
+				}
+				return res;
+			}
+
+			public string GetValue(int i) {
+				string res = null;
+				if (i >= 0 && i < this.Length) {
+					res = values[i] as string;
+				}
+				return res;
+			}
+
+			public string GetValue(string name) {
+				return this.GetValue(names.IndexOf(name));
+			}
+
+			public void ChangeValue(string name, string newValue) {
+				int i = names.IndexOf(name);
+				if (i >= 0 && i < this.Length) {
+					values[i] = newValue;
+				}
+			}
+
+			public string[] Names {
+				get {return names.ToArray(typeof(string)) as string[];}
+			}
+
+			public string[] Values {
+				get {return values.ToArray(typeof(string)) as string[];}
+			}
+
+			public void Clear() {
+				names.Clear();
+				values.Clear();
+			}
+
+			public void Add(string name, string value) {
+				names.Add(name);
+				values.Add(value);
+			}
+
+			public void Remove(int i) {
+				if (i >= 0) {
+					names.RemoveAt(i);
+					values.RemoveAt(i);
+				}
+			}
+
+			public void Remove(string name) {
+				this.Remove(names.IndexOf(name));
+			}
+
+			public void CopyFrom(IAttrList attrs) {
+				if (attrs != null && ((object)this == (object)attrs)) {
+					this.Clear();
+					int n = attrs.Length;
+					for (int i = 0; i < n; i++) {
+						this.Add(attrs.GetName(i), attrs.GetValue(i));
+					}
+				}
+			}
+		}
+
+		public class XMLError : Exception {
+			protected string descr;
+			protected int line, column;
+			public XMLError() : this("Unknown") {}
+			public XMLError(string descr) : this(descr, -1, -1) {}
+			public XMLError(string descr, int line, int column)
+			: base(descr) {
+				this.descr = descr;
+				this.line = line;
+				this.column = column;
+			}
+			public int Line {get {return line;}}
+			public int Column {get {return column;}}
+			public override string ToString() {
+				return (String.Format("{0} @ (line = {1}, col = {2})", descr, line, column));
+			}
+		}
+
+		private static readonly int INPUT_RANGE = 13;
+		private static readonly ushort[] tbl = {
+			(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 1), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 128), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 128),
+			(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 133), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 16), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.FLUSH_CHARS_STATE_CHANGE << 8) | 4),
+			(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.END_ELEM << 8) | 0), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 2), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
+			(ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 5), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3),
+			(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 4), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.END_NAME << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.END_NAME << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.END_NAME << 8) | 8), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
+			(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 3),
+			(ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
+			(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.FLUSH_CHARS_STATE_CHANGE << 8) | 1), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 10), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 7), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10),
+			(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_ELEM << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.START_ELEM << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 8), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
+			(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.SET_ATTR_NAME << 8) | 11), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 12), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130),
+			(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 13), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 10), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 10),
+			(ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 11), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 132), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 132),
+			(ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.SET_ATTR_NAME << 8) | 11), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 12), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 130), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 130),
+			(ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.SEND_CHARS << 8) | 2), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 16), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 134), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ERROR << 8) | 134),
+			(ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.SET_ATTR_VAL << 8) | 17), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 14), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 14),
+			(ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.SET_ATTR_VAL << 8) | 17), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.PROC_CHAR_REF << 8) | 15), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 15),
+			(ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 18), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 0), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.START_CDATA << 8) | 19),
+			(ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.START_ELEM << 8) | 6), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.START_ELEM << 8) | 7), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.STATE_CHANGE << 8) | 17), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CHARS_STATE_CHANGE << 8) | 9), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ERROR << 8) | 129), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ERROR << 8) | 129),
+			(ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.END_CDATA << 8) | 10), (ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 18),
+			(ushort)(((ushort)CharKind.LEFT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SLASH << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_BR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.PI_MARK << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.EQ << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.AMP << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.BANG << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.LEFT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.SPACE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.RIGHT_SQBR << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.DQUOTE << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19), (ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.ACC_CDATA << 8) | 19),
+			(ushort)(((ushort)CharKind.CHARS << 12) | ((ushort)ActionCode.UNKNOWN << 8) | 255),
+			0xFFFF
+		};
+
+		protected static string[] errors = {
+			/* 0 */ "Expected element",
+			/* 1 */ "Invalid character in tag",
+			/* 2 */ "No '='",
+			/* 3 */ "Invalid character entity",
+			/* 4 */ "Invalid attr value",
+			/* 5 */ "Empty tag",
+			/* 6 */ "No end tag",
+			/* 7 */ "Bad entity ref"
+		};
+
+		protected int line;
+		protected int col;
+		protected int[] twoCharBuff;
+		protected bool splitCData;
+
+		public MiniParser() {
+			twoCharBuff = new int[2];
+			splitCData = false;
+			Reset();
+		}
+
+		public void Reset() {
+			line = 0;
+			col = 0;
+		}
+
+		protected static bool StrEquals(string str, StringBuilder sb, int sbStart, int len) {
+			if (len != str.Length) return false;
+			for (int i = 0; i < len; i++) {
+				if (str[i] != sb[sbStart + i]) return false;
+			}
+			return true;
+		}
+
+		protected void FatalErr(string descr) {
+			throw new XMLError(descr, this.line, this.col);
+		}
+
+		protected static int Xlat(int charCode, int state) {
+			int p = state * INPUT_RANGE;
+			int n = System.Math.Min(tbl.Length - p, INPUT_RANGE);
+			for (;--n >= 0;) {
+				ushort code = tbl[p];
+				if (charCode == (code >> 12)) return (code & 0xFFF);
+				p++;
+			}
+			return 0xFFF;
+		}
+
+		public void Parse(IReader reader, IHandler handler) {
+			if (reader == null) throw new ArgumentNullException("reader");
+			if (handler == null) handler = new HandlerAdapter();
+
+			AttrListImpl attrList = new AttrListImpl();
+			string lastAttrName = null;
+			Stack tagStack = new Stack();
+			string elementName = null;
+			line = 1;
+			col = 0;
+			int currCh = 0;
+			int stateCode = 0;
+			StringBuilder sbChars = new StringBuilder();
+			bool seenCData = false;
+			bool isComment = false;
+			bool isDTD = false;
+			int bracketSwitch = 0;
+
+			handler.OnStartParsing(this);
+
+			while (true) {
+				++this.col;
+
+				currCh = reader.Read();
+
+				if (currCh == -1) {
+					if (stateCode != 0) {
+						FatalErr("Unexpected EOF");
+					}
+					break;
+				}
+
+				int charCode = "<>/?=&'\"![ ]\t\r\n".IndexOf((char)currCh) & 0xF;
+				if (charCode == (int)CharKind.CR) continue; // ignore
+				// whitepace ::= (#x20 | #x9 | #xd | #xa)+
+				if (charCode == (int)CharKind.TAB) charCode = (int)CharKind.SPACE; // tab == space
+				if (charCode == (int)CharKind.EOL) {
+					this.col = 0;
+					this.line++;
+					charCode = (int)CharKind.SPACE;
+				}
+
+				int actionCode = MiniParser.Xlat(charCode, stateCode);
+				stateCode = actionCode & 0xFF;
+				// Ignore newline inside attribute value.
+				if (currCh == '\n' && (stateCode == 0xE || stateCode == 0xF)) continue;
+				actionCode >>= 8;
+
+				if (stateCode >= 0x80) {
+					if (stateCode == 0xFF) {
+						FatalErr("State dispatch error.");
+					} else {
+						FatalErr(errors[stateCode ^ 0x80]);
+					}
+				}
+
+				switch (actionCode) {
 				case (int)ActionCode.START_ELEM:
 					handler.OnStartElement(elementName, attrList);
 					if (currCh != '/') {
@@ -511,7 +511,7 @@ internal class MiniParser {
 				case (int)ActionCode.PROC_CHAR_REF:
 					currCh = reader.Read();
 					int cl = this.col + 1;
-					if (currCh == '#') {	// character reference
+					if (currCh == '#') {    // character reference
 						int r = 10;
 						int chCode = 0;
 						int nDigits = 0;
@@ -572,11 +572,11 @@ internal class MiniParser {
 							pos = 0xF;
 							if (lBr != 0xF && currCh == entityRefChars[lBr]) {
 								if (lPred < 0xE) entIdx = lPred;
-//							  pred = lPred;
+//								pred = lPred;
 								predShift = 12; // left
 							} else if (rBr != 0xF && currCh == entityRefChars[rBr]) {
 								if (rPred < 0xE) entIdx = rPred;
-//							  pred = rPred;
+//								pred = rPred;
 								predShift = 8; // right
 							} else if (currCh == ';') {
 								if (entIdx != 0xF
@@ -598,8 +598,8 @@ internal class MiniParser {
 							|| StrEquals("lt", sbChars, sbLen, l)
 							|| StrEquals("gt", sbChars, sbLen, l))
 							) {
-								sbChars.Length = sbLen;
-								sbChars.Append(entities[entIdx]);
+							sbChars.Length = sbLen;
+							sbChars.Append(entities[entIdx]);
 						} else FatalErr(errors[7]);
 					}
 
@@ -609,13 +609,13 @@ internal class MiniParser {
 				default:
 					FatalErr(String.Format("Unexpected action code - {0}.", actionCode));
 					break;
-			}
-		} // while (true)
+				}
+			} // while (true)
 
-		handler.OnEndParsing(this);
+			handler.OnEndParsing(this);
 
-	} // Parse
+		} // Parse
 
-}
+	}
 
 }

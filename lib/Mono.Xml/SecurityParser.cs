@@ -2,7 +2,7 @@
 // Mono.Xml.SecurityParser.cs class implementation
 //
 // Author:
-//  Sebastien Pouliot (spouliot@motus.com)
+//	Sebastien Pouliot (spouliot@motus.com)
 //
 // (C) 2003 Motus Technologies Inc. (http://www.motus.com)
 //
@@ -32,11 +32,13 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using System.Security;
 
 namespace Mono.Xml {
 
-	internal class SecurityParser : MiniParser, MiniParser.IHandler, MiniParser.IReader {
+	// convert an XML document into SecurityElement objects
+	internal class SecurityParser : SmallXmlParser, SmallXmlParser.IContentHandler {
 
 		private SecurityElement root;
 
@@ -48,10 +50,8 @@ namespace Mono.Xml {
 		public void LoadXml (string xml)
 		{
 			root = null;
-			xmldoc = xml;
-			pos = 0;
 			stack.Clear ();
-			Parse (this, this);
+			Parse (new StringReader (xml), this);
 		}
 
 		public SecurityElement ToXml ()
@@ -59,26 +59,18 @@ namespace Mono.Xml {
 			return root;
 		}
 
-		// IReader
-
-		private string xmldoc;
-		private int pos;
-
-		public int Read ()
-		{
-			if (pos >= xmldoc.Length)
-				return -1;
-			return (int) xmldoc [pos++];
-		}
-
-		// IHandler
+		// IContentHandler
 
 		private SecurityElement current;
 		private Stack stack;
 
-		public void OnStartParsing (MiniParser parser) {}
+		public void OnStartParsing (SmallXmlParser parser) {}
 
-		public void OnStartElement (string name, MiniParser.IAttrList attrs)
+		public void OnProcessingInstruction (string name, string text) {}
+
+		public void OnIgnorableWhitespace (string s) {}
+
+		public void OnStartElement (string name, SmallXmlParser.IAttrList attrs)
 		{
 			SecurityElement newel = new SecurityElement (name);
 			if (root == null) {
@@ -107,6 +99,7 @@ namespace Mono.Xml {
 			current.Text = ch;
 		}
 
-		public void OnEndParsing (MiniParser parser) {}
+		public void OnEndParsing (SmallXmlParser parser) {}
 	}
 }
+
