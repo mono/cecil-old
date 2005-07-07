@@ -12,19 +12,19 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class MethodDefSig : MethodSig {
+	internal sealed class MethodDefSig : MethodSig {
 
-        public MethodDefSig () : base ()
-        {
-        }
+		public MethodDefSig () : this (0)
+		{
+		}
 
-        public MethodDefSig (uint blobIndex) : base (blobIndex)
-        {
-        }
+		public MethodDefSig (uint blobIndex) : base (blobIndex)
+		{
+		}
 
-        public override void Accept (ISignatureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (ISignatureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

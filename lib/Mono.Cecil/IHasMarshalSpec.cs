@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IHasMarshalSpec {
+	public interface IHasMarshalSpec {
 
-        IMarshalSpec MarshalSpec { get; }
-    }
+		IMarshalSpec MarshalSpec { get; }
+	}
 }

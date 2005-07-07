@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal abstract class InputOutputItem {
+	internal abstract class InputOutputItem {
 
-        public CustomMod [] CustomMods;
-        public bool ByRef;
-        public SigType Type;
-        public bool TypedByRef;
-    }
+		public CustomMod [] CustomMods;
+		public bool ByRef;
+		public SigType Type;
+		public bool TypedByRef;
+	}
 }

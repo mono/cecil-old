@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil {
 
-    public interface IMemberReference {
+	public interface IMemberReference {
 
-        string Name { get; set; }
-        ITypeReference DeclaringType { get; }
-    }
+		string Name { get; set; }
+		ITypeReference DeclaringType { get; }
+	}
 
-    public interface IMemberDefinition : IMemberReference {}
+	public interface IMemberDefinition : IMemberReference {}
 }

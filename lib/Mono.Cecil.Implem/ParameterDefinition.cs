@@ -12,127 +12,127 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System.Reflection;
+	using System.Reflection;
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    internal sealed class ParameterDefinition : IParameterDefinition {
+	internal sealed class ParameterDefinition : IParameterDefinition {
 
-        private string m_name;
-        private int m_sequence;
-        private ParamAttributes m_attributes;
-        private ITypeReference m_paramType;
+		private string m_name;
+		private int m_sequence;
+		private ParamAttributes m_attributes;
+		private ITypeReference m_paramType;
 
-        private bool m_constLoaded;
-        private object m_const;
+		private bool m_constLoaded;
+		private object m_const;
 
-        private MethodReference m_method;
-        private CustomAttributeCollection m_customAttrs;
+		private MethodReference m_method;
+		private CustomAttributeCollection m_customAttrs;
 
-        private bool m_marshalLoaded;
-        private MarshalDesc m_marshalDesc;
+		private bool m_marshalLoaded;
+		private MarshalDesc m_marshalDesc;
 
-        public string Name {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+		public string Name {
+			get { return m_name; }
+			set { m_name = value; }
+		}
 
-        public int Sequence {
-            get { return m_sequence; }
-            set { m_sequence = value; }
-        }
+		public int Sequence {
+			get { return m_sequence; }
+			set { m_sequence = value; }
+		}
 
-        public ParamAttributes Attributes {
-            get { return m_attributes; }
-            set { m_attributes = value; }
-        }
+		public ParamAttributes Attributes {
+			get { return m_attributes; }
+			set { m_attributes = value; }
+		}
 
-        public ITypeReference ParameterType {
-            get { return m_paramType; }
-            set { m_paramType = value; }
-        }
+		public ITypeReference ParameterType {
+			get { return m_paramType; }
+			set { m_paramType = value; }
+		}
 
-        public bool ConstantLoaded {
-            get { return m_constLoaded; }
-            set { m_constLoaded = value; }
-        }
+		public bool ConstantLoaded {
+			get { return m_constLoaded; }
+			set { m_constLoaded = value; }
+		}
 
-        public object Constant {
-            get {
-                (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadConstant (this);
-                return m_const;
-            }
-            set { m_const = value; }
-        }
+		public object Constant {
+			get {
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadConstant (this);
+				return m_const;
+			}
+			set { m_const = value; }
+		}
 
-        public MethodReference Method {
-            get { return m_method; }
-            set { m_method = value; }
-        }
+		public MethodReference Method {
+			get { return m_method; }
+			set { m_method = value; }
+		}
 
-        public ICustomAttributeCollection CustomAttributes {
-            get {
-                if (m_customAttrs == null && m_method != null)
-                    m_customAttrs = new CustomAttributeCollection (this, (m_method.DeclaringType as TypeDefinition).Module.Controller);
-                else if (m_customAttrs == null)
-                    m_customAttrs = new CustomAttributeCollection (this);
-                return m_customAttrs;
-            }
-        }
+		public ICustomAttributeCollection CustomAttributes {
+			get {
+				if (m_customAttrs == null && m_method != null)
+					m_customAttrs = new CustomAttributeCollection (this, (m_method.DeclaringType as TypeDefinition).Module.Controller);
+				else if (m_customAttrs == null)
+					m_customAttrs = new CustomAttributeCollection (this);
+				return m_customAttrs;
+			}
+		}
 
-        public bool MarshalSpecLoaded {
-            get { return m_marshalLoaded; }
-            set { m_marshalLoaded = value; }
-        }
+		public bool MarshalSpecLoaded {
+			get { return m_marshalLoaded; }
+			set { m_marshalLoaded = value; }
+		}
 
-        public IMarshalSpec MarshalSpec {
-            get {
-                (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadMarshalSpec(this);
-                return m_marshalDesc;
-            }
-            set { m_marshalDesc = value as MarshalDesc; }
-        }
+		public IMarshalSpec MarshalSpec {
+			get {
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadMarshalSpec(this);
+				return m_marshalDesc;
+			}
+			set { m_marshalDesc = value as MarshalDesc; }
+		}
 
-        public ParameterDefinition (string name, int seq, ParamAttributes attrs, ITypeReference paramType)
-        {
-            m_name = name;
-            m_sequence = seq;
-            m_attributes = attrs;
-            m_paramType = paramType;
-        }
+		public ParameterDefinition (string name, int seq, ParamAttributes attrs, ITypeReference paramType)
+		{
+			m_name = name;
+			m_sequence = seq;
+			m_attributes = attrs;
+			m_paramType = paramType;
+		}
 
-        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-        {
-            CustomAttribute ca = new CustomAttribute(ctor);
-            m_customAttrs.Add (ca);
-            return ca;
-        }
+		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
+		{
+			CustomAttribute ca = new CustomAttribute(ctor);
+			m_customAttrs.Add (ca);
+			return ca;
+		}
 
-        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-        {
-            return DefineCustomAttribute (
-                (m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor));
-        }
+		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
+		{
+			return DefineCustomAttribute (
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor));
+		}
 
-        public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-        {
-            CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-            m_customAttrs.Add (ca);
-            return ca;
-        }
+		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
+		{
+			CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
+			m_customAttrs.Add (ca);
+			return ca;
+		}
 
-        public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-        {
-            return DefineCustomAttribute (
-                (m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor), data);
-        }
+		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
+		{
+			return DefineCustomAttribute (
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor), data);
+		}
 
-        public void Accept (IReflectionVisitor visitor)
-        {
-            visitor.Visit (this);
-            if (m_marshalDesc != null)
-                m_marshalDesc.Accept (visitor);
-            m_customAttrs.Accept (visitor);
-        }
-    }
+		public void Accept (IReflectionVisitor visitor)
+		{
+			visitor.Visit (this);
+			if (m_marshalDesc != null)
+				m_marshalDesc.Accept (visitor);
+			m_customAttrs.Accept (visitor);
+		}
+	}
 }

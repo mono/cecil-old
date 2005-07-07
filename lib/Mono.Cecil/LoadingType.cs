@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public enum LoadingType {
-        Lazy,
-        Aggressive
-    }
+	public enum LoadingType {
+		Lazy,
+		Aggressive
+	}
 }

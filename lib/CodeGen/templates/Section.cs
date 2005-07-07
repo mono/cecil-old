@@ -15,22 +15,22 @@
 <% header = $headers["Section"] %>
 namespace Mono.Cecil.Binary {
 
-    public sealed class Section : IHeader, IBinaryVisitable {
+	public sealed class Section : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-        public string Name;
+<% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+		public string Name;
 
-        internal Section ()
-        {
-        }
+		internal Section ()
+		{
+		}
 
-        public void SetDefaultValues ()
-        {<% header.fields.each { |f| print("\n            " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-        }
+		public void SetDefaultValues ()
+		{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+		}
 
-        public void Accept (IBinaryVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

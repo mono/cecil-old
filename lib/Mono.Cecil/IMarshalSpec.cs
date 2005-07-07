@@ -12,43 +12,43 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    public interface IMarshalSpec : IReflectionVisitable {
+	public interface IMarshalSpec : IReflectionVisitable {
 
-        NativeType NativeIntrinsic { get; }
-        IHasMarshalSpec Container { get; }
-    }
+		NativeType NativeIntrinsic { get; }
+		IHasMarshalSpec Container { get; }
+	}
 
-    public interface IArrayDesc : IMarshalSpec {
+	public interface IArrayDesc : IMarshalSpec {
 
-        NativeType ElemType { get; set; }
-        int ParamNum { get; set; }
-        int ElemMult { get; set; }
-        int NumElem { get; set; }
-    }
+		NativeType ElemType { get; set; }
+		int ParamNum { get; set; }
+		int ElemMult { get; set; }
+		int NumElem { get; set; }
+	}
 
-    public interface ICustomMarshalerDesc : IMarshalSpec {
+	public interface ICustomMarshalerDesc : IMarshalSpec {
 
-        Guid Guid { get; set; }
-        string UnmanagedType { get; set; }
-        ITypeDefinition ManagedType { get; set; }
-        string Cookie { get; set; }
-    }
+		Guid Guid { get; set; }
+		string UnmanagedType { get; set; }
+		ITypeDefinition ManagedType { get; set; }
+		string Cookie { get; set; }
+	}
 
-    public interface IFixedArrayDesc : IMarshalSpec {
+	public interface IFixedArrayDesc : IMarshalSpec {
 
-        int NumElem { get; set; }
-        NativeType ElemType { get; set; }
-    }
+		int NumElem { get; set; }
+		NativeType ElemType { get; set; }
+	}
 
-    public interface ISafeArrayDesc : IMarshalSpec {
+	public interface ISafeArrayDesc : IMarshalSpec {
 
-        VariantType ElemType { get; set; }
-    }
+		VariantType ElemType { get; set; }
+	}
 
-    public interface IFixedSysStringDesc : IMarshalSpec {
+	public interface IFixedSysStringDesc : IMarshalSpec {
 
-        int Size { get; set; }
-    }
+		int Size { get; set; }
+	}
 }

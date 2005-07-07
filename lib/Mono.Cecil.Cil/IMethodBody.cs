@@ -12,16 +12,20 @@
 
 namespace Mono.Cecil.Cil {
 
-    public interface IMethodBody : ICodeVisitable {
+	using System;
 
-        int MaxStack { get; set; }
-        int CodeSize { get; set; }
-        bool InitLocals { get; set; }
-        IMethodDefinition Method { get; }
-        IInstructionCollection Instructions { get; }
-        IExceptionHandlerCollection ExceptionHandlers { get; }
-        IVariableDefinitionCollection Variables { get; }
+	public interface IMethodBody : ICodeVisitable {
 
-        IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type);
-    }
+		int MaxStack { get; set; }
+		int CodeSize { get; set; }
+		bool InitLocals { get; set; }
+		IMethodDefinition Method { get; }
+		IInstructionCollection Instructions { get; }
+		IExceptionHandlerCollection ExceptionHandlers { get; }
+		IVariableDefinitionCollection Variables { get; }
+
+		//IVariableDefinition DefineLocalVariable (ITypeReference type);
+		//IVariableDefinition DefineLocalVariable (Type type);
+		IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type);
+	}
 }

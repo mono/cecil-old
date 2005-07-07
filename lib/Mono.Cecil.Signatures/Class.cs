@@ -12,14 +12,14 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class CLASS : SigType {
+	internal sealed class CLASS : SigType {
 
-        public MetadataToken Type;
+		public MetadataToken Type;
 
-        public CLASS () : base (ElementType.Class)
-        {
-        }
-    }
+		public CLASS () : base (ElementType.Class)
+		{
+		}
+	}
 }

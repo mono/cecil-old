@@ -12,64 +12,64 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
+	using System;
 
-    using Mono.Cecil;
-    using Mono.Cecil.Signatures;
+	using Mono.Cecil;
+	using Mono.Cecil.Signatures;
 
-    internal sealed class FunctionPointerType : TypeReference, IFunctionPointerType {
+	internal sealed class FunctionPointerType : TypeReference, IFunctionPointerType {
 
-        private MethodReference m_function;
+		private MethodReference m_function;
 
-        public bool HasThis {
-            get { return m_function.HasThis; }
-            set { m_function.HasThis = value; }
-        }
+		public bool HasThis {
+			get { return m_function.HasThis; }
+			set { m_function.HasThis = value; }
+		}
 
-        public bool ExplicitThis {
-            get { return m_function.ExplicitThis; }
-            set { m_function.ExplicitThis = value; }
-        }
+		public bool ExplicitThis {
+			get { return m_function.ExplicitThis; }
+			set { m_function.ExplicitThis = value; }
+		}
 
-        public MethodCallingConvention CallingConvention {
-            get { return m_function.CallingConvention; }
-            set { m_function.CallingConvention = value; }
-        }
+		public MethodCallingConvention CallingConvention {
+			get { return m_function.CallingConvention; }
+			set { m_function.CallingConvention = value; }
+		}
 
-        public IParameterDefinitionCollection Parameters {
-            get { return m_function.Parameters; }
-        }
+		public IParameterDefinitionCollection Parameters {
+			get { return m_function.Parameters; }
+		}
 
-        public IMethodReturnType ReturnType {
-            get { return m_function.ReturnType; }
-            set { m_function.ReturnType = value; }
-        }
+		public IMethodReturnType ReturnType {
+			get { return m_function.ReturnType; }
+			set { m_function.ReturnType = value; }
+		}
 
-        public override string Name {
-            get { return m_function.Name; }
-            set { throw new InvalidOperationException (); }
-        }
+		public override string Name {
+			get { return m_function.Name; }
+			set { throw new InvalidOperationException (); }
+		}
 
-        public override string Namespace {
-            get { return string.Empty; }
-            set { throw new InvalidOperationException (); }
-        }
+		public override string Namespace {
+			get { return string.Empty; }
+			set { throw new InvalidOperationException (); }
+		}
 
-        public override IMetadataScope Scope {
-            get { return m_function.DeclaringType.Scope; }
-        }
+		public override IMetadataScope Scope {
+			get { return m_function.DeclaringType.Scope; }
+		}
 
-        public override string FullName {
-            get { return m_function.ToString (); }
-        }
+		public override string FullName {
+			get { return m_function.ToString (); }
+		}
 
-        public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
-                                ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
-        {
-            m_function = new MethodReference ("function", this, hasThis, explicitThis, callConv);
-            m_function.ReturnType = retType;
-            foreach (ParameterDefinition param in parameters)
-                (m_function.Parameters as ParameterDefinitionCollection).Add (param);
-        }
-    }
+		public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
+								ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
+		{
+			m_function = new MethodReference ("function", this, hasThis, explicitThis, callConv);
+			m_function.ReturnType = retType;
+			foreach (ParameterDefinition param in parameters)
+				(m_function.Parameters as ParameterDefinitionCollection).Add (param);
+		}
+	}
 }

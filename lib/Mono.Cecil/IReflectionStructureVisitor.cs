@@ -12,20 +12,20 @@
 
 namespace Mono.Cecil {
 
-    public interface IReflectionStructureVisitor {
+	public interface IReflectionStructureVisitor {
 
-        void Visit (IAssemblyDefinition asm);
-        void Visit (IAssemblyNameDefinition name);
-        void Visit (IAssemblyNameReferenceCollection names);
-        void Visit (IAssemblyNameReference name);
-        void Visit (IResourceCollection resources);
-        void Visit (IEmbeddedResource res);
-        void Visit (ILinkedResource res);
-        void Visit (IAssemblyLinkedResource res);
-        void Visit (IModuleDefinition module);
-        void Visit (IModuleDefinitionCollection modules);
-        void Visit (IModuleReference module);
-        void Visit (IModuleReferenceCollection modules);
-    }
+		void Visit (IAssemblyDefinition asm);
+		void Visit (IAssemblyNameDefinition name);
+		void Visit (IAssemblyNameReferenceCollection names);
+		void Visit (IAssemblyNameReference name);
+		void Visit (IResourceCollection resources);
+		void Visit (IEmbeddedResource res);
+		void Visit (ILinkedResource res);
+		void Visit (IAssemblyLinkedResource res);
+		void Visit (IModuleDefinition module);
+		void Visit (IModuleDefinitionCollection modules);
+		void Visit (IModuleReference module);
+		void Visit (IModuleReferenceCollection modules);
+	}
 }
 

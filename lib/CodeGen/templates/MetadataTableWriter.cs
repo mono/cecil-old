@@ -15,55 +15,55 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.Collections;
-    using System.IO;
+	using System;
+	using System.Collections;
+	using System.IO;
 
-    internal sealed class MetadataTableWriter : IMetadataTableVisitor {
+	internal sealed class MetadataTableWriter : IMetadataTableVisitor {
 
-        private MetadataRoot m_metadataRoot;
-        private TablesHeap m_heap;
-        private MetadataRowWriter m_mrrw;
+		private MetadataRoot m_metadataRoot;
+		private TablesHeap m_heap;
+		private MetadataRowWriter m_mrrw;
 
-        public MetadataTableWriter (MetadataWriter mrv)
-        {
-            m_metadataRoot = mrv.GetMetadataRoot ();
-            m_heap = m_metadataRoot.Streams.TablesHeap;
-            m_mrrw = new MetadataRowWriter (this);
-        }
+		public MetadataTableWriter (MetadataWriter mrv)
+		{
+			m_metadataRoot = mrv.GetMetadataRoot ();
+			m_heap = m_metadataRoot.Streams.TablesHeap;
+			m_mrrw = new MetadataRowWriter (this);
+		}
 
-        public MetadataRoot GetMetadataRoot ()
-        {
-            return m_metadataRoot;
-        }
+		public MetadataRoot GetMetadataRoot ()
+		{
+			return m_metadataRoot;
+		}
 
-        public IMetadataRowVisitor GetRowVisitor ()
-        {
-            return m_mrrw;
-        }
+		public IMetadataRowVisitor GetRowVisitor ()
+		{
+			return m_mrrw;
+		}
 
-<% $tables.each { |table| %>        public <%=table.table_name%> Get<%=table.table_name%> ()
-        {
-            Type tt = typeof (<%=table.table_name%>);
-            if (m_heap.HasTable (tt))
-                return m_heap [tt] as <%=table.table_name%>;
-            
-            <%=table.table_name%> table = new <%=table.table_name%> ();
-            m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
-            return table;
-        }
+<% $tables.each { |table| %>		public <%=table.table_name%> Get<%=table.table_name%> ()
+		{
+			Type tt = typeof (<%=table.table_name%>);
+			if (m_heap.HasTable (tt))
+				return m_heap [tt] as <%=table.table_name%>;
+			
+			<%=table.table_name%> table = new <%=table.table_name%> ();
+			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
+			return table;
+		}
 
 <% } %>
-        public void Visit (TableCollection coll)
-        {
-        }
+		public void Visit (TableCollection coll)
+		{
+		}
 
-<% $tables.each { |table| %>        public void Visit (<%=table.table_name%> table)
-        {
-        }
+<% $tables.each { |table| %>		public void Visit (<%=table.table_name%> table)
+		{
+		}
 
-<% } %>        public void Terminate(TableCollection coll)
-        {
-        }
-    }
+<% } %>		public void Terminate(TableCollection coll)
+		{
+		}
+	}
 }

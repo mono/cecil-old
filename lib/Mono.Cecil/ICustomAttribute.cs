@@ -12,18 +12,18 @@
 
 namespace Mono.Cecil {
 
-    using System.Collections;
+	using System.Collections;
 
-    public interface ICustomAttribute : IReflectionVisitable {
+	public interface ICustomAttribute : IReflectionVisitable {
 
-        IMethodReference Constructor { get; }
-        IList ConstructorParameters { get; }
-        IDictionary Fields { get; }
-        IDictionary Properties { get; }
+		IMethodReference Constructor { get; }
+		IList ConstructorParameters { get; }
+		IDictionary Fields { get; }
+		IDictionary Properties { get; }
 
-        ITypeReference GetFieldType (string fieldName);
-        ITypeReference GetPropertyType (string propertyName);
+		ITypeReference GetFieldType (string fieldName);
+		ITypeReference GetPropertyType (string propertyName);
 
-        byte [] GetAsByteArray ();
-    }
+		byte [] GetAsByteArray ();
+	}
 }

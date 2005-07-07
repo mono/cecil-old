@@ -12,48 +12,48 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.Collections;
-    using System.Globalization;
+	using System;
+	using System.Collections;
+	using System.Globalization;
 
-    internal sealed class CultureUtils {
+	internal sealed class CultureUtils {
 
-        private static IDictionary m_cultures;
+		private static IDictionary m_cultures;
 
-        private CultureUtils ()
-        {
-        }
+		private CultureUtils ()
+		{
+		}
 
-        private static void LoadCultures ()
-        {
-            if (m_cultures != null)
-                return;
+		private static void LoadCultures ()
+		{
+			if (m_cultures != null)
+				return;
 
-            CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
-            m_cultures = new Hashtable (cultures.Length + 1);
+			CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
+			m_cultures = new Hashtable (cultures.Length + 1);
 
-            foreach (CultureInfo ci in cultures)
-                m_cultures.Add (ci.Name, ci);
+			foreach (CultureInfo ci in cultures)
+				m_cultures.Add (ci.Name, ci);
 
-            m_cultures.Add ("neutral", CultureInfo.InvariantCulture);
-        }
+			m_cultures.Add ("neutral", CultureInfo.InvariantCulture);
+		}
 
-        public static bool IsValid (string culture)
-        {
-            if (culture == null)
-                throw new ArgumentNullException ("culture");
+		public static bool IsValid (string culture)
+		{
+			if (culture == null)
+				throw new ArgumentNullException ("culture");
 
-            LoadCultures ();
+			LoadCultures ();
 
-            return m_cultures.Contains (culture);
-        }
+			return m_cultures.Contains (culture);
+		}
 
-        public static CultureInfo GetCultureInfo (string culture)
-        {
-            if (IsValid (culture))
-                return m_cultures [culture] as CultureInfo;
+		public static CultureInfo GetCultureInfo (string culture)
+		{
+			if (IsValid (culture))
+				return m_cultures [culture] as CultureInfo;
 
-            return CultureInfo.InvariantCulture;
-        }
-    }
+			return CultureInfo.InvariantCulture;
+		}
+	}
 }

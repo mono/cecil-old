@@ -12,19 +12,19 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    public interface IAssemblyNameReference : IMetadataScope, IReflectionStructureVisitable {
+	public interface IAssemblyNameReference : IMetadataScope, IReflectionStructureVisitable {
 
-        string Name { get; set; }
-        string Culture { get; set; }
-        string FullName { get; }
-        Version Version { get; set; }
-        byte [] PublicKey { get; set; }
-        byte [] PublicKeyToken { get; }
-        AssemblyHashAlgorithm HashAlgorithm { get; set; }
-        byte [] Hash { get; }
-    }
+		string Name { get; set; }
+		string Culture { get; set; }
+		string FullName { get; }
+		Version Version { get; set; }
+		byte [] PublicKey { get; set; }
+		byte [] PublicKeyToken { get; }
+		AssemblyHashAlgorithm HashAlgorithm { get; set; }
+		byte [] Hash { get; }
+	}
 
-    public interface IAssemblyNameDefinition : IAssemblyNameReference {}
+	public interface IAssemblyNameDefinition : IAssemblyNameReference {}
 }

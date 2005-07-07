@@ -12,29 +12,29 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System.IO;
+	using System.IO;
 
-    public class BlobHeap : MetadataHeap {
+	public class BlobHeap : MetadataHeap {
 
-        public int IndexSize;
+		public int IndexSize;
 
-        internal BlobHeap (MetadataStream stream) : base (stream, "#Blob")
-        {
-        }
+		internal BlobHeap (MetadataStream stream) : base (stream, "#Blob")
+		{
+		}
 
-        public byte [] Read (uint index)
-        {
-            return ReadBytesFromStream (index);
-        }
+		public byte [] Read (uint index)
+		{
+			return ReadBytesFromStream (index);
+		}
 
-        public BinaryReader GetReader (uint index)
-        {
-            return new BinaryReader (new MemoryStream (Read (index)));
-        }
+		public BinaryReader GetReader (uint index)
+		{
+			return new BinaryReader (new MemoryStream (Read (index)));
+		}
 
-        public override void Accept (IMetadataVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IMetadataVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

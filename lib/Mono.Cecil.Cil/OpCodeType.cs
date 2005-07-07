@@ -12,12 +12,12 @@
 
 namespace Mono.Cecil.Cil {
 
-    public enum OpCodeType {
-        Annotation,
-        Macro,
-        Nternal,
-        Objmodel,
-        Prefix,
-        Primitive
-    }
+	public enum OpCodeType {
+		Annotation,
+		Macro,
+		Nternal,
+		Objmodel,
+		Prefix,
+		Primitive
+	}
 }

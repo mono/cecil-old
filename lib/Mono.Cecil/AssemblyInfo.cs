@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany ("DotNetGuru (www.dotnetguru.org)")]
 [assembly: AssemblyProduct ("Cecil")]
 [assembly: AssemblyCopyright (
-    "(c)2004, DotNetGuru - All rights reserved - No warranties extended")]
+	"(c)2004, DotNetGuru - All rights reserved - No warranties extended")]
 [assembly: AssemblyTrademark ("DotNetGuru")]
 [assembly: AssemblyCulture ("")]
 

@@ -12,26 +12,26 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    internal sealed class ModuleReference : IModuleReference {
+	internal sealed class ModuleReference : IModuleReference {
 
-        private string m_name;
+		private string m_name;
 
-        public string Name {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+		public string Name {
+			get { return m_name; }
+			set { m_name = value; }
+		}
 
-        public ModuleReference (string name)
-        {
-            m_name = name;
-        }
+		public ModuleReference (string name)
+		{
+			m_name = name;
+		}
 
-        public void Accept (IReflectionStructureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public void Accept (IReflectionStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }
 

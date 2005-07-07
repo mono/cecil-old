@@ -12,29 +12,29 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    internal sealed class FieldReference : MemberReference, IFieldReference {
+	internal sealed class FieldReference : MemberReference, IFieldReference {
 
-        private ITypeReference m_fieldType;
+		private ITypeReference m_fieldType;
 
-        public ITypeReference FieldType {
-            get { return m_fieldType; }
-            set { m_fieldType = value; }
-        }
+		public ITypeReference FieldType {
+			get { return m_fieldType; }
+			set { m_fieldType = value; }
+		}
 
-        public FieldReference (string name, ITypeReference decType, ITypeReference fieldType) : base (name, decType)
-        {
-            m_fieldType = fieldType;
-        }
+		public FieldReference (string name, ITypeReference decType, ITypeReference fieldType) : base (name, decType)
+		{
+			m_fieldType = fieldType;
+		}
 
-        public void Accept (IReflectionVisitor visitor)
-        {
-        }
+		public void Accept (IReflectionVisitor visitor)
+		{
+		}
 
-        public override string ToString ()
-        {
-            return string.Concat (m_fieldType.FullName, " ", base.ToString ());
-        }
-    }
+		public override string ToString ()
+		{
+			return string.Concat (m_fieldType.FullName, " ", base.ToString ());
+		}
+	}
 }

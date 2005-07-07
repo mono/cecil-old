@@ -15,75 +15,75 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.IO;
+	using System;
+	using System.IO;
 
-    internal sealed class Utilities {
+	internal sealed class Utilities {
 
-        private Utilities ()
-        {
-        }
+		private Utilities ()
+		{
+		}
 
-        public static int ReadCompressedInteger (byte [] data, int pos, out int start)
-        {
-            int integer = 0;
-            start = pos;
-            if ((data [pos] & 0x80) == 0) {
-                integer = data [pos];
-                start++;
-            } else if ((data [pos] & 0x40) == 0) {
-                integer = (data [start] & ~0x80) << 8;
-                integer |= data [pos + 1];
-                start += 2;
-            } else {
-                integer = (data [start] & ~0xc0) << 24;
-                integer |= data [pos + 1] << 16;
-                integer |= data [pos + 2] << 8;
-                integer |= data [pos + 3];
-                start += 4;
-            }
-            return integer;
-        }
+		public static int ReadCompressedInteger (byte [] data, int pos, out int start)
+		{
+			int integer = 0;
+			start = pos;
+			if ((data [pos] & 0x80) == 0) {
+				integer = data [pos];
+				start++;
+			} else if ((data [pos] & 0x40) == 0) {
+				integer = (data [start] & ~0x80) << 8;
+				integer |= data [pos + 1];
+				start += 2;
+			} else {
+				integer = (data [start] & ~0xc0) << 24;
+				integer |= data [pos + 1] << 16;
+				integer |= data [pos + 2] << 8;
+				integer |= data [pos + 3];
+				start += 4;
+			}
+			return integer;
+		}
 
-        public static int WriteCompressedInteger (BinaryWriter writer, int value)
-        {
-            if (value < 0x80)
-                writer.Write ((byte) value);
-            else if (value < 0x4000) {
-                writer.Write ((byte) (0x80 | (value >> 8)));
-                writer.Write ((byte) (value & 0xff));
-            } else {
-                writer.Write ((byte) ((value >> 24) | 0xc0));
-                writer.Write ((byte) ((value >> 16) & 0xff));
-                writer.Write ((byte) ((value >> 8) & 0xff));
-                writer.Write ((byte) (value & 0xff));
-            }
-            return (int) writer.BaseStream.Position;
-        }
+		public static int WriteCompressedInteger (BinaryWriter writer, int value)
+		{
+			if (value < 0x80)
+				writer.Write ((byte) value);
+			else if (value < 0x4000) {
+				writer.Write ((byte) (0x80 | (value >> 8)));
+				writer.Write ((byte) (value & 0xff));
+			} else {
+				writer.Write ((byte) ((value >> 24) | 0xc0));
+				writer.Write ((byte) ((value >> 16) & 0xff));
+				writer.Write ((byte) ((value >> 8) & 0xff));
+				writer.Write ((byte) (value & 0xff));
+			}
+			return (int) writer.BaseStream.Position;
+		}
 
-        public static MetadataToken GetMetadataToken (CodedIndex cidx, uint data)
-        {
-            uint rid = 0;
-            switch (cidx) {
-<% $coded_indexes.each { |ci| %>            case CodedIndex.<%=ci.name%> :
-                rid = data >> <%=ci.size%>;
-                switch (data & <%=(2 ** ci.size.to_i - 1).to_s%>) {
-<%    ci.tables.each { |tbl|
-        name = tbl.name
-        if (name == "DeclSecurity")
-            name = "Permission"
-        elsif (name == "StandAloneSig")
-            name = "Signature"
-        end
-%>                case <%=tbl.tag%> :
-                    return new MetadataToken (TokenType.<%=name%>, rid);
-<%    }
-%>                default :
-                    throw new MetadataFormatException("Non valid tag for <%=ci.name%>");
-                }
-<% } %>            default :
-                throw new MetadataFormatException ("Non valid CodedIndex");
-            }
-        }
-    }
+		public static MetadataToken GetMetadataToken (CodedIndex cidx, uint data)
+		{
+			uint rid = 0;
+			switch (cidx) {
+<% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
+				rid = data >> <%=ci.size%>;
+				switch (data & <%=(2 ** ci.size.to_i - 1).to_s%>) {
+<%	ci.tables.each { |tbl|
+		name = tbl.name
+		if (name == "DeclSecurity")
+			name = "Permission"
+		elsif (name == "StandAloneSig")
+			name = "Signature"
+		end
+%>				case <%=tbl.tag%> :
+					return new MetadataToken (TokenType.<%=name%>, rid);
+<%	}
+%>				default :
+					throw new MetadataFormatException("Non valid tag for <%=ci.name%>");
+				}
+<% } %>			default :
+				throw new MetadataFormatException ("Non valid CodedIndex");
+			}
+		}
+	}
 }

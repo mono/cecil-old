@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal interface ISignatureVisitor {
-        void Visit (MethodDefSig methodDef);
-        void Visit (MethodRefSig methodRef);
-        void Visit (FieldSig field);
-        void Visit (PropertySig property);
-        void Visit (LocalVarSig localvar);
-    }
+	internal interface ISignatureVisitor {
+		void Visit (MethodDefSig methodDef);
+		void Visit (MethodRefSig methodRef);
+		void Visit (FieldSig field);
+		void Visit (PropertySig property);
+		void Visit (LocalVarSig localvar);
+	}
 }

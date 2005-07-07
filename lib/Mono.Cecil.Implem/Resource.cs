@@ -12,41 +12,41 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
-    internal abstract class Resource :  IResource {
+	internal abstract class Resource :  IResource {
 
-        private ModuleDefinition m_module;
-        private string m_name;
-        private ManifestResourceAttributes m_attributes;
+		private ModuleDefinition m_module;
+		private string m_name;
+		private ManifestResourceAttributes m_attributes;
 
-        public ModuleDefinition Module {
-            get { return m_module; }
-        }
+		public ModuleDefinition Module {
+			get { return m_module; }
+		}
 
-        public string Name {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+		public string Name {
+			get { return m_name; }
+			set { m_name = value; }
+		}
 
-        public ManifestResourceAttributes Attributes {
-            get { return m_attributes; }
-            set { m_attributes = value; }
-        }
+		public ManifestResourceAttributes Attributes {
+			get { return m_attributes; }
+			set { m_attributes = value; }
+		}
 
-        protected Resource(string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : this (owner)
-        {
-            m_name = name;
-            m_attributes = attributes;
-        }
+		protected Resource(string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : this (owner)
+		{
+			m_name = name;
+			m_attributes = attributes;
+		}
 
-        private Resource (ModuleDefinition owner)
-        {
-            m_module = owner;
-        }
+		private Resource (ModuleDefinition owner)
+		{
+			m_module = owner;
+		}
 
-        public abstract void Accept(IReflectionStructureVisitor visitor);
-    }
+		public abstract void Accept(IReflectionStructureVisitor visitor);
+	}
 }
 

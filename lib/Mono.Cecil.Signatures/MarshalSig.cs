@@ -12,50 +12,50 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using System;
+	using System;
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    internal class MarshalSig {
+	internal class MarshalSig {
 
-        public NativeType NativeInstrinsic;
-        public ValueType Spec;
+		public NativeType NativeInstrinsic;
+		public ValueType Spec;
 
-        public MarshalSig (NativeType nt)
-        {
-            this.NativeInstrinsic = nt;
-        }
+		public MarshalSig (NativeType nt)
+		{
+			this.NativeInstrinsic = nt;
+		}
 
-        internal struct Array {
+		internal struct Array {
 
-            public NativeType ArrayElemType;
-            public int ParamNum;
-            public int ElemMult;
-            public int NumElem;
-        }
+			public NativeType ArrayElemType;
+			public int ParamNum;
+			public int ElemMult;
+			public int NumElem;
+		}
 
-        internal struct CustomMarshaler {
+		internal struct CustomMarshaler {
 
-            public string Guid;
-            public string UnmanagedType;
-            public string ManagedType;
-            public string Cookie;
-        }
+			public string Guid;
+			public string UnmanagedType;
+			public string ManagedType;
+			public string Cookie;
+		}
 
-        internal struct FixedArray {
+		internal struct FixedArray {
 
-            public int NumElem;
-            public NativeType ArrayElemType;
-        }
+			public int NumElem;
+			public NativeType ArrayElemType;
+		}
 
-        internal struct SafeArray {
+		internal struct SafeArray {
 
-            public VariantType ArrayElemType;
-        }
+			public VariantType ArrayElemType;
+		}
 
-        internal struct FixedSysString {
+		internal struct FixedSysString {
 
-            public int Size;
-        }
-    }
+			public int Size;
+		}
+	}
 }

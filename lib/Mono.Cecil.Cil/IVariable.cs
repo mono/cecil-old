@@ -12,15 +12,15 @@
 
 namespace Mono.Cecil.Cil {
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    public interface IVariableReference : ICodeVisitable {
-        IMethodDefinition Method { get; set; }
-        string Name { get; set; }
-        int Index { get; }
-    }
+	public interface IVariableReference : ICodeVisitable {
+		IMethodDefinition Method { get; set; }
+		string Name { get; set; }
+		int Index { get; }
+	}
 
-    public interface IVariableDefinition : IVariableReference {
-        ITypeReference Variable { get; set; }
-    }
+	public interface IVariableDefinition : IVariableReference {
+		ITypeReference Variable { get; set; }
+	}
 }

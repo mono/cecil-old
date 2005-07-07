@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil.Cil {
 
-    public interface ILabel {
+	public interface ILabel {
 
-        int Offset { get; }
-    }
+		int Offset { get; }
+	}
 }

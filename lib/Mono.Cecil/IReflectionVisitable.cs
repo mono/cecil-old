@@ -12,9 +12,9 @@
 
 namespace Mono.Cecil {
 
-    public interface IReflectionVisitable {
+	public interface IReflectionVisitable {
 
-        void Accept (IReflectionVisitor visitor);
-    }
+		void Accept (IReflectionVisitor visitor);
+	}
 }
 

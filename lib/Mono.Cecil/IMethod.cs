@@ -12,31 +12,31 @@
 
 namespace Mono.Cecil {
 
-    using Mono.Cecil.Cil;
+	using Mono.Cecil.Cil;
 
-    public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
-    }
+	public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
+	}
 
-    public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity, ICustomAttributeProvider {
+	public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity, ICustomAttributeProvider {
 
-        MethodAttributes Attributes { get; set; }
-        MethodImplAttributes ImplAttributes { get; set; }
-        MethodSemanticsAttributes SemanticsAttributes { get; set; }
+		MethodAttributes Attributes { get; set; }
+		MethodImplAttributes ImplAttributes { get; set; }
+		MethodSemanticsAttributes SemanticsAttributes { get; set; }
 
-        bool IsAbstract { get; set; }
-        bool IsFinal { get; set; }
-        bool IsHideBySignature { get; set; }
-        bool IsNewSlot { get; set; }
-        bool IsRuntimeSpecialName { get; set; }
-        bool IsSpecialName { get; set; }
-        bool IsStatic { get; set; }
-        bool IsVirtual { get; set; }
+		bool IsAbstract { get; set; }
+		bool IsFinal { get; set; }
+		bool IsHideBySignature { get; set; }
+		bool IsNewSlot { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
+		bool IsSpecialName { get; set; }
+		bool IsStatic { get; set; }
+		bool IsVirtual { get; set; }
 
-        IOverrideCollection Overrides { get; }
-        IMethodBody Body { get; }
-        IPInvokeInfo PInvokeInfo { get; }
+		IOverrideCollection Overrides { get; }
+		IMethodBody Body { get; }
+		IPInvokeInfo PInvokeInfo { get; }
 
-        ICilEmitter DefineBody ();
-        IMethodBody DefineEmptyBody ();
-    }
+		ICilEmitter DefineBody ();
+		IMethodBody DefineEmptyBody ();
+	}
 }

@@ -12,23 +12,23 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class FieldSig : Signature {
+	internal sealed class FieldSig : Signature {
 
-        public bool Field;
-        public CustomMod [] CustomMods;
-        public SigType Type;
+		public bool Field;
+		public CustomMod [] CustomMods;
+		public SigType Type;
 
-        public FieldSig () : base ()
-        {
-        }
+		public FieldSig () : base ()
+		{
+		}
 
-        public FieldSig (uint blobIndex) : base (blobIndex)
-        {
-        }
+		public FieldSig (uint blobIndex) : base (blobIndex)
+		{
+		}
 
-        public override void Accept (ISignatureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (ISignatureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

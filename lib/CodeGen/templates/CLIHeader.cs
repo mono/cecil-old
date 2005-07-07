@@ -15,22 +15,22 @@
 <% header = $headers["CLIHeader"] %>
 namespace Mono.Cecil.Binary {
 
-    public sealed class CLIHeader : IHeader, IBinaryVisitable {
+	public sealed class CLIHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-        public byte [] ImageHash;
+<% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+		public byte [] ImageHash;
 
-        internal CLIHeader ()
-        {
-        }
+		internal CLIHeader ()
+		{
+		}
 
-        public void SetDefaultValues ()
-        {<% header.fields.each { |f| print("\n            " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-        }
+		public void SetDefaultValues ()
+		{<% header.fields.each { |f| print("\n\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+		}
 
-        public void Accept (IBinaryVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

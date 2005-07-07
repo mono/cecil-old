@@ -12,48 +12,48 @@
 
 namespace Mono.Cecil.Cil {
 
-    using System;
+	using System;
 
-    public interface ICilEmitter {
+	public interface ICilEmitter {
 
-        IVariableDefinition DefineLocal (string name, ITypeReference type);
-        IVariableDefinition DefineLocal (string name, Type type);
+		IVariableDefinition DefineLocal (string name, ITypeReference type);
+		IVariableDefinition DefineLocal (string name, Type type);
 
-        ILabel DefineLabel ();
+		ILabel DefineLabel ();
 
-        void Emit (OpCode opcode);
+		void Emit (OpCode opcode);
 
-        void Emit (OpCode opcode, ITypeReference type);
-        void Emit (OpCode opcode, Type type);
+		void Emit (OpCode opcode, ITypeReference type);
+		void Emit (OpCode opcode, Type type);
 
-        void Emit (OpCode opcode, IMethodReference meth);
-        void Emit (OpCode opcode, System.Reflection.MethodInfo meth);
-        void Emit (OpCode opcode, System.Reflection.ConstructorInfo ctor);
+		void Emit (OpCode opcode, IMethodReference meth);
+		void Emit (OpCode opcode, System.Reflection.MethodInfo meth);
+		void Emit (OpCode opcode, System.Reflection.ConstructorInfo ctor);
 
-        void Emit (OpCode opcode, IFieldReference field);
-        void Emit (OpCode opcode, System.Reflection.FieldInfo field);
+		void Emit (OpCode opcode, IFieldReference field);
+		void Emit (OpCode opcode, System.Reflection.FieldInfo field);
 
-        void Emit (OpCode opcode, string str);
-        void Emit (OpCode opcode, byte b);
-        void Emit (OpCode opcode, int i);
-        void Emit (OpCode opcode, long l);
-        void Emit (OpCode opcode, float f);
-        void Emit (OpCode opcode, double d);
+		void Emit (OpCode opcode, string str);
+		void Emit (OpCode opcode, byte b);
+		void Emit (OpCode opcode, int i);
+		void Emit (OpCode opcode, long l);
+		void Emit (OpCode opcode, float f);
+		void Emit (OpCode opcode, double d);
 
-        void Emit (OpCode opcode, ILabel label);
-        void Emit (OpCode opcode, ILabel [] labels);
+		void Emit (OpCode opcode, ILabel label);
+		void Emit (OpCode opcode, ILabel [] labels);
 
-        void Emit (OpCode opcode, IVariableDefinition var);
+		void Emit (OpCode opcode, IVariableDefinition var);
 
-        void MarkLabel (ILabel label);
+		void MarkLabel (ILabel label);
 
-        ILabel BeginExceptionBlock ();
-        void BeginCatchBlock (ITypeReference type);
-        void BeginCatchBlock (Type type);
-        void BeginFilterHeadBlock ();
-        void BeginFilterBodyBlock ();
-        void BeginFaultBlock ();
-        void BeginFinallyBlock ();
-        void EndExceptionBlock ();
-    }
+		ILabel BeginExceptionBlock ();
+		void BeginCatchBlock (ITypeReference type);
+		void BeginCatchBlock (Type type);
+		void BeginFilterHeadBlock ();
+		void BeginFilterBodyBlock ();
+		void BeginFaultBlock ();
+		void BeginFinallyBlock ();
+		void EndExceptionBlock ();
+	}
 }

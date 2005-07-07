@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal interface ISignatureVisitable {
-        void Accept (ISignatureVisitor visitor);
-    }
+	internal interface ISignatureVisitable {
+		void Accept (ISignatureVisitor visitor);
+	}
 }

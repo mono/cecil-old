@@ -16,20 +16,20 @@
 <% header = $headers["PEFileHeader"] %>
 namespace Mono.Cecil.Binary {
 
-    public sealed class PEFileHeader : IHeader, IBinaryVisitable {
+	public sealed class PEFileHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>        public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-        internal PEFileHeader ()
-        {
-        }
+<% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+		internal PEFileHeader ()
+		{
+		}
 
-        public void SetDefaultValues ()
-        {<% header.fields.each { |f| print("\n            " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-        }
+		public void SetDefaultValues ()
+		{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+		}
 
-        public void Accept (IBinaryVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

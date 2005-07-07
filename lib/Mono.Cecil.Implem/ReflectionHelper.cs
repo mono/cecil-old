@@ -12,54 +12,54 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-    using System.Reflection;
+	using System;
+	using System.Reflection;
 
-    internal sealed class ReflectionHelper {
+	internal sealed class ReflectionHelper {
 
-        private ModuleDefinition m_module;
+		private ModuleDefinition m_module;
 
-        public ReflectionHelper (ModuleDefinition module)
-        {
-            m_module = module;
-        }
+		public ReflectionHelper (ModuleDefinition module)
+		{
+			m_module = module;
+		}
 
-        public IAssemblyNameReference RegisterAssembly (Assembly asm)
-        {
-            foreach (IAssemblyNameReference ext in m_module.AssemblyReferences)
-                if (ext.Name == asm.GetName ().Name)
-                    return ext;
+		public IAssemblyNameReference RegisterAssembly (Assembly asm)
+		{
+			foreach (IAssemblyNameReference ext in m_module.AssemblyReferences)
+				if (ext.Name == asm.GetName ().Name)
+					return ext;
 
-            AssemblyName asmName = asm.GetName ();
-            AssemblyNameReference asmRef = new AssemblyNameReference (asmName.Name, asmName.CultureInfo.Name, asmName.Version);
-            (m_module.AssemblyReferences as AssemblyNameReferenceCollection).Add (asmRef);
-            return asmRef;
-        }
+			AssemblyName asmName = asm.GetName ();
+			AssemblyNameReference asmRef = new AssemblyNameReference (asmName.Name, asmName.CultureInfo.Name, asmName.Version);
+			(m_module.AssemblyReferences as AssemblyNameReferenceCollection).Add (asmRef);
+			return asmRef;
+		}
 
-        public ITypeReference RegisterType (Type t)
-        {
-            RegisterAssembly (t.Assembly);
-            throw new NotImplementedException ();
-        }
+		public ITypeReference RegisterType (Type t)
+		{
+			RegisterAssembly (t.Assembly);
+			throw new NotImplementedException ();
+		}
 
-        private IMethodReference RegisterMethodBase (MethodBase meth)
-        {
-            throw new NotImplementedException ();
-        }
+		private IMethodReference RegisterMethodBase (MethodBase meth)
+		{
+			throw new NotImplementedException ();
+		}
 
-        public IMethodReference RegisterConstructor (ConstructorInfo ctor)
-        {
-            return RegisterMethodBase (ctor);
-        }
+		public IMethodReference RegisterConstructor (ConstructorInfo ctor)
+		{
+			return RegisterMethodBase (ctor);
+		}
 
-        public IMethodReference RegisterMethod (MethodInfo meth)
-        {
-            return RegisterMethodBase (meth);
-        }
+		public IMethodReference RegisterMethod (MethodInfo meth)
+		{
+			return RegisterMethodBase (meth);
+		}
 
-        public IFieldReference RegisterField (FieldInfo field)
-        {
-            throw new NotImplementedException ();
-        }
-    }
+		public IFieldReference RegisterField (FieldInfo field)
+		{
+			throw new NotImplementedException ();
+		}
+	}
 }

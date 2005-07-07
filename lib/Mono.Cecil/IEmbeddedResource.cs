@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IEmbeddedResource :  IResource {
+	public interface IEmbeddedResource :  IResource {
 
-        byte [] Data { get; set; }
-    }
+		byte [] Data { get; set; }
+	}
 }

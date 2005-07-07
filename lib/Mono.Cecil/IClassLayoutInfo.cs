@@ -12,10 +12,10 @@
 
 namespace Mono.Cecil {
 
-    public interface IClassLayoutInfo {
+	public interface IClassLayoutInfo {
 
-        bool HasLayoutInfo { get; }
-        ushort PackingSize { get; set; }
-        uint ClassSize { get; set; }
-    }
+		bool HasLayoutInfo { get; }
+		ushort PackingSize { get; set; }
+		uint ClassSize { get; set; }
+	}
 }

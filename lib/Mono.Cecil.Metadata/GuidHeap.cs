@@ -12,48 +12,48 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.Collections;
+	using System;
+	using System.Collections;
 
-    public class GuidHeap : MetadataHeap {
+	public class GuidHeap : MetadataHeap {
 
-        public int IndexSize;
+		public int IndexSize;
 
-        private readonly IDictionary m_guids;
+		private readonly IDictionary m_guids;
 
-        public IDictionary Guids {
-            get { return m_guids; }
-        }
+		public IDictionary Guids {
+			get { return m_guids; }
+		}
 
-        public GuidHeap (MetadataStream stream) : base (stream, "#GUID")
-        {
-            m_guids = new Hashtable ();
-        }
+		public GuidHeap (MetadataStream stream) : base (stream, "#GUID")
+		{
+			m_guids = new Hashtable ();
+		}
 
-        public Guid this [uint index] {
-            get {
-                if (index == 0)
-                    return new Guid (new byte [16]);
+		public Guid this [uint index] {
+			get {
+				if (index == 0)
+					return new Guid (new byte [16]);
 
-                int idx = (int) index - 1;
+				int idx = (int) index - 1;
 
-                if (m_guids.Contains (idx))
-                    return (Guid) m_guids [idx];
+				if (m_guids.Contains (idx))
+					return (Guid) m_guids [idx];
 
-                if (idx + 16 > this.Data.Length)
-                    throw new IndexOutOfRangeException ();
+				if (idx + 16 > this.Data.Length)
+					throw new IndexOutOfRangeException ();
 
-                byte[] buffer = new byte [16];
-                Buffer.BlockCopy (this.Data, idx, buffer, 0, 16);
-                Guid res = new Guid (buffer);
-                m_guids [idx] = res;
-                return res;
-            }
-        }
+				byte[] buffer = new byte [16];
+				Buffer.BlockCopy (this.Data, idx, buffer, 0, 16);
+				Guid res = new Guid (buffer);
+				m_guids [idx] = res;
+				return res;
+			}
+		}
 
-        public override void Accept (IMetadataVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IMetadataVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

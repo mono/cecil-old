@@ -12,28 +12,28 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class AssemblyLinkedResource : Resource, IAssemblyLinkedResource {
+	internal sealed class AssemblyLinkedResource : Resource, IAssemblyLinkedResource {
 
-        private IAssemblyNameReference m_asmRef;
+		private IAssemblyNameReference m_asmRef;
 
-        public IAssemblyNameReference Assembly {
-            get { return m_asmRef; }
-            set { m_asmRef = value; }
-        }
+		public IAssemblyNameReference Assembly {
+			get { return m_asmRef; }
+			set { m_asmRef = value; }
+		}
 
-        public AssemblyLinkedResource (string name, ManifestResourceAttributes attributes,
-                                       ModuleDefinition owner, AssemblyNameReference asmRef) :
-            base (name, attributes, owner)
-        {
-            m_asmRef = asmRef;
-        }
+		public AssemblyLinkedResource (string name, ManifestResourceAttributes attributes,
+									   ModuleDefinition owner, AssemblyNameReference asmRef) :
+			base (name, attributes, owner)
+		{
+			m_asmRef = asmRef;
+		}
 
-        public override void Accept (IReflectionStructureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IReflectionStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

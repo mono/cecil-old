@@ -12,13 +12,13 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System.Collections;
+	using System.Collections;
 
-    internal interface ILazyLoadable {
-        bool Loaded { get; set; }
-        void Load ();
-    }
+	internal interface ILazyLoadable {
+		bool Loaded { get; set; }
+		void Load ();
+	}
 
-    internal interface ILazyLoadableCollection : ILazyLoadable, ICollection {
-    }
+	internal interface ILazyLoadableCollection : ILazyLoadable, ICollection {
+	}
 }

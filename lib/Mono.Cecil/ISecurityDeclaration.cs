@@ -12,13 +12,13 @@
 
 namespace Mono.Cecil {
 
-    using System.Security;
+	using System.Security;
 
-    public interface ISecurityDeclaration : IReflectionVisitable {
+	public interface ISecurityDeclaration : IReflectionVisitable {
 
-        SecurityAction Action { get; set; }
-        PermissionSet PermissionSet { get; set; }
+		SecurityAction Action { get; set; }
+		PermissionSet PermissionSet { get; set; }
 
-        byte [] GetAsByteArray ();
-    }
+		byte [] GetAsByteArray ();
+	}
 }

@@ -12,9 +12,9 @@
 
 namespace Mono.Cecil {
 
-    public interface IArrayDimension {
+	public interface IArrayDimension {
 
-        int LowerBound { get; set; }
-        int UpperBound { get; set; }
-    }
+		int LowerBound { get; set; }
+		int UpperBound { get; set; }
+	}
 }

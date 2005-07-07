@@ -12,22 +12,22 @@
 
 namespace Mono.Cecil {
 
-    public interface IPropertyReference : IMemberReference, IReflectionVisitable {
+	public interface IPropertyReference : IMemberReference, IReflectionVisitable {
 
-        ITypeReference PropertyType { get; set; }
-        IParameterDefinitionCollection Parameters { get; }
-    }
+		ITypeReference PropertyType { get; set; }
+		IParameterDefinitionCollection Parameters { get; }
+	}
 
-    public interface IPropertyDefinition : IMemberDefinition, IPropertyReference, ICustomAttributeProvider, IReflectionVisitable {
+	public interface IPropertyDefinition : IMemberDefinition, IPropertyReference, ICustomAttributeProvider, IReflectionVisitable {
 
-        PropertyAttributes Attributes { get; set; }
+		PropertyAttributes Attributes { get; set; }
 
-        bool IsRuntimeSpecialName { get; set; }
-        bool IsSpecialName { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
+		bool IsSpecialName { get; set; }
 
-        IMethodDefinition GetMethod { get; set; }
-        IMethodDefinition SetMethod { get; set; }
+		IMethodDefinition GetMethod { get; set; }
+		IMethodDefinition SetMethod { get; set; }
 
-        object Constant { get; set; }
-    }
+		object Constant { get; set; }
+	}
 }

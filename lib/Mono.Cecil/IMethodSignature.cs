@@ -12,13 +12,13 @@
 
 namespace Mono.Cecil {
 
-    public interface IMethodSignature {
+	public interface IMethodSignature {
 
-        bool HasThis { get; set; }
-        bool ExplicitThis { get; set; }
-        MethodCallingConvention CallingConvention { get; set; }
+		bool HasThis { get; set; }
+		bool ExplicitThis { get; set; }
+		MethodCallingConvention CallingConvention { get; set; }
 
-        IParameterDefinitionCollection Parameters { get; }
-        IMethodReturnType ReturnType { get; set; }
-    }
+		IParameterDefinitionCollection Parameters { get; }
+		IMethodReturnType ReturnType { get; set; }
+	}
 }

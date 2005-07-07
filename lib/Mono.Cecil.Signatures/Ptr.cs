@@ -12,16 +12,16 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class PTR : SigType {
+	internal sealed class PTR : SigType {
 
-        public CustomMod [] CustomMods;
-        public SigType PtrType;
-        public bool Void;
+		public CustomMod [] CustomMods;
+		public SigType PtrType;
+		public bool Void;
 
-        public PTR () : base (ElementType.Ptr)
-        {
-        }
-    }
+		public PTR () : base (ElementType.Ptr)
+		{
+		}
+	}
 }

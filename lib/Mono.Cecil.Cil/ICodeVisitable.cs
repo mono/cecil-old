@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Cil {
 
-    public interface ICodeVisitable {
-        void Accept (ICodeVisitor visitor);
-    }
+	public interface ICodeVisitable {
+		void Accept (ICodeVisitor visitor);
+	}
 }

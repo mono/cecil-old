@@ -12,14 +12,14 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class SZARRAY : SigType {
+	internal sealed class SZARRAY : SigType {
 
-        public SigType Type;
+		public SigType Type;
 
-        public SZARRAY () : base (ElementType.SzArray)
-        {
-        }
-    }
+		public SZARRAY () : base (ElementType.SzArray)
+		{
+		}
+	}
 }

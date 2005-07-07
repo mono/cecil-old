@@ -12,37 +12,37 @@
 
 namespace Mono.Cecil {
 
-    using Mono.Cecil.Implem;
+	using Mono.Cecil.Implem;
 
-    public sealed class TypeFactory {
+	public sealed class TypeFactory {
 
-        private TypeFactory ()
-        {
-        }
+		private TypeFactory ()
+		{
+		}
 
-        public static IArrayType GetArrayType (ITypeReference type)
-        {
-            return new ArrayType (type);
-        }
+		public static IArrayType GetArrayType (ITypeReference type)
+		{
+			return new ArrayType (type);
+		}
 
-        public static IPinnedType GetPinnedType (ITypeReference type)
-        {
-            return new PinnedType (type);
-        }
+		public static IPinnedType GetPinnedType (ITypeReference type)
+		{
+			return new PinnedType (type);
+		}
 
-        public static IPointerType GetPointerType (ITypeReference type)
-        {
-            return new PointerType (type);
-        }
+		public static IPointerType GetPointerType (ITypeReference type)
+		{
+			return new PointerType (type);
+		}
 
-        public static IModifierOptional GetModifierOptional (ITypeReference modifier, ITypeReference type)
-        {
-            return new ModifierOptional (type, modifier);
-        }
+		public static IModifierOptional GetModifierOptional (ITypeReference modifier, ITypeReference type)
+		{
+			return new ModifierOptional (type, modifier);
+		}
 
-        public static IModifierRequired GetModifierRequired (ITypeReference modifier, ITypeReference type)
-        {
-            return new ModifierRequired (type, modifier);
-        }
-    }
+		public static IModifierRequired GetModifierRequired (ITypeReference modifier, ITypeReference type)
+		{
+			return new ModifierRequired (type, modifier);
+		}
+	}
 }

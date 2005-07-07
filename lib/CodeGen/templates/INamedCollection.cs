@@ -15,16 +15,16 @@
 
 namespace Mono.Cecil {
 
-    using System.Collections;
+	using System.Collections;
 
-    public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
+	public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
-        <%=$cur_coll.type%> this [string name] { get; }
+		<%=$cur_coll.type%> this [string name] { get; }
 
-        <%=$cur_coll.container%> Container { get; }
+		<%=$cur_coll.container%> Container { get; }
 
-        void Clear ();
-        bool Contains (<%=$cur_coll.type%> value);
-        void Remove (<%=$cur_coll.type%> value);
-    }
+		void Clear ();
+		bool Contains (<%=$cur_coll.type%> value);
+		void Remove (<%=$cur_coll.type%> value);
+	}
 }

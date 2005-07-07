@@ -15,8 +15,8 @@
 
 namespace Mono.Cecil.Metadata {
 
-    public enum CodedIndex {
-<% $coded_indexes.each { |ci| %>        <%=ci.name%><% if ci != $coded_indexes.last %>,<% end %>
+	public enum CodedIndex {
+<% $coded_indexes.each { |ci| %>		<%=ci.name%><% if ci != $coded_indexes.last %>,<% end %>
 <% }
-%>    }
+%>	}
 }

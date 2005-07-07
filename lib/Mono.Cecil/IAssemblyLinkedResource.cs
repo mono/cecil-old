@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IAssemblyLinkedResource : IResource {
+	public interface IAssemblyLinkedResource : IResource {
 
-        IAssemblyNameReference Assembly { get; set; }
-    }
+		IAssemblyNameReference Assembly { get; set; }
+	}
 }

@@ -12,112 +12,112 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.IO;
-    using System.Text;
+	using System;
+	using System.IO;
+	using System.Text;
 
-    using Mono.Cecil;
-    using Mono.Cecil.Binary;
+	using Mono.Cecil;
+	using Mono.Cecil.Binary;
 
-    internal sealed class MetadataWriter : IMetadataVisitor {
+	internal sealed class MetadataWriter : IMetadataVisitor {
 
-        private MetadataRoot m_root;
-        private MetadataTableWriter m_tableWriter;
+		private MetadataRoot m_root;
+		private MetadataTableWriter m_tableWriter;
 
-        public MetadataWriter (MetadataRoot root)
-        {
-            m_root = root;
-            m_tableWriter = new MetadataTableWriter (this);
-        }
+		public MetadataWriter (MetadataRoot root)
+		{
+			m_root = root;
+			m_tableWriter = new MetadataTableWriter (this);
+		}
 
-        public MetadataRoot GetMetadataRoot ()
-        {
-            return m_root;
-        }
+		public MetadataRoot GetMetadataRoot ()
+		{
+			return m_root;
+		}
 
-        public MetadataTableWriter GetTableVisitor ()
-        {
-            return m_tableWriter;
-        }
+		public MetadataTableWriter GetTableVisitor ()
+		{
+			return m_tableWriter;
+		}
 
-        public uint AddString (string str)
-        {
-            return 0;
-        }
+		public uint AddString (string str)
+		{
+			return 0;
+		}
 
-        public uint AddBlob (byte [] data)
-        {
-            return 0;
-        }
+		public uint AddBlob (byte [] data)
+		{
+			return 0;
+		}
 
-        public uint AddGuid (Guid g)
-        {
-            return 0;
-        }
+		public uint AddGuid (Guid g)
+		{
+			return 0;
+		}
 
-        public uint AddUserString (string str)
-        {
-            return 0;
-        }
+		public uint AddUserString (string str)
+		{
+			return 0;
+		}
 
-        public void Visit (MetadataRoot root)
-        {
-            // TODO
-        }
+		public void Visit (MetadataRoot root)
+		{
+			// TODO
+		}
 
-        public void Visit (MetadataRoot.MetadataRootHeader header)
-        {
-            // TODO
-        }
+		public void Visit (MetadataRoot.MetadataRootHeader header)
+		{
+			// TODO
+		}
 
-        public void Visit (MetadataStreamCollection streams)
-        {
-            // TODO
-        }
+		public void Visit (MetadataStreamCollection streams)
+		{
+			// TODO
+		}
 
-        public void Visit (MetadataStream stream)
-        {
-            // TODO
-        }
+		public void Visit (MetadataStream stream)
+		{
+			// TODO
+		}
 
-        public void Visit (MetadataStream.MetadataStreamHeader header)
-        {
-            // TODO
-        }
+		public void Visit (MetadataStream.MetadataStreamHeader header)
+		{
+			// TODO
+		}
 
-        public void Visit (GuidHeap heap)
-        {
-            // TODO
-        }
+		public void Visit (GuidHeap heap)
+		{
+			// TODO
+		}
 
-        public void Visit (StringsHeap heap)
-        {
-            // TODO
-        }
+		public void Visit (StringsHeap heap)
+		{
+			// TODO
+		}
 
-        public void Visit (TablesHeap heap)
-        {
-            // TODO
-        }
+		public void Visit (TablesHeap heap)
+		{
+			// TODO
+		}
 
-        public void Visit (BlobHeap heap)
-        {
-            // TODO
-        }
+		public void Visit (BlobHeap heap)
+		{
+			// TODO
+		}
 
-        public void Visit (UserStringsHeap heap)
-        {
-            // TODO
-        }
+		public void Visit (UserStringsHeap heap)
+		{
+			// TODO
+		}
 
-        public void Terminate (MetadataStreamCollection streams)
-        {
-            // TODO
-        }
+		public void Terminate (MetadataStreamCollection streams)
+		{
+			// TODO
+		}
 
-        public void Terminate (MetadataRoot root)
-        {
-            // TODO
-        }
-    }
+		public void Terminate (MetadataRoot root)
+		{
+			// TODO
+		}
+	}
 }

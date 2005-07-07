@@ -12,14 +12,14 @@
 
 namespace Mono.Cecil {
 
-    using System.Reflection;
+	using System.Reflection;
 
-    public interface ICustomAttributeProvider {
+	public interface ICustomAttributeProvider {
 
-        ICustomAttributeCollection CustomAttributes { get; }
-        ICustomAttribute DefineCustomAttribute (IMethodReference ctor);
-        ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor);
-        ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data);
-        ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor, byte [] data);
-    }
+		ICustomAttributeCollection CustomAttributes { get; }
+		ICustomAttribute DefineCustomAttribute (IMethodReference ctor);
+		ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor);
+		ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data);
+		ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor, byte [] data);
+	}
 }

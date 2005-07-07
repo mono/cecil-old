@@ -12,30 +12,30 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    public interface IModuleDefinition : ICustomAttributeProvider, IReflectionStructureVisitable {
+	public interface IModuleDefinition : ICustomAttributeProvider, IReflectionStructureVisitable {
 
-        string Name { get; set; }
-        Guid Mvid { get; set; }
-        bool Main { get; }
+		string Name { get; set; }
+		Guid Mvid { get; set; }
+		bool Main { get; }
 
-        IAssemblyNameReferenceCollection AssemblyReferences { get; }
-        IAssemblyNameReference DefineAssemblyReference (string name);
+		IAssemblyNameReferenceCollection AssemblyReferences { get; }
+		IAssemblyNameReference DefineAssemblyReference (string name);
 
-        IModuleReferenceCollection ModuleReferences { get; }
-        IModuleReference DefineModuleReference (string module);
+		IModuleReferenceCollection ModuleReferences { get; }
+		IModuleReference DefineModuleReference (string module);
 
-        IResourceCollection Resources { get; }
-        IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
-        ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
-        IAssemblyLinkedResource DefineAssemblyLinkedResource (string name, ManifestResourceAttributes attributes, IAssemblyNameReference asm);
+		IResourceCollection Resources { get; }
+		IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data);
+		ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file);
+		IAssemblyLinkedResource DefineAssemblyLinkedResource (string name, ManifestResourceAttributes attributes, IAssemblyNameReference asm);
 
-        ITypeDefinitionCollection Types { get; }
-        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes);
-        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType);
-        ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);
+		ITypeDefinitionCollection Types { get; }
+		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes);
+		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType);
+		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);
 
-        IExternTypeCollection ExternTypes { get; }
-    }
+		IExternTypeCollection ExternTypes { get; }
+	}
 }

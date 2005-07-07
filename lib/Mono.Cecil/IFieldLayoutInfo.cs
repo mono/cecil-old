@@ -12,9 +12,9 @@
 
 namespace Mono.Cecil {
 
-    public interface IFieldLayoutInfo {
+	public interface IFieldLayoutInfo {
 
-        bool HasLayoutInfo { get; }
-        uint Offset { get; set; }
-    }
+		bool HasLayoutInfo { get; }
+		uint Offset { get; set; }
+	}
 }

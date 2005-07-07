@@ -12,41 +12,41 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
+	using System;
 
-    using Mono.Cecil;
-    using Mono.Cecil.Signatures;
+	using Mono.Cecil;
+	using Mono.Cecil.Signatures;
 
-    internal sealed class ReferenceType : TypeReference, IReferenceType {
+	internal sealed class ReferenceType : TypeReference, IReferenceType {
 
-        private ITypeReference m_type;
+		private ITypeReference m_type;
 
-        public override string Name {
-            get { return m_type.Name; }
-            set { m_type.Name = value; }
-        }
+		public override string Name {
+			get { return m_type.Name; }
+			set { m_type.Name = value; }
+		}
 
-        public override string Namespace {
-            get { return m_type.Namespace; }
-            set { m_type.Namespace = value; }
-        }
+		public override string Namespace {
+			get { return m_type.Namespace; }
+			set { m_type.Namespace = value; }
+		}
 
-        public override IMetadataScope Scope {
-            get { return m_type.Scope; }
-        }
+		public override IMetadataScope Scope {
+			get { return m_type.Scope; }
+		}
 
-        public ITypeReference ElementType {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+		public ITypeReference ElementType {
+			get { return m_type; }
+			set { m_type = value; }
+		}
 
-        public override string FullName {
-            get { return string.Concat (m_type.FullName, "&"); }
-        }
+		public override string FullName {
+			get { return string.Concat (m_type.FullName, "&"); }
+		}
 
-        public ReferenceType (ITypeReference type) : base (string.Empty, string.Empty)
-        {
-            m_type = type;
-        }
-    }
+		public ReferenceType (ITypeReference type) : base (string.Empty, string.Empty)
+		{
+			m_type = type;
+		}
+	}
 }

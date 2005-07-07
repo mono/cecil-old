@@ -12,64 +12,64 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
+	using System;
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    public abstract class MetadataHeap : IMetadataVisitable  {
+	public abstract class MetadataHeap : IMetadataVisitable  {
 
-        private MetadataStream m_stream;
-        private string m_name;
-        private byte [] m_data;
+		private MetadataStream m_stream;
+		private string m_name;
+		private byte [] m_data;
 
-        public string Name {
-            get { return m_name; }
-        }
+		public string Name {
+			get { return m_name; }
+		}
 
-        public byte [] Data {
-            get { return m_data; }
-            set { m_data = value; }
-        }
+		public byte [] Data {
+			get { return m_data; }
+			set { m_data = value; }
+		}
 
-        protected MetadataHeap (MetadataStream stream, string name)
-        {
-            m_name = name;
-            m_stream = stream;
-        }
+		protected MetadataHeap (MetadataStream stream, string name)
+		{
+			m_name = name;
+			m_stream = stream;
+		}
 
-        public static MetadataHeap HeapFactory (MetadataStream stream)
-        {
-            switch (stream.Header.Name) {
-            case "#~" :
-                return new TablesHeap (stream);
-            case "#-" :
-                throw new MetadataFormatException ("Non standard #- heap found");
-            case "#GUID" :
-                return new GuidHeap (stream);
-            case "#Strings" :
-                return new StringsHeap (stream);
-            case "#US" :
-                return new UserStringsHeap (stream);
-            case "#Blob" :
-                return new BlobHeap (stream);
-            default :
-                return null;
-            }
-        }
+		public static MetadataHeap HeapFactory (MetadataStream stream)
+		{
+			switch (stream.Header.Name) {
+			case "#~" :
+				return new TablesHeap (stream);
+			case "#-" :
+				throw new MetadataFormatException ("Non standard #- heap found");
+			case "#GUID" :
+				return new GuidHeap (stream);
+			case "#Strings" :
+				return new StringsHeap (stream);
+			case "#US" :
+				return new UserStringsHeap (stream);
+			case "#Blob" :
+				return new BlobHeap (stream);
+			default :
+				return null;
+			}
+		}
 
-        public MetadataStream GetStream ()
-        {
-            return m_stream;
-        }
+		public MetadataStream GetStream ()
+		{
+			return m_stream;
+		}
 
-        protected virtual byte [] ReadBytesFromStream (uint pos)
-        {
-            int start, length = Utilities.ReadCompressedInteger (m_data, (int) pos, out start);
-            byte [] buffer = new byte [length];
-            Buffer.BlockCopy (m_data, start, buffer, 0, length);
-            return buffer;
-        }
+		protected virtual byte [] ReadBytesFromStream (uint pos)
+		{
+			int start, length = Utilities.ReadCompressedInteger (m_data, (int) pos, out start);
+			byte [] buffer = new byte [length];
+			Buffer.BlockCopy (m_data, start, buffer, 0, length);
+			return buffer;
+		}
 
-        public abstract void Accept(IMetadataVisitor visitor);
-    }
+		public abstract void Accept(IMetadataVisitor visitor);
+	}
 }

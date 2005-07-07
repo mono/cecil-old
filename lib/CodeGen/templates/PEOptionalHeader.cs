@@ -15,81 +15,81 @@
 
 namespace Mono.Cecil.Binary {
 
-    public sealed class PEOptionalHeader : IHeader, IBinaryVisitable {
+	public sealed class PEOptionalHeader : IHeader, IBinaryVisitable {
 
-        public StandardFieldsHeader StandardFields;
-        public NTSpecificFieldsHeader NTSpecificFields;
-        public DataDirectoriesHeader DataDirectories;
+		public StandardFieldsHeader StandardFields;
+		public NTSpecificFieldsHeader NTSpecificFields;
+		public DataDirectoriesHeader DataDirectories;
 
-        internal PEOptionalHeader ()
-        {
-            StandardFields = new StandardFieldsHeader ();
-            NTSpecificFields = new NTSpecificFieldsHeader ();
-            DataDirectories = new DataDirectoriesHeader ();
-        }
+		internal PEOptionalHeader ()
+		{
+			StandardFields = new StandardFieldsHeader ();
+			NTSpecificFields = new NTSpecificFieldsHeader ();
+			DataDirectories = new DataDirectoriesHeader ();
+		}
 
-        public void SetDefaultValues ()
-        {
-        }
+		public void SetDefaultValues ()
+		{
+		}
 
-        public void Accept (IBinaryVisitor visitor)
-        {
-            visitor.Visit (this);
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.Visit (this);
 
-            StandardFields.Accept (visitor);
-            NTSpecificFields.Accept (visitor);
-            DataDirectories.Accept (visitor);
-        }
-        <% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
-        public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
+			StandardFields.Accept (visitor);
+			NTSpecificFields.Accept (visitor);
+			DataDirectories.Accept (visitor);
+		}
+		<% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
+		public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            internal StandardFieldsHeader ()
-            {
-            }
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+			internal StandardFieldsHeader ()
+			{
+			}
 
-            public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-            }
+			public void SetDefaultValues ()
+			{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+			}
 
-            public void Accept (IBinaryVisitor visitor)
-            {
-                visitor.Visit (this);
-            }
-        }
-        <% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
-        public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
+			public void Accept (IBinaryVisitor visitor)
+			{
+				visitor.Visit (this);
+			}
+		}
+		<% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
+		public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            internal NTSpecificFieldsHeader ()
-            {
-            }
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+			internal NTSpecificFieldsHeader ()
+			{
+			}
 
-            public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-            }
+			public void SetDefaultValues ()
+			{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+			}
 
-            public void Accept (IBinaryVisitor visitor)
-            {
-                visitor.Visit (this);
-            }
-        }
-        <% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
-        public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
+			public void Accept (IBinaryVisitor visitor)
+			{
+				visitor.Visit (this);
+			}
+		}
+		<% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
+		public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>            public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
-            internal DataDirectoriesHeader ()
-            {
-            }
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+			internal DataDirectoriesHeader ()
+			{
+			}
 
-            public void SetDefaultValues ()
-            {<% header.fields.each { |f| print("\n                " +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-            }
+			public void SetDefaultValues ()
+			{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+			}
 
-            public void Accept (IBinaryVisitor visitor)
-            {
-                visitor.Visit (this);
-            }
-        }
-    }
+			public void Accept (IBinaryVisitor visitor)
+			{
+				visitor.Visit (this);
+			}
+		}
+	}
 }

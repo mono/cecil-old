@@ -14,21 +14,21 @@ using Mono.Cecil;
 
 namespace Mono.Cecil.Signatures {
 
-    internal abstract class MethodSig : Signature {
+	internal abstract class MethodSig : Signature {
 
-        public bool HasThis;
-        public bool ExplicitThis;
-        public MethodCallingConvention MethCallConv;
-        public int ParamCount;
-        public RetType RetType;
-        public Param [] Parameters;
+		public bool HasThis;
+		public bool ExplicitThis;
+		public MethodCallingConvention MethCallConv;
+		public int ParamCount;
+		public RetType RetType;
+		public Param [] Parameters;
 
-        public MethodSig () : base ()
-        {
-        }
+		public MethodSig () : base ()
+		{
+		}
 
-        public MethodSig (uint blobIndex) : base (blobIndex)
-        {
-        }
-    }
+		public MethodSig (uint blobIndex) : base (blobIndex)
+		{
+		}
+	}
 }

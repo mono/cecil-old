@@ -12,24 +12,24 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal class TypeSpec {
+	internal class TypeSpec {
 
-        public SigType Type;
+		public SigType Type;
 
-        public TypeSpec (SigType type)
-        {
-            switch (type.ElementType) {
-            case ElementType.Ptr :
-            case ElementType.FnPtr :
-            case ElementType.Array :
-            case ElementType.SzArray :
-                Type = type;
-                return;
-            default :
-                throw new ReflectionException ("Non valid TypeSpec");
-            }
-        }
-    }
+		public TypeSpec (SigType type)
+		{
+			switch (type.ElementType) {
+			case ElementType.Ptr :
+			case ElementType.FnPtr :
+			case ElementType.Array :
+			case ElementType.SzArray :
+				Type = type;
+				return;
+			default :
+				throw new ReflectionException ("Non valid TypeSpec");
+			}
+		}
+	}
 }

@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil {
 
-    public interface ITypeReference : IType, IMemberReference, ICustomAttributeProvider {
+	public interface ITypeReference : IType, IMemberReference, ICustomAttributeProvider {
 
-        string Namespace { get; set; }
-        IMetadataScope Scope { get; }
+		string Namespace { get; set; }
+		IMetadataScope Scope { get; }
 
-        string FullName { get; }
-    }
+		string FullName { get; }
+	}
 }

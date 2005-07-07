@@ -12,115 +12,115 @@
 
 namespace Mono.Cecil.Binary {
 
-    using System;
-    using System.IO;
+	using System;
+	using System.IO;
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    public sealed class Image : IBinaryVisitable {
+	public sealed class Image : IBinaryVisitable {
 
-        private DOSHeader m_dosHeader;
-        private PEFileHeader m_peFileHeader;
-        private PEOptionalHeader m_peOptionalHeader;
+		private DOSHeader m_dosHeader;
+		private PEFileHeader m_peFileHeader;
+		private PEOptionalHeader m_peOptionalHeader;
 
-        private SectionCollection m_sections;
+		private SectionCollection m_sections;
 
-        private CLIHeader m_cliHeader;
+		private CLIHeader m_cliHeader;
 
-        private MetadataRoot m_mdRoot;
+		private MetadataRoot m_mdRoot;
 
-        private FileInfo m_img;
+		private FileInfo m_img;
 
-        public DOSHeader DOSHeader {
-            get { return m_dosHeader; }
-        }
+		public DOSHeader DOSHeader {
+			get { return m_dosHeader; }
+		}
 
-        public PEFileHeader PEFileHeader {
-            get { return m_peFileHeader; }
-        }
+		public PEFileHeader PEFileHeader {
+			get { return m_peFileHeader; }
+		}
 
-        public PEOptionalHeader PEOptionalHeader {
-            get { return m_peOptionalHeader; }
-        }
+		public PEOptionalHeader PEOptionalHeader {
+			get { return m_peOptionalHeader; }
+		}
 
-        public SectionCollection Sections {
-            get { return m_sections; }
-        }
+		public SectionCollection Sections {
+			get { return m_sections; }
+		}
 
-        public CLIHeader CLIHeader {
-            get { return m_cliHeader; }
-        }
+		public CLIHeader CLIHeader {
+			get { return m_cliHeader; }
+		}
 
-        public MetadataRoot MetadataRoot {
-            get { return m_mdRoot; }
-        }
+		public MetadataRoot MetadataRoot {
+			get { return m_mdRoot; }
+		}
 
-        public FileInfo FileInformation {
-            get { return m_img; }
-        }
+		public FileInfo FileInformation {
+			get { return m_img; }
+		}
 
-        private Image ()
-        {
-            m_dosHeader = new DOSHeader ();
-            m_peFileHeader = new PEFileHeader ();
-            m_peOptionalHeader = new PEOptionalHeader ();
-            m_sections = new SectionCollection ();
-            m_cliHeader = new CLIHeader ();
-            m_mdRoot = new MetadataRoot (this);
-        }
+		private Image ()
+		{
+			m_dosHeader = new DOSHeader ();
+			m_peFileHeader = new PEFileHeader ();
+			m_peOptionalHeader = new PEOptionalHeader ();
+			m_sections = new SectionCollection ();
+			m_cliHeader = new CLIHeader ();
+			m_mdRoot = new MetadataRoot (this);
+		}
 
-        private Image (FileInfo img) : this ()
-        {
-            m_img = img;
-        }
+		private Image (FileInfo img) : this ()
+		{
+			m_img = img;
+		}
 
-        public long ResolveVirtualAddress (RVA rva)
-        {
-            foreach (Section sect in this.Sections) {
-                if (rva >= sect.VirtualAddress &&
-                    rva < sect.VirtualAddress + sect.SizeOfRawData)
+		public long ResolveVirtualAddress (RVA rva)
+		{
+			foreach (Section sect in this.Sections) {
+				if (rva >= sect.VirtualAddress &&
+					rva < sect.VirtualAddress + sect.SizeOfRawData)
 
-                    return rva + sect.PointerToRawData - sect.VirtualAddress;
-            }
-            return 0;
-        }
+					return rva + sect.PointerToRawData - sect.VirtualAddress;
+			}
+			return 0;
+		}
 
-        public void Accept (IBinaryVisitor visitor)
-        {
-            visitor.Visit (this);
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.Visit (this);
 
-            m_dosHeader.Accept (visitor);
-            m_peFileHeader.Accept (visitor);
-            m_peOptionalHeader.Accept (visitor);
+			m_dosHeader.Accept (visitor);
+			m_peFileHeader.Accept (visitor);
+			m_peOptionalHeader.Accept (visitor);
 
-            m_sections.Accept (visitor);
+			m_sections.Accept (visitor);
 
-            m_cliHeader.Accept (visitor);
+			m_cliHeader.Accept (visitor);
 
-            visitor.Terminate (this);
-        }
+			visitor.Terminate (this);
+		}
 
-        public static Image CreateImage ()
-        {
-            Image img = new Image ();
+		public static Image CreateImage ()
+		{
+			Image img = new Image ();
 
-            ImageInitializer init = new ImageInitializer (img);
-            img.Accept (init);
+			ImageInitializer init = new ImageInitializer (img);
+			img.Accept (init);
 
-            return img;
-        }
+			return img;
+		}
 
-        public static Image GetImage (string file)
-        {
-            if (file == null || file.Length == 0)
-                throw new ArgumentException ("file");
+		public static Image GetImage (string file)
+		{
+			if (file == null || file.Length == 0)
+				throw new ArgumentException ("file");
 
-            FileInfo img = new FileInfo (file);
-            if (!File.Exists (img.FullName))
-                throw new FileNotFoundException (img.FullName);
+			FileInfo img = new FileInfo (file);
+			if (!File.Exists (img.FullName))
+				throw new FileNotFoundException (img.FullName);
 
-            Image ret = new Image (img);
-            return ret;
-        }
-    }
+			Image ret = new Image (img);
+			return ret;
+		}
+	}
 }

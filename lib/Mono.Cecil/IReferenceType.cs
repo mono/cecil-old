@@ -12,8 +12,8 @@
 
 namespace Mono.Cecil {
 
-    public interface IReferenceType : ITypeReference {
+	public interface IReferenceType : ITypeReference {
 
-        ITypeReference ElementType { get; }
-    }
+		ITypeReference ElementType { get; }
+	}
 }

@@ -12,33 +12,33 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class LinkedResource : Resource, ILinkedResource {
+	internal sealed class LinkedResource : Resource, ILinkedResource {
 
-        private byte [] m_hash;
-        private string m_file;
+		private byte [] m_hash;
+		private string m_file;
 
-        public byte [] Hash {
-            get { return m_hash; }
-            set { m_hash = value; }
-        }
+		public byte [] Hash {
+			get { return m_hash; }
+			set { m_hash = value; }
+		}
 
-        public string File {
-            get { return m_file; }
-            set { m_file = value; }
-        }
+		public string File {
+			get { return m_file; }
+			set { m_file = value; }
+		}
 
-        public LinkedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner, string file) :
-            base (name, attributes, owner)
-        {
-            m_file = file;
-        }
+		public LinkedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner, string file) :
+			base (name, attributes, owner)
+		{
+			m_file = file;
+		}
 
-        public override void Accept (IReflectionStructureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IReflectionStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

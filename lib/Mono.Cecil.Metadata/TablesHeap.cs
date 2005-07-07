@@ -12,63 +12,63 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System;
-    using System.Collections;
+	using System;
+	using System.Collections;
 
-    public class TablesHeap : MetadataHeap {
+	public class TablesHeap : MetadataHeap {
 
-        public uint Reserved;
-        public byte MajorVersion;
-        public byte MinorVersion;
-        public byte HeapSizes;
-        public byte Reserved2;
-        public long Valid;
-        public long Sorted;
+		public uint Reserved;
+		public byte MajorVersion;
+		public byte MinorVersion;
+		public byte HeapSizes;
+		public byte Reserved2;
+		public long Valid;
+		public long Sorted;
 
-        private TableCollection m_tables;
+		private TableCollection m_tables;
 
-        private static IDictionary m_tidCache = new Hashtable (46);
+		private static IDictionary m_tidCache = new Hashtable (46);
 
-        public TableCollection Tables {
-            get { return m_tables; }
-            set { m_tables = value; }
-        }
+		public TableCollection Tables {
+			get { return m_tables; }
+			set { m_tables = value; }
+		}
 
-        public IMetadataTable this [Type table]
-        {
-            get { return m_tables [GetTableId (table)] as IMetadataTable; }
-            set { m_tables [GetTableId (table)] = value; }
-        }
+		public IMetadataTable this [Type table]
+		{
+			get { return m_tables [GetTableId (table)] as IMetadataTable; }
+			set { m_tables [GetTableId (table)] = value; }
+		}
 
-        internal TablesHeap (MetadataStream stream) : base(stream, "#~")
-        {
-        }
+		internal TablesHeap (MetadataStream stream) : base(stream, "#~")
+		{
+		}
 
-        public bool HasTable (Type table)
-        {
-            return (Valid & (1L << GetTableId (table))) != 0;
-        }
+		public bool HasTable (Type table)
+		{
+			return (Valid & (1L << GetTableId (table))) != 0;
+		}
 
-        public override void Accept (IMetadataVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
+		public override void Accept (IMetadataVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 
-        public static ushort GetTableId (Type table)
-        {
-            object id = m_tidCache [table];
-            if (id != null)
-                return (ushort) id;
+		public static ushort GetTableId (Type table)
+		{
+			object id = m_tidCache [table];
+			if (id != null)
+				return (ushort) id;
 
-            RIdAttribute [] rid = table.GetCustomAttributes (
-                typeof(RIdAttribute), false) as RIdAttribute [];
+			RIdAttribute [] rid = table.GetCustomAttributes (
+				typeof(RIdAttribute), false) as RIdAttribute [];
 
-            if (rid != null && rid.Length == 1) {
-                m_tidCache [table] = (ushort) rid [0].Id;
-                return (ushort) rid [0].Id;
-            }
+			if (rid != null && rid.Length == 1) {
+				m_tidCache [table] = (ushort) rid [0].Id;
+				return (ushort) rid [0].Id;
+			}
 
-            throw new ArgumentException ("No RId attribute found on type");
-        }
-    }
+			throw new ArgumentException ("No RId attribute found on type");
+		}
+	}
 }

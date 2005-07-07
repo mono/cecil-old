@@ -12,14 +12,14 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    [Flags]
-    public enum AssemblyFlags : uint {
-        PublicKey                   = 0x0001,
-        SideBySideCompatible        = 0x0000,
+	[Flags]
+	public enum AssemblyFlags : uint {
+		PublicKey					 	= 0x0001,
+		SideBySideCompatible			= 0x0000,
 
-        EnableJITcompileTracking    = 0x8000,
-        DisableJITcompileOptimizer  = 0x4000
-    }
+		EnableJITcompileTracking		= 0x8000,
+		DisableJITcompileOptimizer	  	= 0x4000
+	}
 }

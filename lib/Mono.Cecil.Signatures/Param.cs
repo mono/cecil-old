@@ -12,6 +12,6 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class Param : InputOutputItem {
-    }
+	internal sealed class Param : InputOutputItem {
+	}
 }

@@ -15,36 +15,36 @@
 
 namespace Mono.Cecil.Metadata {
 
-    public interface IMetadataVisitor {
-        void Visit (MetadataRoot root);
-        void Visit (MetadataRoot.MetadataRootHeader header);
-        void Visit (MetadataStreamCollection streams);
-        void Visit (MetadataStream stream);
-        void Visit (MetadataStream.MetadataStreamHeader header);
-        void Visit (GuidHeap heap);
-        void Visit (StringsHeap heap);
-        void Visit (TablesHeap heap);
-        void Visit (BlobHeap heap);
-        void Visit (UserStringsHeap heap);
+	public interface IMetadataVisitor {
+		void Visit (MetadataRoot root);
+		void Visit (MetadataRoot.MetadataRootHeader header);
+		void Visit (MetadataStreamCollection streams);
+		void Visit (MetadataStream stream);
+		void Visit (MetadataStream.MetadataStreamHeader header);
+		void Visit (GuidHeap heap);
+		void Visit (StringsHeap heap);
+		void Visit (TablesHeap heap);
+		void Visit (BlobHeap heap);
+		void Visit (UserStringsHeap heap);
 
-        void Terminate (MetadataStreamCollection streams);
-        void Terminate (MetadataRoot root);
-    }
+		void Terminate (MetadataStreamCollection streams);
+		void Terminate (MetadataRoot root);
+	}
 
-    public interface IMetadataTableVisitor {
-        void Visit (TableCollection coll);
+	public interface IMetadataTableVisitor {
+		void Visit (TableCollection coll);
 
-<% $tables.each { |table| %>        void Visit (<%= table.table_name %> table);
+<% $tables.each { |table| %>		void Visit (<%= table.table_name %> table);
 <% } %>
-        void Terminate (TableCollection coll);
-        IMetadataRowVisitor GetRowVisitor();
+		void Terminate (TableCollection coll);
+		IMetadataRowVisitor GetRowVisitor();
 }
 
-    public interface IMetadataRowVisitor {
-        void Visit (RowCollection coll);
+	public interface IMetadataRowVisitor {
+		void Visit (RowCollection coll);
 
-<% $tables.each { |table| %>        void Visit(<%= table.row_name %> row);
+<% $tables.each { |table| %>		void Visit(<%= table.row_name %> row);
 <% } %>
-        void Terminate (RowCollection coll);
-    }
+		void Terminate (RowCollection coll);
+	}
 }

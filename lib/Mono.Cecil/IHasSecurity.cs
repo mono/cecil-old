@@ -12,10 +12,10 @@
 
 namespace Mono.Cecil {
 
-    public interface IHasSecurity {
+	public interface IHasSecurity {
 
-        ISecurityDeclarationCollection SecurityDeclarations { get; }
-        ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action);
-        ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration);
-    }
+		ISecurityDeclarationCollection SecurityDeclarations { get; }
+		ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action);
+		ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration);
+	}
 }

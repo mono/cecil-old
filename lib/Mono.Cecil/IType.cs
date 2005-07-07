@@ -12,6 +12,6 @@
 
 namespace Mono.Cecil {
 
-    public interface IType : IReflectionVisitable {
-    }
+	public interface IType : IReflectionVisitable {
+	}
 }

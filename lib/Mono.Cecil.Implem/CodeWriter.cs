@@ -12,47 +12,47 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-    using System.IO;
+	using System;
+	using System.IO;
 
-    using Mono.Cecil;
-    using Mono.Cecil.Binary;
-    using Mono.Cecil.Cil;
-    using Mono.Cecil.Metadata;
-    using Mono.Cecil.Signatures;
+	using Mono.Cecil;
+	using Mono.Cecil.Binary;
+	using Mono.Cecil.Cil;
+	using Mono.Cecil.Metadata;
+	using Mono.Cecil.Signatures;
 
-    internal sealed class CodeWriter : ICodeVisitor {
+	internal sealed class CodeWriter : ICodeVisitor {
 
-        public CodeWriter ()
-        {
-        }
+		public CodeWriter ()
+		{
+		}
 
-        public void Visit (IMethodBody body)
-        {
-        }
+		public void Visit (IMethodBody body)
+		{
+		}
 
-        public void Visit (IInstructionCollection instructions)
-        {
-        }
+		public void Visit (IInstructionCollection instructions)
+		{
+		}
 
-        public void Visit (IInstruction instr)
-        {
-        }
+		public void Visit (IInstruction instr)
+		{
+		}
 
-        public void Visit (IExceptionHandlerCollection seh)
-        {
-        }
+		public void Visit (IExceptionHandlerCollection seh)
+		{
+		}
 
-        public void Visit (IExceptionHandler eh)
-        {
-        }
+		public void Visit (IExceptionHandler eh)
+		{
+		}
 
-        public void Visit (IVariableDefinitionCollection variables)
-        {
-        }
+		public void Visit (IVariableDefinitionCollection variables)
+		{
+		}
 
-        public void Visit (IVariableDefinition var)
-        {
-        }
-    }
+		public void Visit (IVariableDefinition var)
+		{
+		}
+	}
 }

@@ -15,105 +15,105 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
-    using System.Collections;
+	using System;
+	using System.Collections;
 
-    using Mono.Cecil;
-    using Mono.Cecil.Cil;
+	using Mono.Cecil;
+	using Mono.Cecil.Cil;
 
-    internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
+	internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
 
-        private IDictionary m_items;
-        private <%=$cur_coll.container_impl%> m_container;
-        private ReflectionController m_controller;
+		private IDictionary m_items;
+		private <%=$cur_coll.container_impl%> m_container;
+		private ReflectionController m_controller;
 
-        private bool m_loaded;
+		private bool m_loaded;
 
-        public <%=$cur_coll.type%> this [string name] {
-            get {
-                Load ();
-                return m_items [name] as <%=$cur_coll.type%>;
-            }
-            set { m_items [name] = value; }
-        }
+		public <%=$cur_coll.type%> this [string name] {
+			get {
+				Load ();
+				return m_items [name] as <%=$cur_coll.type%>;
+			}
+			set { m_items [name] = value; }
+		}
 
-        public <%=$cur_coll.container%> Container {
-            get { return m_container; }
-        }
+		public <%=$cur_coll.container%> Container {
+			get { return m_container; }
+		}
 
-        public int Count {
-            get {
-                Load ();
-                return m_items.Count;
-            }
-        }
+		public int Count {
+			get {
+				Load ();
+				return m_items.Count;
+			}
+		}
 
-        public bool IsSynchronized {
-            get { return false; }
-        }
+		public bool IsSynchronized {
+			get { return false; }
+		}
 
-        public object SyncRoot {
-            get { return this; }
-        }
+		public object SyncRoot {
+			get { return this; }
+		}
 
-        public bool Loaded {
-            get { return m_loaded; }
-            set { m_loaded = value; }
-        }
-        
-        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
-        {
-            m_container = container;
-            m_items = new Hashtable ();
-        }        
+		public bool Loaded {
+			get { return m_loaded; }
+			set { m_loaded = value; }
+		}
+		
+		public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
+		{
+			m_container = container;
+			m_items = new Hashtable ();
+		}		
 
-        public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, ReflectionController controller) : this (container)
-        {
-            m_controller = controller;
-        }
+		public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, ReflectionController controller) : this (container)
+		{
+			m_controller = controller;
+		}
 
-        public void Clear ()
-        {
-            m_items.Clear ();
-        }
+		public void Clear ()
+		{
+			m_items.Clear ();
+		}
 
-        public bool Contains (<%=$cur_coll.type%> value)
-        {
-            return m_items.Contains (value);
-        }
+		public bool Contains (<%=$cur_coll.type%> value)
+		{
+			return m_items.Contains (value);
+		}
 
-        public void Remove (<%=$cur_coll.type%> value)
-        {
-            m_items.Remove (value);
-        }
+		public void Remove (<%=$cur_coll.type%> value)
+		{
+			m_items.Remove (value);
+		}
 
-        public void CopyTo (Array ary, int index)
-        {
-            Load ();
-            m_items.Values.CopyTo (ary, index);
-        }
+		public void CopyTo (Array ary, int index)
+		{
+			Load ();
+			m_items.Values.CopyTo (ary, index);
+		}
 
-        public IEnumerator GetEnumerator ()
-        {
-            Load ();
-            return m_items.Values.GetEnumerator ();
-        }
-        
-        public void Load ()
-        {
-            if (m_controller != null && !m_loaded) {
-                m_controller.<%=$cur_coll.pathtoloader%>.Visit (this);
-                m_loaded = true;
-            }
-        }
+		public IEnumerator GetEnumerator ()
+		{
+			Load ();
+			return m_items.Values.GetEnumerator ();
+		}
+		
+		public void Load ()
+		{
+			if (m_controller != null && !m_loaded) {
+				m_controller.<%=$cur_coll.pathtoloader%>.Visit (this);
+				m_loaded = true;
+			}
+		}
 
-        public void Accept (<%=$cur_coll.visitor%> visitor)
-        {
-            visitor.<%=$cur_coll.visitThis%> (this);
-            <%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-            m_items.Values.CopyTo (items, 0);
-            for (int i = 0; i < items.Length; i++)
-                items [i].Accept (visitor);
-        }
-    }
+		public void Accept (<%=$cur_coll.visitor%> visitor)
+		{
+			visitor.<%=$cur_coll.visitThis%> (this);
+			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
+			m_items.Values.CopyTo (items, 0);
+			for (int i = 0; i < items.Length; i++)
+				items [i].Accept (visitor);
+		}
+	}
 }

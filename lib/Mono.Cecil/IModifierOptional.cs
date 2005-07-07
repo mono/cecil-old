@@ -12,6 +12,6 @@
 
 namespace Mono.Cecil {
 
-    public interface IModifierOptional : IModifierType {
-    }
+	public interface IModifierOptional : IModifierType {
+	}
 }

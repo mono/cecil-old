@@ -12,20 +12,20 @@
 
 namespace Mono.Cecil {
 
-    public interface IEventReference : IMemberReference, IReflectionVisitable {
+	public interface IEventReference : IMemberReference, IReflectionVisitable {
 
-        ITypeReference EventType { get; set; }
-    }
+		ITypeReference EventType { get; set; }
+	}
 
-    public interface IEventDefinition : IMemberDefinition, IEventReference, ICustomAttributeProvider, IReflectionVisitable {
+	public interface IEventDefinition : IMemberDefinition, IEventReference, ICustomAttributeProvider, IReflectionVisitable {
 
-        EventAttributes Attributes { get; set; }
+		EventAttributes Attributes { get; set; }
 
-        bool IsRuntimeSpecialName { get; set; }
-        bool IsSpecialName { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
+		bool IsSpecialName { get; set; }
 
-        IMethodDefinition AddMethod { get; set; }
-        IMethodDefinition InvokeMethod { get; set; }
-        IMethodDefinition RemoveMethod { get; set; }
-    }
+		IMethodDefinition AddMethod { get; set; }
+		IMethodDefinition InvokeMethod { get; set; }
+		IMethodDefinition RemoveMethod { get; set; }
+	}
 }

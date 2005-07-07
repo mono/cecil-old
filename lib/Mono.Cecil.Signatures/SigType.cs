@@ -12,15 +12,15 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal class SigType {
+	internal class SigType {
 
-        public ElementType ElementType;
+		public ElementType ElementType;
 
-        public SigType (ElementType elem)
-        {
-            ElementType = elem;
-        }
-    }
+		public SigType (ElementType elem)
+		{
+			ElementType = elem;
+		}
+	}
 }

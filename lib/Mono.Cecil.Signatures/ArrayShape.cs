@@ -12,16 +12,16 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class ArrayShape {
+	internal sealed class ArrayShape {
 
-        public int Rank;
-        public int NumSizes;
-        public int [] Sizes;
-        public int NumLoBounds;
-        public int [] LoBounds;
+		public int Rank;
+		public int NumSizes;
+		public int [] Sizes;
+		public int NumLoBounds;
+		public int [] LoBounds;
 
-        public ArrayShape ()
-        {
-        }
-    }
+		public ArrayShape ()
+		{
+		}
+	}
 }

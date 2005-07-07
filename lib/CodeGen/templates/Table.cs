@@ -15,48 +15,48 @@
 
 namespace Mono.Cecil.Metadata {
 <% $cur_table.ref_ns.each { |ns| %>
-    using <%=ns%>;
+	using <%=ns%>;
 <% }
 %>
-    [RId (<%=$cur_table.rid%>)]
-    public sealed class <%=$cur_table.table_name%> : IMetadataTable {
+	[RId (<%=$cur_table.rid%>)]
+	public sealed class <%=$cur_table.table_name%> : IMetadataTable {
 
-        private RowCollection m_rows;
+		private RowCollection m_rows;
 
-        public <%=$cur_table.row_name%> this [int index] {
-            get { return m_rows [index] as <%=$cur_table.row_name%>; }
-            set { m_rows [index] = value; }
-        }
+		public <%=$cur_table.row_name%> this [int index] {
+			get { return m_rows [index] as <%=$cur_table.row_name%>; }
+			set { m_rows [index] = value; }
+		}
 
-        public RowCollection Rows {
-            get { return m_rows; }
-            set { m_rows = value; }
-        }
+		public RowCollection Rows {
+			get { return m_rows; }
+			set { m_rows = value; }
+		}
 
-        internal <%=$cur_table.table_name%> ()
-        {
-        }
+		internal <%=$cur_table.table_name%> ()
+		{
+		}
 
-        public void Accept (IMetadataTableVisitor visitor)
-        {
-            visitor.Visit (this);
-            this.Rows.Accept (visitor.GetRowVisitor ());
-        }
-    }
+		public void Accept (IMetadataTableVisitor visitor)
+		{
+			visitor.Visit (this);
+			this.Rows.Accept (visitor.GetRowVisitor ());
+		}
+	}
 
-    public sealed class <%=$cur_table.row_name%> : IMetadataRow {
+	public sealed class <%=$cur_table.row_name%> : IMetadataRow {
 
-        public static readonly int RowSize = <%=$cur_table.row_size%>;
-        public static readonly int RowColumns = <%=$cur_table.columns.length%>;
+		public static readonly int RowSize = <%=$cur_table.row_size%>;
+		public static readonly int RowColumns = <%=$cur_table.columns.length%>;
 
-<% $cur_table.columns.each { |col| %>        public <%=col.type%> <%=col.property_name%>;<% print("\n") } %>
-        internal <%=$cur_table.row_name%> ()
-        {
-        }
+<% $cur_table.columns.each { |col| %>		public <%=col.type%> <%=col.property_name%>;<% print("\n") } %>
+		internal <%=$cur_table.row_name%> ()
+		{
+		}
 
-        public void Accept (IMetadataRowVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public void Accept (IMetadataRowVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

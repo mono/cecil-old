@@ -12,21 +12,21 @@
 
 namespace Mono.Cecil {
 
-    public interface IFieldReference : IMemberReference, IReflectionVisitable {
+	public interface IFieldReference : IMemberReference, IReflectionVisitable {
 
-        ITypeReference FieldType { get; set; }
-    }
+		ITypeReference FieldType { get; set; }
+	}
 
-    public interface IFieldDefinition : IMemberDefinition, IFieldReference, ICustomAttributeProvider, IHasMarshalSpec, IReflectionVisitable {
+	public interface IFieldDefinition : IMemberDefinition, IFieldReference, ICustomAttributeProvider, IHasMarshalSpec, IReflectionVisitable {
 
-        FieldAttributes Attributes { get; set; }
-        IFieldLayoutInfo LayoutInfo { get; }
-        object Constant { get;  set; }
+		FieldAttributes Attributes { get; set; }
+		IFieldLayoutInfo LayoutInfo { get; }
+		object Constant { get;  set; }
 
-        bool IsLiteral { get; set; }
-        bool IsReadOnly { get; set; }
-        bool IsRuntimeSpecialName { get; set; }
-        bool IsSpecialName { get; set; }
-        bool IsStatic { get; set; }
-    }
+		bool IsLiteral { get; set; }
+		bool IsReadOnly { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
+		bool IsSpecialName { get; set; }
+		bool IsStatic { get; set; }
+	}
 }

@@ -12,55 +12,55 @@
 
 namespace Mono.Cecil.Metadata {
 
-    public class MetadataStream : IMetadataVisitable {
+	public class MetadataStream : IMetadataVisitable {
 
-        private MetadataStreamHeader m_header;
-        private MetadataHeap m_heap;
+		private MetadataStreamHeader m_header;
+		private MetadataHeap m_heap;
 
-        public MetadataStreamHeader Header {
-            get { return m_header; }
-            set { m_header = value; }
-        }
+		public MetadataStreamHeader Header {
+			get { return m_header; }
+			set { m_header = value; }
+		}
 
-        public MetadataHeap Heap {
-            get { return m_heap; }
-            set { m_heap = value; }
-        }
+		public MetadataHeap Heap {
+			get { return m_heap; }
+			set { m_heap = value; }
+		}
 
-        internal MetadataStream ()
-        {
-        }
+		internal MetadataStream ()
+		{
+		}
 
-        public void Accept (IMetadataVisitor visitor)
-        {
-            visitor.Visit (this);
+		public void Accept (IMetadataVisitor visitor)
+		{
+			visitor.Visit (this);
 
-            m_header.Accept (visitor);
-            if (m_heap != null)
-                m_heap.Accept (visitor);
-        }
+			m_header.Accept (visitor);
+			if (m_heap != null)
+				m_heap.Accept (visitor);
+		}
 
-        public class MetadataStreamHeader : IMetadataVisitable {
+		public class MetadataStreamHeader : IMetadataVisitable {
 
-            public uint Offset;
-            public uint Size;
-            public string Name;
+			public uint Offset;
+			public uint Size;
+			public string Name;
 
-            private MetadataStream m_stream;
+			private MetadataStream m_stream;
 
-            public MetadataStream Stream {
-                get { return m_stream; }
-            }
+			public MetadataStream Stream {
+				get { return m_stream; }
+			}
 
-            internal MetadataStreamHeader (MetadataStream stream)
-            {
-                m_stream = stream;
-            }
+			internal MetadataStreamHeader (MetadataStream stream)
+			{
+				m_stream = stream;
+			}
 
-            public void Accept (IMetadataVisitor visitor)
-            {
-                visitor.Visit (this);
-            }
-        }
-    }
+			public void Accept (IMetadataVisitor visitor)
+			{
+				visitor.Visit (this);
+			}
+		}
+	}
 }

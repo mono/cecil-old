@@ -12,42 +12,42 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
+	public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
 
-        TypeAttributes Attributes { get; set; }
-        ITypeReference BaseType { get; set; }
-        IInterfaceCollection Interfaces { get; }
-        IClassLayoutInfo LayoutInfo { get; }
+		TypeAttributes Attributes { get; set; }
+		ITypeReference BaseType { get; set; }
+		IInterfaceCollection Interfaces { get; }
+		IClassLayoutInfo LayoutInfo { get; }
 
-        bool IsAbstract { get; set; }
-        bool IsBeforeFieldInit { get; set; }
-        bool IsInterface { get; set; }
-        bool IsRuntimeSpecialName { get; set; }
-        bool IsSealed { get; set; }
-        bool IsSpecialName { get; set; }
+		bool IsAbstract { get; set; }
+		bool IsBeforeFieldInit { get; set; }
+		bool IsInterface { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
+		bool IsSealed { get; set; }
+		bool IsSpecialName { get; set; }
 
-        INestedTypeCollection NestedTypes { get; }
-        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);
-        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType);
-        ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType);
+		INestedTypeCollection NestedTypes { get; }
+		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);
+		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType);
+		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType);
 
-        IMethodDefinitionCollection Methods { get; }
-        IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
-        IMethodDefinition DefineConstructor ();
-        IMethodDefinition DefineConstructor (bool isstatic);
+		IMethodDefinitionCollection Methods { get; }
+		IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
+		IMethodDefinition DefineConstructor ();
+		IMethodDefinition DefineConstructor (bool isstatic);
 
-        IFieldDefinitionCollection Fields { get; }
-        IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType);
-        IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType);
+		IFieldDefinitionCollection Fields { get; }
+		IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType);
+		IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType);
 
-        IEventDefinitionCollection Events { get; }
-        IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType);
-        IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType);
+		IEventDefinitionCollection Events { get; }
+		IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType);
+		IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType);
 
-        IPropertyDefinitionCollection Properties { get; }
-        IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType);
-        IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType);
-    }
+		IPropertyDefinitionCollection Properties { get; }
+		IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType);
+		IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType);
+	}
 }

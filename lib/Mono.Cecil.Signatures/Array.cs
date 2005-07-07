@@ -12,15 +12,15 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class ARRAY : SigType {
+	internal sealed class ARRAY : SigType {
 
-        public SigType Type;
-        public ArrayShape Shape;
+		public SigType Type;
+		public ArrayShape Shape;
 
-        public ARRAY () : base (ElementType.Array)
-        {
-        }
-    }
+		public ARRAY () : base (ElementType.Array)
+		{
+		}
+	}
 }

@@ -12,10 +12,10 @@
 
 namespace Mono.Cecil {
 
-    public enum AssemblyHashAlgorithm : uint {
-        None        = 0x0000,
-        Reserved    = 0x8003,    // MD5
-        SHA1        = 0x8004
-    }
+	public enum AssemblyHashAlgorithm : uint {
+		None		= 0x0000,
+		Reserved	= 0x8003,	// MD5
+		SHA1		= 0x8004
+	}
 }
 

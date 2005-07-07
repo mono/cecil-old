@@ -12,27 +12,27 @@
 
 namespace Mono.Cecil.Metadata {
 
-    using System.Collections;
+	using System.Collections;
 
-    public class StringsHeap : MetadataHeap {
+	public class StringsHeap : MetadataHeap {
 
-        public int IndexSize;
+		public int IndexSize;
 
-        private Hashtable m_strings;
+		private IDictionary m_strings;
 
-        public string this [uint index] {
-            get { return m_strings.ContainsKey (index) ? m_strings [index] as string : string.Empty; }
-            set { m_strings [index] = value; }
-        }
+		public string this [uint index] {
+			get { return m_strings.Contains (index) ? m_strings [index] as string : string.Empty; }
+			set { m_strings [index] = value; }
+		}
 
-        internal StringsHeap (MetadataStream stream) : base (stream, "#Strings")
-        {
-            m_strings = new Hashtable ();
-        }
+		internal StringsHeap (MetadataStream stream) : base (stream, "#Strings")
+		{
+			m_strings = new Hashtable ();
+		}
 
-        public override void Accept (IMetadataVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IMetadataVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

@@ -12,24 +12,24 @@
 
 namespace Mono.Cecil {
 
-    using System;
+	using System;
 
-    public sealed class MetadataFormatException : ImageFormatException {
+	public sealed class MetadataFormatException : ImageFormatException {
 
-        internal MetadataFormatException () : base ()
-        {
-        }
+		internal MetadataFormatException () : base ()
+		{
+		}
 
-        internal MetadataFormatException (string message) : base (message)
-        {
-        }
+		internal MetadataFormatException (string message) : base (message)
+		{
+		}
 
-        internal MetadataFormatException (string message, params string [] parameters) : base (string.Format (message, parameters))
-        {
-        }
+		internal MetadataFormatException (string message, params string [] parameters) : base (string.Format (message, parameters))
+		{
+		}
 
-        internal MetadataFormatException (string message, Exception inner) : base (message, inner)
-        {
-        }
-    }
+		internal MetadataFormatException (string message, Exception inner) : base (message, inner)
+		{
+		}
+	}
 }

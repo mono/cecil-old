@@ -12,10 +12,30 @@
 
 namespace Mono.Cecil.Signatures {
 
-    internal sealed class SignatureWriter {
+	internal sealed class SignatureWriter : ISignatureVisitor {
 
-        public SignatureWriter ()
-        {
-        }
-    }
+		public SignatureWriter ()
+		{
+		}
+
+		public void Visit (MethodDefSig methodDef)
+		{
+		}
+
+		public void Visit (MethodRefSig methodRef)
+		{
+		}
+
+		public void Visit (FieldSig field)
+		{
+		}
+
+		public void Visit (PropertySig property)
+		{
+		}
+
+		public void Visit (LocalVarSig localvar)
+		{
+		}
+	}
 }

@@ -12,10 +12,11 @@
 
 namespace Mono.Cecil.Cil {
 
-    public interface IInstruction : ICodeVisitable {
+	public interface IInstruction : ICodeVisitable {
 
-        int Offset { get; }
-        OpCode OpCode { get; }
-        object Operand { get; }
-    }
+		int Offset { get; }
+		//ILabel Label { get; }
+		OpCode OpCode { get; }
+		object Operand { get; }
+	}
 }

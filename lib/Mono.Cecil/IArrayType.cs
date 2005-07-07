@@ -12,11 +12,11 @@
 
 namespace Mono.Cecil {
 
-    public interface IArrayType : ITypeReference {
-        IArrayDimensionCollection Dimensions { get; }
-        ITypeReference ElementType { get; set; }
+	public interface IArrayType : ITypeReference {
+		IArrayDimensionCollection Dimensions { get; }
+		ITypeReference ElementType { get; set; }
 
-        IArrayDimension DefineDimension (int lowerBound, int upperBound);
-        IArrayDimension DefineDimension ();
-    }
+		IArrayDimension DefineDimension (int lowerBound, int upperBound);
+		IArrayDimension DefineDimension ();
+	}
 }

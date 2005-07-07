@@ -12,39 +12,39 @@
 
 namespace Mono.Cecil.Implem {
 
-    using System;
+	using System;
 
-    using Mono.Cecil;
+	using Mono.Cecil;
 
-    internal sealed class ReflectionController {
+	internal sealed class ReflectionController {
 
-        private ReflectionReader m_reader;
-        private ReflectionWriter m_writer;
-        private ReflectionHelper m_helper;
+		private ReflectionReader m_reader;
+		private ReflectionWriter m_writer;
+		private ReflectionHelper m_helper;
 
-        public ReflectionReader Reader {
-            get { return m_reader; }
-        }
+		public ReflectionReader Reader {
+			get { return m_reader; }
+		}
 
-        public ReflectionWriter Writer {
-            get { return m_writer; }
-        }
+		public ReflectionWriter Writer {
+			get { return m_writer; }
+		}
 
-        public ReflectionHelper Helper {
-            get { return m_helper; }
-        }
+		public ReflectionHelper Helper {
+			get { return m_helper; }
+		}
 
-        public ReflectionController (ModuleDefinition module, LoadingType lt)
-        {
-            if (lt == LoadingType.Aggressive)
-                m_reader = new AggressiveReflectionReader (module);
-            else if (lt == LoadingType.Lazy)
-                m_reader = new LazyReflectionReader (module);
-            else
-                throw new ReflectionException ("Unknow loading type");
+		public ReflectionController (ModuleDefinition module, LoadingType lt)
+		{
+			if (lt == LoadingType.Aggressive)
+				m_reader = new AggressiveReflectionReader (module);
+			else if (lt == LoadingType.Lazy)
+				m_reader = new LazyReflectionReader (module);
+			else
+				throw new ReflectionException ("Unknow loading type");
 
-            m_writer = new ReflectionWriter (module);
-            m_helper = new ReflectionHelper (module);
-        }
-    }
+			m_writer = new ReflectionWriter (module);
+			m_helper = new ReflectionHelper (module);
+		}
+	}
 }

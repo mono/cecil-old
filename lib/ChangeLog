@@ -1,3 +1,7 @@
+2005-07-07  Jb Evain  <jbevain@gmail.com>
+
+	* *.*: use Mono coding conventions
+
 2005-07-02  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethod.cs

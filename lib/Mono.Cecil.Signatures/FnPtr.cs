@@ -12,14 +12,14 @@
 
 namespace Mono.Cecil.Signatures {
 
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class FNPTR : SigType {
+	internal sealed class FNPTR : SigType {
 
-        public MethodSig Method;
+		public MethodSig Method;
 
-        public FNPTR () : base (ElementType.FnPtr)
-        {
-        }
-    }
+		public FNPTR () : base (ElementType.FnPtr)
+		{
+		}
+	}
 }

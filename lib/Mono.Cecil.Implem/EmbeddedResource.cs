@@ -12,31 +12,31 @@
 
 namespace Mono.Cecil.Implem {
 
-    using Mono.Cecil;
-    using Mono.Cecil.Metadata;
+	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
-    internal sealed class EmbeddedResource : Resource, IEmbeddedResource {
+	internal sealed class EmbeddedResource : Resource, IEmbeddedResource {
 
-        private byte [] m_data;
+		private byte [] m_data;
 
-        public byte [] Data {
-            get { return m_data; }
-            set { m_data = value; }
-        }
+		public byte [] Data {
+			get { return m_data; }
+			set { m_data = value; }
+		}
 
-        public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : base (name, attributes, owner)
-        {
-        }
+		public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : base (name, attributes, owner)
+		{
+		}
 
-        public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner, byte [] data) :
-            base (name, attributes, owner)
-        {
-            m_data = data;
-        }
+		public EmbeddedResource (string name, ManifestResourceAttributes attributes, ModuleDefinition owner, byte [] data) :
+			base (name, attributes, owner)
+		{
+			m_data = data;
+		}
 
-        public override void Accept (IReflectionStructureVisitor visitor)
-        {
-            visitor.Visit (this);
-        }
-    }
+		public override void Accept (IReflectionStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

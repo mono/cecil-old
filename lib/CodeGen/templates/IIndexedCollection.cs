@@ -15,19 +15,19 @@
 
 namespace <%=$cur_coll.target%> {
 
-    using System.Collections;
+	using System.Collections;
 
-    public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
+	public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
-        <%=$cur_coll.type%> this [int index] { get; }
+		<%=$cur_coll.type%> this [int index] { get; }
 
-        <%=$cur_coll.container%> Container { get; }
+		<%=$cur_coll.container%> Container { get; }
 
-        void Clear ();
-        bool Contains (<%=$cur_coll.type%> value);
-        int IndexOf (<%=$cur_coll.type%> value);
-        void Insert (int index, <%=$cur_coll.type%> value);
-        void Remove (<%=$cur_coll.type%> value);
-        void RemoveAt (int index);
-    }
+		void Clear ();
+		bool Contains (<%=$cur_coll.type%> value);
+		int IndexOf (<%=$cur_coll.type%> value);
+		void Insert (int index, <%=$cur_coll.type%> value);
+		void Remove (<%=$cur_coll.type%> value);
+		void RemoveAt (int index);
+	}
 }
