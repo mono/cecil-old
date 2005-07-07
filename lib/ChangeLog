@@ -2,6 +2,8 @@
 
 	* *.*: use Mono coding conventions
 	* Mono.Xml/*.*: update Mono.Xml from corlib
+	* Mono.Cecil.Metadata/CultureUtils.cs:
+		Ensure that Cecil works under Mono
 
 2005-07-02  Jb Evain  <jbevain@gmail.com>
 
