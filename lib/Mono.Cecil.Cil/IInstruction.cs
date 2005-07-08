@@ -18,5 +18,6 @@ namespace Mono.Cecil.Cil {
 		//ILabel Label { get; }
 		OpCode OpCode { get; }
 		object Operand { get; }
+		// IInstruction Next { get; }
 	}
 }

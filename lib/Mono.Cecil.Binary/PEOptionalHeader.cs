@@ -40,7 +40,7 @@ namespace Mono.Cecil.Binary {
 			NTSpecificFields.Accept (visitor);
 			DataDirectories.Accept (visitor);
 		}
-		
+
 		public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
 			public ushort Magic;
@@ -69,7 +69,7 @@ namespace Mono.Cecil.Binary {
 				visitor.Visit (this);
 			}
 		}
-		
+
 		public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
 			public uint ImageBase;
@@ -124,7 +124,7 @@ namespace Mono.Cecil.Binary {
 				visitor.Visit (this);
 			}
 		}
-		
+
 		public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
 			public DataDirectory ExportTable;

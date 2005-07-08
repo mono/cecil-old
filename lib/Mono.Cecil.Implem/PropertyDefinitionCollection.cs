@@ -60,12 +60,12 @@ namespace Mono.Cecil.Implem {
 			get { return m_loaded; }
 			set { m_loaded = value; }
 		}
-		
+
 		public PropertyDefinitionCollection (TypeDefinition container)
 		{
 			m_container = container;
 			m_items = new Hashtable ();
-		}		
+		}
 
 		public PropertyDefinitionCollection (TypeDefinition container, ReflectionController controller) : this (container)
 		{
@@ -98,7 +98,7 @@ namespace Mono.Cecil.Implem {
 			Load ();
 			return m_items.Values.GetEnumerator ();
 		}
-		
+
 		public void Load ()
 		{
 			if (m_controller != null && !m_loaded) {

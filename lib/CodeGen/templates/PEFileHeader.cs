@@ -12,7 +12,6 @@
  * <%=Time.now%>
  *
  *****************************************************************************/
-
 <% header = $headers["PEFileHeader"] %>
 namespace Mono.Cecil.Binary {
 

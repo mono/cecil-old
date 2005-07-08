@@ -65,13 +65,13 @@ namespace Mono.Cecil.Implem {
 		{
 			m_container = container;
 			m_items = new ArrayList ();
-		}		
+		}
 
 		public InterfaceCollection (TypeDefinition container, ReflectionController controller) : this (container)
 		{
 			m_controller = controller;
 		}
-		
+
 		public void Add (ITypeReference value)
 		{
 			m_items.Add (value);
@@ -86,7 +86,7 @@ namespace Mono.Cecil.Implem {
 		{
 			return m_items.Contains (value);
 		}
-		
+
 		public int IndexOf (ITypeReference value)
 		{
 			Load ();
@@ -119,7 +119,7 @@ namespace Mono.Cecil.Implem {
 			Load ();
 			return m_items.GetEnumerator ();
 		}
-		
+
 		public void Load ()
 		{
 			if (m_controller != null && !m_loaded) {

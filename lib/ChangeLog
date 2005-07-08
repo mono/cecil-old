@@ -1,3 +1,7 @@
+2005-07-08  Jb Evain  <jbevain@gmail.com>
+
+   * Every generated files: use \n instead of \r\n
+
 2005-07-07  Jb Evain  <jbevain@gmail.com>
 
 	* *.*: use Mono coding conventions

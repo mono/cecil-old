@@ -13,7 +13,6 @@
  *
  *****************************************************************************/
 
-
 namespace Mono.Cecil.Binary {
 
 	public sealed class PEFileHeader : IHeader, IBinaryVisitable {

@@ -31,7 +31,7 @@ namespace Mono.Cecil.Metadata {
 			set { m_data = value; }
 		}
 
-		protected MetadataHeap (MetadataStream stream, string name)
+		internal MetadataHeap (MetadataStream stream, string name)
 		{
 			m_name = name;
 			m_stream = stream;

@@ -47,7 +47,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyTable;
-			
+
 			AssemblyTable table = new AssemblyTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyOSTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyOSTable;
-			
+
 			AssemblyOSTable table = new AssemblyOSTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -69,7 +69,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyProcessorTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyProcessorTable;
-			
+
 			AssemblyProcessorTable table = new AssemblyProcessorTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -80,7 +80,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyRefTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyRefTable;
-			
+
 			AssemblyRefTable table = new AssemblyRefTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -91,7 +91,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyRefOSTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyRefOSTable;
-			
+
 			AssemblyRefOSTable table = new AssemblyRefOSTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -102,7 +102,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (AssemblyRefProcessorTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as AssemblyRefProcessorTable;
-			
+
 			AssemblyRefProcessorTable table = new AssemblyRefProcessorTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -113,7 +113,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ClassLayoutTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ClassLayoutTable;
-			
+
 			ClassLayoutTable table = new ClassLayoutTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -124,7 +124,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ConstantTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ConstantTable;
-			
+
 			ConstantTable table = new ConstantTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -135,7 +135,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (CustomAttributeTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as CustomAttributeTable;
-			
+
 			CustomAttributeTable table = new CustomAttributeTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -146,7 +146,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (DeclSecurityTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as DeclSecurityTable;
-			
+
 			DeclSecurityTable table = new DeclSecurityTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -157,7 +157,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (EventMapTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as EventMapTable;
-			
+
 			EventMapTable table = new EventMapTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -168,7 +168,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (EventTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as EventTable;
-			
+
 			EventTable table = new EventTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -179,7 +179,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ExportedTypeTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ExportedTypeTable;
-			
+
 			ExportedTypeTable table = new ExportedTypeTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -190,7 +190,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (FieldTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as FieldTable;
-			
+
 			FieldTable table = new FieldTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -201,7 +201,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (FieldLayoutTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as FieldLayoutTable;
-			
+
 			FieldLayoutTable table = new FieldLayoutTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -212,7 +212,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (FieldMarshalTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as FieldMarshalTable;
-			
+
 			FieldMarshalTable table = new FieldMarshalTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -223,7 +223,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (FieldRVATable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as FieldRVATable;
-			
+
 			FieldRVATable table = new FieldRVATable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -234,7 +234,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (FileTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as FileTable;
-			
+
 			FileTable table = new FileTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -245,7 +245,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (GenericParamTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as GenericParamTable;
-			
+
 			GenericParamTable table = new GenericParamTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -256,7 +256,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (GenericParamConstraintTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as GenericParamConstraintTable;
-			
+
 			GenericParamConstraintTable table = new GenericParamConstraintTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -267,7 +267,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ImplMapTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ImplMapTable;
-			
+
 			ImplMapTable table = new ImplMapTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -278,7 +278,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (InterfaceImplTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as InterfaceImplTable;
-			
+
 			InterfaceImplTable table = new InterfaceImplTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -289,7 +289,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ManifestResourceTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ManifestResourceTable;
-			
+
 			ManifestResourceTable table = new ManifestResourceTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -300,7 +300,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (MemberRefTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as MemberRefTable;
-			
+
 			MemberRefTable table = new MemberRefTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -311,7 +311,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (MethodTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as MethodTable;
-			
+
 			MethodTable table = new MethodTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -322,7 +322,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (MethodImplTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as MethodImplTable;
-			
+
 			MethodImplTable table = new MethodImplTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -333,7 +333,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (MethodSemanticsTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as MethodSemanticsTable;
-			
+
 			MethodSemanticsTable table = new MethodSemanticsTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -344,7 +344,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (MethodSpecTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as MethodSpecTable;
-			
+
 			MethodSpecTable table = new MethodSpecTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -355,7 +355,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ModuleTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ModuleTable;
-			
+
 			ModuleTable table = new ModuleTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -366,7 +366,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ModuleRefTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ModuleRefTable;
-			
+
 			ModuleRefTable table = new ModuleRefTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -377,7 +377,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (NestedClassTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as NestedClassTable;
-			
+
 			NestedClassTable table = new NestedClassTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -388,7 +388,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (ParamTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as ParamTable;
-			
+
 			ParamTable table = new ParamTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -399,7 +399,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (PropertyTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as PropertyTable;
-			
+
 			PropertyTable table = new PropertyTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -410,7 +410,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (PropertyMapTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as PropertyMapTable;
-			
+
 			PropertyMapTable table = new PropertyMapTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -421,7 +421,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (StandAloneSigTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as StandAloneSigTable;
-			
+
 			StandAloneSigTable table = new StandAloneSigTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -432,7 +432,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (TypeDefTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as TypeDefTable;
-			
+
 			TypeDefTable table = new TypeDefTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -443,7 +443,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (TypeRefTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as TypeRefTable;
-			
+
 			TypeRefTable table = new TypeRefTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
@@ -454,7 +454,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (TypeSpecTable);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as TypeSpecTable;
-			
+
 			TypeSpecTable table = new TypeSpecTable ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;
