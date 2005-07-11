@@ -36,7 +36,6 @@ namespace Mono.Cecil {
 		IMethodBody Body { get; }
 		IPInvokeInfo PInvokeInfo { get; }
 
-		ICilEmitter DefineBody ();
-		IMethodBody DefineEmptyBody ();
+		IMethodBody DefineBody ();
 	}
 }

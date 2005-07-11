@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 
 	using Mono.Cecil;
@@ -40,12 +41,13 @@ namespace Mono.Cecil.Implem {
 			br.BaseStream.Position = m_reflectReader.Module.ImageReader.Image.ResolveVirtualAddress (meth.RVA);
 
 			// lets read the method
+			IDictionary instrs;
 			int flags = br.ReadByte ();
 			switch (flags & 0x3) {
 			case (int) MethodHeaders.TinyFormat :
 				methBody.CodeSize = flags >> 2;
 				methBody.MaxStack = 8;
-				ReadCilBody (methBody, br);
+				ReadCilBody (methBody, br, out instrs);
 				return;
 			case (int) MethodHeaders.FatFormat :
 				br.BaseStream.Position--;
@@ -56,10 +58,9 @@ namespace Mono.Cecil.Implem {
 				methBody.LocalVarToken = br.ReadInt32 ();
 				body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
 				Visit (methBody.Variables);
-				ReadCilBody (methBody, br);
-				if ((fatflags & (int) MethodHeaders.MoreSects) != 0) {
-					ReadSection (methBody, br);
-				}
+				ReadCilBody (methBody, br, out instrs);
+				if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
+					ReadSection (methBody, br, instrs);
 				return;
 			}
 		}
@@ -74,9 +75,13 @@ namespace Mono.Cecil.Implem {
 			return token >> 24 == (int) t >> 24;
 		}
 
-		private void ReadCilBody (MethodBody body, BinaryReader br)
+		private void ReadCilBody (MethodBody body, BinaryReader br, out IDictionary instructions)
 		{
 			long start = br.BaseStream.Position, offset;
+			Instruction last = null;
+			InstructionCollection code = body.Instructions as InstructionCollection;
+			instructions = new Hashtable ();
+
 			while (br.BaseStream.Position < start + body.CodeSize) {
 				OpCode op;
 				offset = br.BaseStream.Position - start;
@@ -90,6 +95,7 @@ namespace Mono.Cecil.Implem {
 				switch (op.OperandType) {
 				case OperandType.InlineNone :
 					break;
+				// nasty hack: use Labels as operand to resolve branches later
 				case OperandType.InlineSwitch :
 					uint length = br.ReadUInt32 ();
 					Label [] branches = new Label [length];
@@ -104,6 +110,10 @@ namespace Mono.Cecil.Implem {
 					sbyte sbrtgt = br.ReadSByte ();
 					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt));
 					break;
+				case OperandType.InlineBrTarget :
+					int brtgt = br.ReadInt32 ();
+					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
+					break;
 				case OperandType.ShortInlineI :
 					instr.Operand = br.ReadByte ();
 					break;
@@ -112,10 +122,6 @@ namespace Mono.Cecil.Implem {
 					break;
 				case OperandType.ShortInlineParam :
 					instr.Operand = br.ReadByte ();
-					break;
-				case OperandType.InlineBrTarget :
-					int brtgt = br.ReadInt32 ();
-					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
 					break;
 				case OperandType.InlineSig :
 				case OperandType.InlineI :
@@ -143,15 +149,19 @@ namespace Mono.Cecil.Implem {
 					int field = br.ReadInt32 ();
 					if (IsToken (field, TokenType.Field))
 						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (field));
-					else
+					else if (IsToken (field, TokenType.MemberRef))
 						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (field));
+					else
+						throw new ReflectionException ("Wrong token for InlineField Operand: {0}", field.ToString ("x8"));
 					break;
 				case OperandType.InlineMethod :
 					int meth = br.ReadInt32 ();
 					if (IsToken (meth, TokenType.Method))
 						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (meth));
-					else
+					else if (IsToken (meth, TokenType.MemberRef))
 						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth));
+					else
+						throw new ReflectionException ("Wrong token for InlineMethod Operand: {0}", meth.ToString ("x8"));
 					break;
 				case OperandType.InlineType :
 					int type = br.ReadInt32 ();
@@ -183,11 +193,38 @@ namespace Mono.Cecil.Implem {
 					break;
 				}
 
-				(body.Instructions as InstructionCollection).Add (instr);
+				instructions.Add (instr.Offset, instr);
+
+				if (last != null) {
+					last.Next = instr;
+					instr.Previous = last;
+				}
+
+				last = instr;
+
+				code.Add (instr);
+			}
+
+			// resolve branches
+			foreach (Instruction i in code) {
+				switch (i.OpCode.OperandType) {
+				case OperandType.ShortInlineBrTarget:
+				case OperandType.InlineBrTarget:
+					Label lbl = (Label) i.Operand;
+					i.Operand = instructions [lbl.Offset];
+					break;
+				case OperandType.InlineSwitch:
+					Label [] lbls = (Label []) i.Operand;
+					Instruction [] instrs = new Instruction [lbls.Length];
+					for (int j = 0; j < lbls.Length; j++)
+						instrs [j] = instructions [lbls [j].Offset] as Instruction;
+					i.Operand = instrs;
+					break;
+				}
 			}
 		}
 
-		private void ReadSection (MethodBody body, BinaryReader br)
+		private void ReadSection (MethodBody body, BinaryReader br, IDictionary instructions)
 		{
 			br.BaseStream.Position += 3;
 			br.BaseStream.Position &= ~3;
@@ -198,11 +235,12 @@ namespace Mono.Cecil.Implem {
 				br.ReadBytes (2);
 
 				for (int i = 0; i < length; i++) {
-					ExceptionHandler eh = new ExceptionHandler ((ExceptionHandlerType) (br.ReadInt16 () & 0x7));
-					eh.TryOffset = br.ReadInt16 ();
-					eh.TryLength = br.ReadByte ();
-					eh.HandlerOffset = br.ReadInt16 ();
-					eh.HandlerLength = br.ReadByte ();
+					ExceptionHandler eh = body.DefineExceptionHandler (
+						(ExceptionHandlerType) (br.ReadInt16 () & 0x7)) as ExceptionHandler;
+					eh.TryStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
+					eh.TryEnd = instructions [eh.TryStart.Offset + Convert.ToInt32 (br.ReadByte ())] as Instruction;
+					eh.HandlerStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
+					eh.HandlerEnd = instructions [eh.HandlerStart.Offset + Convert.ToInt32 (br.ReadByte ())] as Instruction;
 					switch (eh.Type) {
 					case ExceptionHandlerType.Catch :
 						int token = br.ReadInt32 ();
@@ -212,13 +250,13 @@ namespace Mono.Cecil.Implem {
 							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
 						break;
 					case ExceptionHandlerType.Filter :
-						eh.FilterOffset = br.ReadInt32 ();
+						eh.FilterStart = instructions [br.ReadInt32 ()] as Instruction;
+						eh.FilterEnd = instructions [eh.HandlerStart.Previous.Offset] as Instruction;
 						break;
 					default :
 						br.ReadInt32 ();
 						break;
 					}
-					(body.ExceptionHandlers as ExceptionHandlerCollection).Add (eh);
 				}
 			} else {
 				br.BaseStream.Position--;
@@ -226,11 +264,12 @@ namespace Mono.Cecil.Implem {
 				if ((flags & (int) MethodDataSection.EHTable) == 0)
 					br.ReadBytes (length * 24);
 				for (int i = 0; i < length; i++) {
-					ExceptionHandler eh = new ExceptionHandler ((ExceptionHandlerType) (br.ReadInt32 () & 0x7));
-					eh.TryOffset = br.ReadInt32 ();
-					eh.TryLength = br.ReadInt32 ();
-					eh.HandlerOffset = br.ReadInt32 ();
-					eh.HandlerLength = br.ReadInt32 ();
+					ExceptionHandler eh = body.DefineExceptionHandler (
+						(ExceptionHandlerType) (br.ReadInt32 () & 0x7)) as ExceptionHandler;
+					eh.TryStart = instructions [br.ReadInt32 ()] as Instruction;
+					eh.TryEnd = instructions [eh.TryStart.Offset + br.ReadInt32 ()] as Instruction;
+					eh.HandlerStart = instructions [br.ReadInt32 ()] as Instruction;
+					eh.HandlerEnd = instructions [eh.HandlerStart.Offset + br.ReadInt32 ()] as Instruction;
 					switch (eh.Type) {
 					case ExceptionHandlerType.Catch :
 						int token = br.ReadInt32 ();
@@ -240,18 +279,39 @@ namespace Mono.Cecil.Implem {
 							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
 						break;
 					case ExceptionHandlerType.Filter :
-						eh.FilterOffset = br.ReadInt32 ();
+						eh.FilterStart = instructions [br.ReadInt32 ()] as Instruction;
+						eh.FilterEnd = instructions [eh.HandlerStart.Previous.Offset] as Instruction;
 						break;
 					default :
 						br.ReadInt32 ();
 						break;
 					}
-					(body.ExceptionHandlers as ExceptionHandlerCollection).Add (eh);
 				}
 			}
 
 			if ((flags & (byte) MethodDataSection.MoreSects) != 0)
-				ReadSection (body, br);
+				ReadSection (body, br, instructions);
+		}
+
+		public void Visit (IVariableDefinitionCollection variables)
+		{
+			MethodBody body = variables.Container as MethodBody;
+			if (body.LocalVarToken == 0)
+				return;
+
+			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
+			StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken) - 1];
+			LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
+			for (int i = 0; i < sig.Count; i++) {
+				LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
+				ITypeReference varType = m_reflectReader.GetTypeRefFromSig (lv.Type);
+				if (lv.ByRef)
+					varType = new ReferenceType (varType);
+				if ((lv.Constraint & Constraint.Pinned) != 0)
+					varType = new PinnedType (varType);
+
+				body.DefineLocalVariable (varType);
+			}
 		}
 
 		public void Visit (IInstructionCollection instructions)
@@ -268,28 +328,6 @@ namespace Mono.Cecil.Implem {
 
 		public void Visit (IExceptionHandler eh)
 		{
-		}
-
-		public void Visit (IVariableDefinitionCollection variables)
-		{
-			MethodBody body = variables.Container as MethodBody;
-			if (body.LocalVarToken == 0)
-				return;
-
-			MethodDefinition meth = body.Method as MethodDefinition;
-			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
-			StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken) - 1];
-			LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
-			for (int i = 0; i < sig.Count; i++) {
-				LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
-				ITypeReference varType = m_reflectReader.GetTypeRefFromSig(lv.Type);
-				if (lv.ByRef)
-					varType = new ReferenceType (varType);
-				if ((lv.Constraint & Constraint.Pinned) != 0)
-					varType = new PinnedType (varType);
-				(variables as VariableDefinitionCollection).Add (
-					new VariableDefinition (string.Concat ("V_", i), i, meth, varType));
-			}
 		}
 
 		public void Visit (IVariableDefinition var)

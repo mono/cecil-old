@@ -18,7 +18,7 @@ namespace Mono.Cecil.Implem {
 	using Mono.Cecil;
 	using Mono.Cecil.Cil;
 
-	internal class CilEmitter : ICilEmitter {
+	/*internal class CilEmitter : ICilEmitter {
 
 		private ModuleDefinition m_module;
 		private MethodDefinition m_meth;
@@ -381,5 +381,5 @@ namespace Mono.Cecil.Implem {
 			if (t.Length == 0)
 				t.Length = m_offset - t.Offset;
 		}
-	}
+	}*/
 }

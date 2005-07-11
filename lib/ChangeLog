@@ -1,3 +1,21 @@
+2005-07-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil.Implem/Instruction.cs
+	  Mono.Cecil.Implem/ExceptionHandler.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/Label.cs
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/MethodBody.cs
+	  Mono.Cecil.Implem/CilEmitter.cs
+	  Mono.Cecil.Cil/ILabel.cs
+	  Mono.Cecil.Cil/IInstruction.cs
+	  Mono.Cecil.Cil/IExceptionHandler.cs
+	  Mono.Cecil.Cil/IMethodBody.cs
+	  Mono.Cecil.Cil/ICilEmitter.cs:
+		Preliminary changes on the instruction model before
+		changing of latptop
+
 2005-07-08  Jb Evain  <jbevain@gmail.com>
 
    * Every generated files: use \n instead of \r\n

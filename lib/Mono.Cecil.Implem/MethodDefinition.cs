@@ -194,12 +194,7 @@ namespace Mono.Cecil.Implem {
 			return dec;
 		}
 
-		public ICilEmitter DefineBody ()
-		{
-			return new CilEmitter (this);
-		}
-
-		public IMethodBody DefineEmptyBody ()
+		public IMethodBody DefineBody ()
 		{
 			return this.m_body = new MethodBody (this);
 		}

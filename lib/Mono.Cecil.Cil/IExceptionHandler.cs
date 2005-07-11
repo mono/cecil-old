@@ -16,19 +16,14 @@ namespace Mono.Cecil.Cil {
 
 	public interface IExceptionHandler : ICodeVisitable {
 
-		int TryOffset { get; set; }
-		// IInstruction TryStart { get; set; }
-		// IInstruction TryEnd { get; set; }
-		int TryLength { get; set; }
+		IInstruction TryStart { get; set; }
+		IInstruction TryEnd { get; set; }
 
-		// IInstruction HandlerStart { get; set; }
-		// IInstruction HandlerEnd { get; set; }
-		int HandlerOffset { get; set; }
-		int HandlerLength { get; set; }
+		IInstruction FilterStart { get; set; }
+		IInstruction FilterEnd { get; set; }
 
-		// IInstruction FilterStart { get; set; }
-		// IInstruction FilterEnd { get; set; }
-		int FilterOffset { get; set; }
+		IInstruction HandlerStart { get; set; }
+		IInstruction HandlerEnd { get; set; }
 
 		ITypeReference CatchType { get; set; }
 		ExceptionHandlerType Type { get; set; }

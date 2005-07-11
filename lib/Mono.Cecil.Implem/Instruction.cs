@@ -20,6 +20,9 @@ namespace Mono.Cecil.Implem {
 		private OpCode m_opCode;
 		private object m_operand;
 
+		private Instruction m_previous;
+		private Instruction m_next;
+
 		public int Offset {
 			get { return m_offset; }
 		}
@@ -31,6 +34,16 @@ namespace Mono.Cecil.Implem {
 		public object Operand {
 			get { return m_operand; }
 			set { m_operand = value; }
+		}
+
+		public IInstruction Previous {
+			get { return m_previous; }
+			set { m_previous = value as Instruction; }
+		}
+
+		public IInstruction Next {
+			get { return m_next; }
+			set { m_next = value as Instruction; }
 		}
 
 		public Instruction (int offset, OpCode opCode, object operand) : this (offset, opCode)

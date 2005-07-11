@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System;
+
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Cil;
@@ -71,6 +73,21 @@ namespace Mono.Cecil.Implem {
 			m_instructions = new InstructionCollection (this);
 			m_exceptions = new ExceptionHandlerCollection (this);
 			m_variables = new VariableDefinitionCollection (this);
+		}
+
+		public IVariableDefinition DefineLocalVariable (ITypeReference type)
+		{
+			int index = m_variables.Count;
+			VariableDefinition lvar = new VariableDefinition (
+				string.Concat ("V_", index), index, m_method, type);
+			m_variables.Add (lvar);
+			return lvar;
+		}
+
+		public IVariableDefinition DefineLocalVariable (Type type)
+		{
+			return DefineLocalVariable (
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterType (type));
 		}
 
 		public IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type)

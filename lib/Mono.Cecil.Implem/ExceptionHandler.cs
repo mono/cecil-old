@@ -17,38 +17,44 @@ namespace Mono.Cecil.Implem {
 
 	internal sealed class ExceptionHandler : IExceptionHandler {
 
-		private int m_tryOffset;
-		private int m_tryLength;
-		private int m_handlerOffset;
-		private int m_handlerLength;
-		private int m_filterOffset;
+		private Instruction m_tryStart;
+		private Instruction m_tryEnd;
+		private Instruction m_filterStart;
+		private Instruction m_filterEnd;
+		private Instruction m_handlerStart;
+		private Instruction m_handlerEnd;
 
 		private ITypeReference m_catchType;
 		private ExceptionHandlerType m_type;
 
-		public int TryOffset {
-			get { return m_tryOffset; }
-			set { m_tryOffset = value; }
+		public IInstruction TryStart {
+			get { return m_tryStart; }
+			set { m_tryStart = value as Instruction; }
 		}
 
-		public int TryLength {
-			get { return m_tryLength; }
-			set { m_tryLength = value; }
+		public IInstruction TryEnd {
+			get { return m_tryEnd; }
+			set { m_tryEnd = value as Instruction; }
 		}
 
-		public int HandlerOffset {
-			get { return m_handlerOffset; }
-			set { m_handlerOffset = value; }
+		public IInstruction FilterStart {
+			get { return m_filterStart; }
+			set { m_filterStart = value as Instruction; }
 		}
 
-		public int HandlerLength {
-			get { return m_handlerLength; }
-			set { m_handlerLength = value; }
+		public IInstruction FilterEnd {
+			get { return m_filterEnd; }
+			set { m_filterEnd = value as Instruction; }
 		}
 
-		public int FilterOffset {
-			get { return m_filterOffset; }
-			set { m_filterOffset = value; }
+		public IInstruction HandlerStart {
+			get { return m_handlerStart; }
+			set { m_handlerStart = value as Instruction; }
+		}
+
+		public IInstruction HandlerEnd {
+			get { return m_handlerEnd; }
+			set { m_handlerEnd = value as Instruction; }
 		}
 
 		public ITypeReference CatchType {

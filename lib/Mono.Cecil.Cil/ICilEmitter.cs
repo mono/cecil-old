@@ -14,12 +14,10 @@ namespace Mono.Cecil.Cil {
 
 	using System;
 
-	public interface ICilEmitter {
+	/*public interface ICilEmitter {
 
 		IVariableDefinition DefineLocal (string name, ITypeReference type);
 		IVariableDefinition DefineLocal (string name, Type type);
-
-		ILabel DefineLabel ();
 
 		void Emit (OpCode opcode);
 
@@ -55,5 +53,5 @@ namespace Mono.Cecil.Cil {
 		void BeginFaultBlock ();
 		void BeginFinallyBlock ();
 		void EndExceptionBlock ();
-	}
+	}*/
 }

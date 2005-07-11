@@ -19,13 +19,17 @@ namespace Mono.Cecil.Cil {
 		int MaxStack { get; set; }
 		int CodeSize { get; set; }
 		bool InitLocals { get; set; }
+
 		IMethodDefinition Method { get; }
 		IInstructionCollection Instructions { get; }
 		IExceptionHandlerCollection ExceptionHandlers { get; }
 		IVariableDefinitionCollection Variables { get; }
 
-		//IVariableDefinition DefineLocalVariable (ITypeReference type);
-		//IVariableDefinition DefineLocalVariable (Type type);
+		IVariableDefinition DefineLocalVariable (ITypeReference type);
+		IVariableDefinition DefineLocalVariable (Type type);
+
 		IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type);
+
+		//IInstruction DefineInstruction (OpCode code);
 	}
 }
