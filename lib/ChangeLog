@@ -1,3 +1,7 @@
+2005-07-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources: regenerated
+
 2005-07-11  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethod.cs

@@ -177,7 +177,6 @@
 ./Mono.Cecil.Cil/IExceptionHandlerCollection.cs
 ./Mono.Cecil.Cil/IInstruction.cs
 ./Mono.Cecil.Cil/IInstructionCollection.cs
-./Mono.Cecil.Cil/ILabel.cs
 ./Mono.Cecil.Cil/IMethodBody.cs
 ./Mono.Cecil.Cil/IVariable.cs
 ./Mono.Cecil.Cil/IVariableDefinitionCollection.cs
@@ -288,3 +287,4 @@
 ./Mono.Cecil.Signatures/ValueType.cs
 ./Mono.Xml/MiniParser.cs
 ./Mono.Xml/SecurityParser.cs
+./Mono.Xml/SmallXmlParser.cs
