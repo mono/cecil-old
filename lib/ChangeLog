@@ -1,5 +1,10 @@
 2005-07-13  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/VariableDefinition.cs:
+		set the index field
+
+2005-07-13  Jb Evain  <jbevain@gmail.com>
+
 	* Mono.Cecil.dll.sources: regenerated
 	* Mono.Cecil.Signatures/SignatureReader.cs:
 		Fix compilation warnings

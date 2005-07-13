@@ -44,6 +44,7 @@ namespace Mono.Cecil.Implem {
 		public VariableDefinition (string name, int index, MethodDefinition method, ITypeReference variable)
 		{
 			m_name = name;
+			m_index = index;
 			m_method = method;
 			m_variable = variable;
 		}
