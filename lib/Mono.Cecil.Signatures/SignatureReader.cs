@@ -176,10 +176,10 @@ namespace Mono.Cecil.Signatures {
 			methodDef.CallingConvention = m_blobData [start];
 			methodDef.HasThis = (methodDef.CallingConvention & 0x20) != 0;
 			methodDef.ExplicitThis = (methodDef.CallingConvention & 0x40) != 0;
-			if ((methodDef.CallingConvention & 0x0) != 0)
-				methodDef.MethCallConv |= MethodCallingConvention.Default;
 			if ((methodDef.CallingConvention & 0x5) != 0)
 				methodDef.MethCallConv |= MethodCallingConvention.VarArg;
+			else
+				methodDef.MethCallConv |= MethodCallingConvention.Default;
 			methodDef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
 			methodDef.RetType = this.ReadRetType (m_blobData, start, out start);
 			methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start);
@@ -192,18 +192,18 @@ namespace Mono.Cecil.Signatures {
 			methodRef.CallingConvention = m_blobData [start];
 			methodRef.HasThis = (methodRef.CallingConvention & 0x20) != 0;
 			methodRef.ExplicitThis = (methodRef.CallingConvention & 0x40) != 0;
-			if ((methodRef.CallingConvention & 0x0) != 0)
-				methodRef.MethCallConv |= MethodCallingConvention.Default;
 			if ((methodRef.CallingConvention & 0x1) != 0)
 				methodRef.MethCallConv |= MethodCallingConvention.C;
-			if ((methodRef.CallingConvention & 0x2) != 0)
+			else if ((methodRef.CallingConvention & 0x2) != 0)
 				methodRef.MethCallConv |= MethodCallingConvention.StdCall;
-			if ((methodRef.CallingConvention & 0x3) != 0)
+			else if ((methodRef.CallingConvention & 0x3) != 0)
 				methodRef.MethCallConv |= MethodCallingConvention.ThisCall;
-			if ((methodRef.CallingConvention & 0x4) != 0)
+			else if ((methodRef.CallingConvention & 0x4) != 0)
 				methodRef.MethCallConv |= MethodCallingConvention.FastCall;
-			if ((methodRef.CallingConvention & 0x5) != 0)
+			else if ((methodRef.CallingConvention & 0x5) != 0)
 				methodRef.MethCallConv |= MethodCallingConvention.VarArg;
+			else
+				methodRef.MethCallConv |= MethodCallingConvention.Default;
 			methodRef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
 			methodRef.RetType = this.ReadRetType (m_blobData, start, out start);
 			int sentpos;

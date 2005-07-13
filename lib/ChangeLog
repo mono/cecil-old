@@ -1,6 +1,14 @@
 2005-07-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.dll.sources: regenerated
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix compilation warnings
+	* Mono.Cecil/IArrayType.cs
+	  Mono.Cecil.Implem/ArrayType.cs:
+	  	Add Rank helper property
+	* Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs:
+	  	Add Constructors helper property
 
 2005-07-11  Jb Evain  <jbevain@gmail.com>
 

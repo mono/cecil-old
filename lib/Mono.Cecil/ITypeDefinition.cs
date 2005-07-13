@@ -35,6 +35,8 @@ namespace Mono.Cecil {
 
 		IMethodDefinitionCollection Methods { get; }
 		IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
+
+		IMethodDefinitionCollection Constructors { get; }
 		IMethodDefinition DefineConstructor ();
 		IMethodDefinition DefineConstructor (bool isstatic);
 

@@ -32,6 +32,10 @@ namespace Mono.Cecil.Implem {
 			get { return m_dimensions; }
 		}
 
+		public int Rank {
+			get { return m_dimensions.Count; }
+		}
+
 		public override string Name {
 			get { return m_elementsType.Name; }
 			set { m_elementsType.Name = value; }

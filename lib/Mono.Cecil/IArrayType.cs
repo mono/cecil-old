@@ -15,6 +15,7 @@ namespace Mono.Cecil {
 	public interface IArrayType : ITypeReference {
 		IArrayDimensionCollection Dimensions { get; }
 		ITypeReference ElementType { get; set; }
+		int Rank { get; }
 
 		IArrayDimension DefineDimension (int lowerBound, int upperBound);
 		IArrayDimension DefineDimension ();

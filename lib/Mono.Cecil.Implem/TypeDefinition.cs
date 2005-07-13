@@ -18,6 +18,9 @@ namespace Mono.Cecil.Implem {
 
 	internal sealed class TypeDefinition : TypeReference, ITypeDefinition, IClassLayoutInfo {
 
+		private const string m_cctor = ".cctor";
+		private const string m_ctor = ".ctor";
+
 		private TypeAttributes m_attributes;
 		private ITypeReference m_baseType;
 
@@ -29,6 +32,7 @@ namespace Mono.Cecil.Implem {
 		private InterfaceCollection m_interfaces;
 		private NestedTypeCollection m_nestedTypes;
 		private MethodDefinitionCollection m_methods;
+		private MethodDefinitionCollection m_ctors;
 		private FieldDefinitionCollection m_fields;
 		private EventDefinitionCollection m_events;
 		private PropertyDefinitionCollection m_properties;
@@ -97,6 +101,19 @@ namespace Mono.Cecil.Implem {
 				if (m_methods == null)
 					m_methods = new MethodDefinitionCollection (this, m_module.Controller);
 				return m_methods;
+			}
+		}
+
+		public IMethodDefinitionCollection Constructors {
+			get {
+				if (m_ctors  == null) {
+					m_ctors = new MethodDefinitionCollection (this);
+					foreach (MethodDefinition meth in this.Methods)
+						if ((meth.Name == m_cctor || meth.Name == m_ctor) && meth.IsSpecialName)
+							m_ctors.Add (meth);
+				}
+
+				return m_ctors;
 			}
 		}
 
@@ -206,13 +223,16 @@ namespace Mono.Cecil.Implem {
 			string name = null;
 			MethodAttributes attrs = MethodAttributes.SpecialName;
 			if (isstatic) {
-				name = ".cctor";
+				name = m_cctor;
 				attrs |= MethodAttributes.Static;
 			} else
-				name = ".ctor";
+				name = m_ctor;
+
 			MethodDefinition meth = new MethodDefinition (name, this, attrs);
 
 			(this.Methods as MethodDefinitionCollection).Add (meth);
+			(this.Constructors as MethodDefinitionCollection).Add (meth);
+
 			return meth;
 		}
 
