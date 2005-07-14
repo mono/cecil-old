@@ -25,7 +25,11 @@ namespace Mono.Cecil.Binary {
 
 		private SectionCollection m_sections;
 
+		private ImportAddressTable m_importAddressTable;
 		private CLIHeader m_cliHeader;
+		private ImportTable m_importTable;
+		private ImportLookupTable m_importLookupTable;
+		private HintNameTable m_hintNameTable;
 
 		private MetadataRoot m_mdRoot;
 
@@ -47,12 +51,28 @@ namespace Mono.Cecil.Binary {
 			get { return m_sections; }
 		}
 
+		public ImportAddressTable ImportAddressTable {
+			get { return m_importAddressTable; }
+		}
+
 		public CLIHeader CLIHeader {
 			get { return m_cliHeader; }
 		}
 
 		public MetadataRoot MetadataRoot {
 			get { return m_mdRoot; }
+		}
+
+		public ImportTable ImportTable {
+			get { return m_importTable; }
+		}
+
+		public ImportLookupTable ImportLookupTable {
+			get { return m_importLookupTable; }
+		}
+
+		public HintNameTable HintNameTable {
+			get { return m_hintNameTable; }
 		}
 
 		public FileInfo FileInformation {
@@ -65,7 +85,11 @@ namespace Mono.Cecil.Binary {
 			m_peFileHeader = new PEFileHeader ();
 			m_peOptionalHeader = new PEOptionalHeader ();
 			m_sections = new SectionCollection ();
+			m_importAddressTable = new ImportAddressTable ();
 			m_cliHeader = new CLIHeader ();
+			m_importTable = new ImportTable ();
+			m_importLookupTable = new ImportLookupTable ();
+			m_hintNameTable = new HintNameTable ();
 			m_mdRoot = new MetadataRoot (this);
 		}
 
@@ -95,7 +119,12 @@ namespace Mono.Cecil.Binary {
 
 			m_sections.Accept (visitor);
 
+			m_importAddressTable.Accept (visitor);
 			m_cliHeader.Accept (visitor);
+
+			m_importTable.Accept (visitor);
+			m_importLookupTable.Accept (visitor);
+			m_hintNameTable.Accept (visitor);
 
 			visitor.Terminate (this);
 		}

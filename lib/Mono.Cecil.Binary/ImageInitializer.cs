@@ -86,10 +86,26 @@ namespace Mono.Cecil.Binary {
 			sect.SetDefaultValues ();
 		}
 
+		public void Visit (ImportAddressTable iat)
+		{
+		}
+
 		public void Visit (CLIHeader header)
 		{
 			header.SetDefaultValues ();
 			m_image.MetadataRoot.Accept (m_mdinit);
+		}
+
+		public void Visit (ImportTable it)
+		{
+		}
+
+		public void Visit (ImportLookupTable ilt)
+		{
+		}
+
+		public void Visit (HintNameTable hnt)
+		{
 		}
 
 		public void Terminate (Image img)

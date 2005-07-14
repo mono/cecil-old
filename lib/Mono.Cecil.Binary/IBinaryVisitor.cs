@@ -22,7 +22,11 @@ namespace Mono.Cecil.Binary {
 		void Visit (PEOptionalHeader.DataDirectoriesHeader header);
 		void Visit (SectionCollection coll);
 		void Visit (Section section);
+		void Visit (ImportAddressTable iat);
 		void Visit (CLIHeader header);
+		void Visit (ImportTable it);
+		void Visit (ImportLookupTable ilt);
+		void Visit (HintNameTable hnt);
 
 		void Terminate (Image img);
 	}

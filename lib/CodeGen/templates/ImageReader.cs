@@ -17,6 +17,7 @@ namespace Mono.Cecil.Binary {
 
 	using System;
 	using System.IO;
+	using System.Text;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
@@ -93,6 +94,14 @@ namespace Mono.Cecil.Binary {
 			m_binaryReader.BaseStream.Position += 8 - read - 1;
 <% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
 		}
+
+		public void Visit (ImportAddressTable iat)
+		{
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
+
+			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
+		}
 <% cur_header = $headers["CLIHeader"] %>
 		public void Visit (CLIHeader header)
 		{
@@ -113,6 +122,40 @@ namespace Mono.Cecil.Binary {
 				m_image.CLIHeader.Metadata.VirtualAddress);
 			MetadataReader mrv = new MetadataReader (this);
 			m_image.MetadataRoot.Accept (mrv);
+		}
+
+		public void Visit (ImportTable it)
+		{
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
+
+			it.ImportAddressTable = new RVA (m_binaryReader.ReadUInt32 ());
+			it.DateTimeStamp = m_binaryReader.ReadUInt32 ();
+			it.ForwardChain = m_binaryReader.ReadUInt32 ();
+			it.Name = new RVA (m_binaryReader.ReadUInt32 ());
+			it.ImportAddressTable = new RVA (m_binaryReader.ReadUInt32 ());
+		}
+
+		public void Visit (ImportLookupTable ilt)
+		{
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.ImportTable.ImportLookupTable.Value);
+
+			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
+		}
+
+		public void Visit (HintNameTable hnt)
+		{
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.ImportAddressTable.HintNameTableRVA.Value);
+
+			hnt.Hint = m_binaryReader.ReadUInt16 ();
+			hnt.RuntimeMain = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
+			m_binaryReader.ReadByte ();
+			hnt.RuntimeLibrary = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
+			m_binaryReader.ReadByte ();
+
+			// ep + rva
 		}
 
 		public void Terminate (Image img)

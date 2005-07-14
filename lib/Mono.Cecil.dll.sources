@@ -93,6 +93,7 @@
 ./Mono.Cecil.Binary/ImageCharacteristics.cs
 ./Mono.Cecil.Binary/ImageInitializer.cs
 ./Mono.Cecil.Binary/ImageReader.cs
+./Mono.Cecil.Binary/Imports.cs
 ./Mono.Cecil.Binary/PEFileHeader.cs
 ./Mono.Cecil.Binary/PEOptionalHeader.cs
 ./Mono.Cecil.Binary/RuntimeImage.cs

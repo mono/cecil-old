@@ -1,5 +1,15 @@
 2005-07-14  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Binary/IBinaryVisitor.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/Imports.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Read Imports Tables
+
+2005-07-14  Jb Evain  <jbevain@gmail.com>
+
 	* CodeGen/cecil-gen.rb:
 		make codegen works on ruby 1.8.2
 	* CodeGen/templates/*.cs
