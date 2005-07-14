@@ -47,7 +47,7 @@ namespace Mono.Cecil.Metadata {
 			Type tt = typeof (<%=table.table_name%>);
 			if (m_heap.HasTable (tt))
 				return m_heap [tt] as <%=table.table_name%>;
-			
+
 			<%=table.table_name%> table = new <%=table.table_name%> ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
 			return table;

@@ -52,7 +52,7 @@ namespace Mono.Cecil.Implem {
 			m_container = container;
 			m_items = new ArrayList ();
 		}
-		
+
 		public void Add (<%=$cur_coll.type%> value)
 		{
 			m_items.Add (value);
@@ -67,7 +67,7 @@ namespace Mono.Cecil.Implem {
 		{
 			return m_items.Contains (value);
 		}
-		
+
 		public int IndexOf (<%=$cur_coll.type%> value)
 		{
 			return m_items.IndexOf (value);

@@ -51,6 +51,10 @@ doc.root.each_element("/cecil/metadata/tables//table") { |node|
 	$tables.push(table)
 }
 
+$tables.sort!() { |a, b|
+	a.name <=> b.name
+}
+
 doc.root.each_element("/cecil/metadata/codedindexes//codedindex") { |node|
 	ci = Cecil::CodedIndex.new(node.attribute("name").value,
 		node.attribute("size").value,
@@ -67,6 +71,16 @@ doc.root.each_element("/cecil/metadata/opcodes//opcode") { |node|
 		node.attribute("opcodetype").value, node.attribute("operandtype").value,
 		node.attribute("stackbehaviourpop").value, node.attribute("stackbehaviourpush").value,
 		node.attribute("requires").nil? ? nil : node.attribute("requires").value))
+}
+
+$ops.sort!() { |a, b|
+	if a.op1 == b.op1
+		eval(a.op2) <=> eval(b.op2)
+	elsif a.op1 == "0xff"
+		-1
+	else
+		1	
+	end
 }
 
 doc.root.each_element("/cecil/collections//collection") { |node|

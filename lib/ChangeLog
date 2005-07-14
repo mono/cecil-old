@@ -1,3 +1,11 @@
+2005-07-14  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen.rb:
+		make codegen works on ruby 1.8.2
+	* CodeGen/templates/*.cs
+	  Mono.Cecil.Metadata/*.cs:
+	  	style
+
 2005-07-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/VariableDefinition.cs:

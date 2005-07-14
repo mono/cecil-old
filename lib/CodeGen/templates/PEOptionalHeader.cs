@@ -40,7 +40,7 @@ namespace Mono.Cecil.Binary {
 			NTSpecificFields.Accept (visitor);
 			DataDirectories.Accept (visitor);
 		}
-		<% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
+<% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
 		public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
@@ -57,7 +57,7 @@ namespace Mono.Cecil.Binary {
 				visitor.Visit (this);
 			}
 		}
-		<% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
+<% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
 		public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
@@ -74,7 +74,7 @@ namespace Mono.Cecil.Binary {
 				visitor.Visit (this);
 			}
 		}
-		<% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
+<% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
 		public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
 <% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
