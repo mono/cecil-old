@@ -1,3 +1,12 @@
+2005-07-21  Todd Berman  <tberman@off.net>
+
+	* configure: Add a small stub configure (stolen from mcs) to set the
+	prefix.
+	* mono-cecil.pc.in: Add a mono-cecil.pc.in to allow for installation
+	according to the new "Libraries with Unstable API" Wiki documentation.
+	* Makefile: Add an install an a mono-cecil.pc target to allow for
+	installation and creation of the pc file.
+
 2005-07-14  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/ImageReader.cs
