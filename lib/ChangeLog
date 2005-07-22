@@ -1,3 +1,7 @@
+2005-07-22  Raja R Harinath  <rharinath@novell.com>
+
+	* Makefile (MCS): Allow compiler to be overriden.
+
 2005-07-21  Todd Berman  <tberman@off.net>
 
 	* configure: Add a small stub configure (stolen from mcs) to set the
