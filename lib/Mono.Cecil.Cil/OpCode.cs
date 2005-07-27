@@ -70,6 +70,12 @@ namespace Mono.Cecil.Cil {
 			m_operandType = operandType;
 			m_stackBehaviourPop = pop;
 			m_stackBehaviourPush = push;
+
+			OpCodes.Cache.Instance.Dictionary [m_name] = this;
+			if (size == 1)
+				OpCodes.Cache.Instance.OneByteOpCode [m_op2] = this;
+			else
+				OpCodes.Cache.Instance.TwoBytesOpCode [m_op2] = this;
 		}
 
 		public override int GetHashCode ()

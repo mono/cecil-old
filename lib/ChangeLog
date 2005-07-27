@@ -1,3 +1,10 @@
+2005-07-27  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/OpCodes.cs
+	  Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/OpCode.cs:
+		Changes to reduce the size of the cache ctor
+
 2005-07-22  Raja R Harinath  <rharinath@novell.com>
 
 	* Makefile (MCS): Allow compiler to be overriden.
