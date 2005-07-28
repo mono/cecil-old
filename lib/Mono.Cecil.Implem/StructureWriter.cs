@@ -12,16 +12,20 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System.IO;
+
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
 	internal sealed class StructureWriter : IReflectionStructureVisitor {
 
 		private AssemblyDefinition m_asm;
+		private BinaryWriter m_binaryWriter;
 
-		public StructureWriter (AssemblyDefinition asm)
+		public StructureWriter (AssemblyDefinition asm, BinaryWriter writer)
 		{
 			m_asm = asm;
+			m_binaryWriter = writer;
 		}
 
 		public void Visit (IAssemblyDefinition asm)

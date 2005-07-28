@@ -1,5 +1,9 @@
 2005-07-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+		Preliminary work on assembly writing
+
 	* Mono.Cecil/IMetadataTokenProvider.cs
 	  Mono.Cecil/IMember.cs
 	  Mono.Cecil/IParameter.cs:

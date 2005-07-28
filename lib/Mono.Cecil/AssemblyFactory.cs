@@ -13,6 +13,8 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.IO;
+	using System.Reflection;
 
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Implem;
@@ -60,9 +62,34 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
-		public static void SaveAssembly (string file)
+		public static void SaveAssembly (IAssemblyDefinition asm, string file)
 		{
-			throw new NotImplementedException ();
+			using (FileStream fs = new FileStream (
+					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
+				using (BinaryWriter bw = new BinaryWriter (fs)) {
+
+					StructureWriter sw = new StructureWriter (asm as AssemblyDefinition, bw);
+					asm.Accept (sw);
+				}
+			}
+		}
+
+		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AppDomain domain)
+		{
+			using (MemoryStream ms = new MemoryStream ()) {
+				using (BinaryWriter bw = new BinaryWriter (ms)) {
+
+					StructureWriter sw = new StructureWriter (asm as AssemblyDefinition, bw);
+					asm.Accept (sw);
+
+					return domain.Load (ms.ToArray ());
+				}
+			}
+		}
+
+		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm)
+		{
+			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
 		}
 
 		public static Image GetUnderlyingImage (IModuleDefinition module)
