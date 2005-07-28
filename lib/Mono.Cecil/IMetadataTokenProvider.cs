@@ -12,11 +12,10 @@
 
 namespace Mono.Cecil {
 
-	public interface IMemberReference : IMetadataTokenProvider {
+	using Mono.Cecil.Metadata;
 
-		string Name { get; set; }
-		ITypeReference DeclaringType { get; }
+	public interface IMetadataTokenProvider {
+
+		MetadataToken MetadataToken { get; }
 	}
-
-	public interface IMemberDefinition : IMemberReference {}
 }

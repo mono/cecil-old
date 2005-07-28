@@ -16,6 +16,7 @@ namespace Mono.Cecil.Implem {
 	using System.Reflection;
 
 	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
 	internal class TypeReference : ITypeReference {
 
@@ -23,6 +24,7 @@ namespace Mono.Cecil.Implem {
 		private string m_namespace;
 		private ITypeReference m_decType;
 		private IMetadataScope m_scope;
+		private MetadataToken m_token;
 
 		private CustomAttributeCollection m_customAttrs;
 
@@ -45,6 +47,11 @@ namespace Mono.Cecil.Implem {
 
 		public ModuleDefinition Module {
 			get { return m_module; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public ICustomAttributeCollection CustomAttributes {

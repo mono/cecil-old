@@ -254,6 +254,7 @@ namespace Mono.Cecil.Implem {
 				EventRow erow = evtTable [i - 1];
 				EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
 															GetTypeDefOrRef (erow.EventType), erow.EventFlags);
+				edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, i - 1);
 				evts [edef.Name] = edef;
 				m_events [i - 1] = edef;
 			}
@@ -319,6 +320,7 @@ namespace Mono.Cecil.Implem {
 				PropertySig psig = m_sigReader.GetPropSig (prow.Type);
 				PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
 																  dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
+				pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, i - 1);
 				props [pdef.Name] = pdef;
 				m_properties [i - 1] = pdef;
 			}

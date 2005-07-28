@@ -1,3 +1,24 @@
+2005-07-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMetadataTokenProvider.cs
+	  Mono.Cecil/IMember.cs
+	  Mono.Cecil/IParameter.cs:
+		Add a MetadataToken property on searchable items
+	* Mono.Cecil.Metadata/MetadataToken.cs:
+		Add a factory method to create token from row number
+	* Mono.Cecil.Implem/TypeReference.cs
+	  Mono.Cecil.Implem/MemberReference.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs:
+		Implement the token property
+	* Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/LazyReflectionReader.cs:
+		Set the token property on reading
+	* Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs:
+		Add methods to lookup items from their tokens 
+
 2005-07-27  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/OpCodes.cs

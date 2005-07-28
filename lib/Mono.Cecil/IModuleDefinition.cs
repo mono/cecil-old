@@ -14,6 +14,8 @@ namespace Mono.Cecil {
 
 	using System;
 
+	using Mono.Cecil.Metadata;
+
 	public interface IModuleDefinition : ICustomAttributeProvider, IReflectionStructureVisitable {
 
 		string Name { get; set; }
@@ -37,5 +39,8 @@ namespace Mono.Cecil {
 		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);
 
 		IExternTypeCollection ExternTypes { get; }
+
+		IMetadataTokenProvider LookupByToken (MetadataToken token);
+		IMetadataTokenProvider LookupByToken (TokenType table, int rid);
 	}
 }

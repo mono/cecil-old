@@ -224,6 +224,16 @@ namespace Mono.Cecil.Implem {
 				m_controller.Helper.RegisterConstructor(ctor), data);
 		}
 
+		public IMetadataTokenProvider LookupByToken (MetadataToken token)
+		{
+			return m_controller.Reader.LookupByToken (token);
+		}
+
+		public IMetadataTokenProvider LookupByToken (TokenType table, int rid)
+		{
+			return LookupByToken (new MetadataToken (table, (uint) rid));
+		}
+
 		public void Accept (IReflectionStructureVisitor visitor)
 		{
 			visitor.Visit (this);

@@ -15,6 +15,7 @@ namespace Mono.Cecil.Implem {
 	using System.Reflection;
 
 	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
 	internal sealed class ParameterDefinition : IParameterDefinition {
 
@@ -22,6 +23,7 @@ namespace Mono.Cecil.Implem {
 		private int m_sequence;
 		private ParamAttributes m_attributes;
 		private ITypeReference m_paramType;
+		private MetadataToken m_token;
 
 		private bool m_constLoaded;
 		private object m_const;
@@ -50,6 +52,11 @@ namespace Mono.Cecil.Implem {
 		public ITypeReference ParameterType {
 			get { return m_paramType; }
 			set { m_paramType = value; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public bool ConstantLoaded {

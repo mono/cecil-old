@@ -35,7 +35,7 @@ namespace Mono.Cecil.Implem {
 
 		protected TypeDefinition [] m_typeDefs;
 		protected TypeReference [] m_typeRefs;
-		protected ITypeReference [] m_typeSpecs;
+		protected TypeReference [] m_typeSpecs;
 		protected MethodDefinition [] m_meths;
 		protected FieldDefinition [] m_fields;
 		protected EventDefinition [] m_events;
@@ -87,7 +87,7 @@ namespace Mono.Cecil.Implem {
 			return m_typeRefs [rid - 1];
 		}
 
-		public ITypeReference GetTypeSpecAt (int rid)
+		public TypeReference GetTypeSpecAt (int rid)
 		{
 			return m_typeSpecs [rid - 1];
 		}
@@ -119,7 +119,7 @@ namespace Mono.Cecil.Implem {
 			return index == -1 ? 0 : index + 1;
 		}
 
-		public ITypeReference GetTypeDefOrRef (MetadataToken token)
+		public TypeReference GetTypeDefOrRef (MetadataToken token)
 		{
 			if (token.RID == 0)
 				return null;
@@ -136,12 +136,12 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public ITypeReference SearchCoreType (string fullName)
+		public TypeReference SearchCoreType (string fullName)
 		{
 			if (m_isCorlib)
-				return m_module.Types [fullName];
+				return m_module.Types [fullName] as TypeReference;
 
-			ITypeReference coreType =  m_module.TypeReferences [fullName];
+			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
 			if (coreType == null) {
 				string [] parts = fullName.Split ('.');
 				if (parts.Length != 2)
@@ -150,6 +150,32 @@ namespace Mono.Cecil.Implem {
 				(m_module.TypeReferences as TypeReferenceCollection) [coreType.FullName] = coreType;
 			}
 			return coreType;
+		}
+
+		public IMetadataTokenProvider LookupByToken (MetadataToken token)
+		{
+			switch (token.TokenType) {
+			case TokenType.TypeDef :
+				return GetTypeDefAt ((int) token.RID);
+			case TokenType.TypeRef :
+				return GetTypeRefAt ((int) token.RID);
+			case TokenType.TypeSpec :
+				return GetTypeSpecAt ((int) token.RID);
+			case TokenType.Method :
+				return GetMethodDefAt ((int) token.RID);
+			case TokenType.Field :
+				return GetFieldDefAt ((int) token.RID);
+			case TokenType.Event :
+				return m_events [token.RID - 1];
+			case TokenType.Property :
+				return m_properties [token.RID - 1];
+			case TokenType.Param :
+				return m_parameters [token.RID - 1];
+			case TokenType.MemberRef :
+				return GetMemberRefAt ((int) token.RID);
+			default :
+				throw new NotSupportedException ("Lookup is not allowed on this kind of token");
+			}
 		}
 
 		public CustomAttribute GetCustomAttribute (IMethodReference ctor, byte [] data)
@@ -175,6 +201,7 @@ namespace Mono.Cecil.Implem {
 					m_root.Streams.StringsHeap [type.Name],
 					m_root.Streams.StringsHeap [type.Namespace],
 					type.Flags, def);
+				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
 			}
@@ -220,6 +247,7 @@ namespace Mono.Cecil.Implem {
 						m_root.Streams.StringsHeap [type.Name],
 						m_root.Streams.StringsHeap [type.Namespace],
 						m_module, scope);
+					t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
 
 					if (parent != null)
 						t.DeclaringType = parent;
@@ -268,11 +296,12 @@ namespace Mono.Cecil.Implem {
 				return;
 
 			TypeSpecTable tsTable = m_tHeap [typeof (TypeSpecTable)] as TypeSpecTable;
-			m_typeSpecs = new ITypeReference [tsTable.Rows.Count];
+			m_typeSpecs = new TypeReference [tsTable.Rows.Count];
 			for (int i = 0; i < tsTable.Rows.Count; i++) {
 				TypeSpecRow tsRow = tsTable [i];
 				TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
-				ITypeReference tspec = GetTypeRefFromSig (ts.Type);
+				TypeReference tspec = GetTypeRefFromSig (ts.Type);
+				tspec.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeSpec, i);
 				m_typeSpecs [i] = tspec;
 			}
 		}
@@ -303,6 +332,7 @@ namespace Mono.Cecil.Implem {
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
 					FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
 																dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
+					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
 						fdef.FieldType = GetModifierType (fsig.CustomMods, fdef.FieldType);
@@ -350,6 +380,8 @@ namespace Mono.Cecil.Implem {
 					MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
 																  methRow.RVA, methRow.Flags, methRow.ImplFlags,
 																  msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
+					mdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Method, j - 1);
+
 					int prms;
 					if (j == methTable.Rows.Count)
 						prms = m_parameters.Length + 1;
@@ -369,6 +401,7 @@ namespace Mono.Cecil.Implem {
 						Param psig = msig.Parameters [l];
 						ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name],
 																			 prow.Sequence, prow.Flags, psig);
+						pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Param, k - 1);
 						pdef.Method = mdef;
 						(mdef.Parameters as ParameterDefinitionCollection).Add (pdef);
 						m_parameters [k - 1] = pdef; l++;
@@ -441,6 +474,7 @@ namespace Mono.Cecil.Implem {
 					break; // implement that, or not
 				}
 
+				member.MetadataToken = MetadataToken.FromMetadataRow (TokenType.MemberRef, i);
 				m_memberRefs [i] = member;
 			}
 		}
@@ -769,7 +803,7 @@ namespace Mono.Cecil.Implem {
 			return new MethodReturnType (retType);
 		}
 
-		public ITypeReference GetTypeRefFromSig (SigType t)
+		public TypeReference GetTypeRefFromSig (SigType t)
 		{
 			switch (t.ElementType) {
 			case ElementType.Class :

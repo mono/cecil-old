@@ -13,11 +13,13 @@
 namespace Mono.Cecil.Implem {
 
 	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
 	internal abstract class MemberReference : IMemberReference {
 
 		private string m_name;
 		private ITypeReference m_decType;
+		private MetadataToken m_token;
 
 		public string Name {
 			get { return m_name; }
@@ -26,6 +28,11 @@ namespace Mono.Cecil.Implem {
 
 		public ITypeReference DeclaringType {
 			get { return m_decType; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public MemberReference (string name, ITypeReference declaringType)
