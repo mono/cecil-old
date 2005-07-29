@@ -60,13 +60,14 @@ namespace Mono.Cecil.Metadata {
 			return table;
 		}
 
-<% } %>
-		public void Visit (TableCollection coll)
+<% } %>		public void Visit (TableCollection coll)
 		{
+			// sort table by tid
 		}
 
 <% $tables.each { |table| %>		public void Visit (<%=table.table_name%> table)
 		{
+			m_binaryWriter.Write (table.Rows.Count);
 		}
 
 <% } %>		public void Terminate(TableCollection coll)
