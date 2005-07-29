@@ -1,3 +1,15 @@
+2005-07-29  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen-types.rb
+	  CodeGen/templates/MetadataTableWriter.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Preliminary work on assembly writing
+
 2005-07-28  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFactory.cs

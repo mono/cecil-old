@@ -12,16 +12,25 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System.IO;
+
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 
 	internal sealed class ReflectionWriter : IReflectionVisitor {
 
+		private StructureWriter m_structureWriter;
 		private ModuleDefinition m_mod;
 		private CodeWriter m_codeWriter;
 		private MetadataWriter m_mdWriter;
 		private MetadataTableWriter m_tableWriter;
+		private MetadataRowWriter m_rowWriter;
+
+		public StructureWriter StructureWriter {
+			get { return m_structureWriter; }
+			set { m_structureWriter = value; }
+		}
 
 		public CodeWriter CodeWriter {
 			get { return m_codeWriter; }
@@ -31,12 +40,25 @@ namespace Mono.Cecil.Implem {
 		{
 			m_mod = mod;
 			m_codeWriter = new CodeWriter ();
-			m_mdWriter = new MetadataWriter (m_mod.Image.MetadataRoot);
+			m_mdWriter = new MetadataWriter (this, m_mod.Image.MetadataRoot);
 			m_tableWriter = m_mdWriter.GetTableVisitor ();
+			m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
+		}
+
+		public BinaryWriter GetWriter ()
+		{
+			if (m_structureWriter != null)
+				return m_structureWriter.GetWriter ();
+
+			return null;
 		}
 
 		public void Visit (ITypeDefinitionCollection types)
 		{
+			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
+			foreach (TypeDefinition type in types) {
+				//TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow ()
+			}
 		}
 
 		public void Visit (ITypeDefinition type)

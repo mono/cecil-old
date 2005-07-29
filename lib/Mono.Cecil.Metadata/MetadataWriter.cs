@@ -18,21 +18,29 @@ namespace Mono.Cecil.Metadata {
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
+	using Mono.Cecil.Implem;
 
 	internal sealed class MetadataWriter : IMetadataVisitor {
 
 		private MetadataRoot m_root;
 		private MetadataTableWriter m_tableWriter;
+		private BinaryWriter m_binaryWriter;
 
-		public MetadataWriter (MetadataRoot root)
+		public MetadataWriter (ReflectionWriter reflectionWriter, MetadataRoot root)
 		{
 			m_root = root;
 			m_tableWriter = new MetadataTableWriter (this);
+			m_binaryWriter = reflectionWriter.GetWriter ();
 		}
 
 		public MetadataRoot GetMetadataRoot ()
 		{
 			return m_root;
+		}
+
+		public BinaryWriter GetWriter ()
+		{
+			return m_binaryWriter;
 		}
 
 		public MetadataTableWriter GetTableVisitor ()

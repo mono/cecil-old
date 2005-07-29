@@ -16,6 +16,7 @@
 namespace Mono.Cecil.Metadata {
 
 	using System;
+	using IO = System.IO;
 	using System.Collections;
 
 	using Mono.Cecil.Binary;
@@ -24,11 +25,33 @@ namespace Mono.Cecil.Metadata {
 
 		private MetadataTableWriter m_mtwv;
 		private MetadataRoot m_metadataRoot;
+		private IO.BinaryWriter m_binaryWriter;
 
 		public MetadataRowWriter (MetadataTableWriter mtwv)
 		{
 			m_mtwv = mtwv;
 			m_metadataRoot = mtwv.GetMetadataRoot ();
+			m_binaryWriter = mtwv.GetWriter ();
+		}
+
+		public void WriteBlobPointer (uint pointer)
+		{
+		}
+
+		public void WriteStringPointer (uint pointer)
+		{
+		}
+
+		public void WriteGuidPointer (uint pointer)
+		{
+		}
+
+		public void WriteTablePointer (uint pointer, Type table)
+		{
+		}
+
+		public void WriteMetadataToken (MetadataToken token, CodedIndex ci)
+		{
 		}
 
 <% $tables.each { |table|
@@ -52,7 +75,21 @@ namespace Mono.Cecil.Metadata {
 
 <% $tables.each { |table| %>		public void Visit (<%=table.row_name%> row)
 		{
-		}
+<% table.columns.each { |col|
+ if (col.target.nil?)
+%>			<%=col.write_binary("row", "m_binaryWriter")%>;
+<% elsif (col.target == "BlobHeap")
+%>			WriteBlobPointer (row.<%=col.property_name%>);
+<% elsif (col.target == "StringsHeap")
+%>			WriteStringPointer (row.<%=col.property_name%>);
+<% elsif (col.target == "GuidHeap")
+%>			WriteGuidPointer (row.<%=col.property_name%>);
+<% elsif (col.type == "MetadataToken")
+%>			WriteMetadataToken (row.<%=col.property_name%>, CodedIndex.<%=col.target%>);
+<% else
+%>			WriteTablePointer (row.<%=col.property_name%>, typeof (<%=col.target%>Table));
+<% end
+}%>		}
 
 <% } %>		public void Terminate (RowCollection coll)
 		{

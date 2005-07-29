@@ -42,12 +42,18 @@ module Cecil
 		end
 
 		def write_binary(inst, writer)
+			pre = writer + ".Write ("
+			prp = inst + "." + @property_name
+			suf = ")"
 			return case @type
-				when "byte"
-				when "short"
-				when "uint"
-				when "int"
-					writer + ".Write (" + @property + "." + @property_name + ")"
+				when "byte", "ushort", "short", "uint", "int"
+					pre + prp + suf
+				when "RVA"
+					pre + prp + ".Value" + suf
+				when "DataDirectory"
+					pre + prp + ".VirtualAddress" + suf + "\n\t\t\t" + pre + prp + ".Size" + suf
+				else
+					pre + "(" + @objtype.underlying + ") " + prp + suf
 			end
 		end
 

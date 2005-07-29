@@ -28,6 +28,11 @@ namespace Mono.Cecil.Implem {
 			m_binaryWriter = writer;
 		}
 
+		public BinaryWriter GetWriter ()
+		{
+			return m_binaryWriter;
+		}
+
 		public void Visit (IAssemblyDefinition asm)
 		{
 			// TODO

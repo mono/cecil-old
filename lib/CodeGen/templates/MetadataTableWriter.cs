@@ -24,12 +24,14 @@ namespace Mono.Cecil.Metadata {
 		private MetadataRoot m_metadataRoot;
 		private TablesHeap m_heap;
 		private MetadataRowWriter m_mrrw;
+		private BinaryWriter m_binaryWriter;
 
 		public MetadataTableWriter (MetadataWriter mrv)
 		{
 			m_metadataRoot = mrv.GetMetadataRoot ();
 			m_heap = m_metadataRoot.Streams.TablesHeap;
 			m_mrrw = new MetadataRowWriter (this);
+			m_binaryWriter = mrv.GetWriter ();
 		}
 
 		public MetadataRoot GetMetadataRoot ()
@@ -40,6 +42,11 @@ namespace Mono.Cecil.Metadata {
 		public IMetadataRowVisitor GetRowVisitor ()
 		{
 			return m_mrrw;
+		}
+
+		public BinaryWriter GetWriter ()
+		{
+			return m_binaryWriter;
 		}
 
 <% $tables.each { |table| %>		public <%=table.table_name%> Get<%=table.table_name%> ()

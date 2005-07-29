@@ -31,7 +31,8 @@ namespace Mono.Cecil {
 			try {
 				ImageReader brv = new ImageReader (file);
 				StructureReader srv = new StructureReader (brv);
-				AssemblyDefinition asm = new AssemblyDefinition (new AssemblyNameDefinition (), srv, loadType);
+				AssemblyDefinition asm = new AssemblyDefinition (
+					new AssemblyNameDefinition (), srv, loadType);
 
 				asm.Accept (srv);
 				(asm.MainModule.Types as TypeDefinitionCollection).Load ();
