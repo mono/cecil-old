@@ -33,6 +33,7 @@
 ./Mono.Cecil/IMarshalSpec.cs
 ./Mono.Cecil/IMember.cs
 ./Mono.Cecil/IMetadataScope.cs
+./Mono.Cecil/IMetadataTokenProvider.cs
 ./Mono.Cecil/IMethod.cs
 ./Mono.Cecil/IMethodDefinitionCollection.cs
 ./Mono.Cecil/IMethodReturnType.cs
