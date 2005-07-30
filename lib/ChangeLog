@@ -1,3 +1,13 @@
+2005-07-30  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil-gen.rb
+	  CodeGen/cecil-gen-sources.rb:
+		make them executable
+	* CodeGen/cecil-gen-types: style
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Prelimimary work on assembly writing
+
 2005-07-29  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/cecil-gen-types.rb

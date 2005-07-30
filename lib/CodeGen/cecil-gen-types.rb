@@ -51,7 +51,7 @@ module Cecil
 				when "RVA"
 					pre + prp + ".Value" + suf
 				when "DataDirectory"
-					pre + prp + ".VirtualAddress" + suf + "\n\t\t\t" + pre + prp + ".Size" + suf
+					pre + prp + ".VirtualAddress" + suf + ";\n\t\t\t" + pre + prp + ".Size" + suf
 				else
 					pre + "(" + @objtype.underlying + ") " + prp + suf
 			end
