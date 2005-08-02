@@ -20,16 +20,7 @@ namespace Mono.Cecil.Signatures {
 
 		public TypeSpec (SigType type)
 		{
-			switch (type.ElementType) {
-			case ElementType.Ptr :
-			case ElementType.FnPtr :
-			case ElementType.Array :
-			case ElementType.SzArray :
-				Type = type;
-				return;
-			default :
-				throw new ReflectionException ("Non valid TypeSpec");
-			}
+			this.Type = type;
 		}
 	}
 }

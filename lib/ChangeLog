@@ -1,3 +1,10 @@
+2005-08-02  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/TypeSpec.cs:
+		Don't restrain the SigType
+	* Mono.Cecil.Implem/AggressiveReflectionReader.cs:
+		Set PInvokeInfos on the correct method
+
 2005-07-30  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/cecil-gen.rb
