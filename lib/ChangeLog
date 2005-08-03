@@ -1,5 +1,15 @@
 2005-08-03  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/BaseStructureVisitor.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil.Implem/BaseReflectionReader.cs:
+		Add empty visitors for the sake of simplicity
+	* Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs:
+		Inherit new visitors
+
+2005-08-03  Jb Evain  <jbevain@gmail.com>
+
 	* Mono.Cecil.Implem/ReflectionReader.cs
 	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
 	  Mono.Cecil.Implem/LazyReflectionReader.cs

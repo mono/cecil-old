@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class StructureReader : IReflectionStructureVisitor {
+	internal sealed class StructureReader : BaseStructureVisitor {
 
 		private ImageReader m_ir;
 		private Image m_img;
@@ -42,14 +42,14 @@ namespace Mono.Cecil.Implem {
 			m_tHeap = m_img.MetadataRoot.Streams.TablesHeap;
 		}
 
-		public void Visit (IAssemblyDefinition asm)
+		public override void Visit (IAssemblyDefinition asm)
 		{
 			m_asmDef = asm as AssemblyDefinition;
 			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
 				throw new ReflectionException ("No assembly manifest");
 		}
 
-		public void Visit (IAssemblyNameDefinition name)
+		public override void Visit (IAssemblyNameDefinition name)
 		{
 			AssemblyTable atable = m_tHeap [typeof(AssemblyTable)] as AssemblyTable;
 			AssemblyRow arow = atable [0];
@@ -64,7 +64,7 @@ namespace Mono.Cecil.Implem {
 			name.HashAlgorithm = arow.HashAlgId;
 		}
 
-		public void Visit (IAssemblyNameReferenceCollection names)
+		public override void Visit (IAssemblyNameReferenceCollection names)
 		{
 			if (!m_tHeap.HasTable (typeof (AssemblyRefTable)))
 				return;
@@ -83,11 +83,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public void Visit (IAssemblyNameReference name)
-		{
-		}
-
-		public void Visit (IResourceCollection resources)
+		public override void Visit (IResourceCollection resources)
 		{
 			if (!m_tHeap.HasTable (typeof (ManifestResourceTable)))
 				return;
@@ -133,23 +129,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public void Visit (IEmbeddedResource res)
-		{
-		}
-
-		public void Visit (ILinkedResource res)
-		{
-		}
-
-		public void Visit (IAssemblyLinkedResource res)
-		{
-		}
-
-		public void Visit (IModuleDefinition module)
-		{
-		}
-
-		public void Visit (IModuleDefinitionCollection modules)
+		public override void Visit (IModuleDefinitionCollection modules)
 		{
 			ModuleTable mt = m_tHeap [typeof(ModuleTable)] as ModuleTable;
 			if (mt == null || mt.Rows.Count != 1)
@@ -193,11 +173,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public void Visit (IModuleReference module)
-		{
-		}
-
-		public void Visit (IModuleReferenceCollection modules)
+		public override void Visit (IModuleReferenceCollection modules)
 		{
 			if (!m_tHeap.HasTable (typeof (ModuleRefTable)))
 				return;

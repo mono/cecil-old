@@ -25,7 +25,7 @@ namespace Mono.Cecil.Implem {
 
 	using Mono.Xml;
 
-	internal abstract class ReflectionReader : IReflectionVisitor, IDetailReader {
+	internal abstract class ReflectionReader : BaseReflectionReader {
 
 		private ModuleDefinition m_module;
 		private ImageReader m_reader;
@@ -198,7 +198,7 @@ namespace Mono.Cecil.Implem {
 			return BuildCustomAttribute (ctor, sig);
 		}
 
-		public virtual void Visit (ITypeDefinitionCollection types)
+		public override void Visit (ITypeDefinitionCollection types)
 		{
 			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
 			if (tdc != null && tdc.Loaded)
@@ -498,23 +498,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public virtual void Visit (ITypeDefinition type)
-		{
-		}
-
-		public virtual void Visit (ITypeReferenceCollection refs)
-		{
-		}
-
-		public virtual void Visit (ITypeReference type)
-		{
-		}
-
-		public virtual void Visit (IInterfaceCollection interfaces)
-		{
-		}
-
-		public virtual void Visit (IExternTypeCollection externs)
+		public override void Visit (IExternTypeCollection externs)
 		{
 			ExternTypeCollection ext = externs as ExternTypeCollection;
 
@@ -554,114 +538,6 @@ namespace Mono.Cecil.Implem {
 				if (curs != null)
 					ext [curs.FullName] = curs;
 			}
-		}
-
-		public virtual void Visit (IOverrideCollection meth)
-		{
-		}
-
-		public virtual void Visit (INestedTypeCollection nestedTypes)
-		{
-		}
-
-		public virtual void Visit (IParameterDefinitionCollection parameters)
-		{
-		}
-
-		public virtual void Visit (IParameterDefinition parameter)
-		{
-		}
-
-		public virtual void Visit (IMethodDefinitionCollection methods)
-		{
-		}
-
-		public virtual void Visit (IMethodDefinition method)
-		{
-		}
-
-		public virtual void Visit (IPInvokeInfo pinvk)
-		{
-		}
-
-		public virtual void Visit (IEventDefinitionCollection events)
-		{
-		}
-
-		public virtual void Visit (IEventDefinition evt)
-		{
-		}
-
-		public virtual void Visit (IFieldDefinitionCollection fields)
-		{
-		}
-
-		public virtual void Visit (IFieldDefinition field)
-		{
-		}
-
-		public virtual void Visit (IPropertyDefinitionCollection properties)
-		{
-		}
-
-		public virtual void Visit (IPropertyDefinition property)
-		{
-		}
-
-		public virtual void Visit (ISecurityDeclarationCollection secDecls)
-		{
-		}
-
-		public virtual void Visit (ISecurityDeclaration secDecl)
-		{
-		}
-
-		public virtual void Visit (ICustomAttributeCollection customAttrs)
-		{
-		}
-
-		public virtual void Visit (ICustomAttribute customAttr)
-		{
-		}
-
-		public virtual void Visit (IMarshalSpec marshalSpec)
-		{
-		}
-
-		public virtual void ReadSemantic (EventDefinition evt)
-		{
-		}
-
-		public virtual void ReadSemantic (PropertyDefinition prop)
-		{
-		}
-
-		public virtual void ReadMarshalSpec (ParameterDefinition param)
-		{
-		}
-
-		public virtual void ReadMarshalSpec (FieldDefinition field)
-		{
-		}
-
-		public virtual void ReadLayout (TypeDefinition type)
-		{
-		}
-
-		public virtual void ReadLayout (FieldDefinition field)
-		{
-		}
-
-		public virtual void ReadConstant (FieldDefinition field)
-		{
-		}
-
-		public virtual void ReadConstant (PropertyDefinition prop)
-		{
-		}
-
-		public virtual void ReadConstant (ParameterDefinition param)
-		{
 		}
 
 		private object GetFixedArgValue (CustomAttrib.FixedArg fa)
