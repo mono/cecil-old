@@ -1,5 +1,10 @@
 2005-08-03  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/cecil-gen.rb
+	  CodeGen/cecil-gen-sources.rb
+		make executable
+	* *.*: set svn:eol-style to native
+
 	* Mono.Cecil/BaseStructureVisitor.cs
 	  Mono.Cecil/BaseReflectionVisitor.cs
 	  Mono.Cecil.Implem/BaseReflectionReader.cs:
