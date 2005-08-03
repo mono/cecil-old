@@ -1,5 +1,21 @@
 2005-08-03  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/OpCodes.cs
+	  Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/OpCode.cs:
+		Revert modifications to reduce code. OpCodes::.ctors were
+		not called.
+
+	* Mono.Cecil.Implem/ReflectionReader.cs:
+		Make sure parameters are read even if there is no
+		corresponding Param row. Thanks Cesar for the hint.
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/UserStringsHeap.cs
+	  Mono.Cecil.Metadata/GuidHeap.cs
+	  Mono.Cecil.Implem/CodeReader.cs:
+		On going work on the writing layer
+
 	* CodeGen/cecil-gen.rb
 	  CodeGen/cecil-gen-sources.rb
 		make executable

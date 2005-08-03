@@ -66,7 +66,12 @@ namespace Mono.Cecil.Cil {
 	}
 %>				m_oneByteOpCode = new OpCode [<%=oboc[oboc.length - 1].op2%> + 1];
 				m_twoBytesOpCodes = new OpCode [<%=tboc[tboc.length - 1].op2%> + 1];
-			}
+<% oboc.each { |op| %>				m_oneByteOpCode [<%=op.op2%>] = OpCodes.<%=op.field_name%>;
+<% }
+   tboc.each { |op| %>				m_twoBytesOpCodes [<%=op.op2%>] = OpCodes.<%=op.field_name%>;
+<% } %>
+<% $ops.each { |op| %>				m_cache ["<%=op.name%>"] = OpCodes.<%=op.field_name%>;
+<% } %>			}
 		}
 	}
 }

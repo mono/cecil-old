@@ -406,21 +406,43 @@ namespace Mono.Cecil.Implem {
 
 					ParameterDefinition retparam = null;
 
-					for (int k = (int) methRow.ParamList, l = 0; k < prms; k++) {
-						ParamRow prow = paramTable [k - 1];
-						if (prow.Sequence == 0) { // this is a fake parameter meaning a return type
-							retparam = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
-							retparam.Method = mdef;
-							m_parameters [k - 1] = retparam;
-							continue;
-						}
-						Param psig = msig.Parameters [l];
-						ParameterDefinition pdef = BuildParameterDefinition (m_root.Streams.StringsHeap [prow.Name],
-																			 prow.Sequence, prow.Flags, psig);
-						pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Param, k - 1);
+					//TODO: optimize this
+					ParamRow pRow = null;
+					int start = (int) methRow.ParamList - 1;
+
+					if (paramTable != null && start < prms - 1)
+						pRow = paramTable [start];
+
+					if (pRow != null && pRow.Sequence == 0) { // ret type
+						retparam = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+						retparam.Method = mdef;
+						m_parameters [start] = retparam;
+						start++;
+					}
+
+					for (int k = 0; k < msig.ParamCount; k++) {
+
+						int pointer = start + k;
+
+						if (paramTable != null && pointer < prms - 1)
+							pRow = paramTable [pointer];
+
+						Param psig = msig.Parameters [k];
+
+						ParameterDefinition pdef;
+						if (pRow != null) {
+							pdef = BuildParameterDefinition (
+								m_root.Streams.StringsHeap [pRow.Name],
+								pRow.Sequence, pRow.Flags, psig);
+							pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Param, pointer);
+							m_parameters [pointer] = pdef;
+						} else
+							pdef = BuildParameterDefinition (
+								string.Concat ("A_", k + 1), k + 1, (ParamAttributes) 0, psig);
+
 						pdef.Method = mdef;
 						(mdef.Parameters as ParameterDefinitionCollection).Add (pdef);
-						m_parameters [k - 1] = pdef; l++;
+
 					}
 
 					mdef.ReturnType = GetMethodReturnType (msig);

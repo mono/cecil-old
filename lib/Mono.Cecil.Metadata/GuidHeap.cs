@@ -49,6 +49,7 @@ namespace Mono.Cecil.Metadata {
 				m_guids [idx] = res;
 				return res;
 			}
+			set { m_guids [index] = value; }
 		}
 
 		public override void Accept (IMetadataVisitor visitor)

@@ -20,11 +20,11 @@ namespace Mono.Cecil.Metadata {
 
 		private readonly IDictionary m_strings;
 
-		public string this [int offset] {
+		public string this [uint offset] {
 			get {
 				string us = m_strings [offset] as string;
 				if (us == null) {
-					us = ReadStringAt (offset);
+					us = ReadStringAt ((int) offset);
 					if (us != null && us.Length != 0)
 						m_strings [offset] = us;
 				}

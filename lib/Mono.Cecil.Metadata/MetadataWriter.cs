@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Metadata {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 	using System.Text;
 
@@ -26,11 +27,35 @@ namespace Mono.Cecil.Metadata {
 		private MetadataTableWriter m_tableWriter;
 		private BinaryWriter m_binaryWriter;
 
+		private IDictionary m_stringCache;
+		private BinaryWriter m_stringWriter;
+
+		private IDictionary m_guidCache;
+		private BinaryWriter m_guidWriter;
+
+		private IDictionary m_usCache;
+		private BinaryWriter m_usWriter;
+
+		private BinaryWriter m_blobWriter;
+
 		public MetadataWriter (ReflectionWriter reflectionWriter, MetadataRoot root)
 		{
 			m_root = root;
 			m_tableWriter = new MetadataTableWriter (this);
 			m_binaryWriter = reflectionWriter.GetWriter ();
+
+			m_stringCache = new Hashtable ();
+			m_stringWriter = new BinaryWriter (new MemoryStream (), Encoding.UTF8);
+			m_stringWriter.Write ('\0');
+
+			m_guidCache = new Hashtable ();
+			m_guidWriter = new BinaryWriter (new MemoryStream ());
+
+			m_usCache = new Hashtable ();
+			m_usWriter = new BinaryWriter (new MemoryStream (), Encoding.Unicode);
+			m_usWriter.Write ('\0');
+
+			m_blobWriter = new BinaryWriter (new MemoryStream ());
 		}
 
 		public MetadataRoot GetMetadataRoot ()
@@ -50,22 +75,52 @@ namespace Mono.Cecil.Metadata {
 
 		public uint AddString (string str)
 		{
-			return 0;
+			if (str == null || str.Length == 0)
+				return 0;
+
+			if (m_stringCache.Contains (str))
+				return (uint) m_stringCache [str];
+
+			uint pointer = (uint) m_stringWriter.BaseStream.Position;
+			m_stringWriter.Write (str);
+			m_stringWriter.Write ('\0');
+			m_root.Streams.StringsHeap [pointer] = str;
+			return pointer;
 		}
 
-		public uint AddBlob (byte [] data)
+		public uint AddBlob (byte [] data, bool withSize)
 		{
-			return 0;
+			uint pointer = withSize ? (uint) Utilities.WriteCompressedInteger (
+				m_blobWriter, data.Length) : (uint) m_blobWriter.BaseStream.Position;
+			m_blobWriter.Write (data);
+			return pointer;
 		}
 
 		public uint AddGuid (Guid g)
 		{
-			return 0;
+			if (m_guidCache.Contains (g))
+				return (uint) m_guidCache [g];
+
+			uint pointer = (uint) m_guidWriter.BaseStream.Position;
+			m_guidWriter.Write (g.ToByteArray ());
+			m_root.Streams.GuidHeap [pointer] = g;
+			return pointer;
 		}
 
 		public uint AddUserString (string str)
 		{
-			return 0;
+			if (str == null || str.Length == 0)
+				return 0;
+
+			if (m_usCache.Contains (str))
+				return (uint) m_usCache [str];
+
+			uint pointer = (uint) Utilities.WriteCompressedInteger (
+				m_usWriter, str.Length * 2 + 1);
+			m_usWriter.Write (str);
+			m_usWriter.Write ('\0');
+			m_root.Streams.UserStringsHeap [pointer] = str;
+			return pointer;
 		}
 
 		public void Visit (MetadataRoot root)

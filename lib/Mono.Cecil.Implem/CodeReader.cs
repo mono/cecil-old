@@ -143,7 +143,7 @@ namespace Mono.Cecil.Implem {
 					instr.Operand = br.ReadDouble ();
 					break;
 				case OperandType.InlineString :
-					instr.Operand = m_root.Streams.UserStringsHeap [(int) GetRid (br.ReadInt32 ())];
+					instr.Operand = m_root.Streams.UserStringsHeap [GetRid (br.ReadInt32 ())];
 					break;
 				case OperandType.InlineField :
 					int field = br.ReadInt32 ();
