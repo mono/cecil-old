@@ -80,9 +80,9 @@ namespace Mono.Cecil.Implem {
 				MethodImplRow implRow = implTable [i];
 				if (implRow.MethodBody.TokenType == TokenType.Method && implRow.MethodBody.RID == index) {
 					if (implRow.MethodDeclaration.TokenType == TokenType.Method)
-						methods.Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
+						methods.Add (GetMethodDefAt (implRow.MethodDeclaration.RID));
 					else if (implRow.MethodDeclaration.TokenType == TokenType.MemberRef)
-						methods.Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
+						methods.Add (GetMemberRefAt (implRow.MethodDeclaration.RID) as IMethodReference);
 				}
 			}
 		}
@@ -195,9 +195,9 @@ namespace Mono.Cecil.Implem {
 				case TokenType.Param :
 					if (caRow.Parent.TokenType == target && caRow.Parent.RID == rid) {
 						if (caRow.Type.TokenType == TokenType.Method)
-							ctor = GetMethodDefAt ((int) caRow.Type.RID);
+							ctor = GetMethodDefAt (caRow.Type.RID);
 						else
-							ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
+							ctor = GetMemberRefAt (caRow.Type.RID) as IMethodReference;
 
 						sig = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
 						ca = BuildCustomAttribute (ctor, sig);
@@ -252,8 +252,9 @@ namespace Mono.Cecil.Implem {
 
 			for (int i = (int) thisRow.EventList; i < next; i++) {
 				EventRow erow = evtTable [i - 1];
-				EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], dec,
-															GetTypeDefOrRef (erow.EventType), erow.EventFlags);
+				EventDefinition edef = new EventDefinition (
+					m_root.Streams.StringsHeap [erow.Name], dec,
+					GetTypeDefOrRef (erow.EventType), erow.EventFlags);
 				edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, i - 1);
 				evts [edef.Name] = edef;
 				m_events [i - 1] = edef;
@@ -271,8 +272,9 @@ namespace Mono.Cecil.Implem {
 			for (int i = 0; i < imTable.Rows.Count; i++) {
 				ImplMapRow imRow = imTable [i];
 				if (imRow.MemberForwarded.RID == index) {
-					meth.PInvokeInfo = new PInvokeInfo (meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
-														Module.ModuleReferences [(int) imRow.ImportScope - 1]);
+					meth.PInvokeInfo = new PInvokeInfo (
+						meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
+						Module.ModuleReferences [(int) imRow.ImportScope - 1]);
 					break;
 				}
 			}
@@ -318,8 +320,9 @@ namespace Mono.Cecil.Implem {
 			for (int i = (int) thisRow.PropertyList; i < next; i++) {
 				PropertyRow prow = propsTable [i - 1];
 				PropertySig psig = m_sigReader.GetPropSig (prow.Type);
-				PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
-																  dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
+				PropertyDefinition pdef = new PropertyDefinition (
+					MetadataRoot.Streams.StringsHeap [prow.Name],
+					dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
 				pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, i - 1);
 				props [pdef.Name] = pdef;
 				m_properties [i - 1] = pdef;
@@ -343,7 +346,7 @@ namespace Mono.Cecil.Implem {
 			MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
 			for (int i = 0; i < semTable.Rows.Count; i++) {
 				MethodSemanticsRow semRow = semTable [i];
-				MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
+				MethodDefinition semMeth = GetMethodDefAt (semRow.Method);
 				if (semRow.Association.TokenType == TokenType.Event && semRow.Association.RID == index) {
 					semMeth.SemanticsAttributes = semRow.Semantics;
 					if ((semRow.Semantics & MethodSemanticsAttributes.AddOn) != 0)
@@ -373,7 +376,7 @@ namespace Mono.Cecil.Implem {
 			MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
 			for (int i = 0; i < semTable.Rows.Count; i++) {
 				MethodSemanticsRow semRow = semTable [i];
-				MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
+				MethodDefinition semMeth = GetMethodDefAt (semRow.Method);
 				if (semRow.Association.TokenType == TokenType.Property && semRow.Association.RID == index) {
 					semMeth.SemanticsAttributes = semRow.Semantics;
 					if ((semRow.Semantics & MethodSemanticsAttributes.Getter) != 0)

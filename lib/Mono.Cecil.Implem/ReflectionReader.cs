@@ -76,35 +76,49 @@ namespace Mono.Cecil.Implem {
 			m_isCorlib = m_module.Image.FileInformation != null && m_module.Image.FileInformation.Name == Constants.Corlib;
 		}
 
-		public TypeDefinition GetTypeDefAt (int rid)
+		public TypeDefinition GetTypeDefAt (uint rid)
 		{
 			return m_typeDefs [rid - 1];
 		}
 
-		public TypeReference GetTypeRefAt (int rid)
+		public TypeReference GetTypeRefAt (uint rid)
 		{
-			// 0 based
 			return m_typeRefs [rid - 1];
 		}
 
-		public TypeReference GetTypeSpecAt (int rid)
+		public TypeReference GetTypeSpecAt (uint rid)
 		{
 			return m_typeSpecs [rid - 1];
 		}
 
-		public FieldDefinition GetFieldDefAt (int rid)
+		public FieldDefinition GetFieldDefAt (uint rid)
 		{
 			return m_fields [rid - 1];
 		}
 
-		public MethodDefinition GetMethodDefAt (int rid)
+		public MethodDefinition GetMethodDefAt (uint rid)
 		{
 			return m_meths [rid - 1];
 		}
 
-		public MemberReference GetMemberRefAt (int rid)
+		public MemberReference GetMemberRefAt (uint rid)
 		{
 			return m_memberRefs [rid - 1];
+		}
+
+		public PropertyDefinition GetPropertyDefAt (uint rid)
+		{
+			return m_properties [rid - 1];
+		}
+
+		public EventDefinition GetEventDefAt (uint rid)
+		{
+			return m_events [rid - 1];
+		}
+
+		public ParameterDefinition GetParamDefAt (uint rid)
+		{
+			return m_parameters [rid - 1];
 		}
 
 		public int GetRidForMethodDef (MethodDefinition meth)
@@ -126,11 +140,11 @@ namespace Mono.Cecil.Implem {
 
 			switch (token.TokenType) {
 			case TokenType.TypeDef :
-				return GetTypeDefAt ((int) token.RID);
+				return GetTypeDefAt (token.RID);
 			case TokenType.TypeRef :
-				return GetTypeRefAt ((int) token.RID);
+				return GetTypeRefAt (token.RID);
 			case TokenType.TypeSpec :
-				return GetTypeSpecAt ((int) token.RID);
+				return GetTypeSpecAt (token.RID);
 			default :
 				return null;
 			}
@@ -156,23 +170,23 @@ namespace Mono.Cecil.Implem {
 		{
 			switch (token.TokenType) {
 			case TokenType.TypeDef :
-				return GetTypeDefAt ((int) token.RID);
+				return GetTypeDefAt (token.RID);
 			case TokenType.TypeRef :
-				return GetTypeRefAt ((int) token.RID);
+				return GetTypeRefAt (token.RID);
 			case TokenType.TypeSpec :
-				return GetTypeSpecAt ((int) token.RID);
+				return GetTypeSpecAt (token.RID);
 			case TokenType.Method :
-				return GetMethodDefAt ((int) token.RID);
+				return GetMethodDefAt (token.RID);
 			case TokenType.Field :
-				return GetFieldDefAt ((int) token.RID);
+				return GetFieldDefAt (token.RID);
 			case TokenType.Event :
-				return m_events [token.RID - 1];
+				return GetEventDefAt (token.RID);
 			case TokenType.Property :
-				return m_properties [token.RID - 1];
+				return GetPropertyDefAt (token.RID);
 			case TokenType.Param :
-				return m_parameters [token.RID - 1];
+				return GetParamDefAt (token.RID);
 			case TokenType.MemberRef :
-				return GetMemberRefAt ((int) token.RID);
+				return GetMemberRefAt (token.RID);
 			default :
 				throw new NotSupportedException ("Lookup is not allowed on this kind of token");
 			}
@@ -212,8 +226,8 @@ namespace Mono.Cecil.Implem {
 				for (int i = 0; i < nested.Rows.Count; i++) {
 					NestedClassRow row = nested [i];
 
-					TypeDefinition parent = GetTypeDefAt ((int) row.EnclosingClass);
-					TypeDefinition child = GetTypeDefAt ((int) row.NestedClass);
+					TypeDefinition parent = GetTypeDefAt (row.EnclosingClass);
+					TypeDefinition child = GetTypeDefAt (row.NestedClass);
 
 					child.DeclaringType = parent;
 					(parent.NestedTypes as NestedTypeCollection) [child.Name] = child;
@@ -238,7 +252,7 @@ namespace Mono.Cecil.Implem {
 						scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
 						break;
 					case TokenType.TypeRef :
-						parent = GetTypeRefAt ((int) type.ResolutionScope.RID);
+						parent = GetTypeRefAt (type.ResolutionScope.RID);
 						scope = parent.Scope;
 						break;
 					}
@@ -330,8 +344,9 @@ namespace Mono.Cecil.Implem {
 				for (int j = (int) tdefTable [index].FieldList; j < next; j++) {
 					FieldRow frow = fldTable [j - 1];
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
-					FieldDefinition fdef = new FieldDefinition (m_root.Streams.StringsHeap [frow.Name],
-																dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
+					FieldDefinition fdef = new FieldDefinition (
+						m_root.Streams.StringsHeap [frow.Name],
+						dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
 					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
@@ -377,9 +392,10 @@ namespace Mono.Cecil.Implem {
 					MethodRow methRow = methTable [j - 1];
 					MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
 
-					MethodDefinition mdef = new MethodDefinition (m_root.Streams.StringsHeap [methRow.Name], dec,
-																  methRow.RVA, methRow.Flags, methRow.ImplFlags,
-																  msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
+					MethodDefinition mdef = new MethodDefinition (
+						m_root.Streams.StringsHeap [methRow.Name], dec,
+						methRow.RVA, methRow.Flags, methRow.ImplFlags,
+						msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
 					mdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Method, j - 1);
 
 					int prms;
@@ -424,7 +440,7 @@ namespace Mono.Cecil.Implem {
 				}
 			}
 
-			int eprid = (int) m_reader.Image.CLIHeader.EntryPointToken & 0x00ffffff;
+			uint eprid = m_reader.Image.CLIHeader.EntryPointToken & 0x00ffffff;
 			if (eprid != 0)
 				m_module.Assembly.EntryPoint = GetMethodDefAt (eprid);
 		}
@@ -451,13 +467,15 @@ namespace Mono.Cecil.Implem {
 													 GetTypeRefFromSig (fs.Type));
 					} else {
 						MethodSig ms = sig as MethodSig;
-						MethodReference methref = new MethodReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
-													  ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+						MethodReference methref = new MethodReference (
+							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
+							ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
 						methref.ReturnType = GetMethodReturnType (ms);
 						(methref.ReturnType as MethodReturnType).Method = methref;
 						for (int j = 0; j < ms.ParamCount; j++) {
 							Param p = ms.Parameters [j];
-							ParameterDefinition pdef = BuildParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), p);
+							ParameterDefinition pdef = BuildParameterDefinition (
+								string.Concat ("arg", i), i, new ParamAttributes (), p);
 							pdef.Method = methref;
 							(methref.Parameters as ParameterDefinitionCollection).Add (pdef);
 						}
@@ -466,9 +484,10 @@ namespace Mono.Cecil.Implem {
 					break;
 				case TokenType.Method :
 					// really not sure about this
-					MethodDefinition methdef = GetMethodDefAt ((int) mrefRow.Class.RID);
-					member = new MethodReference (methdef.Name, methdef.DeclaringType, methdef.HasThis,
-																methdef.ExplicitThis, methdef.CallingConvention);
+					MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
+					member = new MethodReference (
+						methdef.Name, methdef.DeclaringType, methdef.HasThis,
+						methdef.ExplicitThis, methdef.CallingConvention);
 					break;
 				case TokenType.ModuleRef :
 					break; // implement that, or not
@@ -773,9 +792,9 @@ namespace Mono.Cecil.Implem {
 				ITypeReference modType = null;
 
 				if (cmod.TypeDefOrRef.TokenType == TokenType.TypeDef)
-					modType = GetTypeDefAt ((int) cmod.TypeDefOrRef.RID);
+					modType = GetTypeDefAt (cmod.TypeDefOrRef.RID);
 				else
-					modType = GetTypeRefAt ((int) cmod.TypeDefOrRef.RID);
+					modType = GetTypeRefAt (cmod.TypeDefOrRef.RID);
 
 				if (cmod.CMOD == CustomMod.CMODType.OPT)
 					ret = new ModifierOptional (ret, modType);
@@ -907,7 +926,8 @@ namespace Mono.Cecil.Implem {
 			case ElementType.R8 :
 				return br.ReadDouble ();
 			case ElementType.String :
-				int next, length = Utilities.ReadCompressedInteger (m_root.Streams.BlobHeap.Data, (int) br.BaseStream.Position, out next);
+				int next, length = Utilities.ReadCompressedInteger (
+					m_root.Streams.BlobHeap.Data, (int) br.BaseStream.Position, out next);
 				br.BaseStream.Position = next;
 				return Encoding.UTF8.GetString (br.ReadBytes (length));
 			case ElementType.Class :

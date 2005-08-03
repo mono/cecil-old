@@ -1,3 +1,12 @@
+2005-08-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/LazyReflectionReader.cs
+	  Mono.Cecil.Implem/CodeReader.cs:
+		Modify and add helpers to avoid lots of casts.
+		Correct a bug in custom attributes attribution.
+
 2005-08-02  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Signatures/TypeSpec.cs:

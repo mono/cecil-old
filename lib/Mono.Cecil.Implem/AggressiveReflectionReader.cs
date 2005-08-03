@@ -57,7 +57,7 @@ namespace Mono.Cecil.Implem {
 			ClassLayoutTable clTable = MetadataRoot.Streams.TablesHeap [typeof (ClassLayoutTable)] as ClassLayoutTable;
 			for (int i = 0; i < clTable.Rows.Count; i++) {
 				ClassLayoutRow clRow = clTable [i];
-				TypeDefinition type = GetTypeDefAt ((int) clRow.Parent);
+				TypeDefinition type = GetTypeDefAt (clRow.Parent);
 				type.PackingSize = clRow.PackingSize;
 				type.ClassSize = clRow.ClassSize;
 			}
@@ -71,7 +71,7 @@ namespace Mono.Cecil.Implem {
 			FieldLayoutTable flTable = MetadataRoot.Streams.TablesHeap [typeof (FieldLayoutTable)] as FieldLayoutTable;
 			for (int i = 0; i < flTable.Rows.Count; i++) {
 				FieldLayoutRow flRow = flTable [i];
-				FieldDefinition field = GetFieldDefAt ((int) flRow.Field);
+				FieldDefinition field = GetFieldDefAt (flRow.Field);
 				field.Offset = flRow.Offset;
 			}
 		}
@@ -85,9 +85,10 @@ namespace Mono.Cecil.Implem {
 			for (int i = 0; i < imTable.Rows.Count; i++) {
 				ImplMapRow imRow = imTable [i];
 				if (imRow.MemberForwarded.TokenType == TokenType.Method) { // should always be true
-					MethodDefinition meth = GetMethodDefAt ((int) imRow.MemberForwarded.RID);
-					meth.PInvokeInfo = new PInvokeInfo (meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
-														Module.ModuleReferences [(int) imRow.ImportScope - 1]);
+					MethodDefinition meth = GetMethodDefAt (imRow.MemberForwarded.RID);
+					meth.PInvokeInfo = new PInvokeInfo (
+						meth, imRow.MappingFlags, MetadataRoot.Streams.StringsHeap [imRow.ImportName],
+						Module.ModuleReferences [(int) imRow.ImportScope - 1]);
 				}
 			}
 		}
@@ -102,7 +103,7 @@ namespace Mono.Cecil.Implem {
 			m_properties = new PropertyDefinition [propsTable.Rows.Count];
 			for (int i = 0; i < pmapTable.Rows.Count; i++) {
 				PropertyMapRow pmapRow = pmapTable [i];
-				TypeDefinition owner = GetTypeDefAt ((int) pmapRow.Parent);
+				TypeDefinition owner = GetTypeDefAt (pmapRow.Parent);
 				int start = (int) pmapRow.PropertyList, end;
 				if (i < pmapTable.Rows.Count - 1)
 					end = (int) pmapTable [i + 1].PropertyList;
@@ -112,8 +113,9 @@ namespace Mono.Cecil.Implem {
 				for (int j = start; j < end; j++) {
 					PropertyRow prow = propsTable [j - 1];
 					PropertySig psig = m_sigReader.GetPropSig (prow.Type);
-					PropertyDefinition pdef = new PropertyDefinition (MetadataRoot.Streams.StringsHeap [prow.Name],
-																	  owner, this.GetTypeRefFromSig (psig.Type), prow.Flags);
+					PropertyDefinition pdef = new PropertyDefinition (
+						m_root.Streams.StringsHeap [prow.Name],
+						owner, this.GetTypeRefFromSig (psig.Type), prow.Flags);
 					pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, j - 1);
 
 					PropertyDefinitionCollection props = owner.Properties as PropertyDefinitionCollection;
@@ -134,7 +136,7 @@ namespace Mono.Cecil.Implem {
 			m_events = new EventDefinition [evtTable.Rows.Count];
 			for (int i = 0; i < emapTable.Rows.Count; i++) {
 				EventMapRow emapRow = emapTable [i];
-				TypeDefinition owner = GetTypeDefAt ((int) emapRow.Parent);
+				TypeDefinition owner = GetTypeDefAt (emapRow.Parent);
 				int start = (int) emapRow.EventList, end;
 				if (i < (emapTable.Rows.Count - 1))
 					end = (int) emapTable [i + 1].EventList;
@@ -143,8 +145,9 @@ namespace Mono.Cecil.Implem {
 
 				for (int j = start; j < end; j++) {
 					EventRow erow = evtTable [j - 1];
-					EventDefinition edef = new EventDefinition (m_root.Streams.StringsHeap [erow.Name], owner,
-																GetTypeDefOrRef (erow.EventType), erow.EventFlags);
+					EventDefinition edef = new EventDefinition (
+						m_root.Streams.StringsHeap [erow.Name], owner,
+						GetTypeDefOrRef (erow.EventType), erow.EventFlags);
 					edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, j - 1);
 
 					EventDefinitionCollection evts = owner.Events as EventDefinitionCollection;
@@ -163,7 +166,7 @@ namespace Mono.Cecil.Implem {
 			MethodSemanticsTable semTable = m_tHeap [typeof (MethodSemanticsTable)] as MethodSemanticsTable;
 			for (int i = 0; i < semTable.Rows.Count; i++) {
 				MethodSemanticsRow semRow = semTable [i];
-				MethodDefinition semMeth = GetMethodDefAt ((int) semRow.Method);
+				MethodDefinition semMeth = GetMethodDefAt (semRow.Method);
 				semMeth.SemanticsAttributes = semRow.Semantics;
 				switch (semRow.Association.TokenType) {
 				case TokenType.Event :
@@ -196,7 +199,7 @@ namespace Mono.Cecil.Implem {
 			InterfaceImplTable intfsTable = m_tHeap [typeof (InterfaceImplTable)] as InterfaceImplTable;
 			for (int i = 0; i < intfsTable.Rows.Count; i++) {
 				InterfaceImplRow intfsRow = intfsTable [i];
-				TypeDefinition owner = GetTypeDefAt ((int)intfsRow.Class);
+				TypeDefinition owner = GetTypeDefAt (intfsRow.Class);
 				(owner.Interfaces as InterfaceCollection).Add (GetTypeDefOrRef (intfsRow.Interface));
 				((InterfaceCollection)owner.Interfaces).Loaded = true;
 			}
@@ -211,13 +214,15 @@ namespace Mono.Cecil.Implem {
 			for (int i = 0; i < implTable.Rows.Count; i++) {
 				MethodImplRow implRow = implTable [i];
 				if (implRow.MethodBody.TokenType == TokenType.Method) {
-					MethodDefinition owner = GetMethodDefAt ((int) implRow.MethodBody.RID);
+					MethodDefinition owner = GetMethodDefAt (implRow.MethodBody.RID);
 					switch (implRow.MethodDeclaration.TokenType) {
 					case TokenType.Method :
-						(owner.Overrides as OverrideCollection).Add (GetMethodDefAt ((int) implRow.MethodDeclaration.RID));
+						(owner.Overrides as OverrideCollection).Add (
+							GetMethodDefAt (implRow.MethodDeclaration.RID));
 						break;
 					case TokenType.MemberRef :
-						(owner.Overrides as OverrideCollection).Add (GetMemberRefAt ((int) implRow.MethodDeclaration.RID) as IMethodReference);
+						(owner.Overrides as OverrideCollection).Add (
+							GetMemberRefAt (implRow.MethodDeclaration.RID) as IMethodReference);
 						break;
 					}
 					((OverrideCollection)owner.Overrides).Loaded = true;
@@ -241,10 +246,10 @@ namespace Mono.Cecil.Implem {
 					owner = this.Module.Assembly;
 					break;
 				case TokenType.TypeDef :
-					owner = GetTypeDefAt ((int) dsRow.Parent.RID);
+					owner = GetTypeDefAt (dsRow.Parent.RID);
 					break;
 				case TokenType.Method :
-					owner = GetMethodDefAt ((int) dsRow.Parent.RID);
+					owner = GetMethodDefAt (dsRow.Parent.RID);
 					break;
 				}
 
@@ -265,9 +270,9 @@ namespace Mono.Cecil.Implem {
 				CustomAttributeRow caRow = caTable [i];
 				IMethodReference ctor;
 				if (caRow.Type.TokenType == TokenType.Method)
-					ctor = GetMethodDefAt ((int) caRow.Type.RID);
+					ctor = GetMethodDefAt (caRow.Type.RID);
 				else
-					ctor = GetMemberRefAt ((int) caRow.Type.RID) as IMethodReference;
+					ctor = GetMemberRefAt (caRow.Type.RID) as IMethodReference;
 
 				CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
 				CustomAttribute cattr = BuildCustomAttribute (ctor, ca);
@@ -281,25 +286,25 @@ namespace Mono.Cecil.Implem {
 					owner = this.Module.CustomAttributes;
 					break;
 				case TokenType.TypeDef :
-					owner = GetTypeDefAt ((int) caRow.Parent.RID).CustomAttributes;
+					owner = GetTypeDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.TypeRef :
-					owner = GetTypeRefAt ((int) caRow.Parent.RID).CustomAttributes;
+					owner = GetTypeRefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.Field :
-					owner = GetFieldDefAt ((int) caRow.Parent.RID).CustomAttributes;
+					owner = GetFieldDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.Method :
-					owner = GetMethodDefAt ((int) caRow.Parent.RID).CustomAttributes;
+					owner = GetMethodDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.Property :
-					owner = m_properties [caRow.Parent.RID - 1].CustomAttributes;
+					owner = GetPropertyDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.Event :
-					owner = m_properties [caRow.Parent.RID - 1].CustomAttributes;
+					owner = GetEventDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				case TokenType.Param :
-					owner = m_parameters [caRow.Parent.RID - 1].CustomAttributes;
+					owner = GetParamDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
 				default :
 					//TODO: support other ?
@@ -323,17 +328,17 @@ namespace Mono.Cecil.Implem {
 
 				switch (csRow.Parent.TokenType) {
 				case TokenType.Field :
-					FieldDefinition field = m_fields [csRow.Parent.RID - 1];
+					FieldDefinition field = GetFieldDefAt (csRow.Parent.RID);
 					field.Constant = constant;
 					field.ConstantLoaded = true;
 					break;
 				case TokenType.Property :
-					PropertyDefinition prop = m_properties [csRow.Parent.RID - 1];
+					PropertyDefinition prop = GetPropertyDefAt (csRow.Parent.RID);
 					prop.Constant = constant;
 					prop.ConstantLoaded = true;
 					break;
 				case TokenType.Param :
-					ParameterDefinition param = m_parameters [csRow.Parent.RID - 1];
+					ParameterDefinition param = GetParamDefAt (csRow.Parent.RID);
 					param.Constant = constant;
 					param.ConstantLoaded = true;
 					break;
@@ -356,13 +361,15 @@ namespace Mono.Cecil.Implem {
 				FieldMarshalRow fmRow = fmTable [i];
 				switch (fmRow.Parent.TokenType) {
 				case TokenType.Field:
-					FieldDefinition field = m_fields [fmRow.Parent.RID - 1];
-					field.MarshalSpec = BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), field);
+					FieldDefinition field = GetFieldDefAt (fmRow.Parent.RID);
+					field.MarshalSpec = BuildMarshalDesc (
+						m_sigReader.GetMarshalSig (fmRow.NativeType), field);
 					field.MarshalSpecLoaded = true;
 					break;
 				case TokenType.Param:
-					ParameterDefinition param = m_parameters [fmRow.Parent.RID - 1];
-					param.MarshalSpec = BuildMarshalDesc (m_sigReader.GetMarshalSig (fmRow.NativeType), param);
+					ParameterDefinition param = GetParamDefAt (fmRow.Parent.RID);
+					param.MarshalSpec = BuildMarshalDesc (
+						m_sigReader.GetMarshalSig (fmRow.NativeType), param);
 					param.MarshalSpecLoaded = true;
 					break;
 				}

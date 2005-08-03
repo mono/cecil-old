@@ -65,9 +65,9 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		private int GetRid (int token)
+		private uint GetRid (int token)
 		{
-			return token & 0x00ffffff;
+			return (uint) token & 0x00ffffff;
 		}
 
 		private bool IsToken (int token, TokenType t)
@@ -143,7 +143,7 @@ namespace Mono.Cecil.Implem {
 					instr.Operand = br.ReadDouble ();
 					break;
 				case OperandType.InlineString :
-					instr.Operand = m_root.Streams.UserStringsHeap [GetRid (br.ReadInt32 ())];
+					instr.Operand = m_root.Streams.UserStringsHeap [(int) GetRid (br.ReadInt32 ())];
 					break;
 				case OperandType.InlineField :
 					int field = br.ReadInt32 ();
@@ -300,7 +300,7 @@ namespace Mono.Cecil.Implem {
 				return;
 
 			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
-			StandAloneSigRow sasRow = sasTable [GetRid (body.LocalVarToken) - 1];
+			StandAloneSigRow sasRow = sasTable [(int) GetRid (body.LocalVarToken) - 1];
 			LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
 			for (int i = 0; i < sig.Count; i++) {
 				LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
