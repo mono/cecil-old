@@ -467,7 +467,6 @@ namespace Mono.Cecil.Signatures {
 
 		private CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, IMethodReference ctor)
 		{
-
 			CustomAttrib ca = new CustomAttrib (ctor);
 			if (data.Length == 0) {
 				ca.FixedArgs = new CustomAttrib.FixedArg [0];
