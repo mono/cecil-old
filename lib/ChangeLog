@@ -3,6 +3,9 @@
 	* Mono.Cecil.Implem/ReflectionReader.cs:
 		set a correct name to nameless parameters
 
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		don't crash on null custom attributes
+
 2005-08-03  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/OpCodes.cs

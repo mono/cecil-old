@@ -469,6 +469,12 @@ namespace Mono.Cecil.Signatures {
 		{
 
 			CustomAttrib ca = new CustomAttrib (ctor);
+			if (data.Length == 0) {
+				ca.FixedArgs = new CustomAttrib.FixedArg [0];
+				ca.NamedArgs = new CustomAttrib.NamedArg [0];
+				return ca;
+			}
+
 			ca.Prolog = br.ReadUInt16 ();
 			if (ca.Prolog != CustomAttrib.StdProlog)
 				throw new MetadataFormatException ("Non standard prolog for custom attribute");
