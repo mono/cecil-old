@@ -438,7 +438,8 @@ namespace Mono.Cecil.Implem {
 							m_parameters [pointer] = pdef;
 						} else
 							pdef = BuildParameterDefinition (
-								string.Concat ("A_", k + 1), k + 1, (ParamAttributes) 0, psig);
+								string.Concat ("A_", mdef.IsStatic ? k : k + 1),
+								k + 1, (ParamAttributes) 0, psig);
 
 						pdef.Method = mdef;
 						(mdef.Parameters as ParameterDefinitionCollection).Add (pdef);
