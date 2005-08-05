@@ -1,3 +1,11 @@
+2005-08-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IAssemblyName.cs
+	  Mono.Cecil.Implem/AssemblyName.cs
+	  Mono.Cecil.Implem/StructureReader.cs:
+		Add an AssemblyFlag property to an IAssemblyNameReference,
+		implement it, and read it.
+
 2005-08-04  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/ReflectionReader.cs:

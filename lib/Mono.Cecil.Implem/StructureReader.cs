@@ -54,6 +54,7 @@ namespace Mono.Cecil.Implem {
 			AssemblyTable atable = m_tHeap [typeof(AssemblyTable)] as AssemblyTable;
 			AssemblyRow arow = atable [0];
 			name.Name = m_img.MetadataRoot.Streams.StringsHeap [arow.Name];
+			name.Flags = arow.Flags;
 			if (arow.PublicKey != 0)
 				name.PublicKey = m_img.MetadataRoot.Streams.BlobHeap.Read (arow.PublicKey);
 

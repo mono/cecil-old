@@ -24,6 +24,7 @@ namespace Mono.Cecil.Implem {
 		private string m_name;
 		private string m_culture;
 		private Version m_version;
+		private AssemblyFlags m_flags;
 		private byte [] m_publicKey;
 		private byte [] m_publicKeyToken;
 		private AssemblyHashAlgorithm m_hashAlgo;
@@ -47,6 +48,11 @@ namespace Mono.Cecil.Implem {
 		public Version Version {
 			get { return m_version; }
 			set { m_version = value; }
+		}
+
+		public AssemblyFlags Flags {
+			get { return m_flags; }
+			set { m_flags = value; }
 		}
 
 		public byte [] PublicKey {
