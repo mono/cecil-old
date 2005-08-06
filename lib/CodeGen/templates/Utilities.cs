@@ -16,9 +16,12 @@
 namespace Mono.Cecil.Metadata {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 
 	internal sealed class Utilities {
+
+		private static IDictionary m_codedIndexCache = new Hashtable ();
 
 		private Utilities ()
 		{
@@ -84,6 +87,82 @@ namespace Mono.Cecil.Metadata {
 <% } %>			default :
 				throw new MetadataFormatException ("Non valid CodedIndex");
 			}
+		}
+
+		internal static Type GetCorrespondingTable (TokenType t)
+		{
+			switch (t) {
+			case TokenType.Assembly :
+				return typeof (AssemblyTable);
+			case TokenType.AssemblyRef :
+				return typeof (AssemblyRefTable);
+			case TokenType.CustomAttribute :
+				return typeof (CustomAttributeTable);
+			case TokenType.Event :
+				return typeof (EventTable);
+			case TokenType.ExportedType :
+				return typeof (ExportedTypeTable);
+			case TokenType.Field :
+				return typeof (FieldTable);
+			case TokenType.File :
+				return typeof (FileTable);
+			case TokenType.InterfaceImpl :
+				return typeof (InterfaceImplTable);
+			case TokenType.MemberRef :
+				return typeof (MemberRefTable);
+			case TokenType.Method :
+				return typeof (MethodTable);
+			case TokenType.Module :
+				return typeof (ModuleTable);
+			case TokenType.ModuleRef :
+				return typeof (ModuleRefTable);
+			case TokenType.Param :
+				return typeof (ParamTable);
+			case TokenType.Permission :
+				return typeof (DeclSecurityTable);
+			case TokenType.Property :
+				return typeof (PropertyTable);
+			case TokenType.Signature :
+				return typeof (StandAloneSigTable);
+			case TokenType.TypeDef :
+				return typeof (TypeDefTable);
+			case TokenType.TypeRef :
+				return typeof (TypeRefTable);
+			case TokenType.TypeSpec :
+				return typeof (TypeSpecTable);
+			default :
+				return null;
+			}
+		}
+
+		internal delegate int TableRowCounter (Type table);
+
+		internal static int GetCodedIndexSize (CodedIndex ci, TableRowCounter rowCounter)
+		{
+			int bits = 0, max = 0;
+			if (m_codedIndexCache [ci] != null)
+				return (int) m_codedIndexCache [ci];
+
+			int res = 0;
+			Type [] tables;
+			switch (ci) {
+<% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
+				bits = <%=ci.size%>;
+				tables = new Type [<%=ci.tables.length%>];
+<%	ci.tables.each_with_index { |tbl, i|
+%>				tables [<%=i%>] = typeof (<%=tbl.name%>Table);
+<%	}
+%>				break;
+<% } %>			default :
+				throw new MetadataFormatException ("Non valid CodedIndex");
+			}
+			foreach (Type t in tables) {
+				int rows = rowCounter (t);
+				if (rows > max) max = rows;
+			}
+			res = max < (1 << (16 - bits)) ? 2 : 4;
+			m_codedIndexCache [ci] = res;
+			return res;
 		}
 	}
 }

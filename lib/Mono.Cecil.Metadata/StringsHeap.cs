@@ -16,8 +16,6 @@ namespace Mono.Cecil.Metadata {
 
 	public class StringsHeap : MetadataHeap {
 
-		public int IndexSize;
-
 		private IDictionary m_strings;
 
 		public string this [uint index] {

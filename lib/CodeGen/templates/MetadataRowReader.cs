@@ -16,7 +16,6 @@
 namespace Mono.Cecil.Metadata {
 
 	using System;
-	using System.Collections;
 	using System.IO;
 
 	using Mono.Cecil.Binary;
@@ -26,7 +25,6 @@ namespace Mono.Cecil.Metadata {
 		private MetadataTableReader m_mtrv;
 		private BinaryReader m_binaryReader;
 		private MetadataRoot m_metadataRoot;
-		private IDictionary m_codedIndexCache;
 
 		private int m_blobHeapIdxSz;
 		private int m_stringsHeapIdxSz;
@@ -37,7 +35,6 @@ namespace Mono.Cecil.Metadata {
 			m_mtrv = mtrv;
 			m_binaryReader = mtrv.GetReader ();
 			m_metadataRoot = mtrv.GetMetadataRoot ();
-			m_codedIndexCache = new Hashtable ();
 		}
 
 		private int GetIndexSize (Type table)
@@ -47,29 +44,7 @@ namespace Mono.Cecil.Metadata {
 
 		private int GetCodedIndexSize (CodedIndex ci)
 		{
-			int bits = 0, max = 0;
-			if (m_codedIndexCache [ci] != null)
-				return (int) m_codedIndexCache [ci];
-
-			int res = 0;
-			ArrayList tables = new ArrayList ();
-			switch (ci) {
-<% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
-				bits = <%=ci.size%>;
-<%	ci.tables.each { |tbl|
-%>				tables.Add (typeof (<%=tbl.name%>Table));
-<%	}
-%>				break;
-<% } %>		   }
-			foreach (Type t in tables) {
-				int rows = m_mtrv.GetNumberOfRows (t);
-				if (rows > max) max = rows;
-			}
-			res = max < (1 << (16 - bits)) ? 2 : 4;
-			m_codedIndexCache [ci] = res;
-			return res;
-
-		}
+			return Utilities.GetCodedIndexSize (ci, m_mtrv.GetNumberOfRows);		}
 
 		private uint ReadByIndexSize (int size)
 		{

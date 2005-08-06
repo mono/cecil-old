@@ -17,8 +17,6 @@ namespace Mono.Cecil.Metadata {
 
 	public class GuidHeap : MetadataHeap {
 
-		public int IndexSize;
-
 		private readonly IDictionary m_guids;
 
 		public IDictionary Guids {

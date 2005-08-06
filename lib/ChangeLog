@@ -1,5 +1,19 @@
 2005-08-06  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/Utilities.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/StringsHeap.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/Utilities.cs
+	  Mono.Cecil.Metadata/BlobHeap.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/MetadataHeap.cd
+	  Mono.Cecil.Metadata/GuidHeap.cs:
+		On going work on the writing layer.
+
 	* CodeGen/templates/MetadataTableWriter.cs
 	  Mono.Cecil.Metadata/MetadataTableWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs:

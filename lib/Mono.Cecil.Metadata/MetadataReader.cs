@@ -205,17 +205,15 @@ namespace Mono.Cecil.Metadata {
 
 		public void Terminate (MetadataStreamCollection coll)
 		{
-			StringsHeap sh = m_root.Streams.StringsHeap;
-			GuidHeap gh = m_root.Streams.GuidHeap;
-			BlobHeap bh = m_root.Streams.BlobHeap;
-			TablesHeap th = m_root.Streams.TablesHeap;
+			SetHeapIndexSize (coll.StringsHeap, 0x01);
+			SetHeapIndexSize (coll.GuidHeap, 0x02);
+			SetHeapIndexSize (coll.BlobHeap, 0x04);
+		}
 
-			if (sh != null)
-				sh.IndexSize = ((th.HeapSizes & 0x01) > 0) ? 4 : 2;
-			if (gh != null)
-				gh.IndexSize = ((th.HeapSizes & 0x02) > 0) ? 4 : 2;
-			if (bh != null)
-				bh.IndexSize = ((th.HeapSizes & 0x04) > 0) ? 4 : 2;
+		private void SetHeapIndexSize (MetadataHeap heap, byte flag)
+		{
+			TablesHeap th = m_root.Streams.TablesHeap;
+			heap.IndexSize = ((th.HeapSizes & flag) > 0) ? 4 : 2;
 		}
 
 		public void Terminate (MetadataRoot root)

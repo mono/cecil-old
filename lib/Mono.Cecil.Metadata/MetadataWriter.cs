@@ -182,7 +182,18 @@ namespace Mono.Cecil.Metadata {
 
 		public void Terminate (MetadataStreamCollection streams)
 		{
-			// TODO
+			SetHeapSize (streams.StringsHeap, m_stringWriter, 0x01);
+			SetHeapSize (streams.GuidHeap, m_guidWriter, 0x02);
+			SetHeapSize (streams.BlobHeap, m_blobWriter, 0x04);
+		}
+
+		private void SetHeapSize (MetadataHeap heap, BinaryWriter data, byte flag)
+		{
+			if (data.BaseStream.Length > 65536) {
+				m_root.Streams.TablesHeap.HeapSizes |= flag;
+				heap.IndexSize = 4;
+			} else
+				heap.IndexSize = 2;
 		}
 
 		public void Terminate (MetadataRoot root)
