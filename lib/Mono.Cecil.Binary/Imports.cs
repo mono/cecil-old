@@ -64,6 +64,7 @@ namespace Mono.Cecil.Binary {
 		public string RuntimeMain;
 		public string RuntimeLibrary;
 		public ushort EntryPoint;
+		public RVA RVA;
 
 		internal HintNameTable ()
 		{

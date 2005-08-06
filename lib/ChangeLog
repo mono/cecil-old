@@ -1,6 +1,15 @@
 2005-08-07  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Binary/Imports.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Read an write correctly the Hint/Name table
+		at the end of the .text section.
+
+	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs
 	  Mono.Cecil.Binary/ImageInitializer.cs:

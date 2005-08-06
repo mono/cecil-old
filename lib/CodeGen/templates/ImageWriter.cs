@@ -129,7 +129,8 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (hnt.RuntimeLibrary);
 			m_textWriter.Write ('\0');
 
-			// ep + rva
+			m_textWriter.Write (hnt.EntryPoint);
+			m_textWriter.Write (hnt.RVA);
 		}
 
 		public override void Terminate (Image img)

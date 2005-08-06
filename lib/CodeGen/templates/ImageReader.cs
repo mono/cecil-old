@@ -151,7 +151,8 @@ namespace Mono.Cecil.Binary {
 			hnt.RuntimeLibrary = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
 			m_binaryReader.ReadByte ();
 
-			// ep + rva
+			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
+			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 	}
 }

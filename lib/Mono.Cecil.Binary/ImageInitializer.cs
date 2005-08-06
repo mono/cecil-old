@@ -95,5 +95,11 @@ namespace Mono.Cecil.Binary {
 			header.SetDefaultValues ();
 			m_image.MetadataRoot.Accept (m_mdinit);
 		}
+
+		public override void Visit (HintNameTable hnt)
+		{
+			hnt.EntryPoint = 0x25ff;
+			hnt.RVA = new RVA (0x402000);
+		}
 	}
 }
