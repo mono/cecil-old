@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
 
 		private ModuleDefinition m_module;
 		private string m_name;
-		private ManifestResourceAttributes m_attributes;
+		private ManifestResourceAttributes m_flags;
 
 		public ModuleDefinition Module {
 			get { return m_module; }
@@ -30,15 +30,15 @@ namespace Mono.Cecil.Implem {
 			set { m_name = value; }
 		}
 
-		public ManifestResourceAttributes Attributes {
-			get { return m_attributes; }
-			set { m_attributes = value; }
+		public ManifestResourceAttributes Flags {
+			get { return m_flags; }
+			set { m_flags = value; }
 		}
 
-		protected Resource(string name, ManifestResourceAttributes attributes, ModuleDefinition owner) : this (owner)
+		protected Resource(string name, ManifestResourceAttributes flags, ModuleDefinition owner) : this (owner)
 		{
 			m_name = name;
-			m_attributes = attributes;
+			m_flags = flags;
 		}
 
 		private Resource (ModuleDefinition owner)

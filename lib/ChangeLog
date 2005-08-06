@@ -1,5 +1,18 @@
 2005-08-06  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IResource.cs
+	  Mono.Cecil.Implem/AssemblyLinkedResource.cs
+	  Mono.Cecil.Implem/EmbeddedResource.cs
+	  Mono.Cecil.Implem/LinkedResource.cs
+	  Mono.Cecil.Implem/Resource.cs:
+		Rename field Attributes to Flags for the sake of consistency.
+	* Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/StructureWriter.cs:
+		On going work on the writing layer.
+	* Mono.Cecil.Implem/StructureReader.cs:
+		Style.
+
 	* Mono.Cecil/IAssemblyName.cs
 	  Mono.Cecil.Implem/AssemblyName.cs
 	  Mono.Cecil.Implem/StructureReader.cs:

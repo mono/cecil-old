@@ -15,7 +15,7 @@ namespace Mono.Cecil {
 	public interface IResource : IReflectionStructureVisitable {
 
 		string Name { get; set; }
-		ManifestResourceAttributes Attributes { get; set; }
+		ManifestResourceAttributes Flags { get; set; }
 	}
 }
 

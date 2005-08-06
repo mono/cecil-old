@@ -115,15 +115,18 @@ namespace Mono.Cecil.Implem {
 				switch (mrRow.Implementation.TokenType) {
 				case TokenType.File :
 					FileRow fRow = fTable [(int) mrRow.Implementation.RID - 1];
-					LinkedResource lres = new LinkedResource (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
-											  module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
+					LinkedResource lres = new LinkedResource (
+						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
+						module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
 					lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
 					(resources as ResourceCollection) [lres.Name] = lres;
 					break;
 				case TokenType.AssemblyRef :
-					AssemblyNameReference asm = m_module.AssemblyReferences [(int) mrRow.Implementation.RID - 1] as AssemblyNameReference;
-					AssemblyLinkedResource alr = new AssemblyLinkedResource (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
-																			 module, asm);
+					AssemblyNameReference asm =
+						m_module.AssemblyReferences [(int) mrRow.Implementation.RID - 1] as AssemblyNameReference;
+					AssemblyLinkedResource alr = new AssemblyLinkedResource (
+						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name],
+						mrRow.Flags, module, asm);
 					(resources as ResourceCollection) [alr.Name] = alr;
 					break;
 				}
@@ -182,7 +185,8 @@ namespace Mono.Cecil.Implem {
 			ModuleRefTable mrTable = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
-				(modules as ModuleReferenceCollection).Add (new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
+				(modules as ModuleReferenceCollection).Add (
+					new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
 			}
 		}
 	}

@@ -12,12 +12,18 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System;
 	using System.IO;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
+	using Mono.Cecil.Metadata;
 
-	internal sealed class StructureWriter : IReflectionStructureVisitor {
+	internal sealed class StructureWriter : BaseStructureVisitor {
+
+		private MetadataWriter m_mdWriter;
+		private MetadataTableWriter m_tableWriter;
+		private MetadataRowWriter m_rowWriter;
 
 		private AssemblyDefinition m_asm;
 		private BinaryWriter m_binaryWriter;
@@ -26,6 +32,17 @@ namespace Mono.Cecil.Implem {
 		{
 			m_asm = asm;
 			m_binaryWriter = writer;
+
+			ReflectionWriter rw = (asm.MainModule as ModuleDefinition).Controller.Writer;
+
+			m_mdWriter = rw.MetadataWriter;
+			m_tableWriter = rw.MetadataTableWriter;
+			m_rowWriter = rw.MetadataRowWriter;
+
+			// reset images
+			foreach (ModuleDefinition module in asm.Modules)
+				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
+					module.Image = Image.CreateImage ();
 		}
 
 		public BinaryWriter GetWriter ()
@@ -33,66 +50,114 @@ namespace Mono.Cecil.Implem {
 			return m_binaryWriter;
 		}
 
-		public void Visit (IAssemblyDefinition asm)
+		public override void Visit (IAssemblyNameDefinition name)
 		{
-			// TODO
-		}
+			AssemblyTable asmTable = m_tableWriter.GetAssemblyTable ();
+			AssemblyRow asmRow = m_rowWriter.CreateAssemblyRow (
+				name.HashAlgorithm,
+				(ushort) name.Version.Major,
+				(ushort) name.Version.Minor,
+				(ushort) name.Version.Build,
+				(ushort) name.Version.Revision,
+				name.Flags,
+				m_mdWriter.AddBlob (name.PublicKey, true),
+				m_mdWriter.AddString (name.Name),
+				m_mdWriter.AddString (name.Culture));
 
-		public void Visit (IAssemblyNameDefinition name)
-		{
-			// TODO
-		}
-
-		public void Visit (IAssemblyNameReferenceCollection names)
-		{
-			// TODO
+			asmTable.Rows.Add (asmRow);
 		}
 
 		public void Visit (IAssemblyNameReference name)
 		{
-			// TODO
+			byte [] pkortoken;
+			if (name.PublicKey.Length > 0)
+				pkortoken = name.PublicKey;
+			else if (name.PublicKeyToken.Length > 0)
+				pkortoken = name.PublicKeyToken;
+			else
+				pkortoken = new byte [0];
+
+			AssemblyRefTable arTable = m_tableWriter.GetAssemblyRefTable ();
+			AssemblyRefRow arRow = m_rowWriter.CreateAssemblyRefRow (
+				(ushort) name.Version.Major,
+				(ushort) name.Version.Minor,
+				(ushort) name.Version.Build,
+				(ushort) name.Version.Revision,
+				name.Flags,
+				m_mdWriter.AddBlob (pkortoken, true),
+				m_mdWriter.AddString (name.Name),
+				m_mdWriter.AddString (name.Culture),
+				m_mdWriter.AddBlob (name.Hash, true));
+
+			arTable.Rows.Add (arRow);
 		}
 
-		public void Visit (IResourceCollection resources)
+		public override void Visit (IEmbeddedResource res)
 		{
-			// TODO
+			// TODO, add to resource section, compute offest
+			throw new NotImplementedException ();
 		}
 
-		public void Visit (IEmbeddedResource res)
+		public override void Visit (ILinkedResource res)
 		{
-			// TODO
+			FileTable fTable = m_tableWriter.GetFileTable ();
+			FileRow fRow = m_rowWriter.CreateFileRow (
+				Mono.Cecil.FileAttributes.ContainsNoMetaData,
+				m_mdWriter.AddString (res.File),
+				m_mdWriter.AddBlob (res.Hash, true));
+
+			fTable.Rows.Add (fRow);
+
+			AddManifestResource (
+				0, res.Name, res.Flags,
+				new MetadataToken (TokenType.File, (uint) fTable.Rows.IndexOf (fRow) + 1));
 		}
 
-		public void Visit (ILinkedResource res)
+		public override void Visit (IAssemblyLinkedResource res)
 		{
-			// TODO
+			MetadataToken impl = new MetadataToken (TokenType.AssemblyRef,
+				(uint) m_asm.MainModule.AssemblyReferences.IndexOf (res.Assembly) + 1);
+
+			AddManifestResource (0, res.Name, res.Flags, impl);
 		}
 
-		public void Visit (IAssemblyLinkedResource res)
+		private void AddManifestResource (uint offest, string name, ManifestResourceAttributes flags, MetadataToken impl)
 		{
-			// TODO
+			ManifestResourceTable mrTable = m_tableWriter.GetManifestResourceTable ();
+			ManifestResourceRow mrRow = m_rowWriter.CreateManifestResourceRow (
+				(uint) 0,
+				flags,
+				m_mdWriter.AddString (name),
+				impl);
+
+			mrTable.Rows.Add (mrRow);
 		}
 
 		public void Visit (IModuleDefinition module)
 		{
-			ModuleDefinition mod = module as ModuleDefinition;
-			if (mod.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
-				mod.Image = Image.CreateImage ();
+			if (module.Main) {
+				ModuleTable modTable = m_tableWriter.GetModuleTable ();
+				ModuleRow modRow = m_rowWriter.CreateModuleRow (
+					(ushort) 0,
+					m_mdWriter.AddString (module.Name),
+					m_mdWriter.AddGuid (module.Mvid),
+					(uint) 0,
+					(uint) 0);
+
+				modTable.Rows.Add (modRow);
+			} else {
+				// multiple module assemblies
+				throw new NotImplementedException ();
+			}
 		}
 
-		public void Visit (IModuleDefinitionCollection modules)
+		public override void Visit (IModuleReference module)
 		{
-			// TODO
-		}
+			ModuleRefTable mrTable = m_tableWriter.GetModuleRefTable ();
+			ModuleRefRow mrRow = m_rowWriter.CreateModuleRefRow (
+				m_mdWriter.AddString (module.Name));
 
-		public void Visit (IModuleReference module)
-		{
-			// TODO
-		}
-
-		public void Visit (IModuleReferenceCollection modules)
-		{
-			// TODO
+			mrTable.Rows.Add (mrRow);
 		}
 	}
 }

@@ -36,6 +36,18 @@ namespace Mono.Cecil.Implem {
 			get { return m_codeWriter; }
 		}
 
+		public MetadataWriter MetadataWriter {
+			get { return m_mdWriter; }
+		}
+
+		public MetadataTableWriter MetadataTableWriter {
+			get { return m_tableWriter; }
+		}
+
+		public MetadataRowWriter MetadataRowWriter {
+			get { return m_rowWriter; }
+		}
+
 		public ReflectionWriter (ModuleDefinition mod)
 		{
 			m_mod = mod;

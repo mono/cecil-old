@@ -90,6 +90,9 @@ namespace Mono.Cecil.Metadata {
 
 		public uint AddBlob (byte [] data, bool withSize)
 		{
+			if (data.Length == 0)
+				return 0;
+
 			uint pointer = withSize ? (uint) Utilities.WriteCompressedInteger (
 				m_blobWriter, data.Length) : (uint) m_blobWriter.BaseStream.Position;
 			m_blobWriter.Write (data);
