@@ -22,7 +22,7 @@ namespace Mono.Cecil.Binary {
 	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class ImageWriter : IBinaryVisitor {
+	internal sealed class ImageWriter : BaseImageVisitor {
 
 		private BinaryWriter m_binaryWriter;
 
@@ -31,11 +31,7 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter = writer.GetWriter ();
 		}
 
-		public void Visit (Image img)
-		{
-		}
-
-		public void Visit (DOSHeader header)
+		public override void Visit (DOSHeader header)
 		{
 			m_binaryWriter.Write (header.Start);
 			m_binaryWriter.Write (header.Lfanew);
@@ -44,21 +40,14 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write ((ushort) 0x4550);
 			m_binaryWriter.Write ((ushort) 0);
 		}
-
-		public void Visit (PEOptionalHeader header)
-		{
-		}
 <% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" %>
-		public void Visit (<%=name%> header)
+		public override void Visit (<%=name%> header)
 		{<% header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
 		}
 <% end } %>
-		public void Visit (SectionCollection coll)
-		{
-		}
 <% cur_header = $headers["Section"] %>
-		public void Visit (Section sect)
+		public override void Visit (Section sect)
 		{
 			foreach (char c in sect.Name)
 				m_binaryWriter.Write ((sbyte) c);
@@ -67,17 +56,17 @@ namespace Mono.Cecil.Binary {
 			<%=field.write_binary("sect", "m_binaryWriter")%>;<% } %>
 		}
 
-		public void Visit (ImportAddressTable iat)
+		public override void Visit (ImportAddressTable iat)
 		{
 			m_binaryWriter.Write (iat.HintNameTableRVA.Value);
 		}
 <% cur_header = $headers["CLIHeader"] %>
-		public void Visit (CLIHeader header)
+		public override void Visit (CLIHeader header)
 		{<% cur_header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
 		}
 
-		public void Visit (ImportTable it)
+		public override void Visit (ImportTable it)
 		{
 			m_binaryWriter.Write (it.ImportAddressTable.Value);
 			m_binaryWriter.Write (it.DateTimeStamp);
@@ -86,12 +75,12 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write (it.ImportAddressTable.Value);
 		}
 
-		public void Visit (ImportLookupTable ilt)
+		public override void Visit (ImportLookupTable ilt)
 		{
 			m_binaryWriter.Write (ilt.HintNameRVA.Value);
 		}
 
-		public void Visit (HintNameTable hnt)
+		public override void Visit (HintNameTable hnt)
 		{
 			m_binaryWriter.Write (hnt.Hint);
 			m_binaryWriter.Write (hnt.RuntimeMain);
@@ -100,10 +89,6 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write ('\0');
 
 			// ep + rva
-		}
-
-		public void Terminate (Image img)
-		{
 		}
 	}
 }

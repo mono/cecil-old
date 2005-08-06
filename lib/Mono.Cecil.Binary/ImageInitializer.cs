@@ -18,7 +18,7 @@ namespace Mono.Cecil.Binary {
 	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class ImageInitializer : IBinaryVisitor {
+	internal sealed class ImageInitializer : BaseImageVisitor {
 
 		private Image m_image;
 		private MetadataInitializer m_mdinit;
@@ -37,41 +37,37 @@ namespace Mono.Cecil.Binary {
 			m_mdinit = new MetadataInitializer (this);
 		}
 
-		public void Visit (Image img)
-		{
-		}
-
-		public void Visit (DOSHeader header)
+		public override void Visit (DOSHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (PEOptionalHeader header)
+		public override void Visit (PEOptionalHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (PEFileHeader header)
+		public override void Visit (PEFileHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)
+		public override void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (PEOptionalHeader.StandardFieldsHeader header)
+		public override void Visit (PEOptionalHeader.StandardFieldsHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (PEOptionalHeader.DataDirectoriesHeader header)
+		public override void Visit (PEOptionalHeader.DataDirectoriesHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public void Visit (SectionCollection coll)
+		public override void Visit (SectionCollection coll)
 		{
 			string [] names = new string [] {".text", ".reloc"};
 			foreach (string name in names) {
@@ -81,35 +77,15 @@ namespace Mono.Cecil.Binary {
 			}
 		}
 
-		public void Visit (Section sect)
+		public override void Visit (Section sect)
 		{
 			sect.SetDefaultValues ();
 		}
 
-		public void Visit (ImportAddressTable iat)
-		{
-		}
-
-		public void Visit (CLIHeader header)
+		public override void Visit (CLIHeader header)
 		{
 			header.SetDefaultValues ();
 			m_image.MetadataRoot.Accept (m_mdinit);
-		}
-
-		public void Visit (ImportTable it)
-		{
-		}
-
-		public void Visit (ImportLookupTable ilt)
-		{
-		}
-
-		public void Visit (HintNameTable hnt)
-		{
-		}
-
-		public void Terminate (Image img)
-		{
 		}
 	}
 }

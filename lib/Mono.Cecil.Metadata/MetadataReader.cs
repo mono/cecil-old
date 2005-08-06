@@ -19,7 +19,7 @@ namespace Mono.Cecil.Metadata {
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
-	internal sealed class MetadataReader : IMetadataVisitor {
+	internal sealed class MetadataReader : BaseMetadataVisitor {
 
 		private BinaryReader m_binaryReader;
 		private MetadataRoot m_root;
@@ -34,16 +34,15 @@ namespace Mono.Cecil.Metadata {
 			return m_root;
 		}
 
-		public void Visit (MetadataRoot root)
+		public override void Visit (MetadataRoot root)
 		{
 			m_root = root;
 			root.Header = new MetadataRoot.MetadataRootHeader ();
 			root.Streams = new MetadataStreamCollection ();
 		}
 
-		public void Visit (MetadataRoot.MetadataRootHeader header)
+		public override void Visit (MetadataRoot.MetadataRootHeader header)
 		{
-
 			long headpos = m_binaryReader.BaseStream.Position;
 
 			header.Signature = m_binaryReader.ReadUInt32 ();
@@ -84,25 +83,20 @@ namespace Mono.Cecil.Metadata {
 			header.Streams = m_binaryReader.ReadUInt16 ();
 		}
 
-		public void Visit (MetadataStreamCollection coll)
+		public override void Visit (MetadataStreamCollection coll)
 		{
 			for (int i = 0; i < m_root.Header.Streams; i++)
 				coll.Add (new MetadataStream ());
 		}
 
-		public void Visit (MetadataStream stream)
-		{
-			stream.Header = new MetadataStream.MetadataStreamHeader (stream);
-		}
-
-		public void Visit (MetadataStream.MetadataStreamHeader header)
+		public override void Visit (MetadataStream.MetadataStreamHeader header)
 		{
 			header.Offset = m_binaryReader.ReadUInt32 ();
 			header.Size = m_binaryReader.ReadUInt32 ();
 
 			StringBuilder buffer = new StringBuilder ();
 			while (true) {
-				char cur = (char)m_binaryReader.ReadSByte ();
+				char cur = (char) m_binaryReader.ReadSByte ();
 				if (cur == '\0')
 					break;
 				buffer.Append (cur);
@@ -130,12 +124,12 @@ namespace Mono.Cecil.Metadata {
 			header.Stream.Heap = MetadataHeap.HeapFactory (header.Stream);
 		}
 
-		public void Visit (GuidHeap heap)
+		public override void Visit (GuidHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
 
-		public void Visit (StringsHeap heap)
+		public override void Visit (StringsHeap heap)
 		{
 			this.VisitHeap (heap);
 
@@ -162,7 +156,7 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public void Visit (TablesHeap heap)
+		public override void Visit (TablesHeap heap)
 		{
 			this.VisitHeap (heap);
 			heap.Tables = new TableCollection (heap);
@@ -180,12 +174,12 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public void Visit (BlobHeap heap)
+		public override void Visit (BlobHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
 
-		public void Visit (UserStringsHeap heap)
+		public override void Visit (UserStringsHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
@@ -203,7 +197,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryReader.BaseStream.Position = cursor;
 		}
 
-		public void Terminate (MetadataStreamCollection coll)
+		public override void Terminate (MetadataStreamCollection coll)
 		{
 			SetHeapIndexSize (coll.StringsHeap, 0x01);
 			SetHeapIndexSize (coll.GuidHeap, 0x02);
@@ -216,7 +210,7 @@ namespace Mono.Cecil.Metadata {
 			heap.IndexSize = ((th.HeapSizes & flag) > 0) ? 4 : 2;
 		}
 
-		public void Terminate (MetadataRoot root)
+		public override void Terminate (MetadataRoot root)
 		{
 			MetadataTableReader mtrv = new MetadataTableReader (this);
 			root.Streams.TablesHeap.Tables.Accept (mtrv);

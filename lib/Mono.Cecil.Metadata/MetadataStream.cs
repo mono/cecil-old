@@ -29,6 +29,7 @@ namespace Mono.Cecil.Metadata {
 
 		internal MetadataStream ()
 		{
+			m_header = new MetadataStreamHeader (this);
 		}
 
 		public void Accept (IMetadataVisitor visitor)

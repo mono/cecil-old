@@ -21,7 +21,7 @@ namespace Mono.Cecil.Metadata {
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Implem;
 
-	internal sealed class MetadataWriter : IMetadataVisitor {
+	internal sealed class MetadataWriter : BaseMetadataVisitor {
 
 		private MetadataRoot m_root;
 		private MetadataTableWriter m_tableWriter;
@@ -130,57 +130,56 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		public void Visit (MetadataRoot root)
+		public void QuadPadding (int length)
+		{
+			int limit = length % 4;
+			for (int i = 0; i < limit; i++)
+				m_binaryWriter.Write ('\0');
+		}
+
+		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		{
+			m_binaryWriter.Write (header.Signature);
+			m_binaryWriter.Write (header.MajorVersion);
+			m_binaryWriter.Write (header.MinorVersion);
+			m_binaryWriter.Write (header.Reserved);
+			m_binaryWriter.Write (header.Version.Length);
+			m_binaryWriter.Write (header.Version);
+			QuadPadding (header.Version.Length);
+			// TODO
+		}
+
+		public override void Visit (MetadataStream.MetadataStreamHeader header)
 		{
 			// TODO
 		}
 
-		public void Visit (MetadataRoot.MetadataRootHeader header)
+		public override void Visit (GuidHeap heap)
 		{
 			// TODO
 		}
 
-		public void Visit (MetadataStreamCollection streams)
+		public override void Visit (StringsHeap heap)
 		{
 			// TODO
 		}
 
-		public void Visit (MetadataStream stream)
+		public override void Visit (TablesHeap heap)
 		{
 			// TODO
 		}
 
-		public void Visit (MetadataStream.MetadataStreamHeader header)
+		public override void Visit (BlobHeap heap)
 		{
 			// TODO
 		}
 
-		public void Visit (GuidHeap heap)
+		public override void Visit (UserStringsHeap heap)
 		{
 			// TODO
 		}
 
-		public void Visit (StringsHeap heap)
-		{
-			// TODO
-		}
-
-		public void Visit (TablesHeap heap)
-		{
-			// TODO
-		}
-
-		public void Visit (BlobHeap heap)
-		{
-			// TODO
-		}
-
-		public void Visit (UserStringsHeap heap)
-		{
-			// TODO
-		}
-
-		public void Terminate (MetadataStreamCollection streams)
+		public override void Terminate (MetadataStreamCollection streams)
 		{
 			SetHeapSize (streams.StringsHeap, m_stringWriter, 0x01);
 			SetHeapSize (streams.GuidHeap, m_guidWriter, 0x02);
@@ -196,7 +195,7 @@ namespace Mono.Cecil.Metadata {
 				heap.IndexSize = 2;
 		}
 
-		public void Terminate (MetadataRoot root)
+		public override void Terminate (MetadataRoot root)
 		{
 			// TODO
 		}

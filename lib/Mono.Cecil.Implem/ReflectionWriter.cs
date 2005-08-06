@@ -18,7 +18,7 @@ namespace Mono.Cecil.Implem {
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class ReflectionWriter : IReflectionVisitor {
+	internal sealed class ReflectionWriter : BaseReflectionVisitor {
 
 		private StructureWriter m_structureWriter;
 		private ModuleDefinition m_mod;
@@ -65,7 +65,7 @@ namespace Mono.Cecil.Implem {
 			return null;
 		}
 
-		public void Visit (ITypeDefinitionCollection types)
+		public override void Visit (ITypeDefinitionCollection types)
 		{
 //			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 //			foreach (TypeDefinition type in types) {
@@ -73,117 +73,117 @@ namespace Mono.Cecil.Implem {
 //			}
 		}
 
-		public void Visit (ITypeDefinition type)
-		{
-
-		}
-
-		public void Visit (ITypeReferenceCollection refs)
+		public override void Visit (ITypeDefinition type)
 		{
 			// TODO
 		}
 
-		public void Visit (ITypeReference type)
+		public override void Visit (ITypeReferenceCollection refs)
 		{
 			// TODO
 		}
 
-		public void Visit (IInterfaceCollection interfaces)
+		public override void Visit (ITypeReference type)
 		{
 			// TODO
 		}
 
-		public void Visit (IExternTypeCollection externs)
+		public override void Visit (IInterfaceCollection interfaces)
 		{
 			// TODO
 		}
 
-		public void Visit (IOverrideCollection meth)
+		public override void Visit (IExternTypeCollection externs)
 		{
 			// TODO
 		}
 
-		public void Visit (INestedTypeCollection nestedTypes)
+		public override void Visit (IOverrideCollection meth)
 		{
 			// TODO
 		}
 
-		public void Visit (IParameterDefinitionCollection parameters)
+		public override void Visit (INestedTypeCollection nestedTypes)
 		{
 			// TODO
 		}
 
-		public void Visit (IParameterDefinition parameter)
+		public override void Visit (IParameterDefinitionCollection parameters)
 		{
 			// TODO
 		}
 
-		public void Visit (IMethodDefinitionCollection methods)
+		public override void Visit (IParameterDefinition parameter)
 		{
 			// TODO
 		}
 
-		public void Visit (IMethodDefinition method)
+		public override void Visit (IMethodDefinitionCollection methods)
 		{
 			// TODO
 		}
 
-		public void Visit (IPInvokeInfo pinvk)
+		public override void Visit (IMethodDefinition method)
 		{
 			// TODO
 		}
 
-		public void Visit (IEventDefinitionCollection events)
+		public override void Visit (IPInvokeInfo pinvk)
 		{
 			// TODO
 		}
 
-		public void Visit (IEventDefinition evt)
+		public override void Visit (IEventDefinitionCollection events)
 		{
 			// TODO
 		}
 
-		public void Visit (IFieldDefinitionCollection fields)
+		public override void Visit (IEventDefinition evt)
 		{
 			// TODO
 		}
 
-		public void Visit (IFieldDefinition field)
+		public override void Visit (IFieldDefinitionCollection fields)
 		{
 			// TODO
 		}
 
-		public void Visit (IPropertyDefinitionCollection properties)
+		public override void Visit (IFieldDefinition field)
 		{
 			// TODO
 		}
 
-		public void Visit (IPropertyDefinition property)
+		public override void Visit (IPropertyDefinitionCollection properties)
 		{
 			// TODO
 		}
 
-		public void Visit (ISecurityDeclarationCollection secDecls)
+		public override void Visit (IPropertyDefinition property)
 		{
 			// TODO
 		}
 
-		public void Visit (ISecurityDeclaration secDecl)
+		public override void Visit (ISecurityDeclarationCollection secDecls)
 		{
 			// TODO
 		}
 
-		public void Visit (ICustomAttributeCollection customAttrs)
+		public override void Visit (ISecurityDeclaration secDecl)
 		{
 			// TODO
 		}
 
-		public void Visit (ICustomAttribute customAttr)
+		public override void Visit (ICustomAttributeCollection customAttrs)
 		{
 			// TODO
 		}
 
-		public void Visit (IMarshalSpec marshalSpec)
+		public override void Visit (ICustomAttribute customAttr)
+		{
+			// TODO
+		}
+
+		public override void Visit (IMarshalSpec marshalSpec)
 		{
 			// TODO
 		}
