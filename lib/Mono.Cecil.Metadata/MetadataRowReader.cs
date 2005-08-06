@@ -44,7 +44,8 @@ namespace Mono.Cecil.Metadata {
 
 		private int GetCodedIndexSize (CodedIndex ci)
 		{
-			return Utilities.GetCodedIndexSize (ci, m_mtrv.GetNumberOfRows);		}
+			return Utilities.GetCodedIndexSize (ci, m_mtrv.GetNumberOfRows);
+		}
 
 		private uint ReadByIndexSize (int size)
 		{
