@@ -36,7 +36,7 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter = bw;
 
 			m_textWriter = new BinaryWriter (new MemoryStream ());
-			m_textWriter.BaseStream.Position = 78;
+			m_textWriter.BaseStream.Position = 80;
 		}
 
 		public Image GetImage ()
