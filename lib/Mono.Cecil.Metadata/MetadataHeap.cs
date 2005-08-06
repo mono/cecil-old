@@ -42,17 +42,17 @@ namespace Mono.Cecil.Metadata {
 		public static MetadataHeap HeapFactory (MetadataStream stream)
 		{
 			switch (stream.Header.Name) {
-			case "#~" :
+			case MetadataStream.Tables :
 				return new TablesHeap (stream);
 			case "#-" :
 				throw new MetadataFormatException ("Non standard #- heap found");
-			case "#GUID" :
+			case MetadataStream.GUID :
 				return new GuidHeap (stream);
-			case "#Strings" :
+			case MetadataStream.Strings :
 				return new StringsHeap (stream);
-			case "#US" :
+			case MetadataStream.UserStrings :
 				return new UserStringsHeap (stream);
-			case "#Blob" :
+			case MetadataStream.Blob :
 				return new BlobHeap (stream);
 			default :
 				return null;

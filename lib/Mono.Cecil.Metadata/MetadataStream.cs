@@ -14,6 +14,12 @@ namespace Mono.Cecil.Metadata {
 
 	public class MetadataStream : IMetadataVisitable {
 
+		public const string Strings = "#Strings";
+		public const string Tables = "#~";
+		public const string Blob = "#Blob";
+		public const string GUID = "#GUID";
+		public const string UserStrings = "#US";
+
 		private MetadataStreamHeader m_header;
 		private MetadataHeap m_heap;
 

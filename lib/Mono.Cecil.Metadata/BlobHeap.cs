@@ -16,7 +16,7 @@ namespace Mono.Cecil.Metadata {
 
 	public class BlobHeap : MetadataHeap {
 
-		internal BlobHeap (MetadataStream stream) : base (stream, "#Blob")
+		internal BlobHeap (MetadataStream stream) : base (stream, MetadataStream.Blob)
 		{
 		}
 

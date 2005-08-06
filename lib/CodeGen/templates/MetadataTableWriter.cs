@@ -62,7 +62,7 @@ namespace Mono.Cecil.Metadata {
 
 <% } %>		public void Visit (TableCollection coll)
 		{
-			// sort table by tid
+			coll.Sort ();
 		}
 
 <% $tables.each { |table| %>		public void Visit (<%=table.table_name%> table)

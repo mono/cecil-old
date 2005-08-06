@@ -23,7 +23,7 @@ namespace Mono.Cecil.Metadata {
 			set { m_strings [index] = value; }
 		}
 
-		internal StringsHeap (MetadataStream stream) : base (stream, "#Strings")
+		internal StringsHeap (MetadataStream stream) : base (stream, MetadataStream.Strings)
 		{
 			m_strings = new Hashtable ();
 		}

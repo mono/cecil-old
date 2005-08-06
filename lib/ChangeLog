@@ -1,5 +1,25 @@
 2005-08-06  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataInitializer.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/StringsHeap.cs
+	  Mono.Cecil.Metadata/BlobHeap.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/UserStringsHeap.cs
+	  Mono.Cecil.Metadata/TableCollection.cs
+	  Mono.Cecil.Metadata/TablesHeap.cs
+	  Mono.Cecil.Metadata/MetadataHeap.cs
+	  Mono.Cecil.Metadata/GuidHeap.cs
+	  Mono.Cecil.Metadata/MetadataStream.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs:
+		Playing lego with bricks from the writing layer.
+
 	* Mono.Cecil.dll.sources:
 		Updated.
 	* CodeGen/templates/CLIHeader.cs

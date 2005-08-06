@@ -23,7 +23,7 @@ namespace Mono.Cecil.Metadata {
 			get { return m_guids; }
 		}
 
-		public GuidHeap (MetadataStream stream) : base (stream, "#GUID")
+		public GuidHeap (MetadataStream stream) : base (stream, MetadataStream.GUID)
 		{
 			m_guids = new Hashtable ();
 		}

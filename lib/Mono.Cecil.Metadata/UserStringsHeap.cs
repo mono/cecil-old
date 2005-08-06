@@ -33,7 +33,7 @@ namespace Mono.Cecil.Metadata {
 			set { m_strings [offset] = value; }
 		}
 
-		internal UserStringsHeap (MetadataStream stream) : base(stream, "#US")
+		internal UserStringsHeap (MetadataStream stream) : base(stream, MetadataStream.UserStrings)
 		{
 			m_strings = new Hashtable ();
 		}

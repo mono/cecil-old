@@ -24,10 +24,11 @@ namespace Mono.Cecil.Implem {
 	internal sealed class CodeWriter : ICodeVisitor {
 
 		private BinaryWriter m_binaryWriter;
+		private RVA m_start = new RVA (0x2050);
 
-		public CodeWriter ()
+		public CodeWriter (BinaryWriter writer)
 		{
-			m_binaryWriter = new BinaryWriter (new MemoryStream ());
+			m_binaryWriter = writer;
 		}
 
 		public void Visit (IMethodBody body)

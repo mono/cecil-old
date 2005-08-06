@@ -40,7 +40,7 @@ namespace Mono.Cecil.Metadata {
 			set { m_tables [GetTableId (table)] = value; }
 		}
 
-		internal TablesHeap (MetadataStream stream) : base(stream, "#~")
+		internal TablesHeap (MetadataStream stream) : base(stream, MetadataStream.Tables)
 		{
 		}
 

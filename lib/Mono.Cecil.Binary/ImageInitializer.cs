@@ -50,6 +50,8 @@ namespace Mono.Cecil.Binary {
 		public override void Visit (PEFileHeader header)
 		{
 			header.SetDefaultValues ();
+			DateTime epoch = new DateTime (1970, 1, 1, 0, 0, 0);
+			header.TimeDateStamp = (uint) (epoch - DateTime.Now).Seconds;
 		}
 
 		public override void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)

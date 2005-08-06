@@ -24,6 +24,7 @@ namespace Mono.Cecil.Metadata {
 	internal sealed class MetadataWriter : BaseMetadataVisitor {
 
 		private MetadataRoot m_root;
+		private ImageWriter m_imgWriter;
 		private MetadataTableWriter m_tableWriter;
 		private BinaryWriter m_binaryWriter;
 
@@ -40,10 +41,17 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_tWriter;
 
-		public MetadataWriter (ReflectionWriter reflectionWriter, MetadataRoot root)
+		private BinaryWriter m_cilWriter;
+
+		public BinaryWriter CilWriter {
+			get { return m_cilWriter; }
+		}
+
+		public MetadataWriter (MetadataRoot root, BinaryWriter writer)
 		{
 			m_root = root;
-			m_binaryWriter = reflectionWriter.GetWriter ();
+			m_imgWriter = new ImageWriter (this, writer);
+			m_binaryWriter = m_imgWriter.GetTextWriter ();
 
 			m_stringCache = new Hashtable ();
 			m_stringWriter = new BinaryWriter (new MemoryStream (), Encoding.UTF8);
@@ -60,11 +68,18 @@ namespace Mono.Cecil.Metadata {
 
 			m_tWriter = new BinaryWriter (new MemoryStream ());
 			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
+
+			m_cilWriter = new BinaryWriter (new MemoryStream ());
 		}
 
 		public MetadataRoot GetMetadataRoot ()
 		{
 			return m_root;
+		}
+
+		public ImageWriter GetImageWriter ()
+		{
+			return m_imgWriter;
 		}
 
 		public BinaryWriter GetWriter ()
@@ -130,60 +145,18 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		public void QuadPadding (int length)
+		public void QuadPadding ()
 		{
-			int limit = length % 4;
-			for (int i = 0; i < limit; i++)
-				m_binaryWriter.Write ('\0');
+			m_binaryWriter.BaseStream.Position += 3;
+			m_binaryWriter.BaseStream.Position &= ~3;
 		}
 
-		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		private void CreateStream (string name)
 		{
-			m_binaryWriter.Write (header.Signature);
-			m_binaryWriter.Write (header.MajorVersion);
-			m_binaryWriter.Write (header.MinorVersion);
-			m_binaryWriter.Write (header.Reserved);
-			m_binaryWriter.Write (header.Version.Length);
-			m_binaryWriter.Write (header.Version);
-			QuadPadding (header.Version.Length);
-			// TODO
-		}
-
-		public override void Visit (MetadataStream.MetadataStreamHeader header)
-		{
-			// TODO
-		}
-
-		public override void Visit (GuidHeap heap)
-		{
-			// TODO
-		}
-
-		public override void Visit (StringsHeap heap)
-		{
-			// TODO
-		}
-
-		public override void Visit (TablesHeap heap)
-		{
-			// TODO
-		}
-
-		public override void Visit (BlobHeap heap)
-		{
-			// TODO
-		}
-
-		public override void Visit (UserStringsHeap heap)
-		{
-			// TODO
-		}
-
-		public override void Terminate (MetadataStreamCollection streams)
-		{
-			SetHeapSize (streams.StringsHeap, m_stringWriter, 0x01);
-			SetHeapSize (streams.GuidHeap, m_guidWriter, 0x02);
-			SetHeapSize (streams.BlobHeap, m_blobWriter, 0x04);
+			MetadataStream stream = new MetadataStream ();
+			stream.Header.Name = name;
+			stream.Heap = MetadataHeap.HeapFactory (stream);
+			m_root.Streams.Add (stream);
 		}
 
 		private void SetHeapSize (MetadataHeap heap, BinaryWriter data, byte flag)
@@ -195,9 +168,117 @@ namespace Mono.Cecil.Metadata {
 				heap.IndexSize = 2;
 		}
 
+		public override void Visit (MetadataRoot root)
+		{
+			if (m_stringWriter.BaseStream.Length > 0) {
+				CreateStream (MetadataStream.Strings);
+				SetHeapSize (root.Streams.StringsHeap, m_stringWriter, 0x01);
+			}
+
+			if (m_guidWriter.BaseStream.Length > 0) {
+				CreateStream (MetadataStream.GUID);
+				SetHeapSize (root.Streams.GuidHeap, m_guidWriter, 0x02);
+			}
+
+			if (m_blobWriter.BaseStream.Length > 0) {
+				CreateStream (MetadataStream.Blob);
+				SetHeapSize (root.Streams.BlobHeap, m_blobWriter, 0x04);
+			}
+
+			if (m_usWriter.BaseStream.Length > 0)
+				CreateStream (MetadataStream.UserStrings);
+
+			m_root.Streams.TablesHeap.Tables.Accept (m_tableWriter);
+
+			if (m_tWriter.BaseStream.Length == 0)
+				m_root.Streams.Remove (m_root.Streams.TablesHeap.GetStream ());
+		}
+
+		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		{
+			m_binaryWriter.Write (header.Signature);
+			m_binaryWriter.Write (header.MajorVersion);
+			m_binaryWriter.Write (header.MinorVersion);
+			m_binaryWriter.Write (header.Reserved);
+			m_binaryWriter.Write (header.Version.Length);
+			m_binaryWriter.Write (header.Version);
+			QuadPadding ();
+			m_binaryWriter.Write (header.Flags);
+			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
+		}
+
+		public override void Visit (MetadataStream.MetadataStreamHeader header)
+		{
+			// TODO, find a way to compute cleverly the offset
+			m_binaryWriter.Write (header.Offset);
+			BinaryWriter container;
+			switch (header.Name) {
+			case MetadataStream.Tables :
+				container = m_tWriter;
+				break;
+			case MetadataStream.Strings :
+				container = m_stringWriter;
+				break;
+			case MetadataStream.GUID :
+				container = m_guidWriter;
+				break;
+			case MetadataStream.Blob :
+				container = m_blobWriter;
+				break;
+			case MetadataStream.UserStrings :
+				container = m_usWriter;
+				break;
+			default :
+				throw new MetadataFormatException ("Unknown stream kind");
+			}
+
+			m_binaryWriter.Write ((uint) container.BaseStream.Length);
+			m_binaryWriter.Write (header.Name);
+			QuadPadding ();
+		}
+
+		private void WriteMemStream (BinaryWriter writer)
+		{
+			m_binaryWriter.Write (
+				(writer.BaseStream as MemoryStream).ToArray ());
+			QuadPadding ();
+		}
+
+		public override void Visit (GuidHeap heap)
+		{
+			WriteMemStream (m_guidWriter);
+		}
+
+		public override void Visit (StringsHeap heap)
+		{
+			WriteMemStream (m_stringWriter);
+		}
+
+		public override void Visit (TablesHeap heap)
+		{
+			m_binaryWriter.Write (heap.Reserved);
+			m_binaryWriter.Write (heap.MajorVersion);
+			m_binaryWriter.Write (heap.MinorVersion);
+			m_binaryWriter.Write (heap.HeapSizes);
+			m_binaryWriter.Write (heap.Reserved2);
+			m_binaryWriter.Write (heap.Valid);
+			m_binaryWriter.Write (heap.Sorted);
+			WriteMemStream (m_tWriter);
+		}
+
+		public override void Visit (BlobHeap heap)
+		{
+			WriteMemStream (m_blobWriter);
+		}
+
+		public override void Visit (UserStringsHeap heap)
+		{
+			WriteMemStream (m_usWriter);
+		}
+
 		public override void Terminate (MetadataRoot root)
 		{
-			// TODO
+			// TODO, fire the ImageWriter visit
 		}
 	}
 }

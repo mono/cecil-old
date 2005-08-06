@@ -46,5 +46,14 @@ namespace Mono.Cecil.Metadata {
 			tables.Heap = MetadataHeap.HeapFactory (tables);
 			m_root.Streams.Add (tables);
 		}
+
+		public override void Visit (TablesHeap th)
+		{
+			th.Reserved = 0;
+			th.MajorVersion = 1;
+			th.MinorVersion = 1;
+			th.Reserved2 = 1;
+			th.Sorted = 0x2003301fa00;
+		}
 	}
 }

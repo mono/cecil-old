@@ -29,7 +29,14 @@ namespace Mono.Cecil.Implem {
 
 		public StructureWriter StructureWriter {
 			get { return m_structureWriter; }
-			set { m_structureWriter = value; }
+			set {
+				m_structureWriter = value;
+				m_mdWriter = new MetadataWriter (
+					m_mod.Image.MetadataRoot, m_structureWriter.GetWriter ());
+				m_tableWriter = m_mdWriter.GetTableVisitor ();
+				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
+				m_codeWriter = new CodeWriter (m_mdWriter.CilWriter);
+			}
 		}
 
 		public CodeWriter CodeWriter {
@@ -51,18 +58,6 @@ namespace Mono.Cecil.Implem {
 		public ReflectionWriter (ModuleDefinition mod)
 		{
 			m_mod = mod;
-			m_codeWriter = new CodeWriter ();
-			m_mdWriter = new MetadataWriter (this, m_mod.Image.MetadataRoot);
-			m_tableWriter = m_mdWriter.GetTableVisitor ();
-			m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
-		}
-
-		public BinaryWriter GetWriter ()
-		{
-			if (m_structureWriter != null)
-				return m_structureWriter.GetWriter ();
-
-			return null;
 		}
 
 		public override void Visit (ITypeDefinitionCollection types)

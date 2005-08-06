@@ -24,11 +24,42 @@ namespace Mono.Cecil.Binary {
 
 	internal sealed class ImageWriter : BaseImageVisitor {
 
+		private Image m_img;
 		private BinaryWriter m_binaryWriter;
+
+		private BinaryWriter m_resWriter;
+		private BinaryWriter m_textWriter;
 
 		public ImageWriter (MetadataWriter writer)
 		{
+			m_img = writer.GetMetadataRoot ().GetImage ();
 			m_binaryWriter = writer.GetWriter ();
+
+			m_textWriter = new BinaryWriter (new MemoryStream ());
+		}
+
+		public Image GetImage ()
+		{
+			return m_img;
+		}
+
+		public BinaryWriter GetTextWriter ()
+		{
+			return m_textWriter;
+		}
+
+		public uint AddResource (byte [] res)
+		{
+			if (m_resWriter == null) {
+				Section rs = new Section ();
+				rs.Name = ".res";
+				m_img.Sections.Add (rs);
+				m_resWriter = new BinaryWriter (new MemoryStream ());
+			}
+
+			uint offset = (uint) m_resWriter.BaseStream.Position;
+			m_resWriter.Write (res);
+			return offset;
 		}
 
 		public override void Visit (DOSHeader header)
@@ -49,9 +80,10 @@ namespace Mono.Cecil.Binary {
 <% cur_header = $headers["Section"] %>
 		public override void Visit (Section sect)
 		{
-			foreach (char c in sect.Name)
-				m_binaryWriter.Write ((sbyte) c);
-			m_binaryWriter.Write ((sbyte) '\0');
+			m_binaryWriter.Write (sect.Name);
+			int more = 8 - sect.Name.Length;
+			for (int i = 0; i < more; i++)
+				m_binaryWriter.Write ((byte) 0);
 <% cur_header.fields.each { |field| %>
 			<%=field.write_binary("sect", "m_binaryWriter")%>;<% } %>
 		}
