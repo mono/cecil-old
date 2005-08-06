@@ -30,12 +30,13 @@ namespace Mono.Cecil.Binary {
 		private BinaryWriter m_resWriter;
 		private BinaryWriter m_textWriter;
 
-		public ImageWriter (MetadataWriter writer)
+		public ImageWriter (MetadataWriter writer, BinaryWriter bw)
 		{
 			m_img = writer.GetMetadataRoot ().GetImage ();
-			m_binaryWriter = writer.GetWriter ();
+			m_binaryWriter = bw;
 
 			m_textWriter = new BinaryWriter (new MemoryStream ());
+			m_textWriter.BaseStream.Position = 78;
 		}
 
 		public Image GetImage ()
@@ -53,6 +54,8 @@ namespace Mono.Cecil.Binary {
 			if (m_resWriter == null) {
 				Section rs = new Section ();
 				rs.Name = ".res";
+				rs.Characteristics = SectionCharacteristics.ContainsInitializedData |
+					SectionCharacteristics.MemoryRead; 
 				m_img.Sections.Add (rs);
 				m_resWriter = new BinaryWriter (new MemoryStream ());
 			}
@@ -62,12 +65,18 @@ namespace Mono.Cecil.Binary {
 			return offset;
 		}
 
+		public override void Visit (Image img)
+		{
+			// size computations, fields setting, etc.
+			img.PEFileHeader.NumberOfSections = (ushort) img.Sections.Count;
+		}
+
 		public override void Visit (DOSHeader header)
 		{
 			m_binaryWriter.Write (header.Start);
 			m_binaryWriter.Write (header.Lfanew);
 			m_binaryWriter.Write (header.End);
-			
+
 			m_binaryWriter.Write ((ushort) 0x4550);
 			m_binaryWriter.Write ((ushort) 0);
 		}
@@ -90,37 +99,42 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportAddressTable iat)
 		{
-			m_binaryWriter.Write (iat.HintNameTableRVA.Value);
+			m_textWriter.Write (iat.HintNameTableRVA.Value);
 		}
 <% cur_header = $headers["CLIHeader"] %>
 		public override void Visit (CLIHeader header)
 		{<% cur_header.fields.each { |field| %>
-			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
+			<%=field.write_binary("header", "m_textWriter")%>;<% } %>
 		}
 
 		public override void Visit (ImportTable it)
 		{
-			m_binaryWriter.Write (it.ImportAddressTable.Value);
-			m_binaryWriter.Write (it.DateTimeStamp);
-			m_binaryWriter.Write (it.ForwardChain);
-			m_binaryWriter.Write (it.Name.Value);
-			m_binaryWriter.Write (it.ImportAddressTable.Value);
+			m_textWriter.Write (it.ImportAddressTable.Value);
+			m_textWriter.Write (it.DateTimeStamp);
+			m_textWriter.Write (it.ForwardChain);
+			m_textWriter.Write (it.Name.Value);
+			m_textWriter.Write (it.ImportAddressTable.Value);
 		}
 
 		public override void Visit (ImportLookupTable ilt)
 		{
-			m_binaryWriter.Write (ilt.HintNameRVA.Value);
+			m_textWriter.Write (ilt.HintNameRVA.Value);
 		}
 
 		public override void Visit (HintNameTable hnt)
 		{
-			m_binaryWriter.Write (hnt.Hint);
-			m_binaryWriter.Write (hnt.RuntimeMain);
-			m_binaryWriter.Write ('\0');
-			m_binaryWriter.Write (hnt.RuntimeLibrary);
-			m_binaryWriter.Write ('\0');
+			m_textWriter.Write (hnt.Hint);
+			m_textWriter.Write (hnt.RuntimeMain);
+			m_textWriter.Write ('\0');
+			m_textWriter.Write (hnt.RuntimeLibrary);
+			m_textWriter.Write ('\0');
 
 			// ep + rva
+		}
+
+		public override void Terminate (Image img)
+		{
+			// write sections, align the whole thing
 		}
 	}
 }

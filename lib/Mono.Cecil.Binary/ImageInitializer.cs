@@ -71,12 +71,18 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (SectionCollection coll)
 		{
-			string [] names = new string [] {".text", ".reloc"};
-			foreach (string name in names) {
-				Section s = new Section ();
-				s.Name = name;
-				coll.Add (s);
-			}
+			Section text = new Section ();
+			text.Name = ".text";
+			text.Characteristics = SectionCharacteristics.ContainsCode |
+				SectionCharacteristics.MemoryRead | SectionCharacteristics.MemExecute;
+
+			Section reloc = new Section ();
+			reloc.Name =  ".reloc";
+			reloc.Characteristics = SectionCharacteristics.ContainsInitializedData |
+				SectionCharacteristics.Align2Bytes | SectionCharacteristics.MemoryRead;
+
+			coll.Add (text);
+			coll.Add (reloc);
 		}
 
 		public override void Visit (Section sect)

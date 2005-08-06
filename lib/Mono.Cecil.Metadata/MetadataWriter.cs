@@ -43,6 +43,8 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_cilWriter;
 
+		private int m_rootStart;
+
 		public BinaryWriter CilWriter {
 			get { return m_cilWriter; }
 		}
@@ -65,6 +67,7 @@ namespace Mono.Cecil.Metadata {
 			m_usWriter.Write ('\0');
 
 			m_blobWriter = new BinaryWriter (new MemoryStream ());
+			m_blobWriter.Write ((byte) 0);
 
 			m_tWriter = new BinaryWriter (new MemoryStream ());
 			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
@@ -145,10 +148,15 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		public void QuadPadding ()
+		public void QuadAlign ()
 		{
-			m_binaryWriter.BaseStream.Position += 3;
-			m_binaryWriter.BaseStream.Position &= ~3;
+			QuadAlign (m_binaryWriter);
+		}
+
+		public void QuadAlign (BinaryWriter bw)
+		{
+			bw.BaseStream.Position += 3;
+			bw.BaseStream.Position &= ~3;
 		}
 
 		private void CreateStream (string name)
@@ -170,9 +178,14 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Visit (MetadataRoot root)
 		{
-			if (m_stringWriter.BaseStream.Length > 0) {
+			WriteMemStream (m_cilWriter);
+
+			m_rootStart = (int) m_binaryWriter.BaseStream.Position;
+
+			if (m_stringWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Strings);
 				SetHeapSize (root.Streams.StringsHeap, m_stringWriter, 0x01);
+				QuadAlign (m_stringWriter);
 			}
 
 			if (m_guidWriter.BaseStream.Length > 0) {
@@ -180,13 +193,16 @@ namespace Mono.Cecil.Metadata {
 				SetHeapSize (root.Streams.GuidHeap, m_guidWriter, 0x02);
 			}
 
-			if (m_blobWriter.BaseStream.Length > 0) {
+			if (m_blobWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Blob);
 				SetHeapSize (root.Streams.BlobHeap, m_blobWriter, 0x04);
+				QuadAlign (m_blobWriter);
 			}
 
-			if (m_usWriter.BaseStream.Length > 0)
+			if (m_usWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.UserStrings);
+				QuadAlign (m_usWriter);
+			}
 
 			m_root.Streams.TablesHeap.Tables.Accept (m_tableWriter);
 
@@ -202,14 +218,15 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.Reserved);
 			m_binaryWriter.Write (header.Version.Length);
 			m_binaryWriter.Write (header.Version);
-			QuadPadding ();
+			QuadAlign ();
 			m_binaryWriter.Write (header.Flags);
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
 		}
 
 		public override void Visit (MetadataStream.MetadataStreamHeader header)
 		{
-			// TODO, find a way to compute cleverly the offset
+			header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_rootStart);
+
 			m_binaryWriter.Write (header.Offset);
 			BinaryWriter container;
 			switch (header.Name) {
@@ -232,16 +249,17 @@ namespace Mono.Cecil.Metadata {
 				throw new MetadataFormatException ("Unknown stream kind");
 			}
 
-			m_binaryWriter.Write ((uint) container.BaseStream.Length);
+			header.Size = (uint) container.BaseStream.Length;
+			m_binaryWriter.Write (header.Size);
 			m_binaryWriter.Write (header.Name);
-			QuadPadding ();
+			QuadAlign ();
 		}
 
 		private void WriteMemStream (BinaryWriter writer)
 		{
 			m_binaryWriter.Write (
 				(writer.BaseStream as MemoryStream).ToArray ());
-			QuadPadding ();
+			QuadAlign ();
 		}
 
 		public override void Visit (GuidHeap heap)
@@ -278,7 +296,8 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Terminate (MetadataRoot root)
 		{
-			// TODO, fire the ImageWriter visit
+			m_binaryWriter.BaseStream.Position = 0;
+			root.GetImage ().Accept (m_imgWriter);
 		}
 	}
 }
