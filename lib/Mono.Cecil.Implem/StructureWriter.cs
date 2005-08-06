@@ -67,7 +67,7 @@ namespace Mono.Cecil.Implem {
 			asmTable.Rows.Add (asmRow);
 		}
 
-		public void Visit (IAssemblyNameReference name)
+		public override void Visit (IAssemblyNameReference name)
 		{
 			byte [] pkortoken;
 			if (name.PublicKey.Length > 0)
@@ -133,7 +133,7 @@ namespace Mono.Cecil.Implem {
 			mrTable.Rows.Add (mrRow);
 		}
 
-		public void Visit (IModuleDefinition module)
+		public override void Visit (IModuleDefinition module)
 		{
 			if (module.Main) {
 				ModuleTable modTable = m_tableWriter.GetModuleTable ();

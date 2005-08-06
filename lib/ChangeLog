@@ -1,5 +1,16 @@
 2005-08-06  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		On going work on the writing layer.
+	* Mono.Cecil.Implem/StructureWriter.cs:
+		Correctly override methods
+	* CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Fix build warnings.
+
 	* Mono.Cecil/IResource.cs
 	  Mono.Cecil.Implem/AssemblyLinkedResource.cs
 	  Mono.Cecil.Implem/EmbeddedResource.cs

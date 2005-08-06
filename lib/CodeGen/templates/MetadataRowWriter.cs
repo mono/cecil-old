@@ -23,14 +23,10 @@ namespace Mono.Cecil.Metadata {
 
 	internal sealed class MetadataRowWriter : IMetadataRowVisitor {
 
-		private MetadataTableWriter m_mtwv;
-		private MetadataRoot m_metadataRoot;
 		private IO.BinaryWriter m_binaryWriter;
 
 		public MetadataRowWriter (MetadataTableWriter mtwv)
 		{
-			m_mtwv = mtwv;
-			m_metadataRoot = mtwv.GetMetadataRoot ();
 			m_binaryWriter = mtwv.GetWriter ();
 		}
 

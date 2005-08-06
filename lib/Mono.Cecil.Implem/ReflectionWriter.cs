@@ -67,10 +67,10 @@ namespace Mono.Cecil.Implem {
 
 		public void Visit (ITypeDefinitionCollection types)
 		{
-			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
-			foreach (TypeDefinition type in types) {
-				//TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow ()
-			}
+//			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
+//			foreach (TypeDefinition type in types) {
+//				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow ();
+//			}
 		}
 
 		public void Visit (ITypeDefinition type)

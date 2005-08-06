@@ -26,12 +26,12 @@ namespace Mono.Cecil.Metadata {
 		private MetadataRowWriter m_mrrw;
 		private BinaryWriter m_binaryWriter;
 
-		public MetadataTableWriter (MetadataWriter mrv)
+		public MetadataTableWriter (MetadataWriter mrv, BinaryWriter writer)
 		{
 			m_metadataRoot = mrv.GetMetadataRoot ();
 			m_heap = m_metadataRoot.Streams.TablesHeap;
 			m_mrrw = new MetadataRowWriter (this);
-			m_binaryWriter = mrv.GetWriter ();
+			m_binaryWriter = writer;
 		}
 
 		public MetadataRoot GetMetadataRoot ()

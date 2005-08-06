@@ -38,10 +38,11 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_blobWriter;
 
+		private BinaryWriter m_tWriter;
+
 		public MetadataWriter (ReflectionWriter reflectionWriter, MetadataRoot root)
 		{
 			m_root = root;
-			m_tableWriter = new MetadataTableWriter (this);
 			m_binaryWriter = reflectionWriter.GetWriter ();
 
 			m_stringCache = new Hashtable ();
@@ -56,6 +57,9 @@ namespace Mono.Cecil.Metadata {
 			m_usWriter.Write ('\0');
 
 			m_blobWriter = new BinaryWriter (new MemoryStream ());
+
+			m_tWriter = new BinaryWriter (new MemoryStream ());
+			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
 		}
 
 		public MetadataRoot GetMetadataRoot ()
