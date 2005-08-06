@@ -40,7 +40,7 @@
 			<field name="TimeDateStamp" type="uint" />
 			<field name="PointerToSymbolTable" type="uint" default="0" />
 			<field name="NumberOfSymbols" type="uint" default="0" />
-			<field name="OptionalHeaderSize" type="ushort" />
+			<field name="OptionalHeaderSize" type="ushort" default="0xe0" />
 			<field name="Characteristics" type="Mono.Cecil.Binary.ImageCharacteristics" />
 		</header>
 
@@ -68,7 +68,7 @@
 			<field name="SubSysMinor" type="ushort" default="0" />
 			<field name="Reserved" type="uint" default="0" />
 			<field name="ImageSize" type="uint" />
-			<field name="HeaderSize" type="uint" />
+			<field name="HeaderSize" type="uint" default="0x200" />
 			<field name="FileChecksum" type="uint" default="0" />
 			<field name="SubSystem" type="Mono.Cecil.Binary.SubSystem" />
 			<field name="DLLFlags" type="ushort" default="0" />
@@ -82,7 +82,7 @@
 
 		<header name="PEOptionalHeader.DataDirectoriesHeader">
 			<field name="ExportTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
-			<field name="ImportTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
+			<field name="ImportTable" type="Mono.Cecil.Binary.DataDirectory" />
 			<field name="ResourceTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
 			<field name="ExceptionTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
 			<field name="CertificateTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
@@ -93,9 +93,9 @@
 			<field name="TLSTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
 			<field name="LoadConfigTable" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
 			<field name="BoundImport" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
-			<field name="IAT" type="Mono.Cecil.Binary.DataDirectory" />
+			<field name="IAT" type="Mono.Cecil.Binary.DataDirectory" default="new DataDirectory (new RVA (0x2000), 8)" />
 			<field name="DelayImportDescriptor" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
-			<field name="CLIHeader" type="Mono.Cecil.Binary.DataDirectory" />
+			<field name="CLIHeader" type="Mono.Cecil.Binary.DataDirectory" default="new DataDirectory (new RVA (0x2008), 0x48)" />
 			<field name="Reserved" type="Mono.Cecil.Binary.DataDirectory" default="DataDirectory.Zero" />
 		</header>
 

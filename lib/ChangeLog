@@ -1,5 +1,16 @@
 2005-08-06  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources:
+		Updated.
+	* CodeGen/templates/CLIHeader.cs
+	  CodeGen/templates/PEOptionalHeader.cs
+		Blah.
+	* CodeGen/cecil.xml
+	  Mono.Cecil.Binary/CLIHeader.cs
+	  Mono.Cecil.Binary/PEOptionalHeader.cs:
+	  Mono.Cecil.Binary/PEFileHeader.cs
+		On going work on the writing layer
+
 	* CodeGen/templates/ImageWriter.cs
 	  CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Binary/BaseImageVisitor.cs

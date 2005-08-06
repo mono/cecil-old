@@ -25,7 +25,7 @@ namespace Mono.Cecil.Binary {
 		}
 
 		public void SetDefaultValues ()
-		{<% header.fields.each { |f| print("\n\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
+		{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
 		}
 
 		public void Accept (IBinaryVisitor visitor)

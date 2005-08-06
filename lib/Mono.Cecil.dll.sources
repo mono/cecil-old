@@ -86,6 +86,7 @@
 ./Mono.Cecil/TypeAttributes.cs
 ./Mono.Cecil/TypeFactory.cs
 ./Mono.Cecil/VariantType.cs
+./Mono.Cecil.Binary/BaseImageVisitor.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
 ./Mono.Cecil.Binary/DataDirectory.cs
 ./Mono.Cecil.Binary/DOSHeader.cs
@@ -112,6 +113,7 @@
 ./Mono.Cecil.Metadata/AssemblyRef.cs
 ./Mono.Cecil.Metadata/AssemblyRefOS.cs
 ./Mono.Cecil.Metadata/AssemblyRefProcessor.cs
+./Mono.Cecil.Metadata/BaseMetadataVisitor.cs
 ./Mono.Cecil.Metadata/BlobHeap.cs
 ./Mono.Cecil.Metadata/ClassLayout.cs
 ./Mono.Cecil.Metadata/CodedIndex.cs
