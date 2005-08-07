@@ -197,13 +197,6 @@ namespace Mono.Cecil.Metadata {
 			m_binaryReader.BaseStream.Position = cursor;
 		}
 
-		public override void Terminate (MetadataStreamCollection coll)
-		{
-			SetHeapIndexSize (coll.StringsHeap, 0x01);
-			SetHeapIndexSize (coll.GuidHeap, 0x02);
-			SetHeapIndexSize (coll.BlobHeap, 0x04);
-		}
-
 		private void SetHeapIndexSize (MetadataHeap heap, byte flag)
 		{
 			TablesHeap th = m_root.Streams.TablesHeap;
@@ -212,8 +205,10 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Terminate (MetadataRoot root)
 		{
-			MetadataTableReader mtrv = new MetadataTableReader (this);
-			root.Streams.TablesHeap.Tables.Accept (mtrv);
+			SetHeapIndexSize (root.Streams.StringsHeap, 0x01);
+			SetHeapIndexSize (root.Streams.GuidHeap, 0x02);
+			SetHeapIndexSize (root.Streams.BlobHeap, 0x04);
+			root.Streams.TablesHeap.Tables.Accept (new MetadataTableReader (this));
 		}
 	}
 }

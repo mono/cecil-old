@@ -27,7 +27,6 @@ namespace Mono.Cecil.Metadata {
 		void Visit (BlobHeap heap);
 		void Visit (UserStringsHeap heap);
 
-		void Terminate (MetadataStreamCollection streams);
 		void Terminate (MetadataRoot root);
 	}
 

@@ -55,9 +55,9 @@ namespace Mono.Cecil.Binary {
 			return (integer + alignWith - 1) & ~(alignWith - 1);
 		}
 
-		public override void Visit (Image img)
+		public void Initialize ()
 		{
-			uint imgBase = img.PEOptionalHeader.NTSpecificFields.ImageBase;
+			Image img = m_img;
 			uint sectAlign = img.PEOptionalHeader.NTSpecificFields.SectionAlignment;
 			uint fileAlign = img.PEOptionalHeader.NTSpecificFields.FileAlignment;
 
@@ -78,7 +78,7 @@ namespace Mono.Cecil.Binary {
 			uint relocSize = 12;
 			m_relocWriter.Write ((uint) 0x200);
 			m_relocWriter.Write (relocSize);
-			m_relocWriter.Write ((ushort) (3 << relocSize) + 2);
+			m_relocWriter.Write ((ushort) (3 << (int) relocSize) + 2);
 			m_relocWriter.Write ((ushort) 0);
 
 			// start counting before sections headers
@@ -108,8 +108,6 @@ namespace Mono.Cecil.Binary {
 				txtSec.SizeOfRawData, fileAlign);
 			img.PEOptionalHeader.StandardFields.BaseOfCode = txtSec.VirtualAddress;
 
-			// entry point rva
-
 			imageSize += headersEnd;
 			img.PEOptionalHeader.NTSpecificFields.ImageSize = GetAligned (imageSize, sectAlign);
 		}
@@ -128,8 +126,7 @@ namespace Mono.Cecil.Binary {
 		{<% header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
 		}
-<% end } %>
-<% cur_header = $headers["Section"] %>
+<% end } ; cur_header = $headers["Section"] %>
 		public override void Visit (Section sect)
 		{
 			m_binaryWriter.Write (sect.Name);
@@ -142,6 +139,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportAddressTable iat)
 		{
+			m_textWriter.BaseStream.Position = 0;
 			m_textWriter.Write (iat.HintNameTableRVA.Value);
 		}
 <% cur_header = $headers["CLIHeader"] %>
@@ -152,6 +150,8 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportTable it)
 		{
+			m_textWriter.BaseStream.Position = m_img.ResolveTextVirtualAddress (
+				m_img.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
 			m_textWriter.Write (it.ImportAddressTable.Value);
 			m_textWriter.Write (it.DateTimeStamp);
 			m_textWriter.Write (it.ForwardChain);
@@ -172,6 +172,13 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (hnt.RuntimeLibrary);
 			m_textWriter.Write ('\0');
 
+			// patch header with ep rva
+			RVA ep = m_img.TextSection.VirtualAddress +
+				(uint) m_textWriter.BaseStream.Position;
+			long pos = m_binaryWriter.BaseStream.Position;
+			m_binaryWriter.BaseStream.Position = 0xa8;
+			m_binaryWriter.Write (ep.Value);
+			m_binaryWriter.BaseStream.Position = pos;
 			m_textWriter.Write (hnt.EntryPoint);
 			m_textWriter.Write (hnt.RVA);
 		}

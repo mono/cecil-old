@@ -1,5 +1,19 @@
 2005-08-07  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageReader.cs
+	  CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/IMetadataVisitor.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Metadata/IMetadataVisitor.cs
+	  Mono.Cecil.Metadata/BaseMetadataVisitor.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/MetadataStreamCollection.cs:
+		Simplify IMetadataVisitor.
+		Work on the writing layer, closer to have something testable
+		than ever.
+
 	* CodeGen/cecil.xml
 	  CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs

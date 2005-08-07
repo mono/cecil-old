@@ -54,10 +54,6 @@ namespace Mono.Cecil.Metadata {
 		{
 		}
 
-		public virtual void Terminate (MetadataStreamCollection streams)
-		{
-		}
-
 		public virtual void Terminate (MetadataRoot root)
 		{
 		}

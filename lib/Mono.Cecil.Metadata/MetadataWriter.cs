@@ -45,7 +45,11 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_resWriter;
 
-		private uint m_rootStart;
+		private uint m_mdStart;
+		private uint m_mdSize;
+
+		private uint m_resStart;
+		private uint m_resSize;
 
 		public BinaryWriter CilWriter {
 			get { return m_cilWriter; }
@@ -192,7 +196,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			WriteMemStream (m_cilWriter);
 
-			m_rootStart = (uint) m_binaryWriter.BaseStream.Position;
+			m_mdStart = (uint) m_binaryWriter.BaseStream.Position;
 
 			if (m_stringWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Strings);
@@ -237,7 +241,7 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Visit (MetadataStream.MetadataStreamHeader header)
 		{
-			header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_rootStart);
+			header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
 
 			m_binaryWriter.Write (header.Offset);
 			BinaryWriter container;
@@ -306,10 +310,30 @@ namespace Mono.Cecil.Metadata {
 			WriteMemStream (m_usWriter);
 		}
 
+		private void PatchHeader ()
+		{
+			Image img = m_imgWriter.GetImage ();
+
+			if (m_mdSize > 0)
+				img.CLIHeader.Metadata = new DataDirectory (
+					img.TextSection.VirtualAddress + m_mdStart, m_mdSize);
+
+			if (m_resSize > 0)
+				img.CLIHeader.Resources = new DataDirectory (
+					img.TextSection.VirtualAddress + m_resStart, m_resSize);
+
+			img.PEOptionalHeader.DataDirectories.ImportTable = new DataDirectory (
+				img.TextSection.VirtualAddress + (uint) m_binaryWriter.BaseStream.Position, 79);
+		}
+
 		public override void Terminate (MetadataRoot root)
 		{
+			m_mdSize = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
+			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
 			WriteMemStream (m_resWriter);
-			m_binaryWriter.BaseStream.Position = 0;
+			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
+			m_imgWriter.Initialize ();
+			PatchHeader ();
 			root.GetImage ().Accept (m_imgWriter);
 		}
 	}

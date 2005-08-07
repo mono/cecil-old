@@ -118,8 +118,7 @@ namespace Mono.Cecil.Binary {
 			}
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.CLIHeader.Metadata.VirtualAddress);
-			MetadataReader mrv = new MetadataReader (this);
-			m_image.MetadataRoot.Accept (mrv);
+			m_image.MetadataRoot.Accept (new MetadataReader (this));
 		}
 
 		public override void Visit (ImportTable it)
