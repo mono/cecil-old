@@ -59,7 +59,7 @@
 		<header name="PEOptionalHeader.NTSpecificFieldsHeader">
 			<field name="ImageBase" type="uint" default="0x400000" />
 			<field name="SectionAlignment" type="uint" default="0x2000" />
-			<field name="FileAlignment" type="uint" />
+			<field name="FileAlignment" type="uint" default="0x200" />
 			<field name="OSMajor" type="ushort" default="4" />
 			<field name="OSMinor" type="ushort" default="0" />
 			<field name="UserMajor" type="ushort" default="0" />

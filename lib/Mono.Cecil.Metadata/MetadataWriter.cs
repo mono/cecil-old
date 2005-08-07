@@ -45,7 +45,7 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_resWriter;
 
-		private int m_rootStart;
+		private uint m_rootStart;
 
 		public BinaryWriter CilWriter {
 			get { return m_cilWriter; }
@@ -192,7 +192,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			WriteMemStream (m_cilWriter);
 
-			m_rootStart = (int) m_binaryWriter.BaseStream.Position;
+			m_rootStart = (uint) m_binaryWriter.BaseStream.Position;
 
 			if (m_stringWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Strings);

@@ -1,5 +1,13 @@
 2005-08-07  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/cecil.xml
+	  CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Binary/PEOptionalHeader.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/Imports.cs:
+		don't stop don't stop come ON!
+
 	* CodeGen/templates/ImageWriter.cs
 	  CodeGen/templates/ImageReader.cs
 	  CodeGen/templates/Section.cs
