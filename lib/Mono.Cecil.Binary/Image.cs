@@ -24,6 +24,7 @@ namespace Mono.Cecil.Binary {
 		private PEOptionalHeader m_peOptionalHeader;
 
 		private SectionCollection m_sections;
+		private Section m_textSection;
 
 		private ImportAddressTable m_importAddressTable;
 		private CLIHeader m_cliHeader;
@@ -49,6 +50,11 @@ namespace Mono.Cecil.Binary {
 
 		public SectionCollection Sections {
 			get { return m_sections; }
+		}
+
+		public Section TextSection {
+			get { return m_textSection; }
+			set { m_textSection = value; }
 		}
 
 		public ImportAddressTable ImportAddressTable {
@@ -98,13 +104,18 @@ namespace Mono.Cecil.Binary {
 			m_img = img;
 		}
 
+		public long ResolveTextVirtualAddress (RVA rva)
+		{
+			return rva + m_textSection.PointerToRawData - m_textSection.VirtualAddress;
+		}
+
 		public long ResolveVirtualAddress (RVA rva)
 		{
 			foreach (Section sect in this.Sections) {
 				if (rva >= sect.VirtualAddress &&
 					rva < sect.VirtualAddress + sect.SizeOfRawData)
 
-					return rva + sect.PointerToRawData - sect.VirtualAddress;
+						return rva + sect.PointerToRawData - sect.VirtualAddress;
 			}
 			return 0;
 		}

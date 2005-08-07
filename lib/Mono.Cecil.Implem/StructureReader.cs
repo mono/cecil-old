@@ -102,7 +102,7 @@ namespace Mono.Cecil.Implem {
 					EmbeddedResource eres = new EmbeddedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags, module);
 
-					br.BaseStream.Position = m_img.ResolveVirtualAddress (
+					br.BaseStream.Position = m_img.ResolveTextVirtualAddress (
 						m_img.CLIHeader.Resources.VirtualAddress);
 					br.BaseStream.Position += mrRow.Offset;
 

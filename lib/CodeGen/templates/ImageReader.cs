@@ -87,13 +87,15 @@ namespace Mono.Cecil.Binary {
 			name = new char [read];
 			Array.Copy (buffer, name, read);
 			sect.Name = read == 0 ? string.Empty : new string (name);
+			if (sect.Name == Section.Text)
+				m_image.TextSection = sect;
 			m_binaryReader.BaseStream.Position += 8 - read - 1;
 <% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
 		}
 
 		public override void Visit (ImportAddressTable iat)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
 
 			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
@@ -104,17 +106,17 @@ namespace Mono.Cecil.Binary {
 			if (m_image.PEOptionalHeader.DataDirectories.CLIHeader == DataDirectory.Zero)
 				throw new ImageFormatException ("Non Pure CLI Image");
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
 <% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
 			if (header.StrongNameSignature != DataDirectory.Zero) {
-				m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 					header.StrongNameSignature.VirtualAddress);
 				header.ImageHash = m_binaryReader.ReadBytes ((int) header.StrongNameSignature.Size);
 			} else {
 				header.ImageHash = new byte [0];
 			}
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.CLIHeader.Metadata.VirtualAddress);
 			MetadataReader mrv = new MetadataReader (this);
 			m_image.MetadataRoot.Accept (mrv);
@@ -122,10 +124,10 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportTable it)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
 
-			it.ImportAddressTable = new RVA (m_binaryReader.ReadUInt32 ());
+			it.ImportLookupTable = new RVA (m_binaryReader.ReadUInt32 ());
 			it.DateTimeStamp = m_binaryReader.ReadUInt32 ();
 			it.ForwardChain = m_binaryReader.ReadUInt32 ();
 			it.Name = new RVA (m_binaryReader.ReadUInt32 ());
@@ -134,7 +136,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportLookupTable ilt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportTable.ImportLookupTable.Value);
 
 			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
@@ -142,7 +144,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (HintNameTable hnt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportAddressTable.HintNameTableRVA.Value);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();

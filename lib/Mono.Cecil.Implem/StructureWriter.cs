@@ -95,7 +95,7 @@ namespace Mono.Cecil.Implem {
 		public override void Visit (IEmbeddedResource res)
 		{
 			AddManifestResource (
-				m_mdWriter.GetImageWriter ().AddResource (res.Data),
+				m_mdWriter.AddResource (res.Data),
 				res.Name, res.Flags,
 				new MetadataToken (TokenType.ManifestResource, 0));
 		}

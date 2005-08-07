@@ -2,6 +2,21 @@
 
 	* CodeGen/templates/ImageWriter.cs
 	  CodeGen/templates/ImageReader.cs
+	  CodeGen/templates/Section.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/Section.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/CodeWriter.cs:
+		Some writing layer love.
+
+	* CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Binary/Imports.cs
 	  Mono.Cecil.Binary/ImageReader.cs
 	  Mono.Cecil.Binary/ImageInitializer.cs

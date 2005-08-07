@@ -72,12 +72,13 @@ namespace Mono.Cecil.Binary {
 		public override void Visit (SectionCollection coll)
 		{
 			Section text = new Section ();
-			text.Name = ".text";
+			text.Name = Section.Text;
 			text.Characteristics = SectionCharacteristics.ContainsCode |
 				SectionCharacteristics.MemoryRead | SectionCharacteristics.MemExecute;
+			m_image.TextSection = text;
 
 			Section reloc = new Section ();
-			reloc.Name =  ".reloc";
+			reloc.Name =  Section.Relocs;
 			reloc.Characteristics = SectionCharacteristics.ContainsInitializedData |
 				SectionCharacteristics.Align2Bytes | SectionCharacteristics.MemoryRead;
 

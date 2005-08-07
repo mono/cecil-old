@@ -27,7 +27,6 @@ namespace Mono.Cecil.Binary {
 		private Image m_img;
 		private BinaryWriter m_binaryWriter;
 
-		private BinaryWriter m_resWriter;
 		private BinaryWriter m_textWriter;
 
 		public ImageWriter (MetadataWriter writer, BinaryWriter bw)
@@ -47,22 +46,6 @@ namespace Mono.Cecil.Binary {
 		public BinaryWriter GetTextWriter ()
 		{
 			return m_textWriter;
-		}
-
-		public uint AddResource (byte [] res)
-		{
-			if (m_resWriter == null) {
-				Section rs = new Section ();
-				rs.Name = ".res";
-				rs.Characteristics = SectionCharacteristics.ContainsInitializedData |
-					SectionCharacteristics.MemoryRead; 
-				m_img.Sections.Add (rs);
-				m_resWriter = new BinaryWriter (new MemoryStream ());
-			}
-
-			uint offset = (uint) m_resWriter.BaseStream.Position;
-			m_resWriter.Write (res);
-			return offset;
 		}
 
 		public override void Visit (Image img)

@@ -43,6 +43,8 @@ namespace Mono.Cecil.Metadata {
 
 		private BinaryWriter m_cilWriter;
 
+		private BinaryWriter m_resWriter;
+
 		private int m_rootStart;
 
 		public BinaryWriter CilWriter {
@@ -73,6 +75,8 @@ namespace Mono.Cecil.Metadata {
 			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
 
 			m_cilWriter = new BinaryWriter (new MemoryStream ());
+
+			m_resWriter = new BinaryWriter (new MemoryStream ());
 		}
 
 		public MetadataRoot GetMetadataRoot ()
@@ -174,6 +178,14 @@ namespace Mono.Cecil.Metadata {
 				heap.IndexSize = 4;
 			} else
 				heap.IndexSize = 2;
+		}
+
+		public uint AddResource (byte [] data)
+		{
+			uint offset = (uint) m_resWriter.BaseStream.Position;
+			m_resWriter.Write (data);
+			QuadAlign (m_resWriter);
+			return offset;
 		}
 
 		public override void Visit (MetadataRoot root)
@@ -296,6 +308,7 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Terminate (MetadataRoot root)
 		{
+			WriteMemStream (m_resWriter);
 			m_binaryWriter.BaseStream.Position = 0;
 			root.GetImage ().Accept (m_imgWriter);
 		}

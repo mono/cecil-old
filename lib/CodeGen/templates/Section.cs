@@ -17,6 +17,11 @@ namespace Mono.Cecil.Binary {
 
 	public sealed class Section : IHeader, IBinaryVisitable {
 
+		public const string Text = ".text";
+		public const string Resources = ".rsrc";
+		public const string Relocs = ".reloc";
+		public const string SData = ".sdata";
+
 <% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
 		public string Name;
 
