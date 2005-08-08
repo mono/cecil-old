@@ -97,6 +97,11 @@ namespace Mono.Cecil.Binary {
 			m_image.MetadataRoot.Accept (m_mdinit);
 		}
 
+		public override void Visit (ImportTable it)
+		{
+			it.ImportAddressTable = new RVA (0x2000);
+		}
+
 		public override void Visit (HintNameTable hnt)
 		{
 			hnt.RuntimeLibrary = HintNameTable.RuntimeCorEE;

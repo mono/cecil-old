@@ -20,7 +20,7 @@ namespace Mono.Cecil.Metadata {
 
 	using Mono.Cecil.Binary;
 
-	internal sealed class MetadataRowReader : IMetadataRowVisitor {
+	internal sealed class MetadataRowReader : BaseMetadataRowVisitor {
 
 		private MetadataTableReader m_mtrv;
 		private BinaryReader m_binaryReader;
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public void Visit (RowCollection coll)
+		public override void Visit (RowCollection coll)
 		{
 			m_blobHeapIdxSz = m_metadataRoot.Streams.BlobHeap != null ?
 				m_metadataRoot.Streams.BlobHeap.IndexSize : 2;
@@ -68,7 +68,7 @@ namespace Mono.Cecil.Metadata {
 				m_metadataRoot.Streams.GuidHeap.IndexSize : 2;
 		}
 
-<% $tables.each { |table| %>		public void Visit (<%=table.row_name%> row)
+<% $tables.each { |table| %>		public override void Visit (<%=table.row_name%> row)
 		{
 <% table.columns.each { |col|
  if (col.target.nil?)
@@ -86,8 +86,5 @@ namespace Mono.Cecil.Metadata {
 %>			row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (typeof (<%=col.target%>Table)));
 <% end
 }%>		}
-<%  print("\n") ; } %>		public void Terminate (RowCollection coll)
-		{
-		}
-	}
+<%  print("\n") ; } %>	}
 }

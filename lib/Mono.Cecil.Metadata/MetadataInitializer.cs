@@ -53,7 +53,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			th.Reserved = 0;
 			th.MajorVersion = 1;
-			th.MinorVersion = 1;
+			th.MinorVersion = 0;
 			th.Reserved2 = 1;
 			th.Sorted = 0x2003301fa00;
 		}

@@ -26,13 +26,17 @@ namespace Mono.Cecil.Binary {
 
 		private Image m_img;
 		private AssemblyKind m_kind;
+		private MetadataWriter m_mdWriter;
 		private BinaryWriter m_binaryWriter;
 
+		private Section m_textSect;
 		private BinaryWriter m_textWriter;
+		private Section m_relocSect;
 		private BinaryWriter m_relocWriter;
 
 		public ImageWriter (MetadataWriter writer, AssemblyKind kind, BinaryWriter bw)
 		{
+			m_mdWriter= writer;
 			m_img = writer.GetMetadataRoot ().GetImage ();
 			m_kind = kind;
 			m_binaryWriter = bw;
@@ -63,14 +67,10 @@ namespace Mono.Cecil.Binary {
 			uint sectAlign = img.PEOptionalHeader.NTSpecificFields.SectionAlignment;
 			uint fileAlign = img.PEOptionalHeader.NTSpecificFields.FileAlignment;
 
-			Section txtSec = img.TextSection;
-			Section relocSec = null;
+			m_textSect = img.TextSection;
 			foreach (Section s in img.Sections)
 				if (s.Name == Section.Relocs)
-					relocSec = s;
-
-			txtSec.VirtualSize = (uint) m_textWriter.BaseStream.Length;
-			relocSec.VirtualSize = (uint) m_relocWriter.BaseStream.Length;
+					m_relocSect = s;
 
 			// size computations, fields setting, etc.
 			uint nbSects = (uint) img.Sections.Count;
@@ -82,6 +82,9 @@ namespace Mono.Cecil.Binary {
 			m_relocWriter.Write (relocSize);
 			m_relocWriter.Write ((ushort) (3 << (int) relocSize) + 2);
 			m_relocWriter.Write ((ushort) 0);
+
+			m_textSect.VirtualSize = (uint) m_textWriter.BaseStream.Length;
+			m_relocSect.VirtualSize = (uint) m_relocWriter.BaseStream.Length;
 
 			// start counting before sections headers
 			// section start + section header sixe * number of sections
@@ -103,18 +106,18 @@ namespace Mono.Cecil.Binary {
 				imageSize += GetAligned (sect.SizeOfRawData, sectAlign);
 			}
 
-			if (txtSec.VirtualAddress.Value != 0x2000)
+			if (m_textSect.VirtualAddress.Value != 0x2000)
 				throw new ImageFormatException ("Wrong RVA for .text section");
 
 			img.PEOptionalHeader.StandardFields.CodeSize = GetAligned (
-				txtSec.SizeOfRawData, fileAlign);
-			img.PEOptionalHeader.StandardFields.BaseOfCode = txtSec.VirtualAddress;
+				m_textSect.SizeOfRawData, fileAlign);
+			img.PEOptionalHeader.StandardFields.BaseOfCode = m_textSect.VirtualAddress;
 
 			imageSize += headersEnd;
 			img.PEOptionalHeader.NTSpecificFields.ImageSize = GetAligned (imageSize, sectAlign);
 
 			img.PEOptionalHeader.DataDirectories.BaseRelocationTable = new DataDirectory (
-				relocSec.VirtualAddress, relocSec.VirtualSize);
+				m_relocSect.VirtualAddress, m_relocSect.VirtualSize);
 
 			if (m_kind == AssemblyKind.Dll) {
 				img.PEFileHeader.Characteristics = ImageCharacteristics.CILOnlyDll;
@@ -125,6 +128,17 @@ namespace Mono.Cecil.Binary {
 			}
 
 			img.PEOptionalHeader.NTSpecificFields.SubSystem = (SubSystem) m_kind;
+
+			RVA importTable = new RVA (img.TextSection.VirtualAddress + m_mdWriter.ItStartPos);
+
+			img.PEOptionalHeader.DataDirectories.ImportTable = new DataDirectory (importTable, 0x4f);
+
+			img.ImportTable.ImportLookupTable = new RVA ((uint) importTable + 0x1e);
+
+			img.ImportLookupTable.HintNameRVA = img.ImportAddressTable.HintNameTableRVA =
+				new RVA ((uint) img.ImportTable.ImportLookupTable + 0x10);
+			img.HintNameTable.Hint = (ushort) img.ImportLookupTable.HintNameRVA;
+			img.ImportTable.Name = new RVA ((uint) img.ImportLookupTable.HintNameRVA + 0xe);
 		}
 
 		public override void Visit (DOSHeader header)
@@ -157,6 +171,7 @@ namespace Mono.Cecil.Binary {
 		{
 			m_textWriter.BaseStream.Position = 0;
 			m_textWriter.Write (iat.HintNameTableRVA.Value);
+			m_textWriter.Write (new byte [4]);
 		}
 <% cur_header = $headers["CLIHeader"] %>
 		public override void Visit (CLIHeader header)
@@ -166,26 +181,29 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (ImportTable it)
 		{
-			m_textWriter.BaseStream.Position = m_img.ResolveTextVirtualAddress (
-				m_img.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
+			m_textWriter.BaseStream.Position = m_mdWriter.ItStartPos;
 			m_textWriter.Write (it.ImportAddressTable.Value);
 			m_textWriter.Write (it.DateTimeStamp);
 			m_textWriter.Write (it.ForwardChain);
 			m_textWriter.Write (it.Name.Value);
 			m_textWriter.Write (it.ImportAddressTable.Value);
+			m_textWriter.Write (new byte [10]);
 		}
 
 		public override void Visit (ImportLookupTable ilt)
 		{
 			m_textWriter.Write (ilt.HintNameRVA.Value);
+			m_textWriter.Write (new byte [12]);
 		}
 
 		public override void Visit (HintNameTable hnt)
 		{
 			m_textWriter.Write (hnt.Hint);
-			m_textWriter.Write (hnt.RuntimeMain);
+			foreach (char c in hnt.RuntimeMain)
+				m_textWriter.Write (c);
 			m_textWriter.Write ('\0');
-			m_textWriter.Write (hnt.RuntimeLibrary);
+			foreach (char c in hnt.RuntimeLibrary)
+				m_textWriter.Write (c);
 			m_textWriter.Write ('\0');
 
 			// patch header with ep rva
@@ -195,6 +213,7 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.BaseStream.Position = 0xa8;
 			m_binaryWriter.Write (ep.Value);
 			m_binaryWriter.BaseStream.Position = pos;
+			m_textWriter.Write (new byte [4]);
 			m_textWriter.Write (hnt.EntryPoint);
 			m_textWriter.Write (hnt.RVA);
 		}
@@ -206,8 +225,15 @@ namespace Mono.Cecil.Binary {
 
 		public override void Terminate (Image img)
 		{
+			m_binaryWriter.BaseStream.Position = 0x200;
+
 			WriteMemStream (m_textWriter);
+			m_binaryWriter.Write (
+				new byte [(int) (m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length)]);
+
 			WriteMemStream (m_relocWriter);
+			m_binaryWriter.Write (
+				new byte [(int) (m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length)]);
 		}
 	}
 }

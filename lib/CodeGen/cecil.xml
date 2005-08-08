@@ -112,11 +112,11 @@
 		</header>
 
 		<header name="CLIHeader">
-			<field name="Cb" type="uint" />
-			<field name="MajorRuntimeVersion" type="ushort" />
-			<field name="MinorRuntimeVersion" type="ushort" />
+			<field name="Cb" type="uint" default="0x48" />
+			<field name="MajorRuntimeVersion" type="ushort" default="2" />
+			<field name="MinorRuntimeVersion" type="ushort" default="0" />
 			<field name="Metadata" type="Mono.Cecil.Binary.DataDirectory" />
-			<field name="Flags" type="Mono.Cecil.Binary.RuntimeImage" />
+			<field name="Flags" type="Mono.Cecil.Binary.RuntimeImage" default="RuntimeImage.ILOnly" />
 			<field name="EntryPointToken" type="uint" />
 			<field name="Resources" type="Mono.Cecil.Binary.DataDirectory" />
 			<field name="StrongNameSignature" type="Mono.Cecil.Binary.DataDirectory" />

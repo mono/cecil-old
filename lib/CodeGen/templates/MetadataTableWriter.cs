@@ -19,7 +19,7 @@ namespace Mono.Cecil.Metadata {
 	using System.Collections;
 	using System.IO;
 
-	internal sealed class MetadataTableWriter : IMetadataTableVisitor {
+	internal sealed class MetadataTableWriter : BaseMetadataTableVisitor {
 
 		private MetadataRoot m_root;
 		private TablesHeap m_heap;
@@ -39,7 +39,7 @@ namespace Mono.Cecil.Metadata {
 			return m_root;
 		}
 
-		public IMetadataRowVisitor GetRowVisitor ()
+		public override IMetadataRowVisitor GetRowVisitor ()
 		{
 			return m_mrrw;
 		}
@@ -62,25 +62,12 @@ namespace Mono.Cecil.Metadata {
 			return table;
 		}
 
-<% } %>		public void Visit (TableCollection coll)
+<% } %>		public override void Visit (TableCollection coll)
 		{
 			coll.Sort ();
 
-			m_mrrw.BlobHeapIndexSize = m_root.Streams.BlobHeap != null ?
-				m_root.Streams.BlobHeap.IndexSize : 2;
-			m_mrrw.StringsHeapIndexSize = m_root.Streams.StringsHeap != null ?
-				m_root.Streams.StringsHeap.IndexSize : 2;
-			m_mrrw.GuidHeapIndexSize = m_root.Streams.GuidHeap != null ?
-				m_root.Streams.GuidHeap.IndexSize : 2;
-		}
-
-<% $tables.each { |table| %>		public void Visit (<%=table.table_name%> table)
-		{
-			m_binaryWriter.Write (table.Rows.Count);
-		}
-
-<% } %>		public void Terminate(TableCollection coll)
-		{
-		}
+<% $stables.each { |table|  %>			if (m_heap.HasTable (typeof (<%=table.table_name%>)))
+				m_binaryWriter.Write (m_heap [typeof (<%=table.table_name%>)].Rows.Count);
+<% } %>		}
 	}
 }

@@ -1,5 +1,25 @@
 2005-08-08  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/cecil-gen.rb
+	  CodeGen/templates/MetadataTableReader.cs
+	  CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/MetadataTableWriter.cs
+	  CodeGen/templates/BaseMetadataVisitor.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Metadata/MetadataInitializer.cs
+	  Mono.Cecil.Metadata/BaseMetadataVisitor.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/CLIHeader.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs:
+		The writing layer almost works.
+
 	* Mono.Cecil/AssemblyKind.cs
 	  Mono.Cecil/TargetRuntime.cs
 	  Mono.Cecil.dll.sources:

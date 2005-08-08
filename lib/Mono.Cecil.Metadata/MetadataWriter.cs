@@ -52,8 +52,14 @@ namespace Mono.Cecil.Metadata {
 		private uint m_resStart;
 		private uint m_resSize;
 
+		private uint m_itStart;
+
 		public BinaryWriter CilWriter {
 			get { return m_cilWriter; }
+		}
+
+		public uint ItStartPos {
+			get { return m_itStart; }
 		}
 
 		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, BinaryWriter writer)
@@ -114,7 +120,8 @@ namespace Mono.Cecil.Metadata {
 				return (uint) m_stringCache [str];
 
 			uint pointer = (uint) m_stringWriter.BaseStream.Position;
-			m_stringWriter.Write (str);
+			foreach (char c in str)
+				m_stringWriter.Write (c);
 			m_stringWriter.Write ('\0');
 			return pointer;
 		}
@@ -150,7 +157,8 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) Utilities.WriteCompressedInteger (
 				m_usWriter, str.Length * 2 + 1);
-			m_usWriter.Write (str);
+			foreach (char c in str)
+				m_usWriter.Write (c);
 			m_usWriter.Write ('\0');
 			return pointer;
 		}
@@ -214,7 +222,7 @@ namespace Mono.Cecil.Metadata {
 				QuadAlign (m_blobWriter);
 			}
 
-			if (m_usWriter.BaseStream.Length > 1) {
+			if (m_usWriter.BaseStream.Length > 2) {
 				CreateStream (MetadataStream.UserStrings);
 				QuadAlign (m_usWriter);
 			}
@@ -247,7 +255,8 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.MinorVersion);
 			m_binaryWriter.Write (header.Reserved);
 			m_binaryWriter.Write (header.Version.Length);
-			m_binaryWriter.Write (header.Version);
+			foreach (char c in header.Version)
+				m_binaryWriter.Write (c);
 			QuadAlign ();
 			m_binaryWriter.Write (header.Flags);
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
@@ -261,11 +270,13 @@ namespace Mono.Cecil.Metadata {
 				header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
 				m_binaryWriter.Write (header.Offset);
 				BinaryWriter container;
+				string name = header.Name;
 				switch (header.Name) {
 				case MetadataStream.Tables :
 					container = m_tWriter;
 					break;
 				case MetadataStream.Strings :
+					name += "\0\0\0\0";
 					container = m_stringWriter;
 					break;
 				case MetadataStream.GUID :
@@ -283,7 +294,8 @@ namespace Mono.Cecil.Metadata {
 
 				header.Size = (uint) container.BaseStream.Length;
 				m_binaryWriter.Write (header.Size);
-				m_binaryWriter.Write (header.Name);
+				foreach (char c in name)
+					m_binaryWriter.Write (c);
 				QuadAlign ();
 			}
 		}
@@ -333,7 +345,7 @@ namespace Mono.Cecil.Metadata {
 
 			if (m_mdSize > 0)
 				img.CLIHeader.Metadata = new DataDirectory (
-					img.TextSection.VirtualAddress + m_mdStart, m_mdSize);
+					img.TextSection.VirtualAddress + m_mdStart, m_itStart - m_mdStart);
 
 			if (m_resSize > 0)
 				img.CLIHeader.Resources = new DataDirectory (
@@ -349,6 +361,9 @@ namespace Mono.Cecil.Metadata {
 			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
 			WriteMemStream (m_resWriter);
 			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
+			// write strong name just here
+			m_itStart = (uint) m_binaryWriter.BaseStream.Position;
+			m_binaryWriter.Write (new byte [0x5c]);
 			m_imgWriter.Initialize ();
 			PatchHeader ();
 			root.GetImage ().Accept (m_imgWriter);

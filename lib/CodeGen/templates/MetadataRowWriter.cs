@@ -21,7 +21,7 @@ namespace Mono.Cecil.Metadata {
 
 	using Mono.Cecil.Binary;
 
-	internal sealed class MetadataRowWriter : IMetadataRowVisitor {
+	internal sealed class MetadataRowWriter : BaseMetadataRowVisitor {
 
 		private MetadataRoot m_root;
 		private IO.BinaryWriter m_binaryWriter;
@@ -29,21 +29,6 @@ namespace Mono.Cecil.Metadata {
 		private int m_blobHeapIdxSz;
 		private int m_stringsHeapIdxSz;
 		private int m_guidHeapIdxSz;
-
-		public int BlobHeapIndexSize {
-			get { return m_blobHeapIdxSz; }
-			set { m_blobHeapIdxSz = value; }
-		}
-
-		public int StringsHeapIndexSize {
-			get { return m_stringsHeapIdxSz; }
-			set { m_stringsHeapIdxSz = value; }
-		}
-
-		public int GuidHeapIndexSize {
-			get { return m_guidHeapIdxSz; }
-			set { m_guidHeapIdxSz = value; }
-		}
 
 		public MetadataRowWriter (MetadataTableWriter mtwv)
 		{
@@ -109,11 +94,17 @@ namespace Mono.Cecil.Metadata {
 <% } %>			return row;
 		}
 
-<% } %>		public void Visit (RowCollection coll)
+<% } %>		public override void Visit (RowCollection coll)
 		{
+			m_blobHeapIdxSz = m_root.Streams.BlobHeap != null ?
+				m_root.Streams.BlobHeap.IndexSize : 2;
+			m_stringsHeapIdxSz = m_root.Streams.StringsHeap != null ?
+				m_root.Streams.StringsHeap.IndexSize : 2;
+			m_guidHeapIdxSz = m_root.Streams.GuidHeap != null ?
+				m_root.Streams.GuidHeap.IndexSize : 2;
 		}
 
-<% $tables.each { |table| %>		public void Visit (<%=table.row_name%> row)
+<% $tables.each { |table| %>		public override void Visit (<%=table.row_name%> row)
 		{
 <% table.columns.each { |col|
  if (col.target.nil?)
@@ -131,8 +122,5 @@ namespace Mono.Cecil.Metadata {
 <% end
 }%>		}
 
-<% } %>		public void Terminate (RowCollection coll)
-		{
-		}
-	}
+<% } %>	}
 }

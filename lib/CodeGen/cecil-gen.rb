@@ -55,6 +55,10 @@ $tables.sort!() { |a, b|
 	a.name <=> b.name
 }
 
+$stables = $tables.sort { |a, b|
+	eval(a.rid) <=> eval(b.rid)
+}
+
 doc.root.each_element("/cecil/metadata/codedindexes//codedindex") { |node|
 	ci = Cecil::CodedIndex.new(node.attribute("name").value,
 		node.attribute("size").value,
@@ -159,7 +163,7 @@ $tables.each { |table|
 $cur_table = nil
 
 [ "MetadataTableReader.cs", "MetadataRowReader.cs",
-  "MetadataTableWriter.cs", "MetadataRowWriter.cs",
+  "MetadataTableWriter.cs", "MetadataRowWriter.cs", "BaseMetadataVisitor.cs",
   "CodedIndex.cs", "Utilities.cs" ].each { |file|
 	cecil_compile("../Mono.Cecil.Metadata/" + file, "./templates/" + file)
 }
