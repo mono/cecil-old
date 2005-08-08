@@ -61,5 +61,9 @@ namespace Mono.Cecil {
 		public virtual void Visit (IModuleReferenceCollection modules)
 		{
 		}
+
+		public virtual void Terminate (IAssemblyDefinition asm)
+		{
+		}
 	}
 }

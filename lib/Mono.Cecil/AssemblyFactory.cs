@@ -53,44 +53,49 @@ namespace Mono.Cecil {
 			return GetAssembly (file, LoadingType.Lazy);
 		}
 
-		public static IAssemblyDefinition DefineAssembly (string assemblyName, string moduleName)
+		public static IAssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt)
 		{
 			AssemblyNameDefinition asmName = new AssemblyNameDefinition ();
 			asmName.Name = assemblyName;
 			AssemblyDefinition asm = new AssemblyDefinition (asmName);
+			asm.Runtime = rt;
 			ModuleDefinition main = new ModuleDefinition (moduleName, asm, true);
 			(asm.Modules as ModuleDefinitionCollection).Add (main);
 			return asm;
 		}
 
-		public static void SaveAssembly (IAssemblyDefinition asm, string file)
+		public static void SaveAssembly (IAssemblyDefinition asm, string file, AssemblyKind kind)
 		{
 			using (FileStream fs = new FileStream (
 					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
 				using (BinaryWriter bw = new BinaryWriter (fs)) {
 
-					StructureWriter sw = new StructureWriter (asm as AssemblyDefinition, bw);
-					asm.Accept (sw);
+					WriteAssembly (asm, kind, bw);
 				}
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AppDomain domain)
+		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind, AppDomain domain)
 		{
 			using (MemoryStream ms = new MemoryStream ()) {
 				using (BinaryWriter bw = new BinaryWriter (ms)) {
 
-					StructureWriter sw = new StructureWriter (asm as AssemblyDefinition, bw);
-					asm.Accept (sw);
+					WriteAssembly (asm, kind, bw);
 
 					return domain.Load (ms.ToArray ());
 				}
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm)
+		private static void WriteAssembly (IAssemblyDefinition asm, AssemblyKind kind, BinaryWriter bw)
 		{
-			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
+			asm.Accept (new StructureWriter (
+					(asm as AssemblyDefinition), kind, bw));
+		}
+
+		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind)
+		{
+			return CreateReflectionAssembly (asm, kind, AppDomain.CurrentDomain);
 		}
 
 		public static Image GetUnderlyingImage (IModuleDefinition module)

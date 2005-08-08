@@ -21,22 +21,22 @@ namespace Mono.Cecil.Metadata {
 
 	internal sealed class MetadataTableWriter : IMetadataTableVisitor {
 
-		private MetadataRoot m_metadataRoot;
+		private MetadataRoot m_root;
 		private TablesHeap m_heap;
 		private MetadataRowWriter m_mrrw;
 		private BinaryWriter m_binaryWriter;
 
 		public MetadataTableWriter (MetadataWriter mrv, BinaryWriter writer)
 		{
-			m_metadataRoot = mrv.GetMetadataRoot ();
-			m_heap = m_metadataRoot.Streams.TablesHeap;
-			m_mrrw = new MetadataRowWriter (this);
+			m_root = mrv.GetMetadataRoot ();
+			m_heap = m_root.Streams.TablesHeap;
 			m_binaryWriter = writer;
+			m_mrrw = new MetadataRowWriter (this);
 		}
 
 		public MetadataRoot GetMetadataRoot ()
 		{
-			return m_metadataRoot;
+			return m_root;
 		}
 
 		public IMetadataRowVisitor GetRowVisitor ()
@@ -56,13 +56,22 @@ namespace Mono.Cecil.Metadata {
 				return m_heap [tt] as <%=table.table_name%>;
 
 			<%=table.table_name%> table = new <%=table.table_name%> ();
+			table.Rows = new RowCollection ();
 			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
+			m_heap.Tables.Add (table);
 			return table;
 		}
 
 <% } %>		public void Visit (TableCollection coll)
 		{
 			coll.Sort ();
+
+			m_mrrw.BlobHeapIndexSize = m_root.Streams.BlobHeap != null ?
+				m_root.Streams.BlobHeap.IndexSize : 2;
+			m_mrrw.StringsHeapIndexSize = m_root.Streams.StringsHeap != null ?
+				m_root.Streams.StringsHeap.IndexSize : 2;
+			m_mrrw.GuidHeapIndexSize = m_root.Streams.GuidHeap != null ?
+				m_root.Streams.GuidHeap.IndexSize : 2;
 		}
 
 <% $tables.each { |table| %>		public void Visit (<%=table.table_name%> table)

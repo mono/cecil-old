@@ -80,7 +80,7 @@ namespace Mono.Cecil.Binary {
 			Section reloc = new Section ();
 			reloc.Name =  Section.Relocs;
 			reloc.Characteristics = SectionCharacteristics.ContainsInitializedData |
-				SectionCharacteristics.Align2Bytes | SectionCharacteristics.MemoryRead;
+				SectionCharacteristics.MemDiscardable | SectionCharacteristics.MemoryRead;
 
 			coll.Add (text);
 			coll.Add (reloc);
@@ -99,6 +99,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (HintNameTable hnt)
 		{
+			hnt.RuntimeLibrary = HintNameTable.RuntimeCorEE;
 			hnt.EntryPoint = 0x25ff;
 			hnt.RVA = new RVA (0x402000);
 		}

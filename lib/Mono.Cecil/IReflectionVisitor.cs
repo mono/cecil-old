@@ -38,5 +38,7 @@ namespace Mono.Cecil {
 		void Visit (ICustomAttributeCollection customAttrs);
 		void Visit (ICustomAttribute customAttr);
 		void Visit (IMarshalSpec marshalSpec);
+
+		void Terminate (ITypeDefinitionCollection types);
 	}
 }

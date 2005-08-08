@@ -45,7 +45,7 @@ namespace Mono.Cecil.Metadata {
 		public BlobHeap BlobHeap {
 			get {
 				if (m_blobHeap == null)
-					m_blobHeap = GetHeap ("#Blob") as BlobHeap;
+					m_blobHeap = GetHeap (MetadataStream.Blob) as BlobHeap;
 				return m_blobHeap;
 			}
 		}
@@ -53,7 +53,7 @@ namespace Mono.Cecil.Metadata {
 		public GuidHeap GuidHeap {
 			get {
 				if (m_guidHeap == null)
-					m_guidHeap = GetHeap ("#GUID") as GuidHeap;
+					m_guidHeap = GetHeap (MetadataStream.GUID) as GuidHeap;
 				return m_guidHeap;
 			}
 		}
@@ -61,7 +61,7 @@ namespace Mono.Cecil.Metadata {
 		public StringsHeap StringsHeap {
 			get {
 				if (m_stringsHeap == null)
-					m_stringsHeap = GetHeap ("#Strings") as StringsHeap;
+					m_stringsHeap = GetHeap (MetadataStream.Strings) as StringsHeap;
 				return m_stringsHeap;
 			}
 		}
@@ -69,7 +69,7 @@ namespace Mono.Cecil.Metadata {
 		public TablesHeap TablesHeap {
 			get {
 				if (m_tablesHeap == null)
-					m_tablesHeap = GetHeap ("#~") as TablesHeap;
+					m_tablesHeap = GetHeap (MetadataStream.Tables) as TablesHeap;
 				return m_tablesHeap;
 			}
 		}
@@ -77,7 +77,7 @@ namespace Mono.Cecil.Metadata {
 		public UserStringsHeap UserStringsHeap {
 			get {
 				if (m_usHeap == null)
-					m_usHeap = GetHeap ("#US") as UserStringsHeap;
+					m_usHeap = GetHeap (MetadataStream.UserStrings) as UserStringsHeap;
 				return m_usHeap;
 			}
 		}

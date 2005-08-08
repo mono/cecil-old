@@ -128,7 +128,7 @@ namespace Mono.Cecil.Implem {
 			m_asm = asm;
 			m_name = name;
 			m_main = main;
-			m_mvid = new Guid ();
+			m_mvid = Guid.NewGuid ();
 
 			if (reader != null) {
 				m_image = reader.Image;

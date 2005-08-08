@@ -24,16 +24,23 @@ namespace Mono.Cecil.Implem {
 		private MetadataWriter m_mdWriter;
 		private MetadataTableWriter m_tableWriter;
 		private MetadataRowWriter m_rowWriter;
+		private AssemblyKind m_kind;
 
 		private AssemblyDefinition m_asm;
 		private BinaryWriter m_binaryWriter;
 
-		public StructureWriter (AssemblyDefinition asm, BinaryWriter writer)
+		public AssemblyKind AssemblyKind {
+			get { return m_kind; }
+		}
+
+		public StructureWriter (AssemblyDefinition asm, AssemblyKind kind, BinaryWriter writer)
 		{
 			m_asm = asm;
+			m_kind = kind;
 			m_binaryWriter = writer;
 
 			ReflectionWriter rw = (asm.MainModule as ModuleDefinition).Controller.Writer;
+			rw.StructureWriter = this;
 
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
@@ -160,6 +167,12 @@ namespace Mono.Cecil.Implem {
 				m_mdWriter.AddString (module.Name));
 
 			mrTable.Rows.Add (mrRow);
+		}
+
+		public override void Terminate (IAssemblyDefinition asm)
+		{
+			foreach (ModuleDefinition mod in asm.Modules)
+				mod.Types.Accept (mod.Controller.Writer);
 		}
 	}
 }

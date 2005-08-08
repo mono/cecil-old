@@ -26,6 +26,8 @@ namespace Mono.Cecil {
 		void Visit (IModuleDefinitionCollection modules);
 		void Visit (IModuleReference module);
 		void Visit (IModuleReferenceCollection modules);
+
+		void Terminate (IAssemblyDefinition asm);
 	}
 }
 

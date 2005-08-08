@@ -24,6 +24,7 @@ namespace Mono.Cecil.Implem {
 		private SecurityDeclarationCollection m_secDecls;
 		private CustomAttributeCollection m_customAttrs;
 		private MethodDefinition m_ep;
+		private TargetRuntime m_runtime;
 
 		private ModuleDefinition m_mainModule;
 		private StructureReader m_reader;
@@ -40,7 +41,8 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
 				if (m_secDecls == null)
-					m_secDecls = new SecurityDeclarationCollection (this, (this.MainModule as ModuleDefinition).Controller);
+					m_secDecls = new SecurityDeclarationCollection (
+						this, (this.MainModule as ModuleDefinition).Controller);
 				return m_secDecls;
 			}
 		}
@@ -48,7 +50,8 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, (this.MainModule as ModuleDefinition).Controller);
+					m_customAttrs = new CustomAttributeCollection (
+						this, (this.MainModule as ModuleDefinition).Controller);
 				return m_customAttrs;
 			}
 		}
@@ -56,6 +59,11 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinition EntryPoint {
 			get { return m_ep; }
 			set { m_ep = value as MethodDefinition; }
+		}
+
+		public TargetRuntime Runtime {
+			get { return m_runtime; }
+			set { m_runtime = value; }
 		}
 
 		public IModuleDefinition MainModule {
@@ -140,6 +148,8 @@ namespace Mono.Cecil.Implem {
 
 			m_asmName.Accept (visitor);
 			m_modules.Accept (visitor);
+
+			visitor.Terminate (this);
 		}
 	}
 }

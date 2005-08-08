@@ -24,6 +24,7 @@ namespace Mono.Cecil.Metadata {
 	internal sealed class MetadataWriter : BaseMetadataVisitor {
 
 		private MetadataRoot m_root;
+		private TargetRuntime m_runtime;
 		private ImageWriter m_imgWriter;
 		private MetadataTableWriter m_tableWriter;
 		private BinaryWriter m_binaryWriter;
@@ -55,10 +56,11 @@ namespace Mono.Cecil.Metadata {
 			get { return m_cilWriter; }
 		}
 
-		public MetadataWriter (MetadataRoot root, BinaryWriter writer)
+		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, BinaryWriter writer)
 		{
 			m_root = root;
-			m_imgWriter = new ImageWriter (this, writer);
+			m_runtime = rt;
+			m_imgWriter = new ImageWriter (this, kind, writer);
 			m_binaryWriter = m_imgWriter.GetTextWriter ();
 
 			m_stringCache = new Hashtable ();
@@ -114,13 +116,12 @@ namespace Mono.Cecil.Metadata {
 			uint pointer = (uint) m_stringWriter.BaseStream.Position;
 			m_stringWriter.Write (str);
 			m_stringWriter.Write ('\0');
-			m_root.Streams.StringsHeap [pointer] = str;
 			return pointer;
 		}
 
 		public uint AddBlob (byte [] data, bool withSize)
 		{
-			if (data.Length == 0)
+			if (data == null || data.Length == 0)
 				return 0;
 
 			uint pointer = withSize ? (uint) Utilities.WriteCompressedInteger (
@@ -136,7 +137,6 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_guidWriter.BaseStream.Position;
 			m_guidWriter.Write (g.ToByteArray ());
-			m_root.Streams.GuidHeap [pointer] = g;
 			return pointer;
 		}
 
@@ -152,7 +152,6 @@ namespace Mono.Cecil.Metadata {
 				m_usWriter, str.Length * 2 + 1);
 			m_usWriter.Write (str);
 			m_usWriter.Write ('\0');
-			m_root.Streams.UserStringsHeap [pointer] = str;
 			return pointer;
 		}
 
@@ -220,6 +219,21 @@ namespace Mono.Cecil.Metadata {
 				QuadAlign (m_usWriter);
 			}
 
+			switch (m_runtime) {
+			case TargetRuntime.NET_1_0 :
+				m_root.Header.Version = "v1.0.3705";
+				m_root.Header.MajorVersion = 1;
+				m_root.Header.MajorVersion = 0;
+				break;
+			case TargetRuntime.NET_1_1 :
+				m_root.Header.Version = "v.1.1.4322";
+				m_root.Header.MajorVersion = 1;
+				m_root.Header.MajorVersion = 1;
+				break;
+			case TargetRuntime.NET_2_0 :
+				throw new NotImplementedException (".net 2 assemblies are not supported");
+			}
+
 			m_root.Streams.TablesHeap.Tables.Accept (m_tableWriter);
 
 			if (m_tWriter.BaseStream.Length == 0)
@@ -239,36 +253,39 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
 		}
 
-		public override void Visit (MetadataStream.MetadataStreamHeader header)
+		public override void Visit (MetadataStreamCollection streams)
 		{
-			header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
+			foreach (MetadataStream stream in streams) {
+				MetadataStream.MetadataStreamHeader header = stream.Header;
 
-			m_binaryWriter.Write (header.Offset);
-			BinaryWriter container;
-			switch (header.Name) {
-			case MetadataStream.Tables :
-				container = m_tWriter;
-				break;
-			case MetadataStream.Strings :
-				container = m_stringWriter;
-				break;
-			case MetadataStream.GUID :
-				container = m_guidWriter;
-				break;
-			case MetadataStream.Blob :
-				container = m_blobWriter;
-				break;
-			case MetadataStream.UserStrings :
-				container = m_usWriter;
-				break;
-			default :
-				throw new MetadataFormatException ("Unknown stream kind");
+				header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
+				m_binaryWriter.Write (header.Offset);
+				BinaryWriter container;
+				switch (header.Name) {
+				case MetadataStream.Tables :
+					container = m_tWriter;
+					break;
+				case MetadataStream.Strings :
+					container = m_stringWriter;
+					break;
+				case MetadataStream.GUID :
+					container = m_guidWriter;
+					break;
+				case MetadataStream.Blob :
+					container = m_blobWriter;
+					break;
+				case MetadataStream.UserStrings :
+					container = m_usWriter;
+					break;
+				default :
+					throw new MetadataFormatException ("Unknown stream kind");
+				}
+
+				header.Size = (uint) container.BaseStream.Length;
+				m_binaryWriter.Write (header.Size);
+				m_binaryWriter.Write (header.Name);
+				QuadAlign ();
 			}
-
-			header.Size = (uint) container.BaseStream.Length;
-			m_binaryWriter.Write (header.Size);
-			m_binaryWriter.Write (header.Name);
-			QuadAlign ();
 		}
 
 		private void WriteMemStream (BinaryWriter writer)

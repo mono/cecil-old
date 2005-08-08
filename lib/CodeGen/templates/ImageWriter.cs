@@ -25,14 +25,16 @@ namespace Mono.Cecil.Binary {
 	internal sealed class ImageWriter : BaseImageVisitor {
 
 		private Image m_img;
+		private AssemblyKind m_kind;
 		private BinaryWriter m_binaryWriter;
 
 		private BinaryWriter m_textWriter;
 		private BinaryWriter m_relocWriter;
 
-		public ImageWriter (MetadataWriter writer, BinaryWriter bw)
+		public ImageWriter (MetadataWriter writer, AssemblyKind kind, BinaryWriter bw)
 		{
 			m_img = writer.GetMetadataRoot ().GetImage ();
+			m_kind = kind;
 			m_binaryWriter = bw;
 
 			m_textWriter = new BinaryWriter (new MemoryStream ());
@@ -92,7 +94,7 @@ namespace Mono.Cecil.Binary {
 				fileOffset = GetAligned (fileOffset, fileAlign);
 				sectOffset = GetAligned (sectOffset, sectAlign);
 
-				sect.PointerToRawData = fileOffset;
+				sect.PointerToRawData = new RVA (fileOffset);
 				sect.VirtualAddress = new RVA (sectOffset);
 				sect.SizeOfRawData = GetAligned (sect.VirtualSize, fileAlign);
 
@@ -110,6 +112,19 @@ namespace Mono.Cecil.Binary {
 
 			imageSize += headersEnd;
 			img.PEOptionalHeader.NTSpecificFields.ImageSize = GetAligned (imageSize, sectAlign);
+
+			img.PEOptionalHeader.DataDirectories.BaseRelocationTable = new DataDirectory (
+				relocSec.VirtualAddress, relocSec.VirtualSize);
+
+			if (m_kind == AssemblyKind.Dll) {
+				img.PEFileHeader.Characteristics = ImageCharacteristics.CILOnlyDll;
+				img.HintNameTable.RuntimeMain = HintNameTable.RuntimeMainDll;
+			} else {
+				img.PEFileHeader.Characteristics = ImageCharacteristics.CILOnlyExe;
+				img.HintNameTable.RuntimeMain = HintNameTable.RuntimeMainExe;
+			}
+
+			img.PEOptionalHeader.NTSpecificFields.SubSystem = (SubSystem) m_kind;
 		}
 
 		public override void Visit (DOSHeader header)
@@ -129,7 +144,8 @@ namespace Mono.Cecil.Binary {
 <% end } ; cur_header = $headers["Section"] %>
 		public override void Visit (Section sect)
 		{
-			m_binaryWriter.Write (sect.Name);
+			foreach (char c in sect.Name)
+				m_binaryWriter.Write (c);
 			int more = 8 - sect.Name.Length;
 			for (int i = 0; i < more; i++)
 				m_binaryWriter.Write ((byte) 0);
@@ -183,9 +199,15 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (hnt.RVA);
 		}
 
+		private void WriteMemStream (BinaryWriter bw)
+		{
+			m_binaryWriter.Write ((bw.BaseStream as MemoryStream).ToArray ());
+		}
+
 		public override void Terminate (Image img)
 		{
-			// write sections, align the whole thing
+			WriteMemStream (m_textWriter);
+			WriteMemStream (m_relocWriter);
 		}
 	}
 }

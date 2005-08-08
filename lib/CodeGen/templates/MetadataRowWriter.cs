@@ -30,17 +30,25 @@ namespace Mono.Cecil.Metadata {
 		private int m_stringsHeapIdxSz;
 		private int m_guidHeapIdxSz;
 
+		public int BlobHeapIndexSize {
+			get { return m_blobHeapIdxSz; }
+			set { m_blobHeapIdxSz = value; }
+		}
+
+		public int StringsHeapIndexSize {
+			get { return m_stringsHeapIdxSz; }
+			set { m_stringsHeapIdxSz = value; }
+		}
+
+		public int GuidHeapIndexSize {
+			get { return m_guidHeapIdxSz; }
+			set { m_guidHeapIdxSz = value; }
+		}
+
 		public MetadataRowWriter (MetadataTableWriter mtwv)
 		{
 			m_binaryWriter = mtwv.GetWriter ();
 			m_root = mtwv.GetMetadataRoot ();
-
-			if (m_root.Streams.BlobHeap != null)
-				m_blobHeapIdxSz = m_root.Streams.BlobHeap.IndexSize;
-			if (m_root.Streams.StringsHeap != null)
-				m_stringsHeapIdxSz = m_root.Streams.StringsHeap.IndexSize;
-			if (m_root.Streams.GuidHeap != null)
-				m_guidHeapIdxSz = m_root.Streams.GuidHeap.IndexSize;
 		}
 
 		private void WriteBlobPointer (uint pointer)

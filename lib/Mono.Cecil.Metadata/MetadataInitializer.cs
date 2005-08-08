@@ -42,8 +42,10 @@ namespace Mono.Cecil.Metadata {
 		public override void Visit (MetadataStreamCollection coll)
 		{
 			MetadataStream tables = new MetadataStream ();
-			tables.Header.Name = "#~";
+			tables.Header.Name = MetadataStream.Tables;
 			tables.Heap = MetadataHeap.HeapFactory (tables);
+			TablesHeap th = tables.Heap as TablesHeap;
+			th.Tables = new TableCollection (th);
 			m_root.Streams.Add (tables);
 		}
 

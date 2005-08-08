@@ -12,14 +12,11 @@
 
 namespace Mono.Cecil {
 
-	public interface IAssemblyDefinition : ICustomAttributeProvider, IHasSecurity, IReflectionStructureVisitable {
+	using Mono.Cecil.Binary;
 
-		IAssemblyNameDefinition Name { get; }
-		TargetRuntime Runtime { get; set; }
-
-		IModuleDefinitionCollection Modules { get; }
-		IModuleDefinition MainModule { get; }
-
-		IMethodDefinition EntryPoint { get; set; }
+	public enum AssemblyKind {
+		Dll = SubSystem.Native,
+		Console = SubSystem.WindowsCui,
+		Windows = SubSystem.WindowsGui
 	}
 }

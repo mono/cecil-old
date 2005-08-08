@@ -32,7 +32,10 @@ namespace Mono.Cecil.Implem {
 			set {
 				m_structureWriter = value;
 				m_mdWriter = new MetadataWriter (
-					m_mod.Image.MetadataRoot, m_structureWriter.GetWriter ());
+					m_mod.Image.MetadataRoot,
+					m_structureWriter.AssemblyKind,
+					m_mod.Assembly.Runtime,
+					m_structureWriter.GetWriter ());
 				m_tableWriter = m_mdWriter.GetTableVisitor ();
 				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
 				m_codeWriter = new CodeWriter (m_mdWriter.CilWriter);
@@ -181,6 +184,11 @@ namespace Mono.Cecil.Implem {
 		public override void Visit (IMarshalSpec marshalSpec)
 		{
 			// TODO
+		}
+
+		public override void Terminate (ITypeDefinitionCollection colls)
+		{
+			(colls.Container as ModuleDefinition).Image.MetadataRoot.Accept (m_mdWriter);
 		}
 	}
 }

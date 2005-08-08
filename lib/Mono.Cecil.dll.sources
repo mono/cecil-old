@@ -2,6 +2,7 @@
 ./Mono.Cecil/AssemblyFlags.cs
 ./Mono.Cecil/AssemblyHashAlgorithm.cs
 ./Mono.Cecil/AssemblyInfo.cs
+./Mono.Cecil/AssemblyKind.cs
 ./Mono.Cecil/BaseReflectionVisitor.cs
 ./Mono.Cecil/BaseStructureVisitor.cs
 ./Mono.Cecil/EventAttributes.cs
@@ -83,6 +84,7 @@
 ./Mono.Cecil/PropertyAttributes.cs
 ./Mono.Cecil/ReflectionException.cs
 ./Mono.Cecil/SecurityAction.cs
+./Mono.Cecil/TargetRuntime.cs
 ./Mono.Cecil/TypeAttributes.cs
 ./Mono.Cecil/TypeFactory.cs
 ./Mono.Cecil/VariantType.cs

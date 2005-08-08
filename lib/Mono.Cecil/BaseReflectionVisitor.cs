@@ -110,5 +110,9 @@ namespace Mono.Cecil {
 		public virtual void Visit (IMarshalSpec marshalSpec)
 		{
 		}
+
+		public virtual void Terminate (ITypeDefinitionCollection types)
+		{
+		}
 	}
 }

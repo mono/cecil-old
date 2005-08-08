@@ -60,8 +60,8 @@ namespace Mono.Cecil.Binary {
 
 	public sealed class HintNameTable : IBinaryVisitable {
 
-		public const string RuntimeMainExe = "_CorExeDll";
-		public const string RuntimeMainDll = "_CorExeMain";
+		public const string RuntimeMainExe = "_CorExeMain";
+		public const string RuntimeMainDll = "_CorDllMain";
 		public const string RuntimeCorEE = "mscoree.dll";
 
 		public ushort Hint;

@@ -1,3 +1,36 @@
+2005-08-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyKind.cs
+	  Mono.Cecil/TargetRuntime.cs
+	  Mono.Cecil.dll.sources:
+		Add thoses enumes to control assembly writing.
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/IAssemblyDefinition.cs
+	  Mono.Cecil/IReflectionStructureVisitor.cs
+	  Mono.Cecil/BaseStructureVisitor.cs
+	  CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/MetadataTableWriter.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  CodeGen/templates/LzNamedCollectionImplem.cs
+	  Mono.Cecil.Metadata/MetadataInitializer.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/MetadataStreamCollection.cs
+	  Mono.Cecil.Implem/AssemblyName.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinitionCollection.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/AssemblyDefinition.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/Imports.cs:
+		Things are now plugged. SaveAssembly will now emits
+		a binary file. A broken file, but heh, at least it does.
+
 2005-08-07  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/ImageReader.cs

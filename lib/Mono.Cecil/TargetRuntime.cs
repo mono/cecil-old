@@ -12,14 +12,9 @@
 
 namespace Mono.Cecil {
 
-	public interface IAssemblyDefinition : ICustomAttributeProvider, IHasSecurity, IReflectionStructureVisitable {
-
-		IAssemblyNameDefinition Name { get; }
-		TargetRuntime Runtime { get; set; }
-
-		IModuleDefinitionCollection Modules { get; }
-		IModuleDefinition MainModule { get; }
-
-		IMethodDefinition EntryPoint { get; set; }
+	public enum TargetRuntime {
+		NET_1_0,
+		NET_1_1,
+		NET_2_0
 	}
 }
