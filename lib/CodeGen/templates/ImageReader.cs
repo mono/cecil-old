@@ -144,14 +144,17 @@ namespace Mono.Cecil.Binary {
 		public override void Visit (HintNameTable hnt)
 		{
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
-				m_image.ImportAddressTable.HintNameTableRVA.Value);
+				m_image.ImportAddressTable.HintNameTableRVA);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();
 			hnt.RuntimeMain = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
-			m_binaryReader.ReadByte ();
-			hnt.RuntimeLibrary = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
-			m_binaryReader.ReadByte ();
 
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+				m_image.ImportTable.Name);
+			hnt.RuntimeLibrary = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
+
+			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+				m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
 			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
 			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}

@@ -78,9 +78,9 @@ namespace Mono.Cecil.Binary {
 
 			// build the reloc section data
 			uint relocSize = 12;
-			m_relocWriter.Write ((uint) 0x200);
+			m_relocWriter.Write ((uint) 0x2000);
 			m_relocWriter.Write (relocSize);
-			m_relocWriter.Write ((ushort) (3 << (int) relocSize) + 2);
+			m_relocWriter.Write ((ushort) 0);
 			m_relocWriter.Write ((ushort) 0);
 
 			m_textSect.VirtualSize = (uint) m_textWriter.BaseStream.Length;
@@ -139,7 +139,6 @@ namespace Mono.Cecil.Binary {
 
 			img.ImportLookupTable.HintNameRVA = img.ImportAddressTable.HintNameTableRVA =
 				new RVA ((uint) img.ImportTable.ImportLookupTable + 0x10);
-			img.HintNameTable.Hint = (ushort) img.ImportLookupTable.HintNameRVA;
 			img.ImportTable.Name = new RVA ((uint) img.ImportLookupTable.HintNameRVA + 0xe);
 		}
 
@@ -184,7 +183,7 @@ namespace Mono.Cecil.Binary {
 		public override void Visit (ImportTable it)
 		{
 			m_textWriter.BaseStream.Position = m_mdWriter.ItStartPos;
-			m_textWriter.Write (it.ImportAddressTable.Value);
+			m_textWriter.Write (it.ImportLookupTable.Value);
 			m_textWriter.Write (it.DateTimeStamp);
 			m_textWriter.Write (it.ForwardChain);
 			m_textWriter.Write (it.Name.Value);
@@ -216,6 +215,12 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.BaseStream.Position = 0xa8;
 			m_binaryWriter.Write (ep.Value);
 			m_binaryWriter.BaseStream.Position = pos;
+
+			// patch reloc Sect with ep
+			m_relocWriter.BaseStream.Position = 8;
+			m_relocWriter.Write ((ushort) (3 << 12) + (
+				ep - m_img.TextSection.VirtualAddress + 2));
+
 			m_textWriter.Write (hnt.EntryPoint);
 			m_textWriter.Write (hnt.RVA);
 		}

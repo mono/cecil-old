@@ -352,7 +352,6 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (heap.Valid);
 			m_binaryWriter.Write (heap.Sorted);
 			WriteMemStream (m_tWriter);
-			m_binaryWriter.Write (new byte [4]);
 		}
 
 		public override void Visit (BlobHeap heap)

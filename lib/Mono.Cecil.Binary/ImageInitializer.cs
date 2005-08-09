@@ -50,8 +50,8 @@ namespace Mono.Cecil.Binary {
 		public override void Visit (PEFileHeader header)
 		{
 			header.SetDefaultValues ();
-			DateTime epoch = new DateTime (1970, 1, 1, 0, 0, 0);
-			header.TimeDateStamp = (uint) (epoch - DateTime.Now).Seconds;
+			header.TimeDateStamp = (uint) DateTime.UtcNow.Subtract (
+				new DateTime (1970, 1, 1)).TotalSeconds;
 		}
 
 		public override void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)
@@ -104,6 +104,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void Visit (HintNameTable hnt)
 		{
+			hnt.Hint = 0;
 			hnt.RuntimeLibrary = HintNameTable.RuntimeCorEE;
 			hnt.EntryPoint = 0x25ff;
 			hnt.RVA = new RVA (0x402000);
