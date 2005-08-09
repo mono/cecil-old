@@ -202,6 +202,10 @@ namespace Mono.Cecil.Metadata {
 		public override void Visit (MetadataRoot root)
 		{
 			WriteMemStream (m_cilWriter);
+			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
+			WriteMemStream (m_resWriter);
+			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
+			// write strong name here
 
 			m_mdStart = (uint) m_binaryWriter.BaseStream.Position;
 
@@ -231,12 +235,12 @@ namespace Mono.Cecil.Metadata {
 			case TargetRuntime.NET_1_0 :
 				m_root.Header.Version = "v1.0.3705";
 				m_root.Header.MajorVersion = 1;
-				m_root.Header.MajorVersion = 0;
+				m_root.Header.MinorVersion = 0;
 				break;
 			case TargetRuntime.NET_1_1 :
 				m_root.Header.Version = "v1.1.4322";
 				m_root.Header.MajorVersion = 1;
-				m_root.Header.MajorVersion = 1;
+				m_root.Header.MinorVersion = 1;
 				break;
 			case TargetRuntime.NET_2_0 :
 				throw new NotImplementedException (".net 2 assemblies are not supported");
@@ -335,12 +339,9 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (heap.Reserved);
 			switch (m_runtime) {
 			case TargetRuntime.NET_1_0 :
-				heap.MajorVersion = 1;
-				heap.MajorVersion = 0;
-				break;
 			case TargetRuntime.NET_1_1 :
 				heap.MajorVersion = 1;
-				heap.MajorVersion = 1;
+				heap.MinorVersion = 0;
 				break;
 			case TargetRuntime.NET_2_0 :
 				throw new NotImplementedException (".net 2 assemblies are not supported");
@@ -377,20 +378,13 @@ namespace Mono.Cecil.Metadata {
 			if (m_resSize > 0)
 				img.CLIHeader.Resources = new DataDirectory (
 					img.TextSection.VirtualAddress + m_resStart, m_resSize);
-
-			img.PEOptionalHeader.DataDirectories.ImportTable = new DataDirectory (
-				img.TextSection.VirtualAddress + m_itStart, 79);
 		}
 
 		public override void Terminate (MetadataRoot root)
 		{
 			m_mdSize = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
-			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
-			WriteMemStream (m_resWriter);
-			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
-			// write strong name just here
 			m_itStart = (uint) m_binaryWriter.BaseStream.Position;
-			m_binaryWriter.Write (new byte [0x5c]); // imports
+			m_binaryWriter.Write (new byte [0x60]); // imports
 			m_imgWriter.Initialize ();
 			PatchHeader ();
 			root.GetImage ().Accept (m_imgWriter);

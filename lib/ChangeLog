@@ -1,3 +1,11 @@
+2005-08-10  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Cecil now emits assemblies understood by the .net clr.
+
 2005-08-09  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyKind.cs

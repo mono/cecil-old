@@ -74,10 +74,10 @@ namespace Mono.Cecil.Implem {
 			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 				(TypeAttributes) 0,
 				m_mdWriter.AddString ("<Module>"),
-				0,
+				m_mdWriter.AddString (""),
 				new MetadataToken (TokenType.TypeDef, 0),
-				0,
-				0
+				1,
+				1
 			);
 
 			tdTable.Rows.Add (tdRow);
