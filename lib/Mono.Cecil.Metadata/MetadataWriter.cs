@@ -144,7 +144,7 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_guidWriter.BaseStream.Position;
 			m_guidWriter.Write (g.ToByteArray ());
-			return pointer;
+			return pointer + 1;
 		}
 
 		public uint AddUserString (string str)
@@ -234,7 +234,7 @@ namespace Mono.Cecil.Metadata {
 				m_root.Header.MajorVersion = 0;
 				break;
 			case TargetRuntime.NET_1_1 :
-				m_root.Header.Version = "v.1.1.4322";
+				m_root.Header.Version = "v1.1.4322";
 				m_root.Header.MajorVersion = 1;
 				m_root.Header.MajorVersion = 1;
 				break;
@@ -254,7 +254,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.MajorVersion);
 			m_binaryWriter.Write (header.MinorVersion);
 			m_binaryWriter.Write (header.Reserved);
-			m_binaryWriter.Write (header.Version.Length);
+			m_binaryWriter.Write (header.Version.Length + 3 & (~3));
 			foreach (char c in header.Version)
 				m_binaryWriter.Write (c);
 			QuadAlign ();
@@ -267,13 +267,15 @@ namespace Mono.Cecil.Metadata {
 			foreach (MetadataStream stream in streams) {
 				MetadataStream.MetadataStreamHeader header = stream.Header;
 
-				header.Offset = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
+				header.Offset = (uint) (m_binaryWriter.BaseStream.Position);
 				m_binaryWriter.Write (header.Offset);
 				BinaryWriter container;
 				string name = header.Name;
+				uint size = 0;
 				switch (header.Name) {
 				case MetadataStream.Tables :
 					container = m_tWriter;
+					size += 24; // header
 					break;
 				case MetadataStream.Strings :
 					name += "\0\0\0\0";
@@ -292,8 +294,8 @@ namespace Mono.Cecil.Metadata {
 					throw new MetadataFormatException ("Unknown stream kind");
 				}
 
-				header.Size = (uint) container.BaseStream.Length;
-				m_binaryWriter.Write (header.Size);
+				size += (uint) (container.BaseStream.Length + 3 & (~3));
+				m_binaryWriter.Write (size);
 				foreach (char c in name)
 					m_binaryWriter.Write (c);
 				QuadAlign ();
@@ -307,19 +309,42 @@ namespace Mono.Cecil.Metadata {
 			QuadAlign ();
 		}
 
+		private void PatchStreamHeaderOffset (MetadataHeap heap)
+		{
+			long pos = m_binaryWriter.BaseStream.Position;
+			m_binaryWriter.BaseStream.Position = heap.GetStream ().Header.Offset;
+			m_binaryWriter.Write ((uint) (pos - m_mdStart));
+			m_binaryWriter.BaseStream.Position = pos;
+		}
+
 		public override void Visit (GuidHeap heap)
 		{
+			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_guidWriter);
 		}
 
 		public override void Visit (StringsHeap heap)
 		{
+			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_stringWriter);
 		}
 
 		public override void Visit (TablesHeap heap)
 		{
+			PatchStreamHeaderOffset (heap);
 			m_binaryWriter.Write (heap.Reserved);
+			switch (m_runtime) {
+			case TargetRuntime.NET_1_0 :
+				heap.MajorVersion = 1;
+				heap.MajorVersion = 0;
+				break;
+			case TargetRuntime.NET_1_1 :
+				heap.MajorVersion = 1;
+				heap.MajorVersion = 1;
+				break;
+			case TargetRuntime.NET_2_0 :
+				throw new NotImplementedException (".net 2 assemblies are not supported");
+			}
 			m_binaryWriter.Write (heap.MajorVersion);
 			m_binaryWriter.Write (heap.MinorVersion);
 			m_binaryWriter.Write (heap.HeapSizes);
@@ -327,15 +352,18 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (heap.Valid);
 			m_binaryWriter.Write (heap.Sorted);
 			WriteMemStream (m_tWriter);
+			m_binaryWriter.Write (new byte [4]);
 		}
 
 		public override void Visit (BlobHeap heap)
 		{
+			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_blobWriter);
 		}
 
 		public override void Visit (UserStringsHeap heap)
 		{
+			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_usWriter);
 		}
 
@@ -352,7 +380,7 @@ namespace Mono.Cecil.Metadata {
 					img.TextSection.VirtualAddress + m_resStart, m_resSize);
 
 			img.PEOptionalHeader.DataDirectories.ImportTable = new DataDirectory (
-				img.TextSection.VirtualAddress + (uint) m_binaryWriter.BaseStream.Position, 79);
+				img.TextSection.VirtualAddress + m_itStart, 79);
 		}
 
 		public override void Terminate (MetadataRoot root)
@@ -363,7 +391,7 @@ namespace Mono.Cecil.Metadata {
 			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
 			// write strong name just here
 			m_itStart = (uint) m_binaryWriter.BaseStream.Position;
-			m_binaryWriter.Write (new byte [0x5c]);
+			m_binaryWriter.Write (new byte [0x5c]); // imports
 			m_imgWriter.Initialize ();
 			PatchHeader ();
 			root.GetImage ().Accept (m_imgWriter);

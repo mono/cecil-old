@@ -110,8 +110,10 @@ namespace Mono.Cecil.Binary {
 				throw new ImageFormatException ("Wrong RVA for .text section");
 
 			img.PEOptionalHeader.StandardFields.CodeSize = GetAligned (
-				m_textSect.SizeOfRawData, fileAlign);
+				m_textSect.SizeOfRawData + m_relocSect.SizeOfRawData, fileAlign);
+			img.PEOptionalHeader.StandardFields.InitializedDataSize = 0x200; // + rsrc.SizeOfRawData ?
 			img.PEOptionalHeader.StandardFields.BaseOfCode = m_textSect.VirtualAddress;
+			//img.PEOptionalHeader.StandardFields.BaseOfData = m_relocSect.VirtualAddress;
 
 			imageSize += headersEnd;
 			img.PEOptionalHeader.NTSpecificFields.ImageSize = GetAligned (imageSize, sectAlign);
@@ -205,6 +207,7 @@ namespace Mono.Cecil.Binary {
 			foreach (char c in hnt.RuntimeLibrary)
 				m_textWriter.Write (c);
 			m_textWriter.Write ('\0');
+			m_textWriter.Write (new byte [4]);
 
 			// patch header with ep rva
 			RVA ep = m_img.TextSection.VirtualAddress +
@@ -213,7 +216,6 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.BaseStream.Position = 0xa8;
 			m_binaryWriter.Write (ep.Value);
 			m_binaryWriter.BaseStream.Position = pos;
-			m_textWriter.Write (new byte [4]);
 			m_textWriter.Write (hnt.EntryPoint);
 			m_textWriter.Write (hnt.RVA);
 		}

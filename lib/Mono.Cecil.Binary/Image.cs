@@ -115,7 +115,7 @@ namespace Mono.Cecil.Binary {
 				if (rva >= sect.VirtualAddress &&
 					rva < sect.VirtualAddress + sect.SizeOfRawData)
 
-						return rva + sect.PointerToRawData - sect.VirtualAddress;
+					return rva + sect.PointerToRawData - sect.VirtualAddress;
 			}
 			return 0;
 		}

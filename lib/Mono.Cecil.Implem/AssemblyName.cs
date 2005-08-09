@@ -120,7 +120,7 @@ namespace Mono.Cecil.Implem {
 			set { m_hash = value; }
 		}
 
-		public AssemblyNameReference () : this(string.Empty, string.Empty, new Version ())
+		public AssemblyNameReference () : this (string.Empty, string.Empty, new Version (0, 0, 0, 0))
 		{
 		}
 

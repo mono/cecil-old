@@ -47,6 +47,15 @@ namespace Mono.Cecil.Implem {
 			m_asmDef = asm as AssemblyDefinition;
 			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
 				throw new ReflectionException ("No assembly manifest");
+
+			MetadataRoot root = m_img.MetadataRoot;
+			if (root.Header.MajorVersion == 1)
+				if (root.Header.MinorVersion == 1)
+					asm.Runtime = TargetRuntime.NET_1_1;
+				else
+					asm.Runtime = TargetRuntime.NET_1_0;
+			else if (root.Header.MajorVersion == 2)
+				asm.Runtime = TargetRuntime.NET_2_0;
 		}
 
 		public override void Visit (IAssemblyNameDefinition name)

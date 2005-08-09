@@ -69,6 +69,18 @@ namespace Mono.Cecil.Implem {
 //			foreach (TypeDefinition type in types) {
 //				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow ();
 //			}
+
+			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
+			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
+				(TypeAttributes) 0,
+				m_mdWriter.AddString ("<Module>"),
+				0,
+				new MetadataToken (TokenType.TypeDef, 0),
+				0,
+				0
+			);
+
+			tdTable.Rows.Add (tdRow);
 		}
 
 		public override void Visit (ITypeDefinition type)

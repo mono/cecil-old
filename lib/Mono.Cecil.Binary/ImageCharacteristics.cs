@@ -33,7 +33,7 @@ namespace Mono.Cecil.Binary {
 		UPSystemOnly = 0x4000,
 		BytesReversedHI = 0x8000,
 
-		__flags = 0x0002 | 0x0004 | 0x0008 | 0x0100 | 0x0020,
+		__flags = 0x0002 | 0x0004 | 0x0008 | 0x0100,
 
 		CILOnlyDll = 0x2000 | (ushort) __flags,
 		CILOnlyExe = __flags

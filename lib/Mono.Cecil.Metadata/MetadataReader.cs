@@ -199,6 +199,8 @@ namespace Mono.Cecil.Metadata {
 
 		private void SetHeapIndexSize (MetadataHeap heap, byte flag)
 		{
+			if (heap == null)
+				return;
 			TablesHeap th = m_root.Streams.TablesHeap;
 			heap.IndexSize = ((th.HeapSizes & flag) > 0) ? 4 : 2;
 		}
