@@ -1,5 +1,9 @@
 2005-08-09  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix an array out of range while trying to read
+		fixed arrays signatures
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataReader.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs

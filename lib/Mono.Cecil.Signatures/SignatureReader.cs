@@ -796,7 +796,8 @@ namespace Mono.Cecil.Signatures {
 			case NativeType.FIXEDARRAY:
 				MarshalSig.FixedArray fa = new MarshalSig.FixedArray ();
 				fa.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
-				fa.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					fa.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
 				ms.Spec = fa;
 				break;
 			case NativeType.SAFEARRAY:
