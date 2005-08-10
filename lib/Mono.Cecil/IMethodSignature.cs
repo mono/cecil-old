@@ -19,6 +19,6 @@ namespace Mono.Cecil {
 		MethodCallingConvention CallingConvention { get; set; }
 
 		IParameterDefinitionCollection Parameters { get; }
-		IMethodReturnType ReturnType { get; set; }
+		IMethodReturnType ReturnType { get; }
 	}
 }

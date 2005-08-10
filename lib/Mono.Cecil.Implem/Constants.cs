@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System.Collections;
+
 	internal sealed class Constants {
 
 		private Constants ()
@@ -38,7 +40,6 @@ namespace Mono.Cecil.Implem {
 		public const string IntPtr = "System.IntPtr";
 		public const string UIntPtr = "System.UIntPtr";
 		public const string TypedReference = "System.TypedReference";
-		public const string Variant = "System.Variant";
 		public const string Type = "System.Type";
 	}
 }

@@ -57,7 +57,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, Type type)
 		{
-			Create (opcode, m_module.Controller.Helper.RegisterType (type));
+			return Create (opcode, m_module.Controller.Helper.RegisterType (type));
 		}
 
 		public IInstruction Create (OpCode opcode, IMethodReference meth)
@@ -71,12 +71,12 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, SR.MethodInfo meth)
 		{
-			Create (opcode, m_module.Controller.Helper.RegisterMethod (meth));
+			return Create (opcode, m_module.Controller.Helper.RegisterMethod (meth));
 		}
 
 		public IInstruction Create (OpCode opcode, SR.ConstructorInfo ctor)
 		{
-			Create (opcode, m_module.Controller.Helper.RegisterConstructor (ctor));
+			return Create (opcode, m_module.Controller.Helper.RegisterConstructor (ctor));
 		}
 
 		public IInstruction Create (OpCode opcode, IFieldReference field)
@@ -90,7 +90,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, SR.FieldInfo field)
 		{
-			Create (opcode, m_module.Controller.Helper.RegisterField (field));
+			return Create (opcode, m_module.Controller.Helper.RegisterField (field));
 		}
 
 		public IInstruction Create (OpCode opcode, string str)

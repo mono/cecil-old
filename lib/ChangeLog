@@ -1,3 +1,14 @@
+2005-08-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethodSignature.cs:
+		Remove the setted for the return type.
+	* Mono.Cecil.Implem/CilWorker.cs:
+		Fix the build. Me idiot!
+	* Mono.Cecil.Implem/Constants.cs:
+		Remove unexisting type Variant.
+	* Mono.Cecil.Implem/ReflectionHelper.cs:
+		Complete the helper.
+
 2005-08-10  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/IMethodBody.cs
