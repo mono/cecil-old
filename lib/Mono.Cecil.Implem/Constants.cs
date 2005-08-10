@@ -12,8 +12,6 @@
 
 namespace Mono.Cecil.Implem {
 
-	using System.Collections;
-
 	internal sealed class Constants {
 
 		private Constants ()
