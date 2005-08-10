@@ -1,5 +1,16 @@
 2005-08-10  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/IMethodBody.cs
+	  Mono.Cecil.Cil/ICilEmitter.cs
+	  Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Implem/CilWorker.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/MethodBody.cs
+	  Mono.Cecil.Implem/CilEmitter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Prepare the api for the cil emitting.
+
 	* CodeGen/templates/Utilities.cs
 	  CodeGen/templates/MetadataRowReader.cs
 	  CodeGen/templates/MetadataRowWriter.cs

@@ -17,11 +17,13 @@ namespace Mono.Cecil.Implem {
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
+	using Mono.Cecil.Signatures;
 
 	internal sealed class ReflectionWriter : BaseReflectionVisitor {
 
 		private StructureWriter m_structureWriter;
 		private ModuleDefinition m_mod;
+		private SignatureWriter m_sigWriter;
 		private CodeWriter m_codeWriter;
 		private MetadataWriter m_mdWriter;
 		private MetadataTableWriter m_tableWriter;
@@ -38,6 +40,7 @@ namespace Mono.Cecil.Implem {
 					m_structureWriter.GetWriter ());
 				m_tableWriter = m_mdWriter.GetTableVisitor ();
 				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
+				m_sigWriter = new SignatureWriter (m_mdWriter, this);
 				m_codeWriter = new CodeWriter (m_mdWriter.CilWriter);
 			}
 		}
@@ -65,10 +68,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Visit (ITypeDefinitionCollection types)
 		{
-//			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
-//			foreach (TypeDefinition type in types) {
-//				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow ();
-//			}
+			// SORT TYPES
 
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
@@ -200,6 +200,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Terminate (ITypeDefinitionCollection colls)
 		{
+			// for each method codewrite!
 			(colls.Container as ModuleDefinition).Image.MetadataRoot.Accept (m_mdWriter);
 		}
 	}

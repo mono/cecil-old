@@ -778,7 +778,7 @@ namespace Mono.Cecil.Signatures {
 				MarshalSig.Array ar = new MarshalSig.Array ();
 				ar.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
-				ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
+					ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
 					ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)

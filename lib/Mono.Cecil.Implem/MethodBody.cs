@@ -31,6 +31,8 @@ namespace Mono.Cecil.Implem {
 		private ExceptionHandlerCollection m_exceptions;
 		private VariableDefinitionCollection m_variables;
 
+		private CilWorker m_cilWorker;
+
 		public IMethodDefinition Method {
 			get { return m_method; }
 		}
@@ -95,6 +97,14 @@ namespace Mono.Cecil.Implem {
 			ExceptionHandler eh = new ExceptionHandler (type);
 			m_exceptions.Add (eh);
 			return eh;
+		}
+
+		public ICilWorker GetWorker ()
+		{
+			if (m_cilWorker == null)
+				m_cilWorker = new CilWorker (m_method);
+
+			return m_cilWorker;
 		}
 
 		public void Accept (ICodeVisitor visitor)

@@ -12,10 +12,18 @@
 
 namespace Mono.Cecil.Signatures {
 
+	using Mono.Cecil.Implem;
+	using Mono.Cecil.Metadata;
+
 	internal sealed class SignatureWriter : ISignatureVisitor {
 
-		public SignatureWriter ()
+		private MetadataWriter m_mdWriter;
+		private ReflectionWriter m_reflectWriter;
+
+		public SignatureWriter (MetadataWriter mdWriter, ReflectionWriter reflectWriter)
 		{
+			m_mdWriter = mdWriter;
+			m_reflectWriter = reflectWriter;
 		}
 
 		public void Visit (MethodDefSig methodDef)

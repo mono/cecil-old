@@ -30,6 +30,6 @@ namespace Mono.Cecil.Cil {
 
 		IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type);
 
-		//IInstruction DefineInstruction (OpCode code);
+		ICilWorker GetWorker ();
 	}
 }
