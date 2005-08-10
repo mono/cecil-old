@@ -21,8 +21,6 @@ namespace Mono.Cecil.Metadata {
 
 	internal sealed class Utilities {
 
-		private static IDictionary m_codedIndexCache = new Hashtable ();
-
 		private Utilities ()
 		{
 		}
@@ -137,11 +135,11 @@ namespace Mono.Cecil.Metadata {
 
 		internal delegate int TableRowCounter (Type table);
 
-		internal static int GetCodedIndexSize (CodedIndex ci, TableRowCounter rowCounter)
+		internal static int GetCodedIndexSize (CodedIndex ci, TableRowCounter rowCounter, IDictionary codedIndexCache)
 		{
 			int bits = 0, max = 0;
-			if (m_codedIndexCache [ci] != null)
-				return (int) m_codedIndexCache [ci];
+			if (codedIndexCache [ci] != null)
+				return (int) codedIndexCache [ci];
 
 			int res = 0;
 			Type [] tables;
@@ -161,7 +159,7 @@ namespace Mono.Cecil.Metadata {
 				if (rows > max) max = rows;
 			}
 			res = max < (1 << (16 - bits)) ? 2 : 4;
-			m_codedIndexCache [ci] = res;
+			codedIndexCache [ci] = res;
 			return res;
 		}
 	}

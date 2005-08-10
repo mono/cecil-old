@@ -1,5 +1,16 @@
 2005-08-10  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/Utilities.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/Utilities.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs:
+		Fix the build on .net, i was using a sugar
+		syntax for delegates that csc does not understand.
+		Remove the coded index cache from the static class
+		Utilities, and add one per row visitor.
+
 	* Mono.Cecil/IMethodReturnType.cs
 	  Mono.Cecil.Implem/MethodReturnType.cs
 	  Mono.Cecil.Implem/ReflectionReader.cs

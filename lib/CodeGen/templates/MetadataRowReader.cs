@@ -16,6 +16,7 @@
 namespace Mono.Cecil.Metadata {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 
 	using Mono.Cecil.Binary;
@@ -25,6 +26,7 @@ namespace Mono.Cecil.Metadata {
 		private MetadataTableReader m_mtrv;
 		private BinaryReader m_binaryReader;
 		private MetadataRoot m_metadataRoot;
+		private IDictionary m_ciCache;
 
 		private int m_blobHeapIdxSz;
 		private int m_stringsHeapIdxSz;
@@ -35,6 +37,7 @@ namespace Mono.Cecil.Metadata {
 			m_mtrv = mtrv;
 			m_binaryReader = mtrv.GetReader ();
 			m_metadataRoot = mtrv.GetMetadataRoot ();
+			m_ciCache = new Hashtable ();
 		}
 
 		private int GetIndexSize (Type table)
@@ -44,7 +47,8 @@ namespace Mono.Cecil.Metadata {
 
 		private int GetCodedIndexSize (CodedIndex ci)
 		{
-			return Utilities.GetCodedIndexSize (ci, m_mtrv.GetNumberOfRows);
+			return Utilities.GetCodedIndexSize (ci,
+				new Utilities.TableRowCounter (m_mtrv.GetNumberOfRows), m_ciCache);
 		}
 
 		private uint ReadByIndexSize (int size)
