@@ -80,7 +80,8 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null && m_method != null)
-					m_customAttrs = new CustomAttributeCollection (this, (m_method.DeclaringType as TypeDefinition).Module.Controller);
+					m_customAttrs = new CustomAttributeCollection (
+						this, (m_method.DeclaringType as TypeDefinition).Module.Controller);
 				else if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
 				return m_customAttrs;
@@ -94,7 +95,7 @@ namespace Mono.Cecil.Implem {
 
 		public IMarshalSpec MarshalSpec {
 			get {
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadMarshalSpec(this);
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadMarshalSpec (this);
 				return m_marshalDesc;
 			}
 			set { m_marshalDesc = value as MarshalDesc; }

@@ -450,8 +450,8 @@ namespace Mono.Cecil.Implem {
 					MethodReturnType mrt = mdef.ReturnType as MethodReturnType;
 					mrt.Method = mdef;
 					if (retparam != null) {
-						mrt.CustomAttributeOwner = retparam;
-						mrt.CustomAttributeOwner.ParameterType = mrt.ReturnType;
+						mrt.Parameter = retparam;
+						mrt.Parameter.ParameterType = mrt.ReturnType;
 					}
 
 					m_meths [j - 1] = mdef;

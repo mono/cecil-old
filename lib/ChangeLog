@@ -1,5 +1,13 @@
 2005-08-10  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IMethodReturnType.cs
+	  Mono.Cecil.Implem/MethodReturnType.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs:
+		Make IMethodReturn type inherits IHasMarshalSpec so
+		that users can read marshaling info for return types,
+		and implement it.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs

@@ -19,7 +19,7 @@ namespace Mono.Cecil.Implem {
 	internal sealed class MethodReturnType : IMethodReturnType {
 
 		private MethodReference m_method;
-		private ParameterDefinition m_customAttrOwner;
+		private ParameterDefinition m_param;
 
 		private ITypeReference m_returnType;
 
@@ -33,43 +33,52 @@ namespace Mono.Cecil.Implem {
 			set { m_returnType = value; }
 		}
 
-		public ParameterDefinition CustomAttributeOwner {
-			get { return m_customAttrOwner; }
-			set { m_customAttrOwner = value; }
+		public ParameterDefinition Parameter {
+			get { return m_param; }
+			set { m_param = value; }
 		}
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_customAttrOwner == null)
-					m_customAttrOwner = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
-				return m_customAttrOwner.CustomAttributes;
+				if (m_param == null)
+					m_param = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+				return m_param.CustomAttributes;
+			}
+		}
+
+		public IMarshalSpec MarshalSpec {
+			get {
+				if (m_param == null)
+					return null;
+
+				return m_param.MarshalSpec;
 			}
 		}
 
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			(m_customAttrOwner.CustomAttributes as CustomAttributeCollection).Add (ca);
+			(m_param.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
 		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
 		{
 			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor));
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor (ctor));
 		}
 
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(m_customAttrOwner.CustomAttributes as CustomAttributeCollection).Add (ca);
+			(m_param.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
 		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
 		{
 			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor), data);
+				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor (ctor), data);
 		}
 
 		public MethodReturnType (ITypeReference retType)
