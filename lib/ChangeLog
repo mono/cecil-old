@@ -1,5 +1,8 @@
 2005-08-11  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Read Array signatures correctly.
+
 	* Mono.Cecil/IMethodSignature.cs:
 		Remove the setted for the return type.
 	* Mono.Cecil.Implem/CilWorker.cs:

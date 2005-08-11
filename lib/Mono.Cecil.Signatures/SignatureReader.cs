@@ -780,9 +780,9 @@ namespace Mono.Cecil.Signatures {
 				if (start < data.Length)
 					ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
-					ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
-				if (start < data.Length)
 					ar.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					ar.ElemMult = Utilities.ReadCompressedInteger (data, start, out start);
 				ms.Spec = ar;
 				break;
 			case NativeType.CUSTOMMARSHALER:
