@@ -1,3 +1,36 @@
+2005-08-12  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/Utilities.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  CodeGen/templates/LzNamedCollectionImplem.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil/IMethod.cs
+	  Mono.Cecil/IAssemblyName.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/Utilities.cs
+	  Mono.Cecil.Implem/ReflectionHelper.cs
+	  Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/EventDefinition.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/MethodReference.cs
+	  Mono.Cecil.Implem/TypeDefinitionCollection.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/Constants.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs
+	  Mono.Cecil.Implem/PropertyDefinition.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Ongoing work on the writing layer.
+		Some fixes to the reading layer as well.
+
 2005-08-11  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Signatures/SignatureReader.cs:

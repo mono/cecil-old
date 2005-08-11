@@ -16,7 +16,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public interface IModuleDefinition : ICustomAttributeProvider, IReflectionStructureVisitable {
+	public interface IModuleDefinition : ICustomAttributeProvider, IMetadataScope, IReflectionStructureVisitable {
 
 		string Name { get; set; }
 		Guid Mvid { get; set; }

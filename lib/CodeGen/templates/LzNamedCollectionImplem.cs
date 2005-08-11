@@ -113,7 +113,7 @@ namespace Mono.Cecil.Implem {
 			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
 			m_items.Values.CopyTo (items, 0);
 			for (int i = 0; i < items.Length; i++)
-				items [i].Accept (visitor);<% print("\n\t\t\tvisitor.Terminate (this);") if $cur_coll.name == "TypeDefinitionCollection" %>
+				items [i].Accept (visitor);
 		}
 	}
 }

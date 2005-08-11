@@ -60,8 +60,9 @@ namespace Mono.Cecil.Metadata {
 
 		private void WriteMetadataToken (MetadataToken token, CodedIndex ci)
 		{
-			WriteByIndexSize (token.RID, Utilities.GetCodedIndexSize (ci,
-				new Utilities.TableRowCounter (GetNumberOfRows), m_ciCache));
+			WriteByIndexSize (Utilities.CompressMetadataToken (ci, token),
+				Utilities.GetCodedIndexSize (
+					ci, new Utilities.TableRowCounter (GetNumberOfRows), m_ciCache));
 		}
 
 		private int GetNumberOfRows (Type table)

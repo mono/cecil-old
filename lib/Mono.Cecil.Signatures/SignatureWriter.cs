@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Signatures {
 
+	using System.Collections;
+
 	using Mono.Cecil.Implem;
 	using Mono.Cecil.Metadata;
 
@@ -20,10 +22,16 @@ namespace Mono.Cecil.Signatures {
 		private MetadataWriter m_mdWriter;
 		private ReflectionWriter m_reflectWriter;
 
+		private IDictionary m_sigCache;
+		private IDictionary m_methCache;
+
 		public SignatureWriter (MetadataWriter mdWriter, ReflectionWriter reflectWriter)
 		{
 			m_mdWriter = mdWriter;
 			m_reflectWriter = reflectWriter;
+
+			m_sigCache = new Hashtable ();
+			m_methCache = new Hashtable ();
 		}
 
 		public void Visit (MethodDefSig methodDef)

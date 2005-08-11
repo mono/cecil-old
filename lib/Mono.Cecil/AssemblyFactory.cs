@@ -35,7 +35,6 @@ namespace Mono.Cecil {
 					new AssemblyNameDefinition (), srv, loadType);
 
 				asm.Accept (srv);
-				(asm.MainModule.Types as TypeDefinitionCollection).Load ();
 				return asm;
 			} catch (ReflectionException) {
 				throw;

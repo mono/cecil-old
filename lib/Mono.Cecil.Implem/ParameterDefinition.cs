@@ -112,7 +112,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			m_customAttrs.Add (ca);
+			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
@@ -125,7 +125,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			m_customAttrs.Add (ca);
+			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
@@ -138,9 +138,9 @@ namespace Mono.Cecil.Implem {
 		public void Accept (IReflectionVisitor visitor)
 		{
 			visitor.Visit (this);
-			if (m_marshalDesc != null)
-				m_marshalDesc.Accept (visitor);
-			m_customAttrs.Accept (visitor);
+
+			this.MarshalSpec.Accept (visitor);
+			this.CustomAttributes.Accept (visitor);
 		}
 	}
 }

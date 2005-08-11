@@ -140,7 +140,7 @@ namespace Mono.Cecil.Implem {
 			m_modRefs = new ModuleReferenceCollection (this);
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
-			m_types = new TypeDefinitionCollection (this, m_controller);
+			m_types = new TypeDefinitionCollection (this);
 			m_refs = new TypeReferenceCollection (this);
 		}
 
@@ -238,9 +238,9 @@ namespace Mono.Cecil.Implem {
 		{
 			visitor.Visit (this);
 
-			m_asmRefs.Accept (visitor);
-			m_modRefs.Accept (visitor);
-			m_res.Accept (visitor);
+			this.AssemblyReferences.Accept (visitor);
+			this.ModuleReferences.Accept (visitor);
+			this.Resources.Accept (visitor);
 		}
 	}
 }

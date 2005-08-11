@@ -50,7 +50,8 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
 				if (m_secDecls == null)
-					m_secDecls = new SecurityDeclarationCollection (this, (this.DeclaringType as TypeDefinition).Module.Controller);
+					m_secDecls = new SecurityDeclarationCollection (
+						this, (this.DeclaringType as TypeDefinition).Module.Controller);
 				return m_secDecls;
 			}
 		}
@@ -58,7 +59,8 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, (this.DeclaringType as TypeDefinition).Module.Controller);
+					m_customAttrs = new CustomAttributeCollection (
+						this, (this.DeclaringType as TypeDefinition).Module.Controller);
 				return m_customAttrs;
 			}
 		}
@@ -93,7 +95,8 @@ namespace Mono.Cecil.Implem {
 		public IOverrideCollection Overrides {
 			get {
 				if (m_overrides == null)
-					m_overrides = new OverrideCollection (this, (this.DeclaringType as TypeDefinition).Module.Controller);
+					m_overrides = new OverrideCollection (
+						this, (this.DeclaringType as TypeDefinition).Module.Controller);
 				return m_overrides;
 			}
 		}
@@ -139,8 +142,8 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public MethodDefinition (string name, TypeDefinition decType, RVA rva,
-								 MethodAttributes attrs, MethodImplAttributes implAttrs,
-								 bool hasThis, bool explicitThis, MethodCallingConvention callConv) :
+			MethodAttributes attrs, MethodImplAttributes implAttrs,
+			bool hasThis, bool explicitThis, MethodCallingConvention callConv) :
 			base (name, decType, hasThis, explicitThis, callConv)
 		{
 			m_rva = rva;
@@ -156,7 +159,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			m_customAttrs.Add (ca);
+			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
@@ -169,7 +172,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = (this.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			m_customAttrs.Add (ca);
+			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
 
@@ -182,7 +185,7 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
-			m_secDecls.Add (dec);
+			(this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
 			return dec;
 		}
 
@@ -190,21 +193,46 @@ namespace Mono.Cecil.Implem {
 		{
 			SecurityDeclaration dec =
 				(this.DeclaringType as TypeDefinition).Module.Controller.Reader.BuildSecurityDeclaration (action, declaration);
-			m_secDecls.Add (dec);
+			(this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
 			return dec;
+		}
+
+		public IPInvokeInfo DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs)
+		{
+			this.PInvokeInfo.EntryPoint = ep;
+			this.PInvokeInfo.Attributes = attrs;
+
+			bool exists = false;
+			foreach (IModuleReference modref in (this.DeclaringType as TypeDefinition).Module.ModuleReferences) {
+				if (modref.Name == module) {
+					this.PInvokeInfo.Module = modref;
+					exists = true;
+				}
+			}
+
+			if (!exists)
+				this.PInvokeInfo.Module	 =
+					(this.DeclaringType as TypeDefinition).Module.DefineModuleReference (module);
+
+			return this.PInvokeInfo;
 		}
 
 		public IMethodBody DefineBody ()
 		{
-			return this.m_body = new MethodBody (this);
+			return m_body = new MethodBody (this);
 		}
 
 		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.Visit (this);
-			m_secDecls.Accept (visitor);
-			m_overrides.Accept (visitor);
 			this.Parameters.Accept (visitor);
+
+			if (this.PInvokeInfo != null)
+				this.PInvokeInfo.Accept (visitor);
+
+			this.SecurityDeclarations.Accept (visitor);
+			this.Overrides.Accept (visitor);
+			this.CustomAttributes.Accept (visitor);
 		}
 	}
 }

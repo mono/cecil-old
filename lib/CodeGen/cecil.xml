@@ -287,7 +287,7 @@
 				<column name="Method" type="uint" target="Method" />
 				<column name="Association" type="Mono.Cecil.Metadata.MetadataToken" target="HasSemantics" />
 			</table>
-			<table name="MethodSpec" rid="0x2b">
+			<table name="MethodSpec" rid="0x2b" requires="NET_2_0">
 				<column name="Method" type="Mono.Cecil.Metadata.MetadataToken" target="MethodDefOrRef" />
 				<column name="Instantiation" type="uint" target="BlobHeap" />
 			</table>
@@ -653,7 +653,7 @@
 		<collection type="IModuleReference" container="IModuleDefinition" visit="IReflectionStructure" indexed="true" target="Mono.Cecil" />
 		<collection type="IModuleDefinition" container="IAssemblyDefinition" visit="IReflectionStructure" indexed="true" target="Mono.Cecil" />
 		<collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
-		<collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" />
+		<collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
 		<collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
 		<collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
 		<collection type="IParameterDefinition" container="IMemberReference" visit="IReflection" indexed="true" target="Mono.Cecil" />

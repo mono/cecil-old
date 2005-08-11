@@ -198,5 +198,11 @@ namespace Mono.Cecil.Implem {
 					new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
 			}
 		}
+
+		public override void Terminate (IAssemblyDefinition asm)
+		{
+			foreach (ModuleDefinition mod in asm.Modules)
+				mod.Controller.Reader.Visit (mod.Types);
+		}
 	}
 }

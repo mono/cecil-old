@@ -87,6 +87,31 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
+		public static uint CompressMetadataToken (CodedIndex cidx, MetadataToken token)
+		{
+			uint ret = 0;
+						switch (cidx) {
+<% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
+				ret = token.RID << <%=ci.size%>;
+				switch (token.TokenType) {
+<%	ci.tables.each { |tbl|
+		name = tbl.name
+		if (name == "DeclSecurity")
+			name = "Permission"
+		elsif (name == "StandAloneSig")
+			name = "Signature"
+		end
+%>				case TokenType.<%=name%> :
+					return ret + <%=tbl.tag%>;
+<%	}
+%>				default :
+					throw new MetadataFormatException("Non valid Token for <%=ci.name%>");
+				}
+<% } %>			default :
+				throw new MetadataFormatException ("Non valid CodedIndex");
+			}
+		}
+
 		internal static Type GetCorrespondingTable (TokenType t)
 		{
 			switch (t) {

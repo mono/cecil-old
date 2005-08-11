@@ -209,7 +209,7 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes)
 		{
 			MethodDefinition meth = new MethodDefinition (name, this, attributes);
-			m_methods.Add (meth);
+			(this.Methods as MethodDefinitionCollection).Add (meth);
 			return meth;
 		}
 
@@ -289,11 +289,13 @@ namespace Mono.Cecil.Implem {
 		{
 			visitor.Visit (this);
 
-			m_interfaces.Accept (visitor);
-			m_fields.Accept (visitor);
-			m_properties.Accept (visitor);
-			m_events.Accept (visitor);
-			m_methods.Accept (visitor);
+			this.CustomAttributes.Accept (visitor);
+			this.SecurityDeclarations.Accept (visitor);
+			this.Interfaces.Accept (visitor);
+			this.Fields.Accept (visitor);
+			this.Properties.Accept (visitor);
+			this.Events.Accept (visitor);
+			this.Methods.Accept (visitor);
 		}
 	}
 }

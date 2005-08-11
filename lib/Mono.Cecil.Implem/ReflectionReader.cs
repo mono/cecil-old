@@ -201,8 +201,6 @@ namespace Mono.Cecil.Implem {
 		public override void Visit (ITypeDefinitionCollection types)
 		{
 			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
-			if (tdc != null && tdc.Loaded)
-				return;
 
 			ModuleDefinition def = tdc.Container as ModuleDefinition;
 
@@ -251,6 +249,9 @@ namespace Mono.Cecil.Implem {
 					case TokenType.ModuleRef :
 						scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
 						break;
+					case TokenType.Module :
+						scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
+						break;
 					case TokenType.TypeRef :
 						parent = GetTypeRefAt (type.ResolutionScope.RID);
 						scope = parent.Scope;
@@ -272,8 +273,6 @@ namespace Mono.Cecil.Implem {
 
 			} else
 				m_typeRefs = new TypeReference [0];
-
-			tdc.Loaded = true;
 
 			for (int i = 0; i < m_typeDefs.Length; i++) {
 				TypeDefinition type = m_typeDefs [i];

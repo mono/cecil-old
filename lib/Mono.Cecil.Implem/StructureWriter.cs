@@ -77,9 +77,9 @@ namespace Mono.Cecil.Implem {
 		public override void Visit (IAssemblyNameReference name)
 		{
 			byte [] pkortoken;
-			if (name.PublicKey.Length > 0)
+			if (name.PublicKey != null && name.PublicKey.Length > 0)
 				pkortoken = name.PublicKey;
-			else if (name.PublicKeyToken.Length > 0)
+			else if (name.PublicKeyToken != null && name.PublicKeyToken.Length > 0)
 				pkortoken = name.PublicKeyToken;
 			else
 				pkortoken = new byte [0];
@@ -171,8 +171,10 @@ namespace Mono.Cecil.Implem {
 
 		public override void Terminate (IAssemblyDefinition asm)
 		{
-			foreach (ModuleDefinition mod in asm.Modules)
-				mod.Types.Accept (mod.Controller.Writer);
+			foreach (ModuleDefinition mod in asm.Modules) {
+				mod.TypeReferences.Accept (mod.Controller.Writer);
+				mod.Controller.Writer.Terminate (mod.Types);
+			}
 		}
 	}
 }

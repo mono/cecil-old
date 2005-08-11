@@ -53,7 +53,6 @@ namespace Mono.Cecil.Implem {
 		private void FillPrimitives ()
 		{
 			AddPrimitive (typeof (void));
-			AddPrimitive (typeof (object));
 			AddPrimitive (typeof (string));
 			AddPrimitive (typeof (bool));
 			AddPrimitive (typeof (char));
@@ -69,8 +68,6 @@ namespace Mono.Cecil.Implem {
 			AddPrimitive (typeof (ulong));
 			AddPrimitive (typeof (IntPtr));
 			AddPrimitive (typeof (UIntPtr));
-			AddPrimitive (typeof (TypedReference));
-			AddPrimitive (typeof (Type));
 		}
 
 		public IAssemblyNameReference RegisterAssembly (Assembly asm)
@@ -85,6 +82,11 @@ namespace Mono.Cecil.Implem {
 
 			AssemblyName asmName = asm.GetName ();
 			asmRef = new AssemblyNameReference (asmName.Name, asmName.CultureInfo.Name, asmName.Version);
+			asmRef.PublicKey = asmName.GetPublicKey ();
+			asmRef.PublicKeyToken = asmName.GetPublicKeyToken ();
+			asmRef.HashAlgorithm = (Mono.Cecil.AssemblyHashAlgorithm) asmName.HashAlgorithm;
+			asmRef.Culture = asmName.CultureInfo.ToString ();
+			asmRef.Flags = (Mono.Cecil.AssemblyFlags) asmName.Flags;
 			(m_module.AssemblyReferences as AssemblyNameReferenceCollection).Add (asmRef);
 			m_asmCache [asm.FullName] = asmRef;
 			return asmRef;

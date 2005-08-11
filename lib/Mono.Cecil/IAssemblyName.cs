@@ -22,7 +22,7 @@ namespace Mono.Cecil {
 		Version Version { get; set; }
 		AssemblyFlags Flags { get; set; }
 		byte [] PublicKey { get; set; }
-		byte [] PublicKeyToken { get; }
+		byte [] PublicKeyToken { get; set; }
 		AssemblyHashAlgorithm HashAlgorithm { get; set; }
 		byte [] Hash { get; }
 	}

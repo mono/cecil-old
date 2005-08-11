@@ -46,11 +46,19 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IParameterDefinitionCollection Parameters {
-			get { return m_parameters; }
+			get {
+				if (m_parameters == null)
+					m_parameters = new ParameterDefinitionCollection (this);
+				return m_parameters;
+			}
 		}
 
 		public IMethodReturnType ReturnType {
-			get { return m_returnType; }
+			get {
+				if (m_returnType == null)
+					m_returnType = new MethodReturnType (null);
+				return m_returnType;
+			}
 			set { m_returnType = value as MethodReturnType; }
 		}
 

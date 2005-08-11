@@ -26,9 +26,6 @@ namespace Mono.Cecil.Implem {
 
 		public override void Visit (ITypeDefinitionCollection types)
 		{
-			if (((TypeDefinitionCollection)types).Loaded)
-				return;
-
 			base.Visit (types);
 			ReadClassLayoutInfos ();
 			ReadFieldLayoutInfos ();
