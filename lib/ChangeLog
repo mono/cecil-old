@@ -1,3 +1,9 @@
+2005-08-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix a bug when reading chars inside a custom
+		attribute signature.
+
 2005-08-12  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFactory.cs

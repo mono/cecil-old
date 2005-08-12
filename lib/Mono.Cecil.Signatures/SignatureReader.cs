@@ -453,7 +453,7 @@ namespace Mono.Cecil.Signatures {
 			else
 				cm.CMOD = CustomMod.CMODType.None;
 			cm.TypeDefOrRef = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef,
-														  (uint) Utilities.ReadCompressedInteger (data, start, out start));
+				(uint) Utilities.ReadCompressedInteger (data, start, out start));
 			return cm;
 		}
 
@@ -462,7 +462,8 @@ namespace Mono.Cecil.Signatures {
 			int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
 			byte [] data = new byte [length];
 			Buffer.BlockCopy (m_blobData, start, data, 0, length);
-			return ReadCustomAttrib (new BinaryReader (new MemoryStream (data)), data, ctor);
+			return ReadCustomAttrib (new BinaryReader (
+				new MemoryStream (data), Encoding.Unicode), data, ctor);
 		}
 
 		private CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, IMethodReference ctor)
@@ -762,7 +763,8 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadInt32 ();
 				break;
 			default :
-				throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}", ((byte) elemType).ToString("x2"));
+				throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}",
+					((byte) elemType).ToString("x2"));
 			}
 
 			elem.Simple = true;
