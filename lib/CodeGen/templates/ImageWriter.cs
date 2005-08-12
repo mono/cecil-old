@@ -16,7 +16,6 @@
 namespace Mono.Cecil.Binary {
 
 	using System;
-	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil;
@@ -27,23 +26,23 @@ namespace Mono.Cecil.Binary {
 		private Image m_img;
 		private AssemblyKind m_kind;
 		private MetadataWriter m_mdWriter;
-		private BinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_binaryWriter;
 
 		private Section m_textSect;
-		private BinaryWriter m_textWriter;
+		private MemoryBinaryWriter m_textWriter;
 		private Section m_relocSect;
-		private BinaryWriter m_relocWriter;
+		private MemoryBinaryWriter m_relocWriter;
 
-		public ImageWriter (MetadataWriter writer, AssemblyKind kind, BinaryWriter bw)
+		public ImageWriter (MetadataWriter writer, AssemblyKind kind, MemoryBinaryWriter bw)
 		{
 			m_mdWriter= writer;
 			m_img = writer.GetMetadataRoot ().GetImage ();
 			m_kind = kind;
 			m_binaryWriter = bw;
 
-			m_textWriter = new BinaryWriter (new MemoryStream ());
+			m_textWriter = new MemoryBinaryWriter ();
 			m_textWriter.BaseStream.Position = 80;
-			m_relocWriter = new BinaryWriter (new MemoryStream ());
+			m_relocWriter = new MemoryBinaryWriter ();
 		}
 
 		public Image GetImage ()
@@ -51,7 +50,7 @@ namespace Mono.Cecil.Binary {
 			return m_img;
 		}
 
-		public BinaryWriter GetTextWriter ()
+		public MemoryBinaryWriter GetTextWriter ()
 		{
 			return m_textWriter;
 		}
@@ -226,20 +225,15 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (hnt.RVA);
 		}
 
-		private void WriteMemStream (BinaryWriter bw)
-		{
-			m_binaryWriter.Write ((bw.BaseStream as MemoryStream).ToArray ());
-		}
-
 		public override void Terminate (Image img)
 		{
 			m_binaryWriter.BaseStream.Position = 0x200;
 
-			WriteMemStream (m_textWriter);
+			m_binaryWriter.Write (m_textWriter);
 			m_binaryWriter.Write (
 				new byte [(int) (m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length)]);
 
-			WriteMemStream (m_relocWriter);
+			m_binaryWriter.Write (m_relocWriter);
 			m_binaryWriter.Write (
 				new byte [(int) (m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length)]);
 		}

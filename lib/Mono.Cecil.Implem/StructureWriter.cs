@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Implem {
 
 	using System;
-	using System.IO;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -27,13 +26,13 @@ namespace Mono.Cecil.Implem {
 		private AssemblyKind m_kind;
 
 		private AssemblyDefinition m_asm;
-		private BinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_binaryWriter;
 
 		public AssemblyKind AssemblyKind {
 			get { return m_kind; }
 		}
 
-		public StructureWriter (AssemblyDefinition asm, AssemblyKind kind, BinaryWriter writer)
+		public StructureWriter (AssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter writer)
 		{
 			m_asm = asm;
 			m_kind = kind;
@@ -52,7 +51,7 @@ namespace Mono.Cecil.Implem {
 					module.Image = Image.CreateImage ();
 		}
 
-		public BinaryWriter GetWriter ()
+		public MemoryBinaryWriter GetWriter ()
 		{
 			return m_binaryWriter;
 		}

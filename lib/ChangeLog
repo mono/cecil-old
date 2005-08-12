@@ -1,5 +1,17 @@
 2005-08-12  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/AssemblyFactory.cs
+	  CodeGen/templates/ImageWriter.cs
+	  CodeGen/templates/MetadataTableWriter.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/MemoryBinaryWriter.cs:
+		Use a custom binary writer instead of the old one.
+
 	* Mono.Cecil/IMethod.cs
 	  Mono.Cecil.Cil/BaseCodeVisitor.cs
 	  Mono.Cecil.Cil/MethodHeader.cs

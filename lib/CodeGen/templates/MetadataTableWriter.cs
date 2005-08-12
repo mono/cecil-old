@@ -17,16 +17,17 @@ namespace Mono.Cecil.Metadata {
 
 	using System;
 	using System.Collections;
-	using System.IO;
+
+	using Mono.Cecil.Binary;
 
 	internal sealed class MetadataTableWriter : BaseMetadataTableVisitor {
 
 		private MetadataRoot m_root;
 		private TablesHeap m_heap;
 		private MetadataRowWriter m_mrrw;
-		private BinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_binaryWriter;
 
-		public MetadataTableWriter (MetadataWriter mrv, BinaryWriter writer)
+		public MetadataTableWriter (MetadataWriter mrv, MemoryBinaryWriter writer)
 		{
 			m_root = mrv.GetMetadataRoot ();
 			m_heap = m_root.Streams.TablesHeap;
@@ -44,7 +45,7 @@ namespace Mono.Cecil.Metadata {
 			return m_mrrw;
 		}
 
-		public BinaryWriter GetWriter ()
+		public MemoryBinaryWriter GetWriter ()
 		{
 			return m_binaryWriter;
 		}

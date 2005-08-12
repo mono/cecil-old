@@ -14,7 +14,6 @@ namespace Mono.Cecil.Metadata {
 
 	using System;
 	using System.Collections;
-	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil;
@@ -27,24 +26,24 @@ namespace Mono.Cecil.Metadata {
 		private TargetRuntime m_runtime;
 		private ImageWriter m_imgWriter;
 		private MetadataTableWriter m_tableWriter;
-		private BinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_binaryWriter;
 
 		private IDictionary m_stringCache;
-		private BinaryWriter m_stringWriter;
+		private MemoryBinaryWriter m_stringWriter;
 
 		private IDictionary m_guidCache;
-		private BinaryWriter m_guidWriter;
+		private MemoryBinaryWriter m_guidWriter;
 
 		private IDictionary m_usCache;
-		private BinaryWriter m_usWriter;
+		private MemoryBinaryWriter m_usWriter;
 
-		private BinaryWriter m_blobWriter;
+		private MemoryBinaryWriter m_blobWriter;
 
-		private BinaryWriter m_tWriter;
+		private MemoryBinaryWriter m_tWriter;
 
-		private BinaryWriter m_cilWriter;
+		private MemoryBinaryWriter m_cilWriter;
 
-		private BinaryWriter m_resWriter;
+		private MemoryBinaryWriter m_resWriter;
 
 		private uint m_mdStart;
 		private uint m_mdSize;
@@ -54,7 +53,7 @@ namespace Mono.Cecil.Metadata {
 
 		private uint m_itStart;
 
-		public BinaryWriter CilWriter {
+		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
 		}
 
@@ -62,7 +61,7 @@ namespace Mono.Cecil.Metadata {
 			get { return m_itStart; }
 		}
 
-		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, BinaryWriter writer)
+		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, MemoryBinaryWriter writer)
 		{
 			m_root = root;
 			m_runtime = rt;
@@ -70,25 +69,25 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter = m_imgWriter.GetTextWriter ();
 
 			m_stringCache = new Hashtable ();
-			m_stringWriter = new BinaryWriter (new MemoryStream (), Encoding.UTF8);
+			m_stringWriter = new MemoryBinaryWriter (Encoding.UTF8);
 			m_stringWriter.Write ('\0');
 
 			m_guidCache = new Hashtable ();
-			m_guidWriter = new BinaryWriter (new MemoryStream ());
+			m_guidWriter = new MemoryBinaryWriter ();
 
 			m_usCache = new Hashtable ();
-			m_usWriter = new BinaryWriter (new MemoryStream (), Encoding.Unicode);
+			m_usWriter = new MemoryBinaryWriter (Encoding.Unicode);
 			m_usWriter.Write ('\0');
 
-			m_blobWriter = new BinaryWriter (new MemoryStream ());
+			m_blobWriter = new MemoryBinaryWriter ();
 			m_blobWriter.Write ((byte) 0);
 
-			m_tWriter = new BinaryWriter (new MemoryStream ());
+			m_tWriter = new MemoryBinaryWriter ();
 			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
 
-			m_cilWriter = new BinaryWriter (new MemoryStream ());
+			m_cilWriter = new MemoryBinaryWriter ();
 
-			m_resWriter = new BinaryWriter (new MemoryStream ());
+			m_resWriter = new MemoryBinaryWriter ();
 		}
 
 		public MetadataRoot GetMetadataRoot ()
@@ -101,7 +100,7 @@ namespace Mono.Cecil.Metadata {
 			return m_imgWriter;
 		}
 
-		public BinaryWriter GetWriter ()
+		public MemoryBinaryWriter GetWriter ()
 		{
 			return m_binaryWriter;
 		}
@@ -163,17 +162,6 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		public void QuadAlign ()
-		{
-			QuadAlign (m_binaryWriter);
-		}
-
-		public void QuadAlign (BinaryWriter bw)
-		{
-			bw.BaseStream.Position += 3;
-			bw.BaseStream.Position &= ~3;
-		}
-
 		private void CreateStream (string name)
 		{
 			MetadataStream stream = new MetadataStream ();
@@ -182,7 +170,7 @@ namespace Mono.Cecil.Metadata {
 			m_root.Streams.Add (stream);
 		}
 
-		private void SetHeapSize (MetadataHeap heap, BinaryWriter data, byte flag)
+		private void SetHeapSize (MetadataHeap heap, MemoryBinaryWriter data, byte flag)
 		{
 			if (data.BaseStream.Length > 65536) {
 				m_root.Streams.TablesHeap.HeapSizes |= flag;
@@ -195,7 +183,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			uint offset = (uint) m_resWriter.BaseStream.Position;
 			m_resWriter.Write (data);
-			QuadAlign (m_resWriter);
+			m_resWriter.QuadAlign ();
 			return offset;
 		}
 
@@ -212,7 +200,7 @@ namespace Mono.Cecil.Metadata {
 			if (m_stringWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Strings);
 				SetHeapSize (root.Streams.StringsHeap, m_stringWriter, 0x01);
-				QuadAlign (m_stringWriter);
+				m_stringWriter.QuadAlign ();
 			}
 
 			if (m_guidWriter.BaseStream.Length > 0) {
@@ -223,12 +211,12 @@ namespace Mono.Cecil.Metadata {
 			if (m_blobWriter.BaseStream.Length > 1) {
 				CreateStream (MetadataStream.Blob);
 				SetHeapSize (root.Streams.BlobHeap, m_blobWriter, 0x04);
-				QuadAlign (m_blobWriter);
+				m_blobWriter.QuadAlign ();
 			}
 
 			if (m_usWriter.BaseStream.Length > 2) {
 				CreateStream (MetadataStream.UserStrings);
-				QuadAlign (m_usWriter);
+				m_usWriter.QuadAlign ();
 			}
 
 			switch (m_runtime) {
@@ -261,7 +249,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.Version.Length + 3 & (~3));
 			foreach (char c in header.Version)
 				m_binaryWriter.Write (c);
-			QuadAlign ();
+			m_binaryWriter.QuadAlign ();
 			m_binaryWriter.Write (header.Flags);
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
 		}
@@ -273,7 +261,7 @@ namespace Mono.Cecil.Metadata {
 
 				header.Offset = (uint) (m_binaryWriter.BaseStream.Position);
 				m_binaryWriter.Write (header.Offset);
-				BinaryWriter container;
+				MemoryBinaryWriter container;
 				string name = header.Name;
 				uint size = 0;
 				switch (header.Name) {
@@ -302,15 +290,14 @@ namespace Mono.Cecil.Metadata {
 				m_binaryWriter.Write (size);
 				foreach (char c in name)
 					m_binaryWriter.Write (c);
-				QuadAlign ();
+				m_binaryWriter.QuadAlign ();
 			}
 		}
 
-		private void WriteMemStream (BinaryWriter writer)
+		private void WriteMemStream (MemoryBinaryWriter writer)
 		{
-			m_binaryWriter.Write (
-				(writer.BaseStream as MemoryStream).ToArray ());
-			QuadAlign ();
+			m_binaryWriter.Write (writer);
+			m_binaryWriter.QuadAlign ();
 		}
 
 		private void PatchStreamHeaderOffset (MetadataHeap heap)

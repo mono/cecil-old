@@ -17,14 +17,13 @@ namespace Mono.Cecil.Metadata {
 
 	using System;
 	using System.Collections;
-	using IO = System.IO;
 
 	using Mono.Cecil.Binary;
 
 	internal sealed class MetadataRowWriter : BaseMetadataRowVisitor {
 
 		private MetadataRoot m_root;
-		private IO.BinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_binaryWriter;
 		private IDictionary m_ciCache;
 
 		private int m_blobHeapIdxSz;
