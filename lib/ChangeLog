@@ -1,5 +1,18 @@
 2005-08-12  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil.Cil/BaseCodeVisitor.cs
+	  Mono.Cecil.Cil/MethodHeader.cs
+	  Mono.Cecil.Cil/ICodeVisitor.cs
+	  Mono.Cecil.Implem/Instruction.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Implem/MethodBody.cs:
+		Ongoing work on the writing layer.
+
 	* CodeGen/templates/Utilities.cs
 	  CodeGen/templates/NamedCollectionImplem.cs
 	  CodeGen/templates/MetadataRowWriter.cs

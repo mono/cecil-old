@@ -22,7 +22,7 @@ namespace Mono.Cecil.Implem {
 	using Mono.Cecil.Metadata;
 	using Mono.Cecil.Signatures;
 
-	internal sealed class CodeReader : ICodeVisitor {
+	internal sealed class CodeReader : BaseCodeVisitor {
 
 		private ReflectionReader m_reflectReader;
 		private MetadataRoot m_root;
@@ -33,7 +33,7 @@ namespace Mono.Cecil.Implem {
 			m_root = m_reflectReader.MetadataRoot;
 		}
 
-		public void Visit (IMethodBody body)
+		public override void Visit (IMethodBody body)
 		{
 			MethodDefinition meth = body.Method as MethodDefinition;
 			MethodBody methBody = body as MethodBody;
@@ -44,22 +44,22 @@ namespace Mono.Cecil.Implem {
 			IDictionary instrs;
 			int flags = br.ReadByte ();
 			switch (flags & 0x3) {
-			case (int) MethodHeaders.TinyFormat :
+			case (int) MethodHeader.TinyFormat :
 				methBody.CodeSize = flags >> 2;
 				methBody.MaxStack = 8;
 				ReadCilBody (methBody, br, out instrs);
 				return;
-			case (int) MethodHeaders.FatFormat :
+			case (int) MethodHeader.FatFormat :
 				br.BaseStream.Position--;
 				int fatflags = br.ReadUInt16 ();
 				//int headersize = (fatflags >> 12) & 0xf;
 				methBody.MaxStack = br.ReadUInt16 ();
 				methBody.CodeSize = br.ReadInt32 ();
 				methBody.LocalVarToken = br.ReadInt32 ();
-				body.InitLocals = (fatflags & (int) MethodHeaders.InitLocals) != 0;
+				body.InitLocals = (fatflags & (int) MethodHeader.InitLocals) != 0;
 				Visit (methBody.Variables);
 				ReadCilBody (methBody, br, out instrs);
-				if ((fatflags & (int) MethodHeaders.MoreSects) != 0)
+				if ((fatflags & (int) MethodHeader.MoreSects) != 0)
 					ReadSection (methBody, br, instrs);
 				return;
 			}
@@ -120,7 +120,7 @@ namespace Mono.Cecil.Implem {
 				case OperandType.ShortInlineVar :
 					instr.Operand = body.Variables [br.ReadByte ()];
 					break;
-				case OperandType.ShortInlineParam :
+				case OperandType.ShortInlineParam : // see param
 					instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.InlineSig :
@@ -130,7 +130,7 @@ namespace Mono.Cecil.Implem {
 				case OperandType.InlineVar :
 					instr.Operand = body.Variables [br.ReadInt32 ()];
 					break;
-				case OperandType.InlineParam :
+				case OperandType.InlineParam : // get an IParamDef as operand, adjust the index if static
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineI8 :
@@ -293,7 +293,7 @@ namespace Mono.Cecil.Implem {
 				ReadSection (body, br, instructions);
 		}
 
-		public void Visit (IVariableDefinitionCollection variables)
+		public override void Visit (IVariableDefinitionCollection variables)
 		{
 			MethodBody body = variables.Container as MethodBody;
 			if (body.LocalVarToken == 0)
@@ -312,26 +312,6 @@ namespace Mono.Cecil.Implem {
 
 				body.DefineLocalVariable (varType);
 			}
-		}
-
-		public void Visit (IInstructionCollection instructions)
-		{
-		}
-
-		public void Visit (IInstruction instr)
-		{
-		}
-
-		public void Visit (IExceptionHandlerCollection seh)
-		{
-		}
-
-		public void Visit (IExceptionHandler eh)
-		{
-		}
-
-		public void Visit (IVariableDefinition var)
-		{
 		}
 	}
 }

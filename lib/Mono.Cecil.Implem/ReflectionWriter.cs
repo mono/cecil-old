@@ -36,6 +36,8 @@ namespace Mono.Cecil.Implem {
 		private IDictionary m_methods;
 		private IDictionary m_fields;
 
+		private IList m_methodStack;
+
 		private uint m_methodIndex;
 		private uint m_fieldIndex;
 
@@ -51,7 +53,7 @@ namespace Mono.Cecil.Implem {
 				m_tableWriter = m_mdWriter.GetTableVisitor ();
 				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
 				m_sigWriter = new SignatureWriter (m_mdWriter, this);
-				m_codeWriter = new CodeWriter (m_mdWriter.CilWriter);
+				m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
 			}
 		}
 
@@ -79,6 +81,8 @@ namespace Mono.Cecil.Implem {
 			m_typesRef = new Hashtable ();
 			m_methods = new Hashtable ();
 			m_fields = new Hashtable ();
+
+			m_methodStack = new ArrayList ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -114,6 +118,11 @@ namespace Mono.Cecil.Implem {
 				return (uint) m_fields [field.ToString ()];
 
 			return 0;
+		}
+
+		public uint GetRidFor (IMemberReference member)
+		{
+			return 0; // TODO
 		}
 
 		public uint GetRidFor (IAssemblyNameReference asmName)
@@ -154,6 +163,9 @@ namespace Mono.Cecil.Implem {
 			orderedTypes.Sort (TypeDefComparer.Instance);
 
 			foreach (TypeDefinition t in orderedTypes)
+				Console.WriteLine (t);
+
+			foreach (TypeDefinition t in orderedTypes)
 				t.Accept (this);
 		}
 
@@ -164,11 +176,11 @@ namespace Mono.Cecil.Implem {
 			if (t.BaseType is ITypeDefinition)
 				ext = new MetadataToken (TokenType.TypeDef, GetRidFor (
 						t.BaseType as ITypeDefinition));
-			else if (t.BaseType is ITypeReference)
+			else if (t.BaseType != null)
 				ext = new MetadataToken (TokenType.TypeRef, GetRidFor (
 						t.BaseType));
 			else
-				ext = new MetadataToken (TokenType.TypeRef, 0);
+				ext = new MetadataToken (TokenType.TypeRef, 0); // illegal, get object typeref or def for corlib
 			// TODO, deal with type spec
 			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 				t.Attributes,
@@ -227,10 +239,13 @@ namespace Mono.Cecil.Implem {
 				else if (b.Name == Constants.ModuleType)
 					return 1;
 
+				Console.WriteLine ("DerivesFrom (a: {0}, b: {1}): {2}", a, b, DerivesFrom (a, b));
+				Console.WriteLine ("DerivesFrom (b: {0}, a: {1}): {2}", b, a, DerivesFrom (b, a));
+
 				if (DerivesFrom (a, b))
-					return -1;
-				else if (DerivesFrom (b, a))
 					return 1;
+				else if (DerivesFrom (b, a))
+					return -1;
 
 				return Comparer.Default.Compare (a.FullName, b.FullName);
 			}
@@ -408,7 +423,11 @@ namespace Mono.Cecil.Implem {
 
 		public override void Terminate (ITypeDefinitionCollection colls)
 		{
-			// for each method codewrite!
+			MethodTable mTable = m_tableWriter.GetMethodTable ();
+			for (int i = 0; i < m_methodStack.Count; i++)
+				mTable [i].RVA = m_codeWriter.WriteMethodBody (
+					m_methodStack [i] as IMethodDefinition);
+
 			(colls.Container as ModuleDefinition).Image.MetadataRoot.Accept (m_mdWriter);
 		}
 	}

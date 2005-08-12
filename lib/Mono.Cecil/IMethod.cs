@@ -37,6 +37,8 @@ namespace Mono.Cecil {
 		IPInvokeInfo PInvokeInfo { get; }
 
 		IMethodBody DefineBody ();
-		IPInvokeInfo DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs);
+		void DefineOverride (IMethodReference meth);
+		void DefineOverride (System.Reflection.MethodInfo meth);
+		void DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs);
 	}
 }

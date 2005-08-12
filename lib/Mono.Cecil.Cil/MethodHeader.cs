@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Cil {
 
-	internal enum MethodHeaders : ushort {
+	internal enum MethodHeader : ushort {
 		TinyFormat = 0x2,
 		FatFormat = 0x3,
 		MoreSects = 0x8,

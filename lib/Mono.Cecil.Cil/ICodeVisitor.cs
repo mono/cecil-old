@@ -20,5 +20,7 @@ namespace Mono.Cecil.Cil {
 		void Visit (IExceptionHandler eh);
 		void Visit (IVariableDefinitionCollection variables);
 		void Visit (IVariableDefinition var);
+
+		void Terminate (IMethodBody body);
 	}
 }

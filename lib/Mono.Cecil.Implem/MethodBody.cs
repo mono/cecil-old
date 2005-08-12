@@ -113,6 +113,8 @@ namespace Mono.Cecil.Implem {
 			m_variables.Accept (visitor);
 			m_instructions.Accept (visitor);
 			m_exceptions.Accept (visitor);
+
+			visitor.Terminate (this);
 		}
 	}
 }

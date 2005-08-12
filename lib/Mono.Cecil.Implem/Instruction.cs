@@ -25,6 +25,7 @@ namespace Mono.Cecil.Implem {
 
 		public int Offset {
 			get { return m_offset; }
+			set { m_offset = value; }
 		}
 
 		public OpCode OpCode {

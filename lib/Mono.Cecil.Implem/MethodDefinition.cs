@@ -156,6 +156,17 @@ namespace Mono.Cecil.Implem {
 			m_attributes = attrs;
 		}
 
+		public void DefineOverride (IMethodReference meth)
+		{
+			(this.Overrides as OverrideCollection).Add (meth);
+		}
+
+		public void DefineOverride (System.Reflection.MethodInfo meth)
+		{
+			DefineOverride (
+				(this.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterMethod (meth));
+		}
+
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
@@ -197,24 +208,20 @@ namespace Mono.Cecil.Implem {
 			return dec;
 		}
 
-		public IPInvokeInfo DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs)
+		public void DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs)
 		{
 			this.PInvokeInfo.EntryPoint = ep;
 			this.PInvokeInfo.Attributes = attrs;
 
-			bool exists = false;
 			foreach (IModuleReference modref in (this.DeclaringType as TypeDefinition).Module.ModuleReferences) {
 				if (modref.Name == module) {
 					this.PInvokeInfo.Module = modref;
-					exists = true;
+					return;
 				}
 			}
 
-			if (!exists)
-				this.PInvokeInfo.Module	 =
-					(this.DeclaringType as TypeDefinition).Module.DefineModuleReference (module);
-
-			return this.PInvokeInfo;
+			this.PInvokeInfo.Module	 =
+				(this.DeclaringType as TypeDefinition).Module.DefineModuleReference (module);
 		}
 
 		public IMethodBody DefineBody ()
