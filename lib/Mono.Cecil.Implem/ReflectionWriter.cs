@@ -276,15 +276,14 @@ namespace Mono.Cecil.Implem {
 				if (t == null || cur == t || cur.Interfaces.Count == 0 || !t.IsInterface)
 					return false;
 
-				if (cur.Interfaces.Contains(t))
+				if (cur.Interfaces.Contains (t))
 					return true;
 
 				// Process hierarchy
 				if(cur.BaseType != null && cur.BaseType is TypeDefinition)
-					return Implements((TypeDefinition)cur.BaseType, t);
+					return Implements(cur.BaseType as TypeDefinition, t);
 
 				return false;
-
 			}
 
 			private bool Extends (TypeDefinition cur, TypeDefinition t)

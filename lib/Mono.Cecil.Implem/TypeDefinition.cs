@@ -247,6 +247,7 @@ namespace Mono.Cecil.Implem {
 		public IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType)
 		{
 			FieldDefinition field = new FieldDefinition (name, this, fieldType, attributes);
+			field.ConstantLoaded = field.LayoutLoaded = field.MarshalSpecLoaded = true;
 			(this.Fields as FieldDefinitionCollection) [name] = field;
 			return field;
 		}

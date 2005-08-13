@@ -129,7 +129,15 @@ namespace Mono.Cecil.Binary {
 				img.HintNameTable.RuntimeMain = HintNameTable.RuntimeMainExe;
 			}
 
-			img.PEOptionalHeader.NTSpecificFields.SubSystem = (SubSystem) m_kind;
+			switch (m_kind) {
+			case AssemblyKind.Dll :
+			case AssemblyKind.Console :
+				img.PEOptionalHeader.NTSpecificFields.SubSystem = SubSystem.WindowsCui;
+				break;
+			case AssemblyKind.Windows :
+				img.PEOptionalHeader.NTSpecificFields.SubSystem = SubSystem.WindowsGui;
+				break;
+			}
 
 			RVA importTable = new RVA (img.TextSection.VirtualAddress + m_mdWriter.ItStartPos);
 

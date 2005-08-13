@@ -12,11 +12,9 @@
 
 namespace Mono.Cecil {
 
-	using Mono.Cecil.Binary;
-
 	public enum AssemblyKind {
-		Dll = SubSystem.WindowsCui,
-		Console = SubSystem.WindowsCui,
-		Windows = SubSystem.WindowsGui
+		Dll,
+		Console,
+		Windows
 	}
 }

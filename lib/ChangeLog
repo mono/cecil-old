@@ -1,3 +1,15 @@
+2005-08-14  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/templates/ImageWriter.cs
+	  Mono.Cecil/AssemblyKind.cs:
+		Make assemblies executable on win32.
+	  Mono.Cecil.Implem/TypeDefinition.cs:
+		Mark new fields as loaded.
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Correct the style to patch provided by
+		Sebastien Ros  <s.ros@evaluant.com>
+
 2005-08-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethod.cs
