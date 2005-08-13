@@ -18,7 +18,7 @@ namespace Mono.Cecil.Implem {
 		{
 		}
 
-		public const string Corlib = "mscorlib.dll";
+		public const string Corlib = "mscorlib";
 
 		public const string ModuleType = "<Module>";
 

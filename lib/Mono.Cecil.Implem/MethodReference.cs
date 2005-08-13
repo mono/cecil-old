@@ -54,11 +54,7 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IMethodReturnType ReturnType {
-			get {
-				if (m_returnType == null)
-					m_returnType = new MethodReturnType (null);
-				return m_returnType;
-			}
+			get { return m_returnType;}
 			set { m_returnType = value as MethodReturnType; }
 		}
 
@@ -69,10 +65,12 @@ namespace Mono.Cecil.Implem {
 			m_hasThis = hasThis;
 			m_explicitThis = explicitThis;
 			m_callConv = callConv;
+			m_returnType = new MethodReturnType (null);
 		}
 
 		public MethodReference (string name, ITypeReference decType) : base (name, decType)
 		{
+			m_returnType = new MethodReturnType (null);
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

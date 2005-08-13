@@ -144,7 +144,7 @@ namespace Mono.Cecil.Signatures {
 			int start, callconv;
 			Utilities.ReadCompressedInteger (m_blobData, (int) index, out start);
 			callconv = m_blobData [start];
-			if ((callconv & 0x7) != 0) // field ?
+			if ((callconv & 0x6) != 0) // field ?
 				return GetFieldSig (index);
 			switch (tt) {
 			case TokenType.TypeDef :
@@ -372,12 +372,12 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.ValueType :
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = Utilities.GetMetadataToken(CodedIndex.TypeDefOrRef,
-													 (uint) Utilities.ReadCompressedInteger (data, start, out start));
+					(uint) Utilities.ReadCompressedInteger (data, start, out start));
 				return vt;
 			case ElementType.Class :
 				CLASS c = new CLASS ();
 				c.Type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef,
-													 (uint) Utilities.ReadCompressedInteger (data, start, out start));
+					(uint) Utilities.ReadCompressedInteger (data, start, out start));
 				return c;
 			case ElementType.Ptr :
 				PTR p = new PTR ();

@@ -182,7 +182,8 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
-			CustomAttribute ca = (this.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
+			CustomAttribute ca =
+				(this.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
 			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
 			return ca;
 		}
@@ -222,6 +223,22 @@ namespace Mono.Cecil.Implem {
 
 			this.PInvokeInfo.Module	 =
 				(this.DeclaringType as TypeDefinition).Module.DefineModuleReference (module);
+		}
+
+		public IParameterDefinition DefineParameter (string name, ParamAttributes attributes, ITypeReference type)
+		{
+			ParameterDefinition param = new ParameterDefinition (
+				name, this.Parameters.Count == 0 ? 1 : this.Parameters.Count + 1,
+				attributes, type);
+
+			(this.Parameters as ParameterDefinitionCollection).Add (param);
+			return param;
+		}
+
+		public IParameterDefinition DefineParameter (string name, ParamAttributes attributes, Type type)
+		{
+			return DefineParameter (name, attributes,
+				(this.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterType (type));
 		}
 
 		public IMethodBody DefineBody ()

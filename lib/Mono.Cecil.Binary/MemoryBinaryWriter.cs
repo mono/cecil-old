@@ -29,6 +29,12 @@ namespace Mono.Cecil.Binary {
 		{
 		}
 
+		public void Empty ()
+		{
+			this.BaseStream.Position = 0;
+			this.BaseStream.SetLength (0);
+		}
+
 		public void Write (MemoryBinaryWriter writer)
 		{
 			Write (writer.ToArray ());

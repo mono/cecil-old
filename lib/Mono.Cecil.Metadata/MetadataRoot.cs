@@ -70,8 +70,6 @@ namespace Mono.Cecil.Metadata {
 			public void SetDefaultValues ()
 			{
 				Signature = StandardSignature;
-				MajorVersion = 1; // TODO produce 1.0, 1.1, or 2.0 ...
-				MinorVersion = 0;
 				Reserved = 0;
 				Flags = 0;
 			}

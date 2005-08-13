@@ -206,11 +206,17 @@ namespace Mono.Cecil.Implem {
 			return DefineNestedType (name, attributes, m_module.Controller.Helper.RegisterType (baseType));
 		}
 
-		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes)
+		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType)
 		{
 			MethodDefinition meth = new MethodDefinition (name, this, attributes);
+			meth.ReturnType.ReturnType = retType;
 			(this.Methods as MethodDefinitionCollection).Add (meth);
 			return meth;
+		}
+
+		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes, Type retType)
+		{
+			return DefineMethod (name, attributes, m_module.Controller.Helper.RegisterType (retType));
 		}
 
 		public IMethodDefinition DefineConstructor ()
@@ -221,7 +227,7 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinition DefineConstructor (bool isstatic)
 		{
 			string name = null;
-			MethodAttributes attrs = MethodAttributes.SpecialName;
+			MethodAttributes attrs = MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
 			if (isstatic) {
 				name = m_cctor;
 				attrs |= MethodAttributes.Static;
@@ -229,6 +235,8 @@ namespace Mono.Cecil.Implem {
 				name = m_ctor;
 
 			MethodDefinition meth = new MethodDefinition (name, this, attrs);
+			meth.HasThis = true;
+			meth.ReturnType.ReturnType = m_module.Controller.Writer.GetCoreType (Constants.Void);
 
 			(this.Methods as MethodDefinitionCollection).Add (meth);
 			(this.Constructors as MethodDefinitionCollection).Add (meth);
@@ -239,6 +247,7 @@ namespace Mono.Cecil.Implem {
 		public IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType)
 		{
 			FieldDefinition field = new FieldDefinition (name, this, fieldType, attributes);
+			(this.Fields as FieldDefinitionCollection) [name] = field;
 			return field;
 		}
 

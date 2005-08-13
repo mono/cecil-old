@@ -33,6 +33,14 @@ namespace Mono.Cecil.Cil {
 			get { return m_size; }
 		}
 
+		public byte Op1 {
+			get { return m_op1; }
+		}
+
+		public byte Op2 {
+			get { return m_op2; }
+		}
+
 		public short Value {
 			get { return m_size == 1 ? m_op2 : (short) ((m_op1 << 8) | m_op2); }
 		}

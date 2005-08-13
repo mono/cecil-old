@@ -139,7 +139,9 @@ namespace Mono.Cecil.Implem {
 		{
 			visitor.Visit (this);
 
-			this.MarshalSpec.Accept (visitor);
+			if (this.MarshalSpec != null)
+				this.MarshalSpec.Accept (visitor);
+
 			this.CustomAttributes.Accept (visitor);
 		}
 	}

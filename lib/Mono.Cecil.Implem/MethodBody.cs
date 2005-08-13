@@ -102,7 +102,7 @@ namespace Mono.Cecil.Implem {
 		public ICilWorker GetWorker ()
 		{
 			if (m_cilWorker == null)
-				m_cilWorker = new CilWorker (m_method);
+				m_cilWorker = new CilWorker (this);
 
 			return m_cilWorker;
 		}

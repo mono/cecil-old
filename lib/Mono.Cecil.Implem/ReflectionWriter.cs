@@ -35,11 +35,15 @@ namespace Mono.Cecil.Implem {
 		private IDictionary m_typesRef;
 		private IDictionary m_methods;
 		private IDictionary m_fields;
+		private IDictionary m_membersRef;
+		private IDictionary m_primitives;
 
+		private IList m_membersRefContainer;
 		private IList m_methodStack;
 
 		private uint m_methodIndex;
 		private uint m_fieldIndex;
+		private uint m_paramIndex;
 
 		public StructureWriter StructureWriter {
 			get { return m_structureWriter; }
@@ -81,11 +85,56 @@ namespace Mono.Cecil.Implem {
 			m_typesRef = new Hashtable ();
 			m_methods = new Hashtable ();
 			m_fields = new Hashtable ();
+			m_membersRef = new Hashtable ();
+			m_primitives = new Hashtable ();
 
+			m_membersRefContainer = new ArrayList ();
 			m_methodStack = new ArrayList ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
+			m_paramIndex = 1;
+
+			FillPrimitives ();
+		}
+
+		private void FillPrimitives ()
+		{
+			object o = new object ();
+			m_primitives [Constants.Void] = o;
+			m_primitives [Constants.String] = o;
+			m_primitives [Constants.Boolean] = o;
+			m_primitives [Constants.Char] = o;
+			m_primitives [Constants.Single] = o;
+			m_primitives [Constants.Double] = o;
+			m_primitives [Constants.SByte] = o;
+			m_primitives [Constants.Byte] = o;
+			m_primitives [Constants.Int16] = o;
+			m_primitives [Constants.UInt16] = o;
+			m_primitives [Constants.Int32] = o;
+			m_primitives [Constants.UInt32] = o;
+			m_primitives [Constants.Int64] = o;
+			m_primitives [Constants.UInt64] = o;
+			m_primitives [Constants.IntPtr] = o;
+			m_primitives [Constants.UIntPtr] = o;
+		}
+
+		public void AddMemberRef (IMemberReference member)
+		{
+			m_membersRefContainer.Add (member);
+		}
+
+		private void ImportMemberRefFromReader ()
+		{
+			ReflectionReader reader = m_mod.Controller.Reader;
+			if (reader.MemberReferences != null && reader.MemberReferences.Length > 0)
+				foreach (MemberReference member in m_mod.Controller.Reader.MemberReferences)
+					AddMemberRef (member);
+		}
+
+		public ITypeReference GetCoreType (string name)
+		{
+			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
 
 		public uint GetRidFor (ITypeDefinition t)
@@ -122,7 +171,10 @@ namespace Mono.Cecil.Implem {
 
 		public uint GetRidFor (IMemberReference member)
 		{
-			return 0; // TODO
+			if (m_membersRef.Contains (member.ToString ()))
+				return (uint) m_membersRef [member.ToString ()];
+
+			return 0;
 		}
 
 		public uint GetRidFor (IAssemblyNameReference asmName)
@@ -138,6 +190,34 @@ namespace Mono.Cecil.Implem {
 		public uint GetRidFor (IModuleReference modRef)
 		{
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
+		}
+
+		private MetadataToken GetTypeDefOrRefToken (ITypeReference type)
+		{
+			// TODO
+			if (type is IArrayType) {
+
+			} else if (type is IFunctionPointerType) {
+
+			} else if (type is IModifierType) {
+
+			} else if (type is IPinnedType) {
+
+			} else if (type is IPointerType) {
+
+			} else if (type is IReferenceType) {
+
+			} else if (type is ITypeDefinition) {
+				return new MetadataToken (
+					TokenType.TypeDef, GetRidFor (type as ITypeDefinition));
+			} else if (type != null) {
+				return new MetadataToken (
+					TokenType.TypeRef, GetRidFor (type));
+			} else { // <Module> and interfaces
+				return new MetadataToken (TokenType.TypeRef, 0);
+			}
+
+			return new MetadataToken ();
 		}
 
 		public override void Visit (ITypeDefinitionCollection types)
@@ -163,25 +243,13 @@ namespace Mono.Cecil.Implem {
 			orderedTypes.Sort (TypeDefComparer.Instance);
 
 			foreach (TypeDefinition t in orderedTypes)
-				Console.WriteLine (t);
-
-			foreach (TypeDefinition t in orderedTypes)
 				t.Accept (this);
 		}
 
 		public override void Visit (ITypeDefinition t)
 		{
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
-			MetadataToken ext;
-			if (t.BaseType is ITypeDefinition)
-				ext = new MetadataToken (TokenType.TypeDef, GetRidFor (
-						t.BaseType as ITypeDefinition));
-			else if (t.BaseType != null)
-				ext = new MetadataToken (TokenType.TypeRef, GetRidFor (
-						t.BaseType));
-			else
-				ext = new MetadataToken (TokenType.TypeRef, 0); // illegal, get object typeref or def for corlib
-			// TODO, deal with type spec
+			MetadataToken ext = GetTypeDefOrRefToken (t.BaseType);
 			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 				t.Attributes,
 				m_mdWriter.AddString (t.Name),
@@ -205,7 +273,18 @@ namespace Mono.Cecil.Implem {
 
 			private bool Implements (TypeDefinition cur, TypeDefinition t)
 			{
-				throw new NotImplementedException ();
+				if (t == null || cur == t || cur.Interfaces.Count == 0 || !t.IsInterface)
+					return false;
+
+				if (cur.Interfaces.Contains(t))
+					return true;
+
+				// Process hierarchy
+				if(cur.BaseType != null && cur.BaseType is TypeDefinition)
+					return Implements((TypeDefinition)cur.BaseType, t);
+
+				return false;
+
 			}
 
 			private bool Extends (TypeDefinition cur, TypeDefinition t)
@@ -234,13 +313,13 @@ namespace Mono.Cecil.Implem {
 				if (a == null || b == null)
 					throw new ReflectionException ("TypeDefComparer can only compare TypeDefinition");
 
+				if (a == b)
+					return 0;
+
 				if (a.Name == Constants.ModuleType)
 					return -1;
 				else if (b.Name == Constants.ModuleType)
 					return 1;
-
-				Console.WriteLine ("DerivesFrom (a: {0}, b: {1}): {2}", a, b, DerivesFrom (a, b));
-				Console.WriteLine ("DerivesFrom (b: {0}, a: {1}): {2}", b, a, DerivesFrom (b, a));
 
 				if (DerivesFrom (a, b))
 					return 1;
@@ -253,9 +332,12 @@ namespace Mono.Cecil.Implem {
 
 		public override void Visit (ITypeReferenceCollection refs)
 		{
+			ImportMemberRefFromReader ();
+
 			ArrayList orderedTypeRefs = new ArrayList (refs.Count);
 			foreach (TypeReference tr in refs)
-				orderedTypeRefs.Add (tr);
+				if (!m_primitives.Contains (tr.FullName))
+					orderedTypeRefs.Add (tr);
 
 			orderedTypeRefs.Sort (TypeRefComparer.Instance);
 
@@ -350,7 +432,19 @@ namespace Mono.Cecil.Implem {
 
 		public override void Visit (IMethodDefinition method)
 		{
-			// TODO
+			MethodTable mTable = m_tableWriter.GetMethodTable ();
+			MethodRow mRow = m_rowWriter.CreateMethodRow (
+				RVA.Zero,
+				method.ImplAttributes,
+				method.Attributes,
+				m_mdWriter.AddString (method.Name),
+				m_sigWriter.AddMethodDefSig (GetMethodDefSig (method)),
+				m_paramIndex);
+
+			mTable.Rows.Add (mRow);
+			m_methodStack.Add (method);
+			m_methods [method.ToString ()] = (uint) mTable.Rows.Count;
+			m_methodIndex++;
 		}
 
 		public override void Visit (IPInvokeInfo pinvk)
@@ -375,15 +469,15 @@ namespace Mono.Cecil.Implem {
 
 		public override void Visit (IFieldDefinition field)
 		{
-//			FieldTable fTable = m_tableWriter.GetFieldTable ();
-//			FieldRow fRow = m_rowWriter.CreateFieldRow (
-//				field.Attributes,
-//				m_mdWriter.AddString (field.Name),
-//				m_sigWriter.AddFieldSig (field));
-//
-//			fTable.Rows.Add (fRow);
-//			m_fieldIndex++;
-//			m_fields [field.ToString ()] = field;
+			FieldTable fTable = m_tableWriter.GetFieldTable ();
+			FieldRow fRow = m_rowWriter.CreateFieldRow (
+				field.Attributes,
+				m_mdWriter.AddString (field.Name),
+				m_sigWriter.AddFieldSig (GetFieldSig (field)));
+
+			fTable.Rows.Add (fRow);
+			m_fields [field.ToString ()] = (uint) fTable.Rows.Count;
+			m_fieldIndex++;
 		}
 
 		public override void Visit (IPropertyDefinitionCollection properties)
@@ -423,12 +517,168 @@ namespace Mono.Cecil.Implem {
 
 		public override void Terminate (ITypeDefinitionCollection colls)
 		{
+			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
+
+			foreach (IMemberReference member in m_membersRefContainer) {
+				uint sig = 0;
+				if (member is IFieldReference)
+					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
+				else if (member is IMethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
+					GetTypeDefOrRefToken (member.DeclaringType),
+					m_mdWriter.AddString (member.Name),
+					sig);
+
+				mrTable.Rows.Add (mrRow);
+				m_membersRef [member.ToString ()] = (uint) mrTable.Rows.Count;
+			}
+
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++)
 				mTable [i].RVA = m_codeWriter.WriteMethodBody (
 					m_methodStack [i] as IMethodDefinition);
 
+			if (m_mod.Assembly.EntryPoint != null)
+				m_mdWriter.EntryPointToken =
+					((uint) TokenType.Method) | GetRidFor (m_mod.Assembly.EntryPoint);
+
 			(colls.Container as ModuleDefinition).Image.MetadataRoot.Accept (m_mdWriter);
+		}
+
+		public SigType GetSigType (ITypeReference type)
+		{
+			// TODO, complete ...
+			string name = type.FullName;
+			switch (name) {
+			case Constants.Void :
+				return new SigType (ElementType.Void);
+			case Constants.Object :
+				return new SigType (ElementType.Object);
+			case Constants.Boolean :
+				return new SigType (ElementType.Boolean);
+			case Constants.String :
+				return new SigType (ElementType.String);
+			}
+
+			CLASS c = new CLASS ();
+			c.Type = GetTypeDefOrRefToken (type);
+			return c;
+		}
+
+		public CustomMod [] GetCustomMods (ITypeReference type)
+		{
+			if (!(type is IModifierType))
+				return new CustomMod [0];
+
+			ArrayList cmods = new ArrayList ();
+			ITypeReference cur = type;
+			while (cur is IModifierType) {
+				if (cur is IModifierOptional) {
+					CustomMod cmod = new CustomMod ();
+					cmod.CMOD = CustomMod.CMODType.OPT;
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierOptional).ModifierType);
+					cmods.Add (cmod);
+				} else if (cur is IModifierRequired) {
+					CustomMod cmod = new CustomMod ();
+					cmod.CMOD = CustomMod.CMODType.REQD;
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierRequired).ModifierType);
+					cmods.Add (cmod);
+				}
+
+				cur = (cur as IModifierType).ElementType;
+			}
+
+			return cmods.ToArray (typeof (CustomMod)) as CustomMod [];
+		}
+
+		public Signature GetMemberRefSig (IMemberReference member)
+		{
+			if (member is IFieldReference)
+				return GetFieldSig (member as IFieldReference);
+			else
+				return GetMemberRefSig (member as IMethodReference);
+		}
+
+		public FieldSig GetFieldSig (IFieldReference field)
+		{
+			FieldSig sig = new FieldSig ();
+			sig.CallingConvention |= 0x6;
+			sig.Field = true;
+			sig.CustomMods = GetCustomMods (field.FieldType);
+			sig.Type = GetSigType (field.FieldType);
+			return sig;
+		}
+
+		private void CompleteMethodSig (IMethodReference meth, MethodSig sig)
+		{
+			sig.HasThis = meth.HasThis;
+			sig.ExplicitThis = meth.ExplicitThis;
+			if (sig.HasThis)
+				sig.CallingConvention |= 0x20;
+			if (sig.ExplicitThis)
+				sig.CallingConvention |= 0x40;
+
+			if ((meth.CallingConvention & MethodCallingConvention.VarArg) != 0)
+				sig.CallingConvention |= 0x5;
+
+			sig.ParamCount = meth.Parameters.Count;
+			sig.Parameters = new Param [sig.ParamCount];
+			for (int i = 0; i < sig.ParamCount; i++) {
+				IParameterDefinition pDef = meth.Parameters [i];
+				Param p = new Param ();
+				p.CustomMods = GetCustomMods (pDef.ParameterType);
+				if (pDef.ParameterType.FullName == Constants.TypedReference)
+					p.TypedByRef = true;
+				else if (pDef.ParameterType is IReferenceType) {
+					p.ByRef = true;
+					p.Type = GetSigType (
+						(pDef.ParameterType as IReferenceType).ElementType);
+				} else
+					p.Type = GetSigType (pDef.ParameterType);
+				sig.Parameters [i] = p;
+			}
+
+			RetType rtSig = new RetType ();
+			rtSig.CustomMods = GetCustomMods (meth.ReturnType.ReturnType);
+
+			if (meth.ReturnType.ReturnType.FullName == Constants.Void)
+				rtSig.Void = true;
+			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
+				rtSig.TypedByRef = true;
+			else if (meth.ReturnType.ReturnType is IReferenceType) {
+				rtSig.ByRef = true;
+				rtSig.Type = GetSigType (
+					(meth.ReturnType.ReturnType as IReferenceType).ElementType);
+			} else
+				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
+
+			sig.RetType = rtSig;
+		}
+
+
+		public MethodRefSig GetMethodRefSig (IMethodReference meth)
+		{
+			MethodRefSig methSig = new MethodRefSig ();
+			CompleteMethodSig (meth, methSig);
+
+			if ((meth.CallingConvention & MethodCallingConvention.C) != 0)
+				methSig.CallingConvention |= 0x1;
+			else if ((meth.CallingConvention & MethodCallingConvention.StdCall) != 0)
+				methSig.CallingConvention |= 0x2;
+			else if ((meth.CallingConvention & MethodCallingConvention.ThisCall) != 0)
+				methSig.CallingConvention |= 0x3;
+			else if ((meth.CallingConvention & MethodCallingConvention.FastCall) != 0)
+				methSig.CallingConvention |= 0x4;
+
+			return methSig;
+		}
+
+		public MethodDefSig GetMethodDefSig (IMethodDefinition meth)
+		{
+			MethodDefSig sig = new MethodDefSig ();
+			CompleteMethodSig (meth, sig);
+			return sig;
 		}
 	}
 }

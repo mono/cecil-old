@@ -16,6 +16,8 @@ namespace Mono.Cecil.Cil {
 
 	public interface ICilWorker {
 
+		IMethodBody GetBody ();
+
 		IInstruction Emit (OpCode opcode);
 
 		IInstruction Emit (OpCode opcode, ITypeReference type);

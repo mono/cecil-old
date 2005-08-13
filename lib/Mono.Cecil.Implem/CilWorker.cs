@@ -22,20 +22,20 @@ namespace Mono.Cecil.Implem {
 	internal class CilWorker : ICilWorker {
 
 		private ModuleDefinition m_module;
-		private MethodDefinition m_meth;
 		private MethodBody m_mbody;
 
 		private InstructionCollection m_instrs;
 
-		public CilWorker (MethodDefinition meth)
+		public CilWorker (MethodBody body)
 		{
-			m_meth = meth;
-			m_mbody = new MethodBody (meth);
-			meth.Body = m_mbody;
-
-			m_module = (meth.DeclaringType as TypeDefinition).Module;
-
+			m_mbody = body;
+			m_module = (body.Method.DeclaringType as TypeDefinition).Module;
 			m_instrs = m_mbody.Instructions as InstructionCollection;
+		}
+
+		public IMethodBody GetBody ()
+		{
+			return m_mbody;
 		}
 
 		public IInstruction Create (OpCode opcode)

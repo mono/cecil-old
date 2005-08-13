@@ -38,17 +38,17 @@ namespace Mono.Cecil.Implem {
 			m_kind = kind;
 			m_binaryWriter = writer;
 
+			// reset images
+			foreach (ModuleDefinition module in asm.Modules)
+				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
+					module.Image = Image.CreateImage ();
+
 			ReflectionWriter rw = (asm.MainModule as ModuleDefinition).Controller.Writer;
 			rw.StructureWriter = this;
 
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
 			m_rowWriter = rw.MetadataRowWriter;
-
-			// reset images
-			foreach (ModuleDefinition module in asm.Modules)
-				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
-					module.Image = Image.CreateImage ();
 		}
 
 		public MemoryBinaryWriter GetWriter ()

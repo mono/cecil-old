@@ -38,6 +38,12 @@ namespace Mono.Cecil {
 		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType);
 		ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType);
 
+		ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm);
+		IFieldReference DefineFieldReference (string name, ITypeReference declaringType, ITypeReference fieldType);
+		IMethodReference DefineMethodReference (string name, ITypeReference declaringType,
+			ITypeReference returnType, ITypeReference [] parametersTypes,
+		bool hasThis, bool explicitThis, MethodCallingConvention conv);
+
 		IExternTypeCollection ExternTypes { get; }
 
 		IMetadataTokenProvider LookupByToken (MetadataToken token);

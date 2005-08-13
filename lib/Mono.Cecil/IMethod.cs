@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil {
 
+	using System;
+
 	using Mono.Cecil.Cil;
 
 	public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
@@ -37,8 +39,13 @@ namespace Mono.Cecil {
 		IPInvokeInfo PInvokeInfo { get; }
 
 		IMethodBody DefineBody ();
+
 		void DefineOverride (IMethodReference meth);
 		void DefineOverride (System.Reflection.MethodInfo meth);
+
 		void DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs);
+
+		IParameterDefinition DefineParameter (string name, ParamAttributes attributes, ITypeReference type);
+		IParameterDefinition DefineParameter (string name, ParamAttributes attributes, Type type);
 	}
 }

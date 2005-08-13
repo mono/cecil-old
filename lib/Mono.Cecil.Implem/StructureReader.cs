@@ -103,7 +103,7 @@ namespace Mono.Cecil.Implem {
 			ManifestResourceTable mrTable = m_tHeap [typeof(ManifestResourceTable)] as ManifestResourceTable;
 			FileTable fTable = m_tHeap [typeof(FileTable)] as FileTable;
 
-			BinaryReader br = m_ir.GetReader ();
+			BinaryReader br;
 
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ManifestResourceRow mrRow = mrTable [i];
@@ -111,7 +111,7 @@ namespace Mono.Cecil.Implem {
 					EmbeddedResource eres = new EmbeddedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags, module);
 
-					br.BaseStream.Position = m_img.ResolveTextVirtualAddress (
+					br = m_ir.MetadataReader.GetCodeOrResReader (
 						m_img.CLIHeader.Resources.VirtualAddress);
 					br.BaseStream.Position += mrRow.Offset;
 

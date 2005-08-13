@@ -53,12 +53,19 @@ namespace Mono.Cecil.Metadata {
 
 		private uint m_itStart;
 
+		private uint m_entryPointToken;
+
 		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
 		}
 
 		public uint ItStartPos {
 			get { return m_itStart; }
+		}
+
+		public uint EntryPointToken {
+			get { return m_entryPointToken; }
+			set { m_entryPointToken = value; }
 		}
 
 		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, MemoryBinaryWriter writer)
@@ -130,8 +137,9 @@ namespace Mono.Cecil.Metadata {
 			if (data == null || data.Length == 0)
 				return 0;
 
-			uint pointer = withSize ? (uint) Utilities.WriteCompressedInteger (
-				m_blobWriter, data.Length) : (uint) m_blobWriter.BaseStream.Position;
+			uint pointer = (uint) m_blobWriter.BaseStream.Position;
+			if (withSize)
+				Utilities.WriteCompressedInteger (m_blobWriter, data.Length);
 			m_blobWriter.Write (data);
 			return pointer;
 		}
@@ -154,10 +162,11 @@ namespace Mono.Cecil.Metadata {
 			if (m_usCache.Contains (str))
 				return (uint) m_usCache [str];
 
-			uint pointer = (uint) Utilities.WriteCompressedInteger (
-				m_usWriter, str.Length * 2 + 1);
+			uint pointer = (uint) m_usWriter.BaseStream.Position;
+			Utilities.WriteCompressedInteger (m_usWriter, str.Length * 2 + 1);
 			foreach (char c in str)
 				m_usWriter.Write (c);
+			// m_usWriter.Write (str);
 			m_usWriter.Write ('\0');
 			return pointer;
 		}
@@ -357,6 +366,8 @@ namespace Mono.Cecil.Metadata {
 		private void PatchHeader ()
 		{
 			Image img = m_imgWriter.GetImage ();
+
+			img.CLIHeader.EntryPointToken = m_entryPointToken;
 
 			if (m_mdSize > 0)
 				img.CLIHeader.Metadata = new DataDirectory (

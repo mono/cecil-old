@@ -34,7 +34,8 @@ namespace Mono.Cecil {
 		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType);
 
 		IMethodDefinitionCollection Methods { get; }
-		IMethodDefinition DefineMethod (string name, MethodAttributes attributes);
+		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType);
+		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, Type retType);
 
 		IMethodDefinitionCollection Constructors { get; }
 		IMethodDefinition DefineConstructor ();

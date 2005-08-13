@@ -22,52 +22,13 @@ namespace Mono.Cecil.Implem {
 		private ModuleDefinition m_module;
 
 		private IDictionary m_asmCache;
-		private IDictionary m_primitives;
 		private IDictionary m_memberRefCache;
 
 		public ReflectionHelper (ModuleDefinition module)
 		{
 			m_module = module;
 			m_asmCache = new Hashtable ();
-			m_primitives = new Hashtable ();
 			m_memberRefCache = new Hashtable ();
-
-			FillPrimitives ();
-		}
-
-		private void AddPrimitive (Type t)
-		{
-			m_primitives [t.FullName] = new TypeReference (t.Name, t.Namespace);
-		}
-
-		private bool IsPrimitive (Type t)
-		{
-			return m_primitives.Contains (t.FullName);
-		}
-
-		private ITypeReference GetPrimitive (Type t)
-		{
-			return m_primitives [t.FullName] as ITypeReference;
-		}
-
-		private void FillPrimitives ()
-		{
-			AddPrimitive (typeof (void));
-			AddPrimitive (typeof (string));
-			AddPrimitive (typeof (bool));
-			AddPrimitive (typeof (char));
-			AddPrimitive (typeof (float));
-			AddPrimitive (typeof (double));
-			AddPrimitive (typeof (sbyte));
-			AddPrimitive (typeof (byte));
-			AddPrimitive (typeof (short));
-			AddPrimitive (typeof (ushort));
-			AddPrimitive (typeof (int));
-			AddPrimitive (typeof (uint));
-			AddPrimitive (typeof (long));
-			AddPrimitive (typeof (ulong));
-			AddPrimitive (typeof (IntPtr));
-			AddPrimitive (typeof (UIntPtr));
 		}
 
 		public IAssemblyNameReference RegisterAssembly (Assembly asm)
@@ -105,17 +66,12 @@ namespace Mono.Cecil.Implem {
 
 		public ITypeReference RegisterType (Type t)
 		{
-			if (IsPrimitive (t))
-				return GetPrimitive (t);
-
 			TypeReference typeRef = m_module.TypeReferences [GetTypeSignature (t)] as TypeReference;
 			if (typeRef != null)
 				return typeRef;
 
 			IAssemblyNameReference asm = RegisterAssembly (t.Assembly);
-			typeRef = new TypeReference (t.Name, t.Namespace, m_module, asm);
-			(m_module.TypeReferences as TypeReferenceCollection) [typeRef.FullName] = typeRef;
-			return typeRef;
+			return m_module.DefineTypeReference (t.Name, t.Namespace, asm);
 		}
 
 		private string GetMethodBaseSignature (MethodBase meth)
@@ -137,21 +93,21 @@ namespace Mono.Cecil.Implem {
 
 		private IMethodReference RegisterMethodBase (MethodBase meth, Type retType)
 		{
-			MethodReference methRef = m_memberRefCache [
+			IMethodReference methRef = m_memberRefCache [
 				GetMethodBaseSignature (meth)] as MethodReference;
 			if (methRef != null)
 				return methRef;
 
-			methRef = new MethodReference (meth.Name, RegisterType (meth.DeclaringType));
-			int seq = 1;
-			foreach (ParameterInfo p in meth.GetParameters ()) {
-				ParameterDefinition paramDef = new ParameterDefinition (
-					p.Name, seq++, (ParamAttributes) 0, RegisterType (p.ParameterType));
-				(methRef.Parameters as ParameterDefinitionCollection).Add (paramDef);
-			}
-			methRef.ReturnType.ReturnType = RegisterType (retType);
-			// TODO: add it somewhere in the reflection writer for the MemberRef table
-			return methRef;
+			ParameterInfo [] methParams = meth.GetParameters ();
+			ITypeReference [] parameters = new ITypeReference [methParams.Length];
+			for (int i = 0; i < methParams.Length; i++)
+				parameters [i] = RegisterType (methParams [i].ParameterType);
+
+			return m_module.DefineMethodReference (meth.Name,
+				RegisterType (meth.DeclaringType), RegisterType (retType), parameters,
+				(meth.CallingConvention & CallingConventions.HasThis) > 0,
+				(meth.CallingConvention & CallingConventions.ExplicitThis) > 0,
+				MethodCallingConvention.Default); // TODO, get it from meth
 		}
 
 		public IMethodReference RegisterConstructor (ConstructorInfo ctor)
@@ -182,10 +138,8 @@ namespace Mono.Cecil.Implem {
 			if (fieldRef != null)
 				return fieldRef;
 
-			fieldRef = new FieldReference (field.Name,
+			return m_module.DefineFieldReference (field.Name,
 				RegisterType (field.DeclaringType), RegisterType (field.FieldType));
-			// TODO: add it somewhere in the reflection writer for the MemberRef table
-			return fieldRef;
 		}
 	}
 }

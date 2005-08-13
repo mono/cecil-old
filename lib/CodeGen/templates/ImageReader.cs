@@ -24,8 +24,13 @@ namespace Mono.Cecil.Binary {
 
 	internal sealed class ImageReader : BaseImageVisitor {
 
+		private MetadataReader m_mdReader;
 		private BinaryReader m_binaryReader;
 		private Image m_image;
+
+		public MetadataReader MetadataReader {
+			get { return m_mdReader; }
+		}
 
 		public Image Image {
 			get { return m_image; }
@@ -47,6 +52,7 @@ namespace Mono.Cecil.Binary {
 			m_binaryReader = new BinaryReader (
 				new FileStream (img.FileInformation.FullName, FileMode.Open,
 					FileAccess.Read, FileShare.Read));
+			m_mdReader = new MetadataReader (this);
 		}
 
 		public override void Visit (DOSHeader header)
@@ -118,7 +124,7 @@ namespace Mono.Cecil.Binary {
 			}
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.CLIHeader.Metadata.VirtualAddress);
-			m_image.MetadataRoot.Accept (new MetadataReader (this));
+			m_image.MetadataRoot.Accept (m_mdReader);
 		}
 
 		public override void Visit (ImportTable it)
@@ -157,6 +163,11 @@ namespace Mono.Cecil.Binary {
 				m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
 			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
 			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
+		}
+
+		public override void Terminate (Image img)
+		{
+			m_binaryReader.Close ();
 		}
 	}
 }

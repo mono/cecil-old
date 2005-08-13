@@ -64,6 +64,10 @@ namespace Mono.Cecil.Implem {
 			get { return m_root; }
 		}
 
+		public MemberReference [] MemberReferences {
+			get { return m_memberRefs; }
+		}
+
 		public ReflectionReader (ModuleDefinition module)
 		{
 			m_module = module;
@@ -73,7 +77,7 @@ namespace Mono.Cecil.Implem {
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_secParser = new SecurityParser ();
-			m_isCorlib = m_module.Image.FileInformation != null && m_module.Image.FileInformation.Name == Constants.Corlib;
+			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
 		}
 
 		public TypeDefinition GetTypeDefAt (uint rid)
@@ -485,8 +489,9 @@ namespace Mono.Cecil.Implem {
 				case TokenType.TypeSpec :
 					if (sig is FieldSig) {
 						FieldSig fs = sig as FieldSig;
-						member = new FieldReference (m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
-													 GetTypeRefFromSig (fs.Type));
+						member = new FieldReference (
+							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
+							GetTypeRefFromSig (fs.Type));
 					} else {
 						MethodSig ms = sig as MethodSig;
 						MethodReference methref = new MethodReference (
@@ -512,7 +517,7 @@ namespace Mono.Cecil.Implem {
 						methdef.ExplicitThis, methdef.CallingConvention);
 					break;
 				case TokenType.ModuleRef :
-					break; // implement that, or not
+					break; // TODO, implement that, or not
 				}
 
 				member.MetadataToken = MetadataToken.FromMetadataRow (TokenType.MemberRef, i);

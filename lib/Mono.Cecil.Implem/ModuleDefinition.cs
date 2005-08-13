@@ -224,6 +224,36 @@ namespace Mono.Cecil.Implem {
 				m_controller.Helper.RegisterConstructor(ctor), data);
 		}
 
+		public ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm)
+		{
+			TypeReference typeRef = new TypeReference (name, ns, this, asm);
+			m_refs [typeRef.FullName] = typeRef;
+			return typeRef;
+		}
+
+		public IFieldReference DefineFieldReference (string name, ITypeReference declaringType,
+			ITypeReference fieldType)
+		{
+			FieldReference fieldRef = new FieldReference (name,
+				declaringType, fieldType);
+			m_controller.Writer.AddMemberRef (fieldRef);
+			return fieldRef;
+		}
+
+		public IMethodReference DefineMethodReference (string name, ITypeReference declaringType,
+			ITypeReference returnType, ITypeReference [] parametersTypes,
+			bool hasThis, bool explicitThis, MethodCallingConvention conv)
+		{
+			MethodReference meth = new MethodReference (name, declaringType, hasThis, explicitThis, conv);
+			meth.ReturnType.ReturnType = returnType;
+			int seq = 1;
+			foreach (ITypeReference t in parametersTypes)
+				(meth.Parameters as ParameterDefinitionCollection).Add (new ParameterDefinition (
+						string.Empty, seq++, (ParamAttributes) 0, t));
+			m_controller.Writer.AddMemberRef (meth);
+			return meth;
+		}
+
 		public IMetadataTokenProvider LookupByToken (MetadataToken token)
 		{
 			return m_controller.Reader.LookupByToken (token);

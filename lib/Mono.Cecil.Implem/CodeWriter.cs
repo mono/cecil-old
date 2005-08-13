@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Implem {
 
 	using System;
-	using System.IO;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -24,17 +23,17 @@ namespace Mono.Cecil.Implem {
 	internal sealed class CodeWriter : BaseCodeVisitor {
 
 		private ReflectionWriter m_reflectWriter;
-		private BinaryWriter m_binaryWriter;
-		private BinaryWriter m_codeWriter;
+		private MemoryBinaryWriter m_binaryWriter;
+		private MemoryBinaryWriter m_codeWriter;
 		private RVA m_start = new RVA (0x2050);
 
 		private RVA m_curs;
 
-		public CodeWriter (ReflectionWriter reflectWriter, BinaryWriter writer)
+		public CodeWriter (ReflectionWriter reflectWriter, MemoryBinaryWriter writer)
 		{
 			m_reflectWriter = reflectWriter;
 			m_binaryWriter = writer;
-			m_codeWriter = new BinaryWriter (new MemoryStream ());
+			m_codeWriter = new MemoryBinaryWriter ();
 			m_curs = m_start;
 		}
 
@@ -48,15 +47,15 @@ namespace Mono.Cecil.Implem {
 			return ret;
 		}
 
-		private void WriteToken (TokenType type, uint rid)
-		{
-			m_codeWriter.Write (((uint) type) << 24 | rid);
-		}
-
 		public override void Visit (IMethodBody body)
 		{
-			m_codeWriter.BaseStream.Position = 0;
-			m_codeWriter.BaseStream.SetLength (0);
+			m_codeWriter.Empty ();
+		}
+
+		private void WriteToken (TokenType type, uint rid)
+		{
+			uint res = ((uint) type) | rid;
+			m_codeWriter.Write (res);
 		}
 
 		public override void Visit (IInstructionCollection instructions)
@@ -65,7 +64,7 @@ namespace Mono.Cecil.Implem {
 			long start = m_codeWriter.BaseStream.Position;
 			foreach (Instruction instr in instructions) {
 
-				instr.Offset = (int) (start - m_codeWriter.BaseStream.Position);
+				instr.Offset = (int) (m_codeWriter.BaseStream.Position - start);
 
 				if (instr.OpCode.Size == 1)
 					m_codeWriter.Write ((byte) instr.OpCode.Value);
@@ -82,11 +81,9 @@ namespace Mono.Cecil.Implem {
 						m_codeWriter.Write (0);
 					break;
 				case OperandType.ShortInlineBrTarget :
-					instr.Offset = (int) m_codeWriter.BaseStream.Position;
 					m_codeWriter.Write ((byte) 0);
 					break;
 				case OperandType.InlineBrTarget :
-					instr.Offset = (int) m_codeWriter.BaseStream.Position;
 					m_codeWriter.Write (0);
 					break;
 				case OperandType.ShortInlineI :
@@ -172,17 +169,19 @@ namespace Mono.Cecil.Implem {
 			long pos = m_codeWriter.BaseStream.Position;
 
 			foreach (Instruction instr in instructions) {
-				m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 				switch (instr.OpCode.OperandType) {
 				case OperandType.InlineSwitch :
+					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					IInstruction [] targets = instr.Operand as IInstruction [];
 					foreach (IInstruction tgt in targets)
 						m_codeWriter.Write (instr.Offset - tgt.Offset);
 					break;
 				case OperandType.ShortInlineBrTarget :
+					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					m_codeWriter.Write ((byte) (instr.Offset - (instr.Operand as IInstruction).Offset));
 					break;
 				case OperandType.InlineBrTarget :
+					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					m_codeWriter.Write (instr.Offset - (instr.Operand as IInstruction).Offset);
 					break;
 				}
@@ -211,6 +210,19 @@ namespace Mono.Cecil.Implem {
 			// TODO
 		}
 
+		void DebugCode (string msg)
+		{
+			Console.Write (msg);
+			Console.Write (" [ ");
+			byte [] sig = m_codeWriter.ToArray ();
+			for (int i = 0; i < sig.Length; i++) {
+				if (i > 0)
+					Console.Write (", ");
+				Console.Write (sig [i].ToString ("x2"));
+			}
+			Console.WriteLine (" ]");
+		}
+
 		public override void Terminate (IMethodBody body)
 		{
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
@@ -219,9 +231,10 @@ namespace Mono.Cecil.Implem {
 				// write fat header
 			} else {
 
-				m_binaryWriter.Write (
-					(ushort) MethodHeader.TinyFormat | m_codeWriter.BaseStream.Length << 2);
-				m_binaryWriter.Write ((m_codeWriter.BaseStream as MemoryStream).ToArray ());
+				byte header = (byte) ((byte) MethodHeader.TinyFormat | m_codeWriter.BaseStream.Length << 2);
+				m_binaryWriter.Write (header);
+				m_binaryWriter.Write (m_codeWriter);
+				m_binaryWriter.QuadAlign ();
 			}
 
 			m_curs = m_start + (uint) m_binaryWriter.BaseStream.Position;
