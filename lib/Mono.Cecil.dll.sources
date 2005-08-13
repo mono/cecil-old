@@ -101,6 +101,7 @@
 ./Mono.Cecil.Binary/ImageReader.cs
 ./Mono.Cecil.Binary/ImageWriter.cs
 ./Mono.Cecil.Binary/Imports.cs
+./Mono.Cecil.Binary/MemoryBinaryWriter.cs
 ./Mono.Cecil.Binary/PEFileHeader.cs
 ./Mono.Cecil.Binary/PEOptionalHeader.cs
 ./Mono.Cecil.Binary/RuntimeImage.cs
@@ -177,9 +178,10 @@
 ./Mono.Cecil.Metadata/TypeSpec.cs
 ./Mono.Cecil.Metadata/UserStringsHeap.cs
 ./Mono.Cecil.Metadata/Utilities.cs
+./Mono.Cecil.Cil/BaseCodeVisitor.cs
 ./Mono.Cecil.Cil/ExceptionHandlerType.cs
 ./Mono.Cecil.Cil/FlowControl.cs
-./Mono.Cecil.Cil/ICilEmitter.cs
+./Mono.Cecil.Cil/ICilWorker.cs
 ./Mono.Cecil.Cil/ICodeVisitable.cs
 ./Mono.Cecil.Cil/ICodeVisitor.cs
 ./Mono.Cecil.Cil/IExceptionHandler.cs
@@ -205,7 +207,7 @@
 ./Mono.Cecil.Implem/AssemblyName.cs
 ./Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
 ./Mono.Cecil.Implem/BaseReflectionReader.cs
-./Mono.Cecil.Implem/CilEmitter.cs
+./Mono.Cecil.Implem/CilWorker.cs
 ./Mono.Cecil.Implem/CodeReader.cs
 ./Mono.Cecil.Implem/CodeWriter.cs
 ./Mono.Cecil.Implem/Constants.cs
