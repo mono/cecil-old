@@ -109,12 +109,12 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (ICodeVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMethodBody (this);
 			m_variables.Accept (visitor);
 			m_instructions.Accept (visitor);
 			m_exceptions.Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateMethodBody (this);
 		}
 	}
 }

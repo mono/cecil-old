@@ -13,14 +13,14 @@
 namespace Mono.Cecil.Cil {
 
 	public interface ICodeVisitor {
-		void Visit (IMethodBody body);
-		void Visit (IInstructionCollection instructions);
-		void Visit (IInstruction instr);
-		void Visit (IExceptionHandlerCollection seh);
-		void Visit (IExceptionHandler eh);
-		void Visit (IVariableDefinitionCollection variables);
-		void Visit (IVariableDefinition var);
+		void VisitMethodBody (IMethodBody body);
+		void VisitInstructionCollection (IInstructionCollection instructions);
+		void VisitInstruction (IInstruction instr);
+		void VisitExceptionHandlerCollection (IExceptionHandlerCollection seh);
+		void VisitExceptionHandler (IExceptionHandler eh);
+		void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables);
+		void VisitVariableDefinition (IVariableDefinition var);
 
-		void Terminate (IMethodBody body);
+		void TerminateMethodBody (IMethodBody body);
 	}
 }

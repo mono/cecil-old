@@ -138,7 +138,7 @@ namespace Mono.Cecil.Implem {
 
 		public virtual void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitAssemblyNameReference (this);
 		}
 	}
 
@@ -158,7 +158,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitAssemblyNameDefinition (this);
 		}
 	}
 }

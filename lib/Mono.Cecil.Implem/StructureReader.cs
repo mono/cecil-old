@@ -42,7 +42,7 @@ namespace Mono.Cecil.Implem {
 			m_tHeap = m_img.MetadataRoot.Streams.TablesHeap;
 		}
 
-		public override void Visit (IAssemblyDefinition asm)
+		public override void VisitAssemblyDefinition (IAssemblyDefinition asm)
 		{
 			m_asmDef = asm as AssemblyDefinition;
 			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Implem {
 				asm.Runtime = TargetRuntime.NET_2_0;
 		}
 
-		public override void Visit (IAssemblyNameDefinition name)
+		public override void VisitAssemblyNameDefinition (IAssemblyNameDefinition name)
 		{
 			AssemblyTable atable = m_tHeap [typeof(AssemblyTable)] as AssemblyTable;
 			AssemblyRow arow = atable [0];
@@ -74,7 +74,7 @@ namespace Mono.Cecil.Implem {
 			name.HashAlgorithm = arow.HashAlgId;
 		}
 
-		public override void Visit (IAssemblyNameReferenceCollection names)
+		public override void VisitAssemblyNameReferenceCollection (IAssemblyNameReferenceCollection names)
 		{
 			if (!m_tHeap.HasTable (typeof (AssemblyRefTable)))
 				return;
@@ -93,7 +93,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IResourceCollection resources)
+		public override void VisitResourceCollection (IResourceCollection resources)
 		{
 			if (!m_tHeap.HasTable (typeof (ManifestResourceTable)))
 				return;
@@ -142,7 +142,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IModuleDefinitionCollection modules)
+		public override void VisitModuleDefinitionCollection (IModuleDefinitionCollection modules)
 		{
 			ModuleTable mt = m_tHeap [typeof(ModuleTable)] as ModuleTable;
 			if (mt == null || mt.Rows.Count != 1)
@@ -186,7 +186,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IModuleReferenceCollection modules)
+		public override void VisitModuleReferenceCollection (IModuleReferenceCollection modules)
 		{
 			if (!m_tHeap.HasTable (typeof (ModuleRefTable)))
 				return;
@@ -199,10 +199,10 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Terminate (IAssemblyDefinition asm)
+		public override void TerminateAssemblyDefinition (IAssemblyDefinition asm)
 		{
 			foreach (ModuleDefinition mod in asm.Modules)
-				mod.Controller.Reader.Visit (mod.Types);
+				mod.Controller.Reader.VisitTypeDefinitionCollection (mod.Types);
 		}
 	}
 }

@@ -47,7 +47,7 @@ namespace Mono.Cecil.Implem {
 			return ret;
 		}
 
-		public override void Visit (IMethodBody body)
+		public override void VisitMethodBody (IMethodBody body)
 		{
 			m_codeWriter.Empty ();
 		}
@@ -58,7 +58,7 @@ namespace Mono.Cecil.Implem {
 			m_codeWriter.Write (res);
 		}
 
-		public override void Visit (IInstructionCollection instructions)
+		public override void VisitInstructionCollection (IInstructionCollection instructions)
 		{
 			IMethodBody body = instructions.Container;
 			long start = m_codeWriter.BaseStream.Position;
@@ -190,22 +190,22 @@ namespace Mono.Cecil.Implem {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		public override void Visit (IExceptionHandlerCollection seh)
+		public override void VisitExceptionHandlerCollection (IExceptionHandlerCollection seh)
 		{
 			// TODO
 		}
 
-		public override void Visit (IExceptionHandler eh)
+		public override void VisitExceptionHandler (IExceptionHandler eh)
 		{
 			// TODO
 		}
 
-		public override void Visit (IVariableDefinitionCollection variables)
+		public override void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
 			// TODO
 		}
 
-		public override void Visit (IVariableDefinition var)
+		public override void VisitVariableDefinition (IVariableDefinition var)
 		{
 			// TODO
 		}
@@ -223,7 +223,7 @@ namespace Mono.Cecil.Implem {
 			Console.WriteLine (" ]");
 		}
 
-		public override void Terminate (IMethodBody body)
+		public override void TerminateMethodBody (IMethodBody body)
 		{
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
 				|| m_codeWriter.BaseStream.Length >= 64) {

@@ -14,31 +14,35 @@ namespace Mono.Cecil {
 
 	public interface IReflectionVisitor {
 
-		void Visit (ITypeDefinitionCollection types);
-		void Visit (ITypeDefinition type);
-		void Visit (ITypeReferenceCollection refs);
-		void Visit (ITypeReference type);
-		void Visit (IInterfaceCollection interfaces);
-		void Visit (IExternTypeCollection externs);
-		void Visit (IOverrideCollection meth);
-		void Visit (INestedTypeCollection nestedTypes);
-		void Visit (IParameterDefinitionCollection parameters);
-		void Visit (IParameterDefinition parameter);
-		void Visit (IMethodDefinitionCollection methods);
-		void Visit (IMethodDefinition method);
-		void Visit (IPInvokeInfo pinvk);
-		void Visit (IEventDefinitionCollection events);
-		void Visit (IEventDefinition evt);
-		void Visit (IFieldDefinitionCollection fields);
-		void Visit (IFieldDefinition field);
-		void Visit (IPropertyDefinitionCollection properties);
-		void Visit (IPropertyDefinition property);
-		void Visit (ISecurityDeclarationCollection secDecls);
-		void Visit (ISecurityDeclaration secDecl);
-		void Visit (ICustomAttributeCollection customAttrs);
-		void Visit (ICustomAttribute customAttr);
-		void Visit (IMarshalSpec marshalSpec);
+		void VisitTypeDefinitionCollection (ITypeDefinitionCollection types);
+		void VisitTypeDefinition (ITypeDefinition type);
+		void VisitTypeReferenceCollection (ITypeReferenceCollection refs);
+		void VisitTypeReference (ITypeReference type);
+		void VisitInterfaceCollection (IInterfaceCollection interfaces);
+		void VisitInterface (ITypeReference interf);
+		void VisitExternTypeCollection (IExternTypeCollection externs);
+		void VisitExternType (ITypeReference externType);
+		void VisitOverrideCollection (IOverrideCollection meth);
+		void VisitOverride (IMethodReference ov);
+		void VisitNestedTypeCollection (INestedTypeCollection nestedTypes);
+		void VisitNestedType (ITypeDefinition nestedType);
+		void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters);
+		void VisitParameterDefinition (IParameterDefinition parameter);
+		void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods);
+		void VisitMethodDefinition (IMethodDefinition method);
+		void VisitPInvokeInfo (IPInvokeInfo pinvk);
+		void VisitEventDefinitionCollection (IEventDefinitionCollection events);
+		void VisitEventDefinition (IEventDefinition evt);
+		void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields);
+		void VisitFieldDefinition (IFieldDefinition field);
+		void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties);
+		void VisitPropertyDefinition (IPropertyDefinition property);
+		void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls);
+		void VisitSecurityDeclaration (ISecurityDeclaration secDecl);
+		void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs);
+		void VisitCustomAttribute (ICustomAttribute customAttr);
+		void VisitMarshalSpec (IMarshalSpec marshalSpec);
 
-		void Terminate (ITypeDefinitionCollection types);
+		void TerminateTypeDefinitionCollection (ITypeDefinitionCollection types);
 	}
 }

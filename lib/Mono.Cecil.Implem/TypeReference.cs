@@ -154,7 +154,7 @@ namespace Mono.Cecil.Implem {
 
 		public virtual void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitTypeReference (this);
 		}
 
 		public override string ToString ()

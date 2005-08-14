@@ -1,5 +1,76 @@
 2005-08-15  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/IReflectionStructureVisitor.cs
+	  Mono.Cecil/BaseStructureVisitor.cs
+	  Mono.Cecil.Cil/BaseCodeVisitor.cs
+	  Mono.Cecil.Cil/ICodeVisitor.cs
+	  CodeGen/cecil-gen.rb
+	  CodeGen/cecil-gen-types.rb
+	  CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/LzIndexedCollectionImplem.cs
+	  CodeGen/templates/LzNamedCollectionImplem.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Implem/InterfaceCollection.cs
+	  Mono.Cecil.Implem/AssemblyLinkedResource.cs
+	  Mono.Cecil.Implem/ModuleReferenceCollection.cs
+	  Mono.Cecil.Implem/AssemblyName.cs
+	  Mono.Cecil.Implem/Instruction.cs
+	  Mono.Cecil.Implem/ExternTypeCollection.cs
+	  Mono.Cecil.Implem/MarshalDesc.cs
+	  Mono.Cecil.Implem/SecurityDeclarationCollection.cs
+	  Mono.Cecil.Implem/OverrideCollection.cs
+	  Mono.Cecil.Implem/ExceptionHandler.cs
+	  Mono.Cecil.Implem/EmbeddedResource.cs
+	  Mono.Cecil.Implem/ModuleReference.cs
+	  Mono.Cecil.Implem/ParameterDefinitionCollection.cs
+	  Mono.Cecil.Implem/EventDefinitionCollection.cs
+	  Mono.Cecil.Implem/FieldDefinitionCollection.cs
+	  Mono.Cecil.Implem/PropertyDefinitionCollection.cs
+	  Mono.Cecil.Implem/ModuleDefinitionCollection.cs
+	  Mono.Cecil.Implem/CustomAttributeCollection.cs
+	  Mono.Cecil.Implem/VariableDefinitionCollection.cs
+	  Mono.Cecil.Implem/TypeReferenceCollection.cs
+	  Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/EventDefinition.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/InstructionCollection.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/CustomAttribute.cs
+	  Mono.Cecil.Implem/VariableDefinition.cs
+	  Mono.Cecil.Implem/TypeReference.cs
+	  Mono.Cecil.Implem/TypeDefinitionCollection.cs
+	  Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/PInvokeInfo.cs
+	  Mono.Cecil.Implem/AssemblyDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/MethodDefinitionCollection.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Implem/SecurityDeclaration.cs
+	  Mono.Cecil.Implem/LazyReflectionReader.cs
+	  Mono.Cecil.Implem/LinkedResource.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs
+	  Mono.Cecil.Implem/PropertyDefinition.cs
+	  Mono.Cecil.Implem/MethodBody.cs
+	  Mono.Cecil.Implem/NestedTypeCollection.cs
+	  Mono.Cecil.Implem/ResourceCollection.cs
+	  Mono.Cecil.Implem/ExceptionHandlerCollection.cs:
+		BIG changes in the visitor object model. Last one
+		was causing ambiguous calls, and does not provides
+		differences between an interface and a typedef for
+		instance. This is corrected by suffixing the visit
+		method by the name of what it is visiting, and by
+		configuring some collection to stop the propagation
+		of the visitor.
+
 	* Mono.Cecil/ITypeDefinition.cs
 	  Mono.Cecil/IArrayType.cs
 	  CodeGen/templates/Utilities.cs

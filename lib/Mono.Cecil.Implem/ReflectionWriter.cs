@@ -218,7 +218,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (ITypeDefinitionCollection types)
+		public override void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
 			ArrayList orderedTypes = new ArrayList (types.Count);
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
@@ -244,7 +244,7 @@ namespace Mono.Cecil.Implem {
 				t.Accept (this);
 		}
 
-		public override void Visit (ITypeDefinition t)
+		public override void VisitTypeDefinition (ITypeDefinition t)
 		{
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 			MetadataToken ext = GetTypeDefOrRefToken (t.BaseType);
@@ -327,7 +327,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (ITypeReferenceCollection refs)
+		public override void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
 		{
 			ImportMemberRefFromReader ();
 
@@ -364,7 +364,7 @@ namespace Mono.Cecil.Implem {
 				m_typesRef [t.FullName] = (uint) trTable.Rows.Count;
 			}
 
-			Visit (m_mod.Types);
+			VisitTypeDefinitionCollection (m_mod.Types);
 		}
 
 		private class TypeRefComparer : IComparer {
@@ -392,42 +392,62 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IInterfaceCollection interfaces)
+		public override void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
 			// TODO
 		}
 
-		public override void Visit (IExternTypeCollection externs)
+		public override void VisitInterface (ITypeReference interf)
 		{
 			// TODO
 		}
 
-		public override void Visit (IOverrideCollection meth)
+		public override void VisitExternTypeCollection (IExternTypeCollection externs)
 		{
 			// TODO
 		}
 
-		public override void Visit (INestedTypeCollection nestedTypes)
+		public override void VisitExternType (ITypeReference externType)
 		{
 			// TODO
 		}
 
-		public override void Visit (IParameterDefinitionCollection parameters)
+		public override void VisitOverrideCollection (IOverrideCollection meth)
 		{
 			// TODO
 		}
 
-		public override void Visit (IParameterDefinition parameter)
+		public override void VisitOverride (IMethodReference ov)
 		{
 			// TODO
 		}
 
-		public override void Visit (IMethodDefinitionCollection methods)
+		public override void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
 		{
 			// TODO
 		}
 
-		public override void Visit (IMethodDefinition method)
+		public override void VisitNestedType (ITypeDefinition nestedType)
+		{
+			// TODO
+		}
+
+		public override void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
+		{
+			// TODO
+		}
+
+		public override void VisitParameterDefinition (IParameterDefinition parameter)
+		{
+			// TODO
+		}
+
+		public override void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods)
+		{
+			// TODO
+		}
+
+		public override void VisitMethodDefinition (IMethodDefinition method)
 		{
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			MethodRow mRow = m_rowWriter.CreateMethodRow (
@@ -444,27 +464,27 @@ namespace Mono.Cecil.Implem {
 			m_methodIndex++;
 		}
 
-		public override void Visit (IPInvokeInfo pinvk)
+		public override void VisitPInvokeInfo (IPInvokeInfo pinvk)
 		{
 			// TODO
 		}
 
-		public override void Visit (IEventDefinitionCollection events)
+		public override void VisitEventDefinitionCollection (IEventDefinitionCollection events)
 		{
 			// TODO
 		}
 
-		public override void Visit (IEventDefinition evt)
+		public override void VisitEventDefinition (IEventDefinition evt)
 		{
 			// TODO
 		}
 
-		public override void Visit (IFieldDefinitionCollection fields)
+		public override void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields)
 		{
 			// TODO
 		}
 
-		public override void Visit (IFieldDefinition field)
+		public override void VisitFieldDefinition (IFieldDefinition field)
 		{
 			FieldTable fTable = m_tableWriter.GetFieldTable ();
 			FieldRow fRow = m_rowWriter.CreateFieldRow (
@@ -477,42 +497,42 @@ namespace Mono.Cecil.Implem {
 			m_fieldIndex++;
 		}
 
-		public override void Visit (IPropertyDefinitionCollection properties)
+		public override void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
 		{
 			// TODO
 		}
 
-		public override void Visit (IPropertyDefinition property)
+		public override void VisitPropertyDefinition (IPropertyDefinition property)
 		{
 			// TODO
 		}
 
-		public override void Visit (ISecurityDeclarationCollection secDecls)
+		public override void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
 		{
 			// TODO
 		}
 
-		public override void Visit (ISecurityDeclaration secDecl)
+		public override void VisitSecurityDeclaration (ISecurityDeclaration secDecl)
 		{
 			// TODO
 		}
 
-		public override void Visit (ICustomAttributeCollection customAttrs)
+		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
 			// TODO
 		}
 
-		public override void Visit (ICustomAttribute customAttr)
+		public override void VisitCustomAttribute (ICustomAttribute customAttr)
 		{
 			// TODO
 		}
 
-		public override void Visit (IMarshalSpec marshalSpec)
+		public override void VisitMarshalSpec (IMarshalSpec marshalSpec)
 		{
 			// TODO
 		}
 
-		public override void Terminate (ITypeDefinitionCollection colls)
+		public override void TerminateTypeDefinitionCollection (ITypeDefinitionCollection colls)
 		{
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
 			foreach (IMemberReference member in m_membersRefContainer) {

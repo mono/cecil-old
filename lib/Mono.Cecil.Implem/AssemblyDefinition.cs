@@ -144,12 +144,12 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitAssemblyDefinition (this);
 
 			m_asmName.Accept (visitor);
 			m_modules.Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateAssemblyDefinition (this);
 		}
 	}
 }

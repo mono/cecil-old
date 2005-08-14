@@ -14,104 +14,119 @@ namespace Mono.Cecil {
 
 	public abstract class BaseReflectionVisitor : IReflectionVisitor {
 
-		public virtual void Visit (ITypeDefinitionCollection types)
+		public virtual void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
 		}
 
-		public virtual void Visit (ITypeDefinition type)
+		public virtual void VisitTypeDefinition (ITypeDefinition type)
 		{
 		}
 
-		public virtual void Visit (ITypeReferenceCollection refs)
+		public virtual void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
 		{
 		}
 
-		public virtual void Visit (ITypeReference type)
+		public virtual void VisitTypeReference (ITypeReference type)
 		{
 		}
 
-		public virtual void Visit (IInterfaceCollection interfaces)
+		public virtual void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
 		}
 
-		public virtual void Visit (IExternTypeCollection externs)
+		public virtual void VisitInterface (ITypeReference interf)
 		{
 		}
 
-		public virtual void Visit (IOverrideCollection meth)
+		public virtual void VisitExternTypeCollection (IExternTypeCollection externs)
 		{
 		}
 
-		public virtual void Visit (INestedTypeCollection nestedTypes)
+		public virtual void VisitExternType (ITypeReference externType)
 		{
 		}
 
-		public virtual void Visit (IParameterDefinitionCollection parameters)
+		public virtual void VisitOverrideCollection (IOverrideCollection meth)
 		{
 		}
 
-		public virtual void Visit (IParameterDefinition parameter)
+		public virtual void VisitOverride (IMethodReference ov)
 		{
 		}
 
-		public virtual void Visit (IMethodDefinitionCollection methods)
+		public virtual void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
 		{
 		}
 
-
-		public virtual void Visit (IMethodDefinition method)
+		public virtual void VisitNestedType (ITypeDefinition nestedType)
 		{
 		}
 
-		public virtual void Visit (IPInvokeInfo pinvk)
+		public virtual void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
 		{
 		}
 
-		public virtual void Visit (IEventDefinitionCollection events)
+		public virtual void VisitParameterDefinition (IParameterDefinition parameter)
 		{
 		}
 
-		public virtual void Visit (IEventDefinition evt)
+		public virtual void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods)
 		{
 		}
 
-		public virtual void Visit (IFieldDefinitionCollection fields)
+		public virtual void VisitMethodDefinition (IMethodDefinition method)
 		{
 		}
 
-		public virtual void Visit (IFieldDefinition field)
+		public virtual void VisitPInvokeInfo (IPInvokeInfo pinvk)
 		{
 		}
 
-		public virtual void Visit (IPropertyDefinitionCollection properties)
+		public virtual void VisitEventDefinitionCollection (IEventDefinitionCollection events)
 		{
 		}
 
-		public virtual void Visit (IPropertyDefinition property)
+		public virtual void VisitEventDefinition (IEventDefinition evt)
 		{
 		}
 
-		public virtual void Visit (ISecurityDeclarationCollection secDecls)
+		public virtual void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields)
 		{
 		}
 
-		public virtual void Visit (ISecurityDeclaration secDecl)
+		public virtual void VisitFieldDefinition (IFieldDefinition field)
 		{
 		}
 
-		public virtual void Visit (ICustomAttributeCollection customAttrs)
+		public virtual void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
 		{
 		}
 
-		public virtual void Visit (ICustomAttribute customAttr)
+		public virtual void VisitPropertyDefinition (IPropertyDefinition property)
 		{
 		}
 
-		public virtual void Visit (IMarshalSpec marshalSpec)
+		public virtual void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
 		{
 		}
 
-		public virtual void Terminate (ITypeDefinitionCollection types)
+		public virtual void VisitSecurityDeclaration (ISecurityDeclaration secDecl)
+		{
+		}
+
+		public virtual void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
+		{
+		}
+
+		public virtual void VisitCustomAttribute (ICustomAttribute customAttr)
+		{
+		}
+
+		public virtual void VisitMarshalSpec (IMarshalSpec marshalSpec)
+		{
+		}
+
+		public virtual void TerminateTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
 		}
 	}

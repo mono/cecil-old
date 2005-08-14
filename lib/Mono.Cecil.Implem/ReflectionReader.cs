@@ -202,7 +202,7 @@ namespace Mono.Cecil.Implem {
 			return BuildCustomAttribute (ctor, sig);
 		}
 
-		public override void Visit (ITypeDefinitionCollection types)
+		public override void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
 			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
 
@@ -525,7 +525,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IExternTypeCollection externs)
+		public override void VisitExternTypeCollection (IExternTypeCollection externs)
 		{
 			ExternTypeCollection ext = externs as ExternTypeCollection;
 

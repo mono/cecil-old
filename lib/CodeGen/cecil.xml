@@ -655,9 +655,9 @@
 		<collection type="IResource" container="IModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" />
 		<collection type="ITypeDefinition" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
 		<collection type="ITypeReference" container="IModuleDefinition" visit="IReflection" target="Mono.Cecil" />
-		<collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
+		<collection type="ITypeReference" container="ITypeDefinition" visit="IReflection" name="IInterface" lazyload="true" pathtoloader="Reader" indexed="true" nopropagation="true" target="Mono.Cecil" />
 		<collection type="IParameterDefinition" container="IMemberReference" visit="IReflection" indexed="true" target="Mono.Cecil" />
-		<collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
+		<collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="Reader" indexed="true" nopropagation="true" target="Mono.Cecil" />
 		<collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
 		<collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" />
 		<collection type="IFieldDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" />
@@ -668,8 +668,8 @@
 		<collection type="IArrayDimension" container="IArrayType" target="Mono.Cecil" indexed="true" />
 		<collection type="ISecurityDeclaration" container="IHasSecurity" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" lazyload="true" pathtoloader="Reader" />
 		<collection type="ICustomAttribute" container="ICustomAttributeProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" lazyload="true" pathtoloader="Reader" />
-		<collection type="ITypeReference" container="IModuleDefinition" target="Mono.Cecil" visit="IReflection" name="IExternType" lazyload="true" pathtoloader="Reader" />
-		<collection type="ITypeDefinition" container="ITypeDefinition" target="Mono.Cecil" visit="IReflection" name="INestedType" />
+		<collection type="ITypeReference" container="IModuleDefinition" target="Mono.Cecil" visit="IReflection" name="IExternType" lazyload="true" pathtoloader="Reader" nopropagation="true" />
+		<collection type="ITypeDefinition" container="ITypeDefinition" target="Mono.Cecil" visit="IReflection" name="INestedType" nopropagation="true" />
 	</collections>
 
 </cecil>

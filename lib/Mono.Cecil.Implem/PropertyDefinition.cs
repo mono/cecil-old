@@ -136,7 +136,7 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitPropertyDefinition (this);
 
 			this.CustomAttributes.Accept (visitor);
 		}

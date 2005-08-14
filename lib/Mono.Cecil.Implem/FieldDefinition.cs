@@ -164,7 +164,7 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitFieldDefinition (this);
 
 			if (this.MarshalSpec != null)
 				this.MarshalSpec.Accept (visitor);

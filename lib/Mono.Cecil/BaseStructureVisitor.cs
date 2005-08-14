@@ -14,55 +14,55 @@ namespace Mono.Cecil {
 
 	public abstract class BaseStructureVisitor : IReflectionStructureVisitor {
 
-		public virtual void Visit (IAssemblyDefinition asm)
+		public virtual void VisitAssemblyDefinition (IAssemblyDefinition asm)
 		{
 		}
 
-		public virtual void Visit (IAssemblyNameDefinition name)
+		public virtual void VisitAssemblyNameDefinition (IAssemblyNameDefinition name)
 		{
 		}
 
-		public virtual void Visit (IAssemblyNameReferenceCollection names)
+		public virtual void VisitAssemblyNameReferenceCollection (IAssemblyNameReferenceCollection names)
 		{
 		}
 
-		public virtual void Visit (IAssemblyNameReference name)
+		public virtual void VisitAssemblyNameReference (IAssemblyNameReference name)
 		{
 		}
 
-		public virtual void Visit (IResourceCollection resources)
+		public virtual void VisitResourceCollection (IResourceCollection resources)
 		{
 		}
 
-		public virtual void Visit (IEmbeddedResource res)
+		public virtual void VisitEmbeddedResource (IEmbeddedResource res)
 		{
 		}
 
-		public virtual void Visit (ILinkedResource res)
+		public virtual void VisitLinkedResource (ILinkedResource res)
 		{
 		}
 
-		public virtual void Visit (IAssemblyLinkedResource res)
+		public virtual void VisitAssemblyLinkedResource (IAssemblyLinkedResource res)
 		{
 		}
 
-		public virtual void Visit (IModuleDefinition module)
+		public virtual void VisitModuleDefinition (IModuleDefinition module)
 		{
 		}
 
-		public virtual void Visit (IModuleDefinitionCollection modules)
+		public virtual void VisitModuleDefinitionCollection (IModuleDefinitionCollection modules)
 		{
 		}
 
-		public virtual void Visit (IModuleReference module)
+		public virtual void VisitModuleReference (IModuleReference module)
 		{
 		}
 
-		public virtual void Visit (IModuleReferenceCollection modules)
+		public virtual void VisitModuleReferenceCollection (IModuleReferenceCollection modules)
 		{
 		}
 
-		public virtual void Terminate (IAssemblyDefinition asm)
+		public virtual void TerminateAssemblyDefinition (IAssemblyDefinition asm)
 		{
 		}
 	}

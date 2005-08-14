@@ -309,7 +309,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitTypeDefinition (this);
 
 			this.CustomAttributes.Accept (visitor);
 			this.SecurityDeclarations.Accept (visitor);

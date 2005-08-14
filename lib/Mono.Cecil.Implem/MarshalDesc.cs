@@ -39,7 +39,7 @@ namespace Mono.Cecil.Implem {
 
 		public virtual void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMarshalSpec (this);
 		}
 	}
 

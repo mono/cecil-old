@@ -95,7 +95,8 @@ doc.root.each_element("/cecil/collections//collection") { |node|
 		(node.attribute("pathtoloader").nil? ? nil : node.attribute("pathtoloader").value),
 		node.attribute("target").value,
 		(node.attribute("indexed").nil? ? false : node.attribute("indexed").value == "true"),
-		(node.attribute("usecontainerinterface").nil? ? false : node.attribute("usecontainerinterface").value == "true")))
+		(node.attribute("usecontainerinterface").nil? ? false : node.attribute("usecontainerinterface").value == "true"),
+		(node.attribute("nopropagation").nil? ? false : node.attribute("nopropagation").value == "true")))
 }
 
 $compiler = ERuby::Compiler.new()

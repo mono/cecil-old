@@ -266,7 +266,7 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitModuleDefinition (this);
 
 			this.AssemblyReferences.Accept (visitor);
 			this.ModuleReferences.Accept (visitor);

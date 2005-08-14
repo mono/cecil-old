@@ -60,7 +60,7 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (ICodeVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitInstruction (this);
 		}
 	}
 }

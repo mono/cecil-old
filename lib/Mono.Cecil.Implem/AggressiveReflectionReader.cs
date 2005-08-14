@@ -24,9 +24,9 @@ namespace Mono.Cecil.Implem {
 		{
 		}
 
-		public override void Visit (ITypeDefinitionCollection types)
+		public override void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
-			base.Visit (types);
+			base.VisitTypeDefinitionCollection (types);
 			ReadClassLayoutInfos ();
 			ReadFieldLayoutInfos ();
 			ReadPInvokeInfos ();
@@ -345,7 +345,7 @@ namespace Mono.Cecil.Implem {
 
 		private void ReadExternTypes ()
 		{
-			base.Visit (Module.ExternTypes as ExternTypeCollection);
+			base.VisitExternTypeCollection (Module.ExternTypes as ExternTypeCollection);
 		}
 
 		private void ReadMarshalSpecs ()

@@ -24,7 +24,7 @@ namespace Mono.Cecil.Implem {
 		{
 		}
 
-		public override void Visit (IInterfaceCollection interfaces)
+		public override void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
 			InterfaceCollection interfs = interfaces as InterfaceCollection;
 			if (interfs != null && interfs.Loaded)
@@ -51,18 +51,18 @@ namespace Mono.Cecil.Implem {
 			interfs.Loaded = true;
 		}
 
-		public override void Visit (IExternTypeCollection externs)
+		public override void VisitExternTypeCollection (IExternTypeCollection externs)
 		{
 			ExternTypeCollection ext = externs as ExternTypeCollection;
 			if (ext.Loaded)
 				return;
 
-			base.Visit (externs);
+			base.VisitExternTypeCollection (externs);
 
 			ext.Loaded = true;
 		}
 
-		public override void Visit (IOverrideCollection meths)
+		public override void VisitOverrideCollection (IOverrideCollection meths)
 		{
 			OverrideCollection methods = meths as OverrideCollection;
 			if (methods.Loaded)
@@ -87,7 +87,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (ISecurityDeclarationCollection secDecls)
+		public override void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
 		{
 			SecurityDeclarationCollection secDeclarations = secDecls as SecurityDeclarationCollection;
 			if (secDeclarations.Loaded)
@@ -130,7 +130,7 @@ namespace Mono.Cecil.Implem {
 			secDeclarations.Loaded = true;
 		}
 
-		public override void Visit (ICustomAttributeCollection customAttrs)
+		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
 			CustomAttributeCollection customAttributes = customAttrs as CustomAttributeCollection;
 			if (customAttributes.Loaded)
@@ -212,7 +212,7 @@ namespace Mono.Cecil.Implem {
 			customAttributes.Loaded = true;
 		}
 
-		public override void Visit (IEventDefinitionCollection events)
+		public override void VisitEventDefinitionCollection (IEventDefinitionCollection events)
 		{
 			EventDefinitionCollection evts = events as EventDefinitionCollection;
 			if (evts.Loaded)
@@ -263,7 +263,7 @@ namespace Mono.Cecil.Implem {
 			evts.Loaded = true;
 		}
 
-		public override void Visit (IPInvokeInfo pinvk)
+		public override void VisitPInvokeInfo (IPInvokeInfo pinvk)
 		{
 			MethodDefinition meth = pinvk.Method as MethodDefinition;
 			int index = GetRidForMethodDef (meth);
@@ -280,7 +280,7 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public override void Visit (IPropertyDefinitionCollection properties)
+		public override void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
 		{
 			PropertyDefinitionCollection props = properties as PropertyDefinitionCollection;
 			if (props.Loaded)

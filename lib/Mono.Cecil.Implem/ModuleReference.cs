@@ -30,7 +30,7 @@ namespace Mono.Cecil.Implem {
 
 		public void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitModuleReference (this);
 		}
 	}
 }

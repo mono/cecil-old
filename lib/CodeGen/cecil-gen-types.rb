@@ -155,26 +155,31 @@ module Cecil
 		attr_reader(:visitable)
 		attr_reader(:visitor)
 		attr_reader(:visitThis)
+		attr_reader(:visitItem)
 		attr_reader(:lazyload)
 		attr_reader(:pathtoloader)
 		attr_reader(:target)
 		attr_reader(:indexed)
+		attr_reader(:nopropagation)
 
-		def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false, usecntintf = false)
+		def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false, usecntintf = false, nopropagation = false)
 			@type = type
-			@intf = (name.nil? ? type : name) + "Collection"
+			basename = (name.nil? ? type : name)
+			@intf = basename + "Collection"
 			@name = @intf[1..@intf.length]
 			@container = container
 			@container_impl = usecntintf ? @container : @container[1..@container.length]
 			if (!visit.nil?) then
 				@visitable = visit + "Visitable"
 				@visitor = visit + "Visitor"
-				@visitThis = "Visit"
+				@visitThis = "Visit" + @name
+				@visitItem = "Visit" + basename[1..basename.length]
 			end
 			@lazyload = lazyload
 			@pathtoloader = pathtoloader
 			@target = target
 			@indexed = indexed
+			@nopropagation = nopropagation
 		end
 	end
 

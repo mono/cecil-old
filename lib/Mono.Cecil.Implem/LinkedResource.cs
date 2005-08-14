@@ -38,7 +38,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Accept (IReflectionStructureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitLinkedResource (this);
 		}
 	}
 }

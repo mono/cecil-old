@@ -74,7 +74,7 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_body == null && m_rva != RVA.Zero) {
 					m_body = new MethodBody (this);
-					((TypeDefinition)this.DeclaringType).Module.Controller.Reader.Code.Visit (m_body);
+					((TypeDefinition)this.DeclaringType).Module.Controller.Reader.Code.VisitMethodBody (m_body);
 				}
 				return m_body;
 			}
@@ -85,7 +85,7 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_pinvoke == null && (m_attributes & MethodAttributes.PInvokeImpl) != 0) {
 					m_pinvoke = new PInvokeInfo (this);
-					((TypeDefinition)this.DeclaringType).Module.Controller.Reader.Visit (m_pinvoke);
+					((TypeDefinition)this.DeclaringType).Module.Controller.Reader.VisitPInvokeInfo (m_pinvoke);
 				}
 				return m_pinvoke;
 			}
@@ -251,7 +251,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void Accept (IReflectionVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMethodDefinition (this);
 			this.Parameters.Accept (visitor);
 
 			if (this.PInvokeInfo != null)

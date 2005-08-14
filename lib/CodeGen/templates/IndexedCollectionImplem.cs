@@ -104,7 +104,7 @@ namespace Mono.Cecil.Implem {
 			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
 			m_items.CopyTo (items, 0);
 			for (int i = 0; i < items.Length; i++)
-				items [i].Accept (visitor);
+				<%=$cur_coll.nopropagation ? "visitor.#{$cur_coll.visitItem} (items [i])" : "items [i].Accept (visitor)" %>;
 		}
 <% end %>	}
 }

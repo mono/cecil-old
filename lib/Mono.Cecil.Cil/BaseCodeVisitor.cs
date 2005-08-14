@@ -14,35 +14,35 @@ namespace Mono.Cecil.Cil {
 
 	public abstract class BaseCodeVisitor : ICodeVisitor {
 
-		public virtual void Visit (IMethodBody body)
+		public virtual void VisitMethodBody (IMethodBody body)
 		{
 		}
 
-		public virtual void Visit (IInstructionCollection instructions)
+		public virtual void VisitInstructionCollection (IInstructionCollection instructions)
 		{
 		}
 
-		public virtual void Visit (IInstruction instr)
+		public virtual void VisitInstruction (IInstruction instr)
 		{
 		}
 
-		public virtual void Visit (IExceptionHandlerCollection seh)
+		public virtual void VisitExceptionHandlerCollection (IExceptionHandlerCollection seh)
 		{
 		}
 
-		public virtual void Visit (IExceptionHandler eh)
+		public virtual void VisitExceptionHandler (IExceptionHandler eh)
 		{
 		}
 
-		public virtual void Visit (IVariableDefinitionCollection variables)
+		public virtual void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
 		}
 
-		public virtual void Visit (IVariableDefinition var)
+		public virtual void VisitVariableDefinition (IVariableDefinition var)
 		{
 		}
 
-		public virtual void Terminate (IMethodBody body)
+		public virtual void TerminateMethodBody (IMethodBody body)
 		{
 		}
 	}

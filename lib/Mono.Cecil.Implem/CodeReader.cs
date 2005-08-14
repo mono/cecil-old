@@ -33,7 +33,7 @@ namespace Mono.Cecil.Implem {
 			m_root = m_reflectReader.MetadataRoot;
 		}
 
-		public override void Visit (IMethodBody body)
+		public override void VisitMethodBody (IMethodBody body)
 		{
 			MethodDefinition meth = body.Method as MethodDefinition;
 			MethodBody methBody = body as MethodBody;
@@ -56,7 +56,7 @@ namespace Mono.Cecil.Implem {
 				methBody.CodeSize = br.ReadInt32 ();
 				methBody.LocalVarToken = br.ReadInt32 ();
 				body.InitLocals = (fatflags & (int) MethodHeader.InitLocals) != 0;
-				Visit (methBody.Variables);
+				VisitVariableDefinitionCollection (methBody.Variables);
 				ReadCilBody (methBody, br, out instrs);
 				if ((fatflags & (int) MethodHeader.MoreSects) != 0)
 					ReadSection (methBody, br, instrs);
@@ -292,7 +292,7 @@ namespace Mono.Cecil.Implem {
 				ReadSection (body, br, instructions);
 		}
 
-		public override void Visit (IVariableDefinitionCollection variables)
+		public override void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
 			MethodBody body = variables.Container as MethodBody;
 			if (body.LocalVarToken == 0)
