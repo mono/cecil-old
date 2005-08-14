@@ -179,6 +179,17 @@ namespace Mono.Cecil.Implem {
 			set { m_attributes |= value ? TypeAttributes.SpecialName : 0; }
 		}
 
+		public bool IsEnum {
+			get { return m_baseType != null && m_baseType.FullName == Constants.Enum; }
+		}
+
+		public bool IsValueType {
+			get {
+				return m_baseType != null && (
+					this.IsEnum || m_baseType.FullName == Constants.ValueType);
+			}
+		}
+
 		public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
 			base (name, ns, module, module.Assembly.Name)
 		{

@@ -22,6 +22,8 @@ namespace Mono.Cecil.Implem {
 
 		private string m_name;
 		private string m_namespace;
+		private bool m_fullNameDiscarded;
+		private string m_fullName;
 		private ITypeReference m_decType;
 		private IMetadataScope m_scope;
 		private MetadataToken m_token;
@@ -32,17 +34,26 @@ namespace Mono.Cecil.Implem {
 
 		public virtual string Name {
 			get { return m_name; }
-			set { m_name = value; }
+			set {
+				m_name = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public virtual string Namespace {
 			get { return m_namespace; }
-			set { m_namespace = value; }
+			set {
+				m_namespace = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public virtual ITypeReference DeclaringType {
 			get { return m_decType; }
-			set { m_decType = value; }
+			set {
+				m_decType = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public ModuleDefinition Module {
@@ -74,13 +85,18 @@ namespace Mono.Cecil.Implem {
 
 		public virtual string FullName {
 			get {
+				if (m_fullName != null && !m_fullNameDiscarded)
+					return m_fullName;
+
 				if (m_decType != null)
 					return string.Concat (m_decType.FullName, "/", m_name);
 
 				if (m_namespace == null || m_namespace.Length == 0)
 					return m_name;
 
-				return string.Concat (m_namespace, ".", m_name);
+				m_fullName = string.Concat (m_namespace, ".", m_name);
+				m_fullNameDiscarded = false;
+				return m_fullName;
 			}
 		}
 
@@ -88,6 +104,7 @@ namespace Mono.Cecil.Implem {
 		{
 			m_name = name;
 			m_namespace = ns;
+			m_fullNameDiscarded = false;
 		}
 
 		public TypeReference (string name, string ns, ModuleDefinition module, IMetadataScope scope) : this (name, ns)

@@ -90,7 +90,7 @@ namespace Mono.Cecil.Metadata {
 		public static uint CompressMetadataToken (CodedIndex cidx, MetadataToken token)
 		{
 			uint ret = 0;
-						switch (cidx) {
+			switch (cidx) {
 <% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
 				ret = token.RID << <%=ci.size%>;
 				switch (token.TokenType) {
@@ -102,7 +102,7 @@ namespace Mono.Cecil.Metadata {
 			name = "Signature"
 		end
 %>				case TokenType.<%=name%> :
-					return ret + <%=tbl.tag%>;
+					return ret | <%=tbl.tag%>;
 <%	}
 %>				default :
 					throw new MetadataFormatException("Non valid Token for <%=ci.name%>");

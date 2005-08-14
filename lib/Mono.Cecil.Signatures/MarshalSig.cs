@@ -38,9 +38,9 @@ namespace Mono.Cecil.Signatures {
 
 			public Array ()
 			{
-				this.ParamNum = -1;
-				this.ElemMult = -1;
-				this.NumElem = -1;
+				this.ParamNum = 0;
+				this.ElemMult = 0;
+				this.NumElem = 0;
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Mono.Cecil.Signatures {
 
 			public FixedArray ()
 			{
-				this.NumElem = -1;
+				this.NumElem = 0;
 				this.ArrayElemType = NativeType.NONE;
 			}
 		}

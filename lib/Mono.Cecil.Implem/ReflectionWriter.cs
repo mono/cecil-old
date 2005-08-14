@@ -33,6 +33,7 @@ namespace Mono.Cecil.Implem {
 
 		private IDictionary m_types;
 		private IDictionary m_typesRef;
+		private IDictionary m_typeSpecs;
 		private IDictionary m_methods;
 		private IDictionary m_fields;
 		private IDictionary m_membersRef;
@@ -83,6 +84,7 @@ namespace Mono.Cecil.Implem {
 
 			m_types = new Hashtable ();
 			m_typesRef = new Hashtable ();
+			m_typeSpecs = new Hashtable ();
 			m_methods = new Hashtable ();
 			m_fields = new Hashtable ();
 			m_membersRef = new Hashtable ();
@@ -194,19 +196,17 @@ namespace Mono.Cecil.Implem {
 
 		private MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
-			// TODO
-			if (type is IArrayType) {
+			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
+				if (m_typeSpecs.Contains (type.FullName))
+					return new MetadataToken (TokenType.TypeSpec, (uint) m_typesRef [type.FullName]);
 
-			} else if (type is IFunctionPointerType) {
-
-			} else if (type is IModifierType) {
-
-			} else if (type is IPinnedType) {
-
-			} else if (type is IPointerType) {
-
-			} else if (type is IReferenceType) {
-
+				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
+				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
+					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));
+				tsTable.Rows.Add (tsRow);
+				uint rid = (uint) tsTable.Rows.Count;
+				m_typesRef [type.FullName] = rid;
+				return new MetadataToken (TokenType.TypeSpec, rid);
 			} else if (type is ITypeDefinition) {
 				return new MetadataToken (
 					TokenType.TypeDef, GetRidFor (type as ITypeDefinition));
@@ -216,8 +216,6 @@ namespace Mono.Cecil.Implem {
 			} else { // <Module> and interfaces
 				return new MetadataToken (TokenType.TypeRef, 0);
 			}
-
-			return new MetadataToken ();
 		}
 
 		public override void Visit (ITypeDefinitionCollection types)
@@ -517,7 +515,6 @@ namespace Mono.Cecil.Implem {
 		public override void Terminate (ITypeDefinitionCollection colls)
 		{
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-
 			foreach (IMemberReference member in m_membersRefContainer) {
 				uint sig = 0;
 				if (member is IFieldReference)
@@ -547,8 +544,8 @@ namespace Mono.Cecil.Implem {
 
 		public SigType GetSigType (ITypeReference type)
 		{
-			// TODO, complete ...
 			string name = type.FullName;
+
 			switch (name) {
 			case Constants.Void :
 				return new SigType (ElementType.Void);
@@ -558,11 +555,67 @@ namespace Mono.Cecil.Implem {
 				return new SigType (ElementType.Boolean);
 			case Constants.String :
 				return new SigType (ElementType.String);
+			case Constants.Char :
+				return new SigType (ElementType.Char);
+			case Constants.SByte :
+				return new SigType (ElementType.I1);
+			case Constants.Byte :
+				return new SigType (ElementType.U1);
+			case Constants.Int16 :
+				return new SigType (ElementType.I2);
+			case Constants.UInt16 :
+				return new SigType (ElementType.U2);
+			case Constants.Int32 :
+				return new SigType (ElementType.I4);
+			case Constants.UInt32 :
+				return new SigType (ElementType.U4);
+			case Constants.Int64 :
+				return new SigType (ElementType.I8);
+			case Constants.UInt64 :
+				return new SigType (ElementType.U8);
+			case Constants.Single :
+				return new SigType (ElementType.R4);
+			case Constants.Double :
+				return new SigType (ElementType.R8);
+			case Constants.IntPtr :
+				return new SigType (ElementType.I);
+			case Constants.UIntPtr :
+				return new SigType (ElementType.U);
+			case Constants.TypedReference :
+				return new SigType (ElementType.TypedByRef);
 			}
 
-			CLASS c = new CLASS ();
-			c.Type = GetTypeDefOrRefToken (type);
-			return c;
+			if (type is IArrayType) {
+				IArrayType aryType = type as IArrayType;
+				if (aryType.IsSizedArray) {
+					SZARRAY szary = new SZARRAY ();
+					szary.Type = GetSigType (aryType.ElementType);
+					return szary;
+				}
+
+				ARRAY ary = new ARRAY ();
+				return ary; // TODO
+			} else if (type is IPointerType) {
+				PTR p = new PTR ();
+				ITypeReference elementType = (type as IPointerType).ElementType;
+				p.Void = elementType.FullName == Constants.Void;
+				if (!p.Void) {
+					p.CustomMods = GetCustomMods (elementType);
+					p.PtrType = GetSigType (elementType);
+				}
+				return p;
+			} else if (type is IFunctionPointerType) {
+				FNPTR fp = new FNPTR (); // TODO
+				return fp;
+			} else if (type is ITypeDefinition && (type as ITypeDefinition).IsValueType) {
+				VALUETYPE vt = new VALUETYPE ();
+				vt.Type = GetTypeDefOrRefToken (type);
+				return vt;
+			} else {
+				CLASS c = new CLASS ();
+				c.Type = GetTypeDefOrRefToken (type);
+				return c;
+			}
 		}
 
 		public CustomMod [] GetCustomMods (ITypeReference type)
@@ -678,6 +731,12 @@ namespace Mono.Cecil.Implem {
 			MethodDefSig sig = new MethodDefSig ();
 			CompleteMethodSig (meth, sig);
 			return sig;
+		}
+
+		public TypeSpec GetTypeSpecSig (ITypeReference type)
+		{
+			TypeSpec ts = new TypeSpec (GetSigType (type));
+			return ts;
 		}
 	}
 }

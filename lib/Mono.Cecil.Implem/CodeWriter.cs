@@ -228,11 +228,18 @@ namespace Mono.Cecil.Implem {
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
 				|| m_codeWriter.BaseStream.Length >= 64) {
 
-				// write fat header
-			} else {
+				MethodHeader header = (MethodHeader) ((ushort) MethodHeader.FatFormat |
+					m_codeWriter.BaseStream.Length << 2);
+				if (body.InitLocals)
+					header |= MethodHeader.InitLocals;
+				if (body.ExceptionHandlers.Count > 0)
+					header |= MethodHeader.MoreSects;
 
-				byte header = (byte) ((byte) MethodHeader.TinyFormat | m_codeWriter.BaseStream.Length << 2);
-				m_binaryWriter.Write (header);
+				m_binaryWriter.Write (m_codeWriter);
+				m_binaryWriter.QuadAlign ();
+			} else {
+				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
+					m_codeWriter.BaseStream.Length << 2));
 				m_binaryWriter.Write (m_codeWriter);
 				m_binaryWriter.QuadAlign ();
 			}

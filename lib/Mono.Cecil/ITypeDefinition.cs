@@ -27,6 +27,8 @@ namespace Mono.Cecil {
 		bool IsRuntimeSpecialName { get; set; }
 		bool IsSealed { get; set; }
 		bool IsSpecialName { get; set; }
+		bool IsValueType { get; }
+		bool IsEnum { get; }
 
 		INestedTypeCollection NestedTypes { get; }
 		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);

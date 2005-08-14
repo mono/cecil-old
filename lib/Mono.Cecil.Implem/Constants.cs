@@ -41,5 +41,7 @@ namespace Mono.Cecil.Implem {
 		public const string UIntPtr = "System.UIntPtr";
 		public const string TypedReference = "System.TypedReference";
 		public const string Type = "System.Type";
+		public const string ValueType = "System.ValueType";
+		public const string Enum = "System.Enum";
 	}
 }

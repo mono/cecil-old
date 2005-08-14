@@ -50,6 +50,15 @@ namespace Mono.Cecil.Implem {
 			get { return m_elementsType.Scope; }
 		}
 
+		public bool IsSizedArray {
+			get {
+				if (this.Rank != 1)
+					return false;
+				IArrayDimension dim = m_dimensions [0];
+				return dim.LowerBound == 0 && dim.UpperBound == 0;
+			}
+		}
+
 		public override string FullName {
 			get {
 				StringBuilder sb = new StringBuilder ();
@@ -72,7 +81,7 @@ namespace Mono.Cecil.Implem {
 
 		public ArrayType (ITypeReference elementsType, ArrayShape shape) : this (elementsType)
 		{
-			for (int i = 0; i < shape.Rank; i++) {
+			for (int i = 0; i < shape.Rank; i++) { // TODO
 				if (i < shape.NumSizes)
 					DefineDimension (shape.LoBounds [i], shape.LoBounds [i] + shape.Sizes [i] - 1);
 				else
