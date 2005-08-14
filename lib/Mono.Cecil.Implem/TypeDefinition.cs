@@ -209,6 +209,7 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType)
 		{
 			MethodDefinition meth = new MethodDefinition (name, this, attributes);
+			meth.HasThis = !meth.IsStatic;
 			meth.ReturnType.ReturnType = retType;
 			(this.Methods as MethodDefinitionCollection).Add (meth);
 			return meth;
@@ -235,7 +236,7 @@ namespace Mono.Cecil.Implem {
 				name = m_ctor;
 
 			MethodDefinition meth = new MethodDefinition (name, this, attrs);
-			meth.HasThis = true;
+			meth.HasThis = !isstatic;
 			meth.ReturnType.ReturnType = m_module.Controller.Writer.GetCoreType (Constants.Void);
 
 			(this.Methods as MethodDefinitionCollection).Add (meth);

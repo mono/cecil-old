@@ -13,6 +13,8 @@
 namespace Mono.Cecil {
 
 	public enum NativeType {
+		NONE = 0x66,
+
 		BOOLEAN = 0x02,
 		I1 = 0x03,
 		U1 = 0x04,

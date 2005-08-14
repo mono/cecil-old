@@ -19,22 +19,32 @@ namespace Mono.Cecil.Signatures {
 	internal class MarshalSig {
 
 		public NativeType NativeInstrinsic;
-		public ValueType Spec;
+		public IMarshalSigSpec Spec;
 
 		public MarshalSig (NativeType nt)
 		{
 			this.NativeInstrinsic = nt;
 		}
 
-		internal struct Array {
+		internal interface IMarshalSigSpec {
+		}
+
+		internal class Array : IMarshalSigSpec {
 
 			public NativeType ArrayElemType;
 			public int ParamNum;
 			public int ElemMult;
 			public int NumElem;
+
+			public Array ()
+			{
+				this.ParamNum = -1;
+				this.ElemMult = -1;
+				this.NumElem = -1;
+			}
 		}
 
-		internal struct CustomMarshaler {
+		internal class CustomMarshaler : IMarshalSigSpec {
 
 			public string Guid;
 			public string UnmanagedType;
@@ -42,18 +52,24 @@ namespace Mono.Cecil.Signatures {
 			public string Cookie;
 		}
 
-		internal struct FixedArray {
+		internal class FixedArray : IMarshalSigSpec {
 
 			public int NumElem;
 			public NativeType ArrayElemType;
+
+			public FixedArray ()
+			{
+				this.NumElem = -1;
+				this.ArrayElemType = NativeType.NONE;
+			}
 		}
 
-		internal struct SafeArray {
+		internal class SafeArray : IMarshalSigSpec {
 
 			public VariantType ArrayElemType;
 		}
 
-		internal struct FixedSysString {
+		internal class FixedSysString : IMarshalSigSpec {
 
 			public int Size;
 		}

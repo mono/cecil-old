@@ -133,7 +133,10 @@ namespace Mono.Cecil.Implem {
 
 		public bool IsStatic {
 			get { return (m_attributes & MethodAttributes.Static) != 0; }
-			set { m_attributes |= value ? MethodAttributes.Static : 0; }
+			set {
+				m_attributes |= value ? MethodAttributes.Static : 0;
+				this.HasThis = !value;
+			}
 		}
 
 		public bool IsVirtual {

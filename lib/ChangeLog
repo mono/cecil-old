@@ -1,5 +1,14 @@
 2005-08-14  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/NativeType.cs
+	  Mono.Cecil.Signatures/MarshalSig.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+	  Mono.Cecil.Signatures/Signature.cs:
+		Work on signature writing.
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs:
+		Correct bugs in setting the hasThis field.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Binary/templates/ImageWriter.cs
 	  Mono.Cecil/AssemblyKind.cs:

@@ -16,7 +16,7 @@ namespace Mono.Cecil.Signatures {
 
 	internal abstract class Signature : ISignatureVisitable {
 
-		public uint CallingConvention;
+		public byte CallingConvention;
 		public uint BlobIndex;
 
 		public Signature (uint blobIndex)
