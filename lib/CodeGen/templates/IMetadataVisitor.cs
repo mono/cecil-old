@@ -16,34 +16,34 @@
 namespace Mono.Cecil.Metadata {
 
 	public interface IMetadataVisitor {
-		void Visit (MetadataRoot root);
-		void Visit (MetadataRoot.MetadataRootHeader header);
-		void Visit (MetadataStreamCollection streams);
-		void Visit (MetadataStream stream);
-		void Visit (MetadataStream.MetadataStreamHeader header);
-		void Visit (GuidHeap heap);
-		void Visit (StringsHeap heap);
-		void Visit (TablesHeap heap);
-		void Visit (BlobHeap heap);
-		void Visit (UserStringsHeap heap);
+		void VisitMetadataRoot (MetadataRoot root);
+		void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header);
+		void VisitMetadataStreamCollection (MetadataStreamCollection streams);
+		void VisitMetadataStream (MetadataStream stream);
+		void VisitMetadataStreamHeader (MetadataStream.MetadataStreamHeader header);
+		void VisitGuidHeap (GuidHeap heap);
+		void VisitStringsHeap (StringsHeap heap);
+		void VisitTablesHeap (TablesHeap heap);
+		void VisitBlobHeap (BlobHeap heap);
+		void VisitUserStringsHeap (UserStringsHeap heap);
 
-		void Terminate (MetadataRoot root);
+		void TerminateMetadataRoot (MetadataRoot root);
 	}
 
 	public interface IMetadataTableVisitor {
-		void Visit (TableCollection coll);
+		void VisitTableCollection (TableCollection coll);
 
-<% $tables.each { |table| %>		void Visit (<%= table.table_name %> table);
+<% $tables.each { |table| %>		void Visit<%=table.table_name%> (<%=table.table_name%> table);
 <% } %>
-		void Terminate (TableCollection coll);
+		void TerminateTableCollection (TableCollection coll);
 		IMetadataRowVisitor GetRowVisitor();
 }
 
 	public interface IMetadataRowVisitor {
-		void Visit (RowCollection coll);
+		void VisitRowCollection (RowCollection coll);
 
-<% $tables.each { |table| %>		void Visit(<%= table.row_name %> row);
+<% $tables.each { |table| %>		void Visit<%=table.row_name%> (<%=table.row_name%> row);
 <% } %>
-		void Terminate (RowCollection coll);
+		void TerminateRowCollection (RowCollection coll);
 	}
 }

@@ -27,7 +27,7 @@ namespace Mono.Cecil.Signatures {
 
 		public override void Accept (ISignatureVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMethodRefSig (this);
 		}
 	}
 }

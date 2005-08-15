@@ -197,6 +197,18 @@ namespace Mono.Cecil.Implem {
 			m_attributes = attrs;
 		}
 
+		public void DefineInterface (ITypeReference type)
+		{
+			(m_interfaces as InterfaceCollection).Add (type);
+		}
+
+		public void DefineInterface (Type type)
+		{
+			if (!type.IsInterface)
+				throw new ArgumentException ("The type is not an interface");
+			DefineInterface (m_module.Controller.Helper.RegisterType (type));
+		}
+
 		public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes)
 		{
 			return DefineNestedType (name, attributes, typeof (object));

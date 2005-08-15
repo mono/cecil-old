@@ -47,7 +47,7 @@ namespace Mono.Cecil.Binary {
 			return m_binaryReader;
 		}
 
-		public override void Visit (Image img)
+		public override void VisitImage (Image img)
 		{
 			m_binaryReader = new BinaryReader (
 				new FileStream (img.FileInformation.FullName, FileMode.Open,
@@ -55,7 +55,7 @@ namespace Mono.Cecil.Binary {
 			m_mdReader = new MetadataReader (this);
 		}
 
-		public override void Visit (DOSHeader header)
+		public override void VisitDOSHeader (DOSHeader header)
 		{
 			header.Start = m_binaryReader.ReadBytes (60);
 			header.Lfanew = m_binaryReader.ReadUInt32 ();
@@ -69,18 +69,18 @@ namespace Mono.Cecil.Binary {
 				throw new ImageFormatException ("Invalid PE File Signature");
 		}
 <% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" %>
-		public override void Visit (<%=name%> header)
+		public override void Visit<%=name.index('.') ? name[(name.index('.') + 1)..name.length] : name%> (<%=name%> header)
 		{<% header.fields.each { |field| %>
 			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% } %>
 		}
 <% end } %>
-		public override void Visit (SectionCollection coll)
+		public override void VisitSectionCollection (SectionCollection coll)
 		{
 			for (int i = 0; i < m_image.PEFileHeader.NumberOfSections; i++)
 				coll.Add (new Section ());
 		}
 <% cur_header = $headers["Section"] %>
-		public override void Visit (Section sect)
+		public override void VisitSection (Section sect)
 		{
 			char [] name, buffer = new char [8];
 			int read = 0;
@@ -99,7 +99,7 @@ namespace Mono.Cecil.Binary {
 <% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
 		}
 
-		public override void Visit (ImportAddressTable iat)
+		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
@@ -107,7 +107,7 @@ namespace Mono.Cecil.Binary {
 			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 <% cur_header = $headers["CLIHeader"] %>
-		public override void Visit (CLIHeader header)
+		public override void VisitCLIHeader (CLIHeader header)
 		{
 			if (m_image.PEOptionalHeader.DataDirectories.CLIHeader == DataDirectory.Zero)
 				throw new ImageFormatException ("Non Pure CLI Image");
@@ -127,7 +127,7 @@ namespace Mono.Cecil.Binary {
 			m_image.MetadataRoot.Accept (m_mdReader);
 		}
 
-		public override void Visit (ImportTable it)
+		public override void VisitImportTable (ImportTable it)
 		{
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
@@ -139,7 +139,7 @@ namespace Mono.Cecil.Binary {
 			it.ImportAddressTable = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
-		public override void Visit (ImportLookupTable ilt)
+		public override void VisitImportLookupTable (ImportLookupTable ilt)
 		{
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportTable.ImportLookupTable.Value);
@@ -147,7 +147,7 @@ namespace Mono.Cecil.Binary {
 			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
-		public override void Visit (HintNameTable hnt)
+		public override void VisitHintNameTable (HintNameTable hnt)
 		{
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportAddressTable.HintNameTableRVA);
@@ -165,7 +165,7 @@ namespace Mono.Cecil.Binary {
 			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
-		public override void Terminate (Image img)
+		public override void TerminateImage (Image img)
 		{
 			m_binaryReader.Close ();
 		}

@@ -37,39 +37,39 @@ namespace Mono.Cecil.Binary {
 			m_mdinit = new MetadataInitializer (this);
 		}
 
-		public override void Visit (DOSHeader header)
+		public override void VisitDOSHeader (DOSHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (PEOptionalHeader header)
+		public override void VisitPEOptionalHeader (PEOptionalHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (PEFileHeader header)
+		public override void VisitPEFileHeader (PEFileHeader header)
 		{
 			header.SetDefaultValues ();
 			header.TimeDateStamp = (uint) DateTime.UtcNow.Subtract (
 				new DateTime (1970, 1, 1)).TotalSeconds;
 		}
 
-		public override void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)
+		public override void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (PEOptionalHeader.StandardFieldsHeader header)
+		public override void VisitStandardFieldsHeader (PEOptionalHeader.StandardFieldsHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (PEOptionalHeader.DataDirectoriesHeader header)
+		public override void VisitDataDirectoriesHeader (PEOptionalHeader.DataDirectoriesHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (SectionCollection coll)
+		public override void VisitSectionCollection (SectionCollection coll)
 		{
 			Section text = new Section ();
 			text.Name = Section.Text;
@@ -86,23 +86,23 @@ namespace Mono.Cecil.Binary {
 			coll.Add (reloc);
 		}
 
-		public override void Visit (Section sect)
+		public override void VisitSection (Section sect)
 		{
 			sect.SetDefaultValues ();
 		}
 
-		public override void Visit (CLIHeader header)
+		public override void VisitCLIHeader (CLIHeader header)
 		{
 			header.SetDefaultValues ();
 			m_image.MetadataRoot.Accept (m_mdinit);
 		}
 
-		public override void Visit (ImportTable it)
+		public override void VisitImportTable (ImportTable it)
 		{
 			it.ImportAddressTable = new RVA (0x2000);
 		}
 
-		public override void Visit (HintNameTable hnt)
+		public override void VisitHintNameTable (HintNameTable hnt)
 		{
 			hnt.Hint = 0;
 			hnt.RuntimeLibrary = HintNameTable.RuntimeCorEE;

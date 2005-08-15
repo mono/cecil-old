@@ -18,7 +18,6 @@ namespace Mono.Cecil {
 
 		TypeAttributes Attributes { get; set; }
 		ITypeReference BaseType { get; set; }
-		IInterfaceCollection Interfaces { get; }
 		IClassLayoutInfo LayoutInfo { get; }
 
 		bool IsAbstract { get; set; }
@@ -29,6 +28,10 @@ namespace Mono.Cecil {
 		bool IsSpecialName { get; set; }
 		bool IsValueType { get; }
 		bool IsEnum { get; }
+
+		IInterfaceCollection Interfaces { get; }
+		void DefineInterface (Type interf);
+		void DefineInterface (ITypeReference interf);
 
 		INestedTypeCollection NestedTypes { get; }
 		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);

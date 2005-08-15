@@ -40,7 +40,7 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMetadataStream (this);
 
 			m_header.Accept (visitor);
 			if (m_heap != null)
@@ -66,7 +66,7 @@ namespace Mono.Cecil.Metadata {
 
 			public void Accept (IMetadataVisitor visitor)
 			{
-				visitor.Visit (this);
+				visitor.VisitMetadataStreamHeader (this);
 			}
 		}
 	}

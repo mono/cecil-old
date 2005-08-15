@@ -65,7 +65,7 @@ namespace Mono.Cecil.Metadata {
 			return 0;
 		}
 
-		public override void Visit (TableCollection coll)
+		public override void VisitTableCollection (TableCollection coll)
 		{
 <% $stables.each { |table|  %>			if (m_heap.HasTable (typeof (<%=table.table_name%>))) {
 				coll.Add (new <%=table.table_name%> ());
@@ -73,7 +73,7 @@ namespace Mono.Cecil.Metadata {
 			}
 <% } %>		}
 
-<% $tables.each { |table| %>		public override void Visit (<%=table.table_name%> table)
+<% $tables.each { |table| %>		public override void Visit<%=table.table_name%> (<%=table.table_name%> table)
 		{
 			int number = GetNumberOfRows (typeof (<%=table.table_name%>));
 			table.Rows = new RowCollection (number);

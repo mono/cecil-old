@@ -122,7 +122,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitImage (this);
 
 			m_dosHeader.Accept (visitor);
 			m_peFileHeader.Accept (visitor);
@@ -137,7 +137,7 @@ namespace Mono.Cecil.Binary {
 			m_importLookupTable.Accept (visitor);
 			m_hintNameTable.Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateImage (this);
 		}
 
 		public static Image CreateImage ()

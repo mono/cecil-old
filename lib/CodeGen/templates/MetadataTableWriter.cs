@@ -63,7 +63,7 @@ namespace Mono.Cecil.Metadata {
 			return table;
 		}
 
-<% } %>		public override void Visit (TableCollection coll)
+<% } %>		public override void VisitTableCollection (TableCollection coll)
 		{
 			coll.Sort ();
 

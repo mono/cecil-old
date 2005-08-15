@@ -52,7 +52,7 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Accept (IMetadataVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitGuidHeap (this);
 		}
 	}
 }

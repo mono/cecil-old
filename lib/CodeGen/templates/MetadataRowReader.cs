@@ -62,7 +62,7 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public override void Visit (RowCollection coll)
+		public override void VisitRowCollection (RowCollection coll)
 		{
 			m_blobHeapIdxSz = m_metadataRoot.Streams.BlobHeap != null ?
 				m_metadataRoot.Streams.BlobHeap.IndexSize : 2;
@@ -72,7 +72,7 @@ namespace Mono.Cecil.Metadata {
 				m_metadataRoot.Streams.GuidHeap.IndexSize : 2;
 		}
 
-<% $tables.each { |table| %>		public override void Visit (<%=table.row_name%> row)
+<% $tables.each { |table| %>		public override void Visit<%=table.row_name%> (<%=table.row_name%> row)
 		{
 <% table.columns.each { |col|
  if (col.target.nil?)

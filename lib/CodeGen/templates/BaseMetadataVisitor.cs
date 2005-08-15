@@ -17,62 +17,62 @@ namespace Mono.Cecil.Metadata {
 
 	public abstract class BaseMetadataVisitor : IMetadataVisitor {
 
-		public virtual void Visit (MetadataRoot root)
+		public virtual void VisitMetadataRoot (MetadataRoot root)
 		{
 		}
 
-		public virtual void Visit (MetadataRoot.MetadataRootHeader header)
+		public virtual void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header)
 		{
 		}
 
-		public virtual void Visit (MetadataStreamCollection streams)
+		public virtual void VisitMetadataStreamCollection (MetadataStreamCollection streams)
 		{
 		}
 
-		public virtual void Visit (MetadataStream stream)
+		public virtual void VisitMetadataStream (MetadataStream stream)
 		{
 		}
 
-		public virtual void Visit (MetadataStream.MetadataStreamHeader header)
+		public virtual void VisitMetadataStreamHeader (MetadataStream.MetadataStreamHeader header)
 		{
 		}
 
-		public virtual void Visit (GuidHeap heap)
+		public virtual void VisitGuidHeap (GuidHeap heap)
 		{
 		}
 
-		public virtual void Visit (StringsHeap heap)
+		public virtual void VisitStringsHeap (StringsHeap heap)
 		{
 		}
 
-		public virtual void Visit (TablesHeap heap)
+		public virtual void VisitTablesHeap (TablesHeap heap)
 		{
 		}
 
-		public virtual void Visit (BlobHeap heap)
+		public virtual void VisitBlobHeap (BlobHeap heap)
 		{
 		}
 
-		public virtual void Visit (UserStringsHeap heap)
+		public virtual void VisitUserStringsHeap (UserStringsHeap heap)
 		{
 		}
 
-		public virtual void Terminate (MetadataRoot root)
+		public virtual void TerminateMetadataRoot (MetadataRoot root)
 		{
 		}
 	}
 
 	public abstract class BaseMetadataTableVisitor : IMetadataTableVisitor {
 
-		public virtual void Visit (TableCollection coll)
+		public virtual void VisitTableCollection (TableCollection coll)
 		{
 		}
 
-<% $tables.each { |table| %>		public virtual void Visit (<%= table.table_name %> table)
+<% $tables.each { |table| %>		public virtual void Visit<%=table.table_name%> (<%=table.table_name%> table)
 		{
 		}
 <% } %>
-		public virtual void Terminate (TableCollection coll)
+		public virtual void TerminateTableCollection (TableCollection coll)
 		{
 		}
 
@@ -81,15 +81,15 @@ namespace Mono.Cecil.Metadata {
 
 	public abstract class BaseMetadataRowVisitor : IMetadataRowVisitor {
 
-		public virtual void Visit (RowCollection coll)
+		public virtual void VisitRowCollection (RowCollection coll)
 		{
 		}
 
-<% $tables.each { |table| %>		public virtual void Visit(<%= table.row_name %> row)
+<% $tables.each { |table| %>		public virtual void Visit<%=table.row_name%> (<%=table.row_name%> row)
 		{
 		}
 <% } %>
-		public virtual void Terminate (RowCollection coll)
+		public virtual void TerminateRowCollection (RowCollection coll)
 		{
 		}
 	}

@@ -34,7 +34,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitPEOptionalHeader (this);
 
 			StandardFields.Accept (visitor);
 			NTSpecificFields.Accept (visitor);
@@ -54,7 +54,7 @@ namespace Mono.Cecil.Binary {
 
 			public void Accept (IBinaryVisitor visitor)
 			{
-				visitor.Visit (this);
+				visitor.VisitStandardFieldsHeader (this);
 			}
 		}
 <% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
@@ -71,7 +71,7 @@ namespace Mono.Cecil.Binary {
 
 			public void Accept (IBinaryVisitor visitor)
 			{
-				visitor.Visit (this);
+				visitor.VisitNTSpecificFieldsHeader (this);
 			}
 		}
 <% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
@@ -88,7 +88,7 @@ namespace Mono.Cecil.Binary {
 
 			public void Accept (IBinaryVisitor visitor)
 			{
-				visitor.Visit (this);
+				visitor.VisitDataDirectoriesHeader (this);
 			}
 		}
 	}

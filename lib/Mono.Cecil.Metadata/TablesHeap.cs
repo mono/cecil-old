@@ -51,7 +51,7 @@ namespace Mono.Cecil.Metadata {
 
 		public override void Accept (IMetadataVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitTablesHeap (this);
 		}
 
 		public static ushort GetTableId (Type table)

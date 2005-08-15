@@ -39,7 +39,7 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataTableVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.Visit<%=$cur_table.table_name%> (this);
 			this.Rows.Accept (visitor.GetRowVisitor ());
 		}
 	}
@@ -56,7 +56,7 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataRowVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.Visit<%=$cur_table.row_name%> (this);
 		}
 	}
 }

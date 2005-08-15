@@ -147,7 +147,7 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMetadataStreamCollection (this);
 
 			for (int i = 0; i < m_items.Count; i++)
 				this [i].Accept (visitor);

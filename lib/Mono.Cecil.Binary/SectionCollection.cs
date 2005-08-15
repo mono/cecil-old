@@ -89,7 +89,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitSectionCollection (this);
 
 			for (int i = 0; i < m_items.Count; i++)
 				this [i].Accept (visitor);

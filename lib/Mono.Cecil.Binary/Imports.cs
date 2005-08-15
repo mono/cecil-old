@@ -22,7 +22,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitImportAddressTable (this);
 		}
 	}
 
@@ -40,7 +40,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitImportTable (this);
 		}
 	}
 
@@ -54,7 +54,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitImportLookupTable (this);
 		}
 	}
 
@@ -76,7 +76,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitHintNameTable (this);
 		}
 	}
 }

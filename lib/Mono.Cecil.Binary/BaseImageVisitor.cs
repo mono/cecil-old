@@ -14,63 +14,63 @@ namespace Mono.Cecil.Binary {
 
 	public abstract class BaseImageVisitor : IBinaryVisitor {
 
-		public virtual void Visit (Image img)
+		public virtual void VisitImage (Image img)
 		{
 		}
 
-		public virtual void Visit (DOSHeader header)
+		public virtual void VisitDOSHeader (DOSHeader header)
 		{
 		}
 
-		public virtual void Visit (PEFileHeader header)
+		public virtual void VisitPEFileHeader (PEFileHeader header)
 		{
 		}
 
-		public virtual void Visit (PEOptionalHeader header)
+		public virtual void VisitPEOptionalHeader (PEOptionalHeader header)
 		{
 		}
 
-		public virtual void Visit (PEOptionalHeader.StandardFieldsHeader header)
+		public virtual void VisitStandardFieldsHeader (PEOptionalHeader.StandardFieldsHeader header)
 		{
 		}
 
-		public virtual void Visit (PEOptionalHeader.NTSpecificFieldsHeader header)
+		public virtual void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header)
 		{
 		}
 
-		public virtual void Visit (PEOptionalHeader.DataDirectoriesHeader header)
+		public virtual void VisitDataDirectoriesHeader (PEOptionalHeader.DataDirectoriesHeader header)
 		{
 		}
 
-		public virtual void Visit (SectionCollection coll)
+		public virtual void VisitSectionCollection (SectionCollection coll)
 		{
 		}
 
-		public virtual void Visit (Section section)
+		public virtual void VisitSection (Section section)
 		{
 		}
 
-		public virtual void Visit (ImportAddressTable iat)
+		public virtual void VisitImportAddressTable (ImportAddressTable iat)
 		{
 		}
 
-		public virtual void Visit (CLIHeader header)
+		public virtual void VisitCLIHeader (CLIHeader header)
 		{
 		}
 
-		public virtual void Visit (ImportTable it)
+		public virtual void VisitImportTable (ImportTable it)
 		{
 		}
 
-		public virtual void Visit (ImportLookupTable ilt)
+		public virtual void VisitImportLookupTable (ImportLookupTable ilt)
 		{
 		}
 
-		public virtual void Visit (HintNameTable hnt)
+		public virtual void VisitHintNameTable (HintNameTable hnt)
 		{
 		}
 
-		public virtual void Terminate (Image img)
+		public virtual void TerminateImage (Image img)
 		{
 		}
 	}

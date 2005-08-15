@@ -150,7 +150,7 @@ namespace Mono.Cecil.Binary {
 			img.ImportTable.Name = new RVA ((uint) img.ImportLookupTable.HintNameRVA + 0xe);
 		}
 
-		public override void Visit (DOSHeader header)
+		public override void VisitDOSHeader (DOSHeader header)
 		{
 			m_binaryWriter.Write (header.Start);
 			m_binaryWriter.Write (header.Lfanew);
@@ -160,12 +160,12 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write ((ushort) 0);
 		}
 <% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" %>
-		public override void Visit (<%=name%> header)
+		public override void Visit<%=name.index('.') ? name[(name.index('.') + 1)..name.length] : name%> (<%=name%> header)
 		{<% header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
 		}
 <% end } ; cur_header = $headers["Section"] %>
-		public override void Visit (Section sect)
+		public override void VisitSection (Section sect)
 		{
 			foreach (char c in sect.Name)
 				m_binaryWriter.Write (c);
@@ -176,19 +176,19 @@ namespace Mono.Cecil.Binary {
 			<%=field.write_binary("sect", "m_binaryWriter")%>;<% } %>
 		}
 
-		public override void Visit (ImportAddressTable iat)
+		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
 			m_textWriter.BaseStream.Position = 0;
 			m_textWriter.Write (iat.HintNameTableRVA.Value);
 			m_textWriter.Write (new byte [4]);
 		}
 <% cur_header = $headers["CLIHeader"] %>
-		public override void Visit (CLIHeader header)
+		public override void VisitCLIHeader (CLIHeader header)
 		{<% cur_header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_textWriter")%>;<% } %>
 		}
 
-		public override void Visit (ImportTable it)
+		public override void VisitImportTable (ImportTable it)
 		{
 			m_textWriter.BaseStream.Position = m_mdWriter.ItStartPos;
 			m_textWriter.Write (it.ImportLookupTable.Value);
@@ -199,13 +199,13 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (new byte [20]);
 		}
 
-		public override void Visit (ImportLookupTable ilt)
+		public override void VisitImportLookupTable (ImportLookupTable ilt)
 		{
 			m_textWriter.Write (ilt.HintNameRVA.Value);
 			m_textWriter.Write (new byte [16]);
 		}
 
-		public override void Visit (HintNameTable hnt)
+		public override void VisitHintNameTable (HintNameTable hnt)
 		{
 			m_textWriter.Write (hnt.Hint);
 			foreach (char c in hnt.RuntimeMain)
@@ -233,7 +233,7 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (hnt.RVA);
 		}
 
-		public override void Terminate (Image img)
+		public override void TerminateImage (Image img)
 		{
 			m_binaryWriter.BaseStream.Position = 0x200;
 

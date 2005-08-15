@@ -45,7 +45,7 @@ namespace Mono.Cecil.Metadata {
 			return m_codeOrResReader;
 		}
 
-		public override void Visit (MetadataRoot root)
+		public override void VisitMetadataRoot (MetadataRoot root)
 		{
 			m_root = root;
 			root.Header = new MetadataRoot.MetadataRootHeader ();
@@ -61,7 +61,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryReader.BaseStream.Position = pos;
 		}
 
-		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		public override void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header)
 		{
 			long headpos = m_binaryReader.BaseStream.Position;
 
@@ -103,13 +103,13 @@ namespace Mono.Cecil.Metadata {
 			header.Streams = m_binaryReader.ReadUInt16 ();
 		}
 
-		public override void Visit (MetadataStreamCollection coll)
+		public override void VisitMetadataStreamCollection (MetadataStreamCollection coll)
 		{
 			for (int i = 0; i < m_root.Header.Streams; i++)
 				coll.Add (new MetadataStream ());
 		}
 
-		public override void Visit (MetadataStream.MetadataStreamHeader header)
+		public override void VisitMetadataStreamHeader (MetadataStream.MetadataStreamHeader header)
 		{
 			header.Offset = m_binaryReader.ReadUInt32 ();
 			header.Size = m_binaryReader.ReadUInt32 ();
@@ -144,12 +144,12 @@ namespace Mono.Cecil.Metadata {
 			header.Stream.Heap = MetadataHeap.HeapFactory (header.Stream);
 		}
 
-		public override void Visit (GuidHeap heap)
+		public override void VisitGuidHeap (GuidHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
 
-		public override void Visit (StringsHeap heap)
+		public override void VisitStringsHeap (StringsHeap heap)
 		{
 			this.VisitHeap (heap);
 
@@ -176,7 +176,7 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public override void Visit (TablesHeap heap)
+		public override void VisitTablesHeap (TablesHeap heap)
 		{
 			this.VisitHeap (heap);
 			heap.Tables = new TableCollection (heap);
@@ -194,12 +194,12 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		public override void Visit (BlobHeap heap)
+		public override void VisitBlobHeap (BlobHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
 
-		public override void Visit (UserStringsHeap heap)
+		public override void VisitUserStringsHeap (UserStringsHeap heap)
 		{
 			this.VisitHeap (heap);
 		}
@@ -225,7 +225,7 @@ namespace Mono.Cecil.Metadata {
 			heap.IndexSize = ((th.HeapSizes & flag) > 0) ? 4 : 2;
 		}
 
-		public override void Terminate (MetadataRoot root)
+		public override void TerminateMetadataRoot (MetadataRoot root)
 		{
 			SetHeapIndexSize (root.Streams.StringsHeap, 0x01);
 			SetHeapIndexSize (root.Streams.GuidHeap, 0x02);

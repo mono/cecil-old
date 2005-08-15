@@ -53,7 +53,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Accept (IBinaryVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitDOSHeader (this);
 		}
 	}
 }

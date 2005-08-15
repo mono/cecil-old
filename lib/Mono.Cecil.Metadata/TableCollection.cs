@@ -127,12 +127,12 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataTableVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitTableCollection (this);
 
 			for (int i = 0; i < m_items.Count; i++)
 				this [i].Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateTableCollection (this);
 		}
 
 		private sealed class TableComparer : IComparer {

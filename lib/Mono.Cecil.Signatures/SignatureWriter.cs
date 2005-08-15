@@ -113,7 +113,7 @@ namespace Mono.Cecil.Signatures {
 			return m_sigWriter.ToArray ();
 		}
 
-		public void Visit (MethodDefSig methodDef)
+		public void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			m_sigWriter.Write (methodDef.CallingConvention);
 			Write (methodDef.ParamCount);
@@ -121,7 +121,7 @@ namespace Mono.Cecil.Signatures {
 			Write (methodDef.Parameters);
 		}
 
-		public void Visit (MethodRefSig methodRef)
+		public void VisitMethodRefSig (MethodRefSig methodRef)
 		{
 			m_sigWriter.Write (methodRef.CallingConvention);
 			Write (methodRef.ParamCount);
@@ -129,14 +129,14 @@ namespace Mono.Cecil.Signatures {
 			Write (methodRef.Parameters);
 		}
 
-		public void Visit (FieldSig field)
+		public void VisitFieldSig (FieldSig field)
 		{
 			m_sigWriter.Write (field.CallingConvention);
 			Write (field.CustomMods);
 			Write (field.Type);
 		}
 
-		public void Visit (PropertySig property)
+		public void VisitPropertySig (PropertySig property)
 		{
 			m_sigWriter.Write (property.CallingConvention);
 			Write (property.ParamCount);
@@ -144,7 +144,7 @@ namespace Mono.Cecil.Signatures {
 			Write (property.Parameters);
 		}
 
-		public void Visit (LocalVarSig localvar)
+		public void VisitLocalVarSig (LocalVarSig localvar)
 		{
 			m_sigWriter.Write (localvar.CallingConvention);
 			Write (localvar.Count);

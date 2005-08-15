@@ -169,7 +169,7 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
-		public void Visit (MethodDefSig methodDef)
+		public void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) methodDef.BlobIndex, out start);
@@ -185,7 +185,7 @@ namespace Mono.Cecil.Signatures {
 			methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start);
 		}
 
-		public void Visit (MethodRefSig methodRef)
+		public void VisitMethodRefSig (MethodRefSig methodRef)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) methodRef.BlobIndex, out start);
@@ -211,7 +211,7 @@ namespace Mono.Cecil.Signatures {
 			methodRef.Sentinel = sentpos;
 		}
 
-		public void Visit (FieldSig field)
+		public void VisitFieldSig (FieldSig field)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) field.BlobIndex, out start);
@@ -221,7 +221,7 @@ namespace Mono.Cecil.Signatures {
 			field.Type = this.ReadType (m_blobData, start, out start);
 		}
 
-		public void Visit (PropertySig property)
+		public void VisitPropertySig (PropertySig property)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) property.BlobIndex, out start);
@@ -232,7 +232,7 @@ namespace Mono.Cecil.Signatures {
 			property.Parameters = this.ReadParameters (property.ParamCount, m_blobData, start);
 		}
 
-		public void Visit (LocalVarSig localvar)
+		public void VisitLocalVarSig (LocalVarSig localvar)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) localvar.BlobIndex, out start);

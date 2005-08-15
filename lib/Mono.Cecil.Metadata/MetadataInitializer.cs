@@ -28,18 +28,18 @@ namespace Mono.Cecil.Metadata {
 			m_root = init.Image.MetadataRoot;
 		}
 
-		public override void Visit (MetadataRoot root)
+		public override void VisitMetadataRoot (MetadataRoot root)
 		{
 			root.Header = new MetadataRoot.MetadataRootHeader ();
 			root.Streams = new MetadataStreamCollection ();
 		}
 
-		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		public override void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header)
 		{
 			header.SetDefaultValues ();
 		}
 
-		public override void Visit (MetadataStreamCollection coll)
+		public override void VisitMetadataStreamCollection (MetadataStreamCollection coll)
 		{
 			MetadataStream tables = new MetadataStream ();
 			tables.Header.Name = MetadataStream.Tables;
@@ -49,7 +49,7 @@ namespace Mono.Cecil.Metadata {
 			m_root.Streams.Add (tables);
 		}
 
-		public override void Visit (TablesHeap th)
+		public override void VisitTablesHeap (TablesHeap th)
 		{
 			th.Reserved = 0;
 			th.MajorVersion = 1;

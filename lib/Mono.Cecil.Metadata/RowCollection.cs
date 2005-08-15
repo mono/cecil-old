@@ -93,12 +93,12 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataRowVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitRowCollection (this);
 
 			for (int i = 0; i < m_items.Count; i++)
 				this [i].Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateRowCollection (this);
 		}
 	}
 }

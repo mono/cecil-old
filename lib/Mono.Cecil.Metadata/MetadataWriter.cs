@@ -196,7 +196,7 @@ namespace Mono.Cecil.Metadata {
 			return offset;
 		}
 
-		public override void Visit (MetadataRoot root)
+		public override void VisitMetadataRoot (MetadataRoot root)
 		{
 			WriteMemStream (m_cilWriter);
 			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
@@ -249,7 +249,7 @@ namespace Mono.Cecil.Metadata {
 				m_root.Streams.Remove (m_root.Streams.TablesHeap.GetStream ());
 		}
 
-		public override void Visit (MetadataRoot.MetadataRootHeader header)
+		public override void VisitMetadataRootHeader (MetadataRoot.MetadataRootHeader header)
 		{
 			m_binaryWriter.Write (header.Signature);
 			m_binaryWriter.Write (header.MajorVersion);
@@ -263,7 +263,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
 		}
 
-		public override void Visit (MetadataStreamCollection streams)
+		public override void VisitMetadataStreamCollection (MetadataStreamCollection streams)
 		{
 			foreach (MetadataStream stream in streams) {
 				MetadataStream.MetadataStreamHeader header = stream.Header;
@@ -317,19 +317,19 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.BaseStream.Position = pos;
 		}
 
-		public override void Visit (GuidHeap heap)
+		public override void VisitGuidHeap (GuidHeap heap)
 		{
 			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_guidWriter);
 		}
 
-		public override void Visit (StringsHeap heap)
+		public override void VisitStringsHeap (StringsHeap heap)
 		{
 			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_stringWriter);
 		}
 
-		public override void Visit (TablesHeap heap)
+		public override void VisitTablesHeap (TablesHeap heap)
 		{
 			PatchStreamHeaderOffset (heap);
 			m_binaryWriter.Write (heap.Reserved);
@@ -351,13 +351,13 @@ namespace Mono.Cecil.Metadata {
 			WriteMemStream (m_tWriter);
 		}
 
-		public override void Visit (BlobHeap heap)
+		public override void VisitBlobHeap (BlobHeap heap)
 		{
 			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_blobWriter);
 		}
 
-		public override void Visit (UserStringsHeap heap)
+		public override void VisitUserStringsHeap (UserStringsHeap heap)
 		{
 			PatchStreamHeaderOffset (heap);
 			WriteMemStream (m_usWriter);
@@ -378,7 +378,7 @@ namespace Mono.Cecil.Metadata {
 					img.TextSection.VirtualAddress + m_resStart, m_resSize);
 		}
 
-		public override void Terminate (MetadataRoot root)
+		public override void TerminateMetadataRoot (MetadataRoot root)
 		{
 			m_mdSize = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
 			m_itStart = (uint) m_binaryWriter.BaseStream.Position;

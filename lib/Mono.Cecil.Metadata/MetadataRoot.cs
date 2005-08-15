@@ -43,12 +43,12 @@ namespace Mono.Cecil.Metadata {
 
 		public void Accept (IMetadataVisitor visitor)
 		{
-			visitor.Visit (this);
+			visitor.VisitMetadataRoot (this);
 
 			m_header.Accept (visitor);
 			m_streams.Accept (visitor);
 
-			visitor.Terminate (this);
+			visitor.TerminateMetadataRoot (this);
 		}
 
 		public sealed class MetadataRootHeader : IHeader, IMetadataVisitable {
@@ -76,7 +76,7 @@ namespace Mono.Cecil.Metadata {
 
 			public void Accept (IMetadataVisitor visitor)
 			{
-				visitor.Visit (this);
+				visitor.VisitMetadataRootHeader (this);
 			}
 		}
 	}
