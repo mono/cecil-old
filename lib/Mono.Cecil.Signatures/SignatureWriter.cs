@@ -59,6 +59,11 @@ namespace Mono.Cecil.Signatures {
 			return AddSignature (fSig);
 		}
 
+		public uint AddLocalVarSig (LocalVarSig lvs)
+		{
+			return AddSignature (lvs);
+		}
+
 		private uint AddSignature (Signature s)
 		{
 			m_sigWriter.Empty ();

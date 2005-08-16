@@ -175,16 +175,18 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
-			// TODO
-		}
+			MethodBody body = variables.Container as MethodBody;
+			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
+			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (
+				m_reflectWriter.SignatureWriter.AddLocalVarSig (GetLocalVarSig (variables)));
 
-		public override void VisitVariableDefinition (IVariableDefinition var)
-		{
-			// TODO
+			sasTable.Rows.Add (sasRow);
+			body.LocalVarToken = sasTable.Rows.Count;
 		}
 
 		public override void TerminateMethodBody (IMethodBody body)
 		{
+			MethodBody bdy = body as MethodBody;
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
 				|| m_codeWriter.BaseStream.Length >= 64) {
 
@@ -195,8 +197,15 @@ namespace Mono.Cecil.Implem {
 				if (body.ExceptionHandlers.Count > 0)
 					header |= MethodHeader.MoreSects;
 
+				m_binaryWriter.Write ((ushort) header);
+				m_binaryWriter.Write ((ushort) body.MaxStack);
+				m_binaryWriter.Write ((uint) m_codeWriter.BaseStream.Length);
+				m_binaryWriter.Write ((uint) bdy.LocalVarToken);
+
 				m_binaryWriter.Write (m_codeWriter);
 				m_binaryWriter.QuadAlign ();
+
+				// TODO write exception table here
 			} else {
 				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
 					m_codeWriter.BaseStream.Length << 2));
@@ -205,6 +214,32 @@ namespace Mono.Cecil.Implem {
 			}
 
 			m_curs = m_start + (uint) m_binaryWriter.BaseStream.Position;
+		}
+
+		private LocalVarSig GetLocalVarSig (IVariableDefinitionCollection vars)
+		{
+			LocalVarSig lvs = new LocalVarSig ();
+			lvs.CallingConvention |= 0x7;
+			lvs.Count = vars.Count;
+			lvs.LocalVariables = new LocalVarSig.LocalVariable [lvs.Count];
+			for (int i = 0; i < lvs.Count; i++) {
+				LocalVarSig.LocalVariable lv = new LocalVarSig.LocalVariable ();
+				ITypeReference type = vars [i].Variable;
+				if (type is PinnedType) {
+					lv.Constraint |= Constraint.Pinned;
+					type = (type as PinnedType).ElementType;
+				}
+
+				if (type is IReferenceType) {
+					lv.ByRef = true;
+					type = (type as IReferenceType).ElementType;
+				}
+
+				lv.Type = m_reflectWriter.GetSigType (type);
+
+				lvs.LocalVariables [i] = lv;
+			}
+			return lvs;
 		}
 	}
 }

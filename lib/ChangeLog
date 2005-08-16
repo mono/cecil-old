@@ -1,5 +1,10 @@
 2005-08-16  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Implement local var sig writing.
+
 	* Mono.Cecil.Implem/ArrayType.cs:
 		Style.
 	  Mono.Cecil.Implem/ParameterDefinition.cs:

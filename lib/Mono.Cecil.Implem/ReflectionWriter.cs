@@ -65,6 +65,10 @@ namespace Mono.Cecil.Implem {
 			get { return m_codeWriter; }
 		}
 
+		public SignatureWriter SignatureWriter {
+			get { return m_sigWriter; }
+		}
+
 		public MetadataWriter MetadataWriter {
 			get { return m_mdWriter; }
 		}
