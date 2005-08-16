@@ -40,8 +40,11 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_param == null)
-					m_param = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+				if (m_param == null) {
+					m_param = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, m_returnType);
+					m_param.Method = m_method;
+				}
+
 				return m_param.CustomAttributes;
 			}
 		}

@@ -37,6 +37,7 @@ namespace Mono.Cecil.Metadata {
 		private IDictionary m_usCache;
 		private MemoryBinaryWriter m_usWriter;
 
+		private IDictionary m_blobCache;
 		private MemoryBinaryWriter m_blobWriter;
 
 		private MemoryBinaryWriter m_tWriter;
@@ -86,6 +87,7 @@ namespace Mono.Cecil.Metadata {
 			m_usWriter = new MemoryBinaryWriter (Encoding.Unicode);
 			m_usWriter.Write ('\0');
 
+			m_blobCache = new Hashtable ();
 			m_blobWriter = new MemoryBinaryWriter ();
 			m_blobWriter.Write ((byte) 0);
 
@@ -126,6 +128,7 @@ namespace Mono.Cecil.Metadata {
 				return (uint) m_stringCache [str];
 
 			uint pointer = (uint) m_stringWriter.BaseStream.Position;
+			m_stringCache [str] = pointer;
 			foreach (char c in str)
 				m_stringWriter.Write (c);
 			m_stringWriter.Write ('\0');
@@ -137,7 +140,12 @@ namespace Mono.Cecil.Metadata {
 			if (data == null || data.Length == 0)
 				return 0;
 
+			string key = Encoding.ASCII.GetString (data);
+			if (m_blobCache.Contains (key))
+				return (uint) m_blobCache [key];
+
 			uint pointer = (uint) m_blobWriter.BaseStream.Position;
+			m_blobCache [key] = pointer;
 			if (withSize)
 				Utilities.WriteCompressedInteger (m_blobWriter, data.Length);
 			m_blobWriter.Write (data);
@@ -150,6 +158,7 @@ namespace Mono.Cecil.Metadata {
 				return (uint) m_guidCache [g];
 
 			uint pointer = (uint) m_guidWriter.BaseStream.Position;
+			m_guidCache [g] = pointer;
 			m_guidWriter.Write (g.ToByteArray ());
 			return pointer + 1;
 		}
@@ -163,6 +172,7 @@ namespace Mono.Cecil.Metadata {
 				return (uint) m_usCache [str];
 
 			uint pointer = (uint) m_usWriter.BaseStream.Position;
+			m_usCache [str] = pointer;
 			Utilities.WriteCompressedInteger (m_usWriter, str.Length * 2 + 1);
 			foreach (char c in str)
 				m_usWriter.Write (c);

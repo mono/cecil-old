@@ -18,7 +18,8 @@ namespace Mono.Cecil {
 		IParameterDefinitionCollection Parameters { get; }
 	}
 
-	public interface IPropertyDefinition : IMemberDefinition, IPropertyReference, ICustomAttributeProvider, IReflectionVisitable {
+	public interface IPropertyDefinition : IMemberDefinition, IPropertyReference,
+		ICustomAttributeProvider, IHasConstant, IReflectionVisitable {
 
 		PropertyAttributes Attributes { get; set; }
 
@@ -27,7 +28,5 @@ namespace Mono.Cecil {
 
 		IMethodDefinition GetMethod { get; set; }
 		IMethodDefinition SetMethod { get; set; }
-
-		object Constant { get; set; }
 	}
 }

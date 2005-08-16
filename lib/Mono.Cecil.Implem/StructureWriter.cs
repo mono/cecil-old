@@ -73,6 +73,11 @@ namespace Mono.Cecil.Implem {
 			asmTable.Rows.Add (asmRow);
 		}
 
+		public override void VisitAssemblyNameReferenceCollection (IAssemblyNameReferenceCollection references)
+		{
+			VisitCollection (references);
+		}
+
 		public override void VisitAssemblyNameReference (IAssemblyNameReference name)
 		{
 			byte [] pkortoken;
@@ -96,6 +101,11 @@ namespace Mono.Cecil.Implem {
 				m_mdWriter.AddBlob (name.Hash, true));
 
 			arTable.Rows.Add (arRow);
+		}
+
+		public override void VisitResourceCollection (IResourceCollection resources)
+		{
+			VisitCollection (resources);
 		}
 
 		public override void VisitEmbeddedResource (IEmbeddedResource res)
@@ -141,6 +151,11 @@ namespace Mono.Cecil.Implem {
 			mrTable.Rows.Add (mrRow);
 		}
 
+		public override void VisitModuleDefinitionCollection (IModuleDefinitionCollection modules)
+		{
+			VisitCollection (modules);
+		}
+
 		public override void VisitModuleDefinition (IModuleDefinition module)
 		{
 			if (module.Main) {
@@ -159,6 +174,11 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
+		public override void VisitModuleReferenceCollection (IModuleReferenceCollection modules)
+		{
+			VisitCollection (modules);
+		}
+
 		public override void VisitModuleReference (IModuleReference module)
 		{
 			ModuleRefTable mrTable = m_tableWriter.GetModuleRefTable ();
@@ -171,8 +191,9 @@ namespace Mono.Cecil.Implem {
 		public override void TerminateAssemblyDefinition (IAssemblyDefinition asm)
 		{
 			foreach (ModuleDefinition mod in asm.Modules) {
-				mod.TypeReferences.Accept (mod.Controller.Writer);
-				mod.Controller.Writer.TerminateTypeDefinitionCollection (mod.Types);
+				mod.Controller.Writer.VisitTypeReferenceCollection (mod.TypeReferences);
+				mod.Controller.Writer.VisitTypeDefinitionCollection (mod.Types);
+				mod.Controller.Writer.TerminateModuleDefinition (mod);
 			}
 		}
 	}

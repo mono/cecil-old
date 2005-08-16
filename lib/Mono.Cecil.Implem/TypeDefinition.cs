@@ -50,7 +50,9 @@ namespace Mono.Cecil.Implem {
 
 		public IClassLayoutInfo LayoutInfo {
 			get {
-				this.Module.Controller.Reader.ReadLayout (this);
+				if (!m_module.IsNew && !m_layoutLoaded)
+					m_module.Controller.Reader.ReadLayout (this);
+
 				return this;
 			}
 		}
@@ -61,7 +63,12 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public bool HasLayoutInfo {
-			get { return m_hasInfo; }
+			get {
+				if (!m_module.IsNew && !m_layoutLoaded)
+					m_module.Controller.Reader.ReadLayout (this);
+
+				return m_hasInfo;
+			}
 		}
 
 		public ushort PackingSize {
@@ -84,6 +91,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_interfaces == null)
 					m_interfaces = new InterfaceCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_interfaces.Loaded)
+					m_interfaces.Load ();
+
 				return m_interfaces;
 			}
 		}
@@ -92,6 +103,7 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_nestedTypes == null)
 					m_nestedTypes = new NestedTypeCollection (this);
+
 				return m_nestedTypes;
 			}
 		}
@@ -100,6 +112,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_methods == null)
 					m_methods = new MethodDefinitionCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_methods.Loaded)
+					m_methods.Load ();
+
 				return m_methods;
 			}
 		}
@@ -121,6 +137,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_fields == null)
 					m_fields = new FieldDefinitionCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_fields.Loaded)
+					m_fields.Load ();
+
 				return m_fields;
 			}
 		}
@@ -129,6 +149,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_events == null)
 					m_events = new EventDefinitionCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_events.Loaded)
+					m_events.Load ();
+
 				return m_events;
 			}
 		}
@@ -137,6 +161,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_properties == null)
 					m_properties = new PropertyDefinitionCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_properties.Loaded)
+					m_properties.Load ();
+
 				return m_properties;
 			}
 		}
@@ -145,6 +173,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_secDecls == null)
 					m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
+
+				if (!m_module.IsNew && !m_secDecls.Loaded)
+					m_secDecls.Load ();
+
 				return m_secDecls;
 			}
 		}
@@ -199,7 +231,7 @@ namespace Mono.Cecil.Implem {
 
 		public void DefineInterface (ITypeReference type)
 		{
-			(m_interfaces as InterfaceCollection).Add (type);
+			this.Interfaces.Add (type);
 		}
 
 		public void DefineInterface (Type type)
@@ -219,8 +251,8 @@ namespace Mono.Cecil.Implem {
 			TypeDefinition type = new TypeDefinition (name, string.Empty, attributes, m_module);
 			type.BaseType = baseType;
 			type.DeclaringType = this;
-			(this.NestedTypes as NestedTypeCollection) [name] = type;
-			(m_module.Types as TypeDefinitionCollection) [type.FullName] = type;
+			this.NestedTypes [name] = type;
+			m_module.Types [type.FullName] = type;
 			return type;
 		}
 
@@ -234,7 +266,7 @@ namespace Mono.Cecil.Implem {
 			MethodDefinition meth = new MethodDefinition (name, this, attributes);
 			meth.HasThis = !meth.IsStatic;
 			meth.ReturnType.ReturnType = retType;
-			(this.Methods as MethodDefinitionCollection).Add (meth);
+			this.Methods.Add (meth);
 			return meth;
 		}
 
@@ -262,8 +294,8 @@ namespace Mono.Cecil.Implem {
 			meth.HasThis = !isstatic;
 			meth.ReturnType.ReturnType = m_module.Controller.Writer.GetCoreType (Constants.Void);
 
-			(this.Methods as MethodDefinitionCollection).Add (meth);
-			(this.Constructors as MethodDefinitionCollection).Add (meth);
+			this.Methods.Add (meth);
+			this.Constructors.Add (meth);
 
 			return meth;
 		}
@@ -272,7 +304,7 @@ namespace Mono.Cecil.Implem {
 		{
 			FieldDefinition field = new FieldDefinition (name, this, fieldType, attributes);
 			field.ConstantLoaded = field.LayoutLoaded = field.MarshalSpecLoaded = true;
-			(this.Fields as FieldDefinitionCollection) [name] = field;
+			this.Fields.Add (field);
 			return field;
 		}
 
@@ -284,7 +316,7 @@ namespace Mono.Cecil.Implem {
 		public IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType)
 		{
 			EventDefinition evt = new EventDefinition (name, this, eventType, attributes);
-			(this.Events as EventDefinitionCollection) [name] = evt;
+			this.Events.Add (evt);
 			return evt;
 		}
 
@@ -296,7 +328,7 @@ namespace Mono.Cecil.Implem {
 		public IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType)
 		{
 			PropertyDefinition prop = new PropertyDefinition (name, this, propType, attributes);
-			(this.Properties as PropertyDefinitionCollection) [name] = prop;
+			this.Properties.Add (prop);
 			return prop;
 		}
 
@@ -308,14 +340,14 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
-			(this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
+			this.SecurityDeclarations.Add (dec);
 			return dec;
 		}
 
 		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
 		{
 			SecurityDeclaration dec = this.Module.Controller.Reader.BuildSecurityDeclaration (action, declaration);
-			(this.SecurityDeclarations as SecurityDeclarationCollection).Add (dec);
+			this.SecurityDeclarations.Add (dec);
 			return dec;
 		}
 

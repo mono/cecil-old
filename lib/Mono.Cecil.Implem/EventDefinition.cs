@@ -40,7 +40,9 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition AddMethod {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+
 				return m_addMeth;
 			}
 			set { m_addMeth = value; }
@@ -48,7 +50,9 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition InvokeMethod {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+
 				return m_invMeth;
 			}
 			set { m_invMeth = value; }
@@ -56,7 +60,9 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition RemoveMethod {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+
 				return m_remMeth;
 			}
 			set { m_remMeth = value; }
@@ -71,6 +77,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Module.Controller);
+
+				if (!this.DecTypeDef.Module.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -85,7 +95,8 @@ namespace Mono.Cecil.Implem {
 			set { m_attributes |= value ? EventAttributes.SpecialName : 0; }
 		}
 
-		public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType, EventAttributes attrs) : base (name, decType)
+		public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType,
+			EventAttributes attrs) : base (name, decType)
 		{
 			m_eventType = eventType;
 			m_attributes = attrs;
@@ -94,7 +105,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -106,7 +117,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = this.DecTypeDef.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 

@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
+
 	public abstract class BaseStructureVisitor : IReflectionStructureVisitor {
 
 		public virtual void VisitAssemblyDefinition (IAssemblyDefinition asm)
@@ -64,6 +66,15 @@ namespace Mono.Cecil {
 
 		public virtual void TerminateAssemblyDefinition (IAssemblyDefinition asm)
 		{
+		}
+
+		protected void VisitCollection (ICollection coll)
+		{
+			if (coll.Count == 0)
+				return;
+
+			foreach (IReflectionStructureVisitable visitable in coll)
+				visitable.Accept (this);
 		}
 	}
 }

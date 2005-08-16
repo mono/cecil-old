@@ -116,7 +116,7 @@ namespace Mono.Cecil.Implem {
 					pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, j - 1);
 
 					PropertyDefinitionCollection props = owner.Properties as PropertyDefinitionCollection;
-					props [pdef.Name] = pdef;
+					props.Add (pdef);
 					props.Loaded = true;
 					m_properties [j - 1] = pdef;
 				}
@@ -149,7 +149,7 @@ namespace Mono.Cecil.Implem {
 
 					EventDefinitionCollection evts = owner.Events as EventDefinitionCollection;
 					evts.Loaded = true;
-					evts [edef.Name] = edef;
+					evts.Add (edef);
 					m_events [j - 1] = edef;
 				}
 			}

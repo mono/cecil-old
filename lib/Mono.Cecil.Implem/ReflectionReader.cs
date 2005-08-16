@@ -202,6 +202,11 @@ namespace Mono.Cecil.Implem {
 			return BuildCustomAttribute (ctor, sig);
 		}
 
+		public override void VisitModuleDefinition (IModuleDefinition mod)
+		{
+			VisitTypeDefinitionCollection (mod.Types);
+		}
+
 		public override void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
 			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
@@ -358,7 +363,7 @@ namespace Mono.Cecil.Implem {
 					FieldDefinitionCollection flds = dec.Fields as FieldDefinitionCollection;
 
 					flds.Loaded = true;
-					flds [fdef.Name] = fdef;
+					flds.Add (fdef);
 					m_fields [j - 1] = fdef;
 				}
 			}

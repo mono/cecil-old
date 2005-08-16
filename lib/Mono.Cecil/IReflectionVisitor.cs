@@ -14,6 +14,7 @@ namespace Mono.Cecil {
 
 	public interface IReflectionVisitor {
 
+		void VisitModuleDefinition (IModuleDefinition module);
 		void VisitTypeDefinitionCollection (ITypeDefinitionCollection types);
 		void VisitTypeDefinition (ITypeDefinition type);
 		void VisitTypeReferenceCollection (ITypeReferenceCollection refs);
@@ -43,6 +44,6 @@ namespace Mono.Cecil {
 		void VisitCustomAttribute (ICustomAttribute customAttr);
 		void VisitMarshalSpec (IMarshalSpec marshalSpec);
 
-		void TerminateTypeDefinitionCollection (ITypeDefinitionCollection types);
+		void TerminateModuleDefinition (IModuleDefinition module);
 	}
 }

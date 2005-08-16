@@ -12,7 +12,13 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
+
 	public abstract class BaseReflectionVisitor : IReflectionVisitor {
+
+		public virtual void VisitModuleDefinition (IModuleDefinition module)
+		{
+		}
 
 		public virtual void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
@@ -126,8 +132,17 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public virtual void TerminateTypeDefinitionCollection (ITypeDefinitionCollection types)
+		public virtual void TerminateModuleDefinition (IModuleDefinition module)
 		{
+		}
+
+		protected void VisitCollection (ICollection coll)
+		{
+			if (coll.Count == 0)
+				return;
+
+			foreach (IReflectionVisitable visitable in coll)
+				visitable.Accept (this);
 		}
 	}
 }

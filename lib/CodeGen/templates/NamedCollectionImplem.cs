@@ -35,6 +35,11 @@ namespace Mono.Cecil.Implem {
 			get { return m_container; }
 		}
 
+		public void Add (string name, <%=$cur_coll.type%> value)
+		{
+			m_items.Add (name, value);
+		}
+
 		public int Count {
 			get { return m_items.Count; }
 		}
@@ -81,10 +86,6 @@ namespace Mono.Cecil.Implem {
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);
-			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-			m_items.Values.CopyTo (items, 0);
-			for (int i = 0; i < items.Length; i++)
-				<%=$cur_coll.nopropagation ? "visitor.#{$cur_coll.visitItem} (items [i])" : "items [i].Accept (visitor)" %>;<% print("\n\t\t\tvisitor.TerminateTypeDefinitionCollection (this);") if $cur_coll.name == "TypeDefinitionCollection" %>
 		}
 <% end %>	}
 }

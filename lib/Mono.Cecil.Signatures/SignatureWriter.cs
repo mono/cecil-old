@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Signatures {
 
 	using System;
-	using System.Collections;
 	using System.Text;
 
 	using Mono.Cecil.Binary;
@@ -27,41 +26,17 @@ namespace Mono.Cecil.Signatures {
 
 		private MemoryBinaryWriter m_sigWriter;
 
-		private IDictionary m_sigCache;
-
 		public SignatureWriter (MetadataWriter mdWriter, ReflectionWriter reflectWriter)
 		{
 			m_mdWriter = mdWriter;
 			m_reflectWriter = reflectWriter;
 
 			m_sigWriter = new MemoryBinaryWriter ();
-
-			m_sigCache = new Hashtable ();
 		}
 
-		void DebugSig (string msg)
+		private uint GetPointer ()
 		{
-			Console.Write (msg);
-			Console.Write (" [ ");
-			byte [] sig = m_sigWriter.ToArray ();
-			for (int i = 0; i < sig.Length; i++) {
-				if (i > 0)
-					Console.Write (", ");
-				Console.Write (sig [i].ToString ("x2"));
-			}
-			Console.WriteLine (" ]");
-		}
-
-		private uint GetCachedPointer (bool withSize)
-		{
-			byte [] signature = m_sigWriter.ToArray ();
-			string sig = Encoding.ASCII.GetString (signature);
-			if (m_sigCache.Contains (sig))
-				return (uint) m_sigCache [sig];
-
-			uint p = m_mdWriter.AddBlob (signature, withSize);
-			m_sigCache.Add (sig, p);
-			return p;
+			return m_mdWriter.AddBlob (m_sigWriter.ToArray (), true);
 		}
 
 		public uint AddMethodDefSig (MethodDefSig methSig)
@@ -74,6 +49,11 @@ namespace Mono.Cecil.Signatures {
 			return AddSignature (methSig);
 		}
 
+		public uint AddPropertySig (PropertySig ps)
+		{
+			return AddSignature (ps);
+		}
+
 		public uint AddFieldSig (FieldSig fSig)
 		{
 			return AddSignature (fSig);
@@ -83,27 +63,27 @@ namespace Mono.Cecil.Signatures {
 		{
 			m_sigWriter.Empty ();
 			s.Accept (this);
-			return GetCachedPointer (true);
+			return GetPointer ();
 		}
 
 		public uint AddTypeSpec (TypeSpec ts)
 		{
 			m_sigWriter.Empty ();
 			Write (ts);
-			return GetCachedPointer (true);
+			return GetPointer ();
 		}
 
 		public uint AddMarshalSig (MarshalSig ms)
 		{
 			m_sigWriter.Empty ();
 			Write (ms);
-			return GetCachedPointer (true);
+			return GetPointer ();
 		}
 
 		public uint AddCustomAttribute (CustomAttrib ca, IMethodReference ctor)
 		{
 			m_sigWriter.Write (CompressCustomAttribute (ca, ctor));
-			return GetCachedPointer (true);
+			return GetPointer ();
 		}
 
 		public byte [] CompressCustomAttribute (CustomAttrib ca, IMethodReference ctor)

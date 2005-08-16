@@ -28,6 +28,7 @@
 ./Mono.Cecil/IFieldDefinitionCollection.cs
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
+./Mono.Cecil/IHasConstant.cs
 ./Mono.Cecil/IHasMarshalSpec.cs
 ./Mono.Cecil/IHasSecurity.cs
 ./Mono.Cecil/IInterfaceCollection.cs

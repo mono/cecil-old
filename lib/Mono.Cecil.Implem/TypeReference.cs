@@ -71,6 +71,10 @@ namespace Mono.Cecil.Implem {
 					m_customAttrs = new CustomAttributeCollection (this, m_module.Controller);
 				else if (m_customAttrs == null && m_module == null)
 					m_customAttrs = new CustomAttributeCollection (this);
+
+				if (!m_module.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -79,6 +83,7 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_decType != null)
 					return m_decType.Scope;
+
 				return m_scope;
 			}
 		}
@@ -130,7 +135,7 @@ namespace Mono.Cecil.Implem {
 		public virtual ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -142,7 +147,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = m_module.Controller.Reader.GetCustomAttribute (ctor, data);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 

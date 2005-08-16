@@ -89,7 +89,7 @@ namespace Mono.Cecil.Implem {
 								 arRow.BuildNumber, arRow.RevisionNumber));
 				aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.PublicKeyOrToken);
 				aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.HashValue);
-				(names as AssemblyNameReferenceCollection).Add (aname);
+				names.Add (aname);
 			}
 		}
 
@@ -117,7 +117,7 @@ namespace Mono.Cecil.Implem {
 
 					eres.Data = br.ReadBytes (br.ReadInt32 ());
 
-					(resources as ResourceCollection) [eres.Name] = eres;
+					resources [eres.Name] = eres;
 					continue;
 				}
 
@@ -128,7 +128,7 @@ namespace Mono.Cecil.Implem {
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
 						module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
 					lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
-					(resources as ResourceCollection) [lres.Name] = lres;
+					resources [lres.Name] = lres;
 					break;
 				case TokenType.AssemblyRef :
 					AssemblyNameReference asm =
@@ -136,7 +136,7 @@ namespace Mono.Cecil.Implem {
 					AssemblyLinkedResource alr = new AssemblyLinkedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name],
 						mrRow.Flags, module, asm);
-					(resources as ResourceCollection) [alr.Name] = alr;
+					resources [alr.Name] = alr;
 					break;
 				}
 			}
@@ -155,6 +155,7 @@ namespace Mono.Cecil.Implem {
 			main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 			mods.Add (main);
 			m_module = main;
+			m_module.Accept (this);
 
 			FileTable ftable = m_tHeap [typeof(FileTable)] as FileTable;
 			if (ftable != null && ftable.Rows.Count > 0) {
@@ -194,7 +195,7 @@ namespace Mono.Cecil.Implem {
 			ModuleRefTable mrTable = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
-				(modules as ModuleReferenceCollection).Add (
+				modules.Add (
 					new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
 			}
 		}
@@ -202,7 +203,7 @@ namespace Mono.Cecil.Implem {
 		public override void TerminateAssemblyDefinition (IAssemblyDefinition asm)
 		{
 			foreach (ModuleDefinition mod in asm.Modules)
-				mod.Controller.Reader.VisitTypeDefinitionCollection (mod.Types);
+				mod.Controller.Reader.VisitModuleDefinition (mod);
 		}
 	}
 }

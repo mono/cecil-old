@@ -84,9 +84,9 @@ namespace Mono.Cecil.Implem {
 			sb.Append (" ");
 			sb.Append (base.ToString ());
 			sb.Append ("(");
-			for (int i = 0; i < m_parameters.Count; i++) {
-				sb.Append (m_parameters [i].ParameterType.FullName);
-				if (i < m_parameters.Count - 1)
+			for (int i = 0; i < this.Parameters.Count; i++) {
+				sb.Append (this.Parameters [i].ParameterType.FullName);
+				if (i < this.Parameters.Count - 1)
 					sb.Append (",");
 			}
 			sb.Append (")");

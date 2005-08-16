@@ -27,6 +27,7 @@ namespace Mono.Cecil.Implem {
 		private IMethodDefinition m_setMeth;
 
 		private bool m_constLoaded;
+		private bool m_hasConstant;
 		private object m_const;
 
 		public ITypeReference PropertyType {
@@ -39,18 +40,6 @@ namespace Mono.Cecil.Implem {
 			set { m_semanticLoaded = value; }
 		}
 
-		public IParameterDefinitionCollection Parameters {
-			get {
-				if (m_parameters == null) {
-					if (this.GetMethod != null)
-						m_parameters = this.GetMethod.Parameters as ParameterDefinitionCollection;
-					else
-						m_parameters = new ParameterDefinitionCollection (this);
-				}
-				return m_parameters;
-			}
-		}
-
 		public PropertyAttributes Attributes {
 			get { return m_attributes; }
 			set { m_attributes = value; }
@@ -59,14 +48,21 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, (this.DeclaringType as TypeDefinition).Module.Controller);
+					m_customAttrs = new CustomAttributeCollection (
+						this, this.DecTypeDef.Module.Controller);
+
+				if (!this.DecTypeDef.Module.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
 
 		public IMethodDefinition GetMethod {
 			get {
-				((TypeDefinition)this.DeclaringType).Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+
 				return m_getMeth;
 			}
 			set { m_getMeth = value; }
@@ -74,10 +70,31 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition SetMethod {
 			get {
-				((TypeDefinition)this.DeclaringType).Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+
 				return m_setMeth;
 			}
 			set { m_setMeth = value; }
+		}
+
+		public IParameterDefinitionCollection Parameters {
+			get {
+				if (this.GetMethod != null)
+					return ParameterDefinition.Clone (this.GetMethod.Parameters);
+				else if (this.SetMethod != null) {
+					IParameterDefinitionCollection parameters =
+						ParameterDefinition.Clone (this.SetMethod.Parameters);
+					if (parameters.Count > 0)
+						parameters.RemoveAt (parameters.Count - 1);
+					return parameters;
+				}
+
+				if (m_parameters == null)
+					m_parameters = new ParameterDefinitionCollection (this);
+
+				return m_parameters;
+			}
 		}
 
 		public bool ConstantLoaded {
@@ -85,12 +102,26 @@ namespace Mono.Cecil.Implem {
 			set { m_constLoaded = value; }
 		}
 
+		public bool HasConstant {
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+
+				return m_hasConstant;
+			}
+		}
+
 		public object Constant {
 			get {
-				(this.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadConstant (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+
 				return m_const;
 			}
-			set { m_const = value; }
+			set {
+				m_hasConstant = true;
+				m_const = value;
+			}
 		}
 
 		public bool IsRuntimeSpecialName {
@@ -112,7 +143,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -124,7 +155,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = this.DecTypeDef.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 

@@ -23,6 +23,7 @@ namespace Mono.Cecil.Implem {
 		private string m_name;
 		private Guid m_mvid;
 		private bool m_main;
+		private bool m_new;
 
 		private AssemblyNameReferenceCollection m_asmRefs;
 		private ModuleReferenceCollection m_modRefs;
@@ -53,6 +54,11 @@ namespace Mono.Cecil.Implem {
 			set { m_main = value; }
 		}
 
+		public bool IsNew {
+			get { return m_new; }
+			set { m_new = value; }
+		}
+
 		public IAssemblyNameReferenceCollection AssemblyReferences {
 			get { return m_asmRefs; }
 		}
@@ -77,6 +83,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_externs == null)
 					m_externs = new ExternTypeCollection (this, m_controller);
+
+				if (!m_new && !m_externs.Loaded)
+					m_externs.Load ();
+
 				return m_externs;
 			}
 		}
@@ -85,6 +95,10 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this, m_controller);
+
+				if (!m_new && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -130,7 +144,9 @@ namespace Mono.Cecil.Implem {
 			m_main = main;
 			m_mvid = Guid.NewGuid ();
 
-			if (reader != null) {
+			m_new = reader == null;
+
+			if (!m_new) {
 				m_image = reader.Image;
 				m_imgReader = reader;
 			} else
@@ -202,7 +218,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -214,7 +230,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = m_controller.Reader.GetCustomAttribute (ctor, data);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -272,6 +288,13 @@ namespace Mono.Cecil.Implem {
 			this.ModuleReferences.Accept (visitor);
 			this.Resources.Accept (visitor);
 		}
+
+		public void Accept (IReflectionVisitor visitor)
+		{
+			visitor.VisitModuleDefinition (this);
+
+			this.Types.Accept (visitor);
+			this.TypeReferences.Accept (visitor);
+		}
 	}
 }
-

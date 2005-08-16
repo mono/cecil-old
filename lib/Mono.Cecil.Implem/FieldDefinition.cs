@@ -26,6 +26,7 @@ namespace Mono.Cecil.Implem {
 		private uint m_offset;
 
 		private bool m_constLoaded;
+		private bool m_hasConstant;
 		private object m_const;
 
 		private bool m_marshalLoaded;
@@ -33,7 +34,9 @@ namespace Mono.Cecil.Implem {
 
 		public IFieldLayoutInfo LayoutInfo {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadLayout (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_layoutLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadLayout (this);
+
 				return this;
 			}
 		}
@@ -44,7 +47,12 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public bool HasLayoutInfo {
-			get { return m_hasInfo; }
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_layoutLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadLayout (this);
+
+				return m_hasInfo;
+			}
 		}
 
 		public uint Offset {
@@ -70,18 +78,36 @@ namespace Mono.Cecil.Implem {
 			set { m_constLoaded = value; }
 		}
 
+		public bool HasConstant {
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+
+				return m_hasConstant;
+			}
+		}
+
 		public object Constant {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+
 				return m_const;
 			}
-			set { m_const = value; }
+			set {
+				m_hasConstant = true;
+				m_const = value;
+			}
 		}
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Module.Controller);
+
+				if (!this.DecTypeDef.Module.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -93,7 +119,9 @@ namespace Mono.Cecil.Implem {
 
 		public IMarshalSpec MarshalSpec {
 			get {
-				this.DecTypeDef.Module.Controller.Reader.ReadMarshalSpec(this);
+				if (!this.DecTypeDef.Module.IsNew && !m_marshalLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadMarshalSpec (this);
+
 				return m_marshalDesc;
 			}
 			set { m_marshalDesc = value as MarshalDesc; }
@@ -134,7 +162,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -146,7 +174,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = this.DecTypeDef.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 

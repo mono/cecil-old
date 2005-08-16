@@ -31,7 +31,6 @@ namespace Mono.Cecil.Implem {
 
 		public <%=$cur_coll.type%> this [int index] {
 			get {
-				Load ();
 				return m_items [index] as <%=$cur_coll.type%>;
 			}
 			set { m_items [index] = value; }
@@ -42,10 +41,7 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public int Count {
-			get {
-				Load ();
-				return m_items.Count;
-			}
+			get { return m_items.Count; }
 		}
 
 		public bool IsSynchronized {
@@ -89,7 +85,6 @@ namespace Mono.Cecil.Implem {
 
 		public int IndexOf (<%=$cur_coll.type%> value)
 		{
-			Load ();
 			return m_items.IndexOf (value);
 		}
 
@@ -110,13 +105,11 @@ namespace Mono.Cecil.Implem {
 
 		public void CopyTo (Array ary, int index)
 		{
-			Load ();
 			m_items.CopyTo (ary, index);
 		}
 
 		public IEnumerator GetEnumerator ()
 		{
-			Load ();
 			return m_items.GetEnumerator ();
 		}
 
@@ -131,10 +124,6 @@ namespace Mono.Cecil.Implem {
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);
-			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-			m_items.CopyTo (items, 0);
-			for (int i = 0; i < items.Length; i++)
-				<%=$cur_coll.nopropagation ? "visitor.#{$cur_coll.visitItem} (items [i])" : "items [i].Accept (visitor)" %>;
 		}
 	}
 }

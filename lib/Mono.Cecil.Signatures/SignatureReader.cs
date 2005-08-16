@@ -463,7 +463,7 @@ namespace Mono.Cecil.Signatures {
 			byte [] data = new byte [length];
 			Buffer.BlockCopy (m_blobData, start, data, 0, length);
 			return ReadCustomAttrib (new BinaryReader (
-				new MemoryStream (data), Encoding.Unicode), data, ctor);
+				new MemoryStream (data)), data, ctor);
 		}
 
 		private CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, IMethodReference ctor)
@@ -572,7 +572,6 @@ namespace Mono.Cecil.Signatures {
 				throw new MetadataFormatException ("Wrong parameter for ReadElem: " + param.GetType ().FullName);
 		}
 
-		// elem in fixed args, we know the ITypeReference
 		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ITypeReference elemType)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
@@ -621,7 +620,7 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadByte () == 1;
 				break;
 			case Constants.Char :
-				elem.Value = br.ReadChar ();
+				elem.Value = (char) br.ReadUInt16 ();
 				break;
 			case Constants.Single :
 				elem.Value = br.ReadSingle ();
@@ -711,7 +710,7 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case ElementType.Char :
 				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Char);
-				elem.Value = br.ReadChar ();
+				elem.Value = (char) br.ReadUInt16();
 				break;
 			case ElementType.R4 :
 				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Single);

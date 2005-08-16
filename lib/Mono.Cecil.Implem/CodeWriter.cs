@@ -52,10 +52,9 @@ namespace Mono.Cecil.Implem {
 			m_codeWriter.Empty ();
 		}
 
-		private void WriteToken (TokenType type, uint rid)
+		private void WriteToken (MetadataToken token)
 		{
-			uint res = ((uint) type) | rid;
-			m_codeWriter.Write (res);
+			m_codeWriter.Write (((uint) token.TokenType) | token.RID);
 		}
 
 		public override void VisitInstructionCollection (IInstructionCollection instructions)
@@ -70,6 +69,10 @@ namespace Mono.Cecil.Implem {
 					m_codeWriter.Write ((byte) instr.OpCode.Value);
 				else
 					m_codeWriter.Write (instr.OpCode.Value);
+
+				if (instr.OpCode.OperandType != OperandType.InlineNone &&
+					instr.Operand == null)
+					throw new ReflectionException ("OpCode {0} have null operand", instr.OpCode.Name);
 
 				switch (instr.OpCode.OperandType) {
 				case OperandType.InlineNone :
@@ -117,50 +120,20 @@ namespace Mono.Cecil.Implem {
 					m_codeWriter.Write ((double) instr.Operand);
 					break;
 				case OperandType.InlineString :
-					WriteToken (TokenType.String,
-						m_reflectWriter.MetadataWriter.AddUserString (instr.Operand as string));
+					WriteToken (new MetadataToken (TokenType.String,
+							m_reflectWriter.MetadataWriter.AddUserString (instr.Operand as string)));
 					break;
 				case OperandType.InlineField :
-					if (instr.Operand is IFieldDefinition)
-						WriteToken (TokenType.Field, m_reflectWriter.GetRidFor (instr.Operand as IFieldDefinition));
-					else if (instr.Operand is IFieldReference)
-						WriteToken (TokenType.MemberRef, m_reflectWriter.GetRidFor (instr.Operand as IFieldReference));
-					else
-						throw new ReflectionException (
-							"Wrong operand for InlineField OpCode: ", instr.Operand.ToString ());
-					break;
 				case OperandType.InlineMethod :
-					if (instr.Operand is IMethodDefinition)
-						WriteToken (TokenType.Method, m_reflectWriter.GetRidFor (instr.Operand as IMethodDefinition));
-					else if (instr.Operand is IMethodReference)
-						WriteToken (TokenType.MemberRef, m_reflectWriter.GetRidFor (instr.Operand as IMethodReference));
+				case OperandType.InlineType :
+				case OperandType.InlineTok :
+					if (instr.Operand is IMetadataTokenProvider)
+						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
 					else
 						throw new ReflectionException (
-							"Wrong operand for InlineMethod OpCode: {0}", instr.Operand.ToString ());
-					break;
-				case OperandType.InlineType :
-					if (instr.Operand is ITypeDefinition)
-						WriteToken (TokenType.TypeDef, m_reflectWriter.GetRidFor (instr.Operand as ITypeDefinition));
-					else if (instr.Operand is ITypeReference)
-						WriteToken (TokenType.TypeRef, m_reflectWriter.GetRidFor (instr.Operand as ITypeReference));
-					else // deal with type spec!
-						throw new ReflectionException (
-							"Wrong operand for InlineType OpCode: {0}", instr.Operand.ToString ());
-					break;
-				case OperandType.InlineTok :
-					if (instr.Operand is ITypeDefinition)
-						WriteToken (TokenType.TypeDef, m_reflectWriter.GetRidFor (instr.Operand as ITypeDefinition));
-					else if (instr.Operand is ITypeReference)
-						WriteToken (TokenType.TypeRef, m_reflectWriter.GetRidFor (instr.Operand as ITypeReference));
-					if (instr.Operand is IFieldDefinition)
-						WriteToken (TokenType.Field, m_reflectWriter.GetRidFor (instr.Operand as IFieldDefinition));
-					if (instr.Operand is IMethodDefinition)
-						WriteToken (TokenType.Method, m_reflectWriter.GetRidFor (instr.Operand as IMethodDefinition));
-					else if (instr.Operand is IMemberReference)
-						WriteToken (TokenType.MemberRef, m_reflectWriter.GetRidFor (instr.Operand as IMemberReference));
-					else // deal with type spec
-						throw new ReflectionException (
-							"Wrong operand for InlineTok OpCode: {0}", instr.Operand.ToString ());
+							string.Format ("Wrong operand for {0} OpCode: {1}",
+								instr.OpCode.OperandType.ToString (),
+								instr.Operand.GetType ().FullName));
 					break;
 				}
 			}
@@ -208,19 +181,6 @@ namespace Mono.Cecil.Implem {
 		public override void VisitVariableDefinition (IVariableDefinition var)
 		{
 			// TODO
-		}
-
-		void DebugCode (string msg)
-		{
-			Console.Write (msg);
-			Console.Write (" [ ");
-			byte [] sig = m_codeWriter.ToArray ();
-			for (int i = 0; i < sig.Length; i++) {
-				if (i > 0)
-					Console.Write (", ");
-				Console.Write (sig [i].ToString ("x2"));
-			}
-			Console.WriteLine (" ]");
 		}
 
 		public override void TerminateMethodBody (IMethodBody body)

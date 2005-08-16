@@ -30,10 +30,7 @@ namespace Mono.Cecil.Implem {
 		private bool m_loaded;
 
 		public <%=$cur_coll.type%> this [string name] {
-			get {
-				Load ();
-				return m_items [name] as <%=$cur_coll.type%>;
-			}
+			get { return m_items [name] as <%=$cur_coll.type%>; }
 			set { m_items [name] = value; }
 		}
 
@@ -41,11 +38,13 @@ namespace Mono.Cecil.Implem {
 			get { return m_container; }
 		}
 
+		public void Add (string name, <%=$cur_coll.type%> value)
+		{
+			m_items.Add (name, value);
+		}
+
 		public int Count {
-			get {
-				Load ();
-				return m_items.Count;
-			}
+			get { return m_items.Count; }
 		}
 
 		public bool IsSynchronized {
@@ -89,13 +88,11 @@ namespace Mono.Cecil.Implem {
 
 		public void CopyTo (Array ary, int index)
 		{
-			Load ();
 			m_items.Values.CopyTo (ary, index);
 		}
 
 		public IEnumerator GetEnumerator ()
 		{
-			Load ();
 			return m_items.Values.GetEnumerator ();
 		}
 
@@ -110,10 +107,6 @@ namespace Mono.Cecil.Implem {
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);
-			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-			m_items.Values.CopyTo (items, 0);
-			for (int i = 0; i < items.Length; i++)
-				<%=$cur_coll.nopropagation ? "visitor.#{$cur_coll.visitItem} (items [i])" : "items [i].Accept (visitor)" %>;;
 		}
 	}
 }

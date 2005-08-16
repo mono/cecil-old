@@ -1,3 +1,90 @@
+2005-08-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/IModuleDefinitionCollection.cs
+	  Mono.Cecil/IInterfaceCollection.cs
+	  Mono.Cecil/IProperty.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/INestedTypeCollection.cs
+	  Mono.Cecil/ITypeReferenceCollection.cs
+	  Mono.Cecil/IParameter.cs
+	  Mono.Cecil/IExternTypeCollection.cs
+	  Mono.Cecil/IField.cs
+	  Mono.Cecil/IArrayDimensionCollection.cs
+	  Mono.Cecil/IMethodDefinitionCollection.cs
+	  Mono.Cecil/IPropertyDefinitionCollection.cs
+	  Mono.Cecil/IAssemblyNameReferenceCollection.cs
+	  Mono.Cecil/IModuleReferenceCollection.cs
+	  Mono.Cecil/IHasConstant.cs
+	  Mono.Cecil/ISecurityDeclarationCollection.cs
+	  Mono.Cecil/IMetadataTokenProvider.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/BaseStructureVisitor.cs
+	  Mono.Cecil/IResourceCollection.cs
+	  Mono.Cecil/IParameterDefinitionCollection.cs
+	  Mono.Cecil/IEventDefinitionCollection.cs
+	  Mono.Cecil/ITypeDefinitionCollection.cs
+	  Mono.Cecil/IFieldDefinitionCollection.cs
+	  Mono.Cecil/ICustomAttributeCollection.cs
+	  Mono.Cecil/IOverrideCollection.cs
+	  Mono.Cecil.Cil/IExceptionHandlerCollection.cs
+	  Mono.Cecil.Cil/IVariableDefinitionCollection.cs
+	  Mono.Cecil.Cil/IInstructionCollection.cs
+	  CodeGen/cecil-gen.rb
+	  CodeGen/cecil-gen-types.rb
+	  CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/IIndexedCollection.cs
+	  CodeGen/templates/LzIndexedCollectionImplem.cs
+	  CodeGen/templates/INamedCollection.cs
+	  CodeGen/templates/LzNamedCollectionImplem.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/InterfaceCollection.cs
+	  Mono.Cecil.Implem/ModuleReferenceCollection.cs
+	  Mono.Cecil.Implem/ExternTypeCollection.cs
+	  Mono.Cecil.Implem/SecurityDeclarationCollection.cs
+	  Mono.Cecil.Implem/OverrideCollection.cs
+	  Mono.Cecil.Implem/ParameterDefinitionCollection.cs
+	  Mono.Cecil.Implem/EventDefinitionCollection.cs
+	  Mono.Cecil.Implem/FieldDefinitionCollection.cs
+	  Mono.Cecil.Implem/PropertyDefinitionCollection.cs
+	  Mono.Cecil.Implem/ModuleDefinitionCollection.cs
+	  Mono.Cecil.Implem/CustomAttributeCollection.cs
+	  Mono.Cecil.Implem/VariableDefinitionCollection.cs
+	  Mono.Cecil.Implem/TypeReferenceCollection.cs
+	  Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/EventDefinition.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/InstructionCollection.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/MethodReference.cs
+	  Mono.Cecil.Implem/TypeReference.cs
+	  Mono.Cecil.Implem/TypeDefinitionCollection.cs
+	  Mono.Cecil.Implem/AssemblyNameReferenceCollection.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/MethodReturnType.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/AssemblyDefinition.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/MethodDefinitionCollection.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Implem/LazyReflectionReader.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs
+	  Mono.Cecil.Implem/PropertyDefinition.cs
+	  Mono.Cecil.Implem/NestedTypeCollection.cs
+	  Mono.Cecil.Implem/ResourceCollection.cs
+	  Mono.Cecil.Implem/ExceptionHandlerCollection.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Working on the writing layer.
+		Begin to fix brokens part of the API.
+
 2005-08-15  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ITypeDefinition.cs

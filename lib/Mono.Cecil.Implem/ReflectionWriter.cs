@@ -15,6 +15,7 @@ namespace Mono.Cecil.Implem {
 	using System;
 	using System.Collections;
 	using System.IO;
+	using System.Text;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -31,12 +32,6 @@ namespace Mono.Cecil.Implem {
 		private MetadataTableWriter m_tableWriter;
 		private MetadataRowWriter m_rowWriter;
 
-		private IDictionary m_types;
-		private IDictionary m_typesRef;
-		private IDictionary m_typeSpecs;
-		private IDictionary m_methods;
-		private IDictionary m_fields;
-		private IDictionary m_membersRef;
 		private IDictionary m_primitives;
 
 		private IList m_membersRefContainer;
@@ -45,6 +40,10 @@ namespace Mono.Cecil.Implem {
 		private uint m_methodIndex;
 		private uint m_fieldIndex;
 		private uint m_paramIndex;
+		private uint m_eventIndex;
+		private uint m_propertyIndex;
+
+		private MemoryBinaryWriter m_constWriter;
 
 		public StructureWriter StructureWriter {
 			get { return m_structureWriter; }
@@ -82,12 +81,6 @@ namespace Mono.Cecil.Implem {
 		{
 			m_mod = mod;
 
-			m_types = new Hashtable ();
-			m_typesRef = new Hashtable ();
-			m_typeSpecs = new Hashtable ();
-			m_methods = new Hashtable ();
-			m_fields = new Hashtable ();
-			m_membersRef = new Hashtable ();
 			m_primitives = new Hashtable ();
 
 			m_membersRefContainer = new ArrayList ();
@@ -96,6 +89,10 @@ namespace Mono.Cecil.Implem {
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
 			m_paramIndex = 1;
+			m_eventIndex = 1;
+			m_propertyIndex = 1;
+
+			m_constWriter = new MemoryBinaryWriter ();
 
 			FillPrimitives ();
 		}
@@ -139,44 +136,9 @@ namespace Mono.Cecil.Implem {
 			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
 
-		public uint GetRidFor (ITypeDefinition t)
+		public uint GetRidFor (IMetadataTokenProvider tp)
 		{
-			if (m_types.Contains (t.FullName))
-				return (uint) m_types [t.FullName];
-
-			return 0;
-		}
-
-		public uint GetRidFor (ITypeReference t)
-		{
-			if (m_typesRef.Contains (t.FullName))
-				return (uint) m_typesRef [t.FullName];
-
-			return 0;
-		}
-
-		public uint GetRidFor (IMethodDefinition meth)
-		{
-			if (m_methods.Contains (meth.ToString ()))
-				return (uint) m_methods [meth.ToString ()];
-
-			return 0;
-		}
-
-		public uint GetRidFor (IFieldDefinition field)
-		{
-			if (m_fields.Contains (field.ToString ()))
-				return (uint) m_fields [field.ToString ()];
-
-			return 0;
-		}
-
-		public uint GetRidFor (IMemberReference member)
-		{
-			if (m_membersRef.Contains (member.ToString ()))
-				return (uint) m_membersRef [member.ToString ()];
-
-			return 0;
+			return tp.MetadataToken.RID;
 		}
 
 		public uint GetRidFor (IAssemblyNameReference asmName)
@@ -194,25 +156,17 @@ namespace Mono.Cecil.Implem {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		private MetadataToken GetTypeDefOrRefToken (ITypeReference type)
+		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
 			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
-				if (m_typeSpecs.Contains (type.FullName))
-					return new MetadataToken (TokenType.TypeSpec, (uint) m_typesRef [type.FullName]);
-
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
 				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
 					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));
 				tsTable.Rows.Add (tsRow);
-				uint rid = (uint) tsTable.Rows.Count;
-				m_typesRef [type.FullName] = rid;
-				return new MetadataToken (TokenType.TypeSpec, rid);
-			} else if (type is ITypeDefinition) {
-				return new MetadataToken (
-					TokenType.TypeDef, GetRidFor (type as ITypeDefinition));
+				type.MetadataToken = new MetadataToken (TokenType.TypeSpec, (uint) tsTable.Rows.Count);
+				return type.MetadataToken;
 			} else if (type != null) {
-				return new MetadataToken (
-					TokenType.TypeRef, GetRidFor (type));
+				return type.MetadataToken;
 			} else { // <Module> and interfaces
 				return new MetadataToken (TokenType.TypeRef, 0);
 			}
@@ -240,25 +194,26 @@ namespace Mono.Cecil.Implem {
 
 			orderedTypes.Sort (TypeDefComparer.Instance);
 
-			foreach (TypeDefinition t in orderedTypes)
-				t.Accept (this);
-		}
-
-		public override void VisitTypeDefinition (ITypeDefinition t)
-		{
-			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
-			MetadataToken ext = GetTypeDefOrRefToken (t.BaseType);
-			TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
-				t.Attributes,
-				m_mdWriter.AddString (t.Name),
-				m_mdWriter.AddString (t.Namespace),
-				ext,
-				m_fieldIndex,
-				m_methodIndex
+			foreach (ITypeDefinition t in orderedTypes) {
+				MetadataToken ext = GetTypeDefOrRefToken (t.BaseType);
+				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
+					t.Attributes,
+					m_mdWriter.AddString (t.Name),
+					m_mdWriter.AddString (t.Namespace),
+					ext,
+					m_fieldIndex,
+					m_methodIndex
 				);
 
-			tdTable.Rows.Add (tdRow);
-			m_types [t.FullName] = (uint) tdTable.Rows.Count;
+				tdTable.Rows.Add (tdRow);
+				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) tdTable.Rows.Count);
+
+				if (t.LayoutInfo.HasLayoutInfo)
+					WriteLayout (t);
+			}
+
+			foreach (ITypeDefinition t in orderedTypes)
+				t.Accept (this);
 		}
 
 		private class TypeDefComparer : IComparer {
@@ -361,10 +316,8 @@ namespace Mono.Cecil.Implem {
 					m_mdWriter.AddString (t.Namespace));
 
 				trTable.Rows.Add (trRow);
-				m_typesRef [t.FullName] = (uint) trTable.Rows.Count;
+				t.MetadataToken = new MetadataToken (TokenType.TypeRef, (uint) trTable.Rows.Count);
 			}
-
-			VisitTypeDefinitionCollection (m_mod.Types);
 		}
 
 		private class TypeRefComparer : IComparer {
@@ -394,17 +347,19 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
-			// TODO
-		}
+			InterfaceImplTable iiTable = m_tableWriter.GetInterfaceImplTable ();
+			foreach (ITypeReference interf in interfaces) {
+				InterfaceImplRow iiRow = m_rowWriter.CreateInterfaceImplRow (
+					GetRidFor (interfaces.Container),
+					GetTypeDefOrRefToken (interf));
 
-		public override void VisitInterface (ITypeReference interf)
-		{
-			// TODO
+				iiTable.Rows.Add (iiRow);
+			}
 		}
 
 		public override void VisitExternTypeCollection (IExternTypeCollection externs)
 		{
-			// TODO
+			VisitCollection (externs);
 		}
 
 		public override void VisitExternType (ITypeReference externType)
@@ -412,39 +367,55 @@ namespace Mono.Cecil.Implem {
 			// TODO
 		}
 
-		public override void VisitOverrideCollection (IOverrideCollection meth)
+		public override void VisitOverrideCollection (IOverrideCollection meths)
 		{
-			// TODO
-		}
+			VisitCollection (meths);
 
-		public override void VisitOverride (IMethodReference ov)
-		{
-			// TODO
+			MethodImplTable miTable = m_tableWriter.GetMethodImplTable ();
+			foreach (IMethodReference ov in meths) {
+				MethodImplRow miRow = m_rowWriter.CreateMethodImplRow (
+					GetRidFor (meths.Container.DeclaringType as ITypeDefinition),
+					new MetadataToken (TokenType.Method, GetRidFor (meths.Container)),
+					ov.MetadataToken);
+
+				miTable.Rows.Add (miRow);
+			}
 		}
 
 		public override void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
 		{
-			// TODO
+			VisitCollection (nestedTypes);
 		}
 
 		public override void VisitNestedType (ITypeDefinition nestedType)
 		{
-			// TODO
+			NestedClassTable ncTable = m_tableWriter.GetNestedClassTable ();
+			NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
+				nestedType.MetadataToken.RID,
+				nestedType.DeclaringType.MetadataToken.RID);
+
+			ncTable.Rows.Add (ncRow);
 		}
 
 		public override void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
 		{
-			// TODO
-		}
+			ushort seq = 1;
+			ParamTable pTable = m_tableWriter.GetParamTable ();
+			foreach (IParameterDefinition param in parameters) {
+				ParamRow pRow = m_rowWriter.CreateParamRow (
+					param.Attributes,
+					seq++,
+					m_mdWriter.AddString (param.Name));
 
-		public override void VisitParameterDefinition (IParameterDefinition parameter)
-		{
-			// TODO
+				pTable.Rows.Add (pRow);
+				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+				m_paramIndex++;
+			}
 		}
 
 		public override void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods)
 		{
-			// TODO
+			VisitCollection (methods);
 		}
 
 		public override void VisitMethodDefinition (IMethodDefinition method)
@@ -460,28 +431,74 @@ namespace Mono.Cecil.Implem {
 
 			mTable.Rows.Add (mRow);
 			m_methodStack.Add (method);
-			m_methods [method.ToString ()] = (uint) mTable.Rows.Count;
+			method.MetadataToken = new MetadataToken (TokenType.Method, (uint) mTable.Rows.Count);
 			m_methodIndex++;
+
+			if (method.ReturnType.CustomAttributes.Count > 0 || method.ReturnType.MarshalSpec != null) {
+				ParameterDefinition param = (method.ReturnType as MethodReturnType).Parameter;
+				ParamTable pTable = m_tableWriter.GetParamTable ();
+				ParamRow pRow = m_rowWriter.CreateParamRow (
+					param.Attributes,
+					0,
+					0);
+
+				pTable.Rows.Add (pRow);
+				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+			}
 		}
 
 		public override void VisitPInvokeInfo (IPInvokeInfo pinvk)
 		{
-			// TODO
+			ImplMapTable imTable = m_tableWriter.GetImplMapTable ();
+			ImplMapRow imRow = m_rowWriter.CreateImplMapRow (
+				pinvk.Attributes,
+				new MetadataToken (TokenType.Method, GetRidFor (pinvk.Method)),
+				m_mdWriter.AddString (pinvk.EntryPoint),
+				GetRidFor (pinvk.Module));
+
+			imTable.Rows.Add (imRow);
 		}
 
 		public override void VisitEventDefinitionCollection (IEventDefinitionCollection events)
 		{
-			// TODO
+			if (events.Count == 0)
+				return;
+
+			EventMapTable emTable = m_tableWriter.GetEventMapTable ();
+			EventMapRow emRow = m_rowWriter.CreateEventMapRow (
+				GetRidFor (events.Container),
+				m_eventIndex);
+
+			emTable.Rows.Add (emRow);
+			VisitCollection (events);
 		}
 
 		public override void VisitEventDefinition (IEventDefinition evt)
 		{
-			// TODO
+			EventTable eTable = m_tableWriter.GetEventTable ();
+			EventRow eRow = m_rowWriter.CreateEventRow (
+				evt.Attributes,
+				m_mdWriter.AddString (evt.Name),
+				GetTypeDefOrRefToken (evt.EventType));
+
+			eTable.Rows.Add (eRow);
+			evt.MetadataToken = new MetadataToken (TokenType.Event, (uint) eTable.Rows.Count);
+
+			if (evt.AddMethod != null)
+				WriteSemantic (MethodSemanticsAttributes.AddOn, evt, evt.AddMethod);
+
+			if (evt.InvokeMethod != null)
+				WriteSemantic (MethodSemanticsAttributes.Fire, evt, evt.InvokeMethod);
+
+			if (evt.RemoveMethod != null)
+				WriteSemantic (MethodSemanticsAttributes.RemoveOn, evt, evt.RemoveMethod);
+
+			m_eventIndex++;
 		}
 
 		public override void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields)
 		{
-			// TODO
+			VisitCollection (fields);
 		}
 
 		public override void VisitFieldDefinition (IFieldDefinition field)
@@ -493,46 +510,150 @@ namespace Mono.Cecil.Implem {
 				m_sigWriter.AddFieldSig (GetFieldSig (field)));
 
 			fTable.Rows.Add (fRow);
-			m_fields [field.ToString ()] = (uint) fTable.Rows.Count;
+			field.MetadataToken = new MetadataToken (TokenType.Field, (uint) fTable.Rows.Count);
 			m_fieldIndex++;
+
+			if (field.HasConstant)
+				WriteConstant (field, field.MetadataToken, field.FieldType);
+
+			if (field.LayoutInfo.HasLayoutInfo)
+				WriteLayout (field);
 		}
 
 		public override void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
 		{
-			// TODO
+			if (properties.Count == 0)
+				return;
+
+			PropertyMapTable pmTable = m_tableWriter.GetPropertyMapTable ();
+			PropertyMapRow pmRow = m_rowWriter.CreatePropertyMapRow (
+				GetRidFor (properties.Container),
+				m_propertyIndex);
+
+			pmTable.Rows.Add (pmRow);
+			VisitCollection (properties);
 		}
 
 		public override void VisitPropertyDefinition (IPropertyDefinition property)
 		{
-			// TODO
+			PropertyTable pTable = m_tableWriter.GetPropertyTable ();
+			PropertyRow pRow = m_rowWriter.CreatePropertyRow (
+				property.Attributes,
+				m_mdWriter.AddString (property.Name),
+				m_sigWriter.AddPropertySig (GetPropertySig (property)));
+
+			pTable.Rows.Add (pRow);
+			property.MetadataToken = new MetadataToken (TokenType.Property, (uint) pTable.Rows.Count);
+
+			if (property.GetMethod != null)
+				WriteSemantic (MethodSemanticsAttributes.Getter, property, property.GetMethod);
+
+			if (property.SetMethod != null)
+				WriteSemantic (MethodSemanticsAttributes.Setter, property, property.SetMethod);
+
+			m_propertyIndex++;
 		}
 
 		public override void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
 		{
-			// TODO
-		}
+			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
+			foreach (ISecurityDeclaration secDec in secDecls) {
+				MetadataToken parent;
+				if (secDecls.Container is IAssemblyDefinition)
+					parent = new MetadataToken (TokenType.Assembly, 1);
+				else if (secDecls.Container is IMetadataTokenProvider)
+					parent = (secDecls.Container as IMetadataTokenProvider).MetadataToken;
+				else
+					throw new ReflectionException ("Unknown Security Declaration parent");
 
-		public override void VisitSecurityDeclaration (ISecurityDeclaration secDecl)
-		{
-			// TODO
+				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
+					secDec.Action,
+					parent,
+					m_mdWriter.AddBlob (secDec.GetAsByteArray (), true));
+
+				dsTable.Rows.Add (dsRow);
+			}
 		}
 
 		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
-			// TODO
-		}
+			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
+			foreach (ICustomAttribute ca in customAttrs) {
+				MetadataToken parent;
+				if (customAttrs.Container is IAssemblyDefinition)
+					parent = new MetadataToken (TokenType.Assembly, 1);
+				else if (customAttrs.Container is IModuleDefinition)
+					parent = new MetadataToken (TokenType.Module, 1);
+				else if (customAttrs.Container is IMetadataTokenProvider)
+					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
+				else
+					throw new ReflectionException ("Unknown Custom Attribute parent");
+				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
+					parent,
+					ca.Constructor.MetadataToken,
+					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
 
-		public override void VisitCustomAttribute (ICustomAttribute customAttr)
-		{
-			// TODO
+				caTable.Rows.Add (caRow);
+			}
 		}
 
 		public override void VisitMarshalSpec (IMarshalSpec marshalSpec)
 		{
-			// TODO
+			FieldMarshalTable fmTable = m_tableWriter.GetFieldMarshalTable ();
+			FieldMarshalRow fmRow = m_rowWriter.CreateFieldMarshalRow (
+				(marshalSpec as IMetadataTokenProvider).MetadataToken,
+				m_sigWriter.AddMarshalSig (GetMarshalSig (marshalSpec)));
+
+			fmTable.Rows.Add (fmRow);
 		}
 
-		public override void TerminateTypeDefinitionCollection (ITypeDefinitionCollection colls)
+		private void WriteConstant (IHasConstant hc, MetadataToken parent, ITypeReference type)
+		{
+			ConstantTable cTable = m_tableWriter.GetConstantTable ();
+			ElementType et = GetCorrespondingType (type);
+			bool addSize;
+			ConstantRow cRow = m_rowWriter.CreateConstantRow (
+				et,
+				parent,
+				m_mdWriter.AddBlob (EncodeConstant (et, hc.Constant, out addSize), addSize));
+
+			cTable.Rows.Add (cRow);
+		}
+
+		private void WriteLayout (IFieldDefinition field)
+		{
+			FieldLayoutTable flTable = m_tableWriter.GetFieldLayoutTable ();
+			FieldLayoutRow flRow = m_rowWriter.CreateFieldLayoutRow (
+				field.LayoutInfo.Offset,
+				GetRidFor (field));
+
+			flTable.Rows.Add (flRow);
+		}
+
+		private void WriteLayout (ITypeDefinition type)
+		{
+			ClassLayoutTable clTable = m_tableWriter.GetClassLayoutTable ();
+			ClassLayoutRow clRow = m_rowWriter.CreateClassLayoutRow (
+				type.LayoutInfo.PackingSize,
+				type.LayoutInfo.ClassSize,
+				GetRidFor (type));
+
+			clTable.Rows.Add (clRow);
+		}
+
+		private void WriteSemantic (MethodSemanticsAttributes attrs,
+			IMemberDefinition member, IMethodDefinition meth)
+		{
+			MethodSemanticsTable msTable = m_tableWriter.GetMethodSemanticsTable ();
+			MethodSemanticsRow msRow = m_rowWriter.CreateMethodSemanticsRow (
+				attrs,
+				GetRidFor (meth),
+				member.MetadataToken);
+
+			msTable.Rows.Add (msRow);
+		}
+
+		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
 			foreach (IMemberReference member in m_membersRefContainer) {
@@ -547,7 +668,7 @@ namespace Mono.Cecil.Implem {
 					sig);
 
 				mrTable.Rows.Add (mrRow);
-				m_membersRef [member.ToString ()] = (uint) mrTable.Rows.Count;
+				member.MetadataToken = new MetadataToken (TokenType.MemberRef, (uint) mrTable.Rows.Count);
 			}
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
@@ -559,7 +680,96 @@ namespace Mono.Cecil.Implem {
 				m_mdWriter.EntryPointToken =
 					((uint) TokenType.Method) | GetRidFor (m_mod.Assembly.EntryPoint);
 
-			(colls.Container as ModuleDefinition).Image.MetadataRoot.Accept (m_mdWriter);
+			m_mod.Image.MetadataRoot.Accept (m_mdWriter);
+		}
+
+		public ElementType GetCorrespondingType (ITypeReference type)
+		{
+			switch (type.FullName) {
+			case Constants.Boolean :
+				return ElementType.Boolean;
+			case Constants.Char :
+				return ElementType.Char;
+			case Constants.SByte :
+				return ElementType.I1;
+			case Constants.Int16 :
+				return ElementType.I2;
+			case Constants.Int32 :
+				return ElementType.I4;
+			case Constants.Int64 :
+				return ElementType.I8;
+			case Constants.Byte :
+				return ElementType.U1;
+			case Constants.UInt16 :
+				return ElementType.U2;
+			case Constants.UInt32 :
+				return ElementType.U4;
+			case Constants.UInt64 :
+				return ElementType.U8;
+			case Constants.Single :
+				return ElementType.R4;
+			case Constants.Double :
+				return ElementType.R8;
+			case Constants.String :
+				return ElementType.String;
+			default:
+				return ElementType.Class;
+			}
+		}
+
+		private byte [] EncodeConstant (ElementType et, object value, out bool addSize)
+		{
+			m_constWriter.Empty ();
+			addSize = false;
+
+			switch (et) {
+			case ElementType.Boolean :
+				m_constWriter.Write ((byte) (((bool) value) ? 1 : 0));
+				break;
+			case ElementType.Char :
+				m_constWriter.Write ((ushort) (char) value);
+				break;
+			case ElementType.I1 :
+				m_constWriter.Write ((sbyte) value);
+				break;
+			case ElementType.I2 :
+				m_constWriter.Write ((short) value);
+				break;
+			case ElementType.I4 :
+				m_constWriter.Write ((int) value);
+				break;
+			case ElementType.I8 :
+				m_constWriter.Write ((long) value);
+				break;
+			case ElementType.U1 :
+				m_constWriter.Write ((byte) value);
+				break;
+			case ElementType.U2 :
+				m_constWriter.Write ((ushort) value);
+				break;
+			case ElementType.U4 :
+				m_constWriter.Write ((uint) value);
+				break;
+			case ElementType.U8 :
+				m_constWriter.Write ((ulong) value);
+				break;
+			case ElementType.R4 :
+				m_constWriter.Write ((float) value);
+				break;
+			case ElementType.R8 :
+				m_constWriter.Write ((double) value);
+				break;
+			case ElementType.String :
+				addSize = true;
+				m_constWriter.Write (Encoding.UTF8.GetBytes ((string) value));
+				break;
+			case ElementType.Class :
+				break;
+			default :
+				throw new ReflectionException ("Non valid element for a constant");
+			}
+
+			return m_constWriter.ToArray ();
 		}
 
 		public SigType GetSigType (ITypeReference type)
@@ -628,6 +838,12 @@ namespace Mono.Cecil.Implem {
 				FNPTR fp = new FNPTR (); // TODO
 				return fp;
 			} else if (type is ITypeDefinition && (type as ITypeDefinition).IsValueType) {
+				/*
+				Potential bug here ?
+				If the type is a type reference, we can't know
+				if it is a ValueType or a class. So by default
+				we use a class signature.
+				 */
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);
 				return vt;
@@ -682,6 +898,26 @@ namespace Mono.Cecil.Implem {
 			return sig;
 		}
 
+		private Param [] GetParametersSig (IParameterDefinitionCollection parameters)
+		{
+			Param [] ret = new Param [parameters.Count];
+			for (int i = 0; i < ret.Length; i++) {
+				IParameterDefinition pDef =parameters [i];
+				Param p = new Param ();
+				p.CustomMods = GetCustomMods (pDef.ParameterType);
+				if (pDef.ParameterType.FullName == Constants.TypedReference)
+					p.TypedByRef = true;
+				else if (pDef.ParameterType is IReferenceType) {
+					p.ByRef = true;
+					p.Type = GetSigType (
+						(pDef.ParameterType as IReferenceType).ElementType);
+				} else
+					p.Type = GetSigType (pDef.ParameterType);
+				ret [i] = p;
+			}
+			return ret;
+		}
+
 		private void CompleteMethodSig (IMethodReference meth, MethodSig sig)
 		{
 			sig.HasThis = meth.HasThis;
@@ -695,21 +931,7 @@ namespace Mono.Cecil.Implem {
 				sig.CallingConvention |= 0x5;
 
 			sig.ParamCount = meth.Parameters.Count;
-			sig.Parameters = new Param [sig.ParamCount];
-			for (int i = 0; i < sig.ParamCount; i++) {
-				IParameterDefinition pDef = meth.Parameters [i];
-				Param p = new Param ();
-				p.CustomMods = GetCustomMods (pDef.ParameterType);
-				if (pDef.ParameterType.FullName == Constants.TypedReference)
-					p.TypedByRef = true;
-				else if (pDef.ParameterType is IReferenceType) {
-					p.ByRef = true;
-					p.Type = GetSigType (
-						(pDef.ParameterType as IReferenceType).ElementType);
-				} else
-					p.Type = GetSigType (pDef.ParameterType);
-				sig.Parameters [i] = p;
-			}
+			sig.Parameters = GetParametersSig (meth.Parameters);
 
 			RetType rtSig = new RetType ();
 			rtSig.CustomMods = GetCustomMods (meth.ReturnType.ReturnType);
@@ -753,10 +975,100 @@ namespace Mono.Cecil.Implem {
 			return sig;
 		}
 
+		public PropertySig GetPropertySig (IPropertyDefinition prop)
+		{
+			PropertySig ps = new PropertySig ();
+			ps.CallingConvention |= 0x8;
+
+			bool hasThis;
+			bool explicitThis;
+			MethodCallingConvention mcc;
+			IParameterDefinitionCollection parameters = prop.Parameters;
+
+			IMethodDefinition meth;
+			if (prop.GetMethod != null)
+				meth = prop.GetMethod;
+			else if (prop.SetMethod != null)
+				meth = prop.SetMethod;
+			else
+				meth = null;
+
+			if (meth != null) {
+				hasThis = meth.HasThis;
+				explicitThis = meth.ExplicitThis;
+				mcc = meth.CallingConvention;
+			} else {
+				hasThis = explicitThis = false;
+				mcc = MethodCallingConvention.Default;
+			}
+
+			if (hasThis)
+				ps.CallingConvention |= 0x20;
+			if (explicitThis)
+				ps.CallingConvention |= 0x40;
+
+			if ((mcc & MethodCallingConvention.VarArg) != 0)
+				ps.CallingConvention |= 0x5;
+
+			int paramCount = parameters != null ? parameters.Count : 0;
+
+			ps.ParamCount = paramCount;
+			ps.Parameters = GetParametersSig (parameters);
+
+			ps.Type = GetSigType (prop.PropertyType);
+
+			return ps;
+		}
+
 		public TypeSpec GetTypeSpecSig (ITypeReference type)
 		{
 			TypeSpec ts = new TypeSpec (GetSigType (type));
 			return ts;
+		}
+
+		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
+		{
+			// TODO
+			return null;
+		}
+
+		public MarshalSig GetMarshalSig (IMarshalSpec mSpec)
+		{
+			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
+
+			if (mSpec is ArrayMarshalDesc) {
+				ArrayMarshalDesc amd = mSpec as ArrayMarshalDesc;
+				MarshalSig.Array ar = new MarshalSig.Array ();
+				ar.ArrayElemType = amd.ElemType;
+				ar.NumElem = amd.NumElem;
+				ar.ParamNum = amd.ParamNum;
+				ar.ElemMult = amd.ElemMult;
+				ms.Spec = ar;
+			} else if (mSpec is CustomMarshalerDesc) {
+				CustomMarshalerDesc cmd = mSpec as CustomMarshalerDesc;
+				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
+				cm.Guid = cmd.Guid.ToString ();
+				cm.UnmanagedType = cmd.UnmanagedType;
+				cm.ManagedType = cmd.ManagedType.FullName;
+				cm.Cookie = cmd.Cookie;
+				ms.Spec = cm;
+			} else if (mSpec is FixedArrayDesc) {
+				FixedArrayDesc fad = mSpec as FixedArrayDesc;
+				MarshalSig.FixedArray fa = new MarshalSig.FixedArray ();
+				fa.ArrayElemType  = fad.ElemType;
+				fa.NumElem = fad.NumElem;
+				ms.Spec = fa;
+			} else if (mSpec is FixedSysStringDesc) {
+				MarshalSig.FixedSysString fss = new MarshalSig.FixedSysString ();
+				fss.Size = (mSpec as FixedSysStringDesc).Size;
+				ms.Spec = fss;
+			} else if (mSpec is SafeArrayDesc) {
+				MarshalSig.SafeArray sa = new MarshalSig.SafeArray ();
+				sa.ArrayElemType = (mSpec as SafeArrayDesc).ElemType;
+				ms.Spec = sa;
+			}
+
+			return ms;
 		}
 	}
 }

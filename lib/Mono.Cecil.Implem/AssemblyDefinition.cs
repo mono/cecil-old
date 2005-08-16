@@ -43,6 +43,10 @@ namespace Mono.Cecil.Implem {
 				if (m_secDecls == null)
 					m_secDecls = new SecurityDeclarationCollection (
 						this, (this.MainModule as ModuleDefinition).Controller);
+
+				if (!this.MainModuleDefinition.IsNew && !m_secDecls.Loaded)
+					m_secDecls.Load ();
+
 				return m_secDecls;
 			}
 		}
@@ -52,6 +56,10 @@ namespace Mono.Cecil.Implem {
 				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (
 						this, (this.MainModule as ModuleDefinition).Controller);
+
+				if (!this.MainModuleDefinition.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -67,14 +75,17 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IModuleDefinition MainModule {
+			get { return this.MainModuleDefinition; }
+		}
+
+		public ModuleDefinition MainModuleDefinition {
 			get {
 				if (m_mainModule == null)
 					foreach (ModuleDefinition module in m_modules)
 						if (module.Main)
 							m_mainModule = module;
 
-				return m_mainModule;
-			}
+				return m_mainModule;}
 		}
 
 		public StructureReader Reader {
@@ -104,7 +115,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -117,7 +128,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
 			CustomAttribute ca = (this.MainModule as ModuleDefinition).Controller.Reader.GetCustomAttribute (ctor, data);
-			m_customAttrs.Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
@@ -130,7 +141,7 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
-			m_secDecls.Add (dec);
+			this.SecurityDeclarations.Add (dec);
 			return dec;
 		}
 
@@ -138,7 +149,7 @@ namespace Mono.Cecil.Implem {
 		{
 			SecurityDeclaration dec =
 				(this.MainModule as ModuleDefinition).Controller.Reader.BuildSecurityDeclaration (action, declaration);
-			m_secDecls.Add (dec);
+			this.SecurityDeclarations.Add (dec);
 			return dec;
 		}
 

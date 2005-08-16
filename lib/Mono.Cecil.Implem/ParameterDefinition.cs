@@ -26,6 +26,7 @@ namespace Mono.Cecil.Implem {
 		private MetadataToken m_token;
 
 		private bool m_constLoaded;
+		private bool m_hasConstant;
 		private object m_const;
 
 		private MethodReference m_method;
@@ -59,17 +60,33 @@ namespace Mono.Cecil.Implem {
 			set { m_token = value; }
 		}
 
+		private ModuleDefinition Module {
+			get { return (m_paramType as TypeReference).Module; }
+		}
+
 		public bool ConstantLoaded {
 			get { return m_constLoaded; }
 			set { m_constLoaded = value; }
 		}
 
+		public bool HasConstant {
+			get {
+				if (!this.Module.IsNew && !m_constLoaded)
+					this.Module.Controller.Reader.ReadConstant (this);
+
+				return m_hasConstant;
+			}
+		}
+
 		public object Constant {
 			get {
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadConstant (this);
+				this.Module.Controller.Reader.ReadConstant (this);
 				return m_const;
 			}
-			set { m_const = value; }
+			set {
+				m_hasConstant = true;
+				m_const = value;
+			}
 		}
 
 		public MethodReference Method {
@@ -81,9 +98,13 @@ namespace Mono.Cecil.Implem {
 			get {
 				if (m_customAttrs == null && m_method != null)
 					m_customAttrs = new CustomAttributeCollection (
-						this, (m_method.DeclaringType as TypeDefinition).Module.Controller);
+						this, this.Module.Controller);
 				else if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
+
+				if (m_method != null && !this.Module.IsNew && !m_customAttrs.Loaded)
+					m_customAttrs.Load ();
+
 				return m_customAttrs;
 			}
 		}
@@ -95,7 +116,9 @@ namespace Mono.Cecil.Implem {
 
 		public IMarshalSpec MarshalSpec {
 			get {
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.ReadMarshalSpec (this);
+				if (!this.Module.IsNew && !m_marshalLoaded)
+					this.Module.Controller.Reader.ReadMarshalSpec (this);
+
 				return m_marshalDesc;
 			}
 			set { m_marshalDesc = value as MarshalDesc; }
@@ -112,27 +135,36 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
 		{
 			CustomAttribute ca = new CustomAttribute(ctor);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
 		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
 		{
 			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor));
+				this.Module.Controller.Helper.RegisterConstructor(ctor));
 		}
 
 		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
 		{
-			CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(this.CustomAttributes as CustomAttributeCollection).Add (ca);
+			CustomAttribute ca = this.Module.Controller.Reader.GetCustomAttribute (ctor, data);
+			this.CustomAttributes.Add (ca);
 			return ca;
 		}
 
 		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
 		{
 			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor(ctor), data);
+				this.Module.Controller.Helper.RegisterConstructor (ctor), data);
+		}
+
+		public static IParameterDefinitionCollection Clone (IParameterDefinitionCollection original)
+		{
+			ParameterDefinitionCollection clone = new ParameterDefinitionCollection (
+				original as MemberReference);
+			foreach (IParameterDefinition param in original)
+				clone.Add (param);
+			return clone;
 		}
 
 		public void Accept (IReflectionVisitor visitor)

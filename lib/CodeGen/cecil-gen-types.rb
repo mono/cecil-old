@@ -160,9 +160,8 @@ module Cecil
 		attr_reader(:pathtoloader)
 		attr_reader(:target)
 		attr_reader(:indexed)
-		attr_reader(:nopropagation)
 
-		def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false, usecntintf = false, nopropagation = false)
+		def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false, usecntintf = false)
 			@type = type
 			basename = (name.nil? ? type : name)
 			@intf = basename + "Collection"
@@ -179,7 +178,6 @@ module Cecil
 			@pathtoloader = pathtoloader
 			@target = target
 			@indexed = indexed
-			@nopropagation = nopropagation
 		end
 	end
 

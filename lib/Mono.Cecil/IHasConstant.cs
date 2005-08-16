@@ -12,15 +12,9 @@
 
 namespace Mono.Cecil {
 
-	public interface IParameterReference : IReflectionVisitable {
+	public interface IHasConstant {
 
-		string Name { get; set; }
-		int Sequence { get; }
-		ParamAttributes Attributes { get; set; }
-		ITypeReference ParameterType { get; set; }
-	}
-
-	public interface IParameterDefinition : IParameterReference, IHasMarshalSpec,
-		IMetadataTokenProvider, ICustomAttributeProvider, IHasConstant {
+		bool HasConstant { get; }
+		object Constant { get; set; }
 	}
 }

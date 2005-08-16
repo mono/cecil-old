@@ -101,10 +101,6 @@ namespace Mono.Cecil.Implem {
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);
-			<%=$cur_coll.type%> [] items = new <%=$cur_coll.type%> [m_items.Count];
-			m_items.CopyTo (items, 0);
-			for (int i = 0; i < items.Length; i++)
-				<%=$cur_coll.nopropagation ? "visitor.#{$cur_coll.visitItem} (items [i])" : "items [i].Accept (visitor)" %>;
 		}
 <% end %>	}
 }

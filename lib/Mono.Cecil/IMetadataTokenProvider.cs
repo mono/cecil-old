@@ -16,6 +16,6 @@ namespace Mono.Cecil {
 
 	public interface IMetadataTokenProvider {
 
-		MetadataToken MetadataToken { get; }
+		MetadataToken MetadataToken { get; set; }
 	}
 }
