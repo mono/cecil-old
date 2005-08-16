@@ -803,12 +803,14 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case NativeType.SAFEARRAY:
 				MarshalSig.SafeArray sa = new MarshalSig.SafeArray ();
-				sa.ArrayElemType = (VariantType) Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					sa.ArrayElemType = (VariantType) Utilities.ReadCompressedInteger (data, start, out start);
 				ms.Spec = sa;
 				break;
 			case NativeType.FIXEDSYSSTRING:
 				MarshalSig.FixedSysString fss = new MarshalSig.FixedSysString ();
-				fss.Size = Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					fss.Size = Utilities.ReadCompressedInteger (data, start, out start);
 				ms.Spec = fss;
 				break;
 			}

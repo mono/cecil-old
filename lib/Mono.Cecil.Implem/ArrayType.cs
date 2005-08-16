@@ -89,7 +89,8 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public ArrayType (ITypeReference elementsType) : base (elementsType.Name, elementsType.Namespace)
+		public ArrayType (ITypeReference elementsType) :
+			base (elementsType.Name, elementsType.Namespace)
 		{
 			m_elementsType = elementsType;
 			m_dimensions = new ArrayDimensionCollection (this);

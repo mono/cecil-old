@@ -1,5 +1,12 @@
 2005-08-16  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ArrayType.cs:
+		Style.
+	  Mono.Cecil.Implem/ParameterDefinition.cs:
+		Correct a bug in module obtention.
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Correct a bug in arrays's signature reading.
+
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil/IReflectionVisitor.cs
 	  Mono.Cecil/IModuleDefinitionCollection.cs

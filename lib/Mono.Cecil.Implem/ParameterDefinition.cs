@@ -12,7 +12,7 @@
 
 namespace Mono.Cecil.Implem {
 
-	using System.Reflection;
+	using System;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
@@ -29,6 +29,7 @@ namespace Mono.Cecil.Implem {
 		private bool m_hasConstant;
 		private object m_const;
 
+		private ModuleDefinition m_module;
 		private MethodReference m_method;
 		private CustomAttributeCollection m_customAttrs;
 
@@ -61,7 +62,21 @@ namespace Mono.Cecil.Implem {
 		}
 
 		private ModuleDefinition Module {
-			get { return (m_paramType as TypeReference).Module; }
+			get {
+				if (m_module != null)
+					return m_module;
+
+				if (m_paramType != null)
+					m_module = (m_paramType as TypeReference).Module;
+
+				if (m_module == null && m_method != null)
+					return (m_method.DeclaringType as TypeReference).Module;
+
+				if (m_module != null)
+					return m_module;
+
+				throw new ReflectionException ("Can get no module");
+			}
 		}
 
 		public bool ConstantLoaded {
@@ -99,6 +114,7 @@ namespace Mono.Cecil.Implem {
 				if (m_customAttrs == null && m_method != null)
 					m_customAttrs = new CustomAttributeCollection (
 						this, this.Module.Controller);
+
 				else if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
 
