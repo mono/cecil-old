@@ -36,6 +36,7 @@ namespace Mono.Cecil.Implem {
 
 		private IList m_membersRefContainer;
 		private IList m_methodStack;
+		private IList m_fieldDataStack;
 
 		private uint m_methodIndex;
 		private uint m_fieldIndex;
@@ -89,6 +90,7 @@ namespace Mono.Cecil.Implem {
 
 			m_membersRefContainer = new ArrayList ();
 			m_methodStack = new ArrayList ();
+			m_fieldDataStack = new ArrayList ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -199,15 +201,13 @@ namespace Mono.Cecil.Implem {
 			orderedTypes.Sort (TypeDefComparer.Instance);
 
 			foreach (ITypeDefinition t in orderedTypes) {
-				MetadataToken ext = GetTypeDefOrRefToken (t.BaseType);
 				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 					t.Attributes,
 					m_mdWriter.AddString (t.Name),
 					m_mdWriter.AddString (t.Namespace),
-					ext,
-					m_fieldIndex,
-					m_methodIndex
-				);
+					GetTypeDefOrRefToken (t.BaseType),
+					0,
+					0);
 
 				tdTable.Rows.Add (tdRow);
 				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) tdTable.Rows.Count);
@@ -216,8 +216,12 @@ namespace Mono.Cecil.Implem {
 					WriteLayout (t);
 			}
 
-			foreach (ITypeDefinition t in orderedTypes)
+			foreach (ITypeDefinition t in orderedTypes) {
+				TypeDefRow tdRow = tdTable [(int) t.MetadataToken.RID - 1];
+				tdRow.FieldList = m_fieldIndex;
+				tdRow.MethodList = m_methodIndex;
 				t.Accept (this);
+			}
 		}
 
 		private class TypeDefComparer : IComparer {
@@ -388,17 +392,14 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
 		{
-			VisitCollection (nestedTypes);
-		}
-
-		public override void VisitNestedType (ITypeDefinition nestedType)
-		{
 			NestedClassTable ncTable = m_tableWriter.GetNestedClassTable ();
-			NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
-				nestedType.MetadataToken.RID,
-				nestedType.DeclaringType.MetadataToken.RID);
+			foreach (ITypeDefinition nested in nestedTypes) {
+				NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
+					nested.MetadataToken.RID,
+					GetRidFor (nestedTypes.Container));
 
-			ncTable.Rows.Add (ncRow);
+				ncTable.Rows.Add (ncRow);
+			}
 		}
 
 		public override void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
@@ -522,6 +523,9 @@ namespace Mono.Cecil.Implem {
 
 			if (field.LayoutInfo.HasLayoutInfo)
 				WriteLayout (field);
+
+			if (field.InitialValue != null && field.InitialValue.Length > 0)
+				m_fieldDataStack.Add (field);
 		}
 
 		public override void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
@@ -581,7 +585,7 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
-			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
+			/*CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
 			foreach (ICustomAttribute ca in customAttrs) {
 				MetadataToken parent;
 				if (customAttrs.Container is IAssemblyDefinition)
@@ -598,7 +602,7 @@ namespace Mono.Cecil.Implem {
 					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
 
 				caTable.Rows.Add (caRow);
-			}
+			}*/
 		}
 
 		public override void VisitMarshalSpec (IMarshalSpec marshalSpec)
@@ -659,26 +663,43 @@ namespace Mono.Cecil.Implem {
 
 		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
-			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-			foreach (IMemberReference member in m_membersRefContainer) {
-				uint sig = 0;
-				if (member is IFieldReference)
-					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
-				else if (member is IMethodReference)
-					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
-				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
-					GetTypeDefOrRefToken (member.DeclaringType),
-					m_mdWriter.AddString (member.Name),
-					sig);
+			if (m_membersRefContainer.Count > 0) {
+				MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
+				foreach (IMemberReference member in m_membersRefContainer) {
+					uint sig = 0;
+					if (member is IFieldReference)
+						sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
+					else if (member is IMethodReference)
+						sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+					MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
+						GetTypeDefOrRefToken (member.DeclaringType),
+						m_mdWriter.AddString (member.Name),
+						sig);
 
-				mrTable.Rows.Add (mrRow);
-				member.MetadataToken = new MetadataToken (TokenType.MemberRef, (uint) mrTable.Rows.Count);
+					mrTable.Rows.Add (mrRow);
+					member.MetadataToken = new MetadataToken (
+						TokenType.MemberRef, (uint) mrTable.Rows.Count);
+				}
 			}
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++)
 				mTable [i].RVA = m_codeWriter.WriteMethodBody (
 					m_methodStack [i] as IMethodDefinition);
+
+			if (m_fieldDataStack.Count > 0) {
+				FieldRVATable frTable = m_tableWriter.GetFieldRVATable ();
+				foreach (FieldDefinition field in m_fieldDataStack) {
+					FieldRVARow frRow = m_rowWriter.CreateFieldRVARow (
+						m_mdWriter.GetDataCursor (),
+						field.MetadataToken.RID);
+
+					m_mdWriter.AddData (field.InitialValue.Length + 3 & (~3));
+					m_mdWriter.AddFieldInitData (field.InitialValue);
+
+					frTable.Rows.Add (frRow);
+				}
+			}
 
 			if (m_mod.Assembly.EntryPoint != null)
 				m_mdWriter.EntryPointToken =
@@ -716,6 +737,8 @@ namespace Mono.Cecil.Implem {
 				return ElementType.R8;
 			case Constants.String :
 				return ElementType.String;
+			case Constants.Type :
+				return ElementType.Type;
 			default:
 				return ElementType.Class;
 			}
@@ -768,6 +791,7 @@ namespace Mono.Cecil.Implem {
 				m_constWriter.Write (Encoding.UTF8.GetBytes ((string) value));
 				break;
 			case ElementType.Class :
+				m_constWriter.Write (new byte [4]);
 				break;
 			default :
 				throw new ReflectionException ("Non valid element for a constant");
@@ -1032,8 +1056,54 @@ namespace Mono.Cecil.Implem {
 
 		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
 		{
-			// TODO
 			return null;
+			/*
+			CustomAttrib cas = new CustomAttrib (ca.Constructor);
+			cas.Prolog = CustomAttrib.StdProlog;
+
+			cas.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
+			for (int i = 0; i < cas.FixedArgs.Length; i++) {
+				object o = ca.ConstructorParameters [i];
+				CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
+				if (o is object []) {
+					object [] values = o as object [];
+					fa.Elems = new CustomAttrib.Elem [values.Length];
+					for (int j = 0; j < values.Length; j++) {
+						CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+						elem.Value = values [j];
+						elem.FieldOrPropType = ElementType.Object;
+						elem.ElemType = ca.Constructor.Parameters [i].ParameterType;
+						fa.Elems [j] = elem;
+					}
+				} else {
+					fa.Elems = new CustomAttrib.Elem [1];
+					fa.Elems [0].Value = o;
+					fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
+					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType);
+				}
+
+				cas.FixedArgs [i] = fa;
+			}
+
+			cas.NumNamed = (ushort) (ca.Fields.Count + ca.Properties.Count);
+			int counter = 0;
+			foreach (DictionaryEntry de in ca.Fields) {
+				CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
+				na.Field = true;
+				na.FieldOrPropName = (string) de.Key;
+				na.FieldOrPropType = GetCorrespondingType ((ITypeReference) de.Value);
+
+				cas.NamedArgs [counter++] = na;
+			}
+
+			foreach (DictionaryEntry de in ca.Properties) {
+				CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
+				na.Property = true;
+				na.FieldOrPropName = (string) de.Key;
+
+			}
+
+			return cas;*/
 		}
 
 		public MarshalSig GetMarshalSig (IMarshalSpec mSpec)

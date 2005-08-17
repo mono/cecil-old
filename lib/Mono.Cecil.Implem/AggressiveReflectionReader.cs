@@ -40,6 +40,7 @@ namespace Mono.Cecil.Implem {
 			ReadConstants ();
 			ReadExternTypes ();
 			ReadMarshalSpecs ();
+			ReadInitialValues ();
 
 			m_events = null;
 			m_properties = null;
@@ -370,6 +371,21 @@ namespace Mono.Cecil.Implem {
 					param.MarshalSpecLoaded = true;
 					break;
 				}
+			}
+		}
+
+		private void ReadInitialValues ()
+		{
+			if (!m_tHeap.HasTable (typeof (FieldRVATable)))
+				return;
+
+			FieldRVATable frTable = m_tHeap [typeof (FieldRVATable)] as FieldRVATable;
+			for (int i = 0; i < frTable.Rows.Count; i++) {
+				FieldRVARow frRow = frTable [i];
+				FieldDefinition field = GetFieldDefAt (frRow.Field);
+				field.RVA = frRow.RVA;
+				field.InitialValueLoaded = true;
+				SetInitialValue (field);
 			}
 		}
 	}

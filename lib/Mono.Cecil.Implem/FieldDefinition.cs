@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
 	using Mono.Cecil;
+	using Mono.Cecil.Binary;
 
 	internal sealed class FieldDefinition : MemberDefinition, IFieldDefinition, IFieldLayoutInfo {
 
@@ -24,6 +25,10 @@ namespace Mono.Cecil.Implem {
 		private bool m_layoutLoaded;
 		private bool m_hasInfo;
 		private uint m_offset;
+
+		private bool m_initValLoaded;
+		private RVA m_rva;
+		private byte [] m_initVal;
 
 		private bool m_constLoaded;
 		private bool m_hasConstant;
@@ -61,6 +66,36 @@ namespace Mono.Cecil.Implem {
 				m_hasInfo = true;
 				m_offset = value;
 			}
+		}
+
+		public bool InitialValueLoaded {
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+
+				return m_initValLoaded;
+			}
+			set { m_initValLoaded = value; }
+		}
+
+		public RVA RVA {
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+
+				return m_rva;
+			}
+			set { m_rva = value; }
+		}
+
+		public byte [] InitialValue {
+			get {
+				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
+					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+
+				return m_initVal;
+			}
+			set { m_initVal = value; }
 		}
 
 		public ITypeReference FieldType {

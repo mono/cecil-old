@@ -299,6 +299,9 @@ namespace Mono.Cecil.Signatures {
 
 		private void Write (CustomAttrib ca, IMethodReference ctor)
 		{
+			if (ca == null) // TODO temp !
+				return;
+
 			if (ca.Prolog != CustomAttrib.StdProlog)
 				return;
 

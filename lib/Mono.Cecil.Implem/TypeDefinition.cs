@@ -359,9 +359,10 @@ namespace Mono.Cecil.Implem {
 			this.SecurityDeclarations.Accept (visitor);
 			this.Interfaces.Accept (visitor);
 			this.Fields.Accept (visitor);
+			this.Methods.Accept (visitor);
 			this.Properties.Accept (visitor);
 			this.Events.Accept (visitor);
-			this.Methods.Accept (visitor);
+			this.NestedTypes.Accept (visitor);
 		}
 	}
 }

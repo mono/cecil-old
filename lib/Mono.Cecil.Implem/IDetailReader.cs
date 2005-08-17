@@ -26,5 +26,7 @@ namespace Mono.Cecil.Implem {
 		void ReadConstant (FieldDefinition field);
 		void ReadConstant (PropertyDefinition prop);
 		void ReadConstant (ParameterDefinition param);
+
+		void ReadInitialValue (FieldDefinition field);
 	}
 }

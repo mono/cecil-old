@@ -25,7 +25,7 @@ namespace Mono.Cecil.Metadata {
 		private BinaryReader m_binaryReader;
 		private MetadataRoot m_root;
 
-		private BinaryReader m_codeOrResReader;
+		private BinaryReader m_dataReader;
 		private RVA m_baseOfCodeOrRes = new RVA (0x2050);
 
 		public MetadataReader (ImageReader brv)
@@ -39,10 +39,10 @@ namespace Mono.Cecil.Metadata {
 			return m_root;
 		}
 
-		public BinaryReader GetCodeOrResReader (RVA rva)
+		public BinaryReader GetDataReader (RVA rva)
 		{
-			m_codeOrResReader.BaseStream.Position = rva - m_baseOfCodeOrRes;
-			return m_codeOrResReader;
+			m_dataReader.BaseStream.Position = rva - m_baseOfCodeOrRes;
+			return m_dataReader;
 		}
 
 		public override void VisitMetadataRoot (MetadataRoot root)
@@ -56,7 +56,7 @@ namespace Mono.Cecil.Metadata {
 			byte [] data = m_binaryReader.ReadBytes (
 				(int) (m_root.GetImage ().CLIHeader.Metadata.VirtualAddress.Value - m_baseOfCodeOrRes.Value));
 
-			m_codeOrResReader = new BinaryReader (new MemoryStream (data));
+			m_dataReader = new BinaryReader (new MemoryStream (data));
 
 			m_binaryReader.BaseStream.Position = pos;
 		}

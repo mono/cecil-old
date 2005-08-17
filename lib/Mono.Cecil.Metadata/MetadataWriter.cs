@@ -44,6 +44,7 @@ namespace Mono.Cecil.Metadata {
 
 		private MemoryBinaryWriter m_cilWriter;
 
+		private MemoryBinaryWriter m_fieldDataWriter;
 		private MemoryBinaryWriter m_resWriter;
 
 		private uint m_mdStart;
@@ -55,6 +56,8 @@ namespace Mono.Cecil.Metadata {
 		private uint m_itStart;
 
 		private uint m_entryPointToken;
+
+		private RVA m_cursor = new RVA (0x2050);
 
 		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
@@ -96,6 +99,7 @@ namespace Mono.Cecil.Metadata {
 
 			m_cilWriter = new MemoryBinaryWriter ();
 
+			m_fieldDataWriter = new MemoryBinaryWriter ();
 			m_resWriter = new MemoryBinaryWriter ();
 		}
 
@@ -117,6 +121,16 @@ namespace Mono.Cecil.Metadata {
 		public MetadataTableWriter GetTableVisitor ()
 		{
 			return m_tableWriter;
+		}
+
+		public void AddData (int length)
+		{
+			m_cursor += new RVA ((uint) length);
+		}
+
+		public RVA GetDataCursor ()
+		{
+			return m_cursor;
 		}
 
 		public uint AddString (string str)
@@ -204,6 +218,12 @@ namespace Mono.Cecil.Metadata {
 			m_resWriter.Write (data);
 			m_resWriter.QuadAlign ();
 			return offset;
+		}
+
+		public void AddFieldInitData (byte [] data)
+		{
+			m_fieldDataWriter.Write (data);
+			m_fieldDataWriter.QuadAlign ();
 		}
 
 		public override void VisitMetadataRoot (MetadataRoot root)

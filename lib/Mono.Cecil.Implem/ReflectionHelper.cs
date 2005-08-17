@@ -83,9 +83,9 @@ namespace Mono.Cecil.Implem {
 			sb.Append ("(");
 			ParameterInfo [] parameters = meth.GetParameters ();
 			for (int i = 0; i < parameters.Length; i++) {
-				sb.Append (GetTypeSignature (parameters [i].ParameterType));
 				if (i > 0)
 					sb.Append (", ");
+				sb.Append (GetTypeSignature (parameters [i].ParameterType));
 			}
 			sb.Append (")");
 			return sb.ToString ();

@@ -844,5 +844,15 @@ namespace Mono.Cecil.Implem {
 				throw new ReflectionException ("Non valid element in constant table");
 			}
 		}
+
+		protected void SetInitialValue (FieldDefinition field)
+		{
+			if (field.RVA != RVA.Zero) {
+				BinaryReader br = this.Module.ImageReader.MetadataReader.GetDataReader (field.RVA);
+				field.InitialValue = br.ReadBytes (
+					(int) (field.FieldType as ITypeDefinition).LayoutInfo.ClassSize);
+			} else
+				field.InitialValue = new byte [0];
+		}
 	}
 }

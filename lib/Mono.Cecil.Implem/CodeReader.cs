@@ -37,7 +37,7 @@ namespace Mono.Cecil.Implem {
 		{
 			MethodDefinition meth = body.Method as MethodDefinition;
 			MethodBody methBody = body as MethodBody;
-			BinaryReader br = m_reflectReader.Module.ImageReader.MetadataReader.GetCodeOrResReader (meth.RVA);
+			BinaryReader br = m_reflectReader.Module.ImageReader.MetadataReader.GetDataReader (meth.RVA);
 
 			// lets read the method
 			IDictionary instrs;

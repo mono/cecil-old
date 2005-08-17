@@ -25,16 +25,12 @@ namespace Mono.Cecil.Implem {
 		private ReflectionWriter m_reflectWriter;
 		private MemoryBinaryWriter m_binaryWriter;
 		private MemoryBinaryWriter m_codeWriter;
-		private RVA m_start = new RVA (0x2050);
-
-		private RVA m_curs;
 
 		public CodeWriter (ReflectionWriter reflectWriter, MemoryBinaryWriter writer)
 		{
 			m_reflectWriter = reflectWriter;
 			m_binaryWriter = writer;
 			m_codeWriter = new MemoryBinaryWriter ();
-			m_curs = m_start;
 		}
 
 		public RVA WriteMethodBody (IMethodDefinition meth)
@@ -42,7 +38,7 @@ namespace Mono.Cecil.Implem {
 			if (meth.Body == null)
 				return RVA.Zero;
 
-			RVA ret = m_curs;
+			RVA ret = m_reflectWriter.MetadataWriter.GetDataCursor ();
 			meth.Body.Accept (this);
 			return ret;
 		}
@@ -175,10 +171,14 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
+			if (variables.Count == 0)
+				return;
+
 			MethodBody body = variables.Container as MethodBody;
 			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
 			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (
-				m_reflectWriter.SignatureWriter.AddLocalVarSig (GetLocalVarSig (variables)));
+				m_reflectWriter.SignatureWriter.AddLocalVarSig (
+					GetLocalVarSig (variables)));
 
 			sasTable.Rows.Add (sasRow);
 			body.LocalVarToken = sasTable.Rows.Count;
@@ -186,6 +186,8 @@ namespace Mono.Cecil.Implem {
 
 		public override void TerminateMethodBody (IMethodBody body)
 		{
+			long pos = m_binaryWriter.BaseStream.Position;
+
 			MethodBody bdy = body as MethodBody;
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
 				|| m_codeWriter.BaseStream.Length >= 64) {
@@ -213,7 +215,8 @@ namespace Mono.Cecil.Implem {
 				m_binaryWriter.QuadAlign ();
 			}
 
-			m_curs = m_start + (uint) m_binaryWriter.BaseStream.Position;
+			m_reflectWriter.MetadataWriter.AddData (
+				(int) (m_binaryWriter.BaseStream.Position - pos));
 		}
 
 		private LocalVarSig GetLocalVarSig (IVariableDefinitionCollection vars)

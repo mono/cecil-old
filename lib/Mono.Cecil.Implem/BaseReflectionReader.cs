@@ -51,5 +51,9 @@ namespace Mono.Cecil.Implem {
 		public virtual void ReadConstant (ParameterDefinition param)
 		{
 		}
+
+		public virtual void ReadInitialValue (FieldDefinition field)
+		{
+		}
 	}
 }

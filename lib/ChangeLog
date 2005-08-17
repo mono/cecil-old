@@ -1,3 +1,25 @@
+2005-08-17  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IField.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Implem/ReflectionHelper.cs
+	  Mono.Cecil.Implem/StructureReader.cs
+	  Mono.Cecil.Implem/FieldDefinition.cs
+	  Mono.Cecil.Implem/BaseReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/IDetailReader.cs
+	  Mono.Cecil.Implem/CodeWriter.cs
+	  Mono.Cecil.Implem/LazyReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Work on the working layer. Implement field initial
+		data. Bugs.
+
 2005-08-16  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/ReflectionWriter.cs

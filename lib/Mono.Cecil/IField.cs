@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil {
 
+	using Mono.Cecil.Binary;
+
 	public interface IFieldReference : IMemberReference, IReflectionVisitable {
 
 		ITypeReference FieldType { get; set; }
@@ -22,6 +24,9 @@ namespace Mono.Cecil {
 
 		FieldAttributes Attributes { get; set; }
 		IFieldLayoutInfo LayoutInfo { get; }
+
+		RVA RVA { get; set; }
+		byte [] InitialValue { get; set; }
 
 		bool IsLiteral { get; set; }
 		bool IsReadOnly { get; set; }

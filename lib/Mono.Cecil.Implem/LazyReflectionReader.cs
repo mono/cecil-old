@@ -13,8 +13,10 @@
 namespace Mono.Cecil.Implem {
 
 	using System;
+	using System.IO;
 
 	using Mono.Cecil;
+	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 	using Mono.Cecil.Signatures;
 
@@ -502,6 +504,28 @@ namespace Mono.Cecil.Implem {
 			}
 
 			return null;
+		}
+
+		public override void ReadInitialValue (FieldDefinition field)
+		{
+			if (!m_tHeap.HasTable (typeof (FieldRVATable))) {
+				field.InitialValueLoaded = true;
+				return;
+			}
+
+			FieldRVATable frTable = m_tHeap [typeof (FieldRVATable)] as FieldRVATable;
+			uint rid = (uint) Array.IndexOf (m_fields, field) + 1;
+			for (int i = 0; i < frTable.Rows.Count; i++) {
+				FieldRVARow frRow = frTable [i];
+				if (frRow.Field == rid) {
+					field.RVA = frRow.RVA;
+					break;
+				}
+			}
+
+			field.InitialValueLoaded = true;
+
+			SetInitialValue (field);
 		}
 	}
 }
