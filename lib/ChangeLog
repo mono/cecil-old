@@ -1,5 +1,17 @@
 2005-08-19  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/LzNamedCollectionImplem.cs
+	  Mono.Cecil.Implem/ExternTypeCollection.cs
+	  Mono.Cecil.Implem/TypeReferenceCollection.cs
+	  Mono.Cecil.Implem/TypeDefinitionCollection.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TablesComparer.cs
+	  Mono.Cecil.Implem/Constants.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Correct bugs in type* tables generations.
+
 	* Mono.Cecil/IModuleDefinitionCollection.cs
 	  Mono.Cecil/IInterfaceCollection.cs
 	  Mono.Cecil/INestedTypeCollection.cs

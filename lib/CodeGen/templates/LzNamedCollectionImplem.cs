@@ -101,7 +101,7 @@ namespace Mono.Cecil.Implem {
 			(this as ICollection).CopyTo (ary, index);
 		}
 
-		public override IEnumerator GetEnumerator ()
+		public new IEnumerator GetEnumerator ()
 		{
 			return this.BaseGetAllValues ().GetEnumerator ();
 		}

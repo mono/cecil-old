@@ -156,20 +156,19 @@ namespace Mono.Cecil.Implem {
 			ArrayList orderedTypes = new ArrayList (types.Count);
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 
-			if (types [Constants.ModuleType] == null) {
-				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
-					(TypeAttributes) 0,
-					m_mdWriter.AddString ("<Module>"),
-					m_mdWriter.AddString (""),
-					new MetadataToken (TokenType.TypeRef, 0),
-					m_fieldIndex,
-					m_methodIndex
-				);
-				tdTable.Rows.Add (tdRow);
-			}
+			if (types [Constants.ModuleType] == null)
+				m_mod.DefineType (
+					Constants.ModuleType, string.Empty, (TypeAttributes) 0);
 
 			foreach (ITypeDefinition t in types)
 				orderedTypes.Add (t);
+
+			orderedTypes.Sort (TableComparers.TypeDef.Instance);
+
+			for (int i = 0; i < orderedTypes.Count; i++) {
+				ITypeDefinition t = orderedTypes [i] as ITypeDefinition;
+				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) (i + 1));
+			}
 
 			foreach (ITypeDefinition t in orderedTypes) {
 				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
@@ -181,15 +180,14 @@ namespace Mono.Cecil.Implem {
 					0);
 
 				tdTable.Rows.Add (tdRow);
-				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) tdTable.Rows.Count);
-				Console.WriteLine ("{0}:{1}", t.FullName, t.MetadataToken.RID);
 
 				if (t.LayoutInfo.HasLayoutInfo)
 					WriteLayout (t);
 			}
 
-			foreach (ITypeDefinition t in orderedTypes) {
-				TypeDefRow tdRow = tdTable [(int) t.MetadataToken.RID - 1];
+			for (int i = 0; i < orderedTypes.Count; i++) {
+				TypeDefRow tdRow = tdTable [i];
+				ITypeDefinition t = orderedTypes [i] as ITypeDefinition;
 				tdRow.FieldList = m_fieldIndex;
 				tdRow.MethodList = m_methodIndex;
 				t.Accept (this);
@@ -202,7 +200,7 @@ namespace Mono.Cecil.Implem {
 
 			ArrayList orderedTypeRefs = new ArrayList (refs.Count);
 			foreach (TypeReference tr in refs)
-					orderedTypeRefs.Add (tr);
+				orderedTypeRefs.Add (tr);
 
 			orderedTypeRefs.Sort (TableComparers.TypeRef.Instance);
 
@@ -470,7 +468,6 @@ namespace Mono.Cecil.Implem {
 		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
 			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
-			Console.WriteLine ("VisitCas, parent: {0}, count: {1}", customAttrs.Container, customAttrs.Count);
 			foreach (ICustomAttribute ca in customAttrs) {
 				MetadataToken parent;
 				if (customAttrs.Container is IAssemblyDefinition)
@@ -481,12 +478,12 @@ namespace Mono.Cecil.Implem {
 					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
-				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
+				/*CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
 					parent,
 					ca.Constructor.MetadataToken,
 					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
 
-				caTable.Rows.Add (caRow);
+				caTable.Rows.Add (caRow);*/
 			}
 		}
 
@@ -553,6 +550,25 @@ namespace Mono.Cecil.Implem {
 			msTable.Rows.Add (msRow);
 		}
 
+		private void SortTables ()
+		{
+			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+
+			if (th.HasTable (typeof (NestedClassTable)))
+				m_tableWriter.GetNestedClassTable ().Rows.Sort (
+					TableComparers.NestedClass.Instance);
+
+			if (th.HasTable (typeof (InterfaceImplTable)))
+				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
+					TableComparers.InterfaceImpl.Instance);
+
+			if (th.HasTable (typeof (ConstantTable)))
+				m_tableWriter.GetConstantTable ().Rows.Sort (
+					TableComparers.Constant.Instance);
+
+			// TODO continue;
+		}
+
 		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
 			if (m_membersRefContainer.Count > 0) {
@@ -574,15 +590,7 @@ namespace Mono.Cecil.Implem {
 				}
 			}
 
-			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
-
-			if (th.HasTable (typeof (NestedClassTable)))
-				m_tableWriter.GetNestedClassTable ().Rows.Sort (
-					TableComparers.NestedClass.Instance);
-
-			if (th.HasTable (typeof (InterfaceImplTable)))
-				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
-					TableComparers.InterfaceImpl.Instance);
+			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++)

@@ -44,7 +44,7 @@ namespace Mono.Cecil.Implem {
 		protected MemberReference [] m_memberRefs;
 		protected ParameterDefinition [] m_parameters;
 
-		private IDictionary m_typeDefCache;
+		private IAssemblyNameReference m_corlib;
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
@@ -80,8 +80,7 @@ namespace Mono.Cecil.Implem {
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_secParser = new SecurityParser ();
-			m_isCorlib = module.Assembly.Name.Name == Constants.CorlibName;
-			m_typeDefCache = new Hashtable ();
+			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
 		}
 
 		public TypeDefinition GetTypeDefAt (uint rid)
@@ -163,13 +162,20 @@ namespace Mono.Cecil.Implem {
 			if (m_isCorlib)
 				return m_module.Types [fullName] as TypeReference;
 
-			TypeReference coreType =  m_module.TypeReferences [
-				string.Concat (Constants.Corlib, fullName)] as TypeReference;
+			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
 			if (coreType == null) {
+				if (m_corlib == null) {
+					foreach (IAssemblyNameReference ar in m_module.AssemblyReferences) {
+						if (ar.Name == Constants.Corlib)
+							m_corlib = ar;
+						break;
+					}
+				}
+
 				string [] parts = fullName.Split ('.');
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
-				coreType = new TypeReference (parts [1], parts [0]); // TODO
+				coreType = new TypeReference (parts [1], parts [0], m_module, m_corlib);
 				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
@@ -291,7 +297,6 @@ namespace Mono.Cecil.Implem {
 			for (int i = 0; i < m_typeDefs.Length; i++) {
 				TypeDefinition type = m_typeDefs [i];
 				tdc.Add (type);
-				m_typeDefCache.Add (type.FullName, type);
 			}
 
 			for (int i = 0; i < m_typeRefs.Length; i++) {

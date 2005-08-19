@@ -313,21 +313,13 @@ namespace Mono.Cecil.Signatures {
 
 			writer.Write (ca.Prolog);
 
-			Console.WriteLine ("Prolog written");
-
-			for (int i = 0; i < ctor.Parameters.Count; i++) {
-				Console.WriteLine ("Param: {0}", i);
+			for (int i = 0; i < ctor.Parameters.Count; i++)
 				Write (ca.FixedArgs [i], writer);
-			}
 
 			writer.Write (ca.NumNamed);
 
-			for (int i = 0; i < ca.NumNamed; i++) {
-				Console.WriteLine ("NamedArg: {0}", i);
+			for (int i = 0; i < ca.NumNamed; i++)
 				Write (ca.NamedArgs [i], writer);
-			}
-
-			Console.WriteLine ("ca length: {0}", m_sigWriter.BaseStream.Length);
 		}
 
 		private void Write (CustomAttrib.FixedArg fa, MemoryBinaryWriter writer)

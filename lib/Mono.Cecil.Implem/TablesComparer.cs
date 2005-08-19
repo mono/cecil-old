@@ -24,15 +24,6 @@ namespace Mono.Cecil.Implem {
 
 			public static readonly TypeDef Instance = new TypeDef ();
 
-			public void GetExtendLevel (TypeDefinition type, ref int level)
-			{
-				if (type.BaseType != null) {
-					level++;
-					if (type.BaseType is TypeDefinition)
-						GetExtendLevel (type.BaseType as TypeDefinition, ref level);
-				}
-			}
-
 			public int Compare (object x, object y)
 			{
 				TypeDefinition a = x as TypeDefinition;
@@ -40,33 +31,6 @@ namespace Mono.Cecil.Implem {
 
 				if (a == null || b == null)
 					throw new ReflectionException ("TypeDefComparer can only compare TypeDefinition");
-
-				if (a == b)
-					return 0;
-
-				if (a.Name == Constants.ModuleType)
-					return -1;
-				else if (b.Name == Constants.ModuleType)
-					return 1;
-
-				int alev = 0;
-				if (a.DeclaringType != null) {
-					GetExtendLevel (a.DeclaringType as TypeDefinition, ref alev);
-					alev++;
-				} else
-					GetExtendLevel (a, ref alev);
-
-				int blev = 0;
-				if (b.DeclaringType != null) {
-					GetExtendLevel (b.DeclaringType as TypeDefinition, ref blev);
-					blev--;
-				} else
-					GetExtendLevel (b, ref blev);
-
-				if (alev < blev)
-					return -1;
-				else if (blev > alev)
-					return 1;
 
 				return Comparer.Default.Compare (a.FullName, b.FullName);
 			}
@@ -106,6 +70,22 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
+		public class Constant : IComparer {
+
+			public static readonly Constant Instance = new Constant ();
+
+			public int Compare (object x, object y)
+			{
+				ConstantRow a = x as ConstantRow;
+				ConstantRow b = y as ConstantRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.HasConstant, a.Parent),
+					Utilities.CompressMetadataToken (CodedIndex.HasConstant, b.Parent));
+			}
+
+		}
+
 		public class InterfaceImpl : IComparer {
 
 			public static readonly InterfaceImpl Instance = new InterfaceImpl ();
@@ -117,7 +97,9 @@ namespace Mono.Cecil.Implem {
 
 				int klass = Comparer.Default.Compare (a.Class, b.Class);
 				if (klass == 0) {
-					return Comparer.Default.Compare (a.Interface.RID, b.Interface.RID);
+					return Comparer.Default.Compare (
+						Utilities.CompressMetadataToken (CodedIndex.TypeDefOrRef, a.Interface),
+						Utilities.CompressMetadataToken (CodedIndex.TypeDefOrRef, b.Interface));
 				}
 
 				return klass;
