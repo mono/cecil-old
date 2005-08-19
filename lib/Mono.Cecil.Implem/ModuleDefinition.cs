@@ -178,14 +178,14 @@ namespace Mono.Cecil.Implem {
 		public IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
 		{
 			EmbeddedResource res = new EmbeddedResource (name, attributes, this, data);
-			m_res [name] = res;
+			m_res.Add (res);
 			return res;
 		}
 
 		public ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
 		{
 			LinkedResource res = new LinkedResource (name, attributes, this, file);
-			m_res [name] = res;
+			m_res.Add (res);
 			return res;
 		}
 
@@ -193,7 +193,7 @@ namespace Mono.Cecil.Implem {
 																	 IAssemblyNameReference asm)
 		{
 			AssemblyLinkedResource res = new AssemblyLinkedResource (name, attributes, this, asm as AssemblyNameReference);
-			m_res [name] = res;
+			m_res.Add (res);
 			return res;
 		}
 
@@ -206,7 +206,7 @@ namespace Mono.Cecil.Implem {
 		{
 			TypeDefinition type = new TypeDefinition (name, ns, attributes, this);
 			type.BaseType = baseType;
-			m_types [type.FullName] = type;
+			m_types.Add (type);
 			return type;
 		}
 
@@ -243,7 +243,7 @@ namespace Mono.Cecil.Implem {
 		public ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm)
 		{
 			TypeReference typeRef = new TypeReference (name, ns, this, asm);
-			m_refs [typeRef.FullName] = typeRef;
+			m_refs.Add (typeRef);
 			return typeRef;
 		}
 

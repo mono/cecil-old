@@ -554,6 +554,10 @@ namespace Mono.Cecil.Signatures {
 				na.FieldOrPropType = ElementType.Enum;
 				ITypeReference enu = m_reflectReader.Module.Types [enumType];
 				if (enu == null)
+					/*
+				 	According to the spec, we should have a fully qualifier name
+				 	TODO : parse it to extract assembly name and type
+				 	*/
 					enu = m_reflectReader.Module.TypeReferences [enumType];
 				na.FixedArg.Elems [0].ElemType = enu;
 			}
@@ -753,11 +757,16 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadUInt64 ();
 				break;
 			case ElementType.Enum :
-				int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
+				int next, length = Utilities.ReadCompressedInteger (
+					data, (int) br.BaseStream.Position, out next);
 				br.BaseStream.Position = next;
 				string type = Encoding.UTF8.GetString (br.ReadBytes (length));
 				elem.ElemType = m_reflectReader.Module.Types [type];
 				if (elem.ElemType == null)
+					/*
+					 According to the spec, we should have a fully qualifier name
+					 TODO : parse it to extract assembly name and type
+					 */
 					elem.ElemType = m_reflectReader.Module.TypeReferences [type];
 				elem.Value = br.ReadInt32 ();
 				break;

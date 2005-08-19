@@ -13,6 +13,7 @@
 namespace Mono.Cecil.Implem {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 	using System.Security;
 	using System.Security.Permissions;
@@ -42,6 +43,8 @@ namespace Mono.Cecil.Implem {
 		protected PropertyDefinition [] m_properties;
 		protected MemberReference [] m_memberRefs;
 		protected ParameterDefinition [] m_parameters;
+
+		private IDictionary m_typeDefCache;
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
@@ -77,7 +80,8 @@ namespace Mono.Cecil.Implem {
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_secParser = new SecurityParser ();
-			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
+			m_isCorlib = module.Assembly.Name.Name == Constants.CorlibName;
+			m_typeDefCache = new Hashtable ();
 		}
 
 		public TypeDefinition GetTypeDefAt (uint rid)
@@ -159,13 +163,14 @@ namespace Mono.Cecil.Implem {
 			if (m_isCorlib)
 				return m_module.Types [fullName] as TypeReference;
 
-			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
+			TypeReference coreType =  m_module.TypeReferences [
+				string.Concat (Constants.Corlib, fullName)] as TypeReference;
 			if (coreType == null) {
 				string [] parts = fullName.Split ('.');
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
-				coreType = new TypeReference (parts [1], parts [0]);
-				(m_module.TypeReferences as TypeReferenceCollection) [coreType.FullName] = coreType;
+				coreType = new TypeReference (parts [1], parts [0]); // TODO
+				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
 		}
@@ -237,7 +242,7 @@ namespace Mono.Cecil.Implem {
 					TypeDefinition child = GetTypeDefAt (row.NestedClass);
 
 					child.DeclaringType = parent;
-					(parent.NestedTypes as NestedTypeCollection) [child.Name] = child;
+					parent.NestedTypes.Add (child);
 				}
 			}
 
@@ -277,7 +282,7 @@ namespace Mono.Cecil.Implem {
 						t.DeclaringType = parent;
 
 					m_typeRefs [i] = t;
-					(m_module.TypeReferences as TypeReferenceCollection) [t.FullName] = t;
+					m_module.TypeReferences.Add (t);
 				}
 
 			} else
@@ -285,12 +290,13 @@ namespace Mono.Cecil.Implem {
 
 			for (int i = 0; i < m_typeDefs.Length; i++) {
 				TypeDefinition type = m_typeDefs [i];
-				tdc [type.FullName] = type;
+				tdc.Add (type);
+				m_typeDefCache.Add (type.FullName, type);
 			}
 
 			for (int i = 0; i < m_typeRefs.Length; i++) {
 				TypeReference type = m_typeRefs [i];
-				(m_module.TypeReferences as TypeReferenceCollection) [type.FullName] = type;
+				m_module.TypeReferences.Add (type);
 			}
 
 			ReadTypeSpecs ();
@@ -547,12 +553,17 @@ namespace Mono.Cecil.Implem {
 				if (etRow.Implementation.TokenType != TokenType.File)
 					continue;
 
+				/*
+				TODO get the real typeref name
+				[module]Namespace.Name
+				*/
+
 				string name = m_root.Streams.StringsHeap [etRow.TypeName];
 				string ns = m_root.Streams.StringsHeap [etRow.TypeNamespace];
 				if (ns.Length == 0)
-					buffer [i] = Module.TypeReferences [name];
+					buffer [i] = m_module.TypeReferences [name];
 				else
-					buffer [i] = Module.TypeReferences [string.Concat (ns, '.', name)];
+					buffer [i] = m_module.TypeReferences [string.Concat (ns, '.', name)];
 			}
 
 			for (int i = 0; i < etTable.Rows.Count; i++) {
@@ -562,13 +573,13 @@ namespace Mono.Cecil.Implem {
 
 				ITypeReference owner = buffer [etRow.Implementation.RID - 1];
 				string name = m_root.Streams.StringsHeap [etRow.TypeName];
-				buffer [i] = Module.TypeReferences [string.Concat (owner.FullName, '/', name)];
+				buffer [i] = m_module.TypeReferences [string.Concat (owner.FullName, '/', name)];
 			}
 
 			for (int i = 0; i < buffer.Length; i++) {
 				ITypeReference curs = buffer [i];
 				if (curs != null)
-					ext [curs.FullName] = curs;
+					ext.Add (curs);
 			}
 		}
 
@@ -670,7 +681,7 @@ namespace Mono.Cecil.Implem {
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
 				cmd.Guid = new Guid (cmsig.Guid);
 				cmd.UnmanagedType = cmsig.UnmanagedType;
-				cmd.ManagedType = this.Module.Types [cmsig.ManagedType];
+				cmd.ManagedType = m_module.Types [cmsig.ManagedType];
 				cmd.Cookie = cmsig.Cookie;
 				return cmd;
 			} else if (ms.Spec is MarshalSig.FixedArray) {
@@ -806,7 +817,8 @@ namespace Mono.Cecil.Implem {
 
 		protected object GetConstant (uint pos, ElementType elemType)
 		{
-			BinaryReader br = m_root.Streams.BlobHeap.GetReader (pos);
+			byte [] constant = m_root.Streams.BlobHeap.Read (pos);
+			BinaryReader br = new BinaryReader (new MemoryStream (constant));
 
 			switch (elemType) {
 			case ElementType.Boolean :
@@ -834,10 +846,8 @@ namespace Mono.Cecil.Implem {
 			case ElementType.R8 :
 				return br.ReadDouble ();
 			case ElementType.String :
-				int next, length = Utilities.ReadCompressedInteger (
-					m_root.Streams.BlobHeap.Data, (int) br.BaseStream.Position, out next);
-				br.BaseStream.Position = next;
-				return Encoding.UTF8.GetString (br.ReadBytes (length));
+				string str = Encoding.UTF8.GetString (br.ReadBytes (constant.Length));
+				return str;
 			case ElementType.Class :
 				return null;
 			default :

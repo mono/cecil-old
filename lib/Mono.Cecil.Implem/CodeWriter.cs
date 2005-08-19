@@ -57,14 +57,17 @@ namespace Mono.Cecil.Implem {
 		{
 			IMethodBody body = instructions.Container;
 			long start = m_codeWriter.BaseStream.Position;
+
 			foreach (Instruction instr in instructions) {
 
 				instr.Offset = (int) (m_codeWriter.BaseStream.Position - start);
 
 				if (instr.OpCode.Size == 1)
-					m_codeWriter.Write ((byte) instr.OpCode.Value);
-				else
-					m_codeWriter.Write (instr.OpCode.Value);
+					m_codeWriter.Write (instr.OpCode.Op2);
+				else {
+					m_codeWriter.Write (instr.OpCode.Op1);
+					m_codeWriter.Write (instr.OpCode.Op2);
+				}
 
 				if (instr.OpCode.OperandType != OperandType.InlineNone &&
 					instr.Operand == null)
@@ -75,9 +78,8 @@ namespace Mono.Cecil.Implem {
 					break;
 				case OperandType.InlineSwitch :
 					IInstruction [] targets = instr.Operand as IInstruction [];
-					m_codeWriter.Write (targets.Length);
-					for (int i = 0; i < targets.Length; i++)
-						m_codeWriter.Write (0);
+					for (int i = 0; i < targets.Length + 1; i++)
+						m_codeWriter.Write ((uint) 0);
 					break;
 				case OperandType.ShortInlineBrTarget :
 					m_codeWriter.Write ((byte) 0);
@@ -142,16 +144,19 @@ namespace Mono.Cecil.Implem {
 				case OperandType.InlineSwitch :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					IInstruction [] targets = instr.Operand as IInstruction [];
+					m_codeWriter.Write ((uint) targets.Length);
 					foreach (IInstruction tgt in targets)
-						m_codeWriter.Write (instr.Offset - tgt.Offset);
+						m_codeWriter.Write ((uint) (tgt.Offset - instr.Next.Offset));
 					break;
 				case OperandType.ShortInlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
-					m_codeWriter.Write ((byte) (instr.Offset - (instr.Operand as IInstruction).Offset));
+					m_codeWriter.Write ((byte) ((instr.Operand as IInstruction).Offset -
+						(instr.Next != null ? instr.Next.Offset : 0)));
 					break;
 				case OperandType.InlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
-					m_codeWriter.Write (instr.Offset - (instr.Operand as IInstruction).Offset);
+					m_codeWriter.Write ((instr.Operand as IInstruction).Offset -
+						(instr.Next != null ? instr.Next.Offset : 0));
 					break;
 				}
 			}
@@ -159,21 +164,72 @@ namespace Mono.Cecil.Implem {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		public override void VisitExceptionHandlerCollection (IExceptionHandlerCollection seh)
+		private bool IsFat (IExceptionHandlerCollection seh)
 		{
-			// TODO
+			bool fat = false;
+			for (int i = 0; i < seh.Count && !fat; i++) {
+				IExceptionHandler eh = seh [i];
+				fat = eh.TryEnd.Offset - eh.TryStart.Offset > 255;
+			}
+
+			return fat;
 		}
 
-		public override void VisitExceptionHandler (IExceptionHandler eh)
+		private void WriteExceptionHandlerCollection (IExceptionHandlerCollection seh)
 		{
-			// TODO
+			m_codeWriter.QuadAlign ();
+
+			if (!IsFat (seh)) {
+				m_codeWriter.Write ((byte) MethodDataSection.EHTable);
+				m_codeWriter.Write ((byte) (seh.Count * 12 + 4));
+				m_codeWriter.Write (new byte [2]);
+				foreach (IExceptionHandler eh in seh) {
+					m_codeWriter.Write ((ushort) eh.Type);
+					m_codeWriter.Write ((ushort) eh.TryStart.Offset);
+					m_codeWriter.Write ((byte) (eh.TryEnd.Offset - eh.TryStart.Offset));
+					m_codeWriter.Write ((ushort) eh.HandlerStart.Offset);
+					m_codeWriter.Write ((byte) (eh.HandlerEnd.Offset - eh.HandlerStart.Offset));
+					WriteHandlerSpecific (eh);
+				}
+			} else {
+				m_codeWriter.Write ((byte) (MethodDataSection.FatFormat | MethodDataSection.EHTable));
+				WriteFatBlockSize (seh);
+				foreach (IExceptionHandler eh in seh) {
+					m_codeWriter.Write ((uint) eh.Type);
+					m_codeWriter.Write ((uint) eh.TryStart.Offset);
+					m_codeWriter.Write ((uint) (eh.TryEnd.Offset - eh.TryStart.Offset));
+					m_codeWriter.Write ((uint) eh.HandlerStart.Offset);
+					m_codeWriter.Write ((uint) (eh.HandlerEnd.Offset - eh.HandlerStart.Offset));
+					WriteHandlerSpecific (eh);
+				}
+			}
+		}
+
+		private void WriteFatBlockSize (IExceptionHandlerCollection seh)
+		{
+			int size = seh.Count * 24 + 4;
+			m_codeWriter.Write ((byte) (size & 0xff));
+			m_codeWriter.Write ((byte) ((size >> 8) & 0xff));
+			m_codeWriter.Write ((byte) ((size >> 16) & 0xff));
+		}
+
+		private void WriteHandlerSpecific (IExceptionHandler eh)
+		{
+			switch (eh.Type) {
+			case ExceptionHandlerType.Catch :
+				WriteToken (eh.CatchType.MetadataToken);
+				break;
+			case ExceptionHandlerType.Filter :
+				m_codeWriter.Write ((uint) eh.FilterStart.Offset);
+				break;
+			default :
+				m_codeWriter.Write (0);
+				break;
+			}
 		}
 
 		public override void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
 		{
-			if (variables.Count == 0)
-				return;
-
 			MethodBody body = variables.Container as MethodBody;
 			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
 			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (
@@ -192,28 +248,28 @@ namespace Mono.Cecil.Implem {
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
 				|| m_codeWriter.BaseStream.Length >= 64) {
 
-				MethodHeader header = (MethodHeader) ((ushort) MethodHeader.FatFormat |
-					m_codeWriter.BaseStream.Length << 2);
+				MethodHeader header = MethodHeader.FatFormat;
 				if (body.InitLocals)
 					header |= MethodHeader.InitLocals;
 				if (body.ExceptionHandlers.Count > 0)
 					header |= MethodHeader.MoreSects;
 
-				m_binaryWriter.Write ((ushort) header);
-				m_binaryWriter.Write ((ushort) body.MaxStack);
-				m_binaryWriter.Write ((uint) m_codeWriter.BaseStream.Length);
-				m_binaryWriter.Write ((uint) bdy.LocalVarToken);
+				m_binaryWriter.Write ((byte) header);
+				m_binaryWriter.Write ((byte) 0x30); // (header size / 4) << 4
+				m_binaryWriter.Write ((short) body.MaxStack);
+				m_binaryWriter.Write ((int) m_codeWriter.BaseStream.Length);
+				m_binaryWriter.Write (((int) TokenType.Signature | bdy.LocalVarToken));
+
+				WriteExceptionHandlerCollection (body.ExceptionHandlers);
 
 				m_binaryWriter.Write (m_codeWriter);
-				m_binaryWriter.QuadAlign ();
-
-				// TODO write exception table here
 			} else {
 				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
 					m_codeWriter.BaseStream.Length << 2));
 				m_binaryWriter.Write (m_codeWriter);
-				m_binaryWriter.QuadAlign ();
 			}
+
+			m_binaryWriter.QuadAlign ();
 
 			m_reflectWriter.MetadataWriter.AddData (
 				(int) (m_binaryWriter.BaseStream.Position - pos));

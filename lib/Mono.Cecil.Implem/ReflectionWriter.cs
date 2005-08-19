@@ -32,8 +32,6 @@ namespace Mono.Cecil.Implem {
 		private MetadataTableWriter m_tableWriter;
 		private MetadataRowWriter m_rowWriter;
 
-		private IDictionary m_primitives;
-
 		private IList m_membersRefContainer;
 		private IList m_methodStack;
 		private IList m_fieldDataStack;
@@ -86,8 +84,6 @@ namespace Mono.Cecil.Implem {
 		{
 			m_mod = mod;
 
-			m_primitives = new Hashtable ();
-
 			m_membersRefContainer = new ArrayList ();
 			m_methodStack = new ArrayList ();
 			m_fieldDataStack = new ArrayList ();
@@ -99,29 +95,6 @@ namespace Mono.Cecil.Implem {
 			m_propertyIndex = 1;
 
 			m_constWriter = new MemoryBinaryWriter ();
-
-			FillPrimitives ();
-		}
-
-		private void FillPrimitives ()
-		{
-			object o = new object ();
-			m_primitives [Constants.Void] = o;
-			m_primitives [Constants.String] = o;
-			m_primitives [Constants.Boolean] = o;
-			m_primitives [Constants.Char] = o;
-			m_primitives [Constants.Single] = o;
-			m_primitives [Constants.Double] = o;
-			m_primitives [Constants.SByte] = o;
-			m_primitives [Constants.Byte] = o;
-			m_primitives [Constants.Int16] = o;
-			m_primitives [Constants.UInt16] = o;
-			m_primitives [Constants.Int32] = o;
-			m_primitives [Constants.UInt32] = o;
-			m_primitives [Constants.Int64] = o;
-			m_primitives [Constants.UInt64] = o;
-			m_primitives [Constants.IntPtr] = o;
-			m_primitives [Constants.UIntPtr] = o;
 		}
 
 		public void AddMemberRef (IMemberReference member)
@@ -162,6 +135,11 @@ namespace Mono.Cecil.Implem {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
+		public bool IsCoreType (ITypeReference type, string constant)
+		{
+			return constant == string.Concat (type.Namespace, '.', type.Name);
+		}
+
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
 			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
@@ -198,8 +176,6 @@ namespace Mono.Cecil.Implem {
 			foreach (ITypeDefinition t in types)
 				orderedTypes.Add (t);
 
-			orderedTypes.Sort (TypeDefComparer.Instance);
-
 			foreach (ITypeDefinition t in orderedTypes) {
 				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 					t.Attributes,
@@ -211,6 +187,7 @@ namespace Mono.Cecil.Implem {
 
 				tdTable.Rows.Add (tdRow);
 				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) tdTable.Rows.Count);
+				Console.WriteLine ("{0}:{1}", t.FullName, t.MetadataToken.RID);
 
 				if (t.LayoutInfo.HasLayoutInfo)
 					WriteLayout (t);
@@ -224,86 +201,23 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		private class TypeDefComparer : IComparer {
-
-			public static readonly TypeDefComparer Instance = new TypeDefComparer ();
-
-			private TypeDefComparer ()
-			{
-			}
-
-			private bool Implements (TypeDefinition cur, TypeDefinition t)
-			{
-				if (t == null || cur == t || cur.Interfaces.Count == 0 || !t.IsInterface)
-					return false;
-
-				if (cur.Interfaces.Contains (t))
-					return true;
-
-				// Process hierarchy
-				if(cur.BaseType != null && cur.BaseType is TypeDefinition)
-					return Implements(cur.BaseType as TypeDefinition, t);
-
-				return false;
-			}
-
-			private bool Extends (TypeDefinition cur, TypeDefinition t)
-			{
-				if (cur == t || cur.BaseType == null || !(cur.BaseType is TypeDefinition))
-					return false;
-				else if (cur.BaseType is TypeDefinition && cur.BaseType == t)
-					return true;
-
-				return Extends (cur.BaseType as TypeDefinition, t);
-			}
-
-			private bool DerivesFrom (TypeDefinition cur, TypeDefinition t)
-			{
-				if (t.IsInterface)
-					return Implements (cur, t);
-				else
-					return Extends (cur, t);
-			}
-
-			public int Compare (object x, object y)
-			{
-				TypeDefinition a = x as TypeDefinition;
-				TypeDefinition b = y as TypeDefinition;
-
-				if (a == null || b == null)
-					throw new ReflectionException ("TypeDefComparer can only compare TypeDefinition");
-
-				if (a == b)
-					return 0;
-
-				if (a.Name == Constants.ModuleType)
-					return -1;
-				else if (b.Name == Constants.ModuleType)
-					return 1;
-
-				if (DerivesFrom (a, b))
-					return 1;
-				else if (DerivesFrom (b, a))
-					return -1;
-
-				return Comparer.Default.Compare (a.FullName, b.FullName);
-			}
-		}
-
 		public override void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
 		{
 			ImportMemberRefFromReader ();
 
 			ArrayList orderedTypeRefs = new ArrayList (refs.Count);
 			foreach (TypeReference tr in refs)
-				if (!m_primitives.Contains (tr.FullName))
 					orderedTypeRefs.Add (tr);
 
-			orderedTypeRefs.Sort (TypeRefComparer.Instance);
+			orderedTypeRefs.Sort (TableComparers.TypeRef.Instance);
 
 			TypeRefTable trTable = m_tableWriter.GetTypeRefTable ();
 			foreach (TypeReference t in orderedTypeRefs) {
 				MetadataToken scope;
+
+				if (t.Scope == null)
+					continue;
+
 				if (t.DeclaringType != null)
 					scope = new MetadataToken (TokenType.TypeRef, GetRidFor (t.DeclaringType));
 				if (t.Scope is IAssemblyNameReference)
@@ -325,31 +239,6 @@ namespace Mono.Cecil.Implem {
 
 				trTable.Rows.Add (trRow);
 				t.MetadataToken = new MetadataToken (TokenType.TypeRef, (uint) trTable.Rows.Count);
-			}
-		}
-
-		private class TypeRefComparer : IComparer {
-
-			public static readonly TypeRefComparer Instance = new TypeRefComparer ();
-
-			private TypeRefComparer ()
-			{
-			}
-
-			public int Compare (object x, object y)
-			{
-				TypeReference a = x as TypeReference;
-				TypeReference b = y as TypeReference;
-
-				if (a == null || b == null)
-					throw new ReflectionException ("TypeRefComparer can only compare TypeReference");
-
-				if (b.DeclaringType == a)
-					return -1;
-				else if (a.DeclaringType == b)
-					return 1;
-
-				return Comparer.Default.Compare (a.FullName, b.FullName);
 			}
 		}
 
@@ -394,6 +283,8 @@ namespace Mono.Cecil.Implem {
 		{
 			NestedClassTable ncTable = m_tableWriter.GetNestedClassTable ();
 			foreach (ITypeDefinition nested in nestedTypes) {
+		//		Console.WriteLine ("NESTED TYPE {0}:{1} PARENT RID: {2}",
+		//			nested.FullName, nested.MetadataToken.RID, GetRidFor (nestedTypes.Container));
 				NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
 					nested.MetadataToken.RID,
 					GetRidFor (nestedTypes.Container));
@@ -577,7 +468,7 @@ namespace Mono.Cecil.Implem {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					parent,
-					m_mdWriter.AddBlob (secDec.GetAsByteArray (), true));
+					m_mdWriter.AddBlob (secDec.GetAsByteArray ()));
 
 				dsTable.Rows.Add (dsRow);
 			}
@@ -618,12 +509,19 @@ namespace Mono.Cecil.Implem {
 		private void WriteConstant (IHasConstant hc, MetadataToken parent, ITypeReference type)
 		{
 			ConstantTable cTable = m_tableWriter.GetConstantTable ();
-			ElementType et = GetCorrespondingType (type);
-			bool addSize;
+			ElementType et;
+			if (type is TypeDefinition && (type as TypeDefinition).IsEnum) {
+				Type t = hc.Constant.GetType ();
+				if (t.IsEnum)
+					t = Enum.GetUnderlyingType (t);
+
+				et = GetCorrespondingType (string.Concat (t.Namespace, '.', t.Name));
+			} else
+				et = GetCorrespondingType (string.Concat (type.Namespace, '.', type.Name));
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
 				parent,
-				m_mdWriter.AddBlob (EncodeConstant (et, hc.Constant, out addSize), addSize));
+				m_mdWriter.AddBlob (EncodeConstant (et, hc.Constant)));
 
 			cTable.Rows.Add (cRow);
 		}
@@ -682,6 +580,16 @@ namespace Mono.Cecil.Implem {
 				}
 			}
 
+			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+
+			if (th.HasTable (typeof (NestedClassTable)))
+				m_tableWriter.GetNestedClassTable ().Rows.Sort (
+					TableComparers.NestedClass.Instance);
+
+			if (th.HasTable (typeof (InterfaceImplTable)))
+				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
+					TableComparers.InterfaceImpl.Instance);
+
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++)
 				mTable [i].RVA = m_codeWriter.WriteMethodBody (
@@ -708,9 +616,9 @@ namespace Mono.Cecil.Implem {
 			m_mod.Image.MetadataRoot.Accept (m_mdWriter);
 		}
 
-		public ElementType GetCorrespondingType (ITypeReference type)
+		public ElementType GetCorrespondingType (string fullName)
 		{
-			switch (type.FullName) {
+			switch (fullName) {
 			case Constants.Boolean :
 				return ElementType.Boolean;
 			case Constants.Char :
@@ -744,10 +652,9 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		private byte [] EncodeConstant (ElementType et, object value, out bool addSize)
+		private byte [] EncodeConstant (ElementType et, object value)
 		{
 			m_constWriter.Empty ();
-			addSize = false;
 
 			switch (et) {
 			case ElementType.Boolean :
@@ -787,7 +694,6 @@ namespace Mono.Cecil.Implem {
 				m_constWriter.Write ((double) value);
 				break;
 			case ElementType.String :
-				addSize = true;
 				m_constWriter.Write (Encoding.UTF8.GetBytes ((string) value));
 				break;
 			case ElementType.Class :
@@ -802,7 +708,8 @@ namespace Mono.Cecil.Implem {
 
 		public SigType GetSigType (ITypeReference type)
 		{
-			string name = type.FullName;
+			string name = string.Concat (
+				type.Namespace, '.', type.Name);
 
 			switch (name) {
 			case Constants.Void :
@@ -856,7 +763,7 @@ namespace Mono.Cecil.Implem {
 			} else if (type is IPointerType) {
 				PTR p = new PTR ();
 				ITypeReference elementType = (type as IPointerType).ElementType;
-				p.Void = elementType.FullName == Constants.Void;
+				p.Void = IsCoreType (elementType, Constants.Void);
 				if (!p.Void) {
 					p.CustomMods = GetCustomMods (elementType);
 					p.PtrType = GetSigType (elementType);
@@ -933,7 +840,7 @@ namespace Mono.Cecil.Implem {
 				IParameterDefinition pDef =parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
-				if (pDef.ParameterType.FullName == Constants.TypedReference)
+				if (IsCoreType (pDef.ParameterType, Constants.TypedReference))
 					p.TypedByRef = true;
 				else if (pDef.ParameterType is IReferenceType) {
 					p.ByRef = true;
@@ -964,9 +871,9 @@ namespace Mono.Cecil.Implem {
 			RetType rtSig = new RetType ();
 			rtSig.CustomMods = GetCustomMods (meth.ReturnType.ReturnType);
 
-			if (meth.ReturnType.ReturnType.FullName == Constants.Void)
+			if (IsCoreType (meth.ReturnType.ReturnType, Constants.Void))
 				rtSig.Void = true;
-			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
+			else if (IsCoreType (meth.ReturnType.ReturnType, Constants.TypedReference))
 				rtSig.TypedByRef = true;
 			else if (meth.ReturnType.ReturnType is IReferenceType) {
 				rtSig.ByRef = true;

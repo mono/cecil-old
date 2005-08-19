@@ -13,8 +13,6 @@
 namespace Mono.Cecil {
 
 	public interface IModuleReference : IMetadataScope, IReflectionStructureVisitable {
-
-		string Name { get; set; }
 	}
 }
 

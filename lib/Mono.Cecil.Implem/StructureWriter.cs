@@ -66,7 +66,7 @@ namespace Mono.Cecil.Implem {
 				(ushort) name.Version.Build,
 				(ushort) name.Version.Revision,
 				name.Flags,
-				m_mdWriter.AddBlob (name.PublicKey, true),
+				m_mdWriter.AddBlob (name.PublicKey),
 				m_mdWriter.AddString (name.Name),
 				m_mdWriter.AddString (name.Culture));
 
@@ -95,10 +95,10 @@ namespace Mono.Cecil.Implem {
 				(ushort) name.Version.Build,
 				(ushort) name.Version.Revision,
 				name.Flags,
-				m_mdWriter.AddBlob (pkortoken, true),
+				m_mdWriter.AddBlob (pkortoken),
 				m_mdWriter.AddString (name.Name),
 				m_mdWriter.AddString (name.Culture),
-				m_mdWriter.AddBlob (name.Hash, true));
+				m_mdWriter.AddBlob (name.Hash));
 
 			arTable.Rows.Add (arRow);
 		}
@@ -122,7 +122,7 @@ namespace Mono.Cecil.Implem {
 			FileRow fRow = m_rowWriter.CreateFileRow (
 				Mono.Cecil.FileAttributes.ContainsNoMetaData,
 				m_mdWriter.AddString (res.File),
-				m_mdWriter.AddBlob (res.Hash, true));
+				m_mdWriter.AddBlob (res.Hash));
 
 			fTable.Rows.Add (fRow);
 

@@ -93,13 +93,19 @@ namespace Mono.Cecil.Implem {
 				if (m_fullName != null && !m_fullNameDiscarded)
 					return m_fullName;
 
+				string fullName;
+				if (!(this is ITypeDefinition) && m_scope != null)
+					fullName = string.Concat ('[', this.Scope.Name, ']');
+				else
+					fullName= string.Empty;
+
 				if (m_decType != null)
-					return string.Concat (m_decType.FullName, "/", m_name);
+					return string.Concat (fullName, m_decType.FullName, "/", m_name);
 
 				if (m_namespace == null || m_namespace.Length == 0)
-					return m_name;
+					return string.Concat (fullName, m_name);
 
-				m_fullName = string.Concat (m_namespace, ".", m_name);
+				m_fullName = string.Concat (fullName, m_namespace, ".", m_name);
 				m_fullNameDiscarded = false;
 				return m_fullName;
 			}

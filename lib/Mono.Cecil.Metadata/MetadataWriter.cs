@@ -149,7 +149,7 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		public uint AddBlob (byte [] data, bool withSize)
+		public uint AddBlob (byte [] data)
 		{
 			if (data == null || data.Length == 0)
 				return 0;
@@ -160,8 +160,7 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_blobWriter.BaseStream.Position;
 			m_blobCache [key] = pointer;
-			if (withSize)
-				Utilities.WriteCompressedInteger (m_blobWriter, data.Length);
+			Utilities.WriteCompressedInteger (m_blobWriter, data.Length);
 			m_blobWriter.Write (data);
 			return pointer;
 		}

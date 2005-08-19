@@ -117,7 +117,7 @@ namespace Mono.Cecil.Implem {
 
 					eres.Data = br.ReadBytes (br.ReadInt32 ());
 
-					resources [eres.Name] = eres;
+					resources.Add (eres);
 					continue;
 				}
 
@@ -128,7 +128,7 @@ namespace Mono.Cecil.Implem {
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
 						module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
 					lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
-					resources [lres.Name] = lres;
+					resources.Add (lres);
 					break;
 				case TokenType.AssemblyRef :
 					AssemblyNameReference asm =
@@ -136,7 +136,7 @@ namespace Mono.Cecil.Implem {
 					AssemblyLinkedResource alr = new AssemblyLinkedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name],
 						mrRow.Flags, module, asm);
-					resources [alr.Name] = alr;
+					resources.Add (alr);
 					break;
 				}
 			}

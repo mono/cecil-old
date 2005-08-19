@@ -16,7 +16,6 @@ namespace Mono.Cecil {
 
 	public interface IAssemblyNameReference : IMetadataScope, IReflectionStructureVisitable {
 
-		string Name { get; set; }
 		string Culture { get; set; }
 		string FullName { get; }
 		Version Version { get; set; }

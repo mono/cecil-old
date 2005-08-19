@@ -18,10 +18,12 @@ namespace Mono.Cecil.Implem {
 		{
 		}
 
-		public const string Corlib = "mscorlib";
+		public const string CorlibName = "mscorlib";
 
 		public const string ModuleType = "<Module>";
+		public const string PrivateImplDetails = "<PrivateImplementationDetails>";
 
+		public const string Corlib = "[mscorlib]";
 		public const string Void = "System.Void";
 		public const string Object = "System.Object";
 		public const string String = "System.String";

@@ -129,7 +129,7 @@ namespace Mono.Cecil.Implem {
 				case OperandType.InlineVar :
 					instr.Operand = body.Variables [br.ReadInt32 ()];
 					break;
-				case OperandType.InlineParam : // get an IParamDef as operand, adjust the index if static
+				case OperandType.InlineParam : // TODO get an IParamDef as operand, adjust the index if static
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineI8 :

@@ -36,7 +36,7 @@ namespace Mono.Cecil.Signatures {
 
 		private uint GetPointer ()
 		{
-			return m_mdWriter.AddBlob (m_sigWriter.ToArray (), true);
+			return m_mdWriter.AddBlob (m_sigWriter.ToArray ());
 		}
 
 		public uint AddMethodDefSig (MethodDefSig methSig)

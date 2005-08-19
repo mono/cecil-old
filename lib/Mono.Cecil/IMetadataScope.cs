@@ -13,5 +13,6 @@
 namespace Mono.Cecil {
 
 	public interface IMetadataScope {
+		string Name { get; set; }
 	}
 }

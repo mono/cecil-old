@@ -17,7 +17,7 @@ namespace Mono.Cecil.Metadata {
 
 	public class RowCollection : ICollection, IMetadataRowVisitable {
 
-		private IList m_items;
+		private ArrayList m_items;
 
 		public IMetadataRow this [int index] {
 			get { return m_items [index] as IMetadataRow; }
@@ -84,6 +84,11 @@ namespace Mono.Cecil.Metadata {
 		public void CopyTo (Array ary, int index)
 		{
 			m_items.CopyTo (ary, index);
+		}
+
+		public void Sort (IComparer comp)
+		{
+			m_items.Sort (comp);
 		}
 
 		public IEnumerator GetEnumerator ()

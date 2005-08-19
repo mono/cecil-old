@@ -17,42 +17,30 @@ namespace Mono.Cecil.Implem {
 
 	using System;
 	using System.Collections;
+	using System.Collections.Specialized;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Cil;
 
-	internal class <%=$cur_coll.name%> : <%=$cur_coll.intf%>, ILazyLoadableCollection {
+	internal class <%=$cur_coll.name%> : NameObjectCollectionBase, <%=$cur_coll.intf%>, ILazyLoadableCollection {
 
-		private IDictionary m_items;
 		private <%=$cur_coll.container_impl%> m_container;
 		private ReflectionController m_controller;
 
 		private bool m_loaded;
 
-		public <%=$cur_coll.type%> this [string name] {
-			get { return m_items [name] as <%=$cur_coll.type%>; }
-			set { m_items [name] = value; }
+		public <%=$cur_coll.type%> this [int index] {
+			get { return this.BaseGet (index) as <%=$cur_coll.type%>; }
+			set { this.BaseSet (index, value); }
+		}
+
+		public <%=$cur_coll.type%> this [string fullName] {
+			get { return this.BaseGet (fullName) as <%=$cur_coll.type%>; }
+			set { this.BaseSet (fullName, value); }
 		}
 
 		public <%=$cur_coll.container%> Container {
 			get { return m_container; }
-		}
-
-		public void Add (string name, <%=$cur_coll.type%> value)
-		{
-			m_items.Add (name, value);
-		}
-
-		public int Count {
-			get { return m_items.Count; }
-		}
-
-		public bool IsSynchronized {
-			get { return false; }
-		}
-
-		public object SyncRoot {
-			get { return this; }
 		}
 
 		public bool Loaded {
@@ -63,7 +51,6 @@ namespace Mono.Cecil.Implem {
 		public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
 		{
 			m_container = container;
-			m_items = new Hashtable ();
 		}
 
 		public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container, ReflectionController controller) : this (container)
@@ -71,29 +58,52 @@ namespace Mono.Cecil.Implem {
 			m_controller = controller;
 		}
 
+		public void Add (<%=$cur_coll.type%> value)
+		{
+			if (value == null)
+				throw new ArgumentNullException ("value");
+
+			this.BaseSet (value.FullName, value);
+		}
+
 		public void Clear ()
 		{
-			m_items.Clear ();
+			this.BaseClear ();
 		}
 
 		public bool Contains (<%=$cur_coll.type%> value)
 		{
-			return m_items.Contains (value);
+			return Contains (value.FullName);
+		}
+
+		public bool Contains (string fullName)
+		{
+			return this.BaseGet (fullName) != null;
+		}
+
+		public int IndexOf (<%=$cur_coll.type%> value)
+		{
+			return Array.IndexOf (this.BaseGetAllKeys (), value.FullName);
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
 		{
-			m_items.Remove (value);
+			this.BaseRemove (value.FullName);
+		}
+
+		public void RemoveAt (int index)
+		{
+			this.BaseRemoveAt (index);
 		}
 
 		public void CopyTo (Array ary, int index)
 		{
-			m_items.Values.CopyTo (ary, index);
+			(this as ICollection).CopyTo (ary, index);
 		}
 
-		public IEnumerator GetEnumerator ()
+		public override IEnumerator GetEnumerator ()
 		{
-			return m_items.Values.GetEnumerator ();
+			return this.BaseGetAllValues ().GetEnumerator ();
 		}
 
 		public void Load ()

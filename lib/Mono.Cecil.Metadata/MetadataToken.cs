@@ -38,8 +38,8 @@ namespace Mono.Cecil.Metadata {
 
 		public override string ToString ()
 		{
-			return string.Format ("0x{0} [{1}]",
-								  m_type, m_rid);
+			return string.Format ("{0} [0x{1}]",
+				m_type, m_rid.ToString ("x4"));
 		}
 	}
 }
