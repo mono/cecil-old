@@ -265,6 +265,7 @@
 ./Mono.Cecil.Implem/SecurityDeclarationCollection.cs
 ./Mono.Cecil.Implem/StructureReader.cs
 ./Mono.Cecil.Implem/StructureWriter.cs
+./Mono.Cecil.Implem/TablesComparer.cs
 ./Mono.Cecil.Implem/TypeDefinition.cs
 ./Mono.Cecil.Implem/TypeDefinitionCollection.cs
 ./Mono.Cecil.Implem/TypeReference.cs

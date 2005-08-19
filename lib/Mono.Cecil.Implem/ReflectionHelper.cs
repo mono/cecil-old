@@ -55,15 +55,13 @@ namespace Mono.Cecil.Implem {
 
 		private string GetTypeSignature (Type t)
 		{
-			string fullName = string.Concat ('[', t.Assembly.GetName ().Name, ']');
-
 			if (t.DeclaringType != null)
-				return string.Concat (fullName, t.DeclaringType.FullName, "/", t.Name);
+				return string.Concat (t.DeclaringType.FullName, "/", t.Name);
 
 			if (t.Namespace == null || t.Namespace.Length == 0)
-				return string.Concat (fullName, t.Name);
+				return t.Name;
 
-			return string.Concat (fullName, t.Namespace, ".", t.Name);
+			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
 		public ITypeReference RegisterType (Type t)

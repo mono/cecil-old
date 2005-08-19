@@ -135,11 +135,6 @@ namespace Mono.Cecil.Implem {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		public bool IsCoreType (ITypeReference type, string constant)
-		{
-			return constant == string.Concat (type.Namespace, '.', type.Name);
-		}
-
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
 			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
@@ -517,7 +512,7 @@ namespace Mono.Cecil.Implem {
 
 				et = GetCorrespondingType (string.Concat (t.Namespace, '.', t.Name));
 			} else
-				et = GetCorrespondingType (string.Concat (type.Namespace, '.', type.Name));
+				et = GetCorrespondingType (type.FullName);
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
 				parent,
@@ -708,8 +703,7 @@ namespace Mono.Cecil.Implem {
 
 		public SigType GetSigType (ITypeReference type)
 		{
-			string name = string.Concat (
-				type.Namespace, '.', type.Name);
+			string name = type.FullName;
 
 			switch (name) {
 			case Constants.Void :
@@ -763,7 +757,7 @@ namespace Mono.Cecil.Implem {
 			} else if (type is IPointerType) {
 				PTR p = new PTR ();
 				ITypeReference elementType = (type as IPointerType).ElementType;
-				p.Void = IsCoreType (elementType, Constants.Void);
+				p.Void = elementType.FullName == Constants.Void;
 				if (!p.Void) {
 					p.CustomMods = GetCustomMods (elementType);
 					p.PtrType = GetSigType (elementType);
@@ -840,7 +834,7 @@ namespace Mono.Cecil.Implem {
 				IParameterDefinition pDef =parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
-				if (IsCoreType (pDef.ParameterType, Constants.TypedReference))
+				if (pDef.ParameterType.FullName == Constants.TypedReference)
 					p.TypedByRef = true;
 				else if (pDef.ParameterType is IReferenceType) {
 					p.ByRef = true;
@@ -871,9 +865,9 @@ namespace Mono.Cecil.Implem {
 			RetType rtSig = new RetType ();
 			rtSig.CustomMods = GetCustomMods (meth.ReturnType.ReturnType);
 
-			if (IsCoreType (meth.ReturnType.ReturnType, Constants.Void))
+			if (meth.ReturnType.ReturnType.FullName == Constants.Void)
 				rtSig.Void = true;
-			else if (IsCoreType (meth.ReturnType.ReturnType, Constants.TypedReference))
+			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
 				rtSig.TypedByRef = true;
 			else if (meth.ReturnType.ReturnType is IReferenceType) {
 				rtSig.ByRef = true;
@@ -884,7 +878,6 @@ namespace Mono.Cecil.Implem {
 
 			sig.RetType = rtSig;
 		}
-
 
 		public MethodRefSig GetMethodRefSig (IMethodReference meth)
 		{

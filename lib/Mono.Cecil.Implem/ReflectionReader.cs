@@ -553,11 +553,6 @@ namespace Mono.Cecil.Implem {
 				if (etRow.Implementation.TokenType != TokenType.File)
 					continue;
 
-				/*
-				TODO get the real typeref name
-				[module]Namespace.Name
-				*/
-
 				string name = m_root.Streams.StringsHeap [etRow.TypeName];
 				string ns = m_root.Streams.StringsHeap [etRow.TypeNamespace];
 				if (ns.Length == 0)

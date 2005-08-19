@@ -1,5 +1,19 @@
 2005-08-09  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.Implem/ReflectionHelper.cs
+	  Mono.Cecil.Implem/TypeReference.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/TablesComparer.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix the build.
+		Stop to prefix typeref by the scope.
+		Cecil will have buggy behaviour if it have to handle
+		two typeref with the same namespace+name, but for the
+		moment, let it like that.
+
 	* Mono.Cecil/INestedTypeCollection.cs
 	  Mono.Cecil/IModuleReference.cs
 	  Mono.Cecil/ITypeReferenceCollection.cs

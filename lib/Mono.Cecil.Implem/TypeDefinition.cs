@@ -212,15 +212,13 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public bool IsEnum {
-			get { return m_baseType != null &&
-					m_module.Controller.Writer.IsCoreType (m_baseType, Constants.Enum); }
+			get { return m_baseType != null && m_baseType.FullName == Constants.Enum; }
 		}
 
 		public bool IsValueType {
 			get {
 				return m_baseType != null && (
-					this.IsEnum || m_module.Controller.Writer.IsCoreType (
-						m_baseType, Constants.ValueType));
+					this.IsEnum || m_baseType.FullName == Constants.ValueType);
 			}
 		}
 

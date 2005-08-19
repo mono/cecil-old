@@ -580,7 +580,7 @@ namespace Mono.Cecil.Signatures {
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
-			string elemName = string.Concat (elemType.Namespace, '.', elemType.Name);
+			string elemName = elemType.FullName;
 
 			if (elemName == Constants.Object) {
 				ElementType elementType = (ElementType) br.ReadByte ();
