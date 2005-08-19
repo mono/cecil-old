@@ -1,4 +1,34 @@
-2005-08-09  Jb Evain  <jbevain@gmail.com>
+2005-08-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IModuleDefinitionCollection.cs
+	  Mono.Cecil/IInterfaceCollection.cs
+	  Mono.Cecil/INestedTypeCollection.cs
+	  Mono.Cecil/ITypeReferenceCollection.cs
+	  Mono.Cecil/IExternTypeCollection.cs
+	  Mono.Cecil/IArrayDimensionCollection.cs
+	  Mono.Cecil/IMethodDefinitionCollection.cs
+	  Mono.Cecil/IPropertyDefinitionCollection.cs
+	  Mono.Cecil/IAssemblyNameReferenceCollection.cs
+	  Mono.Cecil/IModuleReferenceCollection.cs
+	  Mono.Cecil/ISecurityDeclarationCollection.cs
+	  Mono.Cecil/IResourceCollection.cs
+	  Mono.Cecil/IParameterDefinitionCollection.cs
+	  Mono.Cecil/IEventDefinitionCollection.cs
+	  Mono.Cecil/ITypeDefinitionCollection.cs
+	  Mono.Cecil/IFieldDefinitionCollection.cs
+	  Mono.Cecil/ICustomAttributeCollection.cs
+	  Mono.Cecil/IOverrideCollection.cs
+	  Mono.Cecil.Cil/IExceptionHandlerCollection.cs
+	  Mono.Cecil.Cil/IVariableDefinitionCollection.cs
+	  Mono.Cecil.Cil/IInstructionCollection.cs
+	  CodeGen/templates/IIndexedCollection.cs
+	  CodeGen/templates/INamedCollection.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Binary/SubSystem.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		On going change to the writing api. Not setter allowed on
+		collections. Work on custom attribute encoding. Remove
+		the Flags on Subsystem.
 
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.Implem/ReflectionHelper.cs

@@ -19,8 +19,8 @@ namespace Mono.Cecil {
 
 	public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
-		<%=$cur_coll.type%> this [int index] { get; set; }
-		<%=$cur_coll.type%> this [string fullName] { get; set; }
+		<%=$cur_coll.type%> this [int index] { get; }
+		<%=$cur_coll.type%> this [string fullName] { get; }
 
 		<%=$cur_coll.container%> Container { get; }
 

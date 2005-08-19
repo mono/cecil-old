@@ -278,8 +278,6 @@ namespace Mono.Cecil.Implem {
 		{
 			NestedClassTable ncTable = m_tableWriter.GetNestedClassTable ();
 			foreach (ITypeDefinition nested in nestedTypes) {
-		//		Console.WriteLine ("NESTED TYPE {0}:{1} PARENT RID: {2}",
-		//			nested.FullName, nested.MetadataToken.RID, GetRidFor (nestedTypes.Container));
 				NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
 					nested.MetadataToken.RID,
 					GetRidFor (nestedTypes.Container));
@@ -471,7 +469,8 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
-			/*CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
+			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
+			Console.WriteLine ("VisitCas, parent: {0}, count: {1}", customAttrs.Container, customAttrs.Count);
 			foreach (ICustomAttribute ca in customAttrs) {
 				MetadataToken parent;
 				if (customAttrs.Container is IAssemblyDefinition)
@@ -488,7 +487,7 @@ namespace Mono.Cecil.Implem {
 					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
 
 				caTable.Rows.Add (caRow);
-			}*/
+			}
 		}
 
 		public override void VisitMarshalSpec (IMarshalSpec marshalSpec)
@@ -956,54 +955,41 @@ namespace Mono.Cecil.Implem {
 
 		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
 		{
-			return null;
-			/*
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
 			cas.Prolog = CustomAttrib.StdProlog;
 
+			cas.FixedArgs = new CustomAttrib.FixedArg [0];
+
 			cas.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
+
 			for (int i = 0; i < cas.FixedArgs.Length; i++) {
 				object o = ca.ConstructorParameters [i];
 				CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
-				if (o is object []) {
-					object [] values = o as object [];
-					fa.Elems = new CustomAttrib.Elem [values.Length];
-					for (int j = 0; j < values.Length; j++) {
-						CustomAttrib.Elem elem = new CustomAttrib.Elem ();
-						elem.Value = values [j];
-						elem.FieldOrPropType = ElementType.Object;
-						elem.ElemType = ca.Constructor.Parameters [i].ParameterType;
-						fa.Elems [j] = elem;
-					}
-				} else {
+//				if (o is object []) {
+//					object [] values = o as object [];
+//					fa.Elems = new CustomAttrib.Elem [values.Length];
+//					for (int j = 0; j < values.Length; j++) {
+//						CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+//						elem.Value = values [j];
+//						elem.FieldOrPropType = ElementType.Object;
+//						elem.ElemType = ca.Constructor.Parameters [i].ParameterType;
+//						fa.Elems [j] = elem;
+//					}
+//				} else {
 					fa.Elems = new CustomAttrib.Elem [1];
 					fa.Elems [0].Value = o;
 					fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
-					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType);
-				}
+					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType.FullName);
+//				}
 
 				cas.FixedArgs [i] = fa;
 			}
 
-			cas.NumNamed = (ushort) (ca.Fields.Count + ca.Properties.Count);
-			int counter = 0;
-			foreach (DictionaryEntry de in ca.Fields) {
-				CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
-				na.Field = true;
-				na.FieldOrPropName = (string) de.Key;
-				na.FieldOrPropType = GetCorrespondingType ((ITypeReference) de.Value);
+			cas.NumNamed = 0;
 
-				cas.NamedArgs [counter++] = na;
-			}
+			cas.NamedArgs = new CustomAttrib.NamedArg [0];
 
-			foreach (DictionaryEntry de in ca.Properties) {
-				CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
-				na.Property = true;
-				na.FieldOrPropName = (string) de.Key;
-
-			}
-
-			return cas;*/
+			return cas;
 		}
 
 		public MarshalSig GetMarshalSig (IMarshalSpec mSpec)

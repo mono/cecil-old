@@ -87,15 +87,21 @@ namespace Mono.Cecil.Signatures {
 
 		public uint AddCustomAttribute (CustomAttrib ca, IMethodReference ctor)
 		{
-			m_sigWriter.Write (CompressCustomAttribute (ca, ctor));
+			m_sigWriter.Empty ();
+			CompressCustomAttribute (ca, ctor, m_sigWriter);
 			return GetPointer ();
 		}
 
 		public byte [] CompressCustomAttribute (CustomAttrib ca, IMethodReference ctor)
 		{
-			m_sigWriter.Empty ();
-			Write (ca, ctor);
-			return m_sigWriter.ToArray ();
+			MemoryBinaryWriter writer = new MemoryBinaryWriter ();
+			CompressCustomAttribute (ca, ctor, writer);
+			return writer.ToArray ();
+		}
+
+		private void CompressCustomAttribute (CustomAttrib ca, IMethodReference ctor, MemoryBinaryWriter writer)
+		{
+			Write (ca, ctor, writer);
 		}
 
 		public void VisitMethodDefSig (MethodDefSig methodDef)
@@ -297,75 +303,112 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		private void Write (CustomAttrib ca, IMethodReference ctor)
+		private void Write (CustomAttrib ca, IMethodReference ctor, MemoryBinaryWriter writer)
 		{
-			if (ca == null) // TODO temp !
+			if (ca == null)
 				return;
 
 			if (ca.Prolog != CustomAttrib.StdProlog)
 				return;
 
-			m_sigWriter.Write (ca.Prolog);
+			writer.Write (ca.Prolog);
+
+			Console.WriteLine ("Prolog written");
 
 			for (int i = 0; i < ctor.Parameters.Count; i++) {
-				ITypeReference paramType = ctor.Parameters [i].ParameterType;
-				Write (ca.FixedArgs [i], paramType);
+				Console.WriteLine ("Param: {0}", i);
+				Write (ca.FixedArgs [i], writer);
 			}
 
-			m_sigWriter.Write ((ushort) ca.NamedArgs.Length);
-			foreach (CustomAttrib.NamedArg na in ca.NamedArgs)
-				Write (na);
+			writer.Write (ca.NumNamed);
+
+			for (int i = 0; i < ca.NumNamed; i++) {
+				Console.WriteLine ("NamedArg: {0}", i);
+				Write (ca.NamedArgs [i], writer);
+			}
+
+			Console.WriteLine ("ca length: {0}", m_sigWriter.BaseStream.Length);
 		}
 
-		private void Write (CustomAttrib.FixedArg fa, object type)
+		private void Write (CustomAttrib.FixedArg fa, MemoryBinaryWriter writer)
 		{
 			if (fa.SzArray)
-				m_sigWriter.Write (fa.NumElem);
+				writer.Write (fa.NumElem);
 
 			foreach (CustomAttrib.Elem elem in fa.Elems)
-				Write (elem, type);
+				Write (elem, writer);
 		}
 
-		private void Write (CustomAttrib.NamedArg na)
+		private void Write (CustomAttrib.NamedArg na, MemoryBinaryWriter writer)
 		{
 			if (na.Field)
-				m_sigWriter.Write ((byte) 0x53);
+				writer.Write ((byte) 0x53);
 			else if (na.Property)
-				m_sigWriter.Write ((byte) 0x54);
+				writer.Write ((byte) 0x54);
 			else
 				throw new MetadataFormatException ("Unknown kind of namedarg");
 
 			if (na.FixedArg.SzArray)
-				m_sigWriter.Write ((byte) ElementType.SzArray);
+				writer.Write ((byte) ElementType.SzArray);
 
-			m_sigWriter.Write ((byte) na.FieldOrPropType);
+			writer.Write ((byte) na.FieldOrPropType);
 
 			if (na.FieldOrPropType == ElementType.Enum)
 				Write (na.FixedArg.Elems [0].ElemType.FullName);
 
 			Write (na.FieldOrPropName);
 
-			Write (na.FixedArg, na.FieldOrPropType);
+			Write (na.FixedArg, writer);
 		}
 
-		private void Write (CustomAttrib.Elem elem, object type)
-		{
-			if (type is ITypeReference)
-				Write (elem, type as ITypeReference);
-			else if (type is ElementType)
-				Write (elem, (ElementType) type);
-			else
-				throw new MetadataFormatException ("Wrong parameter type for Elem" + type.GetType ().FullName);
-		}
 
-		private void Write (CustomAttrib.Elem elem, ITypeReference type)
+		private void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
-			throw new NotImplementedException ("TODO"); // TODO
-		}
-
-		private void Write (CustomAttrib.Elem elem, ElementType type)
-		{
-			throw new NotImplementedException ("TODO"); // TODO
+			switch (elem.FieldOrPropType) {
+			case ElementType.Boolean :
+				writer.Write ((byte) ((bool) elem.Value ? 1 : 0));
+				break;
+			case ElementType.Char :
+				writer.Write ((ushort) (char) elem.Value);
+				break;
+			case ElementType.R4 :
+				writer.Write ((float) elem.Value);
+				break;
+			case ElementType.R8 :
+				writer.Write ((double) elem.Value);
+				break;
+			case ElementType.I1 :
+				writer.Write ((sbyte) elem.Value);
+				break;
+			case ElementType.I2 :
+				writer.Write ((short) elem.Value);
+				break;
+			case ElementType.I4 :
+				writer.Write ((int) elem.Value);
+				break;
+			case ElementType.I8 :
+				writer.Write ((long) elem.Value);
+				break;
+			case ElementType.U1 :
+				writer.Write ((byte) elem.Value);
+				break;
+			case ElementType.U2 :
+				writer.Write ((ushort) elem.Value);
+				break;
+			case ElementType.U4 :
+				writer.Write ((uint) elem.Value);
+				break;
+			case ElementType.U8 :
+				writer.Write ((long) elem.Value);
+				break;
+			case ElementType.String :
+				string s = (string) elem.Value;
+				Utilities.WriteCompressedInteger (writer, s.Length);
+				writer.Write (Encoding.UTF8.GetBytes (s));
+				break;
+			default :
+				throw new NotImplementedException ("TODO");
+			}
 		}
 
 		private void Write (string s)
