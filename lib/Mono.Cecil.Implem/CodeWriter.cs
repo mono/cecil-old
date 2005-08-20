@@ -122,10 +122,33 @@ namespace Mono.Cecil.Implem {
 							m_reflectWriter.MetadataWriter.AddUserString (instr.Operand as string)));
 					break;
 				case OperandType.InlineField :
+					if (instr.Operand is IFieldReference)
+						WriteToken ((instr.Operand as IFieldReference).MetadataToken);
+					else
+						throw new ReflectionException ("Wrong operand for InlineField: {0}",
+							instr.Operand.GetType ().FullName);
+					break;
 				case OperandType.InlineMethod :
+					if (instr.Operand is IMethodReference)
+						WriteToken ((instr.Operand as IMethodReference).MetadataToken);
+					else
+						throw new ReflectionException ("Wrong operand for InlineMethod: {0}",
+							instr.Operand.GetType ().FullName);
+					break;
 				case OperandType.InlineType :
+					if (instr.Operand is ITypeReference)
+						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
+								instr.Operand as ITypeReference));
+					else
+						throw new ReflectionException ("Wrong operand for InlineType: {0}",
+							instr.Operand.GetType ().FullName);
+					break;
+
 				case OperandType.InlineTok :
-					if (instr.Operand is IMetadataTokenProvider)
+					if (instr.Operand is ITypeReference)
+						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
+								instr.Operand as ITypeReference));
+					else if (instr.Operand is IMetadataTokenProvider)
 						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
 					else
 						throw new ReflectionException (

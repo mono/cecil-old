@@ -1,5 +1,8 @@
 2005-08-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/CodeWriter.cs:
+		Fix typespec emitting.
+
 	* Mono.Cecil/IReflectionVisitor.cs
 	  Mono.Cecil/IMethod.cs
 	  Mono.Cecil/BaseReflectionVisitor.cs
