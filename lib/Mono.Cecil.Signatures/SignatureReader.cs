@@ -797,6 +797,7 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case NativeType.CUSTOMMARSHALER:
 				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
+				Console.WriteLine ("start: {0}, data length: {1}", start, data.Length);
 				cm.Guid = ReadUTF8String (data, start, out start);
 				cm.UnmanagedType = ReadUTF8String (data, start, out start);
 				cm.ManagedType = ReadUTF8String (data, start, out start);
@@ -831,6 +832,7 @@ namespace Mono.Cecil.Signatures {
 			int length = Utilities.ReadCompressedInteger (data, pos, out start);
 			byte [] str = new byte [length];
 			Buffer.BlockCopy (data, start, str, 0, length);
+			start += length;
 			return Encoding.UTF8.GetString (str);
 		}
 	}

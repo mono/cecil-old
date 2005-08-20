@@ -1,5 +1,9 @@
 2005-08-19  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix custom marshaller reading.
+
 	* CodeGen/templates/NamedCollectionImplem.cs
 	  CodeGen/templates/LzNamedCollectionImplem.cs
 	  Mono.Cecil.Implem/ExternTypeCollection.cs

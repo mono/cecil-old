@@ -679,7 +679,7 @@ namespace Mono.Cecil.Implem {
 			} else if (ms.Spec is MarshalSig.CustomMarshaler) {
 				CustomMarshalerDesc cmd = new CustomMarshalerDesc (container);
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
-				cmd.Guid = new Guid (cmsig.Guid);
+				cmd.Guid = cmsig.Guid.Length > 0 ? new Guid (cmsig.Guid) : new Guid ();
 				cmd.UnmanagedType = cmsig.UnmanagedType;
 				cmd.ManagedType = m_module.Types [cmsig.ManagedType];
 				cmd.Cookie = cmsig.Cookie;
