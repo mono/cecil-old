@@ -1,5 +1,11 @@
 2005-08-19  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionWriter.cs:
+		Set the RVA of a method only if it can
+		have a body.
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Remove debugging stuff.
+
 	* Mono.Cecil.Implem/ReflectionReader.cs
 	  Mono.Cecil.Signatures/SignatureReader.cs:
 		Fix custom marshaller reading.

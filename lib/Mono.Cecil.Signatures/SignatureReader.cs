@@ -797,7 +797,6 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case NativeType.CUSTOMMARSHALER:
 				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
-				Console.WriteLine ("start: {0}, data length: {1}", start, data.Length);
 				cm.Guid = ReadUTF8String (data, start, out start);
 				cm.UnmanagedType = ReadUTF8String (data, start, out start);
 				cm.ManagedType = ReadUTF8String (data, start, out start);

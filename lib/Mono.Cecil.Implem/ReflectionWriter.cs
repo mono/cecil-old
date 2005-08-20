@@ -593,9 +593,11 @@ namespace Mono.Cecil.Implem {
 			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
-			for (int i = 0; i < m_methodStack.Count; i++)
-				mTable [i].RVA = m_codeWriter.WriteMethodBody (
-					m_methodStack [i] as IMethodDefinition);
+			for (int i = 0; i < m_methodStack.Count; i++) {
+				IMethodDefinition meth = m_methodStack [i] as IMethodDefinition;
+				if (!meth.IsAbstract && meth.PInvokeInfo == null)
+					mTable [i].RVA = m_codeWriter.WriteMethodBody (meth);
+			}
 
 			if (m_fieldDataStack.Count > 0) {
 				FieldRVATable frTable = m_tableWriter.GetFieldRVATable ();
