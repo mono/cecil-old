@@ -90,6 +90,8 @@ namespace Mono.Cecil.Metadata {
 		public static uint CompressMetadataToken (CodedIndex cidx, MetadataToken token)
 		{
 			uint ret = 0;
+			if (token.RID == 0)
+				return ret;
 			switch (cidx) {
 <% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
 				ret = token.RID << <%=ci.size%>;
