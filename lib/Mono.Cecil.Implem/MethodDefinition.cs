@@ -21,6 +21,9 @@ namespace Mono.Cecil.Implem {
 
 	internal sealed class MethodDefinition : MethodReference, IMethodDefinition {
 
+		public const string Cctor = ".cctor";
+		public const string Ctor = ".ctor";
+
 		private MethodAttributes m_attributes;
 		private MethodImplAttributes m_implAttrs;
 		private MethodSemanticsAttributes m_semAttrs;
@@ -153,6 +156,13 @@ namespace Mono.Cecil.Implem {
 		public bool IsVirtual {
 			get { return (m_attributes & MethodAttributes.Virtual) != 0; }
 			set { m_attributes |= value ? MethodAttributes.Virtual : 0; }
+		}
+
+		public bool IsConstructor {
+			get {
+				return this.IsRuntimeSpecialName && this.IsSpecialName &&
+					(this.Name == Cctor || this.Name == Ctor);
+			}
 		}
 
 		public MethodDefinition (string name, TypeDefinition decType, RVA rva,

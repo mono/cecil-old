@@ -1,5 +1,18 @@
 2005-08-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/IMethod.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/IConstructorCollection.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Implem/MethodDefinition.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Implem/ConstructorCollection.cs:
+		Support constructors decently.
+
 	* CodeGen/templates/Utilities.cs
 	  Mono.Cecil.Metadata/Utilities.cs:
 		Return a null token if the rid of a md token

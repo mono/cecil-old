@@ -18,9 +18,6 @@ namespace Mono.Cecil.Implem {
 
 	internal sealed class TypeDefinition : TypeReference, ITypeDefinition, IClassLayoutInfo {
 
-		private const string m_cctor = ".cctor";
-		private const string m_ctor = ".ctor";
-
 		private TypeAttributes m_attributes;
 		private ITypeReference m_baseType;
 
@@ -32,7 +29,7 @@ namespace Mono.Cecil.Implem {
 		private InterfaceCollection m_interfaces;
 		private NestedTypeCollection m_nestedTypes;
 		private MethodDefinitionCollection m_methods;
-		private MethodDefinitionCollection m_ctors;
+		private ConstructorCollection m_ctors;
 		private FieldDefinitionCollection m_fields;
 		private EventDefinitionCollection m_events;
 		private PropertyDefinitionCollection m_properties;
@@ -120,14 +117,14 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public IMethodDefinitionCollection Constructors {
+		public IConstructorCollection Constructors {
 			get {
 				if (m_ctors  == null) {
-					m_ctors = new MethodDefinitionCollection (this);
-					foreach (MethodDefinition meth in this.Methods)
-						if ((meth.Name == m_cctor || meth.Name == m_ctor) && meth.IsSpecialName)
-							m_ctors.Add (meth);
+					m_ctors = new ConstructorCollection (this);
 				}
+
+				if (!m_module.IsNew && !m_ctors.Loaded)
+					m_ctors.Load ();
 
 				return m_ctors;
 			}
@@ -285,16 +282,15 @@ namespace Mono.Cecil.Implem {
 			string name = null;
 			MethodAttributes attrs = MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
 			if (isstatic) {
-				name = m_cctor;
+				name = MethodDefinition.Cctor;
 				attrs |= MethodAttributes.Static;
 			} else
-				name = m_ctor;
+				name = MethodDefinition.Ctor;
 
 			MethodDefinition meth = new MethodDefinition (name, this, attrs);
 			meth.HasThis = !isstatic;
 			meth.ReturnType.ReturnType = m_module.Controller.Writer.GetCoreType (Constants.Void);
 
-			this.Methods.Add (meth);
 			this.Constructors.Add (meth);
 
 			return meth;
@@ -358,8 +354,9 @@ namespace Mono.Cecil.Implem {
 			this.CustomAttributes.Accept (visitor);
 			this.SecurityDeclarations.Accept (visitor);
 			this.Interfaces.Accept (visitor);
-			this.Fields.Accept (visitor);
+			this.Constructors.Accept (visitor);
 			this.Methods.Accept (visitor);
+			this.Fields.Accept (visitor);
 			this.Properties.Accept (visitor);
 			this.Events.Accept (visitor);
 			this.NestedTypes.Accept (visitor);

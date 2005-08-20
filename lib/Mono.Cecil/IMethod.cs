@@ -33,6 +33,7 @@ namespace Mono.Cecil {
 		bool IsSpecialName { get; set; }
 		bool IsStatic { get; set; }
 		bool IsVirtual { get; set; }
+		bool IsConstructor { get; }
 
 		IOverrideCollection Overrides { get; }
 		IMethodBody Body { get; }

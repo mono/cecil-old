@@ -84,6 +84,14 @@ namespace Mono.Cecil {
 		{
 		}
 
+		public virtual void VisitConstructorCollection (IConstructorCollection ctors)
+		{
+		}
+
+		public virtual void VisitConstructor (IMethodDefinition ctor)
+		{
+		}
+
 		public virtual void VisitPInvokeInfo (IPInvokeInfo pinvk)
 		{
 		}

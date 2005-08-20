@@ -659,6 +659,7 @@
 		<collection type="IParameterDefinition" container="IMemberReference" visit="IReflection" indexed="true" target="Mono.Cecil" />
 		<collection type="IMethodReference" container="IMethodDefinition" visit="IReflection" name="IOverride" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
 		<collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
+		<collection type="IMethodDefinition" container="ITypeDefinition" visit="IReflection" name="IConstructor" lazyload="true" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
 		<collection type="IEventDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />
 		<collection type="IFieldDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />
 		<collection type="IPropertyDefinition" container="ITypeDefinition" visit="IReflection" lazyload="true" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />

@@ -305,6 +305,11 @@ namespace Mono.Cecil.Implem {
 			VisitCollection (methods);
 		}
 
+		public override void VisitConstructorCollection (IConstructorCollection ctors)
+		{
+			VisitCollection (ctors);
+		}
+
 		public override void VisitMethodDefinition (IMethodDefinition method)
 		{
 			MethodTable mTable = m_tableWriter.GetMethodTable ();

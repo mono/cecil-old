@@ -475,10 +475,13 @@ namespace Mono.Cecil.Implem {
 
 					m_meths [j - 1] = mdef;
 
-					MethodDefinitionCollection methDefs = dec.Methods as MethodDefinitionCollection;
-
-					methDefs.Loaded = true;
-					methDefs.Add (mdef);
+					if (mdef.IsConstructor) {
+						dec.Constructors.Add (mdef);
+						(dec.Constructors as ILazyLoadableCollection).Loaded = true;
+					} else {
+						dec.Methods.Add (mdef);
+						(dec.Methods as ILazyLoadableCollection).Loaded = true;
+					}
 				}
 			}
 

@@ -42,7 +42,7 @@ namespace Mono.Cecil {
 		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType);
 		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, Type retType);
 
-		IMethodDefinitionCollection Constructors { get; }
+		IConstructorCollection Constructors { get; }
 		IMethodDefinition DefineConstructor ();
 		IMethodDefinition DefineConstructor (bool isstatic);
 
