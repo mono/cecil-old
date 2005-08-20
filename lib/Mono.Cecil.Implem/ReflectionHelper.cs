@@ -71,7 +71,7 @@ namespace Mono.Cecil.Implem {
 				return typeRef;
 
 			IAssemblyNameReference asm = RegisterAssembly (t.Assembly);
-			return m_module.DefineTypeReference (t.Name, t.Namespace, asm);
+			return m_module.DefineTypeReference (t.Name, t.Namespace, asm, t.IsValueType);
 		}
 
 		private string GetMethodBaseSignature (MethodBase meth)

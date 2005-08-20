@@ -212,7 +212,7 @@ namespace Mono.Cecil.Implem {
 			get { return m_baseType != null && m_baseType.FullName == Constants.Enum; }
 		}
 
-		public bool IsValueType {
+		public override bool IsValueType {
 			get {
 				return m_baseType != null && (
 					this.IsEnum || m_baseType.FullName == Constants.ValueType);

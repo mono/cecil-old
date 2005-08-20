@@ -752,7 +752,9 @@ namespace Mono.Cecil.Implem {
 				return GetTypeDefOrRef (c.Type);
 			case ElementType.ValueType :
 				VALUETYPE vt = t as VALUETYPE;
-				return GetTypeDefOrRef (vt.Type);
+				TypeReference vtr = GetTypeDefOrRef (vt.Type);
+				vtr.IsValueType = true;
+				return vtr;
 			case ElementType.String :
 				return SearchCoreType (Constants.String);
 			case ElementType.Object :

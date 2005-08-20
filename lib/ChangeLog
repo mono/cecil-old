@@ -1,5 +1,17 @@
 2005-08-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ITypeReference.cs
+	  Mono.Cecil.Implem/ReflectionHelper.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/TypeReference.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs:
+		Add way to know if a type reference is a
+		value type or not. This hack saved my life.
+
 	* Mono.Cecil.Implem/CodeWriter.cs:
 		Fix typespec emitting.
 

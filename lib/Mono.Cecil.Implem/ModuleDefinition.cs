@@ -240,9 +240,10 @@ namespace Mono.Cecil.Implem {
 				m_controller.Helper.RegisterConstructor(ctor), data);
 		}
 
-		public ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm)
+		public ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm, bool valueType)
 		{
 			TypeReference typeRef = new TypeReference (name, ns, this, asm);
+			typeRef.IsValueType = valueType;
 			m_refs.Add (typeRef);
 			return typeRef;
 		}

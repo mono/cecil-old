@@ -780,13 +780,7 @@ namespace Mono.Cecil.Implem {
 			} else if (type is IFunctionPointerType) {
 				FNPTR fp = new FNPTR (); // TODO
 				return fp;
-			} else if (type is ITypeDefinition && (type as ITypeDefinition).IsValueType) {
-				/*
-				Potential bug here ?
-				If the type is a type reference, we can't know
-				if it is a ValueType or a class. So by default
-				we use a class signature.
-				 */
+			} else if (type.IsValueType) {
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);
 				return vt;

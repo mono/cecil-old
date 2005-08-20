@@ -26,7 +26,6 @@ namespace Mono.Cecil {
 		bool IsRuntimeSpecialName { get; set; }
 		bool IsSealed { get; set; }
 		bool IsSpecialName { get; set; }
-		bool IsValueType { get; }
 		bool IsEnum { get; }
 
 		IInterfaceCollection Interfaces { get; }

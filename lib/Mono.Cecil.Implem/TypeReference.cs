@@ -24,6 +24,7 @@ namespace Mono.Cecil.Implem {
 		private string m_namespace;
 		private bool m_fullNameDiscarded;
 		private string m_fullName;
+		private bool m_isValueType;
 		private ITypeReference m_decType;
 		private IMetadataScope m_scope;
 		private MetadataToken m_token;
@@ -54,6 +55,11 @@ namespace Mono.Cecil.Implem {
 				m_decType = value;
 				m_fullNameDiscarded = true;
 			}
+		}
+
+		public virtual bool IsValueType {
+			get { return m_isValueType; }
+			set { m_isValueType = value; }
 		}
 
 		public ModuleDefinition Module {
