@@ -29,7 +29,7 @@ namespace Mono.Cecil.Implem {
 		ICilFactory {
 
 		private ModuleDefinition m_module;
-		protected SecurityParser m_secParser;
+		private SecurityParser m_secParser;
 
 		public ITypeFactory TypeFactory {
 			get { return this; }
@@ -231,6 +231,18 @@ namespace Mono.Cecil.Implem {
 			throw new NotImplementedException ("TODO"); // TODO
 		}
 
+		public ITypeReference CreateTypeReference (string name, IMetadataScope scope, bool isValueType)
+		{
+			return CreateTypeReference (name, string.Empty, scope, isValueType);
+		}
+
+		public ITypeReference CreateTypeReference (string name, string ns, IMetadataScope scope, bool isValueType)
+		{
+			TypeReference t = new TypeReference (name, string.Empty, scope);
+			t.IsValueType = isValueType;
+			return t;
+		}
+
 		public IFieldDefinition CreateField (string name, ITypeReference fieldType)
 		{
 			return CreateField (name, (FieldAttributes) 0, fieldType);
@@ -267,6 +279,13 @@ namespace Mono.Cecil.Implem {
 				nf.LayoutInfo.Offset = field.LayoutInfo.Offset;
 			CloneCustomAttributes (field.CustomAttributes, nf.CustomAttributes);
 			return nf;
+		}
+
+		public IFieldReference CreateFieldReference (string name, ITypeReference decType, ITypeReference fType)
+		{
+			FieldReference fr = new FieldReference (name, fType);
+			fr.DeclaringType = decType;
+			return fr;
 		}
 
 		public IMethodDefinition CreateMethod (string name, MethodAttributes attributes)
@@ -366,6 +385,17 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinition CloneMethod (IMethodDefinition original)
 		{
 			throw new NotImplementedException ("TODO"); // TODO
+		}
+
+		public IMethodReference CreateMethodReference (string name, ITypeReference decType, ITypeReference retType,
+			ITypeReference [] pTypes, bool hasThis, bool explicitThis, MethodCallingConvention mcc)
+		{
+			MethodReference mr = new MethodReference (name, hasThis, explicitThis, mcc);
+			mr.DeclaringType = decType;
+			mr.ReturnType.ReturnType = retType;
+			foreach (ITypeReference pt in pTypes)
+				mr.Parameters.Add (new ParameterDefinition (pt));
+			return mr;
 		}
 
 		public ICilWorker CreateCilWorker (IMethodBody body)

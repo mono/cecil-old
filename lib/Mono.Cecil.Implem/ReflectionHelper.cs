@@ -79,13 +79,12 @@ namespace Mono.Cecil.Implem {
 
 		public ITypeReference CheckType (Type t)
 		{
-			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)] as TypeReference;
+			ITypeReference type = m_module.TypeReferences [GetTypeSignature (t)] as TypeReference;
 			if (type != null)
 				return type;
 
 			IAssemblyNameReference asm = CheckAssemblyReference (t.Assembly);
-			type = new TypeReference (t.Name, t.Namespace, asm);
-			type.IsValueType = t.IsValueType;
+			type = m_module.Factories.TypeFactory.CreateTypeReference (t.Name, t.Namespace, asm, t.IsValueType);
 
 			m_module.TypeReferences.Add (type);
 			return type;
@@ -113,23 +112,22 @@ namespace Mono.Cecil.Implem {
 		private IMethodReference CheckMethodBase (SR.MethodBase mb, Type retType)
 		{
 			string sig = GetMethodBaseSignature (mb, retType);
-			MethodReference meth = m_memberRefCache [sig] as MethodReference;
+			IMethodReference meth = m_memberRefCache [sig] as MethodReference;
 			if (meth != null)
 				return meth;
 
-			meth = new MethodReference (mb.Name,
+			SR.ParameterInfo [] parameters = mb.GetParameters ();
+			ITypeReference [] parametersTypes = new ITypeReference [parameters.Length];
+			for (int i = 0; i < parametersTypes.Length; i++)
+				parametersTypes [i] = CheckType (parameters [i].ParameterType);
+
+			meth = m_module.Factories.MethodFactory.CreateMethodReference (
+				mb.Name, CheckType (mb.DeclaringType), CheckType (retType), parametersTypes,
 				(mb.CallingConvention & SR.CallingConventions.HasThis) > 0,
 				(mb.CallingConvention & SR.CallingConventions.ExplicitThis) > 0,
-				MethodCallingConvention.Default);
-			meth.DeclaringType = CheckType (mb.DeclaringType);
-			meth.ReturnType.ReturnType = CheckType (retType);
-			int seq = 1;
-			SR.ParameterInfo [] parameters = mb.GetParameters ();
-			foreach (SR.ParameterInfo pi in parameters)
-				meth.Parameters.Add (new ParameterDefinition (
-						string.Empty, seq++, (ParamAttributes) 0, CheckType (pi.ParameterType)));
+				MethodCallingConvention.Default); // TODO: get the real callconv
 
-			m_module.Controller.Writer.AddMemberRef (meth);
+			m_module.MemberReferences.Add (meth);
 			m_memberRefCache [sig] = meth;
 			return meth;
 		}
@@ -158,13 +156,14 @@ namespace Mono.Cecil.Implem {
 		public IFieldReference CheckField (SR.FieldInfo fi)
 		{
 			string sig = GetFieldSignature (fi);
-			FieldReference f = m_memberRefCache [sig] as FieldReference;
+			IFieldReference f = m_memberRefCache [sig] as FieldReference;
 			if (f != null)
 				return f;
 
-			f = new FieldReference (fi.Name, CheckType (fi.FieldType));
-			f.DeclaringType = CheckType (fi.DeclaringType);
-			m_module.Controller.Writer.AddMemberRef (f);
+			f = m_module.Factories.FieldFactory.CreateFieldReference (
+				fi.Name, CheckType (fi.DeclaringType), CheckType (fi.FieldType));
+
+			m_module.MemberReferences.Add (f);
 			m_memberRefCache [sig] = f;
 			return f;
 		}
@@ -175,12 +174,12 @@ namespace Mono.Cecil.Implem {
 				return CheckType (type as ITypeDefinition);
 
 			if (IsForeign (type)) {
-				TypeReference t = m_module.TypeReferences [type.FullName] as TypeReference;
+				ITypeReference t = m_module.TypeReferences [type.FullName] as TypeReference;
 				if (t != null)
 					return t;
 
-				t = new TypeReference (type.Name, type.Namespace, CheckScope (type.Scope));
-				t.IsValueType = type.IsValueType;
+				t = m_module.Factories.TypeFactory.CreateTypeReference (
+					type.Name, type.Namespace, CheckScope (type.Scope), type.IsValueType);
 				m_module.TypeReferences.Add (t);
 				return t;
 			}
@@ -199,20 +198,19 @@ namespace Mono.Cecil.Implem {
 		public IMethodReference CheckMethod (IMethodReference m)
 		{
 			string sig = m.ToString ();
-			MethodReference meth = m_memberRefCache [sig] as MethodReference;
+			IMethodReference meth = m_memberRefCache [sig] as IMethodReference;
 			if (meth != null)
 				return meth;
 
-			meth = new MethodReference (m.Name,
-				m.HasThis, m.ExplicitThis, m.CallingConvention);
-			meth.DeclaringType = CheckType (m.DeclaringType);
-			meth.ReturnType.ReturnType = CheckType (meth.ReturnType.ReturnType);
-			int seq = 1;
-			foreach (ITypeReference t in m.Parameters)
-				meth.Parameters.Add (new ParameterDefinition (
-						string.Empty, seq++, (ParamAttributes) 0, CheckType (t)));
+			ITypeReference [] parametersTypes = new ITypeReference [meth.Parameters.Count];
+			for (int i = 0; i < parametersTypes.Length; i++)
+				parametersTypes [i] = CheckType (meth.Parameters [i].ParameterType);
 
-			m_module.Controller.Writer.AddMemberRef (meth);
+			meth = m_module.Factories.MethodFactory.CreateMethodReference (
+				m.Name, CheckType (m.DeclaringType), CheckType (m.ReturnType.ReturnType), parametersTypes,
+				m.HasThis, m.ExplicitThis, m.CallingConvention);
+
+			m_module.MemberReferences.Add (meth);
 			m_memberRefCache [sig] = meth;
 			return meth;
 		}

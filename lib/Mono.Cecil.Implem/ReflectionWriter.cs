@@ -32,7 +32,6 @@ namespace Mono.Cecil.Implem {
 		private MetadataTableWriter m_tableWriter;
 		private MetadataRowWriter m_rowWriter;
 
-		private IList m_membersRefContainer;
 		private IList m_methodStack;
 		private IList m_fieldDataStack;
 
@@ -84,7 +83,6 @@ namespace Mono.Cecil.Implem {
 		{
 			m_mod = mod;
 
-			m_membersRefContainer = new ArrayList ();
 			m_methodStack = new ArrayList ();
 			m_fieldDataStack = new ArrayList ();
 
@@ -95,19 +93,6 @@ namespace Mono.Cecil.Implem {
 			m_propertyIndex = 1;
 
 			m_constWriter = new MemoryBinaryWriter ();
-		}
-
-		public void AddMemberRef (IMemberReference member)
-		{
-			m_membersRefContainer.Add (member);
-		}
-
-		private void ImportMemberRefFromReader ()
-		{
-			ReflectionReader reader = m_mod.Controller.Reader;
-			if (reader.MemberReferences != null && reader.MemberReferences.Length > 0)
-				foreach (MemberReference member in m_mod.Controller.Reader.MemberReferences)
-					AddMemberRef (member);
 		}
 
 		public ITypeReference GetCoreType (string name)
@@ -196,8 +181,6 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
 		{
-			ImportMemberRefFromReader ();
-
 			ArrayList orderedTypeRefs = new ArrayList (refs.Count);
 			foreach (TypeReference tr in refs)
 				orderedTypeRefs.Add (tr);
@@ -577,9 +560,9 @@ namespace Mono.Cecil.Implem {
 
 		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
-			if (m_membersRefContainer.Count > 0) {
+			if (m_mod.MemberReferences.Count > 0) {
 				MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-				foreach (IMemberReference member in m_membersRefContainer) {
+				foreach (IMemberReference member in m_mod.MemberReferences) {
 					uint sig = 0;
 					if (member is IFieldReference)
 						sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));

@@ -1,5 +1,20 @@
 2005-08-26  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IMemberReferenceCollection.cs
+	  Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/IReflectionFactories.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Implem/ReflectionFactories.cs
+	  Mono.Cecil.Implem/ReflectionHelper.cs
+	  Mono.Cecil.Implem/ModuleDefinition.cs
+	  Mono.Cecil.Implem/MemberReferenceCollection.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/ParameterDefinition.cs:
+		Handle member references nicely.
+
 	* Mono.Cecil/ICustomAttributeProvider.cs
 	  Mono.Cecil/IModuleDefinitionCollection.cs
 	  Mono.Cecil/IReflectionStructureFactories.cs

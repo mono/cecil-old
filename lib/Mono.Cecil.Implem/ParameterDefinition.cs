@@ -140,6 +140,11 @@ namespace Mono.Cecil.Implem {
 			set { m_marshalDesc = value as MarshalDesc; }
 		}
 
+		public ParameterDefinition (ITypeReference paramType) :
+			this (string.Empty, -1, (ParamAttributes) 0, paramType)
+		{
+		}
+
 		public ParameterDefinition (string name, int seq, ParamAttributes attrs, ITypeReference paramType)
 		{
 			m_name = name;

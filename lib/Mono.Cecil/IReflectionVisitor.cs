@@ -19,6 +19,8 @@ namespace Mono.Cecil {
 		void VisitTypeDefinition (ITypeDefinition type);
 		void VisitTypeReferenceCollection (ITypeReferenceCollection refs);
 		void VisitTypeReference (ITypeReference type);
+		void VisitMemberReferenceCollection (IMemberReferenceCollection members);
+		void VisitMemberReference (IMemberReference member);
 		void VisitInterfaceCollection (IInterfaceCollection interfaces);
 		void VisitInterface (ITypeReference interf);
 		void VisitExternTypeCollection (IExternTypeCollection externs);

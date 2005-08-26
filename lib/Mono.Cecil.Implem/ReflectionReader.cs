@@ -222,8 +222,6 @@ namespace Mono.Cecil.Implem {
 		{
 			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
 
-			ModuleDefinition def = tdc.Container as ModuleDefinition;
-
 			// type def reading
 			TypeDefTable typesTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
 			m_typeDefs = new TypeDefinition [typesTable.Rows.Count];
@@ -542,6 +540,7 @@ namespace Mono.Cecil.Implem {
 				}
 
 				member.MetadataToken = MetadataToken.FromMetadataRow (TokenType.MemberRef, i);
+				m_module.MemberReferences.Add (member);
 				m_memberRefs [i] = member;
 			}
 		}

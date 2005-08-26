@@ -671,6 +671,7 @@
 		<collection type="ICustomAttribute" container="ICustomAttributeProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" lazyload="true" pathtoloader="Reader" />
 		<collection type="ITypeReference" container="IModuleDefinition" target="Mono.Cecil" visit="IReflection" name="IExternType" lazyload="true" pathtoloader="Reader" />
 		<collection type="ITypeDefinition" container="ITypeDefinition" target="Mono.Cecil" visit="IReflection" name="INestedType" indexed="true" />
+		<collection type="IMemberReference" container="IModuleDefinition" target="Mono.Cecil" visit="IReflection" indexed="true" />
 	</collections>
 
 </cecil>

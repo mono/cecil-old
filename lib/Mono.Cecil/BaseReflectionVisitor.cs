@@ -36,6 +36,14 @@ namespace Mono.Cecil {
 		{
 		}
 
+		public virtual void VisitMemberReferenceCollection (IMemberReferenceCollection members)
+		{
+		}
+
+		public virtual void VisitMemberReference (IMemberReference member)
+		{
+		}
+
 		public virtual void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
 		}

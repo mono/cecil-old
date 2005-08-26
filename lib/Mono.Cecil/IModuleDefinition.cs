@@ -29,6 +29,8 @@ namespace Mono.Cecil {
 		IResourceCollection Resources { get; }
 		ITypeDefinitionCollection Types { get; }
 		IExternTypeCollection ExternTypes { get; }
+		ITypeReferenceCollection TypeReferences { get; }
+		IMemberReferenceCollection MemberReferences { get; }
 
 		IReflectionFactories Factories { get; }
 

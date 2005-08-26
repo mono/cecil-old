@@ -31,6 +31,7 @@ namespace Mono.Cecil.Implem {
 		private TypeDefinitionCollection m_types;
 		private TypeReferenceCollection m_refs;
 		private ExternTypeCollection m_externs;
+		private MemberReferenceCollection m_members;
 		private CustomAttributeCollection m_customAttrs;
 
 		private AssemblyDefinition m_asm;
@@ -78,6 +79,10 @@ namespace Mono.Cecil.Implem {
 
 		public ITypeReferenceCollection TypeReferences {
 			get { return m_refs; }
+		}
+
+		public IMemberReferenceCollection MemberReferences {
+			get { return m_members; }
 		}
 
 		public IExternTypeCollection ExternTypes {
@@ -173,6 +178,7 @@ namespace Mono.Cecil.Implem {
 			m_refs = new TypeReferenceCollection (this);
 			m_refs.OnTypeReferenceAdded += new TypeReferenceEventHandler (OnTypeReferenceAdded);
 			m_refs.OnTypeReferenceRemoved += new TypeReferenceEventHandler (OnTypeReferenceRemoved);
+			m_members = new MemberReferenceCollection (this);
 		}
 
 		private void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)

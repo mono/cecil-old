@@ -76,6 +76,9 @@ namespace Mono.Cecil {
 		ITypeDefinition CloneType (ITypeDefinition original);
 
 		void MergeType (ITypeDefinition original, ITypeDefinition target);
+
+		ITypeReference CreateTypeReference (string name, IMetadataScope scope, bool isValueType);
+		ITypeReference CreateTypeReference (string name, string ns, IMetadataScope scope, bool isValueType);
 	}
 
 	public interface IFieldFactory : IMemberFactory {
@@ -86,6 +89,8 @@ namespace Mono.Cecil {
 		IFieldDefinition CreateField (string name, FieldAttributes attributes, Type fieldType);
 
 		IFieldDefinition CloneField (IFieldDefinition original);
+
+		IFieldReference CreateFieldReference (string name, ITypeReference declaringType, ITypeReference fieldType);
 	}
 
 	public interface IMethodFactory : IMemberFactory {
@@ -110,6 +115,9 @@ namespace Mono.Cecil {
 		IPInvokeInfo CreatePInvokeInfo (string entryPoint, IModuleReference module, PInvokeAttributes attributes);
 
 		IMethodDefinition CloneMethod (IMethodDefinition original);
+
+		IMethodReference CreateMethodReference (string name, ITypeReference declaringType, ITypeReference retType,
+			ITypeReference [] parametersTypes, bool hasThis, bool explicitThis, MethodCallingConvention mcc);
 	}
 
 	public interface ICilFactory {
