@@ -25,8 +25,7 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public AssemblyLinkedResource (string name, ManifestResourceAttributes flags,
-									   ModuleDefinition owner, AssemblyNameReference asmRef) :
-			base (name, flags, owner)
+			AssemblyNameReference asmRef) : base (name, flags)
 		{
 			m_asmRef = asmRef;
 		}

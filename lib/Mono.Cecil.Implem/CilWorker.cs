@@ -26,10 +26,10 @@ namespace Mono.Cecil.Implem {
 
 		private InstructionCollection m_instrs;
 
-		public CilWorker (MethodBody body)
+		public CilWorker (MethodBody body, ModuleDefinition module)
 		{
 			m_mbody = body;
-			m_module = (body.Method.DeclaringType as TypeDefinition).Module;
+			m_module = module;
 			m_instrs = m_mbody.Instructions as InstructionCollection;
 		}
 
@@ -57,7 +57,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, Type type)
 		{
-			return Create (opcode, m_module.Controller.Helper.RegisterType (type));
+			return Create (opcode, m_module.Controller.Helper.CheckType (type));
 		}
 
 		public IInstruction Create (OpCode opcode, IMethodReference meth)
@@ -71,12 +71,12 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, SR.MethodInfo meth)
 		{
-			return Create (opcode, m_module.Controller.Helper.RegisterMethod (meth));
+			return Create (opcode, m_module.Controller.Helper.CheckMethod (meth));
 		}
 
 		public IInstruction Create (OpCode opcode, SR.ConstructorInfo ctor)
 		{
-			return Create (opcode, m_module.Controller.Helper.RegisterConstructor (ctor));
+			return Create (opcode, m_module.Controller.Helper.CheckConstructor (ctor));
 		}
 
 		public IInstruction Create (OpCode opcode, IFieldReference field)
@@ -90,7 +90,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Create (OpCode opcode, SR.FieldInfo field)
 		{
-			return Create (opcode, m_module.Controller.Helper.RegisterField (field));
+			return Create (opcode, m_module.Controller.Helper.CheckField (field));
 		}
 
 		public IInstruction Create (OpCode opcode, string str)
@@ -193,7 +193,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Emit (OpCode opcode, Type type)
 		{
-			return Emit (opcode, m_module.Controller.Helper.RegisterType (type));
+			return Emit (opcode, m_module.Controller.Helper.CheckType (type));
 		}
 
 		public IInstruction Emit (OpCode opcode, IMethodReference meth)
@@ -205,12 +205,12 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Emit (OpCode opcode, SR.MethodInfo meth)
 		{
-			return Emit (opcode, m_module.Controller.Helper.RegisterMethod (meth));
+			return Emit (opcode, m_module.Controller.Helper.CheckMethod (meth));
 		}
 
 		public IInstruction Emit (OpCode opcode, SR.ConstructorInfo ctor)
 		{
-			return Emit (opcode, m_module.Controller.Helper.RegisterConstructor (ctor));
+			return Emit (opcode, m_module.Controller.Helper.CheckConstructor (ctor));
 		}
 
 		public IInstruction Emit (OpCode opcode, IFieldReference field)
@@ -222,7 +222,7 @@ namespace Mono.Cecil.Implem {
 
 		public IInstruction Emit (OpCode opcode, SR.FieldInfo field)
 		{
-			return Emit (opcode, m_module.Controller.Helper.RegisterField (field));
+			return Emit (opcode, m_module.Controller.Helper.CheckField (field));
 		}
 
 		public IInstruction Emit (OpCode opcode, string str)

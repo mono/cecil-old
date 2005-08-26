@@ -152,6 +152,7 @@ module Cecil
 		attr_reader(:name)
 		attr_reader(:container)
 		attr_reader(:container_impl)
+		attr_reader(:item_name)
 		attr_reader(:visitable)
 		attr_reader(:visitor)
 		attr_reader(:visitThis)
@@ -166,13 +167,14 @@ module Cecil
 			basename = (name.nil? ? type : name)
 			@intf = basename + "Collection"
 			@name = @intf[1..@intf.length]
+			@item_name = basename[1..basename.length]
 			@container = container
 			@container_impl = usecntintf ? @container : @container[1..@container.length]
 			if (!visit.nil?) then
 				@visitable = visit + "Visitable"
 				@visitor = visit + "Visitor"
 				@visitThis = "Visit" + @name
-				@visitItem = "Visit" + basename[1..basename.length]
+				@visitItem = "Visit" + @item_name
 			end
 			@lazyload = lazyload
 			@pathtoloader = pathtoloader

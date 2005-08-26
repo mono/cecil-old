@@ -17,9 +17,5 @@ namespace Mono.Cecil {
 	public interface ICustomAttributeProvider {
 
 		ICustomAttributeCollection CustomAttributes { get; }
-		ICustomAttribute DefineCustomAttribute (IMethodReference ctor);
-		ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor);
-		ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data);
-		ICustomAttribute DefineCustomAttribute (ConstructorInfo ctor, byte [] data);
 	}
 }

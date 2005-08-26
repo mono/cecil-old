@@ -62,8 +62,13 @@ namespace Mono.Cecil.Implem {
 			set { m_isValueType = value; }
 		}
 
-		public ModuleDefinition Module {
+		public IModuleDefinition Module {
 			get { return m_module; }
+		}
+
+		public ModuleDefinition Mod {
+			get { return m_module; }
+			set { m_module = value; }
 		}
 
 		public MetadataToken MetadataToken {
@@ -78,7 +83,7 @@ namespace Mono.Cecil.Implem {
 				else if (m_customAttrs == null && m_module == null)
 					m_customAttrs = new CustomAttributeCollection (this);
 
-				if (!m_module.IsNew && !m_customAttrs.Loaded)
+				if (m_module != null && !m_module.IsNew && !m_customAttrs.Loaded)
 					m_customAttrs.Load ();
 
 				return m_customAttrs;
@@ -111,56 +116,16 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public TypeReference (string name, string ns)
+		protected TypeReference (string name, string ns)
 		{
 			m_name = name;
 			m_namespace = ns;
 			m_fullNameDiscarded = false;
 		}
 
-		public TypeReference (string name, string ns, ModuleDefinition module, IMetadataScope scope) : this (name, ns)
+		public TypeReference (string name, string ns, IMetadataScope scope) : this (name, ns)
 		{
-			m_module = module;
 			m_scope = scope;
-		}
-
-		public override bool Equals (object obj)
-		{
-			TypeDefinition td = obj as TypeDefinition;
-			if (td != null)
-				return td.FullName == this.FullName;
-
-			return false;
-		}
-
-		public override int GetHashCode()
-		{
-			return this.FullName.GetHashCode ();
-		}
-
-		public virtual ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (m_module.Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = m_module.Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				m_module.Controller.Helper.RegisterConstructor(ctor), data);
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

@@ -108,10 +108,11 @@ namespace Mono.Cecil.Implem {
 			else if (secDecls.Container is TypeDefinition) {
 				target = TokenType.TypeDef;
 				rid = GetRidForTypeDef (secDecls.Container as TypeDefinition);
-			} else { // MethodDefinition
+			} else if (secDecls.Container is MethodDefinition) {
 				target = TokenType.Method;
 				rid = GetRidForMethodDef (secDecls.Container as MethodDefinition);
-			}
+			} else
+				return;
 
 			for (int i = 0; i < dsTable.Rows.Count; i++) {
 				DeclSecurityRow dsRow = dsTable [i];
@@ -226,8 +227,7 @@ namespace Mono.Cecil.Implem {
 				return;
 			}
 
-			TypeDefinition dec = evts.Container as TypeDefinition;
-			int rid = GetRidForTypeDef (dec), next;
+			int rid = GetRidForTypeDef (evts.Container as TypeDefinition), next;
 			EventTable evtTable = m_tHeap [typeof (EventTable)] as EventTable;
 
 			if (m_events == null)
@@ -255,7 +255,7 @@ namespace Mono.Cecil.Implem {
 			for (int i = (int) thisRow.EventList; i < next; i++) {
 				EventRow erow = evtTable [i - 1];
 				EventDefinition edef = new EventDefinition (
-					m_root.Streams.StringsHeap [erow.Name], dec,
+					m_root.Streams.StringsHeap [erow.Name],
 					GetTypeDefOrRef (erow.EventType), erow.EventFlags);
 				edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, i - 1);
 				evts.Add (edef);
@@ -294,8 +294,7 @@ namespace Mono.Cecil.Implem {
 				return;
 			}
 
-			TypeDefinition dec = props.Container as TypeDefinition;
-			int rid = GetRidForTypeDef (dec), next;
+			int rid = GetRidForTypeDef (props.Container as TypeDefinition), next;
 			PropertyTable propsTable = m_tHeap [typeof (PropertyTable)] as PropertyTable;
 			if (m_properties == null)
 				m_properties = new PropertyDefinition [propsTable.Rows.Count];
@@ -324,7 +323,7 @@ namespace Mono.Cecil.Implem {
 				PropertySig psig = m_sigReader.GetPropSig (prow.Type);
 				PropertyDefinition pdef = new PropertyDefinition (
 					MetadataRoot.Streams.StringsHeap [prow.Name],
-					dec, this.GetTypeRefFromSig (psig.Type), prow.Flags);
+					this.GetTypeRefFromSig (psig.Type), prow.Flags);
 				pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, i - 1);
 				props.Add (pdef);
 				m_properties [i - 1] = pdef;

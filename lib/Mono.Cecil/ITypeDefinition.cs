@@ -29,32 +29,11 @@ namespace Mono.Cecil {
 		bool IsEnum { get; }
 
 		IInterfaceCollection Interfaces { get; }
-		void DefineInterface (Type interf);
-		void DefineInterface (ITypeReference interf);
-
 		INestedTypeCollection NestedTypes { get; }
-		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes);
-		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType);
-		ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType);
-
 		IMethodDefinitionCollection Methods { get; }
-		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType);
-		IMethodDefinition DefineMethod (string name, MethodAttributes attributes, Type retType);
-
 		IConstructorCollection Constructors { get; }
-		IMethodDefinition DefineConstructor ();
-		IMethodDefinition DefineConstructor (bool isstatic);
-
 		IFieldDefinitionCollection Fields { get; }
-		IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType);
-		IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType);
-
 		IEventDefinitionCollection Events { get; }
-		IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType);
-		IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType);
-
 		IPropertyDefinitionCollection Properties { get; }
-		IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType);
-		IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType);
 	}
 }

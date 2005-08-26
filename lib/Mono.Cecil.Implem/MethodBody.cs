@@ -57,6 +57,11 @@ namespace Mono.Cecil.Implem {
 			set { m_localVarToken = value; }
 		}
 
+		public CilWorker CilWorker {
+			get { return m_cilWorker; }
+			set { m_cilWorker = value; }
+		}
+
 		public IInstructionCollection Instructions {
 			get { return m_instructions; }
 		}
@@ -75,36 +80,6 @@ namespace Mono.Cecil.Implem {
 			m_instructions = new InstructionCollection (this);
 			m_exceptions = new ExceptionHandlerCollection (this);
 			m_variables = new VariableDefinitionCollection (this);
-		}
-
-		public IVariableDefinition DefineLocalVariable (ITypeReference type)
-		{
-			int index = m_variables.Count;
-			VariableDefinition lvar = new VariableDefinition (
-				string.Concat ("V_", index), index, m_method, type);
-			m_variables.Add (lvar);
-			return lvar;
-		}
-
-		public IVariableDefinition DefineLocalVariable (Type type)
-		{
-			return DefineLocalVariable (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterType (type));
-		}
-
-		public IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type)
-		{
-			ExceptionHandler eh = new ExceptionHandler (type);
-			m_exceptions.Add (eh);
-			return eh;
-		}
-
-		public ICilWorker GetWorker ()
-		{
-			if (m_cilWorker == null)
-				m_cilWorker = new CilWorker (this);
-
-			return m_cilWorker;
 		}
 
 		public void Accept (ICodeVisitor visitor)

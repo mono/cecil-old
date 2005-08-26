@@ -157,8 +157,8 @@ namespace Mono.Cecil.Implem {
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 
 			if (types [Constants.ModuleType] == null)
-				m_mod.DefineType (
-					Constants.ModuleType, string.Empty, (TypeAttributes) 0);
+				types.Add (new TypeDefinition (
+						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
 
 			foreach (ITypeDefinition t in types)
 				orderedTypes.Add (t);
@@ -464,7 +464,8 @@ namespace Mono.Cecil.Implem {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					parent,
-					m_mdWriter.AddBlob (secDec.GetAsByteArray ()));
+					m_mdWriter.AddBlob (
+						m_mod.Factories.SecurityDeclarationFactory.GetAsByteArray (secDec)));
 
 				dsTable.Rows.Add (dsRow);
 			}
@@ -483,12 +484,12 @@ namespace Mono.Cecil.Implem {
 					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
-				/*CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
+				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
 					parent,
 					ca.Constructor.MetadataToken,
 					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
 
-				caTable.Rows.Add (caRow);*/
+				caTable.Rows.Add (caRow);
 			}
 		}
 

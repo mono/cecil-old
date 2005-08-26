@@ -29,6 +29,7 @@ namespace Mono.Cecil.Implem {
 		private ModuleDefinition m_mainModule;
 		private StructureReader m_reader;
 		private LoadingType m_loadingType;
+		private StructureFactories m_factories;
 
 		public IAssemblyNameDefinition Name {
 			get { return m_asmName; }
@@ -97,6 +98,10 @@ namespace Mono.Cecil.Implem {
 			set { m_loadingType = value; }
 		}
 
+		public IReflectionStructureFactories Factories {
+			get { return m_factories; }
+		}
+
 		public AssemblyDefinition (AssemblyNameDefinition name)
 		{
 			if (name == null)
@@ -104,53 +109,13 @@ namespace Mono.Cecil.Implem {
 
 			m_asmName = name;
 			m_modules = new ModuleDefinitionCollection (this);
+			m_factories = new StructureFactories (this);
 		}
 
 		public AssemblyDefinition (AssemblyNameDefinition name, StructureReader reader, LoadingType lt) : this (name)
 		{
 			m_reader = reader;
 			m_loadingType = lt;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (
-				(this.MainModule as ModuleDefinition).Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = (this.MainModule as ModuleDefinition).Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				(this.MainModule as ModuleDefinition).Controller.Helper.RegisterConstructor(ctor), data);
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
-		{
-			SecurityDeclaration dec = new SecurityDeclaration (action);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
-		{
-			SecurityDeclaration dec =
-				(this.MainModule as ModuleDefinition).Controller.Reader.BuildSecurityDeclaration (action, declaration);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
 		}
 
 		public void Accept (IReflectionStructureVisitor visitor)

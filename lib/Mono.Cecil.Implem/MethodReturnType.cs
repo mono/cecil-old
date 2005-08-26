@@ -41,7 +41,8 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_param == null) {
-					m_param = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, m_returnType);
+					m_param = new ParameterDefinition (
+						string.Empty, 0, (ParamAttributes) 0, m_returnType);
 					m_param.Method = m_method;
 				}
 
@@ -56,32 +57,6 @@ namespace Mono.Cecil.Implem {
 
 				return m_param.MarshalSpec;
 			}
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			(m_param.CustomAttributes as CustomAttributeCollection).Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor (ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = (m_method.DeclaringType as TypeDefinition).Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			(m_param.CustomAttributes as CustomAttributeCollection).Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				(m_method.DeclaringType as TypeDefinition).Module.Controller.Helper.RegisterConstructor (ctor), data);
 		}
 
 		public MethodReturnType (ITypeReference retType)

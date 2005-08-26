@@ -24,12 +24,5 @@ namespace Mono.Cecil.Cil {
 		IInstructionCollection Instructions { get; }
 		IExceptionHandlerCollection ExceptionHandlers { get; }
 		IVariableDefinitionCollection Variables { get; }
-
-		IVariableDefinition DefineLocalVariable (ITypeReference type);
-		IVariableDefinition DefineLocalVariable (Type type);
-
-		IExceptionHandler DefineExceptionHandler (ExceptionHandlerType type);
-
-		ICilWorker GetWorker ();
 	}
 }

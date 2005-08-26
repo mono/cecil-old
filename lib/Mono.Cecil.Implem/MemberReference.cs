@@ -26,8 +26,9 @@ namespace Mono.Cecil.Implem {
 			set { m_name = value; }
 		}
 
-		public ITypeReference DeclaringType {
+		public virtual ITypeReference DeclaringType {
 			get { return m_decType; }
+			set { m_decType = value; }
 		}
 
 		public MetadataToken MetadataToken {
@@ -35,14 +36,16 @@ namespace Mono.Cecil.Implem {
 			set { m_token = value; }
 		}
 
-		public MemberReference (string name, ITypeReference declaringType)
+		public MemberReference (string name)
 		{
 			m_name = name;
-			m_decType = declaringType;
 		}
 
 		public override string ToString ()
 		{
+			if (m_decType == null)
+				return m_name;
+
 			return string.Concat (m_decType.FullName, "::", m_name);
 		}
 	}

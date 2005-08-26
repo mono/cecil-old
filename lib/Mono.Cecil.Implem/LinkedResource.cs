@@ -30,8 +30,8 @@ namespace Mono.Cecil.Implem {
 			set { m_file = value; }
 		}
 
-		public LinkedResource (string name, ManifestResourceAttributes flags, ModuleDefinition owner, string file) :
-			base (name, flags, owner)
+		public LinkedResource (string name, ManifestResourceAttributes flags, string file) :
+			base (name, flags)
 		{
 			m_file = file;
 		}

@@ -26,6 +26,9 @@ namespace Mono.Cecil.Implem {
 		private IList m_items;
 		private <%=$cur_coll.container_impl%> m_container;
 
+		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
+		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
+
 		public <%=$cur_coll.type%> this [int index] {
 			get { return m_items [index] as <%=$cur_coll.type%>; }
 			set { m_items [index] = value; }
@@ -55,11 +58,16 @@ namespace Mono.Cecil.Implem {
 
 		public void Add (<%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
+				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Add (value);
 		}
 
 		public void Clear ()
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null)
+				foreach (<%=$cur_coll.type%> item in this)
+					On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (item));
 			m_items.Clear ();
 		}
 
@@ -75,16 +83,22 @@ namespace Mono.Cecil.Implem {
 
 		public void Insert (int index, <%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
+				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Insert (index, value);
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null && this.Contains (value))
+				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Remove (value);
 		}
 
 		public void RemoveAt (int index)
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null)
+				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
 			m_items.Remove (index);
 		}
 

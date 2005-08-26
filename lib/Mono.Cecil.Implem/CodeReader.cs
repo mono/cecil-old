@@ -234,8 +234,8 @@ namespace Mono.Cecil.Implem {
 				br.ReadBytes (2);
 
 				for (int i = 0; i < length; i++) {
-					ExceptionHandler eh = body.DefineExceptionHandler (
-						(ExceptionHandlerType) (br.ReadInt16 () & 0x7)) as ExceptionHandler;
+					ExceptionHandler eh = new ExceptionHandler (
+						(ExceptionHandlerType) (br.ReadInt16 () & 0x7));
 					eh.TryStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
 					eh.TryEnd = instructions [eh.TryStart.Offset + Convert.ToInt32 (br.ReadByte ())] as Instruction;
 					eh.HandlerStart = instructions [Convert.ToInt32 (br.ReadInt16 ())] as Instruction;
@@ -256,6 +256,7 @@ namespace Mono.Cecil.Implem {
 						br.ReadInt32 ();
 						break;
 					}
+					body.ExceptionHandlers.Add (eh);
 				}
 			} else {
 				br.BaseStream.Position--;
@@ -263,8 +264,8 @@ namespace Mono.Cecil.Implem {
 				if ((flags & (int) MethodDataSection.EHTable) == 0)
 					br.ReadBytes (length * 24);
 				for (int i = 0; i < length; i++) {
-					ExceptionHandler eh = body.DefineExceptionHandler (
-						(ExceptionHandlerType) (br.ReadInt32 () & 0x7)) as ExceptionHandler;
+					ExceptionHandler eh = new ExceptionHandler (
+						(ExceptionHandlerType) (br.ReadInt32 () & 0x7));
 					eh.TryStart = instructions [br.ReadInt32 ()] as Instruction;
 					eh.TryEnd = instructions [eh.TryStart.Offset + br.ReadInt32 ()] as Instruction;
 					eh.HandlerStart = instructions [br.ReadInt32 ()] as Instruction;
@@ -309,7 +310,7 @@ namespace Mono.Cecil.Implem {
 				if ((lv.Constraint & Constraint.Pinned) != 0)
 					varType = new PinnedType (varType);
 
-				body.DefineLocalVariable (varType);
+				body.Variables.Add (new VariableDefinition (varType));
 			}
 		}
 	}

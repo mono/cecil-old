@@ -31,6 +31,8 @@ namespace Mono.Cecil.Implem {
 		private CustomAttributeCollection m_customAttrs;
 
 		private ModuleDefinition m_module;
+		private bool m_isLazyLoadable;
+
 		private MethodBody m_body;
 		private RVA m_rva;
 		private OverrideCollection m_overrides;
@@ -51,14 +53,25 @@ namespace Mono.Cecil.Implem {
 			set { m_semAttrs = value; }
 		}
 
+		public override ITypeReference DeclaringType {
+			get { return base.DeclaringType; }
+			set {
+				base.DeclaringType = value;
+				TypeDefinition t = value as TypeDefinition;
+				if (t != null) {
+					m_module = t.Mod;
+					m_isLazyLoadable = t.IsLazyLoadable;
+				}
+			}
+		}
+
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
-				if (m_secDecls == null)
-					m_secDecls = new SecurityDeclarationCollection (
-						this, m_module.Controller);
-
-				if (!m_module.IsNew && !m_secDecls.Loaded)
+				if (m_isLazyLoadable) {
+					m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
 					m_secDecls.Load ();
+				} else
+					m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
 			}
@@ -66,12 +79,11 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (
-						this, m_module.Controller);
-
-				if (!m_module.IsNew && !m_customAttrs.Loaded)
+				if (m_isLazyLoadable) {
+					m_customAttrs = new CustomAttributeCollection (this, m_module.Controller);
 					m_customAttrs.Load ();
+				} else
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
@@ -84,7 +96,7 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodBody Body {
 			get {
-				if (m_body == null && m_rva != RVA.Zero) {
+				if (m_module != null && m_body == null && m_rva != RVA.Zero) {
 					m_body = new MethodBody (this);
 					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 				}
@@ -96,7 +108,7 @@ namespace Mono.Cecil.Implem {
 
 		public IPInvokeInfo PInvokeInfo {
 			get {
-				if (m_pinvoke == null && (m_attributes & MethodAttributes.PInvokeImpl) != 0) {
+				if (m_module != null && m_pinvoke == null && (m_attributes & MethodAttributes.PInvokeImpl) != 0) {
 					m_pinvoke = new PInvokeInfo (this);
 					m_module.Controller.Reader.VisitPInvokeInfo (m_pinvoke);
 				}
@@ -108,9 +120,12 @@ namespace Mono.Cecil.Implem {
 
 		public IOverrideCollection Overrides {
 			get {
-				if (m_overrides == null)
-					m_overrides = new OverrideCollection (
-						this, m_module.Controller);
+				if (m_isLazyLoadable) {
+					m_overrides = new OverrideCollection (this, m_module.Controller);
+					m_overrides.Load ();
+				} else
+					m_overrides = new OverrideCollection (this);
+
 				return m_overrides;
 			}
 		}
@@ -165,109 +180,23 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public MethodDefinition (string name, TypeDefinition decType, RVA rva,
+		public MethodDefinition (string name, RVA rva,
 			MethodAttributes attrs, MethodImplAttributes implAttrs,
 			bool hasThis, bool explicitThis, MethodCallingConvention callConv) :
-			base (name, decType, hasThis, explicitThis, callConv)
+			base (name, hasThis, explicitThis, callConv)
 		{
-			m_module = decType.Module;
 			m_rva = rva;
 			m_attributes = attrs;
 			m_implAttrs = implAttrs;
 		}
 
-		public MethodDefinition (string name, TypeDefinition decType, MethodAttributes attrs) :
-			base (name, decType)
+		public MethodDefinition (string name, MethodAttributes attrs) :
+			base (name)
 		{
-			m_module = decType.Module;
 			m_attributes = attrs;
 		}
 
-		public void DefineOverride (IMethodReference meth)
-		{
-			this.Overrides.Add (meth);
-		}
-
-		public void DefineOverride (System.Reflection.MethodInfo meth)
-		{
-			DefineOverride (
-				m_module.Controller.Helper.RegisterMethod (meth));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (
-				m_module.Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca =
-				m_module.Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				m_module.Controller.Helper.RegisterConstructor(ctor), data);
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
-		{
-			SecurityDeclaration dec = new SecurityDeclaration (action);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
-		{
-			SecurityDeclaration dec = m_module.Controller.Reader.BuildSecurityDeclaration (
-				action, declaration);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
-		}
-
-		public void DefinePInvokeInfo (string ep, string module, PInvokeAttributes attrs)
-		{
-			this.PInvokeInfo.EntryPoint = ep;
-			this.PInvokeInfo.Attributes = attrs;
-
-			foreach (IModuleReference modref in m_module.ModuleReferences) {
-				if (modref.Name == module) {
-					this.PInvokeInfo.Module = modref;
-					return;
-				}
-			}
-
-			this.PInvokeInfo.Module	 = m_module.DefineModuleReference (module);
-		}
-
-		public IParameterDefinition DefineParameter (string name, ParamAttributes attributes, ITypeReference type)
-		{
-			ParameterDefinition param = new ParameterDefinition (
-				name, this.Parameters.Count == 0 ? 1 : this.Parameters.Count + 1,
-				attributes, type);
-
-			this.Parameters.Add (param);
-			return param;
-		}
-
-		public IParameterDefinition DefineParameter (string name, ParamAttributes attributes, Type type)
-		{
-			return DefineParameter (name, attributes,
-				m_module.Controller.Helper.RegisterType (type));
-		}
-
-		public IMethodBody DefineBody ()
+		public IMethodBody CreateBody ()
 		{
 			return m_body = new MethodBody (this);
 		}

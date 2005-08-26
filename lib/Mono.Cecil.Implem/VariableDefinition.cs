@@ -41,12 +41,17 @@ namespace Mono.Cecil.Implem {
 			set { m_variable = value; }
 		}
 
-		public VariableDefinition (string name, int index, MethodDefinition method, ITypeReference variable)
+		public VariableDefinition (ITypeReference variable)
+		{
+			m_variable = variable;
+		}
+
+		public VariableDefinition (string name, int index, MethodDefinition method, ITypeReference variable) :
+			this (variable)
 		{
 			m_name = name;
 			m_index = index;
 			m_method = method;
-			m_variable = variable;
 		}
 
 		public void Accept (ICodeVisitor visitor)

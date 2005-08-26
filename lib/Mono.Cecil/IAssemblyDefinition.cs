@@ -21,5 +21,7 @@ namespace Mono.Cecil {
 		IModuleDefinition MainModule { get; }
 
 		IMethodDefinition EntryPoint { get; set; }
+
+		IReflectionStructureFactories Factories { get; }
 	}
 }

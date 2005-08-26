@@ -29,6 +29,9 @@ namespace Mono.Cecil.Implem {
 
 		private bool m_loaded;
 
+		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
+		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
+
 		public <%=$cur_coll.type%> this [int index] {
 			get {
 				return m_items [index] as <%=$cur_coll.type%>;
@@ -70,11 +73,16 @@ namespace Mono.Cecil.Implem {
 
 		public void Add (<%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
+				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Add (value);
 		}
 
 		public void Clear ()
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null)
+				foreach (<%=$cur_coll.type%> item in this)
+					On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (item));
 			m_items.Clear ();
 		}
 
@@ -90,16 +98,22 @@ namespace Mono.Cecil.Implem {
 
 		public void Insert (int index, <%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
+				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Insert (index, value);
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null && this.Contains (value))
+				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Remove (value);
 		}
 
 		public void RemoveAt (int index)
 		{
+			if (On<%=$cur_coll.item_name%>Removed != null)
+				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
 			m_items.Remove (index);
 		}
 
@@ -120,7 +134,100 @@ namespace Mono.Cecil.Implem {
 				m_loaded = true;
 			}
 		}
+<%
+	case $cur_coll.item_name
+		when "MethodDefinition"
+%>
+		public IMethodDefinition [] GetMethod (string name)
+		{
+			ArrayList ret = new ArrayList ();
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name)
+					ret.Add (meth);
 
+			return ret.ToArray (typeof (IMethodDefinition)) as IMethodDefinition [];
+		}
+
+		public IMethodDefinition GetMethod (string name, Type [] parameters)
+		{
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name && meth.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (meth.Parameters [i].ParameterType.FullName == m_controller.Helper.GetTypeSignature (parameters [i]))
+							return meth;
+
+			return null;
+		}
+
+		public IMethodDefinition GetMethod (string name, ITypeReference [] parameters)
+		{
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name && meth.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (meth.Parameters [i].ParameterType.FullName == parameters [i].FullName)
+							return meth;
+
+			return null;
+		}
+<%
+		when "FieldDefinition"
+%>
+		public IFieldDefinition GetField (string name)
+		{
+			foreach (IFieldDefinition field in this)
+				if (field.Name == name)
+					return field;
+
+			return null;
+		}
+<%
+		when "Constructor"
+%>
+		public IMethodDefinition GetConstructor (bool isStatic, Type [] parameters)
+		{
+			foreach (IMethodDefinition ctor in this)
+				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (ctor.Parameters [i].ParameterType.FullName == m_controller.Helper.GetTypeSignature (parameters [i]))
+							return ctor;
+
+			return null;
+		}
+
+		public IMethodDefinition GetConstructor (bool isStatic, ITypeReference [] parameters)
+		{
+			foreach (IMethodDefinition ctor in this)
+				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].FullName)
+							return ctor;
+
+			return null;
+		}
+<%
+		when "EventDefinition"
+%>
+		public IEventDefinition GetEvent (string name)
+		{
+			foreach (IEventDefinition evt in this)
+				if (evt.Name == name)
+					return evt;
+
+			return null;
+		}
+<%
+		when "PropertyDefinition"
+%>
+		public IPropertyDefinition [] GetProperties (string name)
+		{
+			ArrayList ret = new ArrayList ();
+			foreach (IPropertyDefinition prop in this)
+				if (prop.Name == name)
+					ret.Add (prop);
+
+			return ret.ToArray (typeof (IPropertyDefinition)) as IPropertyDefinition [];
+		}
+<% end %>
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);

@@ -13,7 +13,6 @@
 namespace Mono.Cecil.Implem {
 
 	using System.Collections;
-	using System.Collections.Specialized;
 
 	internal sealed class CustomAttribute : ICustomAttribute {
 
@@ -40,8 +39,8 @@ namespace Mono.Cecil.Implem {
 		public IDictionary Fields {
 			get {
 				if (m_fields == null) {
-					m_fields = new HybridDictionary ();
-					m_fieldTypes = new HybridDictionary ();
+					m_fields = new Hashtable ();
+					m_fieldTypes = new Hashtable ();
 				}
 				return m_fields;
 			}
@@ -50,8 +49,8 @@ namespace Mono.Cecil.Implem {
 		public IDictionary Properties {
 			get {
 				if (m_properties == null) {
-					m_properties = new HybridDictionary ();
-					m_propTypes = new HybridDictionary ();
+					m_properties = new Hashtable ();
+					m_propTypes = new Hashtable ();
 				}
 				return m_properties;
 			}
@@ -80,12 +79,6 @@ namespace Mono.Cecil.Implem {
 		public void SetPropertyType (string propertyName, ITypeReference type)
 		{
 			m_propTypes [propertyName] = type;
-		}
-
-		public byte [] GetAsByteArray ()
-		{
-			//TODO: implement this using a SignatureWriter
-			return new byte [0];
 		}
 
 		public void Accept (IReflectionVisitor visitor)

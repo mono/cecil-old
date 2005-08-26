@@ -39,8 +39,8 @@ namespace Mono.Cecil.Implem {
 
 		public IFieldLayoutInfo LayoutInfo {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_layoutLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadLayout (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_layoutLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadLayout (this);
 
 				return this;
 			}
@@ -53,8 +53,8 @@ namespace Mono.Cecil.Implem {
 
 		public bool HasLayoutInfo {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_layoutLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadLayout (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_layoutLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadLayout (this);
 
 				return m_hasInfo;
 			}
@@ -70,8 +70,8 @@ namespace Mono.Cecil.Implem {
 
 		public bool InitialValueLoaded {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
 
 				return m_initValLoaded;
 			}
@@ -80,8 +80,8 @@ namespace Mono.Cecil.Implem {
 
 		public RVA RVA {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
 
 				return m_rva;
 			}
@@ -90,8 +90,8 @@ namespace Mono.Cecil.Implem {
 
 		public byte [] InitialValue {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_initValLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadInitialValue (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
 
 				return m_initVal;
 			}
@@ -115,8 +115,8 @@ namespace Mono.Cecil.Implem {
 
 		public bool HasConstant {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+				if (this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
 
 				return m_hasConstant;
 			}
@@ -124,8 +124,8 @@ namespace Mono.Cecil.Implem {
 
 		public object Constant {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_constLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadConstant (this);
+				if (this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
 
 				return m_const;
 			}
@@ -138,10 +138,11 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Module.Controller);
-
-				if (!this.DecTypeDef.Module.IsNew && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
+					if (this.DecTypeDef.IsLazyLoadable) {
+						m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Mod.Controller);
+						m_customAttrs.Load ();
+					} else
+						m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
@@ -154,8 +155,8 @@ namespace Mono.Cecil.Implem {
 
 		public IMarshalSpec MarshalSpec {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_marshalLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadMarshalSpec (this);
+				if (this.DecTypeDef.IsLazyLoadable && !m_marshalLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadMarshalSpec (this);
 
 				return m_marshalDesc;
 			}
@@ -187,36 +188,12 @@ namespace Mono.Cecil.Implem {
 			set { m_attributes |= value ? FieldAttributes.Static : 0; }
 		}
 
-		public FieldDefinition (string name, TypeDefinition decType, ITypeReference fieldType, FieldAttributes attrs) : base (name, decType)
+		public FieldDefinition (string name, ITypeReference fieldType,
+			FieldAttributes attrs) : base (name)
 		{
 			m_hasInfo = false;
 			m_fieldType = fieldType;
 			m_attributes = attrs;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (this.DecTypeDef.Module.Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = this.DecTypeDef.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				this.DecTypeDef.Module.Controller.Helper.RegisterConstructor(ctor), data);
 		}
 
 		public override string ToString ()

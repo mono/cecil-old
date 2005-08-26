@@ -15,13 +15,34 @@
 
 namespace <%=$cur_coll.target%> {
 
+	using System;
 	using System.Collections;
+
+	public class <%=$cur_coll.item_name%>EventArgs : EventArgs {
+
+		private <%=$cur_coll.type%> m_item;
+
+		public <%=$cur_coll.type%> <%=$cur_coll.item_name%> {
+			get { return m_item; }
+		}
+
+		public <%=$cur_coll.item_name%>EventArgs (<%=$cur_coll.type%> item)
+		{
+			m_item = item;
+		}
+	}
+
+	public delegate void <%=$cur_coll.item_name%>EventHandler (
+		object sender, <%=$cur_coll.item_name%>EventArgs ea);
 
 	public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
 		<%=$cur_coll.type%> this [int index] { get; }
 
 		<%=$cur_coll.container%> Container { get; }
+
+		event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
+		event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
 
 		void Add (<%=$cur_coll.type%> value);
 		void Clear ();
@@ -30,5 +51,30 @@ namespace <%=$cur_coll.target%> {
 		void Insert (int index, <%=$cur_coll.type%> value);
 		void Remove (<%=$cur_coll.type%> value);
 		void RemoveAt (int index);
-	}
+<%
+	case $cur_coll.item_name
+		when "MethodDefinition"
+		%>
+		IMethodDefinition [] GetMethod (string name);
+		IMethodDefinition GetMethod (string name, Type [] parameters);
+		IMethodDefinition GetMethod (string name, ITypeReference [] parameters);
+<%
+		when "FieldDefinition"
+%>
+		IFieldDefinition GetField (string name);
+<%
+		when "Constructor"
+%>
+		IMethodDefinition GetConstructor (bool isStatic, Type [] parameters);
+		IMethodDefinition GetConstructor (bool isStatic, ITypeReference [] parameters);
+<%
+		when "EventDefinition"
+%>
+		IEventDefinition GetEvent (string name);
+<%
+		when "PropertyDefinition"
+%>
+		IPropertyDefinition [] GetProperties (string name);
+<%
+	end %>	}
 }

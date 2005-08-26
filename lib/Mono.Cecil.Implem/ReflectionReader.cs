@@ -175,7 +175,7 @@ namespace Mono.Cecil.Implem {
 				string [] parts = fullName.Split ('.');
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
-				coreType = new TypeReference (parts [1], parts [0], m_module, m_corlib);
+				coreType = new TypeReference (parts [1], parts [0], m_corlib);
 				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
@@ -232,7 +232,7 @@ namespace Mono.Cecil.Implem {
 				TypeDefinition t = new TypeDefinition (
 					m_root.Streams.StringsHeap [type.Name],
 					m_root.Streams.StringsHeap [type.Namespace],
-					type.Flags, def);
+					type.Flags);
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
@@ -281,7 +281,7 @@ namespace Mono.Cecil.Implem {
 					TypeReference t = new TypeReference (
 						m_root.Streams.StringsHeap [type.Name],
 						m_root.Streams.StringsHeap [type.Namespace],
-						m_module, scope);
+						scope);
 					t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
 
 					if (parent != null)
@@ -365,7 +365,7 @@ namespace Mono.Cecil.Implem {
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
 					FieldDefinition fdef = new FieldDefinition (
 						m_root.Streams.StringsHeap [frow.Name],
-						dec, this.GetTypeRefFromSig (fsig.Type), frow.Flags);
+						this.GetTypeRefFromSig (fsig.Type), frow.Flags);
 					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
@@ -412,7 +412,7 @@ namespace Mono.Cecil.Implem {
 					MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
 
 					MethodDefinition mdef = new MethodDefinition (
-						m_root.Streams.StringsHeap [methRow.Name], dec,
+						m_root.Streams.StringsHeap [methRow.Name],
 						methRow.RVA, methRow.Flags, methRow.ImplFlags,
 						msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
 					mdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Method, j - 1);
@@ -509,13 +509,14 @@ namespace Mono.Cecil.Implem {
 					if (sig is FieldSig) {
 						FieldSig fs = sig as FieldSig;
 						member = new FieldReference (
-							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
-							GetTypeRefFromSig (fs.Type));
+							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeRefFromSig (fs.Type));
+						member.DeclaringType = GetTypeDefOrRef (mrefRow.Class);
 					} else {
 						MethodSig ms = sig as MethodSig;
 						MethodReference methref = new MethodReference (
-							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeDefOrRef (mrefRow.Class),
+							m_root.Streams.StringsHeap [mrefRow.Name],
 							ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+						methref.DeclaringType = GetTypeDefOrRef (mrefRow.Class);
 						methref.ReturnType = GetMethodReturnType (ms);
 						(methref.ReturnType as MethodReturnType).Method = methref;
 						for (int j = 0; j < ms.ParamCount; j++) {
@@ -532,8 +533,9 @@ namespace Mono.Cecil.Implem {
 					// really not sure about this
 					MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
 					member = new MethodReference (
-						methdef.Name, methdef.DeclaringType, methdef.HasThis,
+						methdef.Name, methdef.HasThis,
 						methdef.ExplicitThis, methdef.CallingConvention);
+					member.DeclaringType = methdef.DeclaringType;
 					break;
 				case TokenType.ModuleRef :
 					break; // TODO, implement that, or not

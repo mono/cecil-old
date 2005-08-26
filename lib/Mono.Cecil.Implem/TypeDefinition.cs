@@ -47,7 +47,7 @@ namespace Mono.Cecil.Implem {
 
 		public IClassLayoutInfo LayoutInfo {
 			get {
-				if (!m_module.IsNew && !m_layoutLoaded)
+				if (IsLazyLoadable && !m_layoutLoaded)
 					m_module.Controller.Reader.ReadLayout (this);
 
 				return this;
@@ -61,7 +61,7 @@ namespace Mono.Cecil.Implem {
 
 		public bool HasLayoutInfo {
 			get {
-				if (!m_module.IsNew && !m_layoutLoaded)
+				if (IsLazyLoadable && !m_layoutLoaded)
 					m_module.Controller.Reader.ReadLayout (this);
 
 				return m_hasInfo;
@@ -84,13 +84,19 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
+		public bool IsLazyLoadable {
+			get { return m_module != null && !m_module.IsNew; }
+		}
+
 		public IInterfaceCollection Interfaces {
 			get {
-				if (m_interfaces == null)
-					m_interfaces = new InterfaceCollection (this, m_module.Controller);
-
-				if (!m_module.IsNew && !m_interfaces.Loaded)
-					m_interfaces.Load ();
+				if (m_interfaces == null) {
+					if (this.IsLazyLoadable) {
+						m_interfaces = new InterfaceCollection (this, m_module.Controller);
+						m_interfaces.Load ();
+					} else
+						m_interfaces = new InterfaceCollection (this);
+				}
 
 				return m_interfaces;
 			}
@@ -98,8 +104,9 @@ namespace Mono.Cecil.Implem {
 
 		public INestedTypeCollection NestedTypes {
 			get {
-				if (m_nestedTypes == null)
+				if (m_nestedTypes == null) {
 					m_nestedTypes = new NestedTypeCollection (this);
+				}
 
 				return m_nestedTypes;
 			}
@@ -107,11 +114,16 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinitionCollection Methods {
 			get {
-				if (m_methods == null)
-					m_methods = new MethodDefinitionCollection (this, m_module.Controller);
+				if (m_methods == null) {
+					if (this.IsLazyLoadable) {
+						m_methods = new MethodDefinitionCollection (this, m_module.Controller);
+						m_methods.Load ();
+					} else
+						m_methods = new MethodDefinitionCollection (this);
 
-				if (!m_module.IsNew && !m_methods.Loaded)
-					m_methods.Load ();
+					m_methods.OnMethodDefinitionAdded += new MethodDefinitionEventHandler (OnMethodAdded);
+					m_methods.OnMethodDefinitionRemoved += new MethodDefinitionEventHandler (OnMethodRemoved);
+				}
 
 				return m_methods;
 			}
@@ -119,12 +131,16 @@ namespace Mono.Cecil.Implem {
 
 		public IConstructorCollection Constructors {
 			get {
-				if (m_ctors  == null) {
-					m_ctors = new ConstructorCollection (this);
-				}
+				if (m_ctors == null) {
+					if (this.IsLazyLoadable) {
+						m_ctors = new ConstructorCollection (this, m_module.Controller);
+						m_ctors.Load ();
+					} else
+						m_ctors = new ConstructorCollection (this);
 
-				if (!m_module.IsNew && !m_ctors.Loaded)
-					m_ctors.Load ();
+					m_ctors.OnConstructorAdded += new ConstructorEventHandler (OnCtorAdded);
+					m_ctors.OnConstructorRemoved += new ConstructorEventHandler (OnCtorRemoved);
+				}
 
 				return m_ctors;
 			}
@@ -132,11 +148,16 @@ namespace Mono.Cecil.Implem {
 
 		public IFieldDefinitionCollection Fields {
 			get {
-				if (m_fields == null)
-					m_fields = new FieldDefinitionCollection (this, m_module.Controller);
+				if (m_fields == null) {
+					if (this.IsLazyLoadable) {
+						m_fields = new FieldDefinitionCollection (this, m_module.Controller);
+						m_fields.Load ();
+					} else
+						m_fields = new FieldDefinitionCollection (this);
 
-				if (!m_module.IsNew && !m_fields.Loaded)
-					m_fields.Load ();
+					m_fields.OnFieldDefinitionAdded += new FieldDefinitionEventHandler (OnFieldAdded);
+					m_fields.OnFieldDefinitionRemoved += new FieldDefinitionEventHandler (OnFieldRemoved);
+				}
 
 				return m_fields;
 			}
@@ -144,11 +165,16 @@ namespace Mono.Cecil.Implem {
 
 		public IEventDefinitionCollection Events {
 			get {
-				if (m_events == null)
-					m_events = new EventDefinitionCollection (this, m_module.Controller);
+				if (m_events == null) {
+					if (this.IsLazyLoadable) {
+						m_events = new EventDefinitionCollection (this, m_module.Controller);
+						m_events.Load ();
+					} else
+						m_events = new EventDefinitionCollection (this);
 
-				if (!m_module.IsNew && !m_events.Loaded)
-					m_events.Load ();
+					m_events.OnEventDefinitionAdded += new EventDefinitionEventHandler (OnEventAdded);
+					m_events.OnEventDefinitionRemoved += new EventDefinitionEventHandler (OnEventRemoved);
+				}
 
 				return m_events;
 			}
@@ -156,11 +182,16 @@ namespace Mono.Cecil.Implem {
 
 		public IPropertyDefinitionCollection Properties {
 			get {
-				if (m_properties == null)
-					m_properties = new PropertyDefinitionCollection (this, m_module.Controller);
+				if (m_properties == null) {
+					if (this.IsLazyLoadable) {
+						m_properties = new PropertyDefinitionCollection (this, m_module.Controller);
+						m_properties.Load ();
+					} else
+						m_properties = new PropertyDefinitionCollection (this);
 
-				if (!m_module.IsNew && !m_properties.Loaded)
-					m_properties.Load ();
+					m_properties.OnPropertyDefinitionAdded += new PropertyDefinitionEventHandler (OnPropertyAdded);
+					m_properties.OnPropertyDefinitionRemoved += new PropertyDefinitionEventHandler (OnPropertyRemoved);
+				}
 
 				return m_properties;
 			}
@@ -169,10 +200,11 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
 				if (m_secDecls == null)
-					m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
-
-				if (!m_module.IsNew && !m_secDecls.Loaded)
-					m_secDecls.Load ();
+					if (this.IsLazyLoadable) {
+						m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
+						m_secDecls.Load ();
+					} else
+						m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
 			}
@@ -219,132 +251,74 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
-			base (name, ns, module, module.Assembly.Name)
+		public TypeDefinition (string name, string ns, TypeAttributes attrs) :
+			base (name, ns)
 		{
 			m_hasInfo = false;
 			m_attributes = attrs;
 		}
 
-		public void DefineInterface (ITypeReference type)
+		private void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
 		{
-			this.Interfaces.Add (type);
+			AttachMember (ea.MethodDefinition as MemberReference);
 		}
 
-		public void DefineInterface (Type type)
+		private void OnMethodRemoved (object sender, MethodDefinitionEventArgs ea)
 		{
-			if (!type.IsInterface)
-				throw new ArgumentException ("The type is not an interface");
-			DefineInterface (m_module.Controller.Helper.RegisterType (type));
+			DetachMember (ea.MethodDefinition as MemberReference);
 		}
 
-		public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes)
+		private void OnFieldAdded (object sender, FieldDefinitionEventArgs ea)
 		{
-			return DefineNestedType (name, attributes, typeof (object));
+			AttachMember (ea.FieldDefinition as MemberReference);
 		}
 
-		public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, ITypeReference baseType)
+		private void OnFieldRemoved (object sender, FieldDefinitionEventArgs ea)
 		{
-			TypeDefinition type = new TypeDefinition (name, string.Empty, attributes, m_module);
-			type.BaseType = baseType;
-			type.DeclaringType = this;
-			this.NestedTypes.Add (type);
-			m_module.Types.Add (type);
-			return type;
+			DetachMember (ea.FieldDefinition as MemberReference);
 		}
 
-		public ITypeDefinition DefineNestedType (string name, TypeAttributes attributes, Type baseType)
+		private void OnCtorAdded (object sender, ConstructorEventArgs ea)
 		{
-			return DefineNestedType (name, attributes, m_module.Controller.Helper.RegisterType (baseType));
+			AttachMember (ea.Constructor as MemberReference);
 		}
 
-		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes, ITypeReference retType)
+		private void OnCtorRemoved (object sender, ConstructorEventArgs ea)
 		{
-			MethodDefinition meth = new MethodDefinition (name, this, attributes);
-			meth.HasThis = !meth.IsStatic;
-			meth.ReturnType.ReturnType = retType;
-			this.Methods.Add (meth);
-			return meth;
+			DetachMember (ea.Constructor as MemberReference);
 		}
 
-		public IMethodDefinition DefineMethod (string name, MethodAttributes attributes, Type retType)
+		private void OnEventAdded (object sender, EventDefinitionEventArgs ea)
 		{
-			return DefineMethod (name, attributes, m_module.Controller.Helper.RegisterType (retType));
+			AttachMember (ea.EventDefinition as MemberReference);
 		}
 
-		public IMethodDefinition DefineConstructor ()
+		private void OnEventRemoved (object sender, EventDefinitionEventArgs ea)
 		{
-			return DefineConstructor (false);
+			DetachMember (ea.EventDefinition as MemberReference);
 		}
 
-		public IMethodDefinition DefineConstructor (bool isstatic)
+		private void OnPropertyAdded (object sender, PropertyDefinitionEventArgs ea)
 		{
-			string name = null;
-			MethodAttributes attrs = MethodAttributes.SpecialName | MethodAttributes.RTSpecialName;
-			if (isstatic) {
-				name = MethodDefinition.Cctor;
-				attrs |= MethodAttributes.Static;
-			} else
-				name = MethodDefinition.Ctor;
-
-			MethodDefinition meth = new MethodDefinition (name, this, attrs);
-			meth.HasThis = !isstatic;
-			meth.ReturnType.ReturnType = m_module.Controller.Writer.GetCoreType (Constants.Void);
-
-			this.Constructors.Add (meth);
-
-			return meth;
+			AttachMember (ea.PropertyDefinition as MemberReference);
 		}
 
-		public IFieldDefinition DefineField (string name, FieldAttributes attributes, ITypeReference fieldType)
+		private void OnPropertyRemoved (object sender, PropertyDefinitionEventArgs ea)
 		{
-			FieldDefinition field = new FieldDefinition (name, this, fieldType, attributes);
-			field.ConstantLoaded = field.LayoutLoaded = field.MarshalSpecLoaded = true;
-			this.Fields.Add (field);
-			return field;
+			DetachMember (ea.PropertyDefinition as MemberReference);
 		}
 
-		public IFieldDefinition DefineField (string name, FieldAttributes attributes, Type fieldType)
+		private void AttachMember (MemberReference member)
 		{
-			return DefineField (name, attributes, this.Module.Controller.Helper.RegisterType (fieldType));
+			if (member.DeclaringType != null)
+				throw new ReflectionException ("Member already attached, clone it instead");
+
+			member.DeclaringType = this;
 		}
 
-		public IEventDefinition DefineEvent (string name, EventAttributes attributes, ITypeReference eventType)
+		private void DetachMember (MemberReference member)
 		{
-			EventDefinition evt = new EventDefinition (name, this, eventType, attributes);
-			this.Events.Add (evt);
-			return evt;
-		}
-
-		public IEventDefinition DefineEvent (string name, EventAttributes attributes, Type eventType)
-		{
-			return DefineEvent (name, attributes, this.Module.Controller.Helper.RegisterType (eventType));
-		}
-
-		public IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, ITypeReference propType)
-		{
-			PropertyDefinition prop = new PropertyDefinition (name, this, propType, attributes);
-			this.Properties.Add (prop);
-			return prop;
-		}
-
-		public IPropertyDefinition DefineProperty (string name, PropertyAttributes attributes, Type propType)
-		{
-			return DefineProperty (name, attributes, this.Module.Controller.Helper.RegisterType (propType));
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action)
-		{
-			SecurityDeclaration dec = new SecurityDeclaration (action);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
-		}
-
-		public ISecurityDeclaration DefineSecurityDeclaration (SecurityAction action, byte [] declaration)
-		{
-			SecurityDeclaration dec = this.Module.Controller.Reader.BuildSecurityDeclaration (action, declaration);
-			this.SecurityDeclarations.Add (dec);
-			return dec;
+			member.DeclaringType = null;
 		}
 
 		public override void Accept (IReflectionVisitor visitor)

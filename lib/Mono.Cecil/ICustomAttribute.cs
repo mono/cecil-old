@@ -23,7 +23,5 @@ namespace Mono.Cecil {
 
 		ITypeReference GetFieldType (string fieldName);
 		ITypeReference GetPropertyType (string propertyName);
-
-		byte [] GetAsByteArray ();
 	}
 }

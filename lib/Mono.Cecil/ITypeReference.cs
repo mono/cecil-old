@@ -16,6 +16,7 @@ namespace Mono.Cecil {
 
 		string Namespace { get; set; }
 		IMetadataScope Scope { get; }
+		IModuleDefinition Module { get; }
 
 		bool IsValueType { get; }
 

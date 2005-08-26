@@ -38,6 +38,7 @@ namespace Mono.Cecil.Implem {
 
 		private ImageReader m_imgReader;
 		private ReflectionController m_controller;
+		private ReflectionFactories m_factories;
 
 		public string Name {
 			get { return m_name; }
@@ -103,7 +104,11 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public AssemblyDefinition Assembly {
+		public IAssemblyDefinition Assembly {
+			get { return m_asm; }
+		}
+
+		public AssemblyDefinition Asm {
 			get { return m_asm; }
 		}
 
@@ -118,6 +123,10 @@ namespace Mono.Cecil.Implem {
 		public Image Image {
 			get { return m_image; }
 			set { m_image = value; }
+		}
+
+		public IReflectionFactories Factories {
+			get { return m_factories; }
 		}
 
 		public ModuleDefinition (string name, AssemblyDefinition asm) : this (name, asm, null, false)
@@ -152,123 +161,40 @@ namespace Mono.Cecil.Implem {
 			} else
 				m_image = Image.CreateImage ();
 
+			m_factories = new ReflectionFactories (this);
+
 			m_controller = new ReflectionController (this, asm.LoadingType);
 			m_modRefs = new ModuleReferenceCollection (this);
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
 			m_types = new TypeDefinitionCollection (this);
+			m_types.OnTypeDefinitionAdded += new TypeDefinitionEventHandler (OnTypeDefinitionAdded);
+			m_types.OnTypeDefinitionRemoved += new TypeDefinitionEventHandler (OnTypeDefinitionRemoved);
 			m_refs = new TypeReferenceCollection (this);
+			m_refs.OnTypeReferenceAdded += new TypeReferenceEventHandler (OnTypeReferenceAdded);
+			m_refs.OnTypeReferenceRemoved += new TypeReferenceEventHandler (OnTypeReferenceRemoved);
 		}
 
-		public IAssemblyNameReference DefineAssemblyReference (string name)
+		private void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)
 		{
-			AssemblyNameReference asmRef = new AssemblyNameReference ();
-			asmRef.Name = name;
-			m_asmRefs.Add (asmRef);
-			return asmRef;
+			if (ea.TypeDefinition.Module != null)
+				throw new ReflectionException ("Type is already attached, clone it instead");
+			(ea.TypeDefinition as TypeDefinition).Mod = this;
 		}
 
-		public IModuleReference DefineModuleReference (string module)
+		private void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
 		{
-			ModuleReference mod = new ModuleReference (module);
-			m_modRefs.Add (mod);
-			return mod;
+			(ea.TypeDefinition as TypeDefinition).Mod = null;
 		}
 
-		public IEmbeddedResource DefineEmbeddedResource (string name, ManifestResourceAttributes attributes, byte [] data)
+		private void OnTypeReferenceAdded (Object sender, TypeReferenceEventArgs ea)
 		{
-			EmbeddedResource res = new EmbeddedResource (name, attributes, this, data);
-			m_res.Add (res);
-			return res;
+			(ea.TypeReference as TypeReference).Mod = this;
 		}
 
-		public ILinkedResource DefineLinkedResource (string name, ManifestResourceAttributes attributes, string file)
+		private void OnTypeReferenceRemoved (Object sender, TypeReferenceEventArgs ea)
 		{
-			LinkedResource res = new LinkedResource (name, attributes, this, file);
-			m_res.Add (res);
-			return res;
-		}
-
-		public IAssemblyLinkedResource DefineAssemblyLinkedResource (string name, ManifestResourceAttributes attributes,
-																	 IAssemblyNameReference asm)
-		{
-			AssemblyLinkedResource res = new AssemblyLinkedResource (name, attributes, this, asm as AssemblyNameReference);
-			m_res.Add (res);
-			return res;
-		}
-
-		public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes)
-		{
-			return DefineType (name, ns, attributes, typeof (object));
-		}
-
-		public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, ITypeReference baseType)
-		{
-			TypeDefinition type = new TypeDefinition (name, ns, attributes, this);
-			type.BaseType = baseType;
-			m_types.Add (type);
-			return type;
-		}
-
-		public ITypeDefinition DefineType (string name, string ns, TypeAttributes attributes, Type baseType)
-		{
-			return DefineType (name, ns, attributes, m_controller.Helper.RegisterType (baseType));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (m_controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = m_controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				m_controller.Helper.RegisterConstructor(ctor), data);
-		}
-
-		public ITypeReference DefineTypeReference (string name, string ns, IAssemblyNameReference asm, bool valueType)
-		{
-			TypeReference typeRef = new TypeReference (name, ns, this, asm);
-			typeRef.IsValueType = valueType;
-			m_refs.Add (typeRef);
-			return typeRef;
-		}
-
-		public IFieldReference DefineFieldReference (string name, ITypeReference declaringType,
-			ITypeReference fieldType)
-		{
-			FieldReference fieldRef = new FieldReference (name,
-				declaringType, fieldType);
-			m_controller.Writer.AddMemberRef (fieldRef);
-			return fieldRef;
-		}
-
-		public IMethodReference DefineMethodReference (string name, ITypeReference declaringType,
-			ITypeReference returnType, ITypeReference [] parametersTypes,
-			bool hasThis, bool explicitThis, MethodCallingConvention conv)
-		{
-			MethodReference meth = new MethodReference (name, declaringType, hasThis, explicitThis, conv);
-			meth.ReturnType.ReturnType = returnType;
-			int seq = 1;
-			foreach (ITypeReference t in parametersTypes)
-				(meth.Parameters as ParameterDefinitionCollection).Add (new ParameterDefinition (
-						string.Empty, seq++, (ParamAttributes) 0, t));
-			m_controller.Writer.AddMemberRef (meth);
-			return meth;
+			(ea.TypeReference as TypeReference).Mod = null;
 		}
 
 		public IMetadataTokenProvider LookupByToken (MetadataToken token)

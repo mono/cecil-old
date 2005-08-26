@@ -16,11 +16,12 @@ namespace Mono.Cecil.Implem {
 
 	internal abstract class MemberDefinition : MemberReference, IMemberDefinition {
 
-		public readonly TypeDefinition DecTypeDef;
+		public TypeDefinition DecTypeDef {
+			get { return this.DeclaringType as TypeDefinition; }
+		}
 
-		public MemberDefinition (string name, TypeDefinition declaringType) : base (name, declaringType)
+		public MemberDefinition (string name) : base (name)
 		{
-			this.DecTypeDef = declaringType;
 		}
 	}
 }

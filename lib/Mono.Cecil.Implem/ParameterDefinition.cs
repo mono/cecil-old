@@ -30,6 +30,7 @@ namespace Mono.Cecil.Implem {
 		private object m_const;
 
 		private ModuleDefinition m_module;
+
 		private MethodReference m_method;
 		private CustomAttributeCollection m_customAttrs;
 
@@ -67,15 +68,12 @@ namespace Mono.Cecil.Implem {
 					return m_module;
 
 				if (m_paramType != null)
-					m_module = (m_paramType as TypeReference).Module;
+					m_module = (m_paramType as TypeReference).Mod;
 
 				if (m_module == null && m_method != null)
-					return (m_method.DeclaringType as TypeReference).Module;
+					return (m_method.DeclaringType as TypeReference).Mod;
 
-				if (m_module != null)
-					return m_module;
-
-				throw new ReflectionException ("Can get no module");
+				return m_module;
 			}
 		}
 
@@ -86,7 +84,7 @@ namespace Mono.Cecil.Implem {
 
 		public bool HasConstant {
 			get {
-				if (!this.Module.IsNew && !m_constLoaded)
+				if (this.Module != null && !this.Module.IsNew && !m_constLoaded)
 					this.Module.Controller.Reader.ReadConstant (this);
 
 				return m_hasConstant;
@@ -95,7 +93,9 @@ namespace Mono.Cecil.Implem {
 
 		public object Constant {
 			get {
-				this.Module.Controller.Reader.ReadConstant (this);
+				if (this.Module != null && !this.Module.IsNew && !m_constLoaded)
+					this.Module.Controller.Reader.ReadConstant (this);
+
 				return m_const;
 			}
 			set {
@@ -132,7 +132,7 @@ namespace Mono.Cecil.Implem {
 
 		public IMarshalSpec MarshalSpec {
 			get {
-				if (!this.Module.IsNew && !m_marshalLoaded)
+				if (this.Module != null && !this.Module.IsNew && !m_marshalLoaded)
 					this.Module.Controller.Reader.ReadMarshalSpec (this);
 
 				return m_marshalDesc;
@@ -146,32 +146,6 @@ namespace Mono.Cecil.Implem {
 			m_sequence = seq;
 			m_attributes = attrs;
 			m_paramType = paramType;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (
-				this.Module.Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = this.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute (
-				this.Module.Controller.Helper.RegisterConstructor (ctor), data);
 		}
 
 		public static IParameterDefinitionCollection Clone (IParameterDefinitionCollection original)

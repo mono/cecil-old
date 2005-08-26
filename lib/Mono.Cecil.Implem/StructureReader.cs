@@ -98,8 +98,6 @@ namespace Mono.Cecil.Implem {
 			if (!m_tHeap.HasTable (typeof (ManifestResourceTable)))
 				return;
 
-			ModuleDefinition module = resources.Container as ModuleDefinition;
-
 			ManifestResourceTable mrTable = m_tHeap [typeof(ManifestResourceTable)] as ManifestResourceTable;
 			FileTable fTable = m_tHeap [typeof(FileTable)] as FileTable;
 
@@ -109,7 +107,7 @@ namespace Mono.Cecil.Implem {
 				ManifestResourceRow mrRow = mrTable [i];
 				if (mrRow.Implementation.RID == 0) {
 					EmbeddedResource eres = new EmbeddedResource (
-						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags, module);
+						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags);
 
 					br = m_ir.MetadataReader.GetDataReader (
 						m_img.CLIHeader.Resources.VirtualAddress);
@@ -126,7 +124,7 @@ namespace Mono.Cecil.Implem {
 					FileRow fRow = fTable [(int) mrRow.Implementation.RID - 1];
 					LinkedResource lres = new LinkedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
-						module, m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
+						m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
 					lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
 					resources.Add (lres);
 					break;
@@ -135,7 +133,7 @@ namespace Mono.Cecil.Implem {
 						m_module.AssemblyReferences [(int) mrRow.Implementation.RID - 1] as AssemblyNameReference;
 					AssemblyLinkedResource alr = new AssemblyLinkedResource (
 						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name],
-						mrRow.Flags, module, asm);
+						mrRow.Flags, asm);
 					resources.Add (alr);
 					break;
 				}

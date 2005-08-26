@@ -23,7 +23,7 @@ namespace Mono.Cecil.Implem {
 			set { m_fieldType = value; }
 		}
 
-		public FieldReference (string name, ITypeReference decType, ITypeReference fieldType) : base (name, decType)
+		public FieldReference (string name, ITypeReference fieldType) : base (name)
 		{
 			m_fieldType = fieldType;
 		}

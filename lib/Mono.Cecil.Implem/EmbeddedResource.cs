@@ -24,13 +24,13 @@ namespace Mono.Cecil.Implem {
 			set { m_data = value; }
 		}
 
-		public EmbeddedResource (string name, ManifestResourceAttributes flags, ModuleDefinition owner) :
-			base (name, flags, owner)
+		public EmbeddedResource (string name, ManifestResourceAttributes flags) :
+			base (name, flags)
 		{
 		}
 
-		public EmbeddedResource (string name, ManifestResourceAttributes flags, ModuleDefinition owner, byte [] data) :
-			base (name, flags, owner)
+		public EmbeddedResource (string name, ManifestResourceAttributes flags, byte [] data) :
+			base (name, flags)
 		{
 			m_data = data;
 		}

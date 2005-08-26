@@ -66,7 +66,8 @@ namespace Mono.Cecil.Implem {
 		public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
 								ParameterDefinitionCollection parameters, MethodReturnType retType) : base (string.Empty, string.Empty)
 		{
-			m_function = new MethodReference ("function", this, hasThis, explicitThis, callConv);
+			m_function = new MethodReference ("function", hasThis, explicitThis, callConv);
+			m_function.DeclaringType = this;
 			m_function.ReturnType = retType;
 			foreach (ParameterDefinition param in parameters)
 				(m_function.Parameters as ParameterDefinitionCollection).Add (param);

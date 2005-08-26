@@ -58,8 +58,8 @@ namespace Mono.Cecil.Implem {
 			set { m_returnType = value as MethodReturnType; }
 		}
 
-		public MethodReference (string name, ITypeReference decType, bool hasThis,
-								 bool explicitThis, MethodCallingConvention callConv) : base (name, decType)
+		public MethodReference (string name, bool hasThis,
+			bool explicitThis, MethodCallingConvention callConv) : base (name)
 		{
 			m_parameters = new ParameterDefinitionCollection (this);
 			m_hasThis = hasThis;
@@ -68,7 +68,7 @@ namespace Mono.Cecil.Implem {
 			m_returnType = new MethodReturnType (null);
 		}
 
-		public MethodReference (string name, ITypeReference decType) : base (name, decType)
+		public MethodReference (string name) : base (name)
 		{
 			m_returnType = new MethodReturnType (null);
 		}

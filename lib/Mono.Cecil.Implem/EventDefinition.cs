@@ -40,8 +40,8 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition AddMethod {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
 
 				return m_addMeth;
 			}
@@ -50,8 +50,8 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition InvokeMethod {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
 
 				return m_invMeth;
 			}
@@ -60,8 +60,8 @@ namespace Mono.Cecil.Implem {
 
 		public IMethodDefinition RemoveMethod {
 			get {
-				if (!this.DecTypeDef.Module.IsNew && !m_semanticLoaded)
-					this.DecTypeDef.Module.Controller.Reader.ReadSemantic (this);
+				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
+					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
 
 				return m_remMeth;
 			}
@@ -76,10 +76,11 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Module.Controller);
-
-				if (!this.DecTypeDef.Module.IsNew && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
+					if (this.DecTypeDef.IsLazyLoadable) {
+						m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Mod.Controller);
+						m_customAttrs.Load ();
+					} else
+						m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
@@ -95,36 +96,11 @@ namespace Mono.Cecil.Implem {
 			set { m_attributes |= value ? EventAttributes.SpecialName : 0; }
 		}
 
-		public EventDefinition (string name, TypeDefinition decType, ITypeReference eventType,
-			EventAttributes attrs) : base (name, decType)
+		public EventDefinition (string name, ITypeReference eventType,
+			EventAttributes attrs) : base (name)
 		{
 			m_eventType = eventType;
 			m_attributes = attrs;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor)
-		{
-			CustomAttribute ca = new CustomAttribute(ctor);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor)
-		{
-			return DefineCustomAttribute (this.DecTypeDef.Module.Controller.Helper.RegisterConstructor(ctor));
-		}
-
-		public ICustomAttribute DefineCustomAttribute (IMethodReference ctor, byte [] data)
-		{
-			CustomAttribute ca = this.DecTypeDef.Module.Controller.Reader.GetCustomAttribute (ctor, data);
-			this.CustomAttributes.Add (ca);
-			return ca;
-		}
-
-		public ICustomAttribute DefineCustomAttribute (System.Reflection.ConstructorInfo ctor, byte [] data)
-		{
-			return DefineCustomAttribute(
-				this.DecTypeDef.Module.Controller.Helper.RegisterConstructor(ctor), data);
 		}
 
 		public void Accept (IReflectionVisitor visitor)
