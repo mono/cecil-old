@@ -17,6 +17,7 @@
 ./Mono.Cecil/IAssemblyName.cs
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
+./Mono.Cecil/IConstructorCollection.cs
 ./Mono.Cecil/ICustomAttribute.cs
 ./Mono.Cecil/ICustomAttributeCollection.cs
 ./Mono.Cecil/ICustomAttributeProvider.cs
@@ -36,6 +37,7 @@
 ./Mono.Cecil/ImageFormatException.cs
 ./Mono.Cecil/IMarshalSpec.cs
 ./Mono.Cecil/IMember.cs
+./Mono.Cecil/IMemberReferenceCollection.cs
 ./Mono.Cecil/IMetadataScope.cs
 ./Mono.Cecil/IMetadataTokenProvider.cs
 ./Mono.Cecil/IMethod.cs
@@ -59,6 +61,8 @@
 ./Mono.Cecil/IProperty.cs
 ./Mono.Cecil/IPropertyDefinitionCollection.cs
 ./Mono.Cecil/IReferenceType.cs
+./Mono.Cecil/IReflectionFactories.cs
+./Mono.Cecil/IReflectionStructureFactories.cs
 ./Mono.Cecil/IReflectionStructureVisitable.cs
 ./Mono.Cecil/IReflectionStructureVisitor.cs
 ./Mono.Cecil/IReflectionVisitable.cs
@@ -87,7 +91,6 @@
 ./Mono.Cecil/SecurityAction.cs
 ./Mono.Cecil/TargetRuntime.cs
 ./Mono.Cecil/TypeAttributes.cs
-./Mono.Cecil/TypeFactory.cs
 ./Mono.Cecil/VariantType.cs
 ./Mono.Cecil.Binary/BaseImageVisitor.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
@@ -212,6 +215,7 @@
 ./Mono.Cecil.Implem/CodeReader.cs
 ./Mono.Cecil.Implem/CodeWriter.cs
 ./Mono.Cecil.Implem/Constants.cs
+./Mono.Cecil.Implem/ConstructorCollection.cs
 ./Mono.Cecil.Implem/CustomAttribute.cs
 ./Mono.Cecil.Implem/CustomAttributeCollection.cs
 ./Mono.Cecil.Implem/EmbeddedResource.cs
@@ -235,6 +239,7 @@
 ./Mono.Cecil.Implem/MarshalDesc.cs
 ./Mono.Cecil.Implem/MemberDefinition.cs
 ./Mono.Cecil.Implem/MemberReference.cs
+./Mono.Cecil.Implem/MemberReferenceCollection.cs
 ./Mono.Cecil.Implem/MethodBody.cs
 ./Mono.Cecil.Implem/MethodDefinition.cs
 ./Mono.Cecil.Implem/MethodDefinitionCollection.cs
@@ -256,6 +261,7 @@
 ./Mono.Cecil.Implem/PropertyDefinitionCollection.cs
 ./Mono.Cecil.Implem/ReferenceType.cs
 ./Mono.Cecil.Implem/ReflectionController.cs
+./Mono.Cecil.Implem/ReflectionFactories.cs
 ./Mono.Cecil.Implem/ReflectionHelper.cs
 ./Mono.Cecil.Implem/ReflectionReader.cs
 ./Mono.Cecil.Implem/ReflectionWriter.cs
@@ -263,6 +269,7 @@
 ./Mono.Cecil.Implem/ResourceCollection.cs
 ./Mono.Cecil.Implem/SecurityDeclaration.cs
 ./Mono.Cecil.Implem/SecurityDeclarationCollection.cs
+./Mono.Cecil.Implem/StructureFactories.cs
 ./Mono.Cecil.Implem/StructureReader.cs
 ./Mono.Cecil.Implem/StructureWriter.cs
 ./Mono.Cecil.Implem/TablesComparer.cs
