@@ -1,5 +1,13 @@
 2005-08-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionWriter.cs:
+		Write back custom attributes of modules and assemblies
+		as well as their security declaration.
+	* Mono.Cecil.Implem/CodeWriter.cs:
+		Fix branches computation.
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Disable custom attribute reading cache.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs:
 		Compute relocations.

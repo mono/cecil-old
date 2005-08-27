@@ -610,6 +610,10 @@ namespace Mono.Cecil.Implem {
 
 		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
+			VisitCustomAttributeCollection (module.Assembly.CustomAttributes);
+			VisitSecurityDeclarationCollection (module.Assembly.SecurityDeclarations);
+			VisitCustomAttributeCollection (module.CustomAttributes);
+
 			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();

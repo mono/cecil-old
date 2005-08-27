@@ -34,7 +34,6 @@ namespace Mono.Cecil.Signatures {
 		private IDictionary m_methodsDefSigs;
 		private IDictionary m_methodsRefSigs;
 		private IDictionary m_localVars;
-		private IDictionary m_customAttribs;
 		private IDictionary m_marshalSpecs;
 
 		public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
@@ -46,7 +45,6 @@ namespace Mono.Cecil.Signatures {
 
 			m_fieldSigs = new Hashtable ();
 			m_propSigs = new Hashtable ();
-			m_customAttribs = new Hashtable ();
 			m_methodsDefSigs = new Hashtable ();
 			m_methodsRefSigs = new Hashtable ();
 			m_localVars = new Hashtable ();
@@ -125,12 +123,7 @@ namespace Mono.Cecil.Signatures {
 
 		public CustomAttrib GetCustomAttrib (uint index, IMethodReference ctor)
 		{
-			CustomAttrib ca = m_customAttribs [index] as CustomAttrib;
-			if (ca == null) {
-				ca = ReadCustomAttrib ((int) index, ctor);
-				m_customAttribs [index] = ca;
-			}
-			return ca;
+			return ReadCustomAttrib ((int) index, ctor);
 		}
 
 		public CustomAttrib GetCustomAttrib (byte [] data, IMethodReference ctor)
@@ -714,7 +707,7 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case ElementType.Char :
 				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Char);
-				elem.Value = (char) br.ReadUInt16();
+				elem.Value = (char) br.ReadUInt16 ();
 				break;
 			case ElementType.R4 :
 				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Single);

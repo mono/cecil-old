@@ -169,17 +169,18 @@ namespace Mono.Cecil.Implem {
 					IInstruction [] targets = instr.Operand as IInstruction [];
 					m_codeWriter.Write ((uint) targets.Length);
 					foreach (IInstruction tgt in targets)
-						m_codeWriter.Write ((uint) (tgt.Offset - instr.Next.Offset));
+						m_codeWriter.Write ((tgt.Offset - (instr.Offset +
+							instr.OpCode.Size + (4 * (targets.Length + 1)))));
 					break;
 				case OperandType.ShortInlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					m_codeWriter.Write ((byte) ((instr.Operand as IInstruction).Offset -
-						(instr.Next != null ? instr.Next.Offset : 0)));
+						(instr.Offset + instr.OpCode.Size + 1)));
 					break;
 				case OperandType.InlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
 					m_codeWriter.Write ((instr.Operand as IInstruction).Offset -
-						(instr.Next != null ? instr.Next.Offset : 0));
+						(instr.Offset + instr.OpCode.Size + 4));
 					break;
 				}
 			}
