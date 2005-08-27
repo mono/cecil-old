@@ -398,8 +398,13 @@ namespace Mono.Cecil.Signatures {
 				Utilities.WriteCompressedInteger (writer, s.Length);
 				writer.Write (Encoding.UTF8.GetBytes (s));
 				break;
+			case ElementType.Type :
+				string t = (string) elem.Value;
+				Utilities.WriteCompressedInteger (writer, t.Length);
+				writer.Write (Encoding.UTF8.GetBytes (t));
+				break;
 			default :
-				throw new NotImplementedException ("TODO");
+				throw new NotImplementedException ("WriteElem " + elem.FieldOrPropType.ToString ());
 			}
 		}
 

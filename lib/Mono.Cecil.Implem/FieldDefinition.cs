@@ -198,6 +198,9 @@ namespace Mono.Cecil.Implem {
 
 		public override string ToString ()
 		{
+			if (this.DeclaringType == null)
+				return string.Concat (m_fieldType.ToString (), ' ', this.Name);
+
 			return string.Concat (m_fieldType.ToString (), ' ',
 				this.DeclaringType.ToString (), "::", this.Name);
 		}
