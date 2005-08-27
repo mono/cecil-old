@@ -105,5 +105,130 @@ namespace Mono.Cecil.Implem {
 				return klass;
 			}
 		}
+
+		public class MethodSem : IComparer {
+
+			public static readonly MethodSem Instance = new MethodSem ();
+
+			public int Compare (object x, object y)
+			{
+				MethodSemanticsRow a = x as MethodSemanticsRow;
+				MethodSemanticsRow b = y as MethodSemanticsRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.HasSemantics, a.Association),
+					Utilities.CompressMetadataToken (CodedIndex.HasSemantics, b.Association));
+			}
+		}
+
+		public class CustomAttribute : IComparer {
+
+			public static readonly CustomAttribute Instance = new CustomAttribute ();
+
+			public int Compare (object x, object y)
+			{
+				CustomAttributeRow a = x as CustomAttributeRow;
+				CustomAttributeRow b = y as CustomAttributeRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.HasCustomAttribute, a.Parent),
+					Utilities.CompressMetadataToken (CodedIndex.HasCustomAttribute, b.Parent));
+			}
+		}
+
+		public class SecurityDeclaration : IComparer {
+
+			public static readonly SecurityDeclaration Instance = new SecurityDeclaration ();
+
+			public int Compare (object x, object y)
+			{
+				DeclSecurityRow a = x as DeclSecurityRow;
+				DeclSecurityRow b = y as DeclSecurityRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.HasDeclSecurity, a.Parent),
+					Utilities.CompressMetadataToken (CodedIndex.HasDeclSecurity, b.Parent));
+			}
+		}
+
+		public class Override : IComparer {
+
+			public static readonly Override Instance = new Override ();
+
+			public int Compare (object x, object y)
+			{
+				MethodImplRow a = x as MethodImplRow;
+				MethodImplRow b = y as MethodImplRow;
+
+				return Comparer.Default.Compare (a.Class, b.Class);
+			}
+		}
+
+		public class PInvoke : IComparer {
+
+			public static readonly PInvoke Instance = new PInvoke ();
+
+			public int Compare (object x, object y)
+			{
+				ImplMapRow a = x as ImplMapRow;
+				ImplMapRow b = y as ImplMapRow;
+
+				return Comparer.Default.Compare (a.MemberForwarded.RID, b.MemberForwarded.RID);
+			}
+		}
+
+		public class FieldRVA : IComparer {
+
+			public static readonly FieldRVA Instance = new FieldRVA ();
+
+			public int Compare (object x, object y)
+			{
+				FieldRVARow a = x as FieldRVARow;
+				FieldRVARow b = y as FieldRVARow;
+
+				return Comparer.Default.Compare (a.Field, b.Field);
+			}
+		}
+
+		public class FieldLayout : IComparer {
+
+			public static readonly FieldLayout Instance = new FieldLayout ();
+
+			public int Compare (object x, object y)
+			{
+				FieldLayoutRow a = x as FieldLayoutRow;
+				FieldLayoutRow b = y as FieldLayoutRow;
+
+				return Comparer.Default.Compare (a.Field, b.Field);
+			}
+		}
+
+		public class FieldMarshal : IComparer {
+
+			public static readonly FieldMarshal Instance = new FieldMarshal ();
+
+			public int Compare (object x, object y)
+			{
+				FieldMarshalRow a = x as FieldMarshalRow;
+				FieldMarshalRow b = y as FieldMarshalRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.HasFieldMarshal, a.Parent),
+					Utilities.CompressMetadataToken (CodedIndex.HasFieldMarshal, b.Parent));
+			}
+		}
+
+		public class TypeLayout : IComparer {
+
+			public static readonly TypeLayout Instance = new TypeLayout ();
+
+			public int Compare (object x, object y)
+			{
+				ClassLayoutRow a = x as ClassLayoutRow;
+				ClassLayoutRow b = y as ClassLayoutRow;
+
+				return Comparer.Default.Compare (a.Parent, b.Parent);
+			}
+		}
 	}
 }

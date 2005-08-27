@@ -1,5 +1,9 @@
 2005-08-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/TablesComparer.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Sort all tables that need to be sorted.
+
 	* Mono.Cecil.Implem/CodeReader.cs:
 		Oops. Add fat exception handlers to the method body.
 

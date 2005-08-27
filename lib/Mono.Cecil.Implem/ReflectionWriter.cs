@@ -571,7 +571,41 @@ namespace Mono.Cecil.Implem {
 				m_tableWriter.GetConstantTable ().Rows.Sort (
 					TableComparers.Constant.Instance);
 
-			// TODO continue;
+			if (th.HasTable (typeof (MethodSemanticsTable)))
+				m_tableWriter.GetMethodSemanticsTable ().Rows.Sort (
+					TableComparers.MethodSem.Instance);
+
+			if (th.HasTable (typeof (FieldMarshalTable)))
+				m_tableWriter.GetFieldMarshalTable ().Rows.Sort (
+					TableComparers.FieldMarshal.Instance);
+
+			if (th.HasTable (typeof (ClassLayoutTable)))
+				m_tableWriter.GetClassLayoutTable ().Rows.Sort (
+					TableComparers.TypeLayout.Instance);
+
+			if (th.HasTable (typeof (FieldLayoutTable)))
+				m_tableWriter.GetFieldLayoutTable ().Rows.Sort (
+					TableComparers.FieldLayout.Instance);
+
+			if (th.HasTable (typeof (ImplMapTable)))
+				m_tableWriter.GetImplMapTable ().Rows.Sort (
+					TableComparers.PInvoke.Instance);
+
+			if (th.HasTable (typeof (FieldRVATable)))
+				m_tableWriter.GetFieldRVATable ().Rows.Sort (
+					TableComparers.FieldRVA.Instance);
+
+			if (th.HasTable (typeof (MethodImplTable)))
+				m_tableWriter.GetMethodImplTable ().Rows.Sort (
+					TableComparers.Override.Instance);
+
+			if (th.HasTable (typeof (CustomAttributeTable)))
+				m_tableWriter.GetCustomAttributeTable ().Rows.Sort (
+					TableComparers.CustomAttribute.Instance);
+
+			if (th.HasTable (typeof (DeclSecurityTable)))
+				m_tableWriter.GetDeclSecurityTable ().Rows.Sort (
+					TableComparers.SecurityDeclaration.Instance);
 		}
 
 		public override void TerminateModuleDefinition (IModuleDefinition module)
