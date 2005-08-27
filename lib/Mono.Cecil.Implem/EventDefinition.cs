@@ -103,6 +103,15 @@ namespace Mono.Cecil.Implem {
 			m_attributes = attrs;
 		}
 
+		public override string ToString ()
+		{
+			if (this.DeclaringType == null)
+				return string.Concat (m_eventType.ToString (), ' ', this.Name);
+
+			return string.Concat (m_eventType.ToString (), ' ',
+				this.DeclaringType.ToString (), "::", this.Name);
+		}
+
 		public void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitEventDefinition (this);

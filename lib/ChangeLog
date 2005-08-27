@@ -1,3 +1,9 @@
+2005-08-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/EventDefinition.cs
+	  Mono.Cecil.Implem/PropertyDefinition.cs:
+		Fix the behavior of .ToString ().
+
 2005-08-27  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/ReflectionWriter.cs:

@@ -12,6 +12,8 @@
 
 namespace Mono.Cecil.Implem {
 
+	using System.Text;
+
 	using Mono.Cecil;
 
 	internal sealed class PropertyDefinition : MemberDefinition, IPropertyDefinition {
@@ -138,6 +140,29 @@ namespace Mono.Cecil.Implem {
 		{
 			m_propertyType = propType;
 			m_attributes = attrs;
+		}
+
+		public override string ToString ()
+		{
+			StringBuilder sb = new StringBuilder ();
+			sb.Append (m_propertyType.ToString ());
+			sb.Append (' ');
+
+			if (this.DeclaringType == null) {
+				sb.Append (this.DeclaringType.ToString ());
+				sb.Append ("::");
+			}
+
+			sb.Append (this.Name);
+			sb.Append ('(');
+			IParameterDefinitionCollection parameters = this.Parameters;
+			for (int i = 0; i < parameters.Count; i++) {
+				if (i > 0)
+					sb.Append (',');
+				sb.Append (parameters [i].ParameterType.ToString ());
+			}
+			sb.Append (')');
+			return sb.ToString ();
 		}
 
 		public void Accept (IReflectionVisitor visitor)
