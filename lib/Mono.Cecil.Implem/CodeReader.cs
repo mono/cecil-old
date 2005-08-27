@@ -286,6 +286,7 @@ namespace Mono.Cecil.Implem {
 						br.ReadInt32 ();
 						break;
 					}
+					body.ExceptionHandlers.Add (eh);
 				}
 			}
 
