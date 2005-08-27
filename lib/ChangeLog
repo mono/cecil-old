@@ -1,5 +1,11 @@
 2005-08-27  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Compute relocations.
+	* Mono.Cecil.Implem/ReflectionFactories.cs:
+		Blah.
+
 	* Mono.Cecil.Implem/TablesComparer.cs
 	  Mono.Cecil.Implem/ReflectionWriter.cs:
 		Sort all tables that need to be sorted.

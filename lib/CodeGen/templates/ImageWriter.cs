@@ -225,12 +225,12 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.BaseStream.Position = pos;
 
 			// patch reloc Sect with ep
-			uint reloc = (uint) (ep - m_img.TextSection.VirtualAddress + 2);
-			uint rva = m_relocSect.VirtualAddress - m_textSect.VirtualAddress;
+			uint reloc = (ep.Value + 2) % 0x1000;
+			uint rva = (ep.Value + 2) - reloc;
+
 			m_relocWriter.BaseStream.Position = 0;
 			m_relocWriter.Write (rva);
 			m_relocWriter.BaseStream.Position = 8;
-			reloc -= rva - m_textSect.VirtualAddress;
 			m_relocWriter.Write ((ushort) ((3 << 12) | reloc));
 
 			m_textWriter.Write (hnt.EntryPoint);

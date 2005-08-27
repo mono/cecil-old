@@ -70,6 +70,7 @@ namespace Mono.Cecil.Implem {
 		public ReflectionFactories (ModuleDefinition module)
 		{
 			m_module = module;
+			m_secParser = new SecurityParser ();
 		}
 
 		public bool IsAttached (IMemberDefinition member)
