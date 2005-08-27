@@ -230,6 +230,7 @@ namespace Mono.Cecil.Binary {
 			m_relocWriter.BaseStream.Position = 0;
 			m_relocWriter.Write (rva);
 			m_relocWriter.BaseStream.Position = 8;
+			reloc -= rva - m_textSect.VirtualAddress;
 			m_relocWriter.Write ((ushort) ((3 << 12) | reloc));
 
 			m_textWriter.Write (hnt.EntryPoint);

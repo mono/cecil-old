@@ -175,8 +175,16 @@ namespace Mono.Cecil.Implem {
 				ITypeDefinition t = orderedTypes [i] as ITypeDefinition;
 				tdRow.FieldList = m_fieldIndex;
 				tdRow.MethodList = m_methodIndex;
-				t.Accept (this);
+				foreach (IFieldDefinition field in t.Fields)
+					VisitFieldDefinition (field);
+				foreach (IMethodDefinition ctor in t.Constructors)
+					VisitMethodDefinition (ctor);
+				foreach (IMethodDefinition meth in t.Methods)
+					VisitMethodDefinition (meth);
 			}
+
+			foreach (ITypeDefinition t in orderedTypes)
+				t.Accept (this);
 		}
 
 		public override void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
@@ -215,6 +223,28 @@ namespace Mono.Cecil.Implem {
 
 				trTable.Rows.Add (trRow);
 				t.MetadataToken = new MetadataToken (TokenType.TypeRef, (uint) trTable.Rows.Count);
+			}
+		}
+
+		public override void VisitMemberReferenceCollection (IMemberReferenceCollection members)
+		{
+			if (members.Count > 0) {
+				MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
+				foreach (IMemberReference member in members) {
+					uint sig = 0;
+					if (member is IFieldReference)
+						sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
+					else if (member is IMethodReference)
+						sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+					MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
+						GetTypeDefOrRefToken (member.DeclaringType),
+						m_mdWriter.AddString (member.Name),
+						sig);
+
+					mrTable.Rows.Add (mrRow);
+					member.MetadataToken = new MetadataToken (
+						TokenType.MemberRef, (uint) mrTable.Rows.Count);
+				}
 			}
 		}
 
@@ -281,16 +311,6 @@ namespace Mono.Cecil.Implem {
 				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
 				m_paramIndex++;
 			}
-		}
-
-		public override void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods)
-		{
-			VisitCollection (methods);
-		}
-
-		public override void VisitConstructorCollection (IConstructorCollection ctors)
-		{
-			VisitCollection (ctors);
 		}
 
 		public override void VisitMethodDefinition (IMethodDefinition method)
@@ -369,11 +389,6 @@ namespace Mono.Cecil.Implem {
 				WriteSemantic (MethodSemanticsAttributes.RemoveOn, evt, evt.RemoveMethod);
 
 			m_eventIndex++;
-		}
-
-		public override void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields)
-		{
-			VisitCollection (fields);
 		}
 
 		public override void VisitFieldDefinition (IFieldDefinition field)
@@ -467,6 +482,7 @@ namespace Mono.Cecil.Implem {
 					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
+
 				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
 					parent,
 					ca.Constructor.MetadataToken,
@@ -560,25 +576,6 @@ namespace Mono.Cecil.Implem {
 
 		public override void TerminateModuleDefinition (IModuleDefinition module)
 		{
-			if (m_mod.MemberReferences.Count > 0) {
-				MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-				foreach (IMemberReference member in m_mod.MemberReferences) {
-					uint sig = 0;
-					if (member is IFieldReference)
-						sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
-					else if (member is IMethodReference)
-						sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
-					MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
-						GetTypeDefOrRefToken (member.DeclaringType),
-						m_mdWriter.AddString (member.Name),
-						sig);
-
-					mrTable.Rows.Add (mrRow);
-					member.MetadataToken = new MetadataToken (
-						TokenType.MemberRef, (uint) mrTable.Rows.Count);
-				}
-			}
-
 			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
@@ -973,6 +970,8 @@ namespace Mono.Cecil.Implem {
 					fa.Elems [0].Value = o;
 					fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
 					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType.FullName);
+					if (fa.Elems [0].FieldOrPropType == ElementType.Class)
+						fa.Elems [0].FieldOrPropType = ElementType.I4; // buggy
 //				}
 
 				cas.FixedArgs [i] = fa;

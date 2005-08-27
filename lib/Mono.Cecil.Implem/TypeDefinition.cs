@@ -325,8 +325,6 @@ namespace Mono.Cecil.Implem {
 		{
 			visitor.VisitTypeDefinition (this);
 
-			this.CustomAttributes.Accept (visitor);
-			this.SecurityDeclarations.Accept (visitor);
 			this.Interfaces.Accept (visitor);
 			this.Constructors.Accept (visitor);
 			this.Methods.Accept (visitor);
@@ -334,6 +332,8 @@ namespace Mono.Cecil.Implem {
 			this.Properties.Accept (visitor);
 			this.Events.Accept (visitor);
 			this.NestedTypes.Accept (visitor);
+			this.CustomAttributes.Accept (visitor);
+			this.SecurityDeclarations.Accept (visitor);
 		}
 	}
 }

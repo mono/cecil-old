@@ -1,5 +1,14 @@
 2005-08-27  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Implem/StructureWriter.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/TypeDefinition.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Correct a few bugs: relocations now works.
+		Encode enums in custom attributes.
+		Compute memberrefs tokens before visitings types.
+
 	* Mono.Cecil.Implem/FieldDefinition.cs:
 		Correct a bug that causes null ref due to
 		the new api.

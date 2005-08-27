@@ -192,7 +192,9 @@ namespace Mono.Cecil.Implem {
 		{
 			foreach (ModuleDefinition mod in asm.Modules) {
 				mod.Controller.Writer.VisitTypeReferenceCollection (mod.TypeReferences);
+				mod.Controller.Writer.VisitMemberReferenceCollection (mod.MemberReferences);
 				mod.Controller.Writer.VisitTypeDefinitionCollection (mod.Types);
+
 				mod.Controller.Writer.TerminateModuleDefinition (mod);
 			}
 		}
