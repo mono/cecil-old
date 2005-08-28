@@ -112,7 +112,7 @@ namespace Mono.Cecil.Implem {
 			sb.Append (m_propertyType.ToString ());
 			sb.Append (' ');
 
-			if (this.DeclaringType == null) {
+			if (this.DeclaringType != null) {
 				sb.Append (this.DeclaringType.ToString ());
 				sb.Append ("::");
 			}
