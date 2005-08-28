@@ -178,7 +178,7 @@ namespace Mono.Cecil.Metadata {
 
 		public uint AddUserString (string str)
 		{
-			if (str == null || str.Length == 0)
+			if (str == null)
 				return 0;
 
 			if (m_usCache.Contains (str))
@@ -186,10 +186,9 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_usWriter.BaseStream.Position;
 			m_usCache [str] = pointer;
-			Utilities.WriteCompressedInteger (m_usWriter, str.Length * 2 + 1);
-			foreach (char c in str)
-				m_usWriter.Write (c);
-			// m_usWriter.Write (str);
+			byte [] us = Encoding.Unicode.GetBytes (str);
+			Utilities.WriteCompressedInteger (m_usWriter, us.Length + 1);
+			m_usWriter.Write (us);
 			m_usWriter.Write ('\0');
 			return pointer;
 		}

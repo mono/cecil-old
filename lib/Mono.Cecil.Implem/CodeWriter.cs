@@ -50,7 +50,10 @@ namespace Mono.Cecil.Implem {
 
 		private void WriteToken (MetadataToken token)
 		{
-			m_codeWriter.Write (((uint) token.TokenType) | token.RID);
+			if (token.RID == 0)
+				m_codeWriter.Write (0);
+			else
+				m_codeWriter.Write (((uint) token.TokenType) | token.RID);
 		}
 
 		public override void VisitInstructionCollection (IInstructionCollection instructions)
