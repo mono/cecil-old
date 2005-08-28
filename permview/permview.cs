@@ -238,7 +238,7 @@ namespace Mono.Tools {
 					return 0;
 
 				string assemblyName = args [args.Length - 1];
-				IAssemblyDefinition ad = AssemblyFactory.GetAssembly (assemblyName, LoadingType.Lazy);
+				IAssemblyDefinition ad = AssemblyFactory.GetAssembly (assemblyName);
 				if (ad != null) {
 					bool complete = false;
 					
