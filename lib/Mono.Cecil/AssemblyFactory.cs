@@ -54,7 +54,7 @@ namespace Mono.Cecil {
 			AssemblyDefinition asm = new AssemblyDefinition (asmName);
 			asm.Runtime = rt;
 			ModuleDefinition main = new ModuleDefinition (moduleName, asm, true);
-			(asm.Modules as ModuleDefinitionCollection).Add (main);
+			asm.Modules.Add (main);
 			return asm;
 		}
 
@@ -84,7 +84,7 @@ namespace Mono.Cecil {
 		private static void WriteAssembly (IAssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
 		{
 			asm.Accept (new StructureWriter (
-					(asm as AssemblyDefinition), kind, bw));
+				(asm as AssemblyDefinition), kind, bw));
 		}
 
 		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind)

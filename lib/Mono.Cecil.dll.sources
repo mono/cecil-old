@@ -76,7 +76,6 @@
 ./Mono.Cecil/ITypeDefinitionCollection.cs
 ./Mono.Cecil/ITypeReference.cs
 ./Mono.Cecil/ITypeReferenceCollection.cs
-./Mono.Cecil/LoadingType.cs
 ./Mono.Cecil/ManifestResourceAttributes.cs
 ./Mono.Cecil/MetadataFormatException.cs
 ./Mono.Cecil/MethodAttributes.cs
@@ -229,12 +228,10 @@
 ./Mono.Cecil.Implem/FieldReference.cs
 ./Mono.Cecil.Implem/FunctionPointerType.cs
 ./Mono.Cecil.Implem/IDetailReader.cs
-./Mono.Cecil.Implem/ILazyLoadable.cs
 ./Mono.Cecil.Implem/Instruction.cs
 ./Mono.Cecil.Implem/InstructionCollection.cs
 ./Mono.Cecil.Implem/InterfaceCollection.cs
 ./Mono.Cecil.Implem/Label.cs
-./Mono.Cecil.Implem/LazyReflectionReader.cs
 ./Mono.Cecil.Implem/LinkedResource.cs
 ./Mono.Cecil.Implem/MarshalDesc.cs
 ./Mono.Cecil.Implem/MemberDefinition.cs
@@ -306,6 +303,10 @@
 ./Mono.Cecil.Signatures/SzArray.cs
 ./Mono.Cecil.Signatures/TypeSpec.cs
 ./Mono.Cecil.Signatures/ValueType.cs
+./Mono.Xml/MiniParser.cs
+./Mono.Xml/SecurityParser.cs
+./Mono.Xml/SmallXmlParser.cs
+l.Signatures/ValueType.cs
 ./Mono.Xml/MiniParser.cs
 ./Mono.Xml/SecurityParser.cs
 ./Mono.Xml/SmallXmlParser.cs
