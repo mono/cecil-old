@@ -230,6 +230,7 @@ namespace Mono.Cecil.Metadata {
 			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
 			WriteMemStream (m_resWriter);
 			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
+			WriteMemStream (m_fieldDataWriter);
 			// write strong name here
 
 			m_mdStart = (uint) m_binaryWriter.BaseStream.Position;

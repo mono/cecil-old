@@ -1,5 +1,10 @@
 2005-08-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Write the fields initial value back.
+		As of this revision, a round tripped mcs
+		can compile Cecil.
+
 	* Mono.Cecil.Implem/ReflectionWriter.cs:
 		Emit things in proper order.
 	  Mono.Cecil.Implem/CodeReader.cs
