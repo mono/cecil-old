@@ -34,15 +34,9 @@ namespace Mono.Cecil.Implem {
 			get { return m_helper; }
 		}
 
-		public ReflectionController (ModuleDefinition module, LoadingType lt)
+		public ReflectionController (ModuleDefinition module)
 		{
-			if (lt == LoadingType.Aggressive)
-				m_reader = new AggressiveReflectionReader (module);
-			else if (lt == LoadingType.Lazy)
-				m_reader = new LazyReflectionReader (module);
-			else
-				throw new ReflectionException ("Unknow loading type");
-
+			m_reader = new AggressiveReflectionReader (module);
 			m_writer = new ReflectionWriter (module);
 			m_helper = new ReflectionHelper (module);
 		}

@@ -88,10 +88,7 @@ namespace Mono.Cecil.Implem {
 		public IExternTypeCollection ExternTypes {
 			get {
 				if (m_externs == null)
-					m_externs = new ExternTypeCollection (this, m_controller);
-
-				if (!m_new && !m_externs.Loaded)
-					m_externs.Load ();
+					m_externs = new ExternTypeCollection (this);
 
 				return m_externs;
 			}
@@ -100,10 +97,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (this, m_controller);
-
-				if (!m_new && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
@@ -134,15 +128,18 @@ namespace Mono.Cecil.Implem {
 			get { return m_factories; }
 		}
 
-		public ModuleDefinition (string name, AssemblyDefinition asm) : this (name, asm, null, false)
+		public ModuleDefinition (string name, AssemblyDefinition asm) :
+			this (name, asm, null, false)
 		{
 		}
 
-		public ModuleDefinition (string name, AssemblyDefinition asm, bool main) : this (name, asm, null, main)
+		public ModuleDefinition (string name, AssemblyDefinition asm, bool main) :
+			this (name, asm, null, main)
 		{
 		}
 
-		public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) : this (name, asm, reader, false)
+		public ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) :
+			this (name, asm, reader, false)
 		{
 		}
 
@@ -168,7 +165,7 @@ namespace Mono.Cecil.Implem {
 
 			m_factories = new ReflectionFactories (this);
 
-			m_controller = new ReflectionController (this, asm.LoadingType);
+			m_controller = new ReflectionController (this);
 			m_modRefs = new ModuleReferenceCollection (this);
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
@@ -185,6 +182,7 @@ namespace Mono.Cecil.Implem {
 		{
 			if (ea.TypeDefinition.Module != null)
 				throw new ReflectionException ("Type is already attached, clone it instead");
+
 			(ea.TypeDefinition as TypeDefinition).Mod = this;
 		}
 

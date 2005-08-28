@@ -66,7 +66,7 @@ namespace Mono.Cecil.Implem {
 			return scope;
 		}
 
-		public string GetTypeSignature (Type t)
+		public static string GetTypeSignature (Type t)
 		{
 			if (t.DeclaringType != null)
 				return string.Concat (t.DeclaringType.FullName, "/", t.Name);
@@ -90,7 +90,7 @@ namespace Mono.Cecil.Implem {
 			return type;
 		}
 
-		private string GetMethodBaseSignature (SR.MethodBase meth, Type retType)
+		private static string GetMethodBaseSignature (SR.MethodBase meth, Type retType)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (GetTypeSignature (retType));
@@ -142,7 +142,7 @@ namespace Mono.Cecil.Implem {
 			return CheckMethodBase (mi, mi.ReturnType);
 		}
 
-		private string GetFieldSignature (SR.FieldInfo field)
+		private static string GetFieldSignature (SR.FieldInfo field)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (GetTypeSignature (field.FieldType));

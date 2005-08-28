@@ -22,15 +22,12 @@ namespace Mono.Cecil.Signatures {
 	internal sealed class SignatureWriter : ISignatureVisitor {
 
 		private MetadataWriter m_mdWriter;
-		private ReflectionWriter m_reflectWriter;
 
 		private MemoryBinaryWriter m_sigWriter;
 
-		public SignatureWriter (MetadataWriter mdWriter, ReflectionWriter reflectWriter)
+		public SignatureWriter (MetadataWriter mdWriter)
 		{
 			m_mdWriter = mdWriter;
-			m_reflectWriter = reflectWriter;
-
 			m_sigWriter = new MemoryBinaryWriter ();
 		}
 

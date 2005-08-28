@@ -111,7 +111,101 @@ namespace Mono.Cecil.Implem {
 		{
 			return m_items.GetEnumerator ();
 		}
-<% if !$cur_coll.visitor.nil? then %>
+<%
+	case $cur_coll.item_name
+		when "MethodDefinition"
+%>
+		public IMethodDefinition [] GetMethod (string name)
+		{
+			ArrayList ret = new ArrayList ();
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name)
+					ret.Add (meth);
+
+			return ret.ToArray (typeof (IMethodDefinition)) as IMethodDefinition [];
+		}
+
+		public IMethodDefinition GetMethod (string name, Type [] parameters)
+		{
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name && meth.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (meth.Parameters [i].ParameterType.FullName == ReflectionHelper.GetTypeSignature (parameters [i]))
+							return meth;
+
+			return null;
+		}
+
+		public IMethodDefinition GetMethod (string name, ITypeReference [] parameters)
+		{
+			foreach (IMethodDefinition meth in this)
+				if (meth.Name == name && meth.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (meth.Parameters [i].ParameterType.FullName == parameters [i].FullName)
+							return meth;
+
+			return null;
+		}
+<%
+		when "FieldDefinition"
+%>
+		public IFieldDefinition GetField (string name)
+		{
+			foreach (IFieldDefinition field in this)
+				if (field.Name == name)
+					return field;
+
+			return null;
+		}
+<%
+		when "Constructor"
+%>
+		public IMethodDefinition GetConstructor (bool isStatic, Type [] parameters)
+		{
+			foreach (IMethodDefinition ctor in this)
+				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (ctor.Parameters [i].ParameterType.FullName ==  ReflectionHelper.GetTypeSignature (parameters [i]))
+							return ctor;
+
+			return null;
+		}
+
+		public IMethodDefinition GetConstructor (bool isStatic, ITypeReference [] parameters)
+		{
+			foreach (IMethodDefinition ctor in this)
+				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
+					for (int i = 0; i < parameters.Length; i++)
+						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].FullName)
+							return ctor;
+
+			return null;
+		}
+<%
+		when "EventDefinition"
+%>
+		public IEventDefinition GetEvent (string name)
+		{
+			foreach (IEventDefinition evt in this)
+				if (evt.Name == name)
+					return evt;
+
+			return null;
+		}
+<%
+		when "PropertyDefinition"
+%>
+		public IPropertyDefinition [] GetProperties (string name)
+		{
+			ArrayList ret = new ArrayList ();
+			foreach (IPropertyDefinition prop in this)
+				if (prop.Name == name)
+					ret.Add (prop);
+
+			return ret.ToArray (typeof (IPropertyDefinition)) as IPropertyDefinition [];
+		}
+<% end 
+  if !$cur_coll.visitor.nil? then %>
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);

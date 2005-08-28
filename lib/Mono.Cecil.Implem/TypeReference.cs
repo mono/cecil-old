@@ -78,13 +78,8 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_customAttrs == null && m_module != null)
-					m_customAttrs = new CustomAttributeCollection (this, m_module.Controller);
-				else if (m_customAttrs == null && m_module == null)
+				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
-
-				if (m_module != null && !m_module.IsNew && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
 
 				return m_customAttrs;
 			}

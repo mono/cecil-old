@@ -28,7 +28,6 @@ namespace Mono.Cecil.Implem {
 
 		private ModuleDefinition m_mainModule;
 		private StructureReader m_reader;
-		private LoadingType m_loadingType;
 		private StructureFactories m_factories;
 
 		public IAssemblyNameDefinition Name {
@@ -42,11 +41,7 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
 				if (m_secDecls == null)
-					m_secDecls = new SecurityDeclarationCollection (
-						this, (this.MainModule as ModuleDefinition).Controller);
-
-				if (!this.MainModuleDefinition.IsNew && !m_secDecls.Loaded)
-					m_secDecls.Load ();
+					m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
 			}
@@ -55,11 +50,7 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					m_customAttrs = new CustomAttributeCollection (
-						this, (this.MainModule as ModuleDefinition).Controller);
-
-				if (!this.MainModuleDefinition.IsNew && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
@@ -93,11 +84,6 @@ namespace Mono.Cecil.Implem {
 			get { return m_reader; }
 		}
 
-		public LoadingType LoadingType {
-			get { return m_loadingType; }
-			set { m_loadingType = value; }
-		}
-
 		public IReflectionStructureFactories Factories {
 			get { return m_factories; }
 		}
@@ -112,10 +98,9 @@ namespace Mono.Cecil.Implem {
 			m_factories = new StructureFactories (this);
 		}
 
-		public AssemblyDefinition (AssemblyNameDefinition name, StructureReader reader, LoadingType lt) : this (name)
+		public AssemblyDefinition (AssemblyNameDefinition name, StructureReader reader) : this (name)
 		{
 			m_reader = reader;
-			m_loadingType = lt;
 		}
 
 		public void Accept (IReflectionStructureVisitor visitor)

@@ -26,13 +26,13 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public static IAssemblyDefinition GetAssembly (string file, LoadingType loadType)
+		public static IAssemblyDefinition GetAssembly (string file)
 		{
 			try {
 				ImageReader brv = new ImageReader (file);
 				StructureReader srv = new StructureReader (brv);
 				AssemblyDefinition asm = new AssemblyDefinition (
-					new AssemblyNameDefinition (), srv, loadType);
+					new AssemblyNameDefinition (), srv);
 
 				asm.Accept (srv);
 				return asm;
@@ -45,11 +45,6 @@ namespace Mono.Cecil {
 			} catch (Exception e) {
 				throw new ReflectionException ("Can not disassemble assembly", e);
 			}
-		}
-
-		public static IAssemblyDefinition GetAssembly (string file)
-		{
-			return GetAssembly (file, LoadingType.Lazy);
 		}
 
 		public static IAssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt)

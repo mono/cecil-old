@@ -25,16 +25,12 @@ namespace Mono.Cecil.Implem {
 		private ITypeReference m_paramType;
 		private MetadataToken m_token;
 
-		private bool m_constLoaded;
 		private bool m_hasConstant;
 		private object m_const;
-
-		private ModuleDefinition m_module;
 
 		private MethodReference m_method;
 		private CustomAttributeCollection m_customAttrs;
 
-		private bool m_marshalLoaded;
 		private MarshalDesc m_marshalDesc;
 
 		public string Name {
@@ -62,42 +58,12 @@ namespace Mono.Cecil.Implem {
 			set { m_token = value; }
 		}
 
-		private ModuleDefinition Module {
-			get {
-				if (m_module != null)
-					return m_module;
-
-				if (m_paramType != null)
-					m_module = (m_paramType as TypeReference).Mod;
-
-				if (m_module == null && m_method != null)
-					return (m_method.DeclaringType as TypeReference).Mod;
-
-				return m_module;
-			}
-		}
-
-		public bool ConstantLoaded {
-			get { return m_constLoaded; }
-			set { m_constLoaded = value; }
-		}
-
 		public bool HasConstant {
-			get {
-				if (this.Module != null && !this.Module.IsNew && !m_constLoaded)
-					this.Module.Controller.Reader.ReadConstant (this);
-
-				return m_hasConstant;
-			}
+			get { return m_hasConstant; }
 		}
 
 		public object Constant {
-			get {
-				if (this.Module != null && !this.Module.IsNew && !m_constLoaded)
-					this.Module.Controller.Reader.ReadConstant (this);
-
-				return m_const;
-			}
+			get { return m_const; }
 			set {
 				m_hasConstant = true;
 				m_const = value;
@@ -111,32 +77,15 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_customAttrs == null && m_method != null)
-					m_customAttrs = new CustomAttributeCollection (
-						this, this.Module.Controller);
-
-				else if (m_customAttrs == null)
+				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
-
-				if (m_method != null && !this.Module.IsNew && !m_customAttrs.Loaded)
-					m_customAttrs.Load ();
 
 				return m_customAttrs;
 			}
 		}
 
-		public bool MarshalSpecLoaded {
-			get { return m_marshalLoaded; }
-			set { m_marshalLoaded = value; }
-		}
-
 		public IMarshalSpec MarshalSpec {
-			get {
-				if (this.Module != null && !this.Module.IsNew && !m_marshalLoaded)
-					this.Module.Controller.Reader.ReadMarshalSpec (this);
-
-				return m_marshalDesc;
-			}
+			get { return m_marshalDesc; }
 			set { m_marshalDesc = value as MarshalDesc; }
 		}
 

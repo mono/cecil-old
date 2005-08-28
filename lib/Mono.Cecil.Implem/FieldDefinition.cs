@@ -22,42 +22,23 @@ namespace Mono.Cecil.Implem {
 
 		private CustomAttributeCollection m_customAttrs;
 
-		private bool m_layoutLoaded;
 		private bool m_hasInfo;
 		private uint m_offset;
 
-		private bool m_initValLoaded;
 		private RVA m_rva;
 		private byte [] m_initVal;
 
-		private bool m_constLoaded;
 		private bool m_hasConstant;
 		private object m_const;
 
-		private bool m_marshalLoaded;
 		private MarshalDesc m_marshalDesc;
 
 		public IFieldLayoutInfo LayoutInfo {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_layoutLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadLayout (this);
-
-				return this;
-			}
-		}
-
-		public bool LayoutLoaded {
-			get { return m_layoutLoaded; }
-			set { m_layoutLoaded = value; }
+			get { return this; }
 		}
 
 		public bool HasLayoutInfo {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_layoutLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadLayout (this);
-
-				return m_hasInfo;
-			}
+			get { return m_hasInfo; }
 		}
 
 		public uint Offset {
@@ -68,33 +49,13 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public bool InitialValueLoaded {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
-
-				return m_initValLoaded;
-			}
-			set { m_initValLoaded = value; }
-		}
-
 		public RVA RVA {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
-
-				return m_rva;
-			}
+			get { return m_rva; }
 			set { m_rva = value; }
 		}
 
 		public byte [] InitialValue {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_initValLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadInitialValue (this);
-
-				return m_initVal;
-			}
+			get { return m_initVal; }
 			set { m_initVal = value; }
 		}
 
@@ -108,27 +69,12 @@ namespace Mono.Cecil.Implem {
 			set { m_attributes = value; }
 		}
 
-		public bool ConstantLoaded {
-			get { return m_constLoaded; }
-			set { m_constLoaded = value; }
-		}
-
 		public bool HasConstant {
-			get {
-				if (this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
-
-				return m_hasConstant;
-			}
+			get { return m_hasConstant; }
 		}
 
 		public object Constant {
-			get {
-				if (this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
-
-				return m_const;
-			}
+			get { return m_const; }
 			set {
 				m_hasConstant = true;
 				m_const = value;
@@ -138,28 +84,14 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					if (this.DecTypeDef.IsLazyLoadable) {
-						m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Mod.Controller);
-						m_customAttrs.Load ();
-					} else
-						m_customAttrs = new CustomAttributeCollection (this);
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
 		}
 
-		public bool MarshalSpecLoaded {
-			get { return m_marshalLoaded; }
-			set { m_marshalLoaded = value; }
-		}
-
 		public IMarshalSpec MarshalSpec {
-			get {
-				if (this.DecTypeDef.IsLazyLoadable && !m_marshalLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadMarshalSpec (this);
-
-				return m_marshalDesc;
-			}
+			get { return m_marshalDesc; }
 			set { m_marshalDesc = value as MarshalDesc; }
 		}
 

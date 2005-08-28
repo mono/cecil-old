@@ -23,7 +23,6 @@ namespace Mono.Cecil.Implem {
 
 		private CustomAttributeCollection m_customAttrs;
 
-		private bool m_semanticLoaded;
 		private IMethodDefinition m_addMeth;
 		private IMethodDefinition m_invMeth;
 		private IMethodDefinition m_remMeth;
@@ -39,48 +38,24 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IMethodDefinition AddMethod {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
-
-				return m_addMeth;
-			}
+			get { return m_addMeth; }
 			set { m_addMeth = value; }
 		}
 
 		public IMethodDefinition InvokeMethod {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
-
-				return m_invMeth;
-			}
+			get { return m_invMeth; }
 			set { m_invMeth = value; }
 		}
 
 		public IMethodDefinition RemoveMethod {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
-
-				return m_remMeth;
-			}
+			get { return m_remMeth; }
 			set { m_remMeth = value; }
-		}
-
-		public bool SemanticLoaded {
-			get { return m_semanticLoaded; }
-			set { m_semanticLoaded = value; }
 		}
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					if (this.DecTypeDef.IsLazyLoadable) {
-						m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Mod.Controller);
-						m_customAttrs.Load ();
-					} else
-						m_customAttrs = new CustomAttributeCollection (this);
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}

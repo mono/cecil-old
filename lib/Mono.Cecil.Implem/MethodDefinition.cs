@@ -31,7 +31,6 @@ namespace Mono.Cecil.Implem {
 		private CustomAttributeCollection m_customAttrs;
 
 		private ModuleDefinition m_module;
-		private bool m_isLazyLoadable;
 
 		private MethodBody m_body;
 		private RVA m_rva;
@@ -58,19 +57,14 @@ namespace Mono.Cecil.Implem {
 			set {
 				base.DeclaringType = value;
 				TypeDefinition t = value as TypeDefinition;
-				if (t != null) {
+				if (t != null)
 					m_module = t.Mod;
-					m_isLazyLoadable = t.IsLazyLoadable;
-				}
 			}
 		}
 
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
-				if (m_isLazyLoadable) {
-					m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
-					m_secDecls.Load ();
-				} else
+				if (m_secDecls == null)
 					m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
@@ -79,10 +73,7 @@ namespace Mono.Cecil.Implem {
 
 		public ICustomAttributeCollection CustomAttributes {
 			get {
-				if (m_isLazyLoadable) {
-					m_customAttrs = new CustomAttributeCollection (this, m_module.Controller);
-					m_customAttrs.Load ();
-				} else
+				if (m_customAttrs == null)
 					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
@@ -107,23 +98,13 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IPInvokeInfo PInvokeInfo {
-			get {
-				if (m_module != null && m_pinvoke == null && (m_attributes & MethodAttributes.PInvokeImpl) != 0) {
-					m_pinvoke = new PInvokeInfo (this);
-					m_module.Controller.Reader.VisitPInvokeInfo (m_pinvoke);
-				}
-
-				return m_pinvoke;
-			}
+			get { return m_pinvoke; }
 			set { m_pinvoke = value as PInvokeInfo; }
 		}
 
 		public IOverrideCollection Overrides {
 			get {
-				if (m_isLazyLoadable) {
-					m_overrides = new OverrideCollection (this, m_module.Controller);
-					m_overrides.Load ();
-				} else
+				if (m_overrides == null)
 					m_overrides = new OverrideCollection (this);
 
 				return m_overrides;

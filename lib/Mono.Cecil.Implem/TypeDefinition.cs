@@ -46,12 +46,7 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public IClassLayoutInfo LayoutInfo {
-			get {
-				if (IsLazyLoadable && !m_layoutLoaded)
-					m_module.Controller.Reader.ReadLayout (this);
-
-				return this;
-			}
+			get { return this; }
 		}
 
 		public bool LayoutLoaded {
@@ -60,12 +55,7 @@ namespace Mono.Cecil.Implem {
 		}
 
 		public bool HasLayoutInfo {
-			get {
-				if (IsLazyLoadable && !m_layoutLoaded)
-					m_module.Controller.Reader.ReadLayout (this);
-
-				return m_hasInfo;
-			}
+			get { return m_hasInfo; }
 		}
 
 		public ushort PackingSize {
@@ -84,19 +74,10 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public bool IsLazyLoadable {
-			get { return m_module != null && !m_module.IsNew; }
-		}
-
 		public IInterfaceCollection Interfaces {
 			get {
-				if (m_interfaces == null) {
-					if (this.IsLazyLoadable) {
-						m_interfaces = new InterfaceCollection (this, m_module.Controller);
-						m_interfaces.Load ();
-					} else
-						m_interfaces = new InterfaceCollection (this);
-				}
+				if (m_interfaces == null)
+					m_interfaces = new InterfaceCollection (this);
 
 				return m_interfaces;
 			}
@@ -104,9 +85,8 @@ namespace Mono.Cecil.Implem {
 
 		public INestedTypeCollection NestedTypes {
 			get {
-				if (m_nestedTypes == null) {
+				if (m_nestedTypes == null)
 					m_nestedTypes = new NestedTypeCollection (this);
-				}
 
 				return m_nestedTypes;
 			}
@@ -115,12 +95,7 @@ namespace Mono.Cecil.Implem {
 		public IMethodDefinitionCollection Methods {
 			get {
 				if (m_methods == null) {
-					if (this.IsLazyLoadable) {
-						m_methods = new MethodDefinitionCollection (this, m_module.Controller);
-						m_methods.Load ();
-					} else
-						m_methods = new MethodDefinitionCollection (this);
-
+					m_methods = new MethodDefinitionCollection (this);
 					m_methods.OnMethodDefinitionAdded += new MethodDefinitionEventHandler (OnMethodAdded);
 					m_methods.OnMethodDefinitionRemoved += new MethodDefinitionEventHandler (OnMethodRemoved);
 				}
@@ -132,12 +107,7 @@ namespace Mono.Cecil.Implem {
 		public IConstructorCollection Constructors {
 			get {
 				if (m_ctors == null) {
-					if (this.IsLazyLoadable) {
-						m_ctors = new ConstructorCollection (this, m_module.Controller);
-						m_ctors.Load ();
-					} else
-						m_ctors = new ConstructorCollection (this);
-
+					m_ctors = new ConstructorCollection (this);
 					m_ctors.OnConstructorAdded += new ConstructorEventHandler (OnCtorAdded);
 					m_ctors.OnConstructorRemoved += new ConstructorEventHandler (OnCtorRemoved);
 				}
@@ -149,12 +119,7 @@ namespace Mono.Cecil.Implem {
 		public IFieldDefinitionCollection Fields {
 			get {
 				if (m_fields == null) {
-					if (this.IsLazyLoadable) {
-						m_fields = new FieldDefinitionCollection (this, m_module.Controller);
-						m_fields.Load ();
-					} else
-						m_fields = new FieldDefinitionCollection (this);
-
+					m_fields = new FieldDefinitionCollection (this);
 					m_fields.OnFieldDefinitionAdded += new FieldDefinitionEventHandler (OnFieldAdded);
 					m_fields.OnFieldDefinitionRemoved += new FieldDefinitionEventHandler (OnFieldRemoved);
 				}
@@ -166,12 +131,7 @@ namespace Mono.Cecil.Implem {
 		public IEventDefinitionCollection Events {
 			get {
 				if (m_events == null) {
-					if (this.IsLazyLoadable) {
-						m_events = new EventDefinitionCollection (this, m_module.Controller);
-						m_events.Load ();
-					} else
-						m_events = new EventDefinitionCollection (this);
-
+					m_events = new EventDefinitionCollection (this);
 					m_events.OnEventDefinitionAdded += new EventDefinitionEventHandler (OnEventAdded);
 					m_events.OnEventDefinitionRemoved += new EventDefinitionEventHandler (OnEventRemoved);
 				}
@@ -183,12 +143,7 @@ namespace Mono.Cecil.Implem {
 		public IPropertyDefinitionCollection Properties {
 			get {
 				if (m_properties == null) {
-					if (this.IsLazyLoadable) {
-						m_properties = new PropertyDefinitionCollection (this, m_module.Controller);
-						m_properties.Load ();
-					} else
-						m_properties = new PropertyDefinitionCollection (this);
-
+					m_properties = new PropertyDefinitionCollection (this);
 					m_properties.OnPropertyDefinitionAdded += new PropertyDefinitionEventHandler (OnPropertyAdded);
 					m_properties.OnPropertyDefinitionRemoved += new PropertyDefinitionEventHandler (OnPropertyRemoved);
 				}
@@ -200,11 +155,7 @@ namespace Mono.Cecil.Implem {
 		public ISecurityDeclarationCollection SecurityDeclarations {
 			get {
 				if (m_secDecls == null)
-					if (this.IsLazyLoadable) {
-						m_secDecls = new SecurityDeclarationCollection (this, m_module.Controller);
-						m_secDecls.Load ();
-					} else
-						m_secDecls = new SecurityDeclarationCollection (this);
+					m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
 			}

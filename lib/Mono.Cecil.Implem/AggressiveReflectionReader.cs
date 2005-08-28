@@ -116,9 +116,7 @@ namespace Mono.Cecil.Implem {
 						this.GetTypeRefFromSig (psig.Type), prow.Flags);
 					pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, j - 1);
 
-					PropertyDefinitionCollection props = owner.Properties as PropertyDefinitionCollection;
-					props.Add (pdef);
-					props.Loaded = true;
+					owner.Properties.Add (pdef);
 					m_properties [j - 1] = pdef;
 				}
 			}
@@ -148,9 +146,7 @@ namespace Mono.Cecil.Implem {
 						GetTypeDefOrRef (erow.EventType), erow.EventFlags);
 					edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, j - 1);
 
-					EventDefinitionCollection evts = owner.Events as EventDefinitionCollection;
-					evts.Loaded = true;
-					evts.Add (edef);
+					owner.Events.Add (edef);
 					m_events [j - 1] = edef;
 				}
 			}
@@ -175,7 +171,6 @@ namespace Mono.Cecil.Implem {
 						evt.InvokeMethod = semMeth;
 					else if ((semRow.Semantics & MethodSemanticsAttributes.RemoveOn) != 0)
 						evt.RemoveMethod = semMeth;
-					evt.SemanticLoaded = true;
 					break;
 				case TokenType.Property :
 					PropertyDefinition prop = m_properties [semRow.Association.RID - 1];
@@ -183,7 +178,6 @@ namespace Mono.Cecil.Implem {
 						prop.GetMethod = semMeth;
 					else if ((semRow.Semantics & MethodSemanticsAttributes.Setter) != 0)
 						prop.SetMethod = semMeth;
-					prop.SemanticLoaded = true;
 					break;
 				}
 			}
@@ -198,8 +192,7 @@ namespace Mono.Cecil.Implem {
 			for (int i = 0; i < intfsTable.Rows.Count; i++) {
 				InterfaceImplRow intfsRow = intfsTable [i];
 				TypeDefinition owner = GetTypeDefAt (intfsRow.Class);
-				(owner.Interfaces as InterfaceCollection).Add (GetTypeDefOrRef (intfsRow.Interface));
-				((InterfaceCollection)owner.Interfaces).Loaded = true;
+				owner.Interfaces.Add (GetTypeDefOrRef (intfsRow.Interface));
 			}
 		}
 
@@ -215,15 +208,14 @@ namespace Mono.Cecil.Implem {
 					MethodDefinition owner = GetMethodDefAt (implRow.MethodBody.RID);
 					switch (implRow.MethodDeclaration.TokenType) {
 					case TokenType.Method :
-						(owner.Overrides as OverrideCollection).Add (
+						owner.Overrides.Add (
 							GetMethodDefAt (implRow.MethodDeclaration.RID));
 						break;
 					case TokenType.MemberRef :
-						(owner.Overrides as OverrideCollection).Add (
+						owner.Overrides.Add (
 							GetMemberRefAt (implRow.MethodDeclaration.RID) as IMethodReference);
 						break;
 					}
-					((OverrideCollection)owner.Overrides).Loaded = true;
 				}
 			}
 		}
@@ -254,7 +246,6 @@ namespace Mono.Cecil.Implem {
 				SecurityDeclarationCollection secDecls = owner.SecurityDeclarations as SecurityDeclarationCollection;
 
 				secDecls.Add (dec);
-				secDecls.Loaded = true;
 			}
 		}
 
@@ -328,17 +319,14 @@ namespace Mono.Cecil.Implem {
 				case TokenType.Field :
 					FieldDefinition field = GetFieldDefAt (csRow.Parent.RID);
 					field.Constant = constant;
-					field.ConstantLoaded = true;
 					break;
 				case TokenType.Property :
 					PropertyDefinition prop = GetPropertyDefAt (csRow.Parent.RID);
 					prop.Constant = constant;
-					prop.ConstantLoaded = true;
 					break;
 				case TokenType.Param :
 					ParameterDefinition param = GetParamDefAt (csRow.Parent.RID);
 					param.Constant = constant;
-					param.ConstantLoaded = true;
 					break;
 				}
 			}
@@ -362,13 +350,11 @@ namespace Mono.Cecil.Implem {
 					FieldDefinition field = GetFieldDefAt (fmRow.Parent.RID);
 					field.MarshalSpec = BuildMarshalDesc (
 						m_sigReader.GetMarshalSig (fmRow.NativeType), field);
-					field.MarshalSpecLoaded = true;
 					break;
 				case TokenType.Param:
 					ParameterDefinition param = GetParamDefAt (fmRow.Parent.RID);
 					param.MarshalSpec = BuildMarshalDesc (
 						m_sigReader.GetMarshalSig (fmRow.NativeType), param);
-					param.MarshalSpecLoaded = true;
 					break;
 				}
 			}
@@ -384,7 +370,6 @@ namespace Mono.Cecil.Implem {
 				FieldRVARow frRow = frTable [i];
 				FieldDefinition field = GetFieldDefAt (frRow.Field);
 				field.RVA = frRow.RVA;
-				field.InitialValueLoaded = true;
 				SetInitialValue (field);
 			}
 		}

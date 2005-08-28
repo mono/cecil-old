@@ -220,8 +220,6 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
 		{
-			TypeDefinitionCollection tdc = types as TypeDefinitionCollection;
-
 			// type def reading
 			TypeDefTable typesTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
 			m_typeDefs = new TypeDefinition [typesTable.Rows.Count];
@@ -294,7 +292,7 @@ namespace Mono.Cecil.Implem {
 
 			for (int i = 0; i < m_typeDefs.Length; i++) {
 				TypeDefinition type = m_typeDefs [i];
-				tdc.Add (type);
+				types.Add (type);
 			}
 
 			for (int i = 0; i < m_typeRefs.Length; i++) {
@@ -369,10 +367,7 @@ namespace Mono.Cecil.Implem {
 					if (fsig.CustomMods.Length > 0)
 						fdef.FieldType = GetModifierType (fsig.CustomMods, fdef.FieldType);
 
-					FieldDefinitionCollection flds = dec.Fields as FieldDefinitionCollection;
-
-					flds.Loaded = true;
-					flds.Add (fdef);
+					dec.Fields.Add (fdef);
 					m_fields [j - 1] = fdef;
 				}
 			}
@@ -459,7 +454,7 @@ namespace Mono.Cecil.Implem {
 								k + 1, (ParamAttributes) 0, psig);
 
 						pdef.Method = mdef;
-						(mdef.Parameters as ParameterDefinitionCollection).Add (pdef);
+						mdef.Parameters.Add (pdef);
 
 					}
 
@@ -473,13 +468,10 @@ namespace Mono.Cecil.Implem {
 
 					m_meths [j - 1] = mdef;
 
-					if (mdef.IsConstructor) {
+					if (mdef.IsConstructor)
 						dec.Constructors.Add (mdef);
-						(dec.Constructors as ILazyLoadableCollection).Loaded = true;
-					} else {
+					else
 						dec.Methods.Add (mdef);
-						(dec.Methods as ILazyLoadableCollection).Loaded = true;
-					}
 				}
 			}
 
@@ -522,7 +514,7 @@ namespace Mono.Cecil.Implem {
 							ParameterDefinition pdef = BuildParameterDefinition (
 								string.Concat ("arg", i), i, new ParamAttributes (), p);
 							pdef.Method = methref;
-							(methref.Parameters as ParameterDefinitionCollection).Add (pdef);
+							methref.Parameters.Add (pdef);
 						}
 						member = methref;
 					}
@@ -549,10 +541,8 @@ namespace Mono.Cecil.Implem {
 		{
 			ExternTypeCollection ext = externs as ExternTypeCollection;
 
-			if (!m_tHeap.HasTable (typeof (ExportedTypeTable))) {
-				ext.Loaded = true;
+			if (!m_tHeap.HasTable (typeof (ExportedTypeTable)))
 				return;
-			}
 
 			ExportedTypeTable etTable = m_tHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
 			ITypeReference [] buffer = new ITypeReference [etTable.Rows.Count];
@@ -631,7 +621,8 @@ namespace Mono.Cecil.Implem {
 			return cattr;
 		}
 
-		protected ParameterDefinition BuildParameterDefinition (string name, int sequence, ParamAttributes attrs, Param psig)
+		protected ParameterDefinition BuildParameterDefinition (string name, int sequence,
+			ParamAttributes attrs, Param psig)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
 			ITypeReference paramType = null;
@@ -811,12 +802,15 @@ namespace Mono.Cecil.Implem {
 				ParameterDefinitionCollection parameters = new ParameterDefinitionCollection (null);
 				for (int i = 0; i < funcptr.Method.ParamCount; i++) {
 					Param p = funcptr.Method.Parameters [i];
-					ParameterDefinition pdef = new ParameterDefinition (string.Concat ("arg", i), i, new ParamAttributes (), null);
-					pdef.ParameterType = p.ByRef ? new ReferenceType (GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
+					ParameterDefinition pdef = new ParameterDefinition (
+						string.Concat ("arg", i), i, new ParamAttributes (), null);
+					pdef.ParameterType = p.ByRef ? new ReferenceType (
+						GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
 					parameters.Add (pdef);
 				}
-				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis, funcptr.Method.MethCallConv,
-											parameters, GetMethodReturnType (funcptr.Method));
+				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
+					funcptr.Method.MethCallConv,
+					parameters, GetMethodReturnType (funcptr.Method));
 			}
 			return null;
 		}

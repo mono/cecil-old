@@ -54,7 +54,7 @@ namespace Mono.Cecil.Implem {
 					m_structureWriter.GetWriter ());
 				m_tableWriter = m_mdWriter.GetTableVisitor ();
 				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
-				m_sigWriter = new SignatureWriter (m_mdWriter, this);
+				m_sigWriter = new SignatureWriter (m_mdWriter);
 				m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
 			}
 		}
@@ -183,6 +183,9 @@ namespace Mono.Cecil.Implem {
 					VisitMethodDefinition (meth);
 			}
 
+			foreach (IMethodDefinition meth in m_methodStack)
+				VisitOverrideCollection (meth.Overrides);
+
 			foreach (ITypeDefinition t in orderedTypes)
 				t.Accept (this);
 		}
@@ -228,28 +231,32 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitMemberReferenceCollection (IMemberReferenceCollection members)
 		{
-			if (members.Count > 0) {
-				MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-				foreach (IMemberReference member in members) {
-					uint sig = 0;
-					if (member is IFieldReference)
-						sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
-					else if (member is IMethodReference)
-						sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
-					MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
-						GetTypeDefOrRefToken (member.DeclaringType),
-						m_mdWriter.AddString (member.Name),
-						sig);
+			if (members.Count == 0)
+				return;
 
-					mrTable.Rows.Add (mrRow);
-					member.MetadataToken = new MetadataToken (
-						TokenType.MemberRef, (uint) mrTable.Rows.Count);
+			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
+			foreach (IMemberReference member in members) {
+				uint sig = 0;
+				if (member is IFieldReference)
+					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
+				else if (member is IMethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
+					GetTypeDefOrRefToken (member.DeclaringType),
+					m_mdWriter.AddString (member.Name),
+					sig);
+
+				mrTable.Rows.Add (mrRow);
+				member.MetadataToken = new MetadataToken (
+					TokenType.MemberRef, (uint) mrTable.Rows.Count);
 				}
-			}
 		}
 
 		public override void VisitInterfaceCollection (IInterfaceCollection interfaces)
 		{
+			if (interfaces.Count == 0)
+				return;
+
 			InterfaceImplTable iiTable = m_tableWriter.GetInterfaceImplTable ();
 			foreach (ITypeReference interf in interfaces) {
 				InterfaceImplRow iiRow = m_rowWriter.CreateInterfaceImplRow (
@@ -272,7 +279,8 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitOverrideCollection (IOverrideCollection meths)
 		{
-			VisitCollection (meths);
+			if (meths.Count == 0)
+				return;
 
 			MethodImplTable miTable = m_tableWriter.GetMethodImplTable ();
 			foreach (IMethodReference ov in meths) {
@@ -287,6 +295,9 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
 		{
+			if (nestedTypes.Count == 0)
+				return;
+
 			NestedClassTable ncTable = m_tableWriter.GetNestedClassTable ();
 			foreach (ITypeDefinition nested in nestedTypes) {
 				NestedClassRow ncRow = m_rowWriter.CreateNestedClassRow (
@@ -299,6 +310,9 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
 		{
+			if (parameters.Count == 0)
+				return;
+
 			ushort seq = 1;
 			ParamTable pTable = m_tableWriter.GetParamTable ();
 			foreach (IParameterDefinition param in parameters) {
@@ -449,6 +463,9 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
 		{
+			if (secDecls.Count == 0)
+				return;
+
 			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
 			foreach (ISecurityDeclaration secDec in secDecls) {
 				MetadataToken parent;
@@ -471,6 +488,9 @@ namespace Mono.Cecil.Implem {
 
 		public override void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
 		{
+			if (customAttrs.Count == 0)
+				return;
+
 			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
 			foreach (ICustomAttribute ca in customAttrs) {
 				MetadataToken parent;

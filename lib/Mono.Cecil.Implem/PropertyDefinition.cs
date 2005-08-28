@@ -24,22 +24,15 @@ namespace Mono.Cecil.Implem {
 
 		private CustomAttributeCollection m_customAttrs;
 
-		private bool m_semanticLoaded;
 		private IMethodDefinition m_getMeth;
 		private IMethodDefinition m_setMeth;
 
-		private bool m_constLoaded;
 		private bool m_hasConstant;
 		private object m_const;
 
 		public ITypeReference PropertyType {
 			get { return m_propertyType; }
 			set { m_propertyType = value; }
-		}
-
-		public bool SemanticLoaded {
-			get { return m_semanticLoaded; }
-			set { m_semanticLoaded = value; }
 		}
 
 		public PropertyAttributes Attributes {
@@ -50,33 +43,19 @@ namespace Mono.Cecil.Implem {
 		public ICustomAttributeCollection CustomAttributes {
 			get {
 				if (m_customAttrs == null)
-					if (this.DecTypeDef.IsLazyLoadable) {
-						m_customAttrs = new CustomAttributeCollection (this, this.DecTypeDef.Mod.Controller);
-						m_customAttrs.Load ();
-					} else
-						m_customAttrs = new CustomAttributeCollection (this);
+					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
 			}
 		}
 
 		public IMethodDefinition GetMethod {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
-
-				return m_getMeth;
-			}
+			get { return m_getMeth; }
 			set { m_getMeth = value; }
 		}
 
 		public IMethodDefinition SetMethod {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_semanticLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadSemantic (this);
-
-				return m_setMeth;
-			}
+			get { return m_setMeth; }
 			set { m_setMeth = value; }
 		}
 
@@ -99,27 +78,12 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
-		public bool ConstantLoaded {
-			get { return m_constLoaded; }
-			set { m_constLoaded = value; }
-		}
-
 		public bool HasConstant {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
-
-				return m_hasConstant;
-			}
+			get { return m_hasConstant; }
 		}
 
 		public object Constant {
-			get {
-				if (!this.DecTypeDef.IsLazyLoadable && !m_constLoaded)
-					this.DecTypeDef.Mod.Controller.Reader.ReadConstant (this);
-
-				return m_const;
-			}
+			get { return m_const; }
 			set {
 				m_hasConstant = true;
 				m_const = value;
