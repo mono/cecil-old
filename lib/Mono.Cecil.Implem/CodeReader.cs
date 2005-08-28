@@ -117,7 +117,7 @@ namespace Mono.Cecil.Implem {
 					instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.ShortInlineVar :
-					instr.Operand = body.Variables [br.ReadByte ()];
+					instr.Operand = body.Variables [(int) br.ReadByte ()];
 					break;
 				case OperandType.ShortInlineParam : // see param
 					instr.Operand = br.ReadByte ();
@@ -127,7 +127,7 @@ namespace Mono.Cecil.Implem {
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineVar :
-					instr.Operand = body.Variables [br.ReadInt32 ()];
+					instr.Operand = body.Variables [(int) br.ReadInt16 ()];
 					break;
 				case OperandType.InlineParam : // TODO get an IParamDef as operand, adjust the index if static
 					instr.Operand = br.ReadInt32 ();

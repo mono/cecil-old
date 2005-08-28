@@ -1,5 +1,12 @@
 2005-08-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionWriter.cs:
+		Emit things in proper order.
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/CodeWriter.cs:
+		Correct bug with InlineVar opcodes.
+		Emit fat body if maxstack is set.
+
 	* Mono.Cecil.Implem/CodeWriter.cs:
 		Handle null tokens.
 	  Mono.Cecil.Metadata/MetadataWriter.cs:

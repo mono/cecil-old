@@ -105,8 +105,8 @@ namespace Mono.Cecil.Implem {
 					m_codeWriter.Write ((int) instr.Operand);
 					break;
 				case OperandType.InlineVar :
-					m_codeWriter.Write (body.Variables.IndexOf (
-							instr.Operand as IVariableDefinition));
+					m_codeWriter.Write ((short) body.Variables.IndexOf (
+						instr.Operand as IVariableDefinition));
 					break;
 				case OperandType.InlineParam : // should write param index of
 					m_codeWriter.Write ((int) instr.Operand);
@@ -273,7 +273,7 @@ namespace Mono.Cecil.Implem {
 
 			MethodBody bdy = body as MethodBody;
 			if (body.Variables.Count > 0 || body.ExceptionHandlers.Count > 0
-				|| m_codeWriter.BaseStream.Length >= 64) {
+				|| m_codeWriter.BaseStream.Length >= 64 || body.MaxStack > 8) {
 
 				MethodHeader header = MethodHeader.FatFormat;
 				if (body.InitLocals)

@@ -33,7 +33,7 @@ namespace Mono.Cecil.Implem {
 		private MetadataRowWriter m_rowWriter;
 
 		private IList m_methodStack;
-		private IList m_fieldDataStack;
+		private IList m_fieldStack;
 
 		private uint m_methodIndex;
 		private uint m_fieldIndex;
@@ -84,7 +84,7 @@ namespace Mono.Cecil.Implem {
 			m_mod = mod;
 
 			m_methodStack = new ArrayList ();
-			m_fieldDataStack = new ArrayList ();
+			m_fieldStack = new ArrayList ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -183,8 +183,14 @@ namespace Mono.Cecil.Implem {
 					VisitMethodDefinition (meth);
 			}
 
-			foreach (IMethodDefinition meth in m_methodStack)
+			foreach (IFieldDefinition field in m_fieldStack)
+				VisitCustomAttributeCollection (field.CustomAttributes);
+
+			foreach (IMethodDefinition meth in m_methodStack) {
 				VisitOverrideCollection (meth.Overrides);
+				VisitCustomAttributeCollection (meth.CustomAttributes);
+				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);
+			}
 
 			foreach (ITypeDefinition t in orderedTypes)
 				t.Accept (this);
@@ -354,6 +360,8 @@ namespace Mono.Cecil.Implem {
 				pTable.Rows.Add (pRow);
 				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
 			}
+
+			VisitParameterDefinitionCollection (method.Parameters);
 		}
 
 		public override void VisitPInvokeInfo (IPInvokeInfo pinvk)
@@ -423,8 +431,7 @@ namespace Mono.Cecil.Implem {
 			if (field.LayoutInfo.HasLayoutInfo)
 				WriteLayout (field);
 
-			if (field.InitialValue != null && field.InitialValue.Length > 0)
-				m_fieldDataStack.Add (field);
+			m_fieldStack.Add (field);
 		}
 
 		public override void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
@@ -534,6 +541,7 @@ namespace Mono.Cecil.Implem {
 				et = GetCorrespondingType (string.Concat (t.Namespace, '.', t.Name));
 			} else
 				et = GetCorrespondingType (type.FullName);
+
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
 				parent,
@@ -643,17 +651,22 @@ namespace Mono.Cecil.Implem {
 					mTable [i].RVA = m_codeWriter.WriteMethodBody (meth);
 			}
 
-			if (m_fieldDataStack.Count > 0) {
-				FieldRVATable frTable = m_tableWriter.GetFieldRVATable ();
-				foreach (FieldDefinition field in m_fieldDataStack) {
-					FieldRVARow frRow = m_rowWriter.CreateFieldRVARow (
-						m_mdWriter.GetDataCursor (),
-						field.MetadataToken.RID);
+			if (m_fieldStack.Count > 0) {
+				FieldRVATable frTable = null;
+				foreach (IFieldDefinition field in m_fieldStack) {
+					if (field.InitialValue != null && field.InitialValue.Length > 0) {
+						if (frTable == null)
+							frTable = m_tableWriter.GetFieldRVATable ();
 
-					m_mdWriter.AddData (field.InitialValue.Length + 3 & (~3));
-					m_mdWriter.AddFieldInitData (field.InitialValue);
+						FieldRVARow frRow = m_rowWriter.CreateFieldRVARow (
+							m_mdWriter.GetDataCursor (),
+							field.MetadataToken.RID);
 
-					frTable.Rows.Add (frRow);
+						m_mdWriter.AddData (field.InitialValue.Length + 3 & (~3));
+						m_mdWriter.AddFieldInitData (field.InitialValue);
+
+						frTable.Rows.Add (frRow);
+					}
 				}
 			}
 
