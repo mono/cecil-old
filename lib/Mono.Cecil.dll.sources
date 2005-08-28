@@ -306,7 +306,3 @@
 ./Mono.Xml/MiniParser.cs
 ./Mono.Xml/SecurityParser.cs
 ./Mono.Xml/SmallXmlParser.cs
-l.Signatures/ValueType.cs
-./Mono.Xml/MiniParser.cs
-./Mono.Xml/SecurityParser.cs
-./Mono.Xml/SmallXmlParser.cs

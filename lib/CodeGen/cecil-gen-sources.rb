@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-f = File.new("../Mono.Cecil.dll.sources", File::CREAT|File::WRONLY)
+f = File.new("../Mono.Cecil.dll.sources", File::CREAT | File::WRONLY | File::TRUNC)
 
 [ "Mono.Cecil", "Mono.Cecil.Binary",
 	"Mono.Cecil.Metadata", "Mono.Cecil.Cil",
