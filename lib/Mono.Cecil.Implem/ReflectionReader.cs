@@ -846,7 +846,7 @@ namespace Mono.Cecil.Implem {
 			case ElementType.R8 :
 				return br.ReadDouble ();
 			case ElementType.String :
-				string str = Encoding.UTF8.GetString (br.ReadBytes (constant.Length));
+				string str = Encoding.Unicode.GetString (br.ReadBytes (constant.Length));
 				return str;
 			case ElementType.Class :
 				return null;

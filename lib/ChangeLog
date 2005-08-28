@@ -1,5 +1,9 @@
 2005-08-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs:
+		Strings constant are unicode.
+
 	* Mono.Cecil/LoadingType.cs
 	  Mono.Cecil/AssemblyFactory.cs
 	  CodeGen/templates/IndexedCollectionImplem.cs

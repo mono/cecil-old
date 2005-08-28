@@ -742,7 +742,7 @@ namespace Mono.Cecil.Implem {
 				m_constWriter.Write ((double) value);
 				break;
 			case ElementType.String :
-				m_constWriter.Write (Encoding.UTF8.GetBytes ((string) value));
+				m_constWriter.Write (Encoding.Unicode.GetBytes ((string) value));
 				break;
 			case ElementType.Class :
 				m_constWriter.Write (new byte [4]);
