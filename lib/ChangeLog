@@ -1,3 +1,16 @@
+2005-09-02  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ICustomAttribute.cs
+	  Mono.Cecil.Implem/ReflectionFactories.cs
+	  Mono.Cecil.Implem/CustomAttribute.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Prepare the work on custom attributes.
+	* Mono.Cecil.Cil/IInstruction.cs:
+		Let users modify the content of an instruction.
+	* Mono.Cecil.Implem/StructureReader.cs:
+		Do not try to read 2.0 assemblies.
+
 2005-08-28  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/MetadataWriter.cs:

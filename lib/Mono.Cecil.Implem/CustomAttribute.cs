@@ -23,6 +23,9 @@ namespace Mono.Cecil.Implem {
 		private IDictionary m_fieldTypes;
 		private IDictionary m_propTypes;
 
+		private bool m_readable;
+		private byte [] m_compressed;
+
 		public IMethodReference Constructor {
 			get { return m_ctor; }
 			set { m_ctor = value; }
@@ -56,9 +59,19 @@ namespace Mono.Cecil.Implem {
 			}
 		}
 
+		public bool IsReadable {
+			get { return m_readable; }
+		}
+
+		public byte [] Compressed {
+			get { return m_compressed; }
+			set { m_compressed = value; }
+		}
+
 		public CustomAttribute (IMethodReference ctor)
 		{
 			m_ctor = ctor;
+			m_readable = true;
 		}
 
 		public ITypeReference GetFieldType (string fieldName)

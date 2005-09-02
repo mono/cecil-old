@@ -54,8 +54,10 @@ namespace Mono.Cecil.Implem {
 					asm.Runtime = TargetRuntime.NET_1_1;
 				else
 					asm.Runtime = TargetRuntime.NET_1_0;
-			else if (root.Header.MajorVersion == 2)
+			else if (root.Header.MajorVersion == 2) {
 				asm.Runtime = TargetRuntime.NET_2_0;
+				throw new NotImplementedException (".net 2 assemblies are not implemented");
+			}
 		}
 
 		public override void VisitAssemblyNameDefinition (IAssemblyNameDefinition name)

@@ -350,7 +350,6 @@ namespace Mono.Cecil.Signatures {
 			Write (na.FixedArg, writer);
 		}
 
-
 		private void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
 			switch (elem.FieldOrPropType) {

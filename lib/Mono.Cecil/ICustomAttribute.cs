@@ -17,6 +17,9 @@ namespace Mono.Cecil {
 	public interface ICustomAttribute : IReflectionVisitable {
 
 		IMethodReference Constructor { get; }
+
+		bool IsReadable { get; }
+
 		IList ConstructorParameters { get; }
 		IDictionary Fields { get; }
 		IDictionary Properties { get; }

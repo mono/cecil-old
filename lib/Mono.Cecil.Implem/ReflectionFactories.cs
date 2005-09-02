@@ -532,6 +532,13 @@ namespace Mono.Cecil.Implem {
 
 		public byte [] GetAsByteArray (ICustomAttribute ca)
 		{
+			CustomAttribute customAttr = ca as CustomAttribute;
+			if (!ca.IsReadable)
+				if (customAttr.Compressed != null)
+					return customAttr.Compressed;
+				else
+					return new byte [0];
+
 			return m_module.Controller.Writer.SignatureWriter.CompressCustomAttribute (
 				m_module.Controller.Writer.GetCustomAttributeSig (ca), ca.Constructor);
 		}

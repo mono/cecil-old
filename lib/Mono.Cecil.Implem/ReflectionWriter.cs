@@ -510,10 +510,13 @@ namespace Mono.Cecil.Implem {
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
 
+				uint value = ca.IsReadable ?
+					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor) :
+					m_mdWriter.AddBlob (m_mod.Factories.CustomAttributeFactory.GetAsByteArray (ca));
 				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (
 					parent,
 					ca.Constructor.MetadataToken,
-					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor));
+					value);
 
 				caTable.Rows.Add (caRow);
 			}
