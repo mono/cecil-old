@@ -30,6 +30,7 @@ namespace Mono.Cecil.Implem {
 
 		public OpCode OpCode {
 			get { return m_opCode; }
+			set { m_opCode = value; }
 		}
 
 		public object Operand {

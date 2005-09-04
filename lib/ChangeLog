@@ -1,3 +1,8 @@
+2005-09-04  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/Instruction.cs:
+		Add the setter for IInstruction::OpCode.
+
 2005-09-02  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ICustomAttribute.cs
