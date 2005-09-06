@@ -167,6 +167,15 @@ namespace Mono.Cecil.Implem {
 			return FinalCreate (opcode, var);
 		}
 
+		public IInstruction Create (OpCode opcode, IParameterDefinition param)
+		{
+			if (opcode.OperandType != OperandType.ShortInlineParam &&
+				opcode.OperandType != OperandType.InlineParam)
+				throw new ArgumentException ("opcode");
+
+			return FinalCreate (opcode, param);
+		}
+
 		private IInstruction FinalCreate (OpCode opcode)
 		{
 			return FinalCreate (opcode, null);
@@ -284,6 +293,13 @@ namespace Mono.Cecil.Implem {
 		public IInstruction Emit (OpCode opcode, IVariableDefinition var)
 		{
 			IInstruction instr = Create (opcode, var);
+			Append (instr);
+			return instr;
+		}
+
+		public IInstruction Emit (OpCode opcode, IParameterDefinition param)
+		{
+			IInstruction instr = Create (opcode, param);
 			Append (instr);
 			return instr;
 		}

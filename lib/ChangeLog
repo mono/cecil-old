@@ -1,3 +1,29 @@
+2005-09-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IReflectionFactories.cs
+	  Mono.Cecil.Implem/ReflectionFactories.cs:
+		Allow the creation of reference types for methods
+		parameters and return types.
+	* Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Implem/CilWorker.cs
+	  Mono.Cecil.Implem/CodeReader.cs
+	  Mono.Cecil.Implem/CodeWriter.cs:
+		Global fix on the handling of parameters in instructions.
+	* Mono.Cecil.Implem/AssemblyName.cs:
+		Correcty write the version of an assembly fullname.
+		Spotted by Bruno Cabral.
+	* Mono.Cecil.Implem/TypeDefinition.cs:
+		Set the declaring type of a nested type on add.
+	* Mono.Cecil.Implem/CustomAttribute.cs
+	  Mono.Cecil.Implem/ReflectionReader.cs
+	  Mono.Cecil.Implem/ReflectionWriter.cs
+	  Mono.Cecil.Implem/AggressiveReflectionReader.cs
+	  Mono.Cecil.Signatures/CustomAttrib.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Global fix on custom attribute handling. Some
+		custom attribute (containing enums) blobs can not be
+		decoded.
+
 2005-09-04  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Implem/Instruction.cs:

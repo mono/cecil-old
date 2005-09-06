@@ -74,6 +74,14 @@ namespace Mono.Cecil.Implem {
 			return token >> 24 == (int) t >> 24;
 		}
 
+		private IParameterDefinition GetParameter (MethodBody body, int index)
+		{
+			if (body.Method.HasThis)
+				index--;
+
+			return body.Method.Parameters [index];
+		}
+
 		private void ReadCilBody (MethodBody body, BinaryReader br, out IDictionary instructions)
 		{
 			long start = br.BaseStream.Position, offset;
@@ -119,8 +127,8 @@ namespace Mono.Cecil.Implem {
 				case OperandType.ShortInlineVar :
 					instr.Operand = body.Variables [(int) br.ReadByte ()];
 					break;
-				case OperandType.ShortInlineParam : // see param
-					instr.Operand = br.ReadByte ();
+				case OperandType.ShortInlineParam :
+					instr.Operand = GetParameter (body, (int) br.ReadByte ());
 					break;
 				case OperandType.InlineSig :
 				case OperandType.InlineI :
@@ -129,8 +137,8 @@ namespace Mono.Cecil.Implem {
 				case OperandType.InlineVar :
 					instr.Operand = body.Variables [(int) br.ReadInt16 ()];
 					break;
-				case OperandType.InlineParam : // TODO get an IParamDef as operand, adjust the index if static
-					instr.Operand = br.ReadInt32 ();
+				case OperandType.InlineParam :
+					instr.Operand = GetParameter (body, (int) br.ReadInt16 ());
 					break;
 				case OperandType.InlineI8 :
 					instr.Operand = br.ReadInt64 ();

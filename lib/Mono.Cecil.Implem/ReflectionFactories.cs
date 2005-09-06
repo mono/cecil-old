@@ -197,6 +197,16 @@ namespace Mono.Cecil.Implem {
 			return CreatePointer (m_module.Controller.Helper.CheckType (type));
 		}
 
+		public IReferenceType CreateReferenceType (ITypeReference type)
+		{
+			return new ReferenceType (m_module.Controller.Helper.CheckType (type));
+		}
+
+		public IReferenceType CreateReferenceType (Type type)
+		{
+			return new ReferenceType (m_module.Controller.Helper.CheckType (type));
+		}
+
 		public ITypeDefinition CloneType (ITypeDefinition original)
 		{
 			TypeDefinition nt = new TypeDefinition (
@@ -432,20 +442,6 @@ namespace Mono.Cecil.Implem {
 			return CreateParameter (name, attributes, m_module.Controller.Helper.CheckType (type));
 		}
 
-		public IParameterDefinition CreateParameter (string name, ParamAttributes attributes,
-			ITypeReference type, bool byRef)
-		{
-			return CreateParameter (name, attributes, byRef ?
-				new ReferenceType (m_module.Controller.Helper.CheckType (type)) : type);
-		}
-
-		public IParameterDefinition CreateParameter (string name, ParamAttributes attributes, Type type, bool byRef)
-		{
-			ITypeReference paramType = m_module.Controller.Helper.CheckType (type);
-			return CreateParameter (name, attributes, byRef ?
-				new ReferenceType (m_module.Controller.Helper.CheckType (paramType)) : paramType);
-		}
-
 		public IEventDefinition CreateEvent (string name, ITypeReference eventType)
 		{
 			return CreateEvent (name, (EventAttributes) 0, eventType);
@@ -534,8 +530,8 @@ namespace Mono.Cecil.Implem {
 		{
 			CustomAttribute customAttr = ca as CustomAttribute;
 			if (!ca.IsReadable)
-				if (customAttr.Compressed != null)
-					return customAttr.Compressed;
+				if (customAttr.Blob != null)
+					return customAttr.Blob;
 				else
 					return new byte [0];
 

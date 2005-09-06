@@ -243,7 +243,6 @@ namespace Mono.Cecil.Implem {
 					TypeDefinition parent = GetTypeDefAt (row.EnclosingClass);
 					TypeDefinition child = GetTypeDefAt (row.NestedClass);
 
-					child.DeclaringType = parent;
 					parent.NestedTypes.Add (child);
 				}
 			}
@@ -802,10 +801,8 @@ namespace Mono.Cecil.Implem {
 				ParameterDefinitionCollection parameters = new ParameterDefinitionCollection (null);
 				for (int i = 0; i < funcptr.Method.ParamCount; i++) {
 					Param p = funcptr.Method.Parameters [i];
-					ParameterDefinition pdef = new ParameterDefinition (
-						string.Concat ("arg", i), i, new ParamAttributes (), null);
-					pdef.ParameterType = p.ByRef ? new ReferenceType (
-						GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type);
+					ParameterDefinition pdef = new ParameterDefinition (p.ByRef ? new ReferenceType (
+							GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type));
 					parameters.Add (pdef);
 				}
 				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,

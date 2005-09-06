@@ -24,6 +24,7 @@ namespace Mono.Cecil.Signatures {
 		public FixedArg [] FixedArgs;
 		public ushort NumNamed;
 		public NamedArg [] NamedArgs;
+		public bool Read;
 
 		public CustomAttrib (IMethodReference ctor)
 		{

@@ -264,7 +264,13 @@ namespace Mono.Cecil.Implem {
 					ctor = GetMemberRefAt (caRow.Type.RID) as IMethodReference;
 
 				CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
-				CustomAttribute cattr = BuildCustomAttribute (ctor, ca);
+				CustomAttribute cattr;
+				if (!ca.Read) {
+					cattr = new CustomAttribute (ctor);
+					cattr.IsReadable = false;
+					cattr.Blob = m_root.Streams.BlobHeap.Read (caRow.Value);
+				} else
+					cattr = BuildCustomAttribute (ctor, ca);
 
 				ICustomAttributeCollection owner = null;
 				switch (caRow.Parent.TokenType) {

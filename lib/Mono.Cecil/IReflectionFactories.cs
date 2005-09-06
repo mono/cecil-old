@@ -73,6 +73,9 @@ namespace Mono.Cecil {
 		IPointerType CreatePointer (ITypeReference type);
 		IPointerType CreatePointer (Type type);
 
+		IReferenceType CreateReferenceType (ITypeReference type);
+		IReferenceType CreateReferenceType (Type type);
+
 		ITypeDefinition CloneType (ITypeDefinition original);
 
 		void MergeType (ITypeDefinition original, ITypeDefinition target);
@@ -134,10 +137,6 @@ namespace Mono.Cecil {
 
 		IParameterDefinition CreateParameter (string name, ParamAttributes attributes, ITypeReference type);
 		IParameterDefinition CreateParameter (string name, ParamAttributes attributes, Type type);
-		IParameterDefinition CreateParameter (string name, ParamAttributes attributes,
-			ITypeReference type, bool byRef);
-		IParameterDefinition CreateParameter (string name, ParamAttributes attributes,
-			Type type, bool byRef);
 	}
 
 	public interface IEventFactory : IMemberFactory {

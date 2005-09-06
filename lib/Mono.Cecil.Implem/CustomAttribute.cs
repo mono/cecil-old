@@ -24,7 +24,7 @@ namespace Mono.Cecil.Implem {
 		private IDictionary m_propTypes;
 
 		private bool m_readable;
-		private byte [] m_compressed;
+		private byte [] m_blob;
 
 		public IMethodReference Constructor {
 			get { return m_ctor; }
@@ -61,11 +61,12 @@ namespace Mono.Cecil.Implem {
 
 		public bool IsReadable {
 			get { return m_readable; }
+			set { m_readable = value; }
 		}
 
-		public byte [] Compressed {
-			get { return m_compressed; }
-			set { m_compressed = value; }
+		public byte [] Blob {
+			get { return m_blob; }
+			set { m_blob = value; }
 		}
 
 		public CustomAttribute (IMethodReference ctor)

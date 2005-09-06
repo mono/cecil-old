@@ -468,23 +468,33 @@ namespace Mono.Cecil.Signatures {
 				return ca;
 			}
 
+			bool read = true;
+
 			ca.Prolog = br.ReadUInt16 ();
 			if (ca.Prolog != CustomAttrib.StdProlog)
 				throw new MetadataFormatException ("Non standard prolog for custom attribute");
 
 			ca.FixedArgs = new CustomAttrib.FixedArg [ctor.Parameters.Count];
-			for (int i = 0; i < ca.FixedArgs.Length; i++)
-				ca.FixedArgs [i] = this.ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType, ctor.Parameters [i].ParameterType);
+			for (int i = 0; i < ca.FixedArgs.Length && read; i++)
+				ca.FixedArgs [i] = this.ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
+					ctor.Parameters [i].ParameterType, ref read);
+
+			if (!read) {
+				ca.Read = read;
+				return ca;
+			}
 
 			ca.NumNamed = br.ReadUInt16 ();
 			ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
-			for (int i = 0; i < ca.NumNamed; i++)
-				ca.NamedArgs [i] = this.ReadNamedArg (data, br);
+			for (int i = 0; i < ca.NumNamed && read; i++)
+				ca.NamedArgs [i] = this.ReadNamedArg (data, br, ref read);
 
+			ca.Read = read;
 			return ca;
 		}
 
-		private CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br, bool array, object param)
+		private CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br,
+			bool array, object param, ref bool read)
 		{
 			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
 			if (array) {
@@ -498,14 +508,14 @@ namespace Mono.Cecil.Signatures {
 
 				fa.Elems = new CustomAttrib.Elem [fa.NumElem];
 				for (int i = 0; i < fa.NumElem; i++)
-					fa.Elems [i] = ReadElem (data, br, param);
+					fa.Elems [i] = ReadElem (data, br, param, ref read);
 			} else
-				fa.Elems = new CustomAttrib.Elem [] { ReadElem (data, br, param) };
+				fa.Elems = new CustomAttrib.Elem [] { ReadElem (data, br, param, ref read) };
 
 			return fa;
 		}
 
-		private CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br)
+		private CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
 			byte kind = br.ReadByte ();
@@ -526,50 +536,33 @@ namespace Mono.Cecil.Signatures {
 			}
 
 			int next, length;
-			bool resetenum = false;
-			string enumType = null;
 
 			if (na.FieldOrPropType == ElementType.Enum) {
-				length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
-				br.BaseStream.Position = next;
-				enumType = Encoding.UTF8.GetString (br.ReadBytes (length));
-				na.FieldOrPropType = ElementType.I4; // hack there, we should know the underlying type
-				resetenum = true;
+				read = false;
+				return na;
 			}
 
 			length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
 			br.BaseStream.Position = next;
 			na.FieldOrPropName = Encoding.UTF8.GetString (br.ReadBytes (length));
 
-			na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType);
-
-			if (resetenum) {
-				na.FieldOrPropType = ElementType.Enum;
-				ITypeReference enu = m_reflectReader.Module.Types [enumType];
-				if (enu == null)
-					/*
-				 	According to the spec, we should have a fully qualifier name
-				 	TODO : parse it to extract assembly name and type
-				 	*/
-					enu = m_reflectReader.Module.TypeReferences [enumType];
-				na.FixedArg.Elems [0].ElemType = enu;
-			}
+			na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType, ref read);
 
 			return na;
 		}
 
 		// i hate this construction, should find something better
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param)
+		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param, ref bool read)
 		{
 			if (param is ITypeReference)
-				return ReadElem (data, br, param as ITypeReference);
+				return ReadElem (data, br, param as ITypeReference, ref read);
 			else if (param is ElementType)
-				return ReadElem (data, br, (ElementType) param);
+				return ReadElem (data, br, (ElementType) param, ref read);
 			else
 				throw new MetadataFormatException ("Wrong parameter for ReadElem: " + param.GetType ().FullName);
 		}
 
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ITypeReference elemType)
+		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ITypeReference elemType, ref bool read)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
@@ -577,7 +570,7 @@ namespace Mono.Cecil.Signatures {
 
 			if (elemName == Constants.Object) {
 				ElementType elementType = (ElementType) br.ReadByte ();
-				elem = ReadElem (data, br, elementType);
+				elem = ReadElem (data, br, elementType, ref read);
 				elem.String = elem.Simple = elem.Type = false;
 				elem.BoxedValueType = true;
 				elem.FieldOrPropType = elementType;
@@ -650,8 +643,8 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadUInt64 ();
 				break;
 			default : // enum
-				elem.Value = br.ReadInt32 (); // buggy, but how can i know the underlying system type ?
-				break;
+				read = false;
+				return elem;
 			}
 
 			elem.Simple = true;
@@ -659,13 +652,13 @@ namespace Mono.Cecil.Signatures {
 		}
 
 		// elem in named args, only have an ElementType
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType)
+		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType, ref bool read)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
 			if (elemType == ElementType.Boxed) {
 				ElementType elementType = (ElementType) br.ReadByte ();
-				elem = ReadElem (data, br, elementType);
+				elem = ReadElem (data, br, elementType, ref read);
 				elem.String = elem.Simple = elem.Type = false;
 				elem.BoxedValueType = true;
 				elem.FieldOrPropType = elementType;
@@ -750,19 +743,8 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadUInt64 ();
 				break;
 			case ElementType.Enum :
-				int next, length = Utilities.ReadCompressedInteger (
-					data, (int) br.BaseStream.Position, out next);
-				br.BaseStream.Position = next;
-				string type = Encoding.UTF8.GetString (br.ReadBytes (length));
-				elem.ElemType = m_reflectReader.Module.Types [type];
-				if (elem.ElemType == null)
-					/*
-					 According to the spec, we should have a fully qualifier name
-					 TODO : parse it to extract assembly name and type
-					 */
-					elem.ElemType = m_reflectReader.Module.TypeReferences [type];
-				elem.Value = br.ReadInt32 ();
-				break;
+				read = false;
+				return elem;
 			default :
 				throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}",
 					((byte) elemType).ToString("x2"));

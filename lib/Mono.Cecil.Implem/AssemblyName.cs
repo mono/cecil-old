@@ -92,6 +92,7 @@ namespace Mono.Cecil.Implem {
 				sb.Append (m_name);
 				if (m_version != null) {
 					sb.Append (sep);
+					sb.Append ("Version=");
 					sb.Append (m_version.ToString ());
 				}
 				sb.Append (sep);

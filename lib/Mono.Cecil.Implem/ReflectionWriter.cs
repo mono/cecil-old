@@ -821,8 +821,7 @@ namespace Mono.Cecil.Implem {
 					return szary;
 				}
 
-				ARRAY ary = new ARRAY ();
-				return ary; // TODO
+				throw new NotImplementedException ("Complex arrays are not implemented"); // TODO
 			} else if (type is IPointerType) {
 				PTR p = new PTR ();
 				ITypeReference elementType = (type as IPointerType).ElementType;
@@ -833,8 +832,7 @@ namespace Mono.Cecil.Implem {
 				}
 				return p;
 			} else if (type is IFunctionPointerType) {
-				FNPTR fp = new FNPTR (); // TODO
-				return fp;
+				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
 			} else if (type.IsValueType) {
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);

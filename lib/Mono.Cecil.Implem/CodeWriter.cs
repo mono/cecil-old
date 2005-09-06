@@ -56,6 +56,15 @@ namespace Mono.Cecil.Implem {
 				m_codeWriter.Write (((uint) token.TokenType) | token.RID);
 		}
 
+		private int GetParameterIndex (IMethodBody body, IParameterDefinition p)
+		{
+			int idx = body.Method.Parameters.IndexOf (p);
+			if (body.Method.HasThis)
+				idx++;
+
+			return idx;
+		}
+
 		public override void VisitInstructionCollection (IInstructionCollection instructions)
 		{
 			IMethodBody body = instructions.Container;
@@ -97,8 +106,8 @@ namespace Mono.Cecil.Implem {
 					m_codeWriter.Write ((byte) body.Variables.IndexOf (
 							instr.Operand as IVariableDefinition));
 					break;
-				case OperandType.ShortInlineParam : // see param
-					m_codeWriter.Write ((byte) instr.Operand);
+				case OperandType.ShortInlineParam :
+					m_codeWriter.Write ((byte) GetParameterIndex (body, (IParameterDefinition) instr.Operand));
 					break;
 				case OperandType.InlineSig :
 				case OperandType.InlineI :
@@ -108,8 +117,9 @@ namespace Mono.Cecil.Implem {
 					m_codeWriter.Write ((short) body.Variables.IndexOf (
 						instr.Operand as IVariableDefinition));
 					break;
-				case OperandType.InlineParam : // should write param index of
-					m_codeWriter.Write ((int) instr.Operand);
+				case OperandType.InlineParam :
+					m_codeWriter.Write ((short) GetParameterIndex (
+							body, (IParameterDefinition) instr.Operand));
 					break;
 				case OperandType.InlineI8 :
 					m_codeWriter.Write ((long) instr.Operand);

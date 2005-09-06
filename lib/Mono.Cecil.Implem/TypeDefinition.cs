@@ -85,8 +85,11 @@ namespace Mono.Cecil.Implem {
 
 		public INestedTypeCollection NestedTypes {
 			get {
-				if (m_nestedTypes == null)
+				if (m_nestedTypes == null) {
 					m_nestedTypes = new NestedTypeCollection (this);
+					m_nestedTypes.OnNestedTypeAdded += new NestedTypeEventHandler (OnNestedTypeAdded);
+					m_nestedTypes.OnNestedTypeRemoved += new NestedTypeEventHandler (OnNestedTypeRemoved);
+				}
 
 				return m_nestedTypes;
 			}
@@ -257,6 +260,29 @@ namespace Mono.Cecil.Implem {
 		private void OnPropertyRemoved (object sender, PropertyDefinitionEventArgs ea)
 		{
 			DetachMember (ea.PropertyDefinition as MemberReference);
+		}
+
+		private void OnNestedTypeAdded (object sender, NestedTypeEventArgs ea)
+		{
+			AttachType (ea.NestedType as TypeReference);
+		}
+
+		private void OnNestedTypeRemoved (object sender, NestedTypeEventArgs ea)
+		{
+			DetachType (ea.NestedType as TypeReference);
+		}
+
+		private void AttachType (TypeReference t)
+		{
+			if (t.DeclaringType != null)
+				throw new ReflectionException ("Member already attached, clone it instead");
+
+			t.DeclaringType = this;
+		}
+
+		private void DetachType (TypeReference t)
+		{
+			t.DeclaringType = null;
 		}
 
 		private void AttachMember (MemberReference member)

@@ -42,6 +42,8 @@ namespace Mono.Cecil.Cil {
 
 		IInstruction Emit (OpCode opcode, IVariableDefinition var);
 
+		IInstruction Emit (OpCode opcode, IParameterDefinition param);
+
 		IInstruction Create (OpCode opcode);
 
 		IInstruction Create (OpCode opcode, ITypeReference type);
@@ -65,6 +67,8 @@ namespace Mono.Cecil.Cil {
 		IInstruction Create (OpCode opcode, IInstruction [] targets);
 
 		IInstruction Create (OpCode opcode, IVariableDefinition var);
+
+		IInstruction Create (OpCode opcode, IParameterDefinition param);
 
 		void InsertBefore (IInstruction target, IInstruction instr);
 		void InsertAfter (IInstruction target, IInstruction instr);
