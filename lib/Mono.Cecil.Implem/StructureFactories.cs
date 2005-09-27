@@ -46,12 +46,12 @@ namespace Mono.Cecil.Implem {
 
 		public IAssemblyNameReference CreateAssemblyNameReference (string name, string culture)
 		{
-			return CreateAssemblyNameReference (name, string.Empty, new Version (0, 0, 0, 0));
+			return CreateAssemblyNameReference (name, culture, new Version (0, 0, 0, 0));
 		}
 
 		public IAssemblyNameReference CreateAssemblyNameReference (string name, string culture, Version ver)
 		{
-			return CreateAssemblyNameReference (name, string.Empty, new Version (0, 0, 0, 0), new byte [0]);
+			return CreateAssemblyNameReference (name, culture, ver, new byte [0]);
 		}
 
 		public IAssemblyNameReference CreateAssemblyNameReference (string name, string culture,

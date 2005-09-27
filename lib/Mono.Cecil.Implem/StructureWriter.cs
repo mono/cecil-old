@@ -139,11 +139,11 @@ namespace Mono.Cecil.Implem {
 			AddManifestResource (0, res.Name, res.Flags, impl);
 		}
 
-		private void AddManifestResource (uint offest, string name, ManifestResourceAttributes flags, MetadataToken impl)
+		private void AddManifestResource (uint offset, string name, ManifestResourceAttributes flags, MetadataToken impl)
 		{
 			ManifestResourceTable mrTable = m_tableWriter.GetManifestResourceTable ();
 			ManifestResourceRow mrRow = m_rowWriter.CreateManifestResourceRow (
-				(uint) 0,
+				offset,
 				flags,
 				m_mdWriter.AddString (name),
 				impl);

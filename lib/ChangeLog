@@ -1,3 +1,12 @@
+2005-09-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Implem/StructureWriter.cs:
+		Correctly set the offset of resources in the manifest.
+	* Mono.Cecil.Implem/StructureFactories.cs:
+		Use correct overrides when creating assembly references.
+	* Mono.Cecil.Implem/ReflectionFactories:
+		Correctly create type references.
+
 2005-09-06  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IReflectionFactories.cs

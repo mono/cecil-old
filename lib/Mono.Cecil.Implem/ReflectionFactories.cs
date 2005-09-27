@@ -249,7 +249,7 @@ namespace Mono.Cecil.Implem {
 
 		public ITypeReference CreateTypeReference (string name, string ns, IMetadataScope scope, bool isValueType)
 		{
-			TypeReference t = new TypeReference (name, string.Empty, scope);
+			TypeReference t = new TypeReference (name, ns, scope);
 			t.IsValueType = isValueType;
 			return t;
 		}

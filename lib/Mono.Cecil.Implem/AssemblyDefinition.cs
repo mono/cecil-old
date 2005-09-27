@@ -77,7 +77,8 @@ namespace Mono.Cecil.Implem {
 						if (module.Main)
 							m_mainModule = module;
 
-				return m_mainModule;}
+				return m_mainModule;
+			}
 		}
 
 		public StructureReader Reader {
