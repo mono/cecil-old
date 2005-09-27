@@ -54,7 +54,7 @@ namespace Mono.Cecil.Metadata {
 			long pos = m_binaryReader.BaseStream.Position;
 			m_binaryReader.BaseStream.Position = m_ir.Image.ResolveTextVirtualAddress (m_baseOfCodeOrRes);
 			byte [] data = m_binaryReader.ReadBytes (
-				(int) (m_root.GetImage ().CLIHeader.Metadata.VirtualAddress.Value - m_baseOfCodeOrRes.Value));
+				(int) (m_binaryReader.BaseStream.Length - m_binaryReader.BaseStream.Position));
 
 			m_dataReader = new BinaryReader (new MemoryStream (data));
 

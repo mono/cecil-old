@@ -1,5 +1,8 @@
 2005-09-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Metadata/MetadataReader.cs:
+		Fix resources reading.
+
 	* Mono.Cecil.Implem/StructureWriter.cs:
 		Correctly set the offset of resources in the manifest.
 	* Mono.Cecil.Implem/StructureFactories.cs:
