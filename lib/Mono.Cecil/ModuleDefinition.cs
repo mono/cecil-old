@@ -177,7 +177,6 @@ namespace Mono.Cecil {
 				m_image = Image.CreateImage ();
 
 			m_secParser = new SecurityParser ();
-			m_controller = new ReflectionController (this);
 			m_modRefs = new ModuleReferenceCollection (this);
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
@@ -188,6 +187,8 @@ namespace Mono.Cecil {
 			m_refs.OnTypeReferenceAdded += new TypeReferenceEventHandler (OnTypeReferenceAdded);
 			m_refs.OnTypeReferenceRemoved += new TypeReferenceEventHandler (OnTypeReferenceRemoved);
 			m_members = new MemberReferenceCollection (this);
+
+			m_controller = new ReflectionController (this);
 		}
 
 		private void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)

@@ -39,16 +39,33 @@ namespace Mono.Cecil {
 
 		IDictionary m_asmCache;
 		IDictionary m_memberRefCache;
+		bool m_cacheLoaded;
 
 		public ReflectionHelper (ModuleDefinition module)
 		{
 			m_module = module;
 			m_asmCache = new Hashtable ();
 			m_memberRefCache = new Hashtable ();
+			m_cacheLoaded = true;
+		}
+
+		void ImportCache ()
+		{
+			if (m_cacheLoaded)
+				return;
+
+			foreach (AssemblyNameReference ar in m_module.AssemblyReferences)
+				m_asmCache [ar.FullName] = ar;
+			foreach (MemberReference member in m_module.MemberReferences)
+				m_memberRefCache [member.ToString ()] = member;
+
+			m_cacheLoaded = true;
 		}
 
 		public AssemblyNameReference ImportAssembly (SR.Assembly asm)
 		{
+			ImportCache ();
+
 			AssemblyNameReference asmRef = (AssemblyNameReference) m_asmCache [asm.FullName];
 			if (asmRef != null)
 				return asmRef;
@@ -168,9 +185,22 @@ namespace Mono.Cecil {
 			return f;
 		}
 
-		public AssemblyNameReference ImportAssembly (AssemblyDefinition asm)
+		public AssemblyNameReference ImportAssembly (AssemblyNameReference asm)
 		{
-			return null;
+			ImportCache ();
+
+			AssemblyNameReference asmRef = (AssemblyNameReference) m_asmCache [asm.FullName];
+			if (asmRef != null)
+				return asmRef;
+
+			asmRef = new AssemblyNameReference (
+				asm.Name, asm.Culture, asm.Version);
+			asmRef.PublicKeyToken = asm.PublicKeyToken;
+			asmRef.HashAlgorithm = asm.HashAlgorithm;
+			asmRef.Flags = asm.Flags;
+			m_module.AssemblyReferences.Add (asmRef);
+			m_asmCache [asm.FullName] = asmRef;
+			return asmRef;
 		}
 
 		public TypeReference ImportTypeReference (TypeReference t)
@@ -179,7 +209,10 @@ namespace Mono.Cecil {
 			if (type != null)
 				return type;
 
-			AssemblyNameReference asm = ImportAssembly (t.Module.Assembly);
+			if (!(t.Scope is AssemblyNameReference))
+				throw new NotImplementedException ("Module scope are not yet supported");
+
+			AssemblyNameReference asm = ImportAssembly ((AssemblyNameReference) t.Scope);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
 
 			m_module.TypeReferences.Add (type);
