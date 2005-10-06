@@ -1,48 +1,64 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// BaseCodeVisitor.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Cil {
 
 	public abstract class BaseCodeVisitor : ICodeVisitor {
 
-		public virtual void VisitMethodBody (IMethodBody body)
+		public virtual void VisitMethodBody (MethodBody body)
 		{
 		}
 
-		public virtual void VisitInstructionCollection (IInstructionCollection instructions)
+		public virtual void VisitInstructionCollection (InstructionCollection instructions)
 		{
 		}
 
-		public virtual void VisitInstruction (IInstruction instr)
+		public virtual void VisitInstruction (Instruction instr)
 		{
 		}
 
-		public virtual void VisitExceptionHandlerCollection (IExceptionHandlerCollection seh)
+		public virtual void VisitExceptionHandlerCollection (ExceptionHandlerCollection seh)
 		{
 		}
 
-		public virtual void VisitExceptionHandler (IExceptionHandler eh)
+		public virtual void VisitExceptionHandler (ExceptionHandler eh)
 		{
 		}
 
-		public virtual void VisitVariableDefinitionCollection (IVariableDefinitionCollection variables)
+		public virtual void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
 		}
 
-		public virtual void VisitVariableDefinition (IVariableDefinition var)
+		public virtual void VisitVariableDefinition (VariableDefinition var)
 		{
 		}
 
-		public virtual void TerminateMethodBody (IMethodBody body)
+		public virtual void TerminateMethodBody (MethodBody body)
 		{
 		}
 	}

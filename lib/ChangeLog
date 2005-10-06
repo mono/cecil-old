@@ -1,3 +1,11 @@
+2005-10-06  Jb Evain  <jbevain@gmail.com>
+
+	* Hopefully, this is the last API change before the release of Cecil 0.1.
+	  Mono.Cecil.Implem has been moved to Mono.Cecil. The interfaces where
+	  very convenient for a reading API, it was far less convenient for a 
+	  modification and writing one. The modification API still needs some work,
+	  but this should be easier this way.
+
 2005-09-27  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/MetadataReader.cs:

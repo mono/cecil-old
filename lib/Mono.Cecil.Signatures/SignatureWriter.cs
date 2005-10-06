@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// SignatureWriter.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Signatures {
 
@@ -16,14 +32,13 @@ namespace Mono.Cecil.Signatures {
 	using System.Text;
 
 	using Mono.Cecil.Binary;
-	using Mono.Cecil.Implem;
+	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class SignatureWriter : ISignatureVisitor {
+	internal sealed class SignatureWriter : BaseSignatureVisitor {
 
-		private MetadataWriter m_mdWriter;
-
-		private MemoryBinaryWriter m_sigWriter;
+		MetadataWriter m_mdWriter;
+		MemoryBinaryWriter m_sigWriter;
 
 		public SignatureWriter (MetadataWriter mdWriter)
 		{
@@ -31,7 +46,7 @@ namespace Mono.Cecil.Signatures {
 			m_sigWriter = new MemoryBinaryWriter ();
 		}
 
-		private uint GetPointer ()
+		uint GetPointer ()
 		{
 			return m_mdWriter.AddBlob (m_sigWriter.ToArray ());
 		}
@@ -61,7 +76,7 @@ namespace Mono.Cecil.Signatures {
 			return AddSignature (lvs);
 		}
 
-		private uint AddSignature (Signature s)
+		uint AddSignature (Signature s)
 		{
 			m_sigWriter.Empty ();
 			s.Accept (this);
@@ -82,26 +97,26 @@ namespace Mono.Cecil.Signatures {
 			return GetPointer ();
 		}
 
-		public uint AddCustomAttribute (CustomAttrib ca, IMethodReference ctor)
+		public uint AddCustomAttribute (CustomAttrib ca, MethodReference ctor)
 		{
 			m_sigWriter.Empty ();
 			CompressCustomAttribute (ca, ctor, m_sigWriter);
 			return GetPointer ();
 		}
 
-		public byte [] CompressCustomAttribute (CustomAttrib ca, IMethodReference ctor)
+		public byte [] CompressCustomAttribute (CustomAttrib ca, MethodReference ctor)
 		{
 			MemoryBinaryWriter writer = new MemoryBinaryWriter ();
 			CompressCustomAttribute (ca, ctor, writer);
 			return writer.ToArray ();
 		}
 
-		private void CompressCustomAttribute (CustomAttrib ca, IMethodReference ctor, MemoryBinaryWriter writer)
+		void CompressCustomAttribute (CustomAttrib ca, MethodReference ctor, MemoryBinaryWriter writer)
 		{
 			Write (ca, ctor, writer);
 		}
 
-		public void VisitMethodDefSig (MethodDefSig methodDef)
+		public override void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			m_sigWriter.Write (methodDef.CallingConvention);
 			Write (methodDef.ParamCount);
@@ -109,7 +124,7 @@ namespace Mono.Cecil.Signatures {
 			Write (methodDef.Parameters);
 		}
 
-		public void VisitMethodRefSig (MethodRefSig methodRef)
+		public override void VisitMethodRefSig (MethodRefSig methodRef)
 		{
 			m_sigWriter.Write (methodRef.CallingConvention);
 			Write (methodRef.ParamCount);
@@ -117,14 +132,14 @@ namespace Mono.Cecil.Signatures {
 			Write (methodRef.Parameters);
 		}
 
-		public void VisitFieldSig (FieldSig field)
+		public override void VisitFieldSig (FieldSig field)
 		{
 			m_sigWriter.Write (field.CallingConvention);
 			Write (field.CustomMods);
 			Write (field.Type);
 		}
 
-		public void VisitPropertySig (PropertySig property)
+		public override void VisitPropertySig (PropertySig property)
 		{
 			m_sigWriter.Write (property.CallingConvention);
 			Write (property.ParamCount);
@@ -132,20 +147,20 @@ namespace Mono.Cecil.Signatures {
 			Write (property.Parameters);
 		}
 
-		public void VisitLocalVarSig (LocalVarSig localvar)
+		public override void VisitLocalVarSig (LocalVarSig localvar)
 		{
 			m_sigWriter.Write (localvar.CallingConvention);
 			Write (localvar.Count);
 			Write (localvar.LocalVariables);
 		}
 
-		private void Write (LocalVarSig.LocalVariable [] vars)
+		void Write (LocalVarSig.LocalVariable [] vars)
 		{
 			foreach (LocalVarSig.LocalVariable var in vars)
 				Write (var);
 		}
 
-		private void Write (LocalVarSig.LocalVariable var)
+		void Write (LocalVarSig.LocalVariable var)
 		{
 			if ((var.Constraint & Constraint.Pinned) != 0)
 				Write (ElementType.Pinned);
@@ -154,7 +169,7 @@ namespace Mono.Cecil.Signatures {
 			Write (var.Type);
 		}
 
-		private void Write (RetType retType)
+		void Write (RetType retType)
 		{
 			Write (retType.CustomMods);
 			if (retType.Void)
@@ -168,18 +183,18 @@ namespace Mono.Cecil.Signatures {
 				Write (retType.Type);
 		}
 
-		private void Write (Param [] parameters)
+		void Write (Param [] parameters)
 		{
 			foreach (Param p in parameters)
 				Write (p);
 		}
 
-		private void Write (ElementType et)
+		void Write (ElementType et)
 		{
 			Write ((int) et);
 		}
 
-		private void Write (SigType t)
+		void Write (SigType t)
 		{
 			Write ((int) t.ElementType);
 
@@ -226,12 +241,12 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		private void Write (TypeSpec ts)
+		void Write (TypeSpec ts)
 		{
 			Write (ts.Type);
 		}
 
-		private void Write (Param p)
+		void Write (Param p)
 		{
 			Write (p.CustomMods);
 			if (p.TypedByRef)
@@ -243,13 +258,13 @@ namespace Mono.Cecil.Signatures {
 				Write (p.Type);
 		}
 
-		private void Write (CustomMod [] customMods)
+		void Write (CustomMod [] customMods)
 		{
 			foreach (CustomMod cm in customMods)
 				Write (cm);
 		}
 
-		private void Write (CustomMod cm)
+		void Write (CustomMod cm)
 		{
 			switch (cm.CMOD) {
 			case CustomMod.CMODType.OPT :
@@ -264,7 +279,7 @@ namespace Mono.Cecil.Signatures {
 					CodedIndex.TypeDefOrRef, cm.TypeDefOrRef));
 		}
 
-		private void Write (MarshalSig ms)
+		void Write (MarshalSig ms)
 		{
 			Write ((int) ms.NativeInstrinsic);
 			switch (ms.NativeInstrinsic) {
@@ -300,7 +315,7 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		private void Write (CustomAttrib ca, IMethodReference ctor, MemoryBinaryWriter writer)
+		void Write (CustomAttrib ca, MethodReference ctor, MemoryBinaryWriter writer)
 		{
 			if (ca == null)
 				return;
@@ -319,7 +334,7 @@ namespace Mono.Cecil.Signatures {
 				Write (ca.NamedArgs [i], writer);
 		}
 
-		private void Write (CustomAttrib.FixedArg fa, MemoryBinaryWriter writer)
+		void Write (CustomAttrib.FixedArg fa, MemoryBinaryWriter writer)
 		{
 			if (fa.SzArray)
 				writer.Write (fa.NumElem);
@@ -328,7 +343,7 @@ namespace Mono.Cecil.Signatures {
 				Write (elem, writer);
 		}
 
-		private void Write (CustomAttrib.NamedArg na, MemoryBinaryWriter writer)
+		void Write (CustomAttrib.NamedArg na, MemoryBinaryWriter writer)
 		{
 			if (na.Field)
 				writer.Write ((byte) 0x53);
@@ -350,7 +365,7 @@ namespace Mono.Cecil.Signatures {
 			Write (na.FixedArg, writer);
 		}
 
-		private void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
+		void Write (CustomAttrib.Elem elem, MemoryBinaryWriter writer) // TODO
 		{
 			switch (elem.FieldOrPropType) {
 			case ElementType.Boolean :
@@ -404,13 +419,13 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		private void Write (string s)
+		void Write (string s)
 		{
 			Write (s.Length);
 			m_sigWriter.Write (Encoding.UTF8.GetBytes (s));
 		}
 
-		private void Write (int i)
+		void Write (int i)
 		{
 			Utilities.WriteCompressedInteger (m_sigWriter, i);
 		}

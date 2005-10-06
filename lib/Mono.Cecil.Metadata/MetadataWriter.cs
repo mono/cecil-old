@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// MetadataWriter.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Metadata {
 
@@ -18,46 +34,45 @@ namespace Mono.Cecil.Metadata {
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
-	using Mono.Cecil.Implem;
 
 	internal sealed class MetadataWriter : BaseMetadataVisitor {
 
-		private MetadataRoot m_root;
-		private TargetRuntime m_runtime;
-		private ImageWriter m_imgWriter;
-		private MetadataTableWriter m_tableWriter;
-		private MemoryBinaryWriter m_binaryWriter;
+		MetadataRoot m_root;
+		TargetRuntime m_runtime;
+		ImageWriter m_imgWriter;
+		MetadataTableWriter m_tableWriter;
+		MemoryBinaryWriter m_binaryWriter;
 
-		private IDictionary m_stringCache;
-		private MemoryBinaryWriter m_stringWriter;
+		IDictionary m_stringCache;
+		MemoryBinaryWriter m_stringWriter;
 
-		private IDictionary m_guidCache;
-		private MemoryBinaryWriter m_guidWriter;
+		IDictionary m_guidCache;
+		MemoryBinaryWriter m_guidWriter;
 
-		private IDictionary m_usCache;
-		private MemoryBinaryWriter m_usWriter;
+		IDictionary m_usCache;
+		MemoryBinaryWriter m_usWriter;
 
-		private IDictionary m_blobCache;
-		private MemoryBinaryWriter m_blobWriter;
+		IDictionary m_blobCache;
+		MemoryBinaryWriter m_blobWriter;
 
-		private MemoryBinaryWriter m_tWriter;
+		MemoryBinaryWriter m_tWriter;
 
-		private MemoryBinaryWriter m_cilWriter;
+		MemoryBinaryWriter m_cilWriter;
 
-		private MemoryBinaryWriter m_fieldDataWriter;
-		private MemoryBinaryWriter m_resWriter;
+		MemoryBinaryWriter m_fieldDataWriter;
+		MemoryBinaryWriter m_resWriter;
 
-		private uint m_mdStart;
-		private uint m_mdSize;
+		uint m_mdStart;
+		uint m_mdSize;
 
-		private uint m_resStart;
-		private uint m_resSize;
+		uint m_resStart;
+		uint m_resSize;
 
-		private uint m_itStart;
+		uint m_itStart;
 
-		private uint m_entryPointToken;
+		uint m_entryPointToken;
 
-		private RVA m_cursor = new RVA (0x2050);
+		RVA m_cursor = new RVA (0x2050);
 
 		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
@@ -193,7 +208,7 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
-		private void CreateStream (string name)
+		void CreateStream (string name)
 		{
 			MetadataStream stream = new MetadataStream ();
 			stream.Header.Name = name;
@@ -201,7 +216,7 @@ namespace Mono.Cecil.Metadata {
 			m_root.Streams.Add (stream);
 		}
 
-		private void SetHeapSize (MetadataHeap heap, MemoryBinaryWriter data, byte flag)
+		void SetHeapSize (MetadataHeap heap, MemoryBinaryWriter data, byte flag)
 		{
 			if (data.BaseStream.Length > 65536) {
 				m_root.Streams.TablesHeap.HeapSizes |= flag;
@@ -332,13 +347,13 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		private void WriteMemStream (MemoryBinaryWriter writer)
+		void WriteMemStream (MemoryBinaryWriter writer)
 		{
 			m_binaryWriter.Write (writer);
 			m_binaryWriter.QuadAlign ();
 		}
 
-		private void PatchStreamHeaderOffset (MetadataHeap heap)
+		void PatchStreamHeaderOffset (MetadataHeap heap)
 		{
 			long pos = m_binaryWriter.BaseStream.Position;
 			m_binaryWriter.BaseStream.Position = heap.GetStream ().Header.Offset;
@@ -392,7 +407,7 @@ namespace Mono.Cecil.Metadata {
 			WriteMemStream (m_usWriter);
 		}
 
-		private void PatchHeader ()
+		void PatchHeader ()
 		{
 			Image img = m_imgWriter.GetImage ();
 

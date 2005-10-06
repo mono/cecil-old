@@ -1,53 +1,69 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// IReflectionVisitor.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil {
 
 	public interface IReflectionVisitor {
 
-		void VisitModuleDefinition (IModuleDefinition module);
-		void VisitTypeDefinitionCollection (ITypeDefinitionCollection types);
-		void VisitTypeDefinition (ITypeDefinition type);
-		void VisitTypeReferenceCollection (ITypeReferenceCollection refs);
-		void VisitTypeReference (ITypeReference type);
-		void VisitMemberReferenceCollection (IMemberReferenceCollection members);
-		void VisitMemberReference (IMemberReference member);
-		void VisitInterfaceCollection (IInterfaceCollection interfaces);
-		void VisitInterface (ITypeReference interf);
-		void VisitExternTypeCollection (IExternTypeCollection externs);
-		void VisitExternType (ITypeReference externType);
-		void VisitOverrideCollection (IOverrideCollection meth);
-		void VisitOverride (IMethodReference ov);
-		void VisitNestedTypeCollection (INestedTypeCollection nestedTypes);
-		void VisitNestedType (ITypeDefinition nestedType);
-		void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters);
-		void VisitParameterDefinition (IParameterDefinition parameter);
-		void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods);
-		void VisitMethodDefinition (IMethodDefinition method);
-		void VisitConstructorCollection (IConstructorCollection ctors);
-		void VisitConstructor (IMethodDefinition ctor);
-		void VisitPInvokeInfo (IPInvokeInfo pinvk);
-		void VisitEventDefinitionCollection (IEventDefinitionCollection events);
-		void VisitEventDefinition (IEventDefinition evt);
-		void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields);
-		void VisitFieldDefinition (IFieldDefinition field);
-		void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties);
-		void VisitPropertyDefinition (IPropertyDefinition property);
-		void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls);
-		void VisitSecurityDeclaration (ISecurityDeclaration secDecl);
-		void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs);
-		void VisitCustomAttribute (ICustomAttribute customAttr);
-		void VisitMarshalSpec (IMarshalSpec marshalSpec);
+		void VisitModuleDefinition (ModuleDefinition module);
+		void VisitTypeDefinitionCollection (TypeDefinitionCollection types);
+		void VisitTypeDefinition (TypeDefinition type);
+		void VisitTypeReferenceCollection (TypeReferenceCollection refs);
+		void VisitTypeReference (TypeReference type);
+		void VisitMemberReferenceCollection (MemberReferenceCollection members);
+		void VisitMemberReference (MemberReference member);
+		void VisitInterfaceCollection (InterfaceCollection interfaces);
+		void VisitInterface (TypeReference interf);
+		void VisitExternTypeCollection (ExternTypeCollection externs);
+		void VisitExternType (TypeReference externType);
+		void VisitOverrideCollection (OverrideCollection meth);
+		void VisitOverride (MethodReference ov);
+		void VisitNestedTypeCollection (NestedTypeCollection nestedTypes);
+		void VisitNestedType (TypeDefinition nestedType);
+		void VisitParameterDefinitionCollection (ParameterDefinitionCollection parameters);
+		void VisitParameterDefinition (ParameterDefinition parameter);
+		void VisitMethodDefinitionCollection (MethodDefinitionCollection methods);
+		void VisitMethodDefinition (MethodDefinition method);
+		void VisitConstructorCollection (ConstructorCollection ctors);
+		void VisitConstructor (MethodDefinition ctor);
+		void VisitPInvokeInfo (PInvokeInfo pinvk);
+		void VisitEventDefinitionCollection (EventDefinitionCollection events);
+		void VisitEventDefinition (EventDefinition evt);
+		void VisitFieldDefinitionCollection (FieldDefinitionCollection fields);
+		void VisitFieldDefinition (FieldDefinition field);
+		void VisitPropertyDefinitionCollection (PropertyDefinitionCollection properties);
+		void VisitPropertyDefinition (PropertyDefinition property);
+		void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls);
+		void VisitSecurityDeclaration (SecurityDeclaration secDecl);
+		void VisitCustomAttributeCollection (CustomAttributeCollection customAttrs);
+		void VisitCustomAttribute (CustomAttribute customAttr);
+		void VisitMarshalSpec (MarshalDesc marshalSpec);
 
-		void TerminateModuleDefinition (IModuleDefinition module);
+		void TerminateModuleDefinition (ModuleDefinition module);
 	}
 }

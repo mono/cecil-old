@@ -1,29 +1,45 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// OpCode.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Cil {
 
 	public struct OpCode {
 
-		private string m_name;
-		private byte m_op1;
-		private byte m_op2;
-		private int m_size;
+		string m_name;
+		byte m_op1;
+		byte m_op2;
+		int m_size;
 
-		private FlowControl m_flowControl;
-		private OpCodeType m_opCodeType;
-		private OperandType m_operandType;
-		private StackBehaviour m_stackBehaviourPop;
-		private StackBehaviour m_stackBehaviourPush;
+		FlowControl m_flowControl;
+		OpCodeType m_opCodeType;
+		OperandType m_operandType;
+		StackBehaviour m_stackBehaviourPop;
+		StackBehaviour m_stackBehaviourPush;
 
 		public string Name {
 			get { return m_name; }

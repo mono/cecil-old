@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// BaseReflectionVisitor.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil {
 
@@ -16,139 +32,139 @@ namespace Mono.Cecil {
 
 	public abstract class BaseReflectionVisitor : IReflectionVisitor {
 
-		public virtual void VisitModuleDefinition (IModuleDefinition module)
+		public virtual void VisitModuleDefinition (ModuleDefinition module)
 		{
 		}
 
-		public virtual void VisitTypeDefinitionCollection (ITypeDefinitionCollection types)
+		public virtual void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
 		}
 
-		public virtual void VisitTypeDefinition (ITypeDefinition type)
+		public virtual void VisitTypeDefinition (TypeDefinition type)
 		{
 		}
 
-		public virtual void VisitTypeReferenceCollection (ITypeReferenceCollection refs)
+		public virtual void VisitTypeReferenceCollection (TypeReferenceCollection refs)
 		{
 		}
 
-		public virtual void VisitTypeReference (ITypeReference type)
+		public virtual void VisitTypeReference (TypeReference type)
 		{
 		}
 
-		public virtual void VisitMemberReferenceCollection (IMemberReferenceCollection members)
+		public virtual void VisitMemberReferenceCollection (MemberReferenceCollection members)
 		{
 		}
 
-		public virtual void VisitMemberReference (IMemberReference member)
+		public virtual void VisitMemberReference (MemberReference member)
 		{
 		}
 
-		public virtual void VisitInterfaceCollection (IInterfaceCollection interfaces)
+		public virtual void VisitInterfaceCollection (InterfaceCollection interfaces)
 		{
 		}
 
-		public virtual void VisitInterface (ITypeReference interf)
+		public virtual void VisitInterface (TypeReference interf)
 		{
 		}
 
-		public virtual void VisitExternTypeCollection (IExternTypeCollection externs)
+		public virtual void VisitExternTypeCollection (ExternTypeCollection externs)
 		{
 		}
 
-		public virtual void VisitExternType (ITypeReference externType)
+		public virtual void VisitExternType (TypeReference externType)
 		{
 		}
 
-		public virtual void VisitOverrideCollection (IOverrideCollection meth)
+		public virtual void VisitOverrideCollection (OverrideCollection meth)
 		{
 		}
 
-		public virtual void VisitOverride (IMethodReference ov)
+		public virtual void VisitOverride (MethodReference ov)
 		{
 		}
 
-		public virtual void VisitNestedTypeCollection (INestedTypeCollection nestedTypes)
+		public virtual void VisitNestedTypeCollection (NestedTypeCollection nestedTypes)
 		{
 		}
 
-		public virtual void VisitNestedType (ITypeDefinition nestedType)
+		public virtual void VisitNestedType (TypeDefinition nestedType)
 		{
 		}
 
-		public virtual void VisitParameterDefinitionCollection (IParameterDefinitionCollection parameters)
+		public virtual void VisitParameterDefinitionCollection (ParameterDefinitionCollection parameters)
 		{
 		}
 
-		public virtual void VisitParameterDefinition (IParameterDefinition parameter)
+		public virtual void VisitParameterDefinition (ParameterDefinition parameter)
 		{
 		}
 
-		public virtual void VisitMethodDefinitionCollection (IMethodDefinitionCollection methods)
+		public virtual void VisitMethodDefinitionCollection (MethodDefinitionCollection methods)
 		{
 		}
 
-		public virtual void VisitMethodDefinition (IMethodDefinition method)
+		public virtual void VisitMethodDefinition (MethodDefinition method)
 		{
 		}
 
-		public virtual void VisitConstructorCollection (IConstructorCollection ctors)
+		public virtual void VisitConstructorCollection (ConstructorCollection ctors)
 		{
 		}
 
-		public virtual void VisitConstructor (IMethodDefinition ctor)
+		public virtual void VisitConstructor (MethodDefinition ctor)
 		{
 		}
 
-		public virtual void VisitPInvokeInfo (IPInvokeInfo pinvk)
+		public virtual void VisitPInvokeInfo (PInvokeInfo pinvk)
 		{
 		}
 
-		public virtual void VisitEventDefinitionCollection (IEventDefinitionCollection events)
+		public virtual void VisitEventDefinitionCollection (EventDefinitionCollection events)
 		{
 		}
 
-		public virtual void VisitEventDefinition (IEventDefinition evt)
+		public virtual void VisitEventDefinition (EventDefinition evt)
 		{
 		}
 
-		public virtual void VisitFieldDefinitionCollection (IFieldDefinitionCollection fields)
+		public virtual void VisitFieldDefinitionCollection (FieldDefinitionCollection fields)
 		{
 		}
 
-		public virtual void VisitFieldDefinition (IFieldDefinition field)
+		public virtual void VisitFieldDefinition (FieldDefinition field)
 		{
 		}
 
-		public virtual void VisitPropertyDefinitionCollection (IPropertyDefinitionCollection properties)
+		public virtual void VisitPropertyDefinitionCollection (PropertyDefinitionCollection properties)
 		{
 		}
 
-		public virtual void VisitPropertyDefinition (IPropertyDefinition property)
+		public virtual void VisitPropertyDefinition (PropertyDefinition property)
 		{
 		}
 
-		public virtual void VisitSecurityDeclarationCollection (ISecurityDeclarationCollection secDecls)
+		public virtual void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls)
 		{
 		}
 
-		public virtual void VisitSecurityDeclaration (ISecurityDeclaration secDecl)
+		public virtual void VisitSecurityDeclaration (SecurityDeclaration secDecl)
 		{
 		}
 
-		public virtual void VisitCustomAttributeCollection (ICustomAttributeCollection customAttrs)
+		public virtual void VisitCustomAttributeCollection (CustomAttributeCollection customAttrs)
 		{
 		}
 
-		public virtual void VisitCustomAttribute (ICustomAttribute customAttr)
+		public virtual void VisitCustomAttribute (CustomAttribute customAttr)
 		{
 		}
 
-		public virtual void VisitMarshalSpec (IMarshalSpec marshalSpec)
+		public virtual void VisitMarshalSpec (MarshalDesc marshalSpec)
 		{
 		}
 
-		public virtual void TerminateModuleDefinition (IModuleDefinition module)
+		public virtual void TerminateModuleDefinition (ModuleDefinition module)
 		{
 		}
 

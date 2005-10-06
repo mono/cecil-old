@@ -104,7 +104,7 @@ def cecil_compile(file, template)
 
 	if (!File.exists?(file))
 
-		File.open(file, File::CREAT|File::WRONLY) { |cur_file|
+		File.open(file, File::CREAT|File::WRONLY|File::TRUNC) { |cur_file|
 			$> = cur_file
 			File.open(template) { |tpl|
 				eval($compiler.compile_file(tpl))
@@ -118,7 +118,7 @@ def cecil_compile(file, template)
 
 		ext = ".tmp"
 
-		File.open(file + ext, File::CREAT|File::WRONLY) { |temp_file|
+		File.open(file + ext, File::CREAT|File::WRONLY|File::TRUNC) { |temp_file|
 			$> = temp_file
 			File.open(template) { |tpl|
 				eval($compiler.compile_file(tpl))
@@ -135,7 +135,7 @@ def cecil_compile(file, template)
 					line.chomp!()
 				}
 				buf = buf.join
-				buf = buf[buf.index("*/"), buf.length]
+				buf = buf[buf.index("SOFTWARE."), buf.length]
 				save.push(buf)
 			}
 		}
@@ -175,7 +175,7 @@ cecil_compile("../Mono.Cecil.Cil/OpCodes.cs", "./templates/OpCodes.cs")
 $colls.each { |coll|
 	$cur_coll = coll
 	files = [ "../#{coll.target}/" + coll.intf + ".cs",
-		"../Mono.Cecil.Implem/" + coll.name + ".cs" ]
+		"../#{coll.target}/" + coll.name + ".cs" ]
 	type = coll.indexed ? "Indexed" : "Named"
 	templates = [ "./templates/I#{type}Collection.cs", "./templates/#{type}CollectionImplem.cs" ]
 	templates[1] = "./templates/Lz#{type}CollectionImplem.cs" if coll.lazyload

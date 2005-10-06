@@ -1,0 +1,117 @@
+//
+// ArrayType.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
+
+namespace Mono.Cecil {
+
+	using System;
+	using System.Text;
+
+	using Mono.Cecil.Signatures;
+
+	public sealed class ArrayType : TypeReference, IArrayType {
+
+		private TypeReference m_elementsType;
+		private ArrayDimensionCollection m_dimensions;
+
+		public TypeReference ElementType {
+			get { return m_elementsType; }
+			set { m_elementsType = value; }
+		}
+
+		public ArrayDimensionCollection Dimensions {
+			get { return m_dimensions; }
+		}
+
+		public int Rank {
+			get { return m_dimensions.Count; }
+		}
+
+		public override string Name {
+			get { return m_elementsType.Name; }
+			set { m_elementsType.Name = value; }
+		}
+
+		public override string Namespace {
+			get { return m_elementsType.Namespace; }
+			set { m_elementsType.Namespace = value; }
+		}
+
+		public override IMetadataScope Scope {
+			get { return m_elementsType.Scope; }
+		}
+
+		public bool IsSizedArray {
+			get {
+				if (this.Rank != 1)
+					return false;
+				IArrayDimension dim = m_dimensions [0];
+				return dim.LowerBound == 0 && dim.UpperBound == 0;
+			}
+		}
+
+		public override string FullName {
+			get {
+				StringBuilder sb = new StringBuilder ();
+				sb.Append (base.FullName);
+				sb.Append ("[");
+				for (int i = 0; i < m_dimensions.Count; i++) {
+					IArrayDimension dim = m_dimensions [i];
+					string rank = dim.ToString ();
+					if (i < m_dimensions.Count - 1)
+						sb.Append (",");
+					if (rank.Length > 0) {
+						sb.Append (" ");
+						sb.Append (rank);
+					}
+				}
+				sb.Append ("]");
+				return sb.ToString ();
+			}
+		}
+
+		internal ArrayType (TypeReference elementsType, ArrayShape shape) : this (elementsType)
+		{
+			for (int i = 0; i < shape.Rank; i++) { // TODO
+				ArrayDimension dim;
+				if (i < shape.NumSizes)
+					dim = new ArrayDimension (shape.LoBounds [i], shape.LoBounds [i] + shape.Sizes [i] - 1);
+				else
+					dim = new ArrayDimension (0, 0);
+
+				m_dimensions.Add (dim);
+			}
+		}
+
+		public ArrayType (TypeReference elementsType) :
+			base (elementsType.Name, elementsType.Namespace)
+		{
+			m_elementsType = elementsType;
+			m_dimensions = new ArrayDimensionCollection (this);
+		}
+	}
+}

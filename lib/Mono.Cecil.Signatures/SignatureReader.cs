@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// SignatureReader.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Signatures {
 
@@ -18,23 +34,22 @@ namespace Mono.Cecil.Signatures {
 	using System.Text;
 
 	using Mono.Cecil;
-	using Mono.Cecil.Implem;
 	using Mono.Cecil.Metadata;
 
-	internal sealed class SignatureReader : ISignatureVisitor {
+	internal sealed class SignatureReader : BaseSignatureVisitor {
 
-		private MetadataRoot m_root;
-		private ReflectionReader m_reflectReader;
-		private byte [] m_blobData;
+		MetadataRoot m_root;
+		ReflectionReader m_reflectReader;
+		byte [] m_blobData;
 
 		// flyweights
-		private IDictionary m_fieldSigs;
-		private IDictionary m_propSigs;
-		private IDictionary m_typeSpecs;
-		private IDictionary m_methodsDefSigs;
-		private IDictionary m_methodsRefSigs;
-		private IDictionary m_localVars;
-		private IDictionary m_marshalSpecs;
+		IDictionary m_fieldSigs;
+		IDictionary m_propSigs;
+		IDictionary m_typeSpecs;
+		IDictionary m_methodsDefSigs;
+		IDictionary m_methodsRefSigs;
+		IDictionary m_localVars;
+		IDictionary m_marshalSpecs;
 
 		public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
 		{
@@ -121,12 +136,12 @@ namespace Mono.Cecil.Signatures {
 			return lv;
 		}
 
-		public CustomAttrib GetCustomAttrib (uint index, IMethodReference ctor)
+		public CustomAttrib GetCustomAttrib (uint index, MethodReference ctor)
 		{
 			return ReadCustomAttrib ((int) index, ctor);
 		}
 
-		public CustomAttrib GetCustomAttrib (byte [] data, IMethodReference ctor)
+		public CustomAttrib GetCustomAttrib (byte [] data, MethodReference ctor)
 		{
 			BinaryReader br = new BinaryReader (new MemoryStream (data));
 			return ReadCustomAttrib (br, data, ctor);
@@ -162,7 +177,7 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
-		public void VisitMethodDefSig (MethodDefSig methodDef)
+		public override void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) methodDef.BlobIndex, out start);
@@ -178,7 +193,7 @@ namespace Mono.Cecil.Signatures {
 			methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start);
 		}
 
-		public void VisitMethodRefSig (MethodRefSig methodRef)
+		public override void VisitMethodRefSig (MethodRefSig methodRef)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) methodRef.BlobIndex, out start);
@@ -204,7 +219,7 @@ namespace Mono.Cecil.Signatures {
 			methodRef.Sentinel = sentpos;
 		}
 
-		public void VisitFieldSig (FieldSig field)
+		public override void VisitFieldSig (FieldSig field)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) field.BlobIndex, out start);
@@ -214,7 +229,7 @@ namespace Mono.Cecil.Signatures {
 			field.Type = this.ReadType (m_blobData, start, out start);
 		}
 
-		public void VisitPropertySig (PropertySig property)
+		public override void VisitPropertySig (PropertySig property)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) property.BlobIndex, out start);
@@ -225,7 +240,7 @@ namespace Mono.Cecil.Signatures {
 			property.Parameters = this.ReadParameters (property.ParamCount, m_blobData, start);
 		}
 
-		public void VisitLocalVarSig (LocalVarSig localvar)
+		public override void VisitLocalVarSig (LocalVarSig localvar)
 		{
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) localvar.BlobIndex, out start);
@@ -235,7 +250,7 @@ namespace Mono.Cecil.Signatures {
 			localvar.LocalVariables = this.ReadLocalVariables (localvar.Count, m_blobData, start);
 		}
 
-		private LocalVarSig.LocalVariable [] ReadLocalVariables (int length, byte [] data, int pos)
+		LocalVarSig.LocalVariable [] ReadLocalVariables (int length, byte [] data, int pos)
 		{
 			int start = pos;
 			LocalVarSig.LocalVariable [] types = new LocalVarSig.LocalVariable [length];
@@ -244,7 +259,7 @@ namespace Mono.Cecil.Signatures {
 			return types;
 		}
 
-		private LocalVarSig.LocalVariable ReadLocalVariable (byte [] data, int pos, out int start)
+		LocalVarSig.LocalVariable ReadLocalVariable (byte [] data, int pos, out int start)
 		{
 			start = pos;
 			LocalVarSig.LocalVariable lv = new LocalVarSig.LocalVariable ();
@@ -265,7 +280,7 @@ namespace Mono.Cecil.Signatures {
 			return lv;
 		}
 
-		private TypeSpec ReadTypeSpec (byte [] data, int pos)
+		TypeSpec ReadTypeSpec (byte [] data, int pos)
 		{
 			int start = pos;
 			Utilities.ReadCompressedInteger (data, start, out start);
@@ -273,7 +288,7 @@ namespace Mono.Cecil.Signatures {
 			return new TypeSpec (t);
 		}
 
-		private RetType ReadRetType (byte [] data, int pos, out int start)
+		RetType ReadRetType (byte [] data, int pos, out int start)
 		{
 			RetType rt = new RetType ();
 			start = pos;
@@ -302,7 +317,7 @@ namespace Mono.Cecil.Signatures {
 			return rt;
 		}
 
-		private Param [] ReadParameters (int length, byte [] data, int pos)
+		Param [] ReadParameters (int length, byte [] data, int pos)
 		{
 			Param [] ret = new Param [length];
 			int start = pos;
@@ -311,7 +326,7 @@ namespace Mono.Cecil.Signatures {
 			return ret;
 		}
 
-		private Param [] ReadParameters (int length, byte [] data, int pos, out int sentinelpos)
+		Param [] ReadParameters (int length, byte [] data, int pos, out int sentinelpos)
 		{
 			Param [] ret = new Param [length];
 			int start = pos;
@@ -330,7 +345,7 @@ namespace Mono.Cecil.Signatures {
 			return ret;
 		}
 
-		private Param ReadParameter (byte [] data, int pos, out int start)
+		Param ReadParameter (byte [] data, int pos, out int start)
 		{
 			Param p = new Param ();
 			start = pos;
@@ -357,7 +372,7 @@ namespace Mono.Cecil.Signatures {
 			return p;
 		}
 
-		private SigType ReadType (byte [] data, int pos, out int start)
+		SigType ReadType (byte [] data, int pos, out int start)
 		{
 			start = pos;
 			ElementType element = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
@@ -419,7 +434,7 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		private CustomMod [] ReadCustomMods (byte [] data, int pos, out int start)
+		CustomMod [] ReadCustomMods (byte [] data, int pos, out int start)
 		{
 			ArrayList cmods = new ArrayList ();
 			start = pos;
@@ -434,7 +449,7 @@ namespace Mono.Cecil.Signatures {
 			return cmods.ToArray (typeof (CustomMod)) as CustomMod [];
 		}
 
-		private CustomMod ReadCustomMod (byte [] data, int pos, out int start)
+		CustomMod ReadCustomMod (byte [] data, int pos, out int start)
 		{
 			CustomMod cm = new CustomMod ();
 			start = pos;
@@ -450,7 +465,7 @@ namespace Mono.Cecil.Signatures {
 			return cm;
 		}
 
-		private CustomAttrib ReadCustomAttrib (int pos, IMethodReference ctor)
+		CustomAttrib ReadCustomAttrib (int pos, MethodReference ctor)
 		{
 			int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
 			byte [] data = new byte [length];
@@ -459,7 +474,7 @@ namespace Mono.Cecil.Signatures {
 				new MemoryStream (data)), data, ctor);
 		}
 
-		private CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, IMethodReference ctor)
+		CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, MethodReference ctor)
 		{
 			CustomAttrib ca = new CustomAttrib (ctor);
 			if (data.Length == 0) {
@@ -493,7 +508,7 @@ namespace Mono.Cecil.Signatures {
 			return ca;
 		}
 
-		private CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br,
+		CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br,
 			bool array, object param, ref bool read)
 		{
 			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
@@ -515,7 +530,7 @@ namespace Mono.Cecil.Signatures {
 			return fa;
 		}
 
-		private CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
+		CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
 			byte kind = br.ReadByte ();
@@ -552,17 +567,17 @@ namespace Mono.Cecil.Signatures {
 		}
 
 		// i hate this construction, should find something better
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param, ref bool read)
+		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param, ref bool read)
 		{
-			if (param is ITypeReference)
-				return ReadElem (data, br, param as ITypeReference, ref read);
+			if (param is TypeReference)
+				return ReadElem (data, br, param as TypeReference, ref read);
 			else if (param is ElementType)
 				return ReadElem (data, br, (ElementType) param, ref read);
 			else
 				throw new MetadataFormatException ("Wrong parameter for ReadElem: " + param.GetType ().FullName);
 		}
 
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ITypeReference elemType, ref bool read)
+		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, TypeReference elemType, ref bool read)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
@@ -652,7 +667,7 @@ namespace Mono.Cecil.Signatures {
 		}
 
 		// elem in named args, only have an ElementType
-		private CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType, ref bool read)
+		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType, ref bool read)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
@@ -754,7 +769,7 @@ namespace Mono.Cecil.Signatures {
 			return elem;
 		}
 
-		private MarshalSig ReadMarshalSig (byte [] data)
+		MarshalSig ReadMarshalSig (byte [] data)
 		{
 			int start;
 			MarshalSig ms = new MarshalSig ((NativeType) Utilities.ReadCompressedInteger (data, 0, out start));
@@ -801,7 +816,7 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
-		private string ReadUTF8String (byte [] data, int pos, out int start)
+		string ReadUTF8String (byte [] data, int pos, out int start)
 		{
 			int length = Utilities.ReadCompressedInteger (data, pos, out start);
 			byte [] str = new byte [length];

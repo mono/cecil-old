@@ -165,11 +165,11 @@ module Cecil
 		def initialize(type, container, visit, name, lazyload, pathtoloader, target, indexed = false, usecntintf = false)
 			@type = type
 			basename = (name.nil? ? type : name)
-			@intf = basename + "Collection"
+			@intf = "I" + basename + "Collection"
 			@name = @intf[1..@intf.length]
-			@item_name = basename[1..basename.length]
+			@item_name = basename[0..basename.length]
 			@container = container
-			@container_impl = usecntintf ? @container : @container[1..@container.length]
+			@container_impl = usecntintf ? @container : @container[0..@container.length]
 			if (!visit.nil?) then
 				@visitable = visit + "Visitable"
 				@visitor = visit + "Visitor"

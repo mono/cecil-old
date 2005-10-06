@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// Image.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Binary {
 
@@ -19,22 +35,22 @@ namespace Mono.Cecil.Binary {
 
 	public sealed class Image : IBinaryVisitable {
 
-		private DOSHeader m_dosHeader;
-		private PEFileHeader m_peFileHeader;
-		private PEOptionalHeader m_peOptionalHeader;
+		DOSHeader m_dosHeader;
+		PEFileHeader m_peFileHeader;
+		PEOptionalHeader m_peOptionalHeader;
 
-		private SectionCollection m_sections;
-		private Section m_textSection;
+		SectionCollection m_sections;
+		Section m_textSection;
 
-		private ImportAddressTable m_importAddressTable;
-		private CLIHeader m_cliHeader;
-		private ImportTable m_importTable;
-		private ImportLookupTable m_importLookupTable;
-		private HintNameTable m_hintNameTable;
+		ImportAddressTable m_importAddressTable;
+		CLIHeader m_cliHeader;
+		ImportTable m_importTable;
+		ImportLookupTable m_importLookupTable;
+		HintNameTable m_hintNameTable;
 
-		private MetadataRoot m_mdRoot;
+		MetadataRoot m_mdRoot;
 
-		private FileInfo m_img;
+		FileInfo m_img;
 
 		public DOSHeader DOSHeader {
 			get { return m_dosHeader; }
@@ -85,7 +101,7 @@ namespace Mono.Cecil.Binary {
 			get { return m_img; }
 		}
 
-		private Image ()
+		Image ()
 		{
 			m_dosHeader = new DOSHeader ();
 			m_peFileHeader = new PEFileHeader ();
@@ -99,7 +115,7 @@ namespace Mono.Cecil.Binary {
 			m_mdRoot = new MetadataRoot (this);
 		}
 
-		private Image (FileInfo img) : this ()
+		Image (FileInfo img) : this ()
 		{
 			m_img = img;
 		}

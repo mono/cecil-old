@@ -1,14 +1,30 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// AssemblyFactory.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil {
 
@@ -17,16 +33,15 @@ namespace Mono.Cecil {
 	using System.Reflection;
 
 	using Mono.Cecil.Binary;
-	using Mono.Cecil.Implem;
 	using Mono.Cecil.Metadata;
 
 	public sealed class AssemblyFactory {
 
-		private AssemblyFactory ()
+		AssemblyFactory ()
 		{
 		}
 
-		public static IAssemblyDefinition GetAssembly (string file)
+		public static AssemblyDefinition GetAssembly (string file)
 		{
 			try {
 				ImageReader brv = new ImageReader (file);
@@ -47,7 +62,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public static IAssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt)
+		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt)
 		{
 			AssemblyNameDefinition asmName = new AssemblyNameDefinition ();
 			asmName.Name = assemblyName;
@@ -56,6 +71,12 @@ namespace Mono.Cecil {
 			ModuleDefinition main = new ModuleDefinition (moduleName, asm, true);
 			asm.Modules.Add (main);
 			return asm;
+		}
+
+		static void WriteAssembly (IAssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
+		{
+			asm.Accept (new StructureWriter (
+					(asm as AssemblyDefinition), kind, bw));
 		}
 
 		public static void SaveAssembly (IAssemblyDefinition asm, string file, AssemblyKind kind)
@@ -81,20 +102,9 @@ namespace Mono.Cecil {
 			}
 		}
 
-		private static void WriteAssembly (IAssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
-		{
-			asm.Accept (new StructureWriter (
-				(asm as AssemblyDefinition), kind, bw));
-		}
-
 		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind)
 		{
 			return CreateReflectionAssembly (asm, kind, AppDomain.CurrentDomain);
-		}
-
-		public static Image GetUnderlyingImage (IModuleDefinition module)
-		{
-			return (module as ModuleDefinition).Image;
 		}
 	}
 }

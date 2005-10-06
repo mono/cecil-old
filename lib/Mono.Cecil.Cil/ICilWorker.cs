@@ -1,77 +1,79 @@
-/*
- * Copyright (c) 2004, 2005 DotNetGuru and the individuals listed
- * on the ChangeLog entries.
- *
- * Authors :
- *   Jb Evain   (jbevain@gmail.com)
- *
- * This is a free software distributed under a MIT/X11 license
- * See LICENSE.MIT file for more details
- *
- *****************************************************************************/
+//
+// ICilWorker.cs
+//
+// Author:
+//   Jb Evain (jbevain@gmail.com)
+//
+// (C) 2005 Jb Evain
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+//
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//
 
 namespace Mono.Cecil.Cil {
 
-	using System;
-
 	public interface ICilWorker {
 
-		IMethodBody GetBody ();
+		MethodBody GetBody ();
 
-		IInstruction Emit (OpCode opcode);
+		Instruction Emit (OpCode opcode);
 
-		IInstruction Emit (OpCode opcode, ITypeReference type);
-		IInstruction Emit (OpCode opcode, Type type);
+		Instruction Emit (OpCode opcode, TypeReference type);
+		Instruction Emit (OpCode opcode, MethodReference meth);
+		Instruction Emit (OpCode opcode, FieldReference field);
 
-		IInstruction Emit (OpCode opcode, IMethodReference meth);
-		IInstruction Emit (OpCode opcode, System.Reflection.MethodInfo meth);
-		IInstruction Emit (OpCode opcode, System.Reflection.ConstructorInfo ctor);
+		Instruction Emit (OpCode opcode, string str);
+		Instruction Emit (OpCode opcode, byte b);
+		Instruction Emit (OpCode opcode, int i);
+		Instruction Emit (OpCode opcode, long l);
+		Instruction Emit (OpCode opcode, float f);
+		Instruction Emit (OpCode opcode, double d);
 
-		IInstruction Emit (OpCode opcode, IFieldReference field);
-		IInstruction Emit (OpCode opcode, System.Reflection.FieldInfo field);
+		Instruction Emit (OpCode opcode, Instruction target);
+		Instruction Emit (OpCode opcode, Instruction [] targets);
 
-		IInstruction Emit (OpCode opcode, string str);
-		IInstruction Emit (OpCode opcode, byte b);
-		IInstruction Emit (OpCode opcode, int i);
-		IInstruction Emit (OpCode opcode, long l);
-		IInstruction Emit (OpCode opcode, float f);
-		IInstruction Emit (OpCode opcode, double d);
+		Instruction Emit (OpCode opcode, VariableDefinition var);
+		Instruction Emit (OpCode opcode, ParameterDefinition param);
 
-		IInstruction Emit (OpCode opcode, IInstruction target);
-		IInstruction Emit (OpCode opcode, IInstruction [] targets);
+		Instruction Create (OpCode opcode);
 
-		IInstruction Emit (OpCode opcode, IVariableDefinition var);
+		Instruction Create (OpCode opcode, TypeReference type);
 
-		IInstruction Emit (OpCode opcode, IParameterDefinition param);
+		Instruction Create (OpCode opcode, MethodReference meth);
+		Instruction Create (OpCode opcode, FieldReference field);
 
-		IInstruction Create (OpCode opcode);
+		Instruction Create (OpCode opcode, string str);
+		Instruction Create (OpCode opcode, byte b);
+		Instruction Create (OpCode opcode, int i);
+		Instruction Create (OpCode opcode, long l);
+		Instruction Create (OpCode opcode, float f);
+		Instruction Create (OpCode opcode, double d);
 
-		IInstruction Create (OpCode opcode, ITypeReference type);
-		IInstruction Create (OpCode opcode, Type type);
+		Instruction Create (OpCode opcode, Instruction target);
+		Instruction Create (OpCode opcode, Instruction [] targets);
 
-		IInstruction Create (OpCode opcode, IMethodReference meth);
-		IInstruction Create (OpCode opcode, System.Reflection.MethodInfo meth);
-		IInstruction Create (OpCode opcode, System.Reflection.ConstructorInfo ctor);
+		Instruction Create (OpCode opcode, VariableDefinition var);
 
-		IInstruction Create (OpCode opcode, IFieldReference field);
-		IInstruction Create (OpCode opcode, System.Reflection.FieldInfo field);
+		Instruction Create (OpCode opcode, ParameterDefinition param);
 
-		IInstruction Create (OpCode opcode, string str);
-		IInstruction Create (OpCode opcode, byte b);
-		IInstruction Create (OpCode opcode, int i);
-		IInstruction Create (OpCode opcode, long l);
-		IInstruction Create (OpCode opcode, float f);
-		IInstruction Create (OpCode opcode, double d);
-
-		IInstruction Create (OpCode opcode, IInstruction target);
-		IInstruction Create (OpCode opcode, IInstruction [] targets);
-
-		IInstruction Create (OpCode opcode, IVariableDefinition var);
-
-		IInstruction Create (OpCode opcode, IParameterDefinition param);
-
-		void InsertBefore (IInstruction target, IInstruction instr);
-		void InsertAfter (IInstruction target, IInstruction instr);
-		void Append (IInstruction instr);
+		void InsertBefore (Instruction target, Instruction instr);
+		void InsertAfter (Instruction target, Instruction instr);
+		void Append (Instruction instr);
 	}
 }
