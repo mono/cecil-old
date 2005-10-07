@@ -22,6 +22,22 @@ using Mono.Cecil;
 
 namespace Mono.Tools {
 
+	class SecurityElementComparer : IComparer {
+
+		public int Compare (object x, object y)
+		{
+			SecurityElement sx = (x as SecurityElement);
+			SecurityElement sy = (y as SecurityElement);
+			if (sx == null)
+				return (sy == null) ? 0 : -1;
+			else if (sy == null)
+				return 1;
+
+			// compare by name (type name, method name, action name)
+			return String.Compare (sx.Attribute ("Name"), sy.Attribute ("Name"));
+		}
+	}
+
 	class PermView {
 
 		private const string NotSpecified = "\tNot specified.";
@@ -164,26 +180,43 @@ namespace Mono.Tools {
 
 		static SecurityElement AddSecurityXml (ISecurityDeclarationCollection declarations)
 		{
-			SecurityElement se = new SecurityElement ("Actions");
+			ArrayList list = new ArrayList ();
 			foreach (ISecurityDeclaration declsec in declarations) {
 				SecurityElement child = new SecurityElement ("Action");
 				AddAttribute (child, "Name", declsec.Action.ToString ());
 				child.AddChild (declsec.PermissionSet.ToXml ());
+				list.Add (child);
+			}
+			// sort actions
+			list.Sort (Comparer);
+
+			SecurityElement se = new SecurityElement ("Actions");
+			foreach (SecurityElement child in list) {
 				se.AddChild (child);
 			}
 			return se;
 		}
 
+		static SecurityElementComparer comparer;
+		static IComparer Comparer {
+			get {
+				if (comparer == null)
+					comparer = new SecurityElementComparer ();
+				return comparer;
+			}
+		}
+
 		static bool ProcessAssemblyXml (TextWriter tw, IAssemblyDefinition ad)
 		{
-			SecurityElement se = new SecurityElement ("DeclarativeSecurityPermissions");
-			se.AddAttribute ("AssemblyName", ad.Name.FullName);
+			SecurityElement se = new SecurityElement ("Assembly");
+			se.AddAttribute ("Name", ad.Name.FullName);
 
 			if (ad.SecurityDeclarations.Count > 0) {
-				SecurityElement assembly = new SecurityElement ("Assembly");
-				assembly.AddChild (AddSecurityXml (ad.SecurityDeclarations));
-				se.AddChild (assembly);
+				se.AddChild (AddSecurityXml (ad.SecurityDeclarations));
 			}
+
+			ArrayList tlist = new ArrayList ();
+			ArrayList mlist = new ArrayList ();
 
 			foreach (IModuleDefinition module in ad.Modules) {
 
@@ -197,25 +230,38 @@ namespace Mono.Tools {
 						typelem = AddSecurityXml (type.SecurityDeclarations);
 					}
 
+					if (mlist.Count > 0)
+						mlist.Clear ();
+
 					foreach (IMethodDefinition method in type.Methods) {
 						if (method.SecurityDeclarations.Count > 0) {
-							if (typelem == null)
-								typelem = AddSecurityXml (type.SecurityDeclarations);
-
 							SecurityElement meth = new SecurityElement ("Method");
 							AddAttribute (meth, "Name", method.ToString ());
 							meth.AddChild (AddSecurityXml (method.SecurityDeclarations));
-							methods.AddChild (meth);
+							mlist.Add (meth);
 						}
 					}
 
-					if (typelem != null) {
+					// sort methods
+					mlist.Sort (Comparer);
+					foreach (SecurityElement method in mlist) {
+						methods.AddChild (method);
+					}
+
+					if ((typelem != null) || ((methods.Children != null) && (methods.Children.Count > 0))) {
 						AddAttribute (klass, "Name", type.ToString ());
-						klass.AddChild (typelem);
+						if (typelem != null)
+							klass.AddChild (typelem);
 						if ((methods.Children != null) && (methods.Children.Count > 0))
 							klass.AddChild (methods);
-						se.AddChild (klass);
+						tlist.Add (klass);
 					}
+				}
+
+				// sort types
+				tlist.Sort (Comparer);
+				foreach (SecurityElement type in tlist) {
+					se.AddChild (type);
 				}
 			}
 

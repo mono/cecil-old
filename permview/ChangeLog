@@ -1,3 +1,7 @@
+2005-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* permview.cs: Sort the XML output for easier searching
+
 2005-08-28  Jb Evain  <jbevain@gmail.com>
 
 	* permview.cs: match Cecil's api changes.
