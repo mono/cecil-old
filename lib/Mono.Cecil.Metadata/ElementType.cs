@@ -48,13 +48,16 @@ namespace Mono.Cecil.Metadata {
 		ByRef	   = 0x10,   // Followed by <type> token
 		ValueType   = 0x11,   // Followed by <type> token
 		Class	   = 0x12,   // Followed by <type> token
+		Var        = 0x13,   // Followed by generic parameter number
 		Array	   = 0x14,   // <type> <rank> <boundsCount> <bound1>  <loCount> <lo1>
+		GenericInst = 0x15,   // <type> <type-arg-count> <type-1> ... <type-n> */
 		TypedByRef  = 0x16,
 		I		   = 0x18,   // System.IntPtr
 		U		   = 0x19,   // System.UIntPtr
 		FnPtr	   = 0x1b,   // Followed by full method signature
 		Object	  = 0x1c,   // System.Object
 		SzArray	 = 0x1d,   // Single-dim array with 0 lower bound
+		MVar       = 0x1e,   // Followed by generic parameter number
 		CModReqD	= 0x1f,   // Required modifier : followed by a TypeDef or TypeRef token
 		CModOpt	 = 0x20,   // Optional modifier : followed by a TypeDef or TypeRef token
 		Internal	= 0x21,   // Implemented within the CLI

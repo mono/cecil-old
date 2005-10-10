@@ -671,7 +671,10 @@ namespace Mono.Cecil {
 			SecurityDeclaration dec = new SecurityDeclaration (action);
 			PermissionSet ps = new PermissionSet (PermissionState.None);
 			m_secParser.LoadXml (Encoding.Unicode.GetString (permset));
-			ps.FromXml (m_secParser.ToXml ());
+			try {
+				ps.FromXml (m_secParser.ToXml ());
+			} catch {
+			}
 			dec.PermissionSet = ps;
 			return dec;
 		}
@@ -824,6 +827,20 @@ namespace Mono.Cecil {
 				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
 					funcptr.Method.MethCallConv,
 					parameters, GetMethodReturnType (funcptr.Method));
+			case ElementType.Var:
+				VAR var = t as VAR;
+				return new TypeParameterType (var.Index);
+			case ElementType.MVar:
+				MVAR mvar = t as MVAR;
+				return new MethodTypeParameterType (mvar.Index);
+			case ElementType.GenericInst:
+				GENERICINST ginst = t as GENERICINST;
+				TypeReference[] ginst_argv = new TypeReference [ginst.Signature.Arity];
+				for (int i = 0; i < ginst.Signature.Arity; i++)
+					ginst_argv [i] = GetTypeRefFromSig (ginst.Signature.Types [i]);
+				return new GenericInstType (GetTypeRefFromSig (ginst.Type), ginst_argv);
+			default:
+				break;
 			}
 			return null;
 		}

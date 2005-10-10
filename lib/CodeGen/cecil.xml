@@ -382,6 +382,7 @@
 				<table name="Assembly" tag="2" />
 			</codedindex>
 			<codedindex name="MemberRefParent" size="3">
+				<table name="TypeDef" tag="0" />
 				<table name="TypeRef" tag="1" />
 				<table name="ModuleRef" tag="2" />
 				<table name="Method" tag="3" />

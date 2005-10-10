@@ -97,6 +97,8 @@ namespace Mono.Cecil.Metadata {
 			case CodedIndex.MemberRefParent :
 				rid = data >> 3;
 				switch (data & 7) {
+				case 0 :
+					return new MetadataToken (TokenType.TypeDef, rid);
 				case 1 :
 					return new MetadataToken (TokenType.TypeRef, rid);
 				case 2 :

@@ -1,3 +1,33 @@
+2005-09-16  Martin Baulig  <martin@ximian.com>
+
+	Added generics support to Cecil.
+
+	* Mono.Cecil/IGenericInstType.cs: New file.
+	* Mono.Cecil/ITypeParameterType.cs: New file.
+	* Mono.Cecil/IMethodTypeParameterType.cs: New file.
+
+	* Mono.Cecil.Metadata/ElementType.cs
+	(ElementType): Added `Var', `MVar' and `GenericInst'.
+
+	* Mono.Cecil.Metadata/Utilities.cs
+	(Utilities.GetMetadataToken): .NET 2.0 also uses TypeDef's in the
+	MemberRefParent.
+
+	* Mono.Cecil/GenericInstType.cs: New file.
+	* Mono.Cecil/MethodTypeParameterType.cs: New file.
+	* Mono.Cecil/TypeParameterType.cs: New file.
+
+	* Mono.Cecil.Signatures/Var.cs: New file.
+	* Mono.Cecil.Signatures/MVar.cs: New file.
+	* Mono.Cecil.Signatures/GenericInst.cs: New file.
+	* Mono.Cecil.Signatures/GenericInstSignature.cs: New file.
+
+	* Mono.Cecil/ReflectionReader.cs
+	(ReflectionReader.GetTypeRefFromSig): Add the new types.
+
+	* Mono.Cecil.Signatures/SignatureReader.cs
+	(SignatureReader.ReadType): Add the new types.
+
 2005-10-06  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionHelper.cs

@@ -429,6 +429,24 @@ namespace Mono.Cecil.Signatures {
 				SZARRAY sa = new SZARRAY ();
 				sa.Type = this.ReadType (data, start, out start);
 				return sa;
+			case ElementType.Var:
+				VAR var = new VAR ();
+				var.Index = Utilities.ReadCompressedInteger (data, start, out start);
+				return var;
+			case ElementType.MVar:
+				MVAR mvar = new MVAR ();
+				mvar.Index = Utilities.ReadCompressedInteger (data, start, out start);
+				return mvar;
+			case ElementType.GenericInst:
+				GENERICINST ginst = new GENERICINST ();
+				GenericInstSignature gis = new GenericInstSignature ();
+				ginst.Type = this.ReadType (data, start, out start);
+				gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
+				gis.Types = new SigType [gis.Arity];
+				for (int i = 0; i < gis.Arity; i++)
+					gis.Types [i] = this.ReadType (data, start, out start);
+				ginst.Signature = gis;
+				return ginst;
 			default :
 				return new SigType (element);
 			}
