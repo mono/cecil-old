@@ -128,7 +128,7 @@ namespace Mono.Cecil {
 			return get;
 		}
 
-		public static MethodDefinition CreateSetMethod (IPropertyDefinition prop)
+		public static MethodDefinition CreateSetMethod (PropertyDefinition prop)
 		{
 			MethodDefinition set = new MethodDefinition (
 				string.Concat ("set_", prop.Name), (MethodAttributes) 0, prop.PropertyType);

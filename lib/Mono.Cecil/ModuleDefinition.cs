@@ -191,7 +191,7 @@ namespace Mono.Cecil {
 			m_controller = new ReflectionController (this);
 		}
 
-		private void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)
+		void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)
 		{
 			if (ea.TypeDefinition.Module != null)
 				throw new ReflectionException ("Type is already attached, clone it instead");
@@ -199,17 +199,17 @@ namespace Mono.Cecil {
 			ea.TypeDefinition.Module = this;
 		}
 
-		private void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
+		void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
 		{
 			ea.TypeDefinition.Module = null;
 		}
 
-		private void OnTypeReferenceAdded (Object sender, TypeReferenceEventArgs ea)
+		void OnTypeReferenceAdded (Object sender, TypeReferenceEventArgs ea)
 		{
 			ea.TypeReference.Module = this;
 		}
 
-		private void OnTypeReferenceRemoved (Object sender, TypeReferenceEventArgs ea)
+		void OnTypeReferenceRemoved (Object sender, TypeReferenceEventArgs ea)
 		{
 			ea.TypeReference.Module = null;
 		}

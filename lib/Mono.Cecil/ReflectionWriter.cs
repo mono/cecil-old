@@ -145,11 +145,10 @@ namespace Mono.Cecil {
 				tsTable.Rows.Add (tsRow);
 				type.MetadataToken = new MetadataToken (TokenType.TypeSpec, (uint) tsTable.Rows.Count);
 				return type.MetadataToken;
-			} else if (type != null) {
+			} else if (type != null)
 				return type.MetadataToken;
-			} else { // <Module> and interfaces
+			else // <Module> and interfaces
 				return new MetadataToken (TokenType.TypeRef, 0);
-			}
 		}
 
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
@@ -168,6 +167,9 @@ namespace Mono.Cecil {
 
 			for (int i = 0; i < orderedTypes.Count; i++) {
 				TypeDefinition t = (TypeDefinition) orderedTypes [i];
+				if (t.Module.Assembly != m_mod.Assembly)
+					throw new ReflectionException ("A type as not been correctly imported");
+
 				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) (i + 1));
 			}
 
@@ -223,6 +225,9 @@ namespace Mono.Cecil {
 			TypeRefTable trTable = m_tableWriter.GetTypeRefTable ();
 			foreach (TypeReference t in orderedTypeRefs) {
 				MetadataToken scope;
+
+				if (t.Module.Assembly != m_mod.Assembly)
+					throw new ReflectionException ("A type as not been correctly imported");
 
 				if (t.Scope == null)
 					continue;

@@ -92,7 +92,7 @@ namespace Mono.Cecil {
 			m_attributes = attrs;
 		}
 
-		public static MethodDefinition CreateAddMethod (IEventDefinition evt)
+		public static MethodDefinition CreateAddMethod (EventDefinition evt)
 		{
 			MethodDefinition add = new MethodDefinition (
 				string.Concat ("add_", evt.Name), (MethodAttributes) 0, evt.EventType);
@@ -100,7 +100,7 @@ namespace Mono.Cecil {
 			return add;
 		}
 
-		public static MethodDefinition CreateRemoveMethod (IEventDefinition evt)
+		public static MethodDefinition CreateRemoveMethod (EventDefinition evt)
 		{
 			MethodDefinition remove = new MethodDefinition (
 				string.Concat ("remove_", evt.Name), (MethodAttributes) 0, evt.EventType);
@@ -108,7 +108,7 @@ namespace Mono.Cecil {
 			return remove;
 		}
 
-		public static MethodDefinition CreateInvokeMethod (IEventDefinition evt)
+		public static MethodDefinition CreateInvokeMethod (EventDefinition evt)
 		{
 			MethodDefinition raise = new MethodDefinition (
 				string.Concat ("raise_", evt.Name), (MethodAttributes) 0, evt.EventType);

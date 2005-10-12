@@ -1,3 +1,12 @@
+2005-10-12  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/PropertyDefinition.cs:
+		Small fixes.
+
 2005-09-16  Martin Baulig  <martin@ximian.com>
 
 	Added generics support to Cecil.

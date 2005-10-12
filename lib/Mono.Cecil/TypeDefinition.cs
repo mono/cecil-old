@@ -318,16 +318,6 @@ namespace Mono.Cecil {
 			member.DeclaringType = null;
 		}
 
-		public static TypeDefinition CreateInterface (string name, string ns, TypeAttributes attributes)
-		{
-			return new TypeDefinition (name, ns, attributes | TypeAttributes.Interface);
-		}
-
-		public TypeDefinition CreateNestedType (string name, TypeAttributes attributes, TypeReference baseType)
-		{
-			return new TypeDefinition (name, string.Empty, attributes, baseType);
-		}
-
 		public TypeDefinition Clone ()
 		{
 			TypeDefinition nt = new TypeDefinition (
