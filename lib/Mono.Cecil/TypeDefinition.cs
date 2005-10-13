@@ -320,33 +320,41 @@ namespace Mono.Cecil {
 
 		public TypeDefinition Clone ()
 		{
-			TypeDefinition nt = new TypeDefinition (
-				this.Name, this.Namespace, this.Attributes);
-			nt.BaseType = this.BaseType;
+			return Clone (this, null);
+		}
 
-			if (this.LayoutInfo.HasLayoutInfo) {
-				nt.LayoutInfo.ClassSize = this.LayoutInfo.ClassSize;
-				nt.LayoutInfo.PackingSize = this.LayoutInfo.PackingSize;
+		internal static TypeDefinition Clone (TypeDefinition type, ReflectionHelper helper)
+		{
+			TypeDefinition nt = new TypeDefinition (
+				type.Name,
+				type.Namespace,
+				type.Attributes);
+
+			nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
+
+			if (type.LayoutInfo.HasLayoutInfo) {
+				nt.LayoutInfo.ClassSize = type.LayoutInfo.ClassSize;
+				nt.LayoutInfo.PackingSize = type.LayoutInfo.PackingSize;
 			}
 
-			foreach (FieldDefinition field in this.Fields)
-				nt.Fields.Add (field.Clone ());
-			foreach (MethodDefinition ctor in this.Constructors)
-				nt.Constructors.Add (ctor.Clone ());
-			foreach (MethodDefinition meth in this.Methods)
-				nt.Methods.Add (meth.Clone ());
-			foreach (EventDefinition evt in this.Events)
-				nt.Events.Add (evt.Clone ());
-			foreach (PropertyDefinition prop in this.Properties)
-				nt.Properties.Add (prop.Clone ());
-			foreach (TypeReference intf in this.Interfaces)
-				nt.Interfaces.Add (intf);
-			foreach (TypeDefinition nested in this.NestedTypes)
-				nt.NestedTypes.Add (nested.Clone ());
-			foreach (CustomAttribute ca in this.CustomAttributes)
-				nt.CustomAttributes.Add (ca.Clone ());
-			foreach (SecurityDeclaration dec in this.SecurityDeclarations)
-				nt.SecurityDeclarations.Add (dec.Clone ());
+			foreach (FieldDefinition field in type.Fields)
+				nt.Fields.Add (FieldDefinition.Clone (field, helper));
+			foreach (MethodDefinition ctor in type.Constructors)
+				nt.Constructors.Add (MethodDefinition.Clone (ctor, helper));
+			foreach (MethodDefinition meth in type.Methods)
+				nt.Methods.Add (MethodDefinition.Clone (meth, helper));
+			foreach (EventDefinition evt in type.Events)
+				nt.Events.Add (EventDefinition.Clone (evt, helper));
+			foreach (PropertyDefinition prop in type.Properties)
+				nt.Properties.Add (PropertyDefinition.Clone (prop, helper));
+			foreach (TypeReference intf in type.Interfaces)
+				nt.Interfaces.Add (helper == null ? intf : helper.ImportTypeReference (intf));
+			foreach (TypeDefinition nested in type.NestedTypes)
+				nt.NestedTypes.Add (Clone (nested, helper));
+			foreach (CustomAttribute ca in type.CustomAttributes)
+				nt.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+			foreach (SecurityDeclaration dec in type.SecurityDeclarations)
+				nt.SecurityDeclarations.Add (SecurityDeclaration.Clone (dec));
 
 			return nt;
 		}

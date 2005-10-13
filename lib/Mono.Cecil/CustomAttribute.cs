@@ -113,12 +113,17 @@ namespace Mono.Cecil {
 
 		public CustomAttribute Clone ()
 		{
-			CustomAttribute ca = new CustomAttribute (this.Constructor);
-			foreach (object o in this.ConstructorParameters)
+			return Clone (this, null);
+		}
+
+		internal static CustomAttribute Clone (CustomAttribute custattr, ReflectionHelper helper)
+		{
+			CustomAttribute ca = new CustomAttribute (custattr.Constructor);
+			foreach (object o in custattr.ConstructorParameters)
 				ca.ConstructorParameters.Add (o);
-			foreach (DictionaryEntry de in this.Fields)
+			foreach (DictionaryEntry de in custattr.Fields)
 				ca.Fields.Add (de.Key, de.Value);
-			foreach (DictionaryEntry de in this.Properties)
+			foreach (DictionaryEntry de in custattr.Properties)
 				ca.Properties.Add (de.Key, de.Value);
 			return ca;
 		}

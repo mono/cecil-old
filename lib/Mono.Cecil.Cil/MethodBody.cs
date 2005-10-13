@@ -101,6 +101,11 @@ namespace Mono.Cecil.Cil {
 			m_variables = new VariableDefinitionCollection (this);
 		}
 
+		internal static MethodBody Clone (MethodBody body, ReflectionHelper helper)
+		{
+			throw new NotImplementedException (); // TODO
+		}
+
 		public void Accept (ICodeVisitor visitor)
 		{
 			visitor.VisitMethodBody (this);

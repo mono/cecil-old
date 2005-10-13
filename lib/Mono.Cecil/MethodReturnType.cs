@@ -47,7 +47,7 @@ namespace Mono.Cecil {
 			set { m_returnType = value; }
 		}
 
-		public ParameterDefinition Parameter {
+		internal ParameterDefinition Parameter {
 			get { return m_param; }
 			set { m_param = value; }
 		}
@@ -64,6 +64,27 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public bool HasConstant {
+			get {
+				if (m_param == null)
+					return false;
+
+				return m_param.HasConstant;
+			}
+		}
+
+		public object Constant {
+			get {
+				if (m_param == null)
+					return null;
+
+				return m_param.Constant;
+			}
+			set {
+				m_param.Constant = value;
+			}
+		}
+
 		public MarshalDesc MarshalSpec {
 			get {
 				if (m_param == null)
@@ -71,6 +92,7 @@ namespace Mono.Cecil {
 
 				return m_param.MarshalSpec;
 			}
+			set { m_param.MarshalSpec = value; }
 		}
 
 		public MethodReturnType (TypeReference retType)

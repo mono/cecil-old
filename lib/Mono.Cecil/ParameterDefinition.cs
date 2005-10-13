@@ -117,13 +117,29 @@ namespace Mono.Cecil {
 			m_paramType = paramType;
 		}
 
-		public static ParameterDefinitionCollection Clone (ParameterDefinitionCollection original)
+		public ParameterDefinition Clone ()
 		{
-			ParameterDefinitionCollection clone = new ParameterDefinitionCollection (
-				original.Container);
-			foreach (ParameterDefinition param in original)
-				clone.Add (param);
-			return clone;
+			return Clone (this, null);
+		}
+
+		internal static ParameterDefinition Clone (ParameterDefinition param, ReflectionHelper helper)
+		{
+			ParameterDefinition np = new ParameterDefinition (
+				param.Name,
+				param.Sequence,
+				param.Attributes,
+				helper == null ? param.ParameterType : helper.ImportTypeReference (param.ParameterType));
+
+			if (param.HasConstant)
+				np.Constant = param.Constant;
+
+			if (param.MarshalSpec != null)
+				np.MarshalSpec = param.MarshalSpec;
+
+			foreach (CustomAttribute ca in param.CustomAttributes)
+				np.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+
+			return np;
 		}
 
 		public void Accept (IReflectionVisitor visitor)

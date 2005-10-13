@@ -93,7 +93,7 @@ namespace Mono.Cecil {
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
-		public TypeReference ImportType (Type t)
+		public TypeReference ImportSystemType (Type t)
 		{
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null)
@@ -134,27 +134,27 @@ namespace Mono.Cecil {
 
 			meth = new MethodReference (
 				mb.Name,
-				ImportType (mb.DeclaringType),
-				ImportType (retType),
+				ImportSystemType (mb.DeclaringType),
+				ImportSystemType (retType),
 				(mb.CallingConvention & SR.CallingConventions.HasThis) > 0,
 				(mb.CallingConvention & SR.CallingConventions.ExplicitThis) > 0,
 				MethodCallingConvention.Default); // TODO: get the real callconv
 
 			SR.ParameterInfo [] parameters = mb.GetParameters ();
 			for (int i = 0; i < parameters.Length; i++)
-				meth.Parameters.Add (new ParameterDefinition (ImportType (parameters [i].ParameterType)));
+				meth.Parameters.Add (new ParameterDefinition (ImportSystemType (parameters [i].ParameterType)));
 
 			m_module.MemberReferences.Add (meth);
 			m_memberRefCache [sig] = meth;
 			return meth;
 		}
 
-		public MethodReference ImportConstructor (SR.ConstructorInfo ci)
+		public MethodReference ImportConstructorInfo (SR.ConstructorInfo ci)
 		{
 			return ImportMethodBase (ci, typeof (void));
 		}
 
-		public MethodReference ImportMethod (SR.MethodInfo mi)
+		public MethodReference ImportMethodInfo (SR.MethodInfo mi)
 		{
 			return ImportMethodBase (mi, mi.ReturnType);
 		}
@@ -170,7 +170,7 @@ namespace Mono.Cecil {
 			return sb.ToString ();
 		}
 
-		public FieldReference ImportField (SR.FieldInfo fi)
+		public FieldReference ImportFieldInfo (SR.FieldInfo fi)
 		{
 			string sig = GetFieldSignature (fi);
 			FieldReference f = (FieldReference) m_memberRefCache [sig];
@@ -178,7 +178,7 @@ namespace Mono.Cecil {
 				return f;
 
 			f = new FieldReference (
-				fi.Name, ImportType (fi.DeclaringType), ImportType (fi.FieldType));
+				fi.Name, ImportSystemType (fi.DeclaringType), ImportSystemType (fi.FieldType));
 
 			m_module.MemberReferences.Add (f);
 			m_memberRefCache [sig] = f;
@@ -205,6 +205,9 @@ namespace Mono.Cecil {
 
 		public TypeReference ImportTypeReference (TypeReference t)
 		{
+			if (t.Module == m_module)
+				return t;
+
 			TypeReference type = m_module.TypeReferences [t.FullName];
 			if (type != null)
 				return type;
@@ -221,6 +224,9 @@ namespace Mono.Cecil {
 
 		public MethodReference ImportMethodReference (MethodReference mr)
 		{
+			if (mr.DeclaringType.Module == m_module)
+				return mr;
+
 			MethodReference meth = m_memberRefCache [mr.ToString ()] as MethodReference;
 			if (meth != null)
 				return meth;
@@ -243,6 +249,9 @@ namespace Mono.Cecil {
 
 		public FieldReference ImportFieldReference (FieldReference field)
 		{
+			if (field.DeclaringType.Module == m_module)
+				return field;
+
 			FieldReference f = (FieldReference) m_memberRefCache [field.ToString ()];
 			if (f != null)
 				return f;
@@ -255,6 +264,21 @@ namespace Mono.Cecil {
 			m_module.MemberReferences.Add (f);
 			m_memberRefCache [field.ToString ()] = f;
 			return f;
+		}
+
+		public FieldDefinition ImportFieldDefinition (FieldDefinition field)
+		{
+			return FieldDefinition.Clone (field, this);
+		}
+
+		public MethodDefinition ImportMethodDefinition (MethodDefinition meth)
+		{
+			return MethodDefinition.Clone (meth, this);
+		}
+
+		public TypeDefinition ImportTypeDefinition (TypeDefinition type)
+		{
+			return TypeDefinition.Clone (type, this);
 		}
 	}
 }

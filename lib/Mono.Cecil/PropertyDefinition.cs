@@ -76,10 +76,10 @@ namespace Mono.Cecil {
 		public ParameterDefinitionCollection Parameters {
 			get {
 				if (this.GetMethod != null)
-					return ParameterDefinition.Clone (this.GetMethod.Parameters);
+					return CloneParameterCollection (this.GetMethod.Parameters);
 				else if (this.SetMethod != null) {
 					ParameterDefinitionCollection parameters =
-						ParameterDefinition.Clone (this.SetMethod.Parameters);
+						CloneParameterCollection (this.SetMethod.Parameters);
 					if (parameters.Count > 0)
 						parameters.RemoveAt (parameters.Count - 1);
 					return parameters;
@@ -90,6 +90,15 @@ namespace Mono.Cecil {
 
 				return m_parameters;
 			}
+		}
+
+		ParameterDefinitionCollection CloneParameterCollection (ParameterDefinitionCollection original)
+		{
+			ParameterDefinitionCollection clone = new ParameterDefinitionCollection (
+				original.Container);
+			foreach (ParameterDefinition param in original)
+				clone.Add (param);
+			return clone;
 		}
 
 		public bool HasConstant {
@@ -138,13 +147,23 @@ namespace Mono.Cecil {
 
 		public PropertyDefinition Clone ()
 		{
-			PropertyDefinition np = new PropertyDefinition (
-				this.Name, this.PropertyType, this.Attributes);
-			if (this.HasConstant)
-				np.Constant = this.Constant;
+			return Clone (this, null);
+		}
 
-			foreach (CustomAttribute ca in this.CustomAttributes)
-				np.CustomAttributes.Add (ca.Clone ());
+		internal static PropertyDefinition Clone (PropertyDefinition prop, ReflectionHelper helper)
+		{
+			PropertyDefinition np = new PropertyDefinition (
+				prop.Name,
+				helper == null ? prop.PropertyType : helper.ImportTypeReference (prop.PropertyType),
+				prop.Attributes);
+
+			if (prop.HasConstant)
+				np.Constant = prop.Constant;
+
+			// TODO: get methods or clone them
+
+			foreach (CustomAttribute ca in prop.CustomAttributes)
+				np.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
 
 			return np;
 		}

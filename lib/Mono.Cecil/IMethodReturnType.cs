@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public interface IMethodReturnType : ICustomAttributeProvider, IHasMarshalSpec {
+	public interface IMethodReturnType : ICustomAttributeProvider, IHasMarshalSpec, IHasConstant {
 
 		TypeReference ReturnType { get; set; }
 	}

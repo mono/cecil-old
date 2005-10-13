@@ -5,7 +5,7 @@ namespace Mono.Cecil {
 	using Mono.Cecil;
 	using Mono.Cecil.Signatures;
 
-	public sealed class TypeParameterType : TypeReference, IGenericArgument {
+	public sealed class TypeParameterType : TypeReference, ITypeParameterType, IGenericArgument {
 
 		private int position;
 

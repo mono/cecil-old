@@ -1,3 +1,23 @@
+2005-10-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/MethodReturnType.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ParameterDefinition.cs
+	  Mono.Cecil/IMethodReturnType.cs
+	  Mono.Cecil/PropertyDefinition.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Work on the import.
+	* Mono.Cecil/ITypeParameterType.cs
+	  Mono.Cecil/TypeParameterType.cs:
+		Correct the interface.
+
 2005-10-12  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/EventDefinition.cs

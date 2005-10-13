@@ -53,8 +53,13 @@ namespace Mono.Cecil {
 
 		public SecurityDeclaration Clone ()
 		{
-			SecurityDeclaration sd = new SecurityDeclaration (this.Action);
-			sd.PermissionSet = this.PermissionSet;
+			return Clone (this);
+		}
+
+		internal static SecurityDeclaration Clone (SecurityDeclaration sec)
+		{
+			SecurityDeclaration sd = new SecurityDeclaration (sec.Action);
+			sd.PermissionSet = sec.PermissionSet;
 			return sd;
 		}
 

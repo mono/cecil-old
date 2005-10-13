@@ -199,7 +199,48 @@ namespace Mono.Cecil {
 
 		public MethodDefinition Clone ()
 		{
-			throw new NotImplementedException ();
+			return Clone (this, null);
+		}
+
+		internal static MethodDefinition Clone (MethodDefinition meth, ReflectionHelper helper)
+		{
+			MethodDefinition nm = new MethodDefinition (
+				meth.Name,
+				RVA.Zero,
+				meth.Attributes,
+				meth.ImplAttributes,
+				meth.HasThis,
+				meth.ExplicitThis,
+				meth.CallingConvention);
+
+			nm.ReturnType.ReturnType =
+				helper == null ? meth.ReturnType.ReturnType :
+					helper.ImportTypeReference (meth.ReturnType.ReturnType);
+
+			if (meth.ReturnType.HasConstant)
+				nm.ReturnType.Constant = meth.ReturnType.Constant;
+
+			if (meth.ReturnType.MarshalSpec != null)
+				nm.ReturnType.MarshalSpec = meth.ReturnType.MarshalSpec;
+
+			foreach (CustomAttribute ca in meth.ReturnType.CustomAttributes)
+				nm.ReturnType.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+
+			if (meth.PInvokeInfo != null)
+				nm.PInvokeInfo = meth.PInvokeInfo; // TODO: import module ?
+			foreach (ParameterDefinition param in meth.Parameters)
+				nm.Parameters.Add (ParameterDefinition.Clone (param, helper));
+			foreach (MethodReference ov in meth.Overrides)
+				nm.Overrides.Add (helper == null ? ov : helper.ImportMethodReference (ov));
+			foreach (CustomAttribute ca in meth.CustomAttributes)
+				nm.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+			foreach (SecurityDeclaration sec in meth.SecurityDeclarations)
+				nm.SecurityDeclarations.Add (SecurityDeclaration.Clone (sec));
+
+			if (meth.Body != null)
+				nm.Body = MethodBody.Clone (meth.Body, helper);
+
+			return nm;
 		}
 
 		public override void Accept (IReflectionVisitor visitor)

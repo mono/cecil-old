@@ -118,11 +118,20 @@ namespace Mono.Cecil {
 
 		public EventDefinition Clone ()
 		{
-			EventDefinition ne = new EventDefinition (
-				this.Name, this.EventType, this.Attributes);
+			return Clone (this, null);
+		}
 
-			foreach (CustomAttribute ca in this.CustomAttributes)
-				ne.CustomAttributes.Add (ca.Clone ());
+		internal static EventDefinition Clone (EventDefinition evt, ReflectionHelper helper)
+		{
+			EventDefinition ne = new EventDefinition (
+				evt.Name,
+				helper == null ? evt.EventType : helper.ImportTypeReference (evt.EventType),
+				evt.Attributes);
+
+			// TODO: get methods or clone them
+
+			foreach (CustomAttribute ca in evt.CustomAttributes)
+				ne.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
 
 			return ne;
 		}

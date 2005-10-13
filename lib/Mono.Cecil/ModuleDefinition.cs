@@ -226,20 +226,20 @@ namespace Mono.Cecil {
 
 		public TypeReference Import (Type type)
 		{
-			return m_controller.Helper.ImportType (type);
+			return m_controller.Helper.ImportSystemType (type);
 		}
 
 		public MethodReference Import (SR.MethodBase meth)
 		{
 			if (meth is SR.ConstructorInfo)
-				return m_controller.Helper.ImportConstructor (meth as SR.ConstructorInfo);
+				return m_controller.Helper.ImportConstructorInfo (meth as SR.ConstructorInfo);
 			else
-				return m_controller.Helper.ImportMethod (meth as SR.MethodInfo);
+				return m_controller.Helper.ImportMethodInfo (meth as SR.MethodInfo);
 		}
 
 		public FieldReference Import (SR.FieldInfo field)
 		{
-			return m_controller.Helper.ImportField (field);
+			return m_controller.Helper.ImportFieldInfo (field);
 		}
 
 		public TypeReference Import (TypeReference type)
@@ -259,17 +259,17 @@ namespace Mono.Cecil {
 
 		public TypeDefinition Import (TypeDefinition type)
 		{
-			throw new NotImplementedException ();
+			return m_controller.Helper.ImportTypeDefinition (type);
 		}
 
 		public MethodDefinition Import (MethodDefinition meth)
 		{
-			throw new NotImplementedException ();
+			return m_controller.Helper.ImportMethodDefinition (meth);
 		}
 
 		public FieldDefinition Import (FieldDefinition field)
 		{
-			throw new NotImplementedException ();
+			return m_controller.Helper.ImportFieldDefinition (field);
 		}
 
 		public byte [] GetAsByteArray (CustomAttribute ca)

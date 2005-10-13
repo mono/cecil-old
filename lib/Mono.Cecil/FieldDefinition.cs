@@ -146,21 +146,29 @@ namespace Mono.Cecil {
 
 		public FieldDefinition Clone ()
 		{
+			return Clone (this, null);
+		}
+
+		internal static FieldDefinition Clone (FieldDefinition field, ReflectionHelper helper)
+		{
 			FieldDefinition nf = new FieldDefinition (
-				this.Name, this.FieldType, this.Attributes);
-			if (this.HasConstant)
-				nf.Constant = this.Constant;
-			if (this.MarshalSpec != null)
-				nf.MarshalSpec = this.MarshalSpec;
-			if (this.RVA != RVA.Zero)
-				nf.InitialValue = this.InitialValue;
+				field.Name,
+				helper == null ? field.FieldType : helper.ImportTypeReference (field.FieldType),
+				field.Attributes);
+
+			if (field.HasConstant)
+				nf.Constant = field.Constant;
+			if (field.MarshalSpec != null)
+				nf.MarshalSpec = field.MarshalSpec;
+			if (field.RVA != RVA.Zero)
+				nf.InitialValue = field.InitialValue;
 			else
 				nf.InitialValue = new byte [0];
-			if (this.LayoutInfo.HasLayoutInfo)
-				nf.LayoutInfo.Offset = this.LayoutInfo.Offset;
+			if (field.LayoutInfo.HasLayoutInfo)
+				nf.LayoutInfo.Offset = field.LayoutInfo.Offset;
 
-			foreach (CustomAttribute ca in this.CustomAttributes)
-				nf.CustomAttributes.Add (ca.Clone ());
+			foreach (CustomAttribute ca in field.CustomAttributes)
+				nf.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
 
 			return nf;
 		}
