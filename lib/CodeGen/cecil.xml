@@ -636,6 +636,7 @@
 			<opcode name="volatile." op1="0xfe" op2="0x13" flowcontrol="Meta" opcodetype="Prefix" operandtype="InlineNone" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
 			<opcode name="tail." op1="0xfe" op2="0x14" flowcontrol="Meta" opcodetype="Prefix" operandtype="InlineNone" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
 			<opcode name="initobj" op1="0xfe" op2="0x15" flowcontrol="Next" opcodetype="Objmodel" operandtype="InlineType" stackbehaviourpop="Popi" stackbehaviourpush="Push0" />
+			<opcode name="constrained." op1="0xfe" op2="0x16" flowcontrol="Next" opcodetype="Prefix" operandtype="InlineTok" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
 			<opcode name="cpblk" op1="0xfe" op2="0x17" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Popi_popi_popi" stackbehaviourpush="Push0" />
 			<opcode name="initblk" op1="0xfe" op2="0x18" flowcontrol="Next" opcodetype="Primitive" operandtype="InlineNone" stackbehaviourpop="Popi_popi_popi" stackbehaviourpush="Push0" />
 			<opcode name="rethrow" op1="0xfe" op2="0x1a" flowcontrol="Throw" opcodetype="Objmodel" operandtype="InlineNone" stackbehaviourpop="Pop0" stackbehaviourpush="Push0" />
@@ -656,23 +657,25 @@
 		<collection type="Resource" container="ModuleDefinition" visit="IReflectionStructure" target="Mono.Cecil" indexed="true" />
 		<collection type="TypeDefinition" container="ModuleDefinition" visit="IReflection" target="Mono.Cecil" />
 		<collection type="TypeReference" container="ModuleDefinition" visit="IReflection" target="Mono.Cecil" />
-		<collection type="TypeReference" container="TypeDefinition" visit="IReflection" name="Interface" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
+		<collection type="TypeReference" container="TypeDefinition" visit="IReflection" name="Interface" indexed="true" target="Mono.Cecil" />
 		<collection type="ParameterDefinition" container="IMemberReference" visit="IReflection" indexed="true" target="Mono.Cecil" />
-		<collection type="MethodReference" container="MethodDefinition" visit="IReflection" name="Override" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
-		<collection type="MethodDefinition" container="TypeDefinition" visit="IReflection" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
-		<collection type="MethodDefinition" container="TypeDefinition" visit="IReflection" name="Constructor" pathtoloader="Reader" indexed="true" target="Mono.Cecil" />
-		<collection type="EventDefinition" container="TypeDefinition" visit="IReflection" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />
-		<collection type="FieldDefinition" container="TypeDefinition" visit="IReflection" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />
-		<collection type="PropertyDefinition" container="TypeDefinition" visit="IReflection" pathtoloader="Reader" target="Mono.Cecil" indexed="true" />
+		<collection type="MethodReference" container="MethodDefinition" visit="IReflection" name="Override" indexed="true" target="Mono.Cecil" />
+		<collection type="MethodDefinition" container="TypeDefinition" visit="IReflection" indexed="true" target="Mono.Cecil" />
+		<collection type="MethodDefinition" container="TypeDefinition" visit="IReflection" name="Constructor" indexed="true" target="Mono.Cecil" />
+		<collection type="EventDefinition" container="TypeDefinition" visit="IReflection" target="Mono.Cecil" indexed="true" />
+		<collection type="FieldDefinition" container="TypeDefinition" visit="IReflection" target="Mono.Cecil" indexed="true" />
+		<collection type="PropertyDefinition" container="TypeDefinition" visit="IReflection" target="Mono.Cecil" indexed="true" />
 		<collection type="Instruction" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
 		<collection type="ExceptionHandler" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
 		<collection type="VariableDefinition" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
 		<collection type="ArrayDimension" container="ArrayType" target="Mono.Cecil" indexed="true" />
-		<collection type="SecurityDeclaration" container="IHasSecurity" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" pathtoloader="Reader" />
-		<collection type="CustomAttribute" container="ICustomAttributeProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" pathtoloader="Reader" />
-		<collection type="TypeReference" container="ModuleDefinition" target="Mono.Cecil" visit="IReflection" name="ExternType" pathtoloader="Reader" />
+		<collection type="SecurityDeclaration" container="IHasSecurity" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
+		<collection type="CustomAttribute" container="ICustomAttributeProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
+		<collection type="TypeReference" container="ModuleDefinition" target="Mono.Cecil" visit="IReflection" name="ExternType" />
 		<collection type="TypeDefinition" container="TypeDefinition" target="Mono.Cecil" visit="IReflection" name="NestedType" indexed="true" />
 		<collection type="MemberReference" container="ModuleDefinition" target="Mono.Cecil" visit="IReflection" indexed="true" />
+		<collection type="GenericParameter" container="IGenericParameterProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
+		<collection type="TypeReference" name="GenericArgument" container="IGenericInstance" target="Mono.Cecil" indexed="true" />
 	</collections>
 
 </cecil>

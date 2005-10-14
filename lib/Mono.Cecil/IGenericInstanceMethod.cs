@@ -1,11 +1,10 @@
 //
-// GenericInst.cs
+// IGenericInstanceMethod.cs
 //
 // Author:
-//	Martin Baulig  <baulig@ximian.com>
-//  Jb Evain  <jbevain@gmail.com>
+//   Jb Evain (jbevain@gmail.com)
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// (C) 2005 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,20 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.Signatures {
+namespace Mono.Cecil {
 
-	using Mono.Cecil;
-	using Mono.Cecil.Metadata;
+	public interface IGenericInstanceMethod : IGenericInstance, IMethodReference {
 
-	internal sealed class GENERICINST : SigType {
-
-		public bool ValueType;
-		public MetadataToken Type;
-
-		public GenericInstSignature Signature;
-
-		public GENERICINST () : base (ElementType.GenericInst)
-		{
-		}
+		MethodReference ElementMethod { get; set; }
 	}
 }

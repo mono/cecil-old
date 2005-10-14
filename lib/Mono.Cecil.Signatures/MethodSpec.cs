@@ -1,11 +1,10 @@
 //
-// GenericInst.cs
+// TypeSpec.cs
 //
 // Author:
-//	Martin Baulig  <baulig@ximian.com>
-//  Jb Evain  <jbevain@gmail.com>
+//   Jb Evain (jbevain@gmail.com)
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// (C) 2005 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,18 +28,13 @@
 
 namespace Mono.Cecil.Signatures {
 
-	using Mono.Cecil;
-	using Mono.Cecil.Metadata;
-
-	internal sealed class GENERICINST : SigType {
-
-		public bool ValueType;
-		public MetadataToken Type;
+	internal sealed class MethodSpec {
 
 		public GenericInstSignature Signature;
 
-		public GENERICINST () : base (ElementType.GenericInst)
+		public MethodSpec (GenericInstSignature sig)
 		{
+			this.Signature = sig;
 		}
 	}
 }

@@ -42,6 +42,11 @@ namespace Mono.Cecil {
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
 			base.VisitTypeDefinitionCollection (types);
+			if (types.Container.Assembly.Runtime >= TargetRuntime.NET_2_0) {
+				ReadGenericParameters ();
+				ReadGenericParameterConstraints ();
+				ReadMethodSpec ();
+			}
 			ReadClassLayoutInfos ();
 			ReadFieldLayoutInfos ();
 			ReadPInvokeInfos ();
@@ -60,6 +65,75 @@ namespace Mono.Cecil {
 			m_events = null;
 			m_properties = null;
 			m_parameters = null;
+		}
+
+		void ReadGenericParameters ()
+		{
+			if (!m_tHeap.HasTable (typeof (GenericParamTable)))
+				return;
+
+			GenericParamTable gpTable = m_tHeap [typeof (GenericParamTable)] as GenericParamTable;
+			m_genericParameters = new GenericParameter [gpTable.Rows.Count];
+			for (int i = 0; i < gpTable.Rows.Count; i++) {
+				GenericParamRow gpRow = gpTable [i];
+				IGenericParameterProvider owner;
+				if (gpRow.Owner.TokenType == TokenType.Method)
+					owner = GetMethodDefAt (gpRow.Owner.RID);
+				else if (gpRow.Owner.TokenType == TokenType.TypeDef)
+					owner = GetTypeDefAt (gpRow.Owner.RID);
+				else
+					throw new ReflectionException ("Unknown owner type for generic parameter");
+
+				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
+				gp.Attributes = gpRow.Flags;
+				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
+
+				owner.GenericParameters.Add (gp);
+				m_genericParameters [i] = gp;
+			}
+		}
+
+		void ReadGenericParameterConstraints ()
+		{
+			if (!m_tHeap.HasTable (typeof (GenericParamConstraintTable)))
+				return;
+
+			GenericParamConstraintTable gpcTable = MetadataRoot.Streams.TablesHeap [
+				typeof (GenericParamConstraintTable)] as GenericParamConstraintTable;
+			for (int i = 0; i < gpcTable.Rows.Count; i++) {
+				GenericParamConstraintRow gpcRow = gpcTable [i];
+				GenericParameter gp = GetGenericParameterAt (gpcRow.Owner);
+
+				TypeReference constraint = GetTypeDefOrRef (gpcRow.Constraint);
+				// TODO: find how to know if constraint is an interface
+			}
+		}
+
+		void ReadMethodSpec ()
+		{
+			if (!m_tHeap.HasTable (typeof (MethodSpecTable)))
+				return;
+
+			MethodSpecTable msTable = m_tHeap [typeof (MethodSpecTable)] as MethodSpecTable;
+			m_methodSpecs = new GenericInstanceMethod [msTable.Rows.Count];
+			for (int i = 0; i < msTable.Rows.Count; i++) {
+				MethodSpecRow msRow = msTable [i];
+
+				MethodReference meth;
+				if (msRow.Method.TokenType == TokenType.Method)
+					meth = GetMethodDefAt (msRow.Method.RID);
+				else if (msRow.Method.TokenType == TokenType.MemberRef)
+					meth = (MethodReference) GetMemberRefAt (msRow.Method.RID);
+				else
+					throw new ReflectionException ("Unknown method type for method spec");
+
+				GenericInstanceMethod gim = new GenericInstanceMethod (meth);
+				MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
+				foreach (SigType st in sig.Signature.Types)
+					gim.Arguments.Add (GetTypeRefFromSig (st));
+
+				m_methodSpecs [i] = gim;
+			}
 		}
 
 		void ReadClassLayoutInfos ()

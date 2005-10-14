@@ -29,8 +29,13 @@
 ./Mono.Cecil/FieldReference.cs
 ./Mono.Cecil/FileAttributes.cs
 ./Mono.Cecil/FunctionPointerType.cs
-./Mono.Cecil/GenericInstType.cs
+./Mono.Cecil/GenericArgumentCollection.cs
+./Mono.Cecil/GenericInstanceMethod.cs
+./Mono.Cecil/GenericInstanceType.cs
 ./Mono.Cecil/GenericParamAttributes.cs
+./Mono.Cecil/GenericParameter.cs
+./Mono.Cecil/GenericParameterCollection.cs
+./Mono.Cecil/GenericParameterConstraints.cs
 ./Mono.Cecil/HashCodeProvider.cs
 ./Mono.Cecil/IArrayDimension.cs
 ./Mono.Cecil/IArrayDimensionCollection.cs
@@ -53,9 +58,14 @@
 ./Mono.Cecil/IFieldDefinitionCollection.cs
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
-./Mono.Cecil/IGenericArgument.cs
+./Mono.Cecil/IGenericArgumentCollection.cs
 ./Mono.Cecil/IGenericInstance.cs
+./Mono.Cecil/IGenericInstanceMethod.cs
+./Mono.Cecil/IGenericInstanceType.cs
+./Mono.Cecil/IGenericParameter.cs
+./Mono.Cecil/IGenericParameterCollection.cs
 ./Mono.Cecil/IGenericParameterConstraints.cs
+./Mono.Cecil/IGenericParameterProvider.cs
 ./Mono.Cecil/IHasConstant.cs
 ./Mono.Cecil/IHasMarshalSpec.cs
 ./Mono.Cecil/IHasSecurity.cs
@@ -70,7 +80,6 @@
 ./Mono.Cecil/IMethodDefinitionCollection.cs
 ./Mono.Cecil/IMethodReturnType.cs
 ./Mono.Cecil/IMethodSignature.cs
-./Mono.Cecil/IMethodTypeParameterType.cs
 ./Mono.Cecil/IModifierOptional.cs
 ./Mono.Cecil/IModifierRequired.cs
 ./Mono.Cecil/IModifierType.cs
@@ -100,7 +109,6 @@
 ./Mono.Cecil/IType.cs
 ./Mono.Cecil/ITypeDefinition.cs
 ./Mono.Cecil/ITypeDefinitionCollection.cs
-./Mono.Cecil/ITypeParameterType.cs
 ./Mono.Cecil/ITypeReference.cs
 ./Mono.Cecil/ITypeReferenceCollection.cs
 ./Mono.Cecil/LinkedResource.cs
@@ -116,7 +124,6 @@
 ./Mono.Cecil/MethodImplAttributes.cs
 ./Mono.Cecil/MethodReference.cs
 ./Mono.Cecil/MethodReturnType.cs
-./Mono.Cecil/MethodTypeParameterType.cs
 ./Mono.Cecil/MethodSemanticsAttributes.cs
 ./Mono.Cecil/Modifiers.cs
 ./Mono.Cecil/ModuleDefinition.cs
@@ -154,7 +161,6 @@
 ./Mono.Cecil/TypeAttributes.cs
 ./Mono.Cecil/TypeDefinition.cs
 ./Mono.Cecil/TypeDefinitionCollection.cs
-./Mono.Cecil/TypeParameterType.cs
 ./Mono.Cecil/TypeReference.cs
 ./Mono.Cecil/TypeReferenceCollection.cs
 ./Mono.Cecil/VariantType.cs
@@ -290,6 +296,8 @@
 ./Mono.Cecil.Signatures/CustomMod.cs
 ./Mono.Cecil.Signatures/FieldSig.cs
 ./Mono.Cecil.Signatures/FnPtr.cs
+./Mono.Cecil.Signatures/GenericInst.cs
+./Mono.Cecil.Signatures/GenericInstSignature.cs
 ./Mono.Cecil.Signatures/InputOutputItem.cs
 ./Mono.Cecil.Signatures/ISignatureVisitable.cs
 ./Mono.Cecil.Signatures/ISignatureVisitor.cs
@@ -298,6 +306,8 @@
 ./Mono.Cecil.Signatures/MethodDefSig.cs
 ./Mono.Cecil.Signatures/MethodRefSig.cs
 ./Mono.Cecil.Signatures/MethodSig.cs
+./Mono.Cecil.Signatures/MethodSpec.cs
+./Mono.Cecil.Signatures/MVar.cs
 ./Mono.Cecil.Signatures/Param.cs
 ./Mono.Cecil.Signatures/PropertySig.cs
 ./Mono.Cecil.Signatures/Ptr.cs
@@ -310,9 +320,6 @@
 ./Mono.Cecil.Signatures/TypeSpec.cs
 ./Mono.Cecil.Signatures/ValueType.cs
 ./Mono.Cecil.Signatures/Var.cs
-./Mono.Cecil.Signatures/MVar.cs
-./Mono.Cecil.Signatures/GenericInst.cs
-./Mono.Cecil.Signatures/GenericInstSignature.cs
 ./Mono.Xml/MiniParser.cs
 ./Mono.Xml/SecurityParser.cs
 ./Mono.Xml/SmallXmlParser.cs

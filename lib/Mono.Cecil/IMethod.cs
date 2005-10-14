@@ -32,10 +32,12 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Cil;
 
-	public interface IMethodReference : IMethodSignature, IMemberReference, IReflectionVisitable {
+	public interface IMethodReference : IMethodSignature, IMemberReference,
+		IGenericParameterProvider, IReflectionVisitable {
 	}
 
-	public interface IMethodDefinition : IMemberDefinition, IMethodReference, IHasSecurity, ICustomAttributeProvider {
+	public interface IMethodDefinition : IMemberDefinition, IMethodReference,
+		IHasSecurity, ICustomAttributeProvider {
 
 		MethodAttributes Attributes { get; set; }
 		MethodImplAttributes ImplAttributes { get; set; }

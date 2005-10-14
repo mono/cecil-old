@@ -160,6 +160,14 @@ namespace Mono.Cecil {
 		{
 		}
 
+		public virtual void VisitGenericParameterCollection (GenericParameterCollection genparams)
+		{
+		}
+
+		public virtual void VisitGenericParameter (GenericParameter genparam)
+		{
+		}
+
 		public virtual void VisitMarshalSpec (MarshalDesc marshalSpec)
 		{
 		}

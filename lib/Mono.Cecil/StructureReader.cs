@@ -64,16 +64,13 @@ namespace Mono.Cecil {
 
 			m_asmDef = asm;
 
-			MetadataRoot root = m_img.MetadataRoot;
-			if (root.Header.MajorVersion == 1)
-				if (root.Header.MinorVersion == 1)
+			if (m_img.CLIHeader.MajorRuntimeVersion == 1)
+				if (m_img.CLIHeader.MinorRuntimeVersion == 1)
 					asm.Runtime = TargetRuntime.NET_1_1;
 				else
 					asm.Runtime = TargetRuntime.NET_1_0;
-			else if (root.Header.MajorVersion == 2) {
+			else if (m_img.CLIHeader.MajorRuntimeVersion == 2)
 				asm.Runtime = TargetRuntime.NET_2_0;
-				throw new NotImplementedException (".net 2 assemblies are not implemented");
-			}
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)

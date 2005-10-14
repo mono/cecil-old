@@ -49,6 +49,7 @@ namespace Mono.Cecil.Metadata {
 		File				= 0x26000000,
 		ExportedType		= 0x27000000,
 		ManifestResource	= 0x28000000,
+		MethodSpec			= 0x2b000000,
 		String			  = 0x70000000,
 		Name				= 0x71000000,
 		BaseType			= 0x72000000

@@ -28,13 +28,14 @@
 
 namespace Mono.Cecil {
 
-	public interface ITypeReference : IType, IMemberReference, ICustomAttributeProvider {
+	public interface ITypeReference : IType, IMemberReference,
+		ICustomAttributeProvider, IGenericParameterProvider {
 
 		string Namespace { get; set; }
 		IMetadataScope Scope { get; }
 		ModuleDefinition Module { get; }
 
-		bool IsValueType { get; }
+		bool IsValueType { get; set; }
 
 		string FullName { get; }
 	}

@@ -1,5 +1,5 @@
 //
-// IGenericArgument.cs
+// GenericInstanceType.cs
 //
 // Author:
 //	Martin Baulig  <martin@ximian.com>
@@ -29,10 +29,56 @@
 
 namespace Mono.Cecil {
 
-	public interface IGenericParameterConstraints {
+	using System;
+	using System.Text;
 
-		TypeReference ClassConstraint { get; }
-		InterfaceCollection InterfaceConstraints { get; }
+	public sealed class GenericInstanceType : TypeReference, IGenericInstanceType {
+
+		TypeReference m_elementType;
+		GenericArgumentCollection m_arguments;
+
+		public TypeReference ElementType {
+			get { return m_elementType; }
+		}
+
+		public int Arity {
+			get { return m_arguments.Count; }
+		}
+
+		public GenericArgumentCollection Arguments {
+			get { return m_arguments; }
+		}
+
+		public override string Name {
+			get { return m_elementType.FullName; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override string Namespace {
+			get { return string.Empty; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override string FullName {
+			get {
+				StringBuilder sb = new StringBuilder ();
+				sb.Append (this.Name);
+				sb.Append ("<");
+				for (int i = 0; i < this.Arguments.Count; i++) {
+					if (i > 0)
+						sb.Append (",");
+					sb.Append (this.Arguments [i].FullName);
+				}
+				sb.Append (">");
+				return sb.ToString ();
+			}
+		}
+
+		public GenericInstanceType (TypeReference elementType) :
+			base (string.Empty, string.Empty)
+		{
+			m_elementType = elementType;
+			m_arguments = new GenericArgumentCollection (this);
+		}
 	}
 }
-

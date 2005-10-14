@@ -1,3 +1,67 @@
+2005-10-14  Jb Evain  <jbevain@gmail.com>
+
+	Work on generics support.
+
+	* CodeGen/cecil.xml: new collections, coded indexes, opcodes.
+
+	* Mono.Cecil/IGenericParameterCollection.cs
+	  Mono.Cecil/GenericParameterCollection.cs
+	  Mono.Cecil/IGenericArgumentCollection.cs
+	  Mono.Cecil/GenericArgumentCollection.cs:
+		Added new collections.
+
+	* Mono.Cecil.Metadata/Utilities.cs: updated.
+	* Mono.Cecil.Metadata/TokenType.cs: added MethodSpec.
+
+	* Mono.Cecil/IGenericParameter.cs
+	  Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/IGenericParameterConstraints.cs
+	  Mono.Cecil/GenericParameterConstraints.cs
+	  Mono.Cecil/IGenericParameterProvider.cs
+	  Mono.Cecil/IGenericInstance.cs
+	  Mono.Cecil/IGenericInstanceType.cs
+	  Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/IGenericInstanceMethod.cs
+	  Mono.Cecil/GenericInstanceMethod.cs:
+		Generics API elements.
+	  
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/MethodReference.cs
+	  Mono.Cecil/ITypeReference.cs
+	  Mono.Cecil/TypeReference.cs:
+		Implement IGenericParameterProvider
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/IReflectionVisitor.cs
+	  Mono.Cecil/BaseReflectionVisitor.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil/MemberReference.cs:
+		Support for the new generics elements.
+
+	* Mono.Cecil.Signatures/Var.cs
+	  Mono.Cecil.Signatures/MVar.cs
+	  Mono.Cecil.Signatures/GenericInstSignature.cs
+	  Mono.Cecil.Signatures/GenericInst.cs:
+		Added file header.
+
+	* Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/GenericInstSignature.cs
+	  Mono.Cecil.Signatures/MethodDefSig.cs
+	  Mono.Cecil.Signatures/GenericInst.cs
+	  Mono.Cecil.Signatures/MethodSpec.cs
+	  Mono.Cecil/MethodCallingConvention.cs
+	  Mono.Cecil.Cil/CodeReader.cs:
+		Added support for generic signatures.
+
+	* Mono.Cecil.Cil/OpCodes.cs:
+		Add consrained. opcode.
+
+	* Mono.Cecil.dll.sources:
+		Updated.
+
+	Known problems: !!parameters
+
 2005-10-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionHelper.cs

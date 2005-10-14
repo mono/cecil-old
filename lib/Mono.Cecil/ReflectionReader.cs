@@ -59,6 +59,8 @@ namespace Mono.Cecil {
 		protected PropertyDefinition [] m_properties;
 		protected MemberReference [] m_memberRefs;
 		protected ParameterDefinition [] m_parameters;
+		protected GenericParameter [] m_genericParameters;
+		protected GenericInstanceMethod [] m_methodSpecs;
 
 		IAssemblyNameReference m_corlib;
 
@@ -142,6 +144,16 @@ namespace Mono.Cecil {
 		public ParameterDefinition GetParamDefAt (uint rid)
 		{
 			return m_parameters [rid - 1];
+		}
+
+		public GenericParameter GetGenericParameterAt (uint rid)
+		{
+			return m_genericParameters [rid - 1];
+		}
+
+		public GenericInstanceMethod GetMethodSpecAt (uint rid)
+		{
+			return m_methodSpecs [rid - 1];
 		}
 
 		public int GetRidForMethodDef (MethodDefinition meth)
@@ -323,11 +335,6 @@ namespace Mono.Cecil {
 				TypeDefinition child = m_typeDefs [i];
 				child.BaseType = GetTypeDefOrRef (type.Extends);
 			}
-
-			// ok, I've thought a lot before doing that
-			// if I do not load the two primitives that are field and methods here
-			// i'll run into big troubles as soon a lazy loaded stuff reference it
-			// such as methods body or an override collection
 
 			ReadAllFields ();
 			ReadAllMethods ();
@@ -829,16 +836,18 @@ namespace Mono.Cecil {
 					parameters, GetMethodReturnType (funcptr.Method));
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return new TypeParameterType (var.Index);
+				return new GenericParameter (var.Index, GenericInstanceKind.Type);
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return new MethodTypeParameterType (mvar.Index);
+				return new GenericParameter (mvar.Index, GenericInstanceKind.Method);
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
-				TypeReference[] ginst_argv = new TypeReference [ginst.Signature.Arity];
+				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type));
+				instance.IsValueType = ginst.ValueType;
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					ginst_argv [i] = GetTypeRefFromSig (ginst.Signature.Types [i]);
-				return new GenericInstType (GetTypeRefFromSig (ginst.Type), ginst_argv);
+					instance.Arguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i]));
+
+				return instance;
 			default:
 				break;
 			}

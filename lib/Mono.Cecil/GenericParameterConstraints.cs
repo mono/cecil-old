@@ -1,11 +1,10 @@
 //
-// GenericInst.cs
+// GenericParameterConstraints.cs
 //
 // Author:
-//	Martin Baulig  <baulig@ximian.com>
-//  Jb Evain  <jbevain@gmail.com>
+//   Jb Evain (jbevain@gmail.com)
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// (C) 2005 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,19 +26,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.Signatures {
+namespace Mono.Cecil {
 
-	using Mono.Cecil;
-	using Mono.Cecil.Metadata;
+	public sealed class GenericParameterConstraints : IGenericParameterConstraints {
 
-	internal sealed class GENERICINST : SigType {
+		TypeReference m_classConstraint;
+		InterfaceCollection m_intfConstraints;
 
-		public bool ValueType;
-		public MetadataToken Type;
+		public TypeReference ClassConstraint {
+			get { return m_classConstraint; }
+			set { m_classConstraint = value; }
+		}
 
-		public GenericInstSignature Signature;
+		public InterfaceCollection InterfaceConstraints {
+			get {
+				if (m_intfConstraints == null)
+					m_intfConstraints = new InterfaceCollection (null);
 
-		public GENERICINST () : base (ElementType.GenericInst)
+				return m_intfConstraints;
+			}
+		}
+
+		public GenericParameterConstraints ()
 		{
 		}
 	}

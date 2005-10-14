@@ -46,6 +46,7 @@ namespace Mono.Cecil.Signatures {
 		IDictionary m_fieldSigs;
 		IDictionary m_propSigs;
 		IDictionary m_typeSpecs;
+		IDictionary m_methodSpecs;
 		IDictionary m_methodsDefSigs;
 		IDictionary m_methodsRefSigs;
 		IDictionary m_localVars;
@@ -125,6 +126,21 @@ namespace Mono.Cecil.Signatures {
 			return ts;
 		}
 
+		public MethodSpec GetMethodSpec (uint index)
+		{
+			MethodSpec ms = null;
+			if (m_methodSpecs == null)
+				m_methodSpecs = new Hashtable ();
+			else
+				ms = m_methodSpecs [index] as MethodSpec;
+
+			if (ms == null) {
+				ms = ReadMethodSpec (m_blobData, (int) index);
+				m_methodSpecs [index] = ms;
+			}
+			return ms;
+		}
+
 		public LocalVarSig GetLocalVarSig (uint index)
 		{
 			LocalVarSig lv = m_localVars [index] as LocalVarSig;
@@ -182,13 +198,18 @@ namespace Mono.Cecil.Signatures {
 			int start;
 			Utilities.ReadCompressedInteger (m_blobData, (int) methodDef.BlobIndex, out start);
 			methodDef.CallingConvention = m_blobData [start];
+			start++;
 			methodDef.HasThis = (methodDef.CallingConvention & 0x20) != 0;
 			methodDef.ExplicitThis = (methodDef.CallingConvention & 0x40) != 0;
 			if ((methodDef.CallingConvention & 0x5) != 0)
 				methodDef.MethCallConv |= MethodCallingConvention.VarArg;
-			else
+			else if ((methodDef.CallingConvention & 0x10) != 0) {
+				methodDef.MethCallConv |= MethodCallingConvention.Generic;
+				methodDef.GenericParameterCount = Utilities.ReadCompressedInteger (m_blobData, start, out start);
+			} else
 				methodDef.MethCallConv |= MethodCallingConvention.Default;
-			methodDef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
+
+			methodDef.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start, out start);
 			methodDef.RetType = this.ReadRetType (m_blobData, start, out start);
 			methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, m_blobData, start);
 		}
@@ -286,6 +307,23 @@ namespace Mono.Cecil.Signatures {
 			Utilities.ReadCompressedInteger (data, start, out start);
 			SigType t = this.ReadType (data, start, out start);
 			return new TypeSpec (t);
+		}
+
+		MethodSpec ReadMethodSpec (byte [] data, int pos)
+		{
+			int start = pos;
+
+			Utilities.ReadCompressedInteger (data, start, out start);
+			if (Utilities.ReadCompressedInteger (data, start, out start) != 0x0a)
+				throw new ReflectionException ("Invalid MethodSpec signature");
+
+			GenericInstSignature gis = new GenericInstSignature ();
+			gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
+			gis.Types = new SigType [gis.Arity];
+			for (int i = 0; i < gis.Types.Length; i++)
+				gis.Types [i] = this.ReadType (data, start, out start);
+
+			return new MethodSpec (gis);
 		}
 
 		RetType ReadRetType (byte [] data, int pos, out int start)
@@ -398,7 +436,8 @@ namespace Mono.Cecil.Signatures {
 				p.CustomMods = this.ReadCustomMods (data, start, out start);
 				p.PtrType = this.ReadType (data, start, out start);
 				return p;
-			case ElementType.FnPtr :
+			case ElementType.FnPtr : // TODO does it work ?
+				pos++;
 				FNPTR fp = new FNPTR ();
 				if ((data [pos] & 0x5) != 0) {
 					MethodRefSig mr = new MethodRefSig ((uint) pos);
@@ -439,8 +478,14 @@ namespace Mono.Cecil.Signatures {
 				return mvar;
 			case ElementType.GenericInst:
 				GENERICINST ginst = new GENERICINST ();
+
+				ginst.ValueType = ((ElementType) Utilities.ReadCompressedInteger (
+					data, start, out start)) == ElementType.ValueType;
+
+				ginst.Type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef,
+					(uint) Utilities.ReadCompressedInteger (data, start, out start));
+
 				GenericInstSignature gis = new GenericInstSignature ();
-				ginst.Type = this.ReadType (data, start, out start);
 				gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
 				gis.Types = new SigType [gis.Arity];
 				for (int i = 0; i < gis.Arity; i++)

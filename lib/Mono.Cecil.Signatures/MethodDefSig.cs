@@ -30,6 +30,8 @@ namespace Mono.Cecil.Signatures {
 
 	internal sealed class MethodDefSig : MethodSig {
 
+		public int GenericParameterCount;
+
 		public MethodDefSig () : this (0)
 		{
 		}

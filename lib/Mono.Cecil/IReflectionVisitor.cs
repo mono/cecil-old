@@ -62,6 +62,8 @@ namespace Mono.Cecil {
 		void VisitSecurityDeclaration (SecurityDeclaration secDecl);
 		void VisitCustomAttributeCollection (CustomAttributeCollection customAttrs);
 		void VisitCustomAttribute (CustomAttribute customAttr);
+		void VisitGenericParameterCollection (GenericParameterCollection genparams);
+		void VisitGenericParameter (GenericParameter genparam);
 		void VisitMarshalSpec (MarshalDesc marshalSpec);
 
 		void TerminateModuleDefinition (ModuleDefinition module);

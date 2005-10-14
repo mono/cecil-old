@@ -45,22 +45,24 @@ namespace Mono.Cecil {
 		bool m_explicitThis;
 		MethodCallingConvention m_callConv;
 
-		public bool HasThis {
+		GenericParameterCollection m_genparams;
+
+		public virtual bool HasThis {
 			get { return m_hasThis; }
 			set { m_hasThis = value; }
 		}
 
-		public bool ExplicitThis {
+		public virtual bool ExplicitThis {
 			get { return m_explicitThis; }
 			set { m_explicitThis = value; }
 		}
 
-		public MethodCallingConvention CallingConvention {
+		public virtual MethodCallingConvention CallingConvention {
 			get { return m_callConv; }
 			set { m_callConv = value; }
 		}
 
-		public ParameterDefinitionCollection Parameters {
+		public virtual ParameterDefinitionCollection Parameters {
 			get {
 				if (m_parameters == null)
 					m_parameters = new ParameterDefinitionCollection (this);
@@ -68,9 +70,18 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public MethodReturnType ReturnType {
+		public virtual MethodReturnType ReturnType {
 			get { return m_returnType;}
 			set { m_returnType = value; }
+		}
+
+		public virtual GenericParameterCollection GenericParameters {
+			get {
+				if (m_genparams == null)
+					m_genparams = new GenericParameterCollection (this);
+
+				return m_genparams;
+			}
 		}
 
 		internal MethodReference (string name, bool hasThis,

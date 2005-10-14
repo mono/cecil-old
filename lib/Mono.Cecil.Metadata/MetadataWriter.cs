@@ -272,19 +272,19 @@ namespace Mono.Cecil.Metadata {
 				m_usWriter.QuadAlign ();
 			}
 
+			m_root.Header.MajorVersion = 1;
+			m_root.Header.MinorVersion = 1;
+
 			switch (m_runtime) {
 			case TargetRuntime.NET_1_0 :
 				m_root.Header.Version = "v1.0.3705";
-				m_root.Header.MajorVersion = 1;
-				m_root.Header.MinorVersion = 0;
 				break;
 			case TargetRuntime.NET_1_1 :
 				m_root.Header.Version = "v1.1.4322";
-				m_root.Header.MajorVersion = 1;
-				m_root.Header.MinorVersion = 1;
 				break;
 			case TargetRuntime.NET_2_0 :
-				throw new NotImplementedException (".net 2 assemblies are not supported");
+				m_root.Header.Version = "Standard CLI 2005";
+				break;
 			}
 
 			m_root.Streams.TablesHeap.Tables.Accept (m_tableWriter);
@@ -384,7 +384,9 @@ namespace Mono.Cecil.Metadata {
 				heap.MinorVersion = 0;
 				break;
 			case TargetRuntime.NET_2_0 :
-				throw new NotImplementedException (".net 2 assemblies are not supported");
+				heap.MajorVersion = 2;
+				heap.MinorVersion = 0;
+				break;
 			}
 			m_binaryWriter.Write (heap.MajorVersion);
 			m_binaryWriter.Write (heap.MinorVersion);

@@ -182,6 +182,8 @@ namespace Mono.Cecil.Cil {
 						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (meth));
 					else if (IsToken (meth, TokenType.MemberRef))
 						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth));
+					else if (IsToken (meth, TokenType.MethodSpec))
+						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (meth));
 					else
 						throw new ReflectionException ("Wrong token for InlineMethod Operand: {0}", meth.ToString ("x8"));
 					break;
@@ -208,6 +210,8 @@ namespace Mono.Cecil.Cil {
 						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (token));
 					else if (IsToken (token, TokenType.Method))
 						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (token));
+					else if (IsToken (token, TokenType.MethodSpec))
+						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (token));
 					else if (IsToken (token, TokenType.MemberRef))
 						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token));
 					else

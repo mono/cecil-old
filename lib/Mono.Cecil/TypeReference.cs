@@ -45,6 +45,7 @@ namespace Mono.Cecil {
 		MetadataToken m_token;
 
 		CustomAttributeCollection m_customAttrs;
+		GenericParameterCollection m_genparams;
 
 		protected ModuleDefinition m_module;
 
@@ -93,6 +94,15 @@ namespace Mono.Cecil {
 					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
+			}
+		}
+
+		public GenericParameterCollection GenericParameters {
+			get {
+				if (m_genparams == null)
+					m_genparams = new GenericParameterCollection (this);
+
+				return m_genparams;
 			}
 		}
 
