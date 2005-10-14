@@ -834,6 +834,11 @@ namespace Mono.Cecil {
 				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
 					funcptr.Method.MethCallConv,
 					parameters, GetMethodReturnType (funcptr.Method));
+			/*
+				 for both var and mvar, we should not instantiate a
+				 generic parameter, but rather get it from the current
+				 method or type, based on its index.
+			*/
 			case ElementType.Var:
 				VAR var = t as VAR;
 				return new GenericParameter (var.Index, GenericInstanceKind.Type);
