@@ -110,7 +110,7 @@ namespace Mono.Cecil.Cil {
 
 		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ReflectionHelper helper)
 		{
-			MethodBody nb = new MethodBody (null);
+			MethodBody nb = new MethodBody (parent);
 
 			foreach (VariableDefinition var in body.Variables)
 				nb.Variables.Add (new VariableDefinition (helper == null ?
