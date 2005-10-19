@@ -212,10 +212,14 @@ namespace Mono.Cecil {
 			if (type != null)
 				return type;
 
-			if (!(t.Scope is AssemblyNameReference))
-				throw new NotImplementedException ("Module scope are not yet supported");
+			AssemblyNameReference asm;
+			if (t.Scope is AssemblyNameReference)
+				asm = ImportAssembly ((AssemblyNameReference) t.Scope);
+			else if (t.Scope is ModuleDefinition)
+				asm = ImportAssembly (((ModuleDefinition) t.Scope).Assembly.Name);
+			else
+				throw new NotImplementedException ();
 
-			AssemblyNameReference asm = ImportAssembly ((AssemblyNameReference) t.Scope);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
 
 			m_module.TypeReferences.Add (type);

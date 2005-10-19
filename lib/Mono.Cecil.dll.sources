@@ -114,7 +114,6 @@
 ./Mono.Cecil/LinkedResource.cs
 ./Mono.Cecil/ManifestResourceAttributes.cs
 ./Mono.Cecil/MarshalDesc.cs
-./Mono.Cecil/MemberDefinition.cs
 ./Mono.Cecil/MemberReference.cs
 ./Mono.Cecil/MemberReferenceCollection.cs
 ./Mono.Cecil/MethodAttributes.cs

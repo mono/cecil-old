@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil;
 
-	public sealed class FieldReference : MemberReference, IFieldReference {
+	public class FieldReference : MemberReference, IFieldReference {
 
 		TypeReference m_fieldType;
 
@@ -50,7 +50,7 @@ namespace Mono.Cecil {
 			this.DeclaringType = declaringType;
 		}
 
-		public void Accept (IReflectionVisitor visitor)
+		public virtual void Accept (IReflectionVisitor visitor)
 		{
 		}
 

@@ -31,9 +31,8 @@ namespace Mono.Cecil {
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
-	public sealed class FieldDefinition : MemberDefinition, IFieldDefinition, IFieldLayoutInfo {
+	public sealed class FieldDefinition : FieldReference, IFieldDefinition, IFieldLayoutInfo {
 
-		TypeReference m_fieldType;
 		FieldAttributes m_attributes;
 
 		CustomAttributeCollection m_customAttrs;
@@ -73,11 +72,6 @@ namespace Mono.Cecil {
 		public byte [] InitialValue {
 			get { return m_initVal; }
 			set { m_initVal = value; }
-		}
-
-		public TypeReference FieldType {
-			get { return m_fieldType; }
-			set { m_fieldType = value; }
 		}
 
 		public FieldAttributes Attributes {
@@ -137,10 +131,9 @@ namespace Mono.Cecil {
 		}
 
 		public FieldDefinition (string name, TypeReference fieldType,
-			FieldAttributes attrs) : base (name)
+			FieldAttributes attrs) : base (name, fieldType)
 		{
 			m_hasInfo = false;
-			m_fieldType = fieldType;
 			m_attributes = attrs;
 		}
 
@@ -176,13 +169,13 @@ namespace Mono.Cecil {
 		public override string ToString ()
 		{
 			if (this.DeclaringType == null)
-				return string.Concat (m_fieldType.ToString (), ' ', this.Name);
+				return string.Concat (this.FieldType.ToString (), ' ', this.Name);
 
-			return string.Concat (m_fieldType.ToString (), ' ',
+			return string.Concat (this.FieldType.ToString (), ' ',
 				this.DeclaringType.ToString (), "::", this.Name);
 		}
 
-		public void Accept (IReflectionVisitor visitor)
+		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitFieldDefinition (this);
 

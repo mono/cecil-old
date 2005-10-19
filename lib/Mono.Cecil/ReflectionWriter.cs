@@ -158,7 +158,7 @@ namespace Mono.Cecil {
 
 			if (types [Constants.ModuleType] == null)
 				types.Add (new TypeDefinition (
-						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
+						Constants.ModuleType, string.Empty, (TypeAttributes) 0, m_mod));
 
 			foreach (ITypeDefinition t in types)
 				orderedTypes.Add (t);

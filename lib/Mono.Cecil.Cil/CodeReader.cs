@@ -338,7 +338,8 @@ namespace Mono.Cecil.Cil {
 				if ((lv.Constraint & Constraint.Pinned) != 0)
 					varType = new PinnedType (varType);
 
-				body.Variables.Add (new VariableDefinition (varType));
+				body.Variables.Add (new VariableDefinition (
+						string.Concat ("V_", i), i, body.Method, varType));
 			}
 		}
 	}

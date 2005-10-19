@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System.Text;
 
-	public sealed class PropertyDefinition : MemberDefinition, IPropertyDefinition {
+	public sealed class PropertyDefinition : MemberReference, IPropertyDefinition {
 
 		TypeReference m_propertyType;
 		ParameterDefinitionCollection m_parameters;

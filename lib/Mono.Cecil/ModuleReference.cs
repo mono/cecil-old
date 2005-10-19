@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil;
 
-	public sealed class ModuleReference : IModuleReference {
+	public class ModuleReference : IModuleReference {
 
 		string m_name;
 
@@ -44,7 +44,7 @@ namespace Mono.Cecil {
 			m_name = name;
 		}
 
-		public void Accept (IReflectionStructureVisitor visitor)
+		public virtual void Accept (IReflectionStructureVisitor visitor)
 		{
 			visitor.VisitModuleReference (this);
 		}

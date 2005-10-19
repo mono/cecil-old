@@ -41,7 +41,7 @@ namespace Mono.Cecil {
 		string m_fullName;
 		bool m_isValueType;
 		TypeReference m_decType;
-		IMetadataScope m_scope;
+		protected IMetadataScope m_scope;
 		MetadataToken m_token;
 
 		CustomAttributeCollection m_customAttrs;

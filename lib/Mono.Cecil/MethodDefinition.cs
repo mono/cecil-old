@@ -238,7 +238,7 @@ namespace Mono.Cecil {
 				nm.SecurityDeclarations.Add (SecurityDeclaration.Clone (sec));
 
 			if (meth.Body != null)
-				nm.Body = MethodBody.Clone (meth.Body, helper);
+				nm.Body = MethodBody.Clone (meth.Body, nm, helper);
 
 			return nm;
 		}

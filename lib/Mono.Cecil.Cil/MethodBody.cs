@@ -29,6 +29,7 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
+	using System.Collections;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -101,9 +102,98 @@ namespace Mono.Cecil.Cil {
 			m_variables = new VariableDefinitionCollection (this);
 		}
 
-		internal static MethodBody Clone (MethodBody body, ReflectionHelper helper)
+		internal static Instruction GetInstruction (MethodBody oldBody, MethodBody newBody, Instruction i)
 		{
-			throw new NotImplementedException (); // TODO
+			int pos = oldBody.Instructions.IndexOf (i);
+			return newBody.Instructions [pos];
+		}
+
+		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ReflectionHelper helper)
+		{
+			MethodBody nb = new MethodBody (null);
+
+			foreach (VariableDefinition var in body.Variables)
+				nb.Variables.Add (new VariableDefinition (helper == null ?
+					var.Variable : helper.ImportTypeReference (var.Variable)));
+
+			foreach (Instruction instr in body.Instructions) {
+				Instruction ni = new Instruction (instr.OpCode);
+
+				switch (instr.OpCode.OperandType) {
+				case OperandType.InlineParam :
+				case OperandType.ShortInlineParam :
+					int param = body.Method.Parameters.IndexOf ((ParameterDefinition) instr.Operand);
+					ni.Operand = parent.Parameters [param];
+					break;
+				case OperandType.InlineVar :
+				case OperandType.ShortInlineVar :
+					int var = body.Variables.IndexOf ((VariableDefinition) instr.Operand);
+					ni.Operand = nb.Variables [var];
+					break;
+				case OperandType.InlineField :
+					ni.Operand = helper == null ?
+						instr.Operand : helper.ImportFieldReference ((FieldReference) instr.Operand);
+					break;
+				case OperandType.InlineMethod :
+					ni.Operand = helper == null ?
+						instr.Operand : helper.ImportMethodReference ((MethodReference) instr.Operand);
+					break;
+				case OperandType.InlineType :
+					ni.Operand = helper == null ?
+						instr.Operand : helper.ImportTypeReference ((TypeReference) instr.Operand);
+					break;
+				case OperandType.InlineTok :
+					if (instr.Operand is TypeReference)
+						ni.Operand = helper == null ?
+							instr.Operand : helper.ImportTypeReference ((TypeReference) instr.Operand);
+					else if (instr.Operand is FieldReference)
+						ni.Operand = helper == null ?
+							instr.Operand : helper.ImportFieldReference ((FieldReference) instr.Operand);
+					else if (instr.Operand is MethodReference)
+						ni.Operand = helper == null ?
+							instr.Operand : helper.ImportMethodReference ((MethodReference) instr.Operand);
+					break;
+				case OperandType.ShortInlineBrTarget :
+				case OperandType.InlineBrTarget :
+					break;
+				default :
+					ni.Operand = instr.Operand;
+					break;
+				}
+
+				nb.Instructions.Add (ni);
+			}
+
+			for (int i = 0; i < body.Instructions.Count; i++) {
+				Instruction instr = nb.Instructions [i];
+				if (instr.OpCode.OperandType != OperandType.ShortInlineBrTarget &&
+					instr.OpCode.OperandType != OperandType.InlineBrTarget)
+					continue;
+
+				instr.Operand = GetInstruction (body, nb, (Instruction) body.Instructions [i].Operand);
+			}
+
+			foreach (ExceptionHandler eh in body.ExceptionHandlers) {
+				ExceptionHandler neh = new ExceptionHandler (eh.Type);
+				neh.TryStart = GetInstruction (body, nb, eh.TryStart);
+				neh.TryEnd = GetInstruction (body, nb, eh.TryEnd);
+				neh.HandlerStart = GetInstruction (body, nb, eh.HandlerStart);
+				neh.HandlerEnd = GetInstruction (body, nb, eh.HandlerEnd);
+
+				switch (eh.Type) {
+				case ExceptionHandlerType.Catch :
+					neh.CatchType = helper == null ? eh.CatchType : helper.ImportTypeReference (eh.CatchType);
+					break;
+				case ExceptionHandlerType.Filter :
+					neh.FilterStart = GetInstruction (body, nb, eh.FilterStart);
+					neh.FilterEnd = GetInstruction (body, nb, eh.FilterEnd);
+					break;
+				}
+
+				nb.ExceptionHandlers.Add (neh);
+			}
+
+			return nb;
 		}
 
 		public void Accept (ICodeVisitor visitor)

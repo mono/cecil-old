@@ -1,3 +1,34 @@
+2005-10-18  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericParameter.cs:
+		A little change before the fix.
+
+	* Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Implement method cloning.
+
+	* Mono.Cecil/ModuleReference.cs
+	  Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/FieldReference.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/PropertyDefinition.cs
+	  Mono.Cecil/AssemblyFactory.cs:
+		Small API change.
+
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Fix variables names.
+
+	TODO before 0.1:
+		Fix generic parameters,
+		generic writing,
+		constructor changes (with S.Type and SR.*Info)
+
 2005-10-14  Jb Evain  <jbevain@gmail.com>
 
 	Work on generics support.

@@ -30,16 +30,10 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public enum GenericInstanceKind : byte {
-		Type,
-		Method
-	}
-
 	public sealed class GenericParameter : TypeReference, IGenericParameter {
 
 		int m_position;
 		string m_name;
-		GenericInstanceKind m_kind;
 		GenericParamAttributes m_attributes;
 		IGenericParameterProvider m_owner;
 		GenericParameterConstraints m_constraints;
@@ -47,10 +41,6 @@ namespace Mono.Cecil {
 		public int Position {
 			get { return m_position; }
 			set { m_position = value; }
-		}
-
-		public GenericInstanceKind Kind {
-			get { return m_kind; }
 		}
 
 		public GenericParamAttributes Attributes {
@@ -69,9 +59,9 @@ namespace Mono.Cecil {
 		public override string Name {
 			get {
 				string name = m_name != null ? m_name : m_position.ToString ();
-				if (m_kind == GenericInstanceKind.Type)
+				if (m_owner is TypeDefinition)
 					return string.Concat ("!", name);
-				else if (m_kind == GenericInstanceKind.Method)
+				else if (m_owner is MethodDefinition)
 					return string.Concat ("!!", name);
 				else
 					throw new InvalidOperationException ();
@@ -88,25 +78,11 @@ namespace Mono.Cecil {
 			get { return Name; }
 		}
 
-		public GenericParameter (int pos, GenericInstanceKind kind) :
-			base (string.Empty, string.Empty)
-		{
-			m_position = pos;
-			m_constraints = new GenericParameterConstraints ();
-		}
-
 		public GenericParameter (int pos, IGenericParameterProvider owner) :
 			base (string.Empty, string.Empty)
 		{
 			m_position = pos;
 			m_owner = owner;
-			if (owner is TypeReference)
-				m_kind = GenericInstanceKind.Type;
-			else if (owner is MethodReference)
-				m_kind = GenericInstanceKind.Method;
-			else
-				throw new InvalidOperationException ("Unknown kind of generic parameter");
-
 			m_constraints = new GenericParameterConstraints ();
 		}
 	}

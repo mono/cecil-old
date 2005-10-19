@@ -256,7 +256,8 @@ namespace Mono.Cecil {
 				TypeDefinition t = new TypeDefinition (
 					m_root.Streams.StringsHeap [type.Name],
 					m_root.Streams.StringsHeap [type.Namespace],
-					type.Flags);
+					type.Flags,
+					m_module);
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
@@ -834,17 +835,12 @@ namespace Mono.Cecil {
 				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
 					funcptr.Method.MethCallConv,
 					parameters, GetMethodReturnType (funcptr.Method));
-			/*
-				 for both var and mvar, we should not instantiate a
-				 generic parameter, but rather get it from the current
-				 method or type, based on its index.
-			*/
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return new GenericParameter (var.Index, GenericInstanceKind.Type);
+				throw new NotImplementedException ();
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return new GenericParameter (mvar.Index, GenericInstanceKind.Method);
+				throw new NotImplementedException ();
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type));

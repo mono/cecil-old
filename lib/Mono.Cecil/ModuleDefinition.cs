@@ -39,9 +39,8 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Metadata;
 	using Mono.Xml;
 
-	public sealed class ModuleDefinition : IModuleDefinition {
+	public sealed class ModuleDefinition : ModuleReference, IModuleDefinition {
 
-		string m_name;
 		Guid m_mvid;
 		bool m_main;
 		bool m_new;
@@ -61,11 +60,6 @@ namespace Mono.Cecil {
 		ImageReader m_imgReader;
 		SecurityParser m_secParser;
 		ReflectionController m_controller;
-
-		public string Name {
-			get { return m_name; }
-			set { m_name = value; }
-		}
 
 		public Guid Mvid {
 			get { return m_mvid; }
@@ -156,7 +150,7 @@ namespace Mono.Cecil {
 		{
 		}
 
-		internal ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader, bool main)
+		internal ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader, bool main) : base (name)
 		{
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
@@ -164,7 +158,6 @@ namespace Mono.Cecil {
 				throw new ArgumentNullException ("name");
 
 			m_asm = asm;
-			m_name = name;
 			m_main = main;
 			m_mvid = Guid.NewGuid ();
 
@@ -308,7 +301,7 @@ namespace Mono.Cecil {
 			return dec;
 		}
 
-		public void Accept (IReflectionStructureVisitor visitor)
+		public override void Accept (IReflectionStructureVisitor visitor)
 		{
 			visitor.VisitModuleDefinition (this);
 

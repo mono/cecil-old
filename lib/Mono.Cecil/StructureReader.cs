@@ -64,13 +64,17 @@ namespace Mono.Cecil {
 
 			m_asmDef = asm;
 
-			if (m_img.CLIHeader.MajorRuntimeVersion == 1)
-				if (m_img.CLIHeader.MinorRuntimeVersion == 1)
-					asm.Runtime = TargetRuntime.NET_1_1;
-				else
-					asm.Runtime = TargetRuntime.NET_1_0;
-			else if (m_img.CLIHeader.MajorRuntimeVersion == 2)
+			switch (m_img.MetadataRoot.Header.Version) {
+			case "v1.0.3705" :
+				asm.Runtime = TargetRuntime.NET_1_0;
+				break;
+			case "v1.1.4322" :
+				asm.Runtime = TargetRuntime.NET_1_1;
+				break;
+			default :
 				asm.Runtime = TargetRuntime.NET_2_0;
+				break;
+			}
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)

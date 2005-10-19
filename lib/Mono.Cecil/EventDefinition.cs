@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public sealed class EventDefinition : MemberDefinition, IEventDefinition {
+	public sealed class EventDefinition : MemberReference, IEventDefinition {
 
 		TypeReference m_eventType;
 		EventAttributes m_attributes;

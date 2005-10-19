@@ -73,13 +73,12 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
-		static void WriteAssembly (IAssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
+		static void WriteAssembly (AssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
 		{
-			asm.Accept (new StructureWriter (
-					(asm as AssemblyDefinition), kind, bw));
+			asm.Accept (new StructureWriter (asm, kind, bw));
 		}
 
-		public static void SaveAssembly (IAssemblyDefinition asm, string file, AssemblyKind kind)
+		public static void SaveAssembly (AssemblyDefinition asm, string file, AssemblyKind kind)
 		{
 			using (FileStream fs = new FileStream (
 					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
@@ -92,17 +91,16 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind, AppDomain domain)
+		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AssemblyKind kind, AppDomain domain)
 		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
 				WriteAssembly (asm, kind, writer);
-
 				return domain.Load (writer.ToArray ());
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (IAssemblyDefinition asm, AssemblyKind kind)
+		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AssemblyKind kind)
 		{
 			return CreateReflectionAssembly (asm, kind, AppDomain.CurrentDomain);
 		}
