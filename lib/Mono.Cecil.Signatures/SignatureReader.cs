@@ -554,7 +554,7 @@ namespace Mono.Cecil.Signatures {
 
 			ca.FixedArgs = new CustomAttrib.FixedArg [ctor.Parameters.Count];
 			for (int i = 0; i < ca.FixedArgs.Length && read; i++)
-				ca.FixedArgs [i] = this.ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
+				ca.FixedArgs [i] = ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
 					ctor.Parameters [i].ParameterType, ref read);
 
 			if (!read) {
@@ -565,7 +565,7 @@ namespace Mono.Cecil.Signatures {
 			ca.NumNamed = br.ReadUInt16 ();
 			ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
 			for (int i = 0; i < ca.NumNamed && read; i++)
-				ca.NamedArgs [i] = this.ReadNamedArg (data, br, ref read);
+				ca.NamedArgs [i] = ReadNamedArg (data, br, ref read);
 
 			ca.Read = read;
 			return ca;
@@ -593,7 +593,7 @@ namespace Mono.Cecil.Signatures {
 			return fa;
 		}
 
-		CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
+		internal CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
 			byte kind = br.ReadByte ();
@@ -879,7 +879,7 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
-		string ReadUTF8String (byte [] data, int pos, out int start)
+		static internal string ReadUTF8String (byte [] data, int pos, out int start)
 		{
 			int length = Utilities.ReadCompressedInteger (data, pos, out start);
 			byte [] str = new byte [length];

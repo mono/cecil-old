@@ -40,13 +40,11 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Metadata;
 	using Mono.Cecil.Signatures;
 
-	using Mono.Xml;
-
 	internal abstract class ReflectionReader : BaseReflectionReader {
 
 		ModuleDefinition m_module;
 		ImageReader m_reader;
-		protected SecurityParser m_secParser;
+		SecurityDeclarationReader m_secReader;
 		protected MetadataRoot m_root;
 		protected TablesHeap m_tHeap;
 
@@ -97,7 +95,6 @@ namespace Mono.Cecil {
 			m_tHeap = m_root.Streams.TablesHeap;
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
-			m_secParser = new SecurityParser ();
 			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
 		}
 
@@ -667,24 +664,14 @@ namespace Mono.Cecil {
 
 		protected SecurityDeclaration BuildSecurityDeclaration (DeclSecurityRow dsRow)
 		{
-			if (m_root.Header.MajorVersion < 2) {
-				return BuildSecurityDeclaration (dsRow.Action, m_root.Streams.BlobHeap.Read (dsRow.PermissionSet));
-			} //TODO: else
-
-			return null;
+			return BuildSecurityDeclaration (dsRow.Action, m_root.Streams.BlobHeap.Read (dsRow.PermissionSet));
 		}
 
 		public SecurityDeclaration BuildSecurityDeclaration (Mono.Cecil.SecurityAction action, byte [] permset)
 		{
-			SecurityDeclaration dec = new SecurityDeclaration (action);
-			PermissionSet ps = new PermissionSet (PermissionState.None);
-			m_secParser.LoadXml (Encoding.Unicode.GetString (permset));
-			try {
-				ps.FromXml (m_secParser.ToXml ());
-			} catch {
-			}
-			dec.PermissionSet = ps;
-			return dec;
+			if (m_secReader == null)
+				m_secReader = new SecurityDeclarationReader (m_root, this);
+			return m_secReader.FromByteArray (action, permset);
 		}
 
 		protected MarshalDesc BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)

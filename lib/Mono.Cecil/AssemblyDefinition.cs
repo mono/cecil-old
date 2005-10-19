@@ -117,6 +117,10 @@ namespace Mono.Cecil {
 
 			visitor.TerminateAssemblyDefinition (this);
 		}
+
+		public override string ToString ()
+		{
+			return m_asmName.FullName;
+		}
 	}
 }
-

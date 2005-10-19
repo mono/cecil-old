@@ -1,3 +1,16 @@
+2005-10-19  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil/AssemblyDefinition.cs: Added an override for ToString to
+	ease debugging.
+	* Mono.Cecil/ModuleDefinition.cs: Make SecurityDeclaration works with
+	2.0 assemblies.
+	* Mono.Cecil/ReflectionReader.cs: Modified BuildSecurityDeclaration
+	to use the new SecurityDeclarationReader (supporting both formats).
+	* Mono.Cecil/SecurityAction.cs: Removed actions that were "cutted" out
+	of 2.0 final.
+	* Mono.Cecil/SecurityDeclarationReader.cs: New. Handle both the 1.x 
+	and 2.0 formats for reading declarative security.
+
 2005-10-18  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericParameter.cs:

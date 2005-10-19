@@ -43,9 +43,6 @@ namespace Mono.Cecil {
 		PreJitDeny = 12,
 		NonCasDemand = 13,
 		NonCasLinkDemand = 14,
-		NonCasInheritance = 15,
-		LinkDemandChoice = 16,
-		InheritDemandChoice = 17,
-		DemandChoice = 18
+		NonCasInheritance = 15
 	}
 }

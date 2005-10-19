@@ -58,8 +58,8 @@ namespace Mono.Cecil {
 		Image m_image;
 
 		ImageReader m_imgReader;
-		SecurityParser m_secParser;
 		ReflectionController m_controller;
+		SecurityDeclarationReader m_secReader;
 
 		public Guid Mvid {
 			get { return m_mvid; }
@@ -132,7 +132,10 @@ namespace Mono.Cecil {
 
 		public Image Image {
 			get { return m_image; }
-			set { m_image = value; }
+			set {
+				m_image = value;
+				m_secReader = null;
+			}
 		}
 
 		public ModuleDefinition (string name, AssemblyDefinition asm) :
@@ -169,7 +172,6 @@ namespace Mono.Cecil {
 			} else
 				m_image = Image.CreateImage ();
 
-			m_secParser = new SecurityParser ();
 			m_modRefs = new ModuleReferenceCollection (this);
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
@@ -293,12 +295,9 @@ namespace Mono.Cecil {
 
 		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration)
 		{
-			SecurityDeclaration dec = new SecurityDeclaration (action);
-			SS.PermissionSet ps = new SS.PermissionSet (SSP.PermissionState.None);
-			m_secParser.LoadXml (Encoding.Unicode.GetString (declaration));
-			ps.FromXml (m_secParser.ToXml ());
-			dec.PermissionSet = ps;
-			return dec;
+			if (m_secReader == null)
+				m_secReader = new SecurityDeclarationReader (Image.MetadataRoot, m_controller.Reader);
+			return m_secReader.FromByteArray (action, declaration);
 		}
 
 		public override void Accept (IReflectionStructureVisitor visitor)
@@ -316,6 +315,12 @@ namespace Mono.Cecil {
 
 			this.Types.Accept (visitor);
 			this.TypeReferences.Accept (visitor);
+		}
+
+		public override string ToString ()
+		{
+			string s = (m_main ? "(main), Mvid=" : "Mvid=");
+			return s + m_mvid.ToString ();
 		}
 	}
 }
