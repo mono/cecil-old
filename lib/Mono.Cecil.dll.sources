@@ -153,6 +153,7 @@
 ./Mono.Cecil/SecurityAction.cs
 ./Mono.Cecil/SecurityDeclaration.cs
 ./Mono.Cecil/SecurityDeclarationCollection.cs
+./Mono.Cecil/SecurityDeclarationReader.cs
 ./Mono.Cecil/StructureReader.cs
 ./Mono.Cecil/StructureWriter.cs
 ./Mono.Cecil/TableComparers.cs
