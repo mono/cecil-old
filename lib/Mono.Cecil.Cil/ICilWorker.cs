@@ -40,6 +40,7 @@ namespace Mono.Cecil.Cil {
 
 		Instruction Emit (OpCode opcode, string str);
 		Instruction Emit (OpCode opcode, byte b);
+		Instruction Emit (OpCode opcode, sbyte b);
 		Instruction Emit (OpCode opcode, int i);
 		Instruction Emit (OpCode opcode, long l);
 		Instruction Emit (OpCode opcode, float f);
@@ -60,6 +61,7 @@ namespace Mono.Cecil.Cil {
 
 		Instruction Create (OpCode opcode, string str);
 		Instruction Create (OpCode opcode, byte b);
+		Instruction Create (OpCode opcode, sbyte b);
 		Instruction Create (OpCode opcode, int i);
 		Instruction Create (OpCode opcode, long l);
 		Instruction Create (OpCode opcode, float f);

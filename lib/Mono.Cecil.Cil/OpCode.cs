@@ -101,11 +101,11 @@ namespace Mono.Cecil.Cil {
 			return this.Value;
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals (object obj)
 		{
-			if (obj == null || !(obj is OpCode))
+			if (!(obj is OpCode))
 				return false;
-			OpCode v = (OpCode)obj;
+			OpCode v = (OpCode) obj;
 			return v.m_op1 == m_op1 && v.m_op2 == m_op2;
 		}
 	}

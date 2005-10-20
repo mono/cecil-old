@@ -137,7 +137,10 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
 					break;
 				case OperandType.ShortInlineI :
-					instr.Operand = br.ReadByte ();
+					if (op.Equals (OpCodes.Ldc_I4_S))
+						instr.Operand = br.ReadSByte ();
+					else
+						instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.ShortInlineVar :
 					instr.Operand = body.Variables [(int) br.ReadByte ()];

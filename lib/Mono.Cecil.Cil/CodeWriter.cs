@@ -115,7 +115,10 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write (0);
 					break;
 				case OperandType.ShortInlineI :
-					m_codeWriter.Write ((byte) instr.Operand);
+					if (instr.OpCode.Equals (OpCodes.Ldc_I4_S))
+						m_codeWriter.Write ((sbyte) instr.Operand);
+					else
+						m_codeWriter.Write ((byte) instr.Operand);
 					break;
 				case OperandType.ShortInlineVar :
 					m_codeWriter.Write ((byte) body.Variables.IndexOf (

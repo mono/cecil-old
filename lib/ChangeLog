@@ -1,3 +1,16 @@
+2005-10-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Cil/CilWorker.cs:
+		ShortInlineI operands are signed.
+		Spotted by Rodrigo B. de Oliveira.
+
+	* CodeGen/templates/OpCodes.cs
+	  Mono.Cecil.Cil/OpCodes.cs:
+		Add 2.0 opcodes.
+
 2005-10-19  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Mono.Cecil/AssemblyDefinition.cs: Added an override for ToString to
