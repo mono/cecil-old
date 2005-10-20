@@ -65,7 +65,7 @@ namespace Mono.Cecil {
 				m_structureWriter = value;
 				m_mdWriter = new MetadataWriter (
 					m_mod.Image.MetadataRoot,
-					m_structureWriter.AssemblyKind,
+					m_structureWriter.Assembly.Kind,
 					m_mod.Assembly.Runtime,
 					m_structureWriter.GetWriter ());
 				m_tableWriter = m_mdWriter.GetTableVisitor ();

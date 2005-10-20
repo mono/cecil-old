@@ -38,19 +38,17 @@ namespace Mono.Cecil {
 		MetadataWriter m_mdWriter;
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
-		AssemblyKind m_kind;
 
 		AssemblyDefinition m_asm;
 		MemoryBinaryWriter m_binaryWriter;
 
-		public AssemblyKind AssemblyKind {
-			get { return m_kind; }
+		public AssemblyDefinition Assembly {
+			get { return m_asm; }
 		}
 
-		public StructureWriter (AssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter writer)
+		public StructureWriter (AssemblyDefinition asm, MemoryBinaryWriter writer)
 		{
 			m_asm = asm;
-			m_kind = kind;
 			m_binaryWriter = writer;
 
 			// reset images

@@ -39,6 +39,7 @@ namespace Mono.Cecil {
 		CustomAttributeCollection m_customAttrs;
 		MethodDefinition m_ep;
 		TargetRuntime m_runtime;
+		AssemblyKind m_kind;
 
 		ModuleDefinition m_mainModule;
 		StructureReader m_reader;
@@ -77,6 +78,11 @@ namespace Mono.Cecil {
 		public TargetRuntime Runtime {
 			get { return m_runtime; }
 			set { m_runtime = value; }
+		}
+
+		public AssemblyKind Kind {
+			get { return m_kind; }
+			set { m_kind = value; }
 		}
 
 		public ModuleDefinition MainModule {

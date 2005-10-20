@@ -62,47 +62,48 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt)
+		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt, AssemblyKind kind)
 		{
 			AssemblyNameDefinition asmName = new AssemblyNameDefinition ();
 			asmName.Name = assemblyName;
 			AssemblyDefinition asm = new AssemblyDefinition (asmName);
 			asm.Runtime = rt;
+			asm.Kind = kind;
 			ModuleDefinition main = new ModuleDefinition (moduleName, asm, true);
 			asm.Modules.Add (main);
 			return asm;
 		}
 
-		static void WriteAssembly (AssemblyDefinition asm, AssemblyKind kind, MemoryBinaryWriter bw)
+		static void WriteAssembly (AssemblyDefinition asm, MemoryBinaryWriter bw)
 		{
-			asm.Accept (new StructureWriter (asm, kind, bw));
+			asm.Accept (new StructureWriter (asm, bw));
 		}
 
-		public static void SaveAssembly (AssemblyDefinition asm, string file, AssemblyKind kind)
+		public static void SaveAssembly (AssemblyDefinition asm, string file)
 		{
 			using (FileStream fs = new FileStream (
 					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
 				using (BinaryWriter bw = new BinaryWriter (fs)) {
 
 					MemoryBinaryWriter writer = new MemoryBinaryWriter ();
-					WriteAssembly (asm, kind, writer);
+					WriteAssembly (asm, writer);
 					bw.Write (writer.ToArray ());
 				}
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AssemblyKind kind, AppDomain domain)
+		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
 		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
-				WriteAssembly (asm, kind, writer);
+				WriteAssembly (asm, writer);
 				return domain.Load (writer.ToArray ());
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AssemblyKind kind)
+		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm)
 		{
-			return CreateReflectionAssembly (asm, kind, AppDomain.CurrentDomain);
+			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
 		}
 	}
 }

@@ -11,6 +11,13 @@
 	  Mono.Cecil.Cil/OpCodes.cs:
 		Add 2.0 opcodes.
 
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/AssemblyDefinition.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Handle the assembly kind in a smoothie way.
+
 2005-10-19  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Mono.Cecil/AssemblyDefinition.cs: Added an override for ToString to

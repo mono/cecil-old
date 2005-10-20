@@ -75,6 +75,14 @@ namespace Mono.Cecil {
 				asm.Runtime = TargetRuntime.NET_2_0;
 				break;
 			}
+
+			if ((m_img.PEFileHeader.Characteristics & ImageCharacteristics.CILOnlyDll) != 0)
+				asm.Kind = AssemblyKind.Dll;
+			else if (m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsGui ||
+				m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsCeGui)
+				asm.Kind = AssemblyKind.Windows;
+			else
+				asm.Kind = AssemblyKind.Console;
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)
