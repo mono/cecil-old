@@ -186,10 +186,15 @@ namespace Mono.Cecil {
 			m_implAttrs = implAttrs;
 		}
 
-		public MethodDefinition (string name, MethodAttributes attrs, TypeReference returnType) :
-			base (name)
+		internal MethodDefinition (string name, MethodAttributes attrs) : base (name)
 		{
 			m_attributes = attrs;
+		}
+
+		public MethodDefinition (string name, MethodAttributes attrs, TypeReference returnType) :
+			this (name, attrs)
+		{
+			this.ReturnType.ReturnType = returnType;
 		}
 
 		public MethodBody CreateBody ()

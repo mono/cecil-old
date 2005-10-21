@@ -44,6 +44,7 @@ namespace Mono.Cecil {
 
 		ModuleDefinition m_module;
 		ImageReader m_reader;
+		MetadataTableReader m_tableReader;
 		SecurityDeclarationReader m_secReader;
 		protected MetadataRoot m_root;
 		protected TablesHeap m_tHeap;
@@ -60,12 +61,11 @@ namespace Mono.Cecil {
 		protected GenericParameter [] m_genericParameters;
 		protected GenericInstanceMethod [] m_methodSpecs;
 
+		bool m_isCorlib;
 		IAssemblyNameReference m_corlib;
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
-
-		bool m_isCorlib;
 
 		public ModuleDefinition Module {
 			get { return m_module; }
@@ -83,16 +83,13 @@ namespace Mono.Cecil {
 			get { return m_root; }
 		}
 
-		public MemberReference [] MemberReferences {
-			get { return m_memberRefs; }
-		}
-
 		public ReflectionReader (ModuleDefinition module)
 		{
 			m_module = module;
 			m_reader = m_module.ImageReader;
 			m_root = m_module.Image.MetadataRoot;
 			m_tHeap = m_root.Streams.TablesHeap;
+			m_tableReader = m_reader.MetadataReader.TableReader;
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;
@@ -108,9 +105,21 @@ namespace Mono.Cecil {
 			return m_typeRefs [rid - 1];
 		}
 
-		public TypeReference GetTypeSpecAt (uint rid)
+		public TypeReference GetTypeSpecAt (uint rid, GenericContext context)
 		{
-			return m_typeSpecs [rid - 1];
+			int index = (int) rid - 1;
+			TypeReference tspec = m_typeSpecs [index];
+			if (tspec != null)
+				return tspec;
+
+			TypeSpecTable tsTable = m_tableReader.GetTypeSpecTable ();
+			TypeSpecRow tsRow = tsTable [index];
+			TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
+			tspec = GetTypeRefFromSig (ts.Type, context);
+			tspec.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeSpec, index);
+			m_typeSpecs [index] = tspec;
+
+			return tspec;
 		}
 
 		public FieldDefinition GetFieldDefAt (uint rid)
@@ -123,9 +132,71 @@ namespace Mono.Cecil {
 			return m_meths [rid - 1];
 		}
 
-		public MemberReference GetMemberRefAt (uint rid)
+		public MemberReference GetMemberRefAt (uint rid, GenericContext context)
 		{
-			return m_memberRefs [rid - 1];
+			int index = (int) rid - 1;
+			MemberReference member = m_memberRefs [rid - 1];
+			if (member != null)
+				return member;
+
+			MemberRefTable mrTable = m_tableReader.GetMemberRefTable ();
+			MemberRefRow mrefRow = mrTable [index];
+
+			Signature sig = m_sigReader.GetMemberRefSig (mrefRow.Class.TokenType, mrefRow.Signature);
+			switch (mrefRow.Class.TokenType) {
+			case TokenType.TypeDef :
+			case TokenType.TypeRef :
+			case TokenType.TypeSpec :
+				if (sig is FieldSig) {
+					FieldSig fs = sig as FieldSig;
+					member = new FieldReference (
+						m_root.Streams.StringsHeap [mrefRow.Name], GetTypeRefFromSig (fs.Type, context));
+					member.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
+				} else {
+					MethodSig ms = sig as MethodSig;
+					MethodReference methref = new MethodReference (
+						m_root.Streams.StringsHeap [mrefRow.Name],
+						ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+					methref.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
+
+					GenericContext nc = context.Clone ();
+
+					if (methref.DeclaringType is GenericInstanceType) {
+						TypeDefinition type = ((GenericInstanceType) methref.DeclaringType).ElementType as TypeDefinition;
+						if (type != null)
+							nc.Type = type;
+					} else if (methref.DeclaringType is TypeDefinition)
+						nc.Type = methref.DeclaringType as TypeDefinition;
+
+					methref.ReturnType = GetMethodReturnType (ms, nc);
+					methref.ReturnType.Method = methref;
+					for (int j = 0; j < ms.ParamCount; j++) {
+						Param p = ms.Parameters [j];
+						ParameterDefinition pdef = BuildParameterDefinition (
+							string.Concat ("arg", index), index, new ParamAttributes (), p, nc);
+						pdef.Method = methref;
+						methref.Parameters.Add (pdef);
+					}
+					member = methref;
+				}
+				break;
+			case TokenType.Method :
+				// really not sure about this
+				MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
+				member = new MethodReference (
+					methdef.Name, methdef.HasThis,
+					methdef.ExplicitThis, methdef.CallingConvention);
+				member.DeclaringType = methdef.DeclaringType;
+				break;
+			case TokenType.ModuleRef :
+				break; // TODO, implement that, or not
+			}
+
+			member.MetadataToken = MetadataToken.FromMetadataRow (TokenType.MemberRef, index);
+			m_module.MemberReferences.Add (member);
+			m_memberRefs [index] = member;
+
+			return member;
 		}
 
 		public PropertyDefinition GetPropertyDefAt (uint rid)
@@ -148,24 +219,35 @@ namespace Mono.Cecil {
 			return m_genericParameters [rid - 1];
 		}
 
-		public GenericInstanceMethod GetMethodSpecAt (uint rid)
+		public GenericInstanceMethod GetMethodSpecAt (uint rid, GenericContext context)
 		{
-			return m_methodSpecs [rid - 1];
+			int index = (int) rid - 1;
+			GenericInstanceMethod gim = m_methodSpecs [index];
+			if (gim != null)
+				return gim;
+
+			MethodSpecTable msTable = m_tableReader.GetMethodSpecTable ();
+			MethodSpecRow msRow = msTable [index];
+
+			MethodReference meth;
+			if (msRow.Method.TokenType == TokenType.Method)
+				meth = GetMethodDefAt (msRow.Method.RID);
+			else if (msRow.Method.TokenType == TokenType.MemberRef)
+				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, context);
+			else
+				throw new ReflectionException ("Unknown method type for method spec");
+
+			gim = new GenericInstanceMethod (meth);
+			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
+			foreach (SigType st in sig.Signature.Types)
+				gim.Arguments.Add (GetTypeRefFromSig (st, context));
+
+			m_methodSpecs [index] = gim;
+
+			return gim;
 		}
 
-		public int GetRidForMethodDef (MethodDefinition meth)
-		{
-			int index = Array.IndexOf (m_meths, meth);
-			return index == - 1 ? 0 : index + 1;
-		}
-
-		public int GetRidForTypeDef (TypeDefinition typeDef)
-		{
-			int index = Array.IndexOf (m_typeDefs, typeDef);
-			return index == -1 ? 0 : index + 1;
-		}
-
-		public TypeReference GetTypeDefOrRef (MetadataToken token)
+		public TypeReference GetTypeDefOrRef (MetadataToken token, GenericContext context)
 		{
 			if (token.RID == 0)
 				return null;
@@ -176,7 +258,7 @@ namespace Mono.Cecil {
 			case TokenType.TypeRef :
 				return GetTypeRefAt (token.RID);
 			case TokenType.TypeSpec :
-				return GetTypeSpecAt (token.RID);
+				return GetTypeSpecAt (token.RID, context);
 			default :
 				return null;
 			}
@@ -213,8 +295,6 @@ namespace Mono.Cecil {
 				return GetTypeDefAt (token.RID);
 			case TokenType.TypeRef :
 				return GetTypeRefAt (token.RID);
-			case TokenType.TypeSpec :
-				return GetTypeSpecAt (token.RID);
 			case TokenType.Method :
 				return GetMethodDefAt (token.RID);
 			case TokenType.Field :
@@ -225,8 +305,6 @@ namespace Mono.Cecil {
 				return GetPropertyDefAt (token.RID);
 			case TokenType.Param :
 				return GetParamDefAt (token.RID);
-			case TokenType.MemberRef :
-				return GetMemberRefAt (token.RID);
 			default :
 				throw new NotSupportedException ("Lookup is not allowed on this kind of token");
 			}
@@ -258,6 +336,7 @@ namespace Mono.Cecil {
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
+				types.Add (t);
 			}
 
 			// nested types
@@ -315,27 +394,21 @@ namespace Mono.Cecil {
 			} else
 				m_typeRefs = new TypeReference [0];
 
-			for (int i = 0; i < m_typeDefs.Length; i++) {
-				TypeDefinition type = m_typeDefs [i];
-				types.Add (type);
-			}
-
-			for (int i = 0; i < m_typeRefs.Length; i++) {
-				TypeReference type = m_typeRefs [i];
-				m_module.TypeReferences.Add (type);
-			}
-
 			ReadTypeSpecs ();
+			ReadMethodSpecs ();
+
+			ReadMethods ();
+			ReadGenericParameters ();
 
 			// set base types
 			for (int i = 0; i < typesTable.Rows.Count; i++) {
 				TypeDefRow type = typesTable [i];
 				TypeDefinition child = m_typeDefs [i];
-				child.BaseType = GetTypeDefOrRef (type.Extends);
+				child.BaseType = GetTypeDefOrRef (type.Extends, new GenericContext (child));
 			}
 
+			CompleteMethods ();
 			ReadAllFields ();
-			ReadAllMethods ();
 			ReadMemberReferences ();
 		}
 
@@ -344,14 +417,42 @@ namespace Mono.Cecil {
 			if (!m_tHeap.HasTable (typeof (TypeSpecTable)))
 				return;
 
-			TypeSpecTable tsTable = m_tHeap [typeof (TypeSpecTable)] as TypeSpecTable;
+			TypeSpecTable tsTable = m_tableReader.GetTypeSpecTable ();
 			m_typeSpecs = new TypeReference [tsTable.Rows.Count];
-			for (int i = 0; i < tsTable.Rows.Count; i++) {
-				TypeSpecRow tsRow = tsTable [i];
-				TypeSpec ts = m_sigReader.GetTypeSpec (tsRow.Signature);
-				TypeReference tspec = GetTypeRefFromSig (ts.Type);
-				tspec.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeSpec, i);
-				m_typeSpecs [i] = tspec;
+		}
+
+		void ReadMethodSpecs ()
+		{
+			if (!m_tHeap.HasTable (typeof (MethodSpecTable)))
+				return;
+
+			MethodSpecTable msTable = m_tableReader.GetMethodSpecTable ();
+			m_methodSpecs = new GenericInstanceMethod [msTable.Rows.Count];
+		}
+
+		void ReadGenericParameters ()
+		{
+			if (!m_tHeap.HasTable (typeof (GenericParamTable)))
+				return;
+
+			GenericParamTable gpTable = m_tableReader.GetGenericParamTable ();
+			m_genericParameters = new GenericParameter [gpTable.Rows.Count];
+			for (int i = 0; i < gpTable.Rows.Count; i++) {
+				GenericParamRow gpRow = gpTable [i];
+				IGenericParameterProvider owner;
+				if (gpRow.Owner.TokenType == TokenType.Method)
+					owner = GetMethodDefAt (gpRow.Owner.RID);
+				else if (gpRow.Owner.TokenType == TokenType.TypeDef)
+					owner = GetTypeDefAt (gpRow.Owner.RID);
+				else
+					throw new ReflectionException ("Unknown owner type for generic parameter");
+
+				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
+				gp.Attributes = gpRow.Flags;
+				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
+
+				owner.GenericParameters.Add (gp);
+				m_genericParameters [i] = gp;
 			}
 		}
 
@@ -368,6 +469,7 @@ namespace Mono.Cecil {
 
 			for (int i = 0; i < m_typeDefs.Length; i++) {
 				TypeDefinition dec = m_typeDefs [i];
+				GenericContext context = new GenericContext (dec);
 
 				int index = i, next;
 
@@ -381,7 +483,7 @@ namespace Mono.Cecil {
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
 					FieldDefinition fdef = new FieldDefinition (
 						m_root.Streams.StringsHeap [frow.Name],
-						this.GetTypeRefFromSig (fsig.Type), frow.Flags);
+						this.GetTypeRefFromSig (fsig.Type, context), frow.Flags);
 					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
@@ -393,18 +495,40 @@ namespace Mono.Cecil {
 			}
 		}
 
-		void ReadAllMethods ()
+		void ReadMethods ()
 		{
-			TypeDefTable tdefTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
+			if (!m_tHeap.HasTable (typeof (MethodTable))) {
+				m_meths = new MethodDefinition [0];
+				return;
+			}
+
+			MethodTable mTable = m_tableReader.GetMethodTable ();
+			m_meths = new MethodDefinition [mTable.Rows.Count];
+			for (int i = 0; i < mTable.Rows.Count; i++) {
+				MethodRow mRow = mTable [i];
+				MethodDefinition meth = new MethodDefinition (
+					m_root.Streams.StringsHeap [mRow.Name],
+					mRow.Flags);
+				meth.RVA = mRow.RVA;
+				meth.ImplAttributes = mRow.ImplFlags;
+
+				meth.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Method, i);
+
+				m_meths [i] = meth;
+			}
+		}
+
+		void CompleteMethods ()
+		{
+			TypeDefTable tdefTable = m_tableReader.GetTypeDefTable ();
 
 			if (!m_tHeap.HasTable (typeof (MethodTable))) {
 				m_meths = new MethodDefinition [0];
 				return;
 			}
 
-			MethodTable methTable = m_tHeap [typeof (MethodTable)] as MethodTable;
-			ParamTable paramTable = m_tHeap [typeof (ParamTable)] as ParamTable;
-			m_meths = new MethodDefinition [methTable.Rows.Count];
+			MethodTable methTable = m_tableReader.GetMethodTable ();
+			ParamTable paramTable = m_tableReader.GetParamTable ();
 			if (!m_tHeap.HasTable (typeof (ParamTable)))
 				m_parameters = new ParameterDefinition [0];
 			else
@@ -422,13 +546,17 @@ namespace Mono.Cecil {
 
 				for (int j = (int) tdefTable [index].MethodList; j < next; j++) {
 					MethodRow methRow = methTable [j - 1];
-					MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
+					MethodDefinition mdef = m_meths [j - 1];
+					if (mdef.IsConstructor)
+						dec.Constructors.Add (mdef);
+					else
+						dec.Methods.Add (mdef);
+					GenericContext context = new GenericContext (mdef);
 
-					MethodDefinition mdef = new MethodDefinition (
-						m_root.Streams.StringsHeap [methRow.Name],
-						methRow.RVA, methRow.Flags, methRow.ImplFlags,
-						msig.HasThis, msig.ExplicitThis, msig.MethCallConv);
-					mdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Method, j - 1);
+					MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);
+					mdef.HasThis = msig.HasThis;
+					mdef.ExplicitThis = msig.ExplicitThis;
+					mdef.CallingConvention = msig.MethCallConv;
 
 					int prms;
 					if (j == methTable.Rows.Count)
@@ -465,33 +593,25 @@ namespace Mono.Cecil {
 						if (pRow != null) {
 							pdef = BuildParameterDefinition (
 								m_root.Streams.StringsHeap [pRow.Name],
-								pRow.Sequence, pRow.Flags, psig);
+								pRow.Sequence, pRow.Flags, psig, context);
 							pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Param, pointer);
 							m_parameters [pointer] = pdef;
 						} else
 							pdef = BuildParameterDefinition (
 								string.Concat ("A_", mdef.IsStatic ? k : k + 1),
-								k + 1, (ParamAttributes) 0, psig);
+								k + 1, (ParamAttributes) 0, psig, context);
 
 						pdef.Method = mdef;
 						mdef.Parameters.Add (pdef);
-
 					}
 
-					mdef.ReturnType = GetMethodReturnType (msig);
+					mdef.ReturnType = GetMethodReturnType (msig, context);
 					MethodReturnType mrt = mdef.ReturnType as MethodReturnType;
 					mrt.Method = mdef;
 					if (retparam != null) {
 						mrt.Parameter = retparam;
 						mrt.Parameter.ParameterType = mrt.ReturnType;
 					}
-
-					m_meths [j - 1] = mdef;
-
-					if (mdef.IsConstructor)
-						dec.Constructors.Add (mdef);
-					else
-						dec.Methods.Add (mdef);
 				}
 			}
 
@@ -505,56 +625,8 @@ namespace Mono.Cecil {
 			if (!m_tHeap.HasTable (typeof (MemberRefTable)))
 				return;
 
-			MemberRefTable mrefTable = m_tHeap [typeof (MemberRefTable)] as MemberRefTable;
+			MemberRefTable mrefTable = m_tableReader.GetMemberRefTable ();
 			m_memberRefs = new MemberReference [mrefTable.Rows.Count];
-			for (int i = 0; i < mrefTable.Rows.Count; i++) {
-				MemberRefRow mrefRow = mrefTable [i];
-
-				MemberReference member = null;
-				Signature sig = m_sigReader.GetMemberRefSig (mrefRow.Class.TokenType, mrefRow.Signature);
-				switch (mrefRow.Class.TokenType) {
-				case TokenType.TypeDef :
-				case TokenType.TypeRef :
-				case TokenType.TypeSpec :
-					if (sig is FieldSig) {
-						FieldSig fs = sig as FieldSig;
-						member = new FieldReference (
-							m_root.Streams.StringsHeap [mrefRow.Name], GetTypeRefFromSig (fs.Type));
-						member.DeclaringType = GetTypeDefOrRef (mrefRow.Class);
-					} else {
-						MethodSig ms = sig as MethodSig;
-						MethodReference methref = new MethodReference (
-							m_root.Streams.StringsHeap [mrefRow.Name],
-							ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
-						methref.DeclaringType = GetTypeDefOrRef (mrefRow.Class);
-						methref.ReturnType = GetMethodReturnType (ms);
-						(methref.ReturnType as MethodReturnType).Method = methref;
-						for (int j = 0; j < ms.ParamCount; j++) {
-							Param p = ms.Parameters [j];
-							ParameterDefinition pdef = BuildParameterDefinition (
-								string.Concat ("arg", i), i, new ParamAttributes (), p);
-							pdef.Method = methref;
-							methref.Parameters.Add (pdef);
-						}
-						member = methref;
-					}
-					break;
-				case TokenType.Method :
-					// really not sure about this
-					MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
-					member = new MethodReference (
-						methdef.Name, methdef.HasThis,
-						methdef.ExplicitThis, methdef.CallingConvention);
-					member.DeclaringType = methdef.DeclaringType;
-					break;
-				case TokenType.ModuleRef :
-					break; // TODO, implement that, or not
-				}
-
-				member.MetadataToken = MetadataToken.FromMetadataRow (TokenType.MemberRef, i);
-				m_module.MemberReferences.Add (member);
-				m_memberRefs [i] = member;
-			}
 		}
 
 		public override void VisitExternTypeCollection (ExternTypeCollection externs)
@@ -642,17 +714,17 @@ namespace Mono.Cecil {
 		}
 
 		protected ParameterDefinition BuildParameterDefinition (string name, int sequence,
-			ParamAttributes attrs, Param psig)
+			ParamAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
 			TypeReference paramType = null;
 
 			if (psig.ByRef)
-				paramType = new ReferenceType (GetTypeRefFromSig (psig.Type));
+				paramType = new ReferenceType (GetTypeRefFromSig (psig.Type, context));
 			else if (psig.TypedByRef)
 				paramType = SearchCoreType (Constants.TypedReference);
 			else
-				paramType = GetTypeRefFromSig (psig.Type);
+				paramType = GetTypeRefFromSig (psig.Type, context);
 
 			if (psig.CustomMods.Length > 0)
 				paramType = GetModifierType (psig.CustomMods, paramType);
@@ -731,17 +803,17 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		MethodReturnType GetMethodReturnType (MethodSig msig)
+		MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
 		{
 			TypeReference retType = null;
 			if (msig.RetType.Void)
 				retType = SearchCoreType (Constants.Void);
 			else if (msig.RetType.ByRef)
-				retType = new ReferenceType (GetTypeRefFromSig (msig.RetType.Type));
+				retType = new ReferenceType (GetTypeRefFromSig (msig.RetType.Type, context));
 			else if (msig.RetType.TypedByRef)
 				retType = SearchCoreType (Constants.TypedReference);
 			else
-				retType = GetTypeRefFromSig (msig.RetType.Type);
+				retType = GetTypeRefFromSig (msig.RetType.Type, context);
 
 			if (msig.RetType.CustomMods.Length > 0)
 				retType = GetModifierType (msig.RetType.CustomMods, retType);
@@ -749,15 +821,15 @@ namespace Mono.Cecil {
 			return new MethodReturnType (retType);
 		}
 
-		public TypeReference GetTypeRefFromSig (SigType t)
+		public TypeReference GetTypeRefFromSig (SigType t, GenericContext context)
 		{
 			switch (t.ElementType) {
 			case ElementType.Class :
 				CLASS c = t as CLASS;
-				return GetTypeDefOrRef (c.Type);
+				return GetTypeDefOrRef (c.Type, context);
 			case ElementType.ValueType :
 				VALUETYPE vt = t as VALUETYPE;
-				TypeReference vtr = GetTypeDefOrRef (vt.Type);
+				TypeReference vtr = GetTypeDefOrRef (vt.Type, context);
 				vtr.IsValueType = true;
 				return vtr;
 			case ElementType.String :
@@ -798,17 +870,17 @@ namespace Mono.Cecil {
 				return SearchCoreType (Constants.TypedReference);
 			case ElementType.Array :
 				ARRAY ary = t as ARRAY;
-				return new ArrayType (GetTypeRefFromSig (ary.Type), ary.Shape);
+				return new ArrayType (GetTypeRefFromSig (ary.Type, context), ary.Shape);
 			case ElementType.SzArray :
 				SZARRAY szary = t as SZARRAY;
-				ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type));
+				ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type, context));
 				(at.Dimensions as ArrayDimensionCollection).Add (new ArrayDimension (0, 0));
 				return at;
 			case ElementType.Ptr :
 				PTR pointer = t as PTR;
 				if (pointer.Void)
 					return new PointerType (SearchCoreType (Constants.Void));
-				return new PointerType (GetTypeRefFromSig (pointer.PtrType));
+				return new PointerType (GetTypeRefFromSig (pointer.PtrType, context));
 			case ElementType.FnPtr :
 				// not very sure of this
 				FNPTR funcptr = t as FNPTR;
@@ -816,24 +888,24 @@ namespace Mono.Cecil {
 				for (int i = 0; i < funcptr.Method.ParamCount; i++) {
 					Param p = funcptr.Method.Parameters [i];
 					ParameterDefinition pdef = new ParameterDefinition (p.ByRef ? new ReferenceType (
-							GetTypeRefFromSig (p.Type)) : GetTypeRefFromSig (p.Type));
+							GetTypeRefFromSig (p.Type, context)) : GetTypeRefFromSig (p.Type, context));
 					parameters.Add (pdef);
 				}
 				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
 					funcptr.Method.MethCallConv,
-					parameters, GetMethodReturnType (funcptr.Method));
+					parameters, GetMethodReturnType (funcptr.Method, context));
 			case ElementType.Var:
 				VAR var = t as VAR;
-				throw new NotImplementedException ();
+				return context.Type.GenericParameters [var.Index];
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				throw new NotImplementedException ();
+				return context.Method.GenericParameters [mvar.Index];
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
-				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type));
+				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));
 				instance.IsValueType = ginst.ValueType;
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.Arguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i]));
+					instance.Arguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
 
 				return instance;
 			default:

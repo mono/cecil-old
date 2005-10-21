@@ -142,6 +142,14 @@ namespace Mono.Cecil {
 			return np;
 		}
 
+		public override string ToString ()
+		{
+			if (m_name != null && m_name.Length > 0)
+				return m_name;
+
+			return string.Concat ("A_", m_sequence);
+		}
+
 		public void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitParameterDefinition (this);

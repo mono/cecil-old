@@ -68,6 +68,14 @@ namespace Mono.Cecil.Cil {
 			m_method = method;
 		}
 
+		public override string ToString ()
+		{
+			if (m_name != null && m_name.Length > 0)
+				return m_name;
+
+			return string.Concat ("V_", m_index);
+		}
+
 		public void Accept (ICodeVisitor visitor)
 		{
 			visitor.VisitVariableDefinition (this);

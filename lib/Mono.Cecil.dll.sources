@@ -30,6 +30,7 @@
 ./Mono.Cecil/FileAttributes.cs
 ./Mono.Cecil/FunctionPointerType.cs
 ./Mono.Cecil/GenericArgumentCollection.cs
+./Mono.Cecil/GenericContext.cs
 ./Mono.Cecil/GenericInstanceMethod.cs
 ./Mono.Cecil/GenericInstanceType.cs
 ./Mono.Cecil/GenericParamAttributes.cs

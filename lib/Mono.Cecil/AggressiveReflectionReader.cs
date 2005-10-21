@@ -42,11 +42,8 @@ namespace Mono.Cecil {
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
 			base.VisitTypeDefinitionCollection (types);
-			if (types.Container.Assembly.Runtime >= TargetRuntime.NET_2_0) {
-				ReadGenericParameters ();
-				ReadGenericParameterConstraints ();
-				ReadMethodSpec ();
-			}
+
+			ReadGenericParameterConstraints ();
 			ReadClassLayoutInfos ();
 			ReadFieldLayoutInfos ();
 			ReadPInvokeInfos ();
@@ -67,32 +64,6 @@ namespace Mono.Cecil {
 			m_parameters = null;
 		}
 
-		void ReadGenericParameters ()
-		{
-			if (!m_tHeap.HasTable (typeof (GenericParamTable)))
-				return;
-
-			GenericParamTable gpTable = m_tHeap [typeof (GenericParamTable)] as GenericParamTable;
-			m_genericParameters = new GenericParameter [gpTable.Rows.Count];
-			for (int i = 0; i < gpTable.Rows.Count; i++) {
-				GenericParamRow gpRow = gpTable [i];
-				IGenericParameterProvider owner;
-				if (gpRow.Owner.TokenType == TokenType.Method)
-					owner = GetMethodDefAt (gpRow.Owner.RID);
-				else if (gpRow.Owner.TokenType == TokenType.TypeDef)
-					owner = GetTypeDefAt (gpRow.Owner.RID);
-				else
-					throw new ReflectionException ("Unknown owner type for generic parameter");
-
-				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
-				gp.Attributes = gpRow.Flags;
-				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
-
-				owner.GenericParameters.Add (gp);
-				m_genericParameters [i] = gp;
-			}
-		}
-
 		void ReadGenericParameterConstraints ()
 		{
 			if (!m_tHeap.HasTable (typeof (GenericParamConstraintTable)))
@@ -104,35 +75,8 @@ namespace Mono.Cecil {
 				GenericParamConstraintRow gpcRow = gpcTable [i];
 				GenericParameter gp = GetGenericParameterAt (gpcRow.Owner);
 
-				TypeReference constraint = GetTypeDefOrRef (gpcRow.Constraint);
+				//TypeReference constraint = GetTypeDefOrRef (gpcRow.Constraint);
 				// TODO: find how to know if constraint is an interface
-			}
-		}
-
-		void ReadMethodSpec ()
-		{
-			if (!m_tHeap.HasTable (typeof (MethodSpecTable)))
-				return;
-
-			MethodSpecTable msTable = m_tHeap [typeof (MethodSpecTable)] as MethodSpecTable;
-			m_methodSpecs = new GenericInstanceMethod [msTable.Rows.Count];
-			for (int i = 0; i < msTable.Rows.Count; i++) {
-				MethodSpecRow msRow = msTable [i];
-
-				MethodReference meth;
-				if (msRow.Method.TokenType == TokenType.Method)
-					meth = GetMethodDefAt (msRow.Method.RID);
-				else if (msRow.Method.TokenType == TokenType.MemberRef)
-					meth = (MethodReference) GetMemberRefAt (msRow.Method.RID);
-				else
-					throw new ReflectionException ("Unknown method type for method spec");
-
-				GenericInstanceMethod gim = new GenericInstanceMethod (meth);
-				MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
-				foreach (SigType st in sig.Signature.Types)
-					gim.Arguments.Add (GetTypeRefFromSig (st));
-
-				m_methodSpecs [i] = gim;
 			}
 		}
 
@@ -191,6 +135,8 @@ namespace Mono.Cecil {
 			for (int i = 0; i < pmapTable.Rows.Count; i++) {
 				PropertyMapRow pmapRow = pmapTable [i];
 				TypeDefinition owner = GetTypeDefAt (pmapRow.Parent);
+				GenericContext context = new GenericContext (owner);
+
 				int start = (int) pmapRow.PropertyList, end;
 				if (i < pmapTable.Rows.Count - 1)
 					end = (int) pmapTable [i + 1].PropertyList;
@@ -202,7 +148,8 @@ namespace Mono.Cecil {
 					PropertySig psig = m_sigReader.GetPropSig (prow.Type);
 					PropertyDefinition pdef = new PropertyDefinition (
 						m_root.Streams.StringsHeap [prow.Name],
-						this.GetTypeRefFromSig (psig.Type), prow.Flags);
+						GetTypeRefFromSig (psig.Type, context),
+					prow.Flags);
 					pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, j - 1);
 
 					owner.Properties.Add (pdef);
@@ -222,6 +169,8 @@ namespace Mono.Cecil {
 			for (int i = 0; i < emapTable.Rows.Count; i++) {
 				EventMapRow emapRow = emapTable [i];
 				TypeDefinition owner = GetTypeDefAt (emapRow.Parent);
+				GenericContext context = new GenericContext (owner);
+
 				int start = (int) emapRow.EventList, end;
 				if (i < (emapTable.Rows.Count - 1))
 					end = (int) emapTable [i + 1].EventList;
@@ -232,7 +181,7 @@ namespace Mono.Cecil {
 					EventRow erow = evtTable [j - 1];
 					EventDefinition edef = new EventDefinition (
 						m_root.Streams.StringsHeap [erow.Name],
-						GetTypeDefOrRef (erow.EventType), erow.EventFlags);
+						GetTypeDefOrRef (erow.EventType, context), erow.EventFlags);
 					edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, j - 1);
 
 					owner.Events.Add (edef);
@@ -281,7 +230,7 @@ namespace Mono.Cecil {
 			for (int i = 0; i < intfsTable.Rows.Count; i++) {
 				InterfaceImplRow intfsRow = intfsTable [i];
 				TypeDefinition owner = GetTypeDefAt (intfsRow.Class);
-				owner.Interfaces.Add (GetTypeDefOrRef (intfsRow.Interface));
+				owner.Interfaces.Add (GetTypeDefOrRef (intfsRow.Interface, new GenericContext (owner)));
 			}
 		}
 
@@ -302,7 +251,8 @@ namespace Mono.Cecil {
 						break;
 					case TokenType.MemberRef :
 						owner.Overrides.Add (
-							GetMemberRefAt (implRow.MethodDeclaration.RID) as MethodReference);
+							(MethodReference) GetMemberRefAt (
+								implRow.MethodDeclaration.RID, new GenericContext (owner)));
 						break;
 					}
 				}
@@ -332,9 +282,7 @@ namespace Mono.Cecil {
 					break;
 				}
 
-				SecurityDeclarationCollection secDecls = owner.SecurityDeclarations as SecurityDeclarationCollection;
-
-				secDecls.Add (dec);
+				owner.SecurityDeclarations.Add (dec);
 			}
 		}
 
@@ -350,7 +298,7 @@ namespace Mono.Cecil {
 				if (caRow.Type.TokenType == TokenType.Method)
 					ctor = GetMethodDefAt (caRow.Type.RID);
 				else
-					ctor = GetMemberRefAt (caRow.Type.RID) as MethodReference;
+					ctor = GetMemberRefAt (caRow.Type.RID, new GenericContext ()) as MethodReference;
 
 				CustomAttrib ca = m_sigReader.GetCustomAttrib (caRow.Value, ctor);
 				CustomAttribute cattr;
@@ -394,8 +342,9 @@ namespace Mono.Cecil {
 					//TODO: support other ?
 					break;
 				}
+
 				if (owner != null)
-					(owner as CustomAttributeCollection).Add (cattr);
+					owner.Add (cattr);
 			}
 		}
 
@@ -410,26 +359,26 @@ namespace Mono.Cecil {
 
 				object constant = GetConstant (csRow.Value, csRow.Type);
 
+				IHasConstant owner = null;
 				switch (csRow.Parent.TokenType) {
 				case TokenType.Field :
-					FieldDefinition field = GetFieldDefAt (csRow.Parent.RID);
-					field.Constant = constant;
+					owner = GetFieldDefAt (csRow.Parent.RID);
 					break;
 				case TokenType.Property :
-					PropertyDefinition prop = GetPropertyDefAt (csRow.Parent.RID);
-					prop.Constant = constant;
+					owner = GetPropertyDefAt (csRow.Parent.RID);
 					break;
 				case TokenType.Param :
-					ParameterDefinition param = GetParamDefAt (csRow.Parent.RID);
-					param.Constant = constant;
+					owner = GetParamDefAt (csRow.Parent.RID);
 					break;
 				}
+
+				owner.Constant = constant;
 			}
 		}
 
 		void ReadExternTypes ()
 		{
-			base.VisitExternTypeCollection (Module.ExternTypes as ExternTypeCollection);
+			base.VisitExternTypeCollection (Module.ExternTypes);
 		}
 
 		void ReadMarshalSpecs ()
@@ -440,18 +389,19 @@ namespace Mono.Cecil {
 			FieldMarshalTable fmTable = m_tHeap [typeof (FieldMarshalTable)] as FieldMarshalTable;
 			for (int i = 0; i < fmTable.Rows.Count; i++) {
 				FieldMarshalRow fmRow = fmTable [i];
+
+				IHasMarshalSpec owner = null;
 				switch (fmRow.Parent.TokenType) {
 				case TokenType.Field:
-					FieldDefinition field = GetFieldDefAt (fmRow.Parent.RID);
-					field.MarshalSpec = BuildMarshalDesc (
-						m_sigReader.GetMarshalSig (fmRow.NativeType), field);
+					owner = GetFieldDefAt (fmRow.Parent.RID);
 					break;
 				case TokenType.Param:
-					ParameterDefinition param = GetParamDefAt (fmRow.Parent.RID);
-					param.MarshalSpec = BuildMarshalDesc (
-						m_sigReader.GetMarshalSig (fmRow.NativeType), param);
+					owner = GetParamDefAt (fmRow.Parent.RID);
 					break;
 				}
+
+				owner.MarshalSpec = BuildMarshalDesc (
+					m_sigReader.GetMarshalSig (fmRow.NativeType), owner);
 			}
 		}
 

@@ -39,10 +39,15 @@ namespace Mono.Cecil.Metadata {
 
 		ImageReader m_ir;
 		BinaryReader m_binaryReader;
+		MetadataTableReader m_tableReader;
 		MetadataRoot m_root;
 
 		BinaryReader m_dataReader;
 		RVA m_baseOfCodeOrRes = new RVA (0x2050);
+
+		public MetadataTableReader TableReader {
+			get { return m_tableReader; }
+		}
 
 		public MetadataReader (ImageReader brv)
 		{
@@ -246,7 +251,8 @@ namespace Mono.Cecil.Metadata {
 			SetHeapIndexSize (root.Streams.StringsHeap, 0x01);
 			SetHeapIndexSize (root.Streams.GuidHeap, 0x02);
 			SetHeapIndexSize (root.Streams.BlobHeap, 0x04);
-			root.Streams.TablesHeap.Tables.Accept (new MetadataTableReader (this));
+			m_tableReader = new MetadataTableReader (this);
+			root.Streams.TablesHeap.Tables.Accept (m_tableReader);
 		}
 	}
 }

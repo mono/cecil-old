@@ -1,3 +1,24 @@
+2005-10-21  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs:
+		Add helpers for reading.
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Working on generic parameters reading.
+		Still have troubles reading a 2.0 corlib.
+
+	* Mono.Cecil/IHasMarshalSpec.cs:
+		API fix.
+
+	* Mono.Cecil/ParameterDefinition.cs
+	  Mono.Cecil.Cil/VariableDefinition.cs:
+		Override ToString.
+
 2005-10-20  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CodeReader.cs

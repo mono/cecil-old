@@ -103,6 +103,7 @@ namespace Mono.Cecil.Cil {
 			Instruction last = null;
 			InstructionCollection code = body.Instructions as InstructionCollection;
 			instructions = new Hashtable ();
+			GenericContext context = new GenericContext (body.Method);
 
 			while (br.BaseStream.Position < start + body.CodeSize) {
 				OpCode op;
@@ -175,7 +176,7 @@ namespace Mono.Cecil.Cil {
 					if (IsToken (field, TokenType.Field))
 						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (field));
 					else if (IsToken (field, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (field));
+						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (field), context);
 					else
 						throw new ReflectionException ("Wrong token for InlineField Operand: {0}", field.ToString ("x8"));
 					break;
@@ -184,9 +185,9 @@ namespace Mono.Cecil.Cil {
 					if (IsToken (meth, TokenType.Method))
 						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (meth));
 					else if (IsToken (meth, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth));
+						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth), context);
 					else if (IsToken (meth, TokenType.MethodSpec))
-						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (meth));
+						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (meth), context);
 					else
 						throw new ReflectionException ("Wrong token for InlineMethod Operand: {0}", meth.ToString ("x8"));
 					break;
@@ -197,7 +198,7 @@ namespace Mono.Cecil.Cil {
 					else if (IsToken (type, TokenType.TypeRef))
 						instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (type));
 					else if (IsToken (type, TokenType.TypeSpec))
-						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (type));
+						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (type), context);
 					else
 						throw new ReflectionException ("Wrong token for InlineType Operand: {0}", type.ToString ("x8"));
 					break;
@@ -208,15 +209,15 @@ namespace Mono.Cecil.Cil {
 					else if (IsToken (token, TokenType.TypeRef))
 						instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (token));
 					else if (IsToken (token, TokenType.TypeSpec))
-						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token));
+						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token), context);
 					else if (IsToken (token, TokenType.Field))
 						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (token));
 					else if (IsToken (token, TokenType.Method))
 						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (token));
 					else if (IsToken (token, TokenType.MethodSpec))
-						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (token));
+						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (token), context);
 					else if (IsToken (token, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token));
+						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token), context);
 					else
 						throw new ReflectionException ("Wrong token following ldtoken: {0}", token.ToString ("x8"));
 					break;
@@ -335,7 +336,9 @@ namespace Mono.Cecil.Cil {
 			LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
 			for (int i = 0; i < sig.Count; i++) {
 				LocalVarSig.LocalVariable lv = sig.LocalVariables [i];
-				TypeReference varType = m_reflectReader.GetTypeRefFromSig (lv.Type);
+				TypeReference varType = m_reflectReader.GetTypeRefFromSig (
+					lv.Type, new GenericContext (body.Method));
+
 				if (lv.ByRef)
 					varType = new ReferenceType (varType);
 				if ((lv.Constraint & Constraint.Pinned) != 0)

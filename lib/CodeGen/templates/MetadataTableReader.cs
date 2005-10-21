@@ -80,7 +80,12 @@ namespace Mono.Cecil.Metadata {
 				return (int) n;
 			return 0;
 		}
-
+<% $tables.each { |table|  %>
+		public <%=table.table_name%> Get<%=table.table_name%> ()
+		{
+			return (<%=table.table_name%>) m_heap [typeof (<%=table.table_name%>)];
+		}
+<% } %>
 		public override void VisitTableCollection (TableCollection coll)
 		{
 <% $stables.each { |table|  %>			if (m_heap.HasTable (typeof (<%=table.table_name%>))) {

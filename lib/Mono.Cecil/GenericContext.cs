@@ -1,5 +1,5 @@
 //
-// IHasMarshalSpec.cs
+// GenericContext.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,8 +28,45 @@
 
 namespace Mono.Cecil {
 
-	public interface IHasMarshalSpec {
+	internal class GenericContext {
 
-		MarshalDesc MarshalSpec { get; set; }
+		TypeDefinition m_type;
+		MethodDefinition m_method;
+
+		public TypeDefinition Type {
+			get { return m_type; }
+			set { m_type = value; }
+		}
+
+		public MethodDefinition Method {
+			get { return m_method; }
+			set { m_method = value; }
+		}
+
+		public GenericContext ()
+		{
+		}
+
+		public GenericContext (TypeDefinition type)
+		{
+			m_type = type;
+		}
+
+		public GenericContext (MethodDefinition meth)
+		{
+			m_type = (TypeDefinition) meth.DeclaringType;
+			m_method = meth;
+		}
+
+		public GenericContext (TypeDefinition type, MethodDefinition meth)
+		{
+			m_type = type;
+			m_method = meth;
+		}
+
+		public GenericContext Clone ()
+		{
+			return new GenericContext (m_type, m_method);
+		}
 	}
 }
