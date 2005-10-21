@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public sealed class EventDefinition : MemberReference, IEventDefinition {
+	public sealed class EventDefinition : MemberReference, IEventDefinition, ICloneable {
 
 		TypeReference m_eventType;
 		EventAttributes m_attributes;
@@ -114,6 +114,11 @@ namespace Mono.Cecil {
 				string.Concat ("raise_", evt.Name), (MethodAttributes) 0, evt.EventType);
 			evt.InvokeMethod = raise;
 			return raise;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public EventDefinition Clone ()

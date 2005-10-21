@@ -28,10 +28,11 @@
 
 namespace Mono.Cecil {
 
+	using System;
 	using System.Security;
 	using System.Text;
 
-	public sealed class SecurityDeclaration : ISecurityDeclaration {
+	public sealed class SecurityDeclaration : ISecurityDeclaration, ICloneable {
 
 		SecurityAction m_action;
 		PermissionSet m_permSet;
@@ -49,6 +50,11 @@ namespace Mono.Cecil {
 		public SecurityDeclaration (SecurityAction action)
 		{
 			m_action = action;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public SecurityDeclaration Clone ()

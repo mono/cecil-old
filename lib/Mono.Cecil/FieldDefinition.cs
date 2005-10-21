@@ -28,10 +28,12 @@
 
 namespace Mono.Cecil {
 
+	using System;
+
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
-	public sealed class FieldDefinition : FieldReference, IFieldDefinition, IFieldLayoutInfo {
+	public sealed class FieldDefinition : FieldReference, IFieldDefinition, IFieldLayoutInfo, ICloneable {
 
 		FieldAttributes m_attributes;
 
@@ -135,6 +137,11 @@ namespace Mono.Cecil {
 		{
 			m_hasInfo = false;
 			m_attributes = attrs;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public FieldDefinition Clone ()

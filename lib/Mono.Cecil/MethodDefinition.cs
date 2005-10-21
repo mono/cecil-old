@@ -34,7 +34,7 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Cil;
 	using Mono.Cecil.Signatures;
 
-	public sealed class MethodDefinition : MethodReference, IMethodDefinition {
+	public sealed class MethodDefinition : MethodReference, IMethodDefinition, ICloneable {
 
 		public const string Cctor = ".cctor";
 		public const string Ctor = ".ctor";
@@ -204,6 +204,11 @@ namespace Mono.Cecil {
 				m_body = new MethodBody (this);
 				m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public MethodDefinition Clone ()

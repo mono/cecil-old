@@ -76,7 +76,7 @@ namespace Mono.Cecil {
 				break;
 			}
 
-			if ((m_img.PEFileHeader.Characteristics & ImageCharacteristics.CILOnlyDll) != 0)
+			if (m_img.HintNameTable.RuntimeMain == HintNameTable.RuntimeMainDll)
 				asm.Kind = AssemblyKind.Dll;
 			else if (m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsGui ||
 				m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsCeGui)

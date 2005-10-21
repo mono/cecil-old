@@ -1,5 +1,20 @@
 2005-10-21  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ParameterDefinition.cs
+	  Mono.Cecil/PropertyDefinition.cs:
+		Implement ICloneable.
+
+	* Mono.Cecil/IAssemblyDefinition.cs:
+		Mirror changes on asm kind.
+	* Mono.Cecil/StructureReader.cs:
+		Fix asm kind detection.
+
 	* Mono.Cecil/StructureWriter.cs
 	  Mono.Cecil/ReflectionReader.cs
 	  Mono.Cecil/MethodDefinition.cs

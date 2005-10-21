@@ -33,6 +33,7 @@ namespace Mono.Cecil {
 
 		AssemblyNameDefinition Name { get; }
 		TargetRuntime Runtime { get; set; }
+		AssemblyKind Kind { get; set; }
 
 		ModuleDefinitionCollection Modules { get; }
 		ModuleDefinition MainModule { get; }

@@ -32,7 +32,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class ParameterDefinition : IParameterDefinition {
+	public sealed class ParameterDefinition : IParameterDefinition, ICloneable {
 
 		string m_name;
 		int m_sequence;
@@ -115,6 +115,11 @@ namespace Mono.Cecil {
 			m_sequence = seq;
 			m_attributes = attrs;
 			m_paramType = paramType;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public ParameterDefinition Clone ()

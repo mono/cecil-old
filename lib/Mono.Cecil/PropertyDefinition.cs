@@ -28,9 +28,10 @@
 
 namespace Mono.Cecil {
 
+	using System;
 	using System.Text;
 
-	public sealed class PropertyDefinition : MemberReference, IPropertyDefinition {
+	public sealed class PropertyDefinition : MemberReference, IPropertyDefinition, ICloneable {
 
 		TypeReference m_propertyType;
 		ParameterDefinitionCollection m_parameters;
@@ -143,6 +144,11 @@ namespace Mono.Cecil {
 				string.Concat ("set_", prop.Name), (MethodAttributes) 0, prop.PropertyType);
 			prop.SetMethod = set;
 			return set;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public PropertyDefinition Clone ()

@@ -28,9 +28,10 @@
 
 namespace Mono.Cecil {
 
+	using System;
 	using System.Collections;
 
-	public sealed class CustomAttribute : ICustomAttribute {
+	public sealed class CustomAttribute : ICustomAttribute, ICloneable {
 
 		MethodReference m_ctor;
 		IList m_parameters;
@@ -109,6 +110,11 @@ namespace Mono.Cecil {
 		public void SetPropertyType (string propertyName, ITypeReference type)
 		{
 			m_propTypes [propertyName] = type;
+		}
+
+		object ICloneable.Clone ()
+		{
+			return this.Clone ();
 		}
 
 		public CustomAttribute Clone ()
