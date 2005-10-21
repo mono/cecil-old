@@ -204,6 +204,7 @@ namespace Mono.Cecil {
 		public override void TerminateAssemblyDefinition (AssemblyDefinition asm)
 		{
 			foreach (ModuleDefinition mod in asm.Modules) {
+				mod.Controller.Writer.VisitModuleDefinition (mod);
 				mod.Controller.Writer.VisitTypeReferenceCollection (mod.TypeReferences);
 				mod.Controller.Writer.VisitMemberReferenceCollection (mod.MemberReferences);
 				mod.Controller.Writer.VisitTypeDefinitionCollection (mod.Types);

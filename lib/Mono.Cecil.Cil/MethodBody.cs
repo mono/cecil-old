@@ -111,6 +111,9 @@ namespace Mono.Cecil.Cil {
 		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ReflectionHelper helper)
 		{
 			MethodBody nb = new MethodBody (parent);
+			nb.MaxStack = body.MaxStack;
+			nb.InitLocals = body.InitLocals;
+			nb.CodeSize = body.CodeSize;
 
 			foreach (VariableDefinition var in body.Variables)
 				nb.Variables.Add (new VariableDefinition (helper == null ?

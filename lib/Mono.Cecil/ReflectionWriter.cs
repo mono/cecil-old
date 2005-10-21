@@ -151,6 +151,17 @@ namespace Mono.Cecil {
 				return new MetadataToken (TokenType.TypeRef, 0);
 		}
 
+		public override void VisitModuleDefinition (ModuleDefinition mod)
+		{
+			// ensure that everything is loaded before writing
+			foreach (TypeDefinition type in mod.Types) {
+				foreach (MethodDefinition meth in type.Methods)
+					meth.LoadBody ();
+				foreach (MethodDefinition ctor in type.Constructors)
+					ctor.LoadBody ();
+			}
+		}
+
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
 			ArrayList orderedTypes = new ArrayList (types.Count);

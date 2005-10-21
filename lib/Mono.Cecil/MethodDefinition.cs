@@ -102,14 +102,10 @@ namespace Mono.Cecil {
 
 		public MethodBody Body {
 			get {
-				if (m_module != null && m_body == null && m_rva != RVA.Zero) {
-					m_body = new MethodBody (this);
-					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
-				}
-
+				LoadBody ();
 				return m_body;
 			}
-			set { m_body = value as MethodBody; }
+			set { m_body = value; }
 		}
 
 		public PInvokeInfo PInvokeInfo {
@@ -200,6 +196,14 @@ namespace Mono.Cecil {
 		public MethodBody CreateBody ()
 		{
 			return m_body = new MethodBody (this);
+		}
+
+		internal void LoadBody ()
+		{
+			if (m_module != null && m_body == null && m_rva != RVA.Zero) {
+				m_body = new MethodBody (this);
+				m_module.Controller.Reader.Code.VisitMethodBody (m_body);
+			}
 		}
 
 		public MethodDefinition Clone ()

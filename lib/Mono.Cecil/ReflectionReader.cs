@@ -336,7 +336,6 @@ namespace Mono.Cecil {
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;
-				types.Add (t);
 			}
 
 			// nested types
@@ -351,6 +350,9 @@ namespace Mono.Cecil {
 					parent.NestedTypes.Add (child);
 				}
 			}
+
+			foreach (TypeDefinition type in m_typeDefs)
+				types.Add (type);
 
 			// type ref reading
 			if (m_tHeap.HasTable(typeof (TypeRefTable))) {
