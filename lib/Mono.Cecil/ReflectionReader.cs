@@ -44,8 +44,8 @@ namespace Mono.Cecil {
 
 		ModuleDefinition m_module;
 		ImageReader m_reader;
-		MetadataTableReader m_tableReader;
 		SecurityDeclarationReader m_secReader;
+		protected MetadataTableReader m_tableReader;
 		protected MetadataRoot m_root;
 		protected TablesHeap m_tHeap;
 

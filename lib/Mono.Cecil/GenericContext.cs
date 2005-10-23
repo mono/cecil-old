@@ -64,6 +64,16 @@ namespace Mono.Cecil {
 			m_method = meth;
 		}
 
+		public GenericContext (IGenericParameterProvider provider)
+		{
+			if (provider is TypeDefinition)
+				m_type = provider as TypeDefinition;
+			else {
+				m_method = provider as MethodDefinition;
+				m_type = m_method.DeclaringType as TypeDefinition;
+			}
+		}
+
 		public GenericContext Clone ()
 		{
 			return new GenericContext (m_type, m_method);

@@ -36,7 +36,6 @@
 ./Mono.Cecil/GenericParamAttributes.cs
 ./Mono.Cecil/GenericParameter.cs
 ./Mono.Cecil/GenericParameterCollection.cs
-./Mono.Cecil/GenericParameterConstraints.cs
 ./Mono.Cecil/HashCodeProvider.cs
 ./Mono.Cecil/IArrayDimension.cs
 ./Mono.Cecil/IArrayDimensionCollection.cs
@@ -65,7 +64,6 @@
 ./Mono.Cecil/IGenericInstanceType.cs
 ./Mono.Cecil/IGenericParameter.cs
 ./Mono.Cecil/IGenericParameterCollection.cs
-./Mono.Cecil/IGenericParameterConstraints.cs
 ./Mono.Cecil/IGenericParameterProvider.cs
 ./Mono.Cecil/IHasConstant.cs
 ./Mono.Cecil/IHasMarshalSpec.cs

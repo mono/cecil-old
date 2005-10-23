@@ -36,7 +36,7 @@ namespace Mono.Cecil {
 		string m_name;
 		GenericParamAttributes m_attributes;
 		IGenericParameterProvider m_owner;
-		GenericParameterConstraints m_constraints;
+		TypeReferenceCollection m_constraints;
 
 		public int Position {
 			get { return m_position; }
@@ -52,8 +52,13 @@ namespace Mono.Cecil {
 			get { return m_owner; }
 		}
 
-		public GenericParameterConstraints Constraints {
-			get { return m_constraints; }
+		public TypeReferenceCollection Constraints {
+			get {
+				if (m_constraints == null)
+					m_constraints = new TypeReferenceCollection (null);
+
+				return m_constraints;
+			}
 		}
 
 		public override string Name {
@@ -83,7 +88,6 @@ namespace Mono.Cecil {
 		{
 			m_position = pos;
 			m_owner = owner;
-			m_constraints = new GenericParameterConstraints ();
 		}
 	}
 }

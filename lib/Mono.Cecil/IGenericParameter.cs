@@ -33,6 +33,6 @@ namespace Mono.Cecil {
 		int Position { get; }
 		GenericParamAttributes Attributes { get; set; }
 		IGenericParameterProvider Owner { get; }
-		GenericParameterConstraints Constraints { get; }
+		TypeReferenceCollection Constraints { get; }
 	}
 }

@@ -1,3 +1,12 @@
+2005-10-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/IGenericParameter.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Support generic parameters constraints.
+
 2005-10-21  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/FieldDefinition.cs

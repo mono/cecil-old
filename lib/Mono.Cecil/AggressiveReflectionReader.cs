@@ -69,14 +69,12 @@ namespace Mono.Cecil {
 			if (!m_tHeap.HasTable (typeof (GenericParamConstraintTable)))
 				return;
 
-			GenericParamConstraintTable gpcTable = MetadataRoot.Streams.TablesHeap [
-				typeof (GenericParamConstraintTable)] as GenericParamConstraintTable;
+			GenericParamConstraintTable gpcTable = m_tableReader.GetGenericParamConstraintTable ();
 			for (int i = 0; i < gpcTable.Rows.Count; i++) {
 				GenericParamConstraintRow gpcRow = gpcTable [i];
 				GenericParameter gp = GetGenericParameterAt (gpcRow.Owner);
 
-				//TypeReference constraint = GetTypeDefOrRef (gpcRow.Constraint);
-				// TODO: find how to know if constraint is an interface
+				gp.Constraints.Add (GetTypeDefOrRef (gpcRow.Constraint, new GenericContext (gp.Owner)));
 			}
 		}
 
