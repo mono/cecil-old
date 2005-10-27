@@ -77,12 +77,22 @@ namespace Mono.Cecil {
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & EventAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? EventAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= EventAttributes.RTSpecialName;
+				else
+					m_attributes &= ~EventAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & EventAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? EventAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= EventAttributes.SpecialName;
+				else
+					m_attributes &= ~EventAttributes.SpecialName;
+			}
 		}
 
 		public EventDefinition (string name, TypeReference eventType,

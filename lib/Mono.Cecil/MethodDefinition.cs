@@ -124,45 +124,83 @@ namespace Mono.Cecil {
 
 		public bool IsAbstract {
 			get { return (m_attributes & MethodAttributes.Abstract) != 0; }
-			set { m_attributes |= value ? MethodAttributes.Abstract : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.Abstract;
+				else
+					m_attributes &= ~MethodAttributes.Abstract;
+			}
 		}
 
 		public bool IsFinal {
 			get { return (m_attributes & MethodAttributes.Final) != 0; }
-			set { m_attributes |= value ? MethodAttributes.Final : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.Final;
+				else
+					m_attributes &= ~MethodAttributes.Final;
+			}
 		}
 
 		public bool IsHideBySignature {
 			get { return (m_attributes & MethodAttributes.HideBySig) != 0; }
-			set { m_attributes |= value ? MethodAttributes.HideBySig : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.HideBySig;
+				else
+					m_attributes &= ~MethodAttributes.HideBySig;
+			}
 		}
 
 		public bool IsNewSlot {
 			get { return (m_attributes & MethodAttributes.VtableLayoutMask) == MethodAttributes.NewSlot; }
-			set { m_attributes |= value ? (MethodAttributes.VtableLayoutMask & MethodAttributes.NewSlot) : 0; }
+			set {
+				if (value)
+					m_attributes |= (MethodAttributes.VtableLayoutMask & MethodAttributes.NewSlot);
+				else
+					m_attributes &= ~(MethodAttributes.VtableLayoutMask & MethodAttributes.NewSlot);
+			}
 		}
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & MethodAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? MethodAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.RTSpecialName;
+				else
+					m_attributes &= ~MethodAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & MethodAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? MethodAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.SpecialName;
+				else
+					m_attributes &= ~MethodAttributes.SpecialName;
+			}
 		}
 
 		public bool IsStatic {
 			get { return (m_attributes & MethodAttributes.Static) != 0; }
 			set {
-				m_attributes |= value ? MethodAttributes.Static : 0;
+				if (value)
+					m_attributes |= MethodAttributes.Static;
+				else
+					m_attributes &= ~MethodAttributes.Static;
 				this.HasThis = !value;
 			}
 		}
 
 		public bool IsVirtual {
 			get { return (m_attributes & MethodAttributes.Virtual) != 0; }
-			set { m_attributes |= value ? MethodAttributes.Virtual : 0; }
+			set {
+				if (value)
+					m_attributes |= MethodAttributes.Virtual;
+				else
+					m_attributes &= ~MethodAttributes.Virtual;
+			}
 		}
 
 		public bool IsConstructor {

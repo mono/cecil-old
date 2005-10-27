@@ -1,5 +1,12 @@
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/PropertyDefinition.cs:
+		Fix setters working on attributes.
+
 	* Mono.Cecil.Cil/CodeWriter.cs:
 		Compute max stack before writing method.
 

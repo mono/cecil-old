@@ -116,12 +116,22 @@ namespace Mono.Cecil {
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & PropertyAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? PropertyAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= PropertyAttributes.RTSpecialName;
+				else
+					m_attributes &= ~PropertyAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & PropertyAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? PropertyAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= PropertyAttributes.SpecialName;
+				else
+					m_attributes &= ~PropertyAttributes.SpecialName;
+			}
 		}
 
 		public PropertyDefinition (string name, TypeReference propType, PropertyAttributes attrs) : base (name)

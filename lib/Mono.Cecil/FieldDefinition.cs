@@ -109,27 +109,52 @@ namespace Mono.Cecil {
 
 		public bool IsLiteral {
 			get { return (m_attributes & FieldAttributes.Literal) != 0; }
-			set { m_attributes |= value ? FieldAttributes.Literal : 0; }
+			set {
+				if (value)
+					m_attributes |= FieldAttributes.Literal;
+				else
+					m_attributes &= ~FieldAttributes.Literal;
+			}
 		}
 
 		public bool IsReadOnly {
 			get { return (m_attributes & FieldAttributes.InitOnly) != 0; }
-			set { m_attributes |= value ? FieldAttributes.InitOnly : 0; }
+			set {
+				if (value)
+					m_attributes |= FieldAttributes.InitOnly;
+				else
+					m_attributes &= ~FieldAttributes.InitOnly;
+			}
 		}
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & FieldAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? FieldAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= FieldAttributes.RTSpecialName;
+				else
+					m_attributes &= ~FieldAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & FieldAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? FieldAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= FieldAttributes.SpecialName;
+				else
+					m_attributes &= ~FieldAttributes.SpecialName;
+			}
 		}
 
 		public bool IsStatic {
 			get { return (m_attributes & FieldAttributes.Static) != 0; }
-			set { m_attributes |= value ? FieldAttributes.Static : 0; }
+			set {
+				if (value)
+					m_attributes |= FieldAttributes.Static;
+				else
+					m_attributes &= ~FieldAttributes.Static;
+			}
 		}
 
 		public FieldDefinition (string name, TypeReference fieldType,

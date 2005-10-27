@@ -180,32 +180,62 @@ namespace Mono.Cecil {
 
 		public bool IsAbstract {
 			get { return (m_attributes & TypeAttributes.Abstract) != 0; }
-			set { m_attributes |= value ? TypeAttributes.Abstract : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.Abstract;
+				else
+					m_attributes &= ~TypeAttributes.Abstract;
+			}
 		}
 
 		public bool IsBeforeFieldInit {
 			get { return (m_attributes & TypeAttributes.BeforeFieldInit) != 0; }
-			set { m_attributes |= value ? TypeAttributes.BeforeFieldInit : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.BeforeFieldInit;
+				else
+					m_attributes &= ~TypeAttributes.BeforeFieldInit;
+			}
 		}
 
 		public bool IsInterface {
 			get { return (m_attributes & TypeAttributes.ClassSemanticMask) == TypeAttributes.Interface; }
-			set { m_attributes |= value ? (TypeAttributes.ClassSemanticMask & TypeAttributes.Interface) : 0; }
+			set {
+				if (value)
+					m_attributes |= (TypeAttributes.ClassSemanticMask & TypeAttributes.Interface);
+				else
+					m_attributes &= ~(TypeAttributes.ClassSemanticMask & TypeAttributes.Interface);
+			}
 		}
 
 		public bool IsRuntimeSpecialName {
 			get { return (m_attributes & TypeAttributes.RTSpecialName) != 0; }
-			set { m_attributes |= value ? TypeAttributes.RTSpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.RTSpecialName;
+				else
+					m_attributes &= ~TypeAttributes.RTSpecialName;
+			}
 		}
 
 		public bool IsSealed {
 			get { return (m_attributes & TypeAttributes.Sealed) != 0; }
-			set { m_attributes |= value ? TypeAttributes.Sealed : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.Sealed;
+				else
+					m_attributes &= ~TypeAttributes.Sealed;
+			}
 		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & TypeAttributes.SpecialName) != 0; }
-			set { m_attributes |= value ? TypeAttributes.SpecialName : 0; }
+			set {
+				if (value)
+					m_attributes |= TypeAttributes.SpecialName;
+				else
+					m_attributes &= ~TypeAttributes.SpecialName;
+			}
 		}
 
 		public bool IsEnum {
