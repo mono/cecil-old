@@ -147,33 +147,45 @@ namespace Mono.Cecil {
 			case TokenType.TypeDef :
 			case TokenType.TypeRef :
 			case TokenType.TypeSpec :
+				TypeReference declaringType = GetTypeDefOrRef (mrefRow.Class, context);
+				GenericContext nc = context.Clone ();
+
+				if (declaringType is GenericInstanceType) {
+					TypeDefinition type = ((GenericInstanceType) declaringType).ElementType as TypeDefinition;
+					if (type != null)
+						nc.Type = type;
+				} else if (declaringType is TypeDefinition)
+					nc.Type = declaringType as TypeDefinition;
+
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
 					member = new FieldReference (
-						m_root.Streams.StringsHeap [mrefRow.Name], GetTypeRefFromSig (fs.Type, context));
-					member.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
-				} else {
-					MethodSig ms = sig as MethodSig;
-					MethodReference methref = new MethodReference (
 						m_root.Streams.StringsHeap [mrefRow.Name],
-						ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
-					methref.DeclaringType = GetTypeDefOrRef (mrefRow.Class, context);
+						declaringType,
+						GetTypeRefFromSig (fs.Type, nc));
+				} else {
+					string name = m_root.Streams.StringsHeap [mrefRow.Name];
+					MethodSig ms = sig as MethodSig;
+					if (sig is MethodDefSig) {
+						TypeDefinition owner = GetTypeDefAt (mrefRow.Class.RID);
+						MethodDefinition [] meths = owner.Methods.GetMethod (name);
+						for (int i = 0; i < meths.Length; i++)
+							// TODO compare sig, this is wrong
+							if (meths [i].Parameters.Count == ms.ParamCount)
+								nc.Method = meths [i];
+					}
 
-					GenericContext nc = context.Clone ();
-
-					if (methref.DeclaringType is GenericInstanceType) {
-						TypeDefinition type = ((GenericInstanceType) methref.DeclaringType).ElementType as TypeDefinition;
-						if (type != null)
-							nc.Type = type;
-					} else if (methref.DeclaringType is TypeDefinition)
-						nc.Type = methref.DeclaringType as TypeDefinition;
+					MethodReference methref = new MethodReference (
+						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
+					methref.DeclaringType = declaringType;
 
 					methref.ReturnType = GetMethodReturnType (ms, nc);
+
 					methref.ReturnType.Method = methref;
 					for (int j = 0; j < ms.ParamCount; j++) {
 						Param p = ms.Parameters [j];
 						ParameterDefinition pdef = BuildParameterDefinition (
-							string.Concat ("arg", index), index, new ParamAttributes (), p, nc);
+							string.Concat ("A_", j), j, new ParamAttributes (), p, nc);
 						pdef.Method = methref;
 						methref.Parameters.Add (pdef);
 					}

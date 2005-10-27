@@ -28,6 +28,8 @@
 
 namespace Mono.Cecil {
 
+	using System.Text;
+
 	internal class GenericContext {
 
 		TypeDefinition m_type;
@@ -41,6 +43,10 @@ namespace Mono.Cecil {
 		public MethodDefinition Method {
 			get { return m_method; }
 			set { m_method = value; }
+		}
+
+		public bool Null {
+			get { return m_type == null && m_method == null; }
 		}
 
 		public GenericContext ()

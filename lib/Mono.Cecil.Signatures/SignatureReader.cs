@@ -170,6 +170,9 @@ namespace Mono.Cecil.Signatures {
 			callconv = m_blobData [start];
 			if ((callconv & 0x6) != 0) // field ?
 				return GetFieldSig (index);
+			if ((callconv & 0x10) != 0) // generic ?
+				return GetMethodDefSig (index);
+
 			switch (tt) {
 			case TokenType.TypeDef :
 			case TokenType.TypeRef :

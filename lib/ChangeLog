@@ -1,5 +1,10 @@
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/GenericContext.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Work on generics support.
+
 	* CodeGen/cecil.xml
 	  Mono.Cecil/ISecurityDeclarationCollection.cs
 	  Mono.Cecil/SecurityDeclarationCollection.cs:
