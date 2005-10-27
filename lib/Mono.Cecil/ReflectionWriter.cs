@@ -500,21 +500,26 @@ namespace Mono.Cecil {
 			m_propertyIndex++;
 		}
 
+		private MetadataToken GetMetadataToken (IHasSecurity container)
+		{
+			if (container is IAssemblyDefinition)
+				return new MetadataToken (TokenType.Assembly, 1);
+
+			IMetadataTokenProvider provider = (container as IMetadataTokenProvider);
+			if (container == null)
+				throw new ReflectionException ("Unknown Security Declaration parent");
+
+			return provider.MetadataToken;
+		}
+
 		public override void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls)
 		{
 			if (secDecls.Count == 0)
 				return;
 
+			MetadataToken parent = GetMetadataToken (secDecls.Container);
 			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
 			foreach (SecurityDeclaration secDec in secDecls) {
-				MetadataToken parent;
-				if (secDecls.Container is IAssemblyDefinition)
-					parent = new MetadataToken (TokenType.Assembly, 1);
-				else if (secDecls.Container is IMetadataTokenProvider)
-					parent = (secDecls.Container as IMetadataTokenProvider).MetadataToken;
-				else
-					throw new ReflectionException ("Unknown Security Declaration parent");
-
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					parent,

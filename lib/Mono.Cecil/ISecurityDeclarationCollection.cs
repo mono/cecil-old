@@ -53,7 +53,7 @@ namespace Mono.Cecil {
 
 	public interface ISecurityDeclarationCollection : ICollection, IReflectionVisitable {
 
-		SecurityDeclaration this [int index] { get; }
+		SecurityDeclaration this [SecurityAction action] { get; }
 
 		IHasSecurity Container { get; }
 
@@ -62,10 +62,8 @@ namespace Mono.Cecil {
 
 		void Add (SecurityDeclaration value);
 		void Clear ();
+		bool Contains (SecurityAction action);
 		bool Contains (SecurityDeclaration value);
-		int IndexOf (SecurityDeclaration value);
-		void Insert (int index, SecurityDeclaration value);
-		void Remove (SecurityDeclaration value);
-		void RemoveAt (int index);
+		void Remove (SecurityAction value);
 	}
 }

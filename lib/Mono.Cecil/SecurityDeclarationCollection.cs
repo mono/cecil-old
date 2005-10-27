@@ -38,7 +38,7 @@ namespace Mono.Cecil {
 
 	public sealed class SecurityDeclarationCollection : ISecurityDeclarationCollection {
 
-		IList m_items;
+		IDictionary m_items;
 		IHasSecurity m_container;
 
 		public event SecurityDeclarationEventHandler OnSecurityDeclarationAdded;
@@ -47,6 +47,11 @@ namespace Mono.Cecil {
 		public SecurityDeclaration this [int index] {
 			get { return m_items [index] as SecurityDeclaration; }
 			set { m_items [index] = value; }
+		}
+
+		public SecurityDeclaration this [SecurityAction action] {
+			get { return m_items [action] as SecurityDeclaration; }
+			set { m_items [action] = value; }
 		}
 
 		public IHasSecurity Container {
@@ -68,14 +73,26 @@ namespace Mono.Cecil {
 		public SecurityDeclarationCollection (IHasSecurity container)
 		{
 			m_container = container;
-			m_items = new ArrayList ();
+			m_items = new Hashtable ();
 		}
 
 		public void Add (SecurityDeclaration value)
 		{
+			if (value == null)
+				throw new ArgumentNullException ("value");
+
 			if (OnSecurityDeclarationAdded != null && !this.Contains (value))
 				OnSecurityDeclarationAdded (this, new SecurityDeclarationEventArgs (value));
-			m_items.Add (value);
+
+			// Each action can only be added once so...
+			SecurityDeclaration current = (SecurityDeclaration) m_items[value.Action];
+			if (current != null) {
+				// ... further additions are transformed into unions
+				current.PermissionSet = current.PermissionSet.Union (value.PermissionSet);
+			} else {
+				m_items.Add (value.Action, value);
+				SetHasSecurity (true);
+			}
 		}
 
 		public void Clear ()
@@ -84,52 +101,67 @@ namespace Mono.Cecil {
 				foreach (SecurityDeclaration item in this)
 					OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
 			m_items.Clear ();
+			SetHasSecurity (false);
+		}
+
+		public bool Contains (SecurityAction action)
+		{
+			return (m_items [action] != null);
 		}
 
 		public bool Contains (SecurityDeclaration value)
 		{
-			return m_items.Contains (value);
+			if (value == null)
+				return (m_items.Count == 0);
+
+			SecurityDeclaration item = (SecurityDeclaration) m_items[value.Action];
+			if (item == null)
+				return false;
+
+			return value.PermissionSet.IsSubsetOf (item.PermissionSet);
 		}
 
-		public int IndexOf (SecurityDeclaration value)
+		public void Remove (SecurityAction action)
 		{
-			return m_items.IndexOf (value);
-		}
-
-		public void Insert (int index, SecurityDeclaration value)
-		{
-			if (OnSecurityDeclarationAdded != null && !this.Contains (value))
-				OnSecurityDeclarationAdded (this, new SecurityDeclarationEventArgs (value));
-			m_items.Insert (index, value);
-		}
-
-		public void Remove (SecurityDeclaration value)
-		{
-			if (OnSecurityDeclarationRemoved != null && this.Contains (value))
-				OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (value));
-			m_items.Remove (value);
-		}
-
-		public void RemoveAt (int index)
-		{
-			if (OnSecurityDeclarationRemoved != null)
-				OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (this [index]));
-			m_items.Remove (index);
+			SecurityDeclaration item = (SecurityDeclaration) m_items[action];
+			if (OnSecurityDeclarationRemoved != null && (item != null))
+				OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
+			m_items.Remove (action);
+			SetHasSecurity (this.Count > 0);
 		}
 
 		public void CopyTo (Array ary, int index)
 		{
-			m_items.CopyTo (ary, index);
+			m_items.Values.CopyTo (ary, index);
 		}
 
 		public IEnumerator GetEnumerator ()
 		{
-			return m_items.GetEnumerator ();
+			return m_items.Values.GetEnumerator ();
 		}
 
 		public void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitSecurityDeclarationCollection (this);
+		}
+
+		private void SetHasSecurity (bool value)
+		{
+			ITypeDefinition td = (m_container as ITypeDefinition);
+			if (td != null) {
+				if (value)
+					td.Attributes |= TypeAttributes.HasSecurity;
+				else
+					td.Attributes &= ~TypeAttributes.HasSecurity;
+				return;
+			}
+			IMethodDefinition md = (m_container as IMethodDefinition);
+			if (md != null) {
+				if (value)
+					md.Attributes |= MethodAttributes.HasSecurity;
+				else
+					md.Attributes &= ~MethodAttributes.HasSecurity;
+			}
 		}
 	}
 }

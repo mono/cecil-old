@@ -1,3 +1,17 @@
+2005-10-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil\SecurityDeclaration.cs
+		Copy the permission set when cloning.
+	* Mono.Cecil\SecurityDeclarationCollection.cs
+		Ajusted to use an Hashtable, to Union permission sets on
+		the same action and to set/unset HasSecurity when needed.
+	* Mono.Cecil\ModuleDefinition.cs:
+		Added TODO (remainder) for complete 2.0 format support.
+	* Mono.Cecil\ReflectionWriter.cs:
+		Move MetadataToken finding outside the loop.
+	* Mono.Cecil\ISecurityDeclarationCollection.cs:
+		Adjust interface.
+
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/TypeDefinition.cs
