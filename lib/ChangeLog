@@ -1,3 +1,10 @@
+2005-10-27  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/cecil.xml
+	  Mono.Cecil/ISecurityDeclarationCollection.cs
+	  Mono.Cecil/SecurityDeclarationCollection.cs:
+		Remove the security declaration from the codegen.
+
 2005-10-27  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Mono.Cecil\SecurityDeclaration.cs
