@@ -1,5 +1,11 @@
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CilWorker.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/OpCode.cs:
+		Override op == and != on opcodes.
+
 	* Mono.Cecil/FieldDefinition.cs
 	  Mono.Cecil/TypeDefinition.cs
 	  Mono.Cecil/MethodDefinition.cs

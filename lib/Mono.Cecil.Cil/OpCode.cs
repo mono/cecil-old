@@ -108,5 +108,15 @@ namespace Mono.Cecil.Cil {
 			OpCode v = (OpCode) obj;
 			return v.m_op1 == m_op1 && v.m_op2 == m_op2;
 		}
+
+		public static bool operator == (OpCode one, OpCode other)
+		{
+			return one.Equals (other);
+		}
+
+		public static bool operator != (OpCode one, OpCode other)
+		{
+			return !one.Equals (other);
+		}
 	}
 }
