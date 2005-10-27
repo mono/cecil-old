@@ -1,3 +1,8 @@
+2005-10-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericParamAttributes.cs:
+		Add new constraints flags.
+
 2005-10-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericParameter.cs
