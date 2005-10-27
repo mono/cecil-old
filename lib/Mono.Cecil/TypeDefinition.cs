@@ -381,6 +381,7 @@ namespace Mono.Cecil {
 		{
 			visitor.VisitTypeDefinition (this);
 
+			this.GenericParameters.Accept (visitor);
 			this.Interfaces.Accept (visitor);
 			this.Constructors.Accept (visitor);
 			this.Methods.Accept (visitor);

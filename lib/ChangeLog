@@ -1,5 +1,9 @@
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs:
+		Add generics parameters in visitor path.
+
 	* Mono.Cecil/GenericParamAttributes.cs:
 		Add new constraints flags.
 

@@ -260,6 +260,8 @@ namespace Mono.Cecil {
 		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitMethodDefinition (this);
+
+			this.GenericParameters.Accept (visitor);
 			this.Parameters.Accept (visitor);
 
 			if (this.PInvokeInfo != null)
