@@ -37,6 +37,7 @@ namespace Mono.Cecil.Metadata {
 
 	internal sealed class MetadataWriter : BaseMetadataVisitor {
 
+		AssemblyDefinition m_assembly;
 		MetadataRoot m_root;
 		TargetRuntime m_runtime;
 		ImageWriter m_imgWriter;
@@ -62,13 +63,10 @@ namespace Mono.Cecil.Metadata {
 		MemoryBinaryWriter m_fieldDataWriter;
 		MemoryBinaryWriter m_resWriter;
 
-		uint m_mdStart;
-		uint m_mdSize;
-
-		uint m_resStart;
-		uint m_resSize;
-
-		uint m_itStart;
+		uint m_mdStart, m_mdSize;
+		uint m_resStart, m_resSize;
+		uint m_snsStart, m_snsSize;
+		uint m_imporTableStart;
 
 		uint m_entryPointToken;
 
@@ -78,8 +76,8 @@ namespace Mono.Cecil.Metadata {
 			get { return m_cilWriter; }
 		}
 
-		public uint ItStartPos {
-			get { return m_itStart; }
+		public uint ImportTablePosition {
+			get { return m_imporTableStart; }
 		}
 
 		public uint EntryPointToken {
@@ -87,8 +85,10 @@ namespace Mono.Cecil.Metadata {
 			set { m_entryPointToken = value; }
 		}
 
-		public MetadataWriter (MetadataRoot root, AssemblyKind kind, TargetRuntime rt, MemoryBinaryWriter writer)
+		public MetadataWriter (AssemblyDefinition asm, MetadataRoot root,
+			AssemblyKind kind, TargetRuntime rt, MemoryBinaryWriter writer)
 		{
+			m_assembly = asm;
 			m_root = root;
 			m_runtime = rt;
 			m_imgWriter = new ImageWriter (this, kind, writer);
@@ -239,6 +239,12 @@ namespace Mono.Cecil.Metadata {
 			m_fieldDataWriter.QuadAlign ();
 		}
 
+		uint GetStrongNameSignatureSize ()
+		{
+			// TODO: in 1.x its 128, in 2.0 it may be more
+			return 128;
+		}
+
 		public override void VisitMetadataRoot (MetadataRoot root)
 		{
 			WriteMemStream (m_cilWriter);
@@ -246,7 +252,14 @@ namespace Mono.Cecil.Metadata {
 			WriteMemStream (m_resWriter);
 			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
 			WriteMemStream (m_fieldDataWriter);
-			// write strong name here
+
+			// for now, we only reserve the place for the strong name signature
+			if ((m_assembly.Name.Flags & AssemblyFlags.PublicKey) > 0) {
+				m_snsStart = (uint) m_binaryWriter.BaseStream.Position;
+				m_snsSize = GetStrongNameSignatureSize ();
+				m_binaryWriter.Write (new byte [m_snsSize]);
+				m_binaryWriter.QuadAlign ();
+			}
 
 			m_mdStart = (uint) m_binaryWriter.BaseStream.Position;
 
@@ -417,17 +430,21 @@ namespace Mono.Cecil.Metadata {
 
 			if (m_mdSize > 0)
 				img.CLIHeader.Metadata = new DataDirectory (
-					img.TextSection.VirtualAddress + m_mdStart, m_itStart - m_mdStart);
+					img.TextSection.VirtualAddress + m_mdStart, m_imporTableStart - m_mdStart);
 
 			if (m_resSize > 0)
 				img.CLIHeader.Resources = new DataDirectory (
 					img.TextSection.VirtualAddress + m_resStart, m_resSize);
+
+			if (m_snsStart > 0)
+				img.CLIHeader.StrongNameSignature = new DataDirectory (
+					img.TextSection.VirtualAddress + m_snsStart, m_snsSize);
 		}
 
 		public override void TerminateMetadataRoot (MetadataRoot root)
 		{
 			m_mdSize = (uint) (m_binaryWriter.BaseStream.Position - m_mdStart);
-			m_itStart = (uint) m_binaryWriter.BaseStream.Position;
+			m_imporTableStart = (uint) m_binaryWriter.BaseStream.Position;
 			m_binaryWriter.Write (new byte [0x60]); // imports
 			m_imgWriter.Initialize ();
 			PatchHeader ();

@@ -1,5 +1,14 @@
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Implement a big of public key management,
+		here we reserve space for the strong name
+		signature if needed.
+
 	* Mono.Cecil/StructureWriter.cs
 	  Mono.Cecil/StructureReader.cs:
 		Disable public key writing until

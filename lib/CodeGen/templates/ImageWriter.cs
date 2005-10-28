@@ -155,7 +155,7 @@ namespace Mono.Cecil.Binary {
 				break;
 			}
 
-			RVA importTable = new RVA (img.TextSection.VirtualAddress + m_mdWriter.ItStartPos);
+			RVA importTable = new RVA (img.TextSection.VirtualAddress + m_mdWriter.ImportTablePosition);
 
 			img.PEOptionalHeader.DataDirectories.ImportTable = new DataDirectory (importTable, 0x57);
 
@@ -206,7 +206,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportTable (ImportTable it)
 		{
-			m_textWriter.BaseStream.Position = m_mdWriter.ItStartPos;
+			m_textWriter.BaseStream.Position = m_mdWriter.ImportTablePosition;
 			m_textWriter.Write (it.ImportLookupTable.Value);
 			m_textWriter.Write (it.DateTimeStamp);
 			m_textWriter.Write (it.ForwardChain);
