@@ -89,7 +89,8 @@ namespace Mono.Cecil {
 			m_reader = m_module.ImageReader;
 			m_root = m_module.Image.MetadataRoot;
 			m_tHeap = m_root.Streams.TablesHeap;
-			m_tableReader = m_reader.MetadataReader.TableReader;
+			if (m_reader != null)
+				m_tableReader = m_reader.MetadataReader.TableReader;
 			m_codeReader = new CodeReader (this);
 			m_sigReader = new SignatureReader (m_root, this);
 			m_isCorlib = module.Assembly.Name.Name == Constants.Corlib;

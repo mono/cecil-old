@@ -1,5 +1,12 @@
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/MethodReference.cs:
+		Work on generics writing api.
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix a bug when defining a fresh assembly.
+
 	* Mono.Cecil/GenericInstanceType.cs
 	  Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil/IGenericParameterProvider.cs

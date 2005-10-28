@@ -99,8 +99,10 @@ namespace Mono.Cecil {
 
 		public GenericParameterCollection GenericParameters {
 			get {
-				if (m_genparams == null)
+				if (m_genparams == null) {
 					m_genparams = new GenericParameterCollection (this);
+					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
+				}
 
 				return m_genparams;
 			}
@@ -148,6 +150,11 @@ namespace Mono.Cecil {
 			this (name, ns, scope)
 		{
 			this.IsValueType = valueType;
+		}
+
+		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
+		{
+			ea.GenericParameter.Position = m_genparams.Count + 1;
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

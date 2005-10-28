@@ -83,10 +83,17 @@ namespace Mono.Cecil {
 			get { return Name; }
 		}
 
-		public GenericParameter (int pos, IGenericParameterProvider owner) :
+		internal GenericParameter (int pos, IGenericParameterProvider owner) :
 			base (string.Empty, string.Empty)
 		{
 			m_position = pos;
+			m_owner = owner;
+		}
+
+		public GenericParameter (string name, IGenericParameterProvider owner) :
+			base (string.Empty, string.Empty)
+		{
+			m_name = name;
 			m_owner = owner;
 		}
 	}
