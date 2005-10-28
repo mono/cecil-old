@@ -1,5 +1,12 @@
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Uniformize the API.
+
 	* Mono.Cecil.Signatures/SignatureWriter.cs:
 		Correct a bug in strings encoding in custom attributes.
 

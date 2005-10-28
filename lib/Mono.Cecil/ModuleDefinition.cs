@@ -192,6 +192,7 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Type is already attached, clone it instead");
 
 			ea.TypeDefinition.Module = this;
+			ea.TypeDefinition.AttachToScope (this);
 		}
 
 		void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)

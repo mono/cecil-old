@@ -344,8 +344,7 @@ namespace Mono.Cecil {
 				TypeDefinition t = new TypeDefinition (
 					m_root.Streams.StringsHeap [type.Name],
 					m_root.Streams.StringsHeap [type.Namespace],
-					type.Flags,
-					m_module);
+					type.Flags);
 				t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeDef, i);
 
 				m_typeDefs [i] = t;

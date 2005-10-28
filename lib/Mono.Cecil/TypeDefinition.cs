@@ -249,29 +249,18 @@ namespace Mono.Cecil {
 			}
 		}
 
-		internal TypeDefinition (string name, string ns, TypeAttributes attrs, ModuleDefinition module) :
+		internal TypeDefinition (string name, string ns, TypeAttributes attrs) :
 			base (name, ns)
 		{
 			m_hasInfo = false;
 			m_attributes = attrs;
-			m_scope = module;
 		}
 
 		public TypeDefinition (string name, string ns,
-			TypeAttributes attributes, ModuleDefinition module, TypeReference baseType) :
-			this (name, ns, attributes, module)
+			TypeAttributes attributes, TypeReference baseType) :
+			this (name, ns, attributes)
 		{
-			if (baseType.Module != module)
-				baseType = module.Import (baseType);
-
 			this.BaseType = baseType;
-		}
-
-		public TypeDefinition (string name, string ns,
-			TypeAttributes attributes, ModuleDefinition module, Type baseType) :
-		this (name, ns, attributes, module)
-		{
-			this.BaseType = module.Import (baseType);
 		}
 
 		void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
@@ -375,8 +364,7 @@ namespace Mono.Cecil {
 			TypeDefinition nt = new TypeDefinition (
 				type.Name,
 				type.Namespace,
-				type.Attributes,
-				type.Module);
+				type.Attributes);
 
 			nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
 

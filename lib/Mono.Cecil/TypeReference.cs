@@ -152,6 +152,11 @@ namespace Mono.Cecil {
 			this.IsValueType = valueType;
 		}
 
+		internal void AttachToScope (IMetadataScope scope)
+		{
+			m_scope = scope;
+		}
+
 		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
 		{
 			ea.GenericParameter.Position = m_genparams.Count + 1;
