@@ -162,7 +162,9 @@ namespace Mono.Cecil.Cil {
 							instr.Operand.GetType ().FullName);
 					break;
 				case OperandType.InlineMethod :
-					if (instr.Operand is IMethodReference)
+					if (instr.Operand is IGenericInstanceMethod)
+						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
+					else if (instr.Operand is IMethodReference)
 						WriteToken ((instr.Operand as IMethodReference).MetadataToken);
 					else
 						throw new ReflectionException ("Wrong operand for InlineMethod: {0}",
@@ -181,6 +183,8 @@ namespace Mono.Cecil.Cil {
 					if (instr.Operand is ITypeReference)
 						WriteToken (m_reflectWriter.GetTypeDefOrRefToken (
 								instr.Operand as ITypeReference));
+					else if (instr.Operand is IGenericInstanceMethod)
+						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
 					else if (instr.Operand is IMetadataTokenProvider)
 						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
 					else

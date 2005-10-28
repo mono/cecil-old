@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public interface IGenericParameterProvider {
+	public interface IGenericParameterProvider : IMetadataTokenProvider {
 
 		GenericParameterCollection GenericParameters { get; }
 	}

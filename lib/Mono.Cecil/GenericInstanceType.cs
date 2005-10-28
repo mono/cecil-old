@@ -59,6 +59,11 @@ namespace Mono.Cecil {
 			set { throw new InvalidOperationException (); }
 		}
 
+		public override bool IsValueType {
+			get { return m_elementType.IsValueType; }
+			set { throw new InvalidOperationException (); }
+		}
+
 		public override string FullName {
 			get {
 				StringBuilder sb = new StringBuilder ();

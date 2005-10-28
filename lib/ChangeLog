@@ -1,3 +1,15 @@
+2005-10-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/IGenericParameterProvider.cs
+	  Mono.Cecil.Signatures/Var.cs
+	  Mono.Cecil.Signatures/MVar.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Work on generics writing.
+
 2005-10-27  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CodeReader.cs

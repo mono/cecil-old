@@ -34,8 +34,9 @@ namespace Mono.Cecil.Signatures {
 
 		public int Index;
 
-		public MVAR () : base (ElementType.MVar)
+		public MVAR (int index) : base (ElementType.MVar)
 		{
+			this.Index = index;
 		}
 	}
 }

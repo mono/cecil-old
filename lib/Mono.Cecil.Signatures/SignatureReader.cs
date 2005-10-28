@@ -320,13 +320,7 @@ namespace Mono.Cecil.Signatures {
 			if (Utilities.ReadCompressedInteger (data, start, out start) != 0x0a)
 				throw new ReflectionException ("Invalid MethodSpec signature");
 
-			GenericInstSignature gis = new GenericInstSignature ();
-			gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
-			gis.Types = new SigType [gis.Arity];
-			for (int i = 0; i < gis.Types.Length; i++)
-				gis.Types [i] = this.ReadType (data, start, out start);
-
-			return new MethodSpec (gis);
+			return new MethodSpec (ReadGenericInstSignature (data, start, out start));
 		}
 
 		RetType ReadRetType (byte [] data, int pos, out int start)
@@ -472,13 +466,9 @@ namespace Mono.Cecil.Signatures {
 				sa.Type = this.ReadType (data, start, out start);
 				return sa;
 			case ElementType.Var:
-				VAR var = new VAR ();
-				var.Index = Utilities.ReadCompressedInteger (data, start, out start);
-				return var;
+				return new VAR (Utilities.ReadCompressedInteger (data, start, out start));
 			case ElementType.MVar:
-				MVAR mvar = new MVAR ();
-				mvar.Index = Utilities.ReadCompressedInteger (data, start, out start);
-				return mvar;
+				return new MVAR (Utilities.ReadCompressedInteger (data, start, out start));
 			case ElementType.GenericInst:
 				GENERICINST ginst = new GENERICINST ();
 
@@ -488,16 +478,24 @@ namespace Mono.Cecil.Signatures {
 				ginst.Type = Utilities.GetMetadataToken (CodedIndex.TypeDefOrRef,
 					(uint) Utilities.ReadCompressedInteger (data, start, out start));
 
-				GenericInstSignature gis = new GenericInstSignature ();
-				gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
-				gis.Types = new SigType [gis.Arity];
-				for (int i = 0; i < gis.Arity; i++)
-					gis.Types [i] = this.ReadType (data, start, out start);
-				ginst.Signature = gis;
+				ginst.Signature = ReadGenericInstSignature (data, start, out start);
+
 				return ginst;
 			default :
 				return new SigType (element);
 			}
+		}
+
+		GenericInstSignature ReadGenericInstSignature (byte [] data, int pos, out int start)
+		{
+			start = pos;
+			GenericInstSignature gis = new GenericInstSignature ();
+			gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
+			gis.Types = new SigType [gis.Arity];
+			for (int i = 0; i < gis.Arity; i++)
+				gis.Types [i] = this.ReadType (data, start, out start);
+
+			return gis;
 		}
 
 		CustomMod [] ReadCustomMods (byte [] data, int pos, out int start)
