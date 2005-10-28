@@ -1,5 +1,8 @@
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Signatures/SignatureWriter.cs:
+		Correct a bug in strings encoding in custom attributes.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs
 	  Mono.Cecil/StructureWriter.cs

@@ -439,14 +439,11 @@ namespace Mono.Cecil.Signatures {
 				writer.Write ((long) elem.Value);
 				break;
 			case ElementType.String :
-				string s = (string) elem.Value;
-				Utilities.WriteCompressedInteger (writer, s.Length);
-				writer.Write (Encoding.UTF8.GetBytes (s));
-				break;
 			case ElementType.Type :
-				string t = (string) elem.Value;
-				Utilities.WriteCompressedInteger (writer, t.Length);
-				writer.Write (Encoding.UTF8.GetBytes (t));
+				string s = (string) elem.Value;
+				byte [] data = Encoding.UTF8.GetBytes (s);
+				Utilities.WriteCompressedInteger (writer, data.Length);
+				writer.Write (data);
 				break;
 			default :
 				throw new NotImplementedException ("WriteElem " + elem.FieldOrPropType.ToString ());
