@@ -72,6 +72,13 @@ namespace Mono.Cecil {
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)
 		{
 			AssemblyTable asmTable = m_tableWriter.GetAssemblyTable ();
+
+			// TODO: public keys are not supported yet
+			if ((name.Flags & AssemblyFlags.PublicKey) > 0)
+				name.Flags &= ~AssemblyFlags.PublicKey;
+			if (name.PublicKey != null || name.PublicKey.Length > 0)
+				name.PublicKey = new byte [0];
+
 			AssemblyRow asmRow = m_rowWriter.CreateAssemblyRow (
 				name.HashAlgorithm,
 				(ushort) name.Version.Major,

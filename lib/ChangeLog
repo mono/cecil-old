@@ -1,5 +1,10 @@
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/StructureReader.cs:
+		Disable public key writing until
+		it is implemented.
+
 	* Mono.Cecil/GenericParameter.cs
 	  Mono.Cecil/TypeReference.cs
 	  Mono.Cecil/MethodReference.cs:
