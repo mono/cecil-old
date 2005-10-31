@@ -32,15 +32,14 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle ("Cecil")]
-[assembly: AssemblyDescription ("Replacement framework for Reflection & Emit")]
+[assembly: AssemblyDescription ("Library for reading and writing CIL images")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyProduct ("Cecil")]
-[assembly: AssemblyCopyright (
-	"(C) 2005, Jb Evain")]
+[assembly: AssemblyCopyright ("(C) 2005, Jb Evain")]
 [assembly: AssemblyCulture ("")]
 
 [assembly: CLSCompliant (false)]
 [assembly: ComVisible (false)]
 
-[assembly: AssemblyVersion ("0.0.*")]
+[assembly: AssemblyVersion ("0.1.0.0")]
 

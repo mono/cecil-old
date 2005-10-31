@@ -1,5 +1,12 @@
 2005-10-31  Jb Evain  <jbevain@gmail.com>
 
+	* AUTHORS,
+	  NEWS,
+	  README,
+	  TODO,
+	  Mono.Cecil/AssemblyInfo.cs:
+		Cecil 0.1 release.
+
 	* Mono.Cecil/ReflectionReader.cs:
 		Force value type property on known core types.
 
