@@ -1,3 +1,8 @@
+2005-10-31  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Force value type property on known core types.
+
 2005-10-28  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/TypeReference.cs

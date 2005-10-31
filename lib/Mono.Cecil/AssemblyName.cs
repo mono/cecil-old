@@ -167,7 +167,7 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public AssemblyNameDefinition (string name, string culture, Version version) : base(name, culture, version)
+		public AssemblyNameDefinition (string name, string culture, Version version) : base (name, culture, version)
 		{
 		}
 
