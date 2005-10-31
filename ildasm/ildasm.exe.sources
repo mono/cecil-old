@@ -1,0 +1,6 @@
+Mono.Disassembler/CilWriter.cs
+Mono.Disassembler/CodeDisassembler.cs
+Mono.Disassembler/Driver.cs
+Mono.Disassembler/Formater.cs
+Mono.Disassembler/ReflectionDisassembler.cs
+Mono.Disassembler/StructureDisassembler.cs
