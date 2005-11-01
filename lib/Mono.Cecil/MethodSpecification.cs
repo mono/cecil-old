@@ -1,5 +1,5 @@
 //
-// IGenericInstanceMethod.cs
+// MethodSpecification.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,49 +28,48 @@
 
 namespace Mono.Cecil {
 
-	using System.Text;
+	using System;
 
-	public sealed class GenericInstanceMethod : MethodSpecification, IGenericInstanceMethod {
+	public abstract class MethodSpecification : MethodReference, IMethodSpecification {
 
-		GenericArgumentCollection m_arguments;
+		MethodReference m_elementMethod;
 
-		public GenericArgumentCollection Arguments {
-			get { return m_arguments; }
+		public MethodReference ElementMethod {
+			get { return m_elementMethod; }
+			set { m_elementMethod = value; }
 		}
 
-		public int Arity {
-			get { return m_arguments.Count; }
+		public override MethodCallingConvention CallingConvention {
+			get { return m_elementMethod.CallingConvention; }
+			set { throw new InvalidOperationException (); }
 		}
 
-		public GenericInstanceMethod (MethodReference elemMethod) : base (elemMethod)
+		public override bool HasThis {
+			get { return m_elementMethod.HasThis; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override bool ExplicitThis {
+			get { return m_elementMethod.ExplicitThis; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override MethodReturnType ReturnType {
+			get { return m_elementMethod.ReturnType; }
+			set { throw new InvalidOperationException (); }
+		}
+
+		public override ParameterDefinitionCollection Parameters {
+			get { return m_elementMethod.Parameters; }
+		}
+
+		public override GenericParameterCollection GenericParameters {
+			get { return m_elementMethod.GenericParameters; }
+		}
+
+		internal MethodSpecification (MethodReference elemMethod) : base (string.Empty)
 		{
-			m_arguments = new GenericArgumentCollection (this);
-		}
-
-		public override string ToString ()
-		{
-			StringBuilder sb = new StringBuilder ();
-			MethodReference meth = this.ElementMethod;
-			sb.Append (meth.ReturnType.ReturnType.FullName);
-			sb.Append (" ");
-			sb.Append (meth.DeclaringType.FullName);
-			sb.Append ("::");
-			sb.Append (meth.Name);
-			sb.Append ("<");
-			for (int i = 0; i < this.Arguments.Count; i++) {
-				if (i > 0)
-					sb.Append (",");
-				sb.Append (this.Arguments [i].FullName);
-			}
-			sb.Append (">");
-			sb.Append ("(");
-			for (int i = 0; i < meth.Parameters.Count; i++) {
-				sb.Append (meth.Parameters [i].ParameterType.FullName);
-				if (i < meth.Parameters.Count - 1)
-					sb.Append (",");
-			}
-			sb.Append (")");
-			return sb.ToString ();
+			m_elementMethod = elemMethod;
 		}
 	}
 }

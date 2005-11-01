@@ -79,6 +79,7 @@
 ./Mono.Cecil/IMethodDefinitionCollection.cs
 ./Mono.Cecil/IMethodReturnType.cs
 ./Mono.Cecil/IMethodSignature.cs
+./Mono.Cecil/IMethodSpecification.cs
 ./Mono.Cecil/IModifierOptional.cs
 ./Mono.Cecil/IModifierRequired.cs
 ./Mono.Cecil/IModifierType.cs
@@ -110,6 +111,7 @@
 ./Mono.Cecil/ITypeDefinitionCollection.cs
 ./Mono.Cecil/ITypeReference.cs
 ./Mono.Cecil/ITypeReferenceCollection.cs
+./Mono.Cecil/ITypeSpecification.cs
 ./Mono.Cecil/LinkedResource.cs
 ./Mono.Cecil/ManifestResourceAttributes.cs
 ./Mono.Cecil/MarshalDesc.cs
@@ -123,6 +125,7 @@
 ./Mono.Cecil/MethodReference.cs
 ./Mono.Cecil/MethodReturnType.cs
 ./Mono.Cecil/MethodSemanticsAttributes.cs
+./Mono.Cecil/MethodSpecification.cs
 ./Mono.Cecil/Modifiers.cs
 ./Mono.Cecil/ModuleDefinition.cs
 ./Mono.Cecil/ModuleDefinitionCollection.cs
@@ -162,6 +165,7 @@
 ./Mono.Cecil/TypeDefinitionCollection.cs
 ./Mono.Cecil/TypeReference.cs
 ./Mono.Cecil/TypeReferenceCollection.cs
+./Mono.Cecil/TypeSpecification.cs
 ./Mono.Cecil/VariantType.cs
 ./Mono.Cecil.Binary/BaseImageVisitor.cs
 ./Mono.Cecil.Binary/CLIHeader.cs

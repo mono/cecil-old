@@ -28,8 +28,6 @@
 
 namespace Mono.Cecil {
 
-	public interface IGenericInstanceMethod : IGenericInstance, IMethodReference {
-
-		MethodReference ElementMethod { get; set; }
+	public interface IGenericInstanceMethod : IMethodSpecification, IGenericInstance {
 	}
 }

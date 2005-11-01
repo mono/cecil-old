@@ -28,8 +28,8 @@
 
 namespace Mono.Cecil {
 
-	public interface IModifierType : ITypeReference {
-		TypeReference ElementType { get; }
+	public interface IModifierType : ITypeSpecification {
+
 		TypeReference ModifierType { get; }
 	}
 }

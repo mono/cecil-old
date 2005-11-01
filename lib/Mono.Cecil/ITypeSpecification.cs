@@ -1,5 +1,5 @@
 //
-// ReferenceType.cs
+// ITypeSpecification.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,14 +28,8 @@
 
 namespace Mono.Cecil {
 
-	public sealed class ReferenceType : TypeSpecification, IReferenceType {
+	public interface ITypeSpecification : ITypeReference {
 
-		public override string FullName {
-			get { return string.Concat (this.ElementType.FullName, "&"); }
-		}
-
-		public ReferenceType (TypeReference type) : base (type)
-		{
-		}
+		TypeReference ElementType { get; }
 	}
 }

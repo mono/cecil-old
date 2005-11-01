@@ -28,44 +28,17 @@
 
 namespace Mono.Cecil {
 
-	using Mono.Cecil;
+	public abstract class ModType : TypeSpecification, IModifierType {
 
-	public abstract class ModType : TypeReference, IModifierType {
-
-		TypeReference m_elementType;
 		TypeReference m_modifierType;
-
-		public override string Name {
-			get { return m_elementType.Name; }
-			set { m_elementType.Name = value; }
-		}
-
-		public override string Namespace {
-			get { return m_elementType.Namespace; }
-			set { m_elementType.Namespace = value; }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_elementType.Scope; }
-		}
-
-		public TypeReference ElementType {
-			get { return m_elementType; }
-			set { m_elementType = value; }
-		}
 
 		public TypeReference ModifierType {
 			get { return m_modifierType; }
 			set { m_modifierType = value; }
 		}
 
-		public override string FullName {
-			get { return m_elementType.FullName; }
-		}
-
-		public ModType (TypeReference elemType, TypeReference modType) : base (string.Empty, string.Empty)
+		public ModType (TypeReference elemType, TypeReference modType) : base (elemType)
 		{
-			m_elementType = elemType;
 			m_modifierType = modType;
 		}
 	}

@@ -28,8 +28,6 @@
 
 namespace Mono.Cecil {
 
-	public interface IGenericInstanceType : IGenericInstance, ITypeReference {
-
-		TypeReference ElementType { get; }
+	public interface IGenericInstanceType : IGenericInstance, ITypeSpecification {
 	}
 }

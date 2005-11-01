@@ -28,36 +28,10 @@
 
 namespace Mono.Cecil {
 
-	public sealed class PinnedType : TypeReference, IPinnedType {
+	public sealed class PinnedType : TypeSpecification, IPinnedType {
 
-		TypeReference m_pinnedType;
-
-		public override string Name {
-			get { return m_pinnedType.Name; }
-			set { m_pinnedType.Name = value; }
-		}
-
-		public override string Namespace {
-			get { return m_pinnedType.Namespace; }
-			set { m_pinnedType.Namespace = value; }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_pinnedType.Scope; }
-		}
-
-		public TypeReference ElementType {
-			get { return m_pinnedType; }
-			set { m_pinnedType = value; }
-		}
-
-		public override string FullName {
-			get { return m_pinnedType.FullName; }
-		}
-
-		public PinnedType (TypeReference pType) : base (string.Empty, string.Empty)
+		public PinnedType (TypeReference pType) : base (pType)
 		{
-			m_pinnedType = pType;
 		}
 	}
 }

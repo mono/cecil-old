@@ -28,36 +28,14 @@
 
 namespace Mono.Cecil {
 
-	public sealed class PointerType : TypeReference, IPointerType {
-
-		private TypeReference m_pointedType;
-
-		public override string Name {
-			get { return m_pointedType.Name; }
-			set { m_pointedType.Name = value; }
-		}
-
-		public override string Namespace {
-			get { return m_pointedType.Namespace; }
-			set { m_pointedType.Namespace = value; }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_pointedType.Scope; }
-		}
-
-		public TypeReference ElementType {
-			get { return m_pointedType; }
-			set { m_pointedType = value; }
-		}
+	public sealed class PointerType : TypeSpecification, IPointerType {
 
 		public override string FullName {
-			get { return string.Concat (m_pointedType.FullName, "*"); }
+			get { return string.Concat (this.ElementType.FullName, "*"); }
 		}
 
-		public PointerType (TypeReference pType) : base (string.Empty, string.Empty)
+		public PointerType (TypeReference pType) : base (pType)
 		{
-			m_pointedType = pType;
 		}
 	}
 }

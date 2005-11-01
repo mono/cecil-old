@@ -33,15 +33,9 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Signatures;
 
-	public sealed class ArrayType : TypeReference, IArrayType {
+	public sealed class ArrayType : TypeSpecification, IArrayType {
 
-		private TypeReference m_elementsType;
 		private ArrayDimensionCollection m_dimensions;
-
-		public TypeReference ElementType {
-			get { return m_elementsType; }
-			set { m_elementsType = value; }
-		}
 
 		public ArrayDimensionCollection Dimensions {
 			get { return m_dimensions; }
@@ -49,20 +43,6 @@ namespace Mono.Cecil {
 
 		public int Rank {
 			get { return m_dimensions.Count; }
-		}
-
-		public override string Name {
-			get { return m_elementsType.Name; }
-			set { m_elementsType.Name = value; }
-		}
-
-		public override string Namespace {
-			get { return m_elementsType.Namespace; }
-			set { m_elementsType.Namespace = value; }
-		}
-
-		public override IMetadataScope Scope {
-			get { return m_elementsType.Scope; }
 		}
 
 		public bool IsSizedArray {
@@ -107,10 +87,8 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public ArrayType (TypeReference elementsType) :
-			base (elementsType.Name, elementsType.Namespace)
+		public ArrayType (TypeReference elementsType) : base (elementsType)
 		{
-			m_elementsType = elementsType;
 			m_dimensions = new ArrayDimensionCollection (this);
 		}
 	}

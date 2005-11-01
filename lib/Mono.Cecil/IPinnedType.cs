@@ -28,8 +28,6 @@
 
 namespace Mono.Cecil {
 
-	public interface IPinnedType : ITypeReference {
-
-		TypeReference ElementType { get; }
+	public interface IPinnedType : ITypeSpecification {
 	}
 }

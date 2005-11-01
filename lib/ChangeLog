@@ -1,3 +1,26 @@
+2005-11-01  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/MethodSpecification.cs
+	  Mono.Cecil/TypeSpecification.cs
+	  Mono.Cecil/IMethodSpecification.cs
+	  Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/IGenericInstanceType.cs
+	  Mono.Cecil/GenericInstanceMethod.cs
+	  Mono.Cecil/IModifierType.cs
+	  Mono.Cecil/IPinnedType.cs
+	  Mono.Cecil/ReferenceType.cs
+	  Mono.Cecil/IGenericInstanceMethod.cs
+	  Mono.Cecil/PinnedType.cs
+	  Mono.Cecil/PointerType.cs
+	  Mono.Cecil/IPointerType.cs
+	  Mono.Cecil/IReferenceType.cs
+	  Mono.Cecil/IArrayType.cs
+	  Mono.Cecil/ITypeSpecification.cs
+	  Mono.Cecil/Modifiers.cs
+	  Mono.Cecil.dll.sources:
+		Uniformize the specification model.
+
 2005-10-31  Jb Evain  <jbevain@gmail.com>
 
 	* AUTHORS,

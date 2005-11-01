@@ -28,9 +28,8 @@
 
 namespace Mono.Cecil {
 
-	public interface IArrayType : ITypeReference {
+	public interface IArrayType : ITypeSpecification {
 		ArrayDimensionCollection Dimensions { get; }
-		TypeReference ElementType { get; set; }
 		int Rank { get; }
 		bool IsSizedArray { get; }
 	}
