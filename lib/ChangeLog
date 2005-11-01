@@ -1,5 +1,13 @@
 2005-11-01  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/FunctionPointerType.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Work on function pointers.
+
+	* Mono.Cecil/AssemblyInfo.cs:
+		Increase Cecil SVN version.
+
 	* Mono.Cecil/ArrayType.cs
 	  Mono.Cecil/MethodSpecification.cs
 	  Mono.Cecil/TypeSpecification.cs

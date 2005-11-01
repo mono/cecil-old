@@ -29,10 +29,9 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Text;
 
-	using Mono.Cecil.Signatures;
-
-	public sealed class FunctionPointerType : TypeReference, IFunctionPointerType {
+	public sealed class FunctionPointerType : TypeSpecification, IFunctionPointerType {
 
 		MethodReference m_function;
 
@@ -75,18 +74,27 @@ namespace Mono.Cecil {
 		}
 
 		public override string FullName {
-			get { return m_function.ToString (); }
+			get {
+				StringBuilder sb = new StringBuilder ();
+				sb.Append (m_function.Name);
+				sb.Append (" ");
+				sb.Append (m_function.ReturnType.ReturnType.FullName);
+				sb.Append (" *(");
+				for (int i = 0; i < m_function.Parameters.Count; i++) {
+					if (i > 0)
+						sb.Append (",");
+					sb.Append (m_function.Parameters [i].ParameterType.FullName);
+				}
+				sb.Append (")");
+				return sb.ToString ();
+			}
 		}
 
-		public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv,
-			ParameterDefinitionCollection parameters, MethodReturnType retType) :
-			base (string.Empty, string.Empty)
+		public FunctionPointerType (bool hasThis, bool explicitThis, MethodCallingConvention callConv, MethodReturnType retType) :
+			base (retType.ReturnType)
 		{
-			m_function = new MethodReference ("function", hasThis, explicitThis, callConv);
-			m_function.DeclaringType = this;
+			m_function = new MethodReference ("method", hasThis, explicitThis, callConv);
 			m_function.ReturnType = retType;
-			foreach (ParameterDefinition param in parameters)
-				(m_function.Parameters as ParameterDefinitionCollection).Add (param);
 		}
 	}
 }

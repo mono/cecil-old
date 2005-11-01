@@ -914,18 +914,18 @@ namespace Mono.Cecil {
 					return new PointerType (SearchCoreType (Constants.Void));
 				return new PointerType (GetTypeRefFromSig (pointer.PtrType, context));
 			case ElementType.FnPtr :
-				// not very sure of this
 				FNPTR funcptr = t as FNPTR;
-				ParameterDefinitionCollection parameters = new ParameterDefinitionCollection (null);
+				FunctionPointerType fnptr = new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
+					funcptr.Method.MethCallConv, GetMethodReturnType (funcptr.Method, context));
+
 				for (int i = 0; i < funcptr.Method.ParamCount; i++) {
 					Param p = funcptr.Method.Parameters [i];
-					ParameterDefinition pdef = new ParameterDefinition (p.ByRef ? new ReferenceType (
-							GetTypeRefFromSig (p.Type, context)) : GetTypeRefFromSig (p.Type, context));
-					parameters.Add (pdef);
+					fnptr.Parameters.Add (BuildParameterDefinition (
+							string.Concat ("A_", i),
+							i, (ParamAttributes) 0,
+							p, context));
 				}
-				return new FunctionPointerType (funcptr.Method.HasThis, funcptr.Method.ExplicitThis,
-					funcptr.Method.MethCallConv,
-					parameters, GetMethodReturnType (funcptr.Method, context));
+				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
 				return context.Type.GenericParameters [var.Index];
