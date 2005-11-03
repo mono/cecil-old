@@ -1,0 +1,12 @@
+<gendarme>
+	<ruleset name="default">
+		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+		<rules include="*" from="Gendarme.Rules.Security.dll" />
+	</ruleset>
+	<ruleset name="security">
+		<rules include="*" from="Gendarme.Rules.Security.dll" />
+	</ruleset>
+	<ruleset name="performance">
+		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+	</ruleset>
+</gendarme>
