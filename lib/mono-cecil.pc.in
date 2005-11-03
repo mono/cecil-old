@@ -5,4 +5,4 @@ Libraries=${assemblies_dir}/Mono.Cecil.dll
 Name: Mono.Cecil
 Description: Mono.Cecil Library
 Version: 0.1
-Libs: -r:Mono.Cecil.dll
+Libs: -r:${Libraries}
