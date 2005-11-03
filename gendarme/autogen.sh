@@ -1,7 +1,7 @@
 #! /bin/sh
 
 PROJECT=gendarme
-FILE=console/main.cs
+FILE=console/ConsoleRunner.cs
 CONFIGURE=configure.ac
 
 : ${AUTOCONF=autoconf}
