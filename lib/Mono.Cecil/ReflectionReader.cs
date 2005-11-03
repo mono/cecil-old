@@ -745,7 +745,7 @@ namespace Mono.Cecil {
 			return cattr;
 		}
 
-		protected ParameterDefinition BuildParameterDefinition (string name, int sequence,
+		public ParameterDefinition BuildParameterDefinition (string name, int sequence,
 			ParamAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
@@ -835,7 +835,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
+		public MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
 		{
 			TypeReference retType = null;
 			if (msig.RetType.Void)

@@ -196,6 +196,21 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
+		public MethodSig GetStandAloneMethodSig (uint index)
+		{
+			byte [] data = m_root.Streams.BlobHeap.Read (index);
+			int start;
+			if ((data [0] & 0x5) > 0) {
+				MethodRefSig mrs = new MethodRefSig (index);
+				ReadMethodRefSig (mrs, data, 0, out start);
+				return mrs;
+			} else {
+				MethodDefSig mds = new MethodDefSig (index);
+				ReadMethodDefSig (mds, data, 0, out start);
+				return mds;
+			}
+		}
+
 		public override void VisitMethodDefSig (MethodDefSig methodDef)
 		{
 			int start;

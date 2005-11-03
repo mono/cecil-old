@@ -130,6 +130,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((byte) GetParameterIndex (body, (ParameterDefinition) instr.Operand));
 					break;
 				case OperandType.InlineSig :
+					throw new NotImplementedException ();
 				case OperandType.InlineI :
 					m_codeWriter.Write ((int) instr.Operand);
 					break;

@@ -1,3 +1,14 @@
+2005-11-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/CallSite.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ICallSite.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.dll.sources:
+		Implement support for calli opcodes reading.
+
 2005-11-01  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/FunctionPointerType.cs

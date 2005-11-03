@@ -14,6 +14,7 @@
 ./Mono.Cecil/BaseReflectionReader.cs
 ./Mono.Cecil/BaseReflectionVisitor.cs
 ./Mono.Cecil/BaseStructureVisitor.cs
+./Mono.Cecil/CallSite.cs
 ./Mono.Cecil/Constants.cs
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs
@@ -44,6 +45,7 @@
 ./Mono.Cecil/IAssemblyLinkedResource.cs
 ./Mono.Cecil/IAssemblyName.cs
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
+./Mono.Cecil/ICallSite.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
 ./Mono.Cecil/IConstructorCollection.cs
 ./Mono.Cecil/ICustomAttribute.cs
