@@ -39,7 +39,7 @@ namespace Mono.Cecil {
 		string m_namespace;
 		bool m_fullNameDiscarded;
 		string m_fullName;
-		bool m_isValueType;
+		protected bool m_isValueType;
 		TypeReference m_decType;
 		protected IMetadataScope m_scope;
 		MetadataToken m_token;

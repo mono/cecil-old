@@ -43,6 +43,10 @@ namespace Mono.Cecil {
 			get { return m_arguments; }
 		}
 
+		public override bool IsValueType {
+			set { m_isValueType = value; }
+		}
+
 		public override string FullName {
 			get {
 				StringBuilder sb = new StringBuilder ();
