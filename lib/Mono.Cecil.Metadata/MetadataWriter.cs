@@ -242,8 +242,15 @@ namespace Mono.Cecil.Metadata {
 
 		uint GetStrongNameSignatureSize ()
 		{
-			// TODO: in 1.x its 128, in 2.0 it may be more
-			return 128;
+			if (m_assembly.Name.PublicKey != null) {
+				// in fx 2.0 the key may be from 384 to 16384 bits
+				// so we must calculate the signature size based on 
+				// the size of the public key (minus the 32 byte header)
+				int size = m_assembly.Name.PublicKey.Length;
+				if (size > 0)
+					return (uint) (size - 32);
+			}
+			return 128; // default strongname signature size
 		}
 
 		public override void VisitMetadataRoot (MetadataRoot root)
