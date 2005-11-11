@@ -106,7 +106,8 @@ namespace Mono.Cecil {
 
 		public int IndexOf (TypeReference value)
 		{
-			return Array.IndexOf (this.BaseGetAllKeys (), value.FullName);
+			string [] keys = this.BaseGetAllKeys ();
+			return Array.IndexOf (keys, value.FullName, 0, keys.Length);
 		}
 
 		public void Remove (TypeReference value)
@@ -137,5 +138,16 @@ namespace Mono.Cecil {
 		{
 			visitor.VisitTypeReferenceCollection (this);
 		}
+		
+#if CF_1_0
+		internal object[] BaseGetAllValues ()
+		{ 
+			object [] values = new object [this.Count];
+			for (int i=0; i < values.Length; ++i) {
+				values [i] = this.BaseGet (i); 
+			}
+			return values;
+		}
+#endif
 	}
 }

@@ -646,7 +646,10 @@ namespace Mono.Cecil.Signatures {
 
 			length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
 			br.BaseStream.Position = next;
-			na.FieldOrPropName = Encoding.UTF8.GetString (br.ReadBytes (length));
+			
+			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
+			byte [] bytes = br.ReadBytes (length);
+			na.FieldOrPropName = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
 
 			na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType, ref read);
 
@@ -699,7 +702,9 @@ namespace Mono.Cecil.Signatures {
 				} else {
 					int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
 					br.BaseStream.Position = next;
-					elem.Value = Encoding.UTF8.GetString (br.ReadBytes (length));
+					// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
+					byte [] bytes = br.ReadBytes (length);
+					elem.Value = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
 				}
 
 				return elem;
@@ -787,7 +792,9 @@ namespace Mono.Cecil.Signatures {
 				} else {
 					int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
 					br.BaseStream.Position = next;
-					elem.Value = Encoding.UTF8.GetString (br.ReadBytes (length));
+					// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
+					byte [] bytes = br.ReadBytes (length);
+					elem.Value = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
 				}
 
 				return elem;
@@ -909,7 +916,8 @@ namespace Mono.Cecil.Signatures {
 			byte [] str = new byte [length];
 			Buffer.BlockCopy (data, start, str, 0, length);
 			start += length;
-			return Encoding.UTF8.GetString (str);
+			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
+			return Encoding.UTF8.GetString (str, 0, str.Length);
 		}
 	}
 }

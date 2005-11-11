@@ -162,8 +162,9 @@ namespace Mono.Cecil {
 
 			m_asm = asm;
 			m_main = main;
+#if !CF_1_0
 			m_mvid = Guid.NewGuid ();
-
+#endif
 			m_new = reader == null;
 
 			if (!m_new) {

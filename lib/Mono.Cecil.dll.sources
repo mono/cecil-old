@@ -15,6 +15,7 @@
 ./Mono.Cecil/BaseReflectionVisitor.cs
 ./Mono.Cecil/BaseStructureVisitor.cs
 ./Mono.Cecil/CallSite.cs
+./Mono.Cecil/CompactFrameworkCompatibility.cs
 ./Mono.Cecil/Constants.cs
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs

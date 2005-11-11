@@ -83,17 +83,21 @@ namespace Mono.Cecil {
 		{
 			using (FileStream fs = new FileStream (
 					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
-				using (BinaryWriter bw = new BinaryWriter (fs)) {
+				BinaryWriter bw = new BinaryWriter (fs);
+				try {
 
 					MemoryBinaryWriter writer = new MemoryBinaryWriter ();
 					WriteAssembly (asm, writer);
 					bw.Write (writer.ToArray ());
+				} finally {
+					bw.Close();
 				}
 			}
 		}
 
+#if !CF_1_0
 		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
-		{
+		{			
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
 				WriteAssembly (asm, writer);
@@ -105,5 +109,6 @@ namespace Mono.Cecil {
 		{
 			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
 		}
+#endif
 	}
 }

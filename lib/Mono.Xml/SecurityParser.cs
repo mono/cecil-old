@@ -50,7 +50,11 @@ namespace Mono.Xml {
 		public void LoadXml (string xml)
 		{
 			root = null;
+#if CF_1_0
+			stack = new Stack ();
+#else
 			stack.Clear ();
+#endif
 			Parse (new StringReader (xml), this);
 		}
 

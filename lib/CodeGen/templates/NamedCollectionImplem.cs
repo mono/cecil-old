@@ -106,7 +106,8 @@ namespace <%=$cur_coll.target%> {
 
 		public int IndexOf (<%=$cur_coll.type%> value)
 		{
-			return Array.IndexOf (this.BaseGetAllKeys (), value.FullName);
+			string [] keys = this.BaseGetAllKeys ();
+			return Array.IndexOf (keys, value.FullName, 0, keys.Length);
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
@@ -137,5 +138,16 @@ namespace <%=$cur_coll.target%> {
 		{
 			visitor.<%=$cur_coll.visitThis%> (this);
 		}
-<% end %>	}
+<% end %>
+#if CF_1_0
+		internal object[] BaseGetAllValues ()
+		{ 
+			object [] values = new object [this.Count];
+			for (int i=0; i < values.Length; ++i) {
+				values [i] = this.BaseGet (i); 
+			}
+			return values;
+		}
+#endif
+	}
 }

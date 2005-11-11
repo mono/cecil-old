@@ -1,3 +1,25 @@
+2005-11-10	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* Mono.Cecil/CompactFrameworkCompatibility.cs
+	  Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs
+	  Mono.Cecil.Metadata/CultureUtils.cs
+	  Mono.Xml/SecurityParser.cs
+	  Mono.Xml/SmallXmlParser.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  cecil.build
+	  	Implement support for compiling on the CompactFramework
+	
 2005-11-08  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericInstanceType.cs

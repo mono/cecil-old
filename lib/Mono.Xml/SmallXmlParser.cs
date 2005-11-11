@@ -169,7 +169,8 @@ namespace Mono.Xml
 		private Exception UnexpectedEndError ()
 		{
 			string [] arr = new string [elementNames.Count];
-			elementNames.CopyTo (arr, 0);
+			// COMPACT FRAMEWORK NOTE: CopyTo is not visible through the Stack class
+			(elementNames as ICollection).CopyTo (arr, 0);
 			return Error (String.Format (
 							  "Unexpected end of stream. Element stack content is {0}", String.Join (",", arr)));
 		}
@@ -318,7 +319,8 @@ namespace Mono.Xml
 					break;
 				if (idx == nameBuffer.Length) {
 					char [] tmp = new char [idx * 2];
-					Array.Copy (nameBuffer, tmp, idx);
+					// COMPACT FRAMEWORK NOTE: Array.Copy(sourceArray, destinationArray, count) is not available.
+					Array.Copy (nameBuffer, 0, tmp, 0, idx);
 					nameBuffer = tmp;
 				}
 				nameBuffer [idx++] = c;
@@ -354,8 +356,13 @@ namespace Mono.Xml
 			column = 0;
 			handler = null;
 			reader = null;
+#if CF_1_0
+			elementNames = new Stack ();
+			xmlSpaces = new Stack ();
+#else
 			elementNames.Clear ();
 			xmlSpaces.Clear ();
+#endif
 			attributes.Clear ();
 			buffer.Length = 0;
 			xmlSpace = null;

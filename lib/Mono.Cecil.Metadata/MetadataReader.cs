@@ -110,7 +110,7 @@ namespace Mono.Cecil.Metadata {
 				}
 				version = new byte [read];
 				Buffer.BlockCopy (buffer, 0, version, 0, read);
-				header.Version = Encoding.UTF8.GetString (version);
+				header.Version = Encoding.UTF8.GetString (version, 0, version.Length);
 
 				pos += length - headpos + 3;
 				pos &= ~3;
@@ -179,8 +179,9 @@ namespace Mono.Cecil.Metadata {
 
 			heap [(uint) 0] = string.Empty;
 
-			using (BinaryReader br = new BinaryReader (new MemoryStream (heap.Data),
-													   Encoding.UTF8)) {
+			BinaryReader br = new BinaryReader (new MemoryStream (heap.Data),
+													   Encoding.UTF8);
+			try {
 
 				br.BaseStream.Position++;
 
@@ -194,6 +195,9 @@ namespace Mono.Cecil.Metadata {
 					} else
 						buffer.Append (cur);
 				}
+			} finally {
+				// COMPACT FRAMEWORK NOTE: BinaryReader is not IDisposable
+				br.Close();
 			}
 		}
 
@@ -202,9 +206,9 @@ namespace Mono.Cecil.Metadata {
 			this.VisitHeap (heap);
 			heap.Tables = new TableCollection (heap);
 
-			using (BinaryReader br = new BinaryReader (
-					   new MemoryStream (heap.Data))) {
-
+			BinaryReader br = new BinaryReader (
+					   new MemoryStream (heap.Data));
+			try {
 				heap.Reserved = br.ReadUInt32 ();
 				heap.MajorVersion = br.ReadByte ();
 				heap.MinorVersion = br.ReadByte ();
@@ -212,6 +216,9 @@ namespace Mono.Cecil.Metadata {
 				heap.Reserved2 = br.ReadByte ();
 				heap.Valid = br.ReadInt64 ();
 				heap.Sorted = br.ReadInt64 ();
+			} finally {
+				// COMPACT FRAMEWORK NOTE: BinaryReader is not IDisposable
+				br.Close();
 			}
 		}
 

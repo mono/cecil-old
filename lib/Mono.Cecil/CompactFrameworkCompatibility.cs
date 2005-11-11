@@ -1,8 +1,8 @@
 //
-// CultureUtils.cs
+// FrameworkCompatibility.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Rodrigo B. de Oliveira (rodrigobamboo@gmail.com)
 //
 // (C) 2005 Jb Evain
 //
@@ -25,59 +25,77 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
-namespace Mono.Cecil.Metadata {
-
-	using System;
-	using System.Collections;
-	using System.Globalization;
-
-	class CultureUtils {
-
-		static IDictionary m_cultures;
-
-		CultureUtils ()
-		{
-		}
-
-		static void LoadCultures ()
-		{
-			if (m_cultures != null)
-				return;
-
 #if CF_1_0
-			CultureInfo [] cultures = new CultureInfo[0];
-#else
-			CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
-#endif
-			m_cultures = new Hashtable (cultures.Length + 2);
-
-			foreach (CultureInfo ci in cultures)
-				if (!m_cultures.Contains (ci.Name))
-					m_cultures.Add (ci.Name, ci);
-
-			if (!m_cultures.Contains (string.Empty))
-				m_cultures.Add (string.Empty, CultureInfo.InvariantCulture);
-
-			m_cultures.Add ("neutral", CultureInfo.InvariantCulture);
+namespace System {
+	
+	internal class NotImplementedException : System.Exception {
+		
+		public NotImplementedException (string message) : base (message)
+		{
 		}
 
-		public static bool IsValid (string culture)
-		{
-			if (culture == null)
-				throw new ArgumentNullException ("culture");
-
-			LoadCultures ();
-
-			return m_cultures.Contains (culture);
-		}
-
-		public static CultureInfo GetCultureInfo (string culture)
-		{
-			if (IsValid (culture))
-				return m_cultures [culture] as CultureInfo;
-
-			return CultureInfo.InvariantCulture;
+		public NotImplementedException ()
+		{	
 		}
 	}
 }
+
+namespace System.Security {
+	
+	public class PermissionSet {
+		
+		public PermissionSet Copy ()
+		{
+			return this;
+		}
+
+		public PermissionSet Union (PermissionSet other)
+		{
+			return this;
+		}
+
+		public bool IsSubsetOf (PermissionSet other)
+		{
+			return false;
+		}
+
+		public string ToXml ()
+		{
+			return string.Empty;
+		}
+		
+		public static PermissionSet FromXml (string xml)
+		{
+			return new PermissionSet ();
+		}
+	}
+
+	public class SecurityElement 	{
+		
+		public SecurityElement (string tag)
+		{	
+		}
+
+		public string Text
+		{
+			get { return string.Empty; }
+			set {}
+		}
+
+		public void AddChild (SecurityElement child)
+		{	
+		}
+
+		public void AddAttribute (string name, string value)
+		{	
+		}
+	}
+}
+
+namespace System.Security.Permissions {
+	
+	public class SecurityAttribute {
+		
+	}
+}
+#endif

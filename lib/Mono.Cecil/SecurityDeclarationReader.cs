@@ -41,7 +41,9 @@ namespace Mono.Cecil {
 
 	internal class SecurityDeclarationReader {
 
-		static object[] action = new object[1] { (SSP.SecurityAction) 0 };
+#if !CF_1_0
+		static object [] action = new object [1] { (SSP.SecurityAction) 0 };
+#endif
 
 		private SecurityParser m_parser;
 		private SignatureReader sr;
@@ -62,6 +64,7 @@ namespace Mono.Cecil {
 		public SecurityDeclaration FromByteArray (SecurityAction action, byte[] declaration)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
+#if !CF_1_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
 
 			if (declaration[0] == 0x2e) {
@@ -87,10 +90,11 @@ namespace Mono.Cecil {
 				catch {
 				}
 			}
-
+#endif
 			return dec;
 		}
 
+#if !CF_1_0
 		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
@@ -119,5 +123,6 @@ namespace Mono.Cecil {
 
 			return sa;
 		}
+#endif
 	}
 }

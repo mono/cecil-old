@@ -977,7 +977,8 @@ namespace Mono.Cecil {
 			case ElementType.R8 :
 				return br.ReadDouble ();
 			case ElementType.String :
-				string str = Encoding.Unicode.GetString (br.ReadBytes (constant.Length));
+				byte [] bytes = br.ReadBytes (constant.Length);
+				string str = Encoding.Unicode.GetString (bytes, 0, bytes.Length);
 				return str;
 			case ElementType.Class :
 				return null;

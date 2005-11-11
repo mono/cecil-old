@@ -169,7 +169,8 @@ namespace Mono.Cecil.Metadata {
 			if (data == null || data.Length == 0)
 				return 0;
 
-			string key = Encoding.ASCII.GetString (data);
+			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported
+			string key = Encoding.ASCII.GetString (data, 0, data.Length);
 			if (m_blobCache.Contains (key))
 				return (uint) m_blobCache [key];
 

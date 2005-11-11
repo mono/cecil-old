@@ -107,7 +107,7 @@ namespace Mono.Cecil.Binary {
 				buffer [read++] = cur;
 			}
 			name = new char [read];
-			Array.Copy (buffer, name, read);
+			Array.Copy (buffer, 0, name, 0, read);
 			sect.Name = read == 0 ? string.Empty : new string (name);
 			if (sect.Name == Section.Text)
 				m_image.TextSection = sect;
@@ -169,11 +169,15 @@ namespace Mono.Cecil.Binary {
 				m_image.ImportAddressTable.HintNameTableRVA);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();
-			hnt.RuntimeMain = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
+			
+			byte [] bytes = m_binaryReader.ReadBytes (11);
+			hnt.RuntimeMain = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportTable.Name);
-			hnt.RuntimeLibrary = Encoding.ASCII.GetString (m_binaryReader.ReadBytes (11));
+				
+			bytes = m_binaryReader.ReadBytes (11);
+			hnt.RuntimeLibrary = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
