@@ -1,3 +1,9 @@
+2005-11-13	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* Mono.Cecil/ReflectionReader.cs
+		Fix for NRE when reading assemblies with a field initializer
+		pointing to a data section
+		(TestCases/Regression/OddInt64Initializer.dll).
+
 2005-11-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Mono.Cecil.Metadata/MetadataWriter.cs
