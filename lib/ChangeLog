@@ -1,3 +1,16 @@
+2005-11-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethodDefinitionCollection.cs
+	  Mono.Cecil/MethodDefinitionCollection.cs
+	  CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/IIndexedCollection.cs:
+		Add a new search method.
+	* CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs:
+		Style.
+
 2005-11-13	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 	* Mono.Cecil/ReflectionReader.cs
 		Fix for NRE when reading assemblies with a field initializer

@@ -140,7 +140,7 @@ namespace <%=$cur_coll.target%> {
 		}
 <% end %>
 #if CF_1_0
-		internal object[] BaseGetAllValues ()
+		internal object [] BaseGetAllValues ()
 		{ 
 			object [] values = new object [this.Count];
 			for (int i=0; i < values.Length; ++i) {

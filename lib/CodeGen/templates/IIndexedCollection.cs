@@ -74,6 +74,7 @@ namespace <%=$cur_coll.target%> {
 		MethodDefinition [] GetMethod (string name);
 		MethodDefinition GetMethod (string name, Type [] parameters);
 		MethodDefinition GetMethod (string name, ITypeReference [] parameters);
+		MethodDefinition GetMethod (string name, ParameterDefinitionCollection parameters);
 <%
 		when "FieldDefinition"
 %>
