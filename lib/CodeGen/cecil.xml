@@ -371,6 +371,7 @@
 				<table name="File" tag="16" />
 				<table name="ExportedType" tag="17" />
 				<table name="ManifestResource" tag="18" />
+				<table name="GenericParam" tag="19" />
 			</codedindex>
 			<codedindex name="HasFieldMarshal" size="1">
 				<table name="Field" tag="0" />
@@ -679,7 +680,7 @@
 		<collection type="TypeDefinition" container="TypeDefinition" target="Mono.Cecil" visit="IReflection" name="NestedType" indexed="true" />
 		<collection type="MemberReference" container="ModuleDefinition" target="Mono.Cecil" visit="IReflection" indexed="true" />
 		<collection type="GenericParameter" container="IGenericParameterProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
-		<collection type="TypeReference" name="GenericArgument" container="IGenericInstance" target="Mono.Cecil" indexed="true" />
+		<collection type="TypeReference" name="GenericArgument" container="IGenericArgumentProvider" target="Mono.Cecil" indexed="true" />
 	</collections>
 
 </cecil>

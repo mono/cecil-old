@@ -1,3 +1,10 @@
+2005-11-23  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IGenericArgumentProvider.cs
+		Style.
+	* CodeGen/cecil.xml:
+		Mirror Martin's change in the codegen engine.
+
 2005-11-23  Martin Baulig  <martin@ximian.com>
 
 	Generics API changes:
