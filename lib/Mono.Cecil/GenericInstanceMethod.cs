@@ -32,20 +32,12 @@ namespace Mono.Cecil {
 
 	public sealed class GenericInstanceMethod : MethodSpecification, IGenericInstanceMethod {
 
-		GenericArgumentCollection m_arguments;
-
-		public GenericArgumentCollection Arguments {
-			get { return m_arguments; }
-		}
-
 		public int Arity {
-			get { return m_arguments.Count; }
+			get { return GenericArguments.Count; }
 		}
 
 		public GenericInstanceMethod (MethodReference elemMethod) : base (elemMethod)
-		{
-			m_arguments = new GenericArgumentCollection (this);
-		}
+		{ }
 
 		public override string ToString ()
 		{
@@ -57,10 +49,10 @@ namespace Mono.Cecil {
 			sb.Append ("::");
 			sb.Append (meth.Name);
 			sb.Append ("<");
-			for (int i = 0; i < this.Arguments.Count; i++) {
+			for (int i = 0; i < this.GenericArguments.Count; i++) {
 				if (i > 0)
 					sb.Append (",");
-				sb.Append (this.Arguments [i].FullName);
+				sb.Append (this.GenericArguments [i].FullName);
 			}
 			sb.Append (">");
 			sb.Append ("(");

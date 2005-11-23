@@ -31,6 +31,6 @@ namespace Mono.Cecil {
 	public interface IGenericInstance {
 
 		int Arity { get; }
-		GenericArgumentCollection Arguments { get; }
+		GenericArgumentCollection GenericArguments { get; }
 	}
 }

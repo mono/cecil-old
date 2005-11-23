@@ -1,5 +1,66 @@
 2005-11-23  Martin Baulig  <martin@ximian.com>
 
+	Generics API changes:
+	TypeReference and MethodReference now contain a
+	`GenericArguments' property (of type `GenericArgumentCollection')
+	and `GenericParameters' is moved into TypeDefinition/MethodDefinition.
+
+	* Mono.Cecil/IGenericArgumentProvider.cs: New file.
+	(IGenericArgumentProvider): New public interface.
+
+	* Mono.Cecil/IGenericArgumentCollection.cs
+	(IGenericArgumentCollection.Container): Changed type from
+	`IGenericInstance' -> `IGenericArgumentProvider'.
+
+	* Mono.Cecil/IGenericInstance.cs
+	(IGenericInstance.Arguments): Renamed to `GenericArguments'.
+
+	* Mono.Cecil/ITypeReference.cs
+	(ITypeReference): Implement `IGenericArgumentProvider' instead of
+	`IGenericParameterProvider'.
+
+	* Mono.Cecil/ITypeDefinition.cs
+	(ITypeDefinition): Implement `IGenericParameterProvider'.
+
+	* Mono.Cecil/IMethod.cs
+	(IMethodReference): Implement `IGenericArgumentProvider' instead of
+	`IGenericParameterProvider'.
+	(IMethodDefinition): Implement `IGenericParameterProvider'.
+
+	* Mono.Cecil/TypeReference.cs
+	(TypeReference.GenericParameters): Removed.
+	(TypeReference.GenericArguments): New public property.
+
+	* Mono.Cecil/TypeDefinition.cs
+	(TypeDefinition.GenericParameters): New public property.
+	(TypeDefinition.OnGenericParameterAdded): If a generic parameter
+	is added, also add it to the `GenericArguments'.
+
+	* Mono.Cecil/MethodReference.cs
+	(MethodReference.GenericParameters): Removed.
+	(MethodReference.GenericArguments): New public property.
+
+	* Mono.Cecil/MethodDefinition.cs
+	(MethodDefinition.GenericParameters): New public property.
+	(MethodDefinition.OnGenericParameterAdded): If a generic parameter
+	is added, also add it to the `GenericArguments'.
+
+	* Mono.Cecil/GenericInstanceType.cs
+	(GenericInstanceType): Removed the `m_arguments' field; we now
+	inherit the `GenericArguments' property from `TypeReference'.
+
+	* Mono.Cecil/GenericInstanceMethod.cs
+	(GenericInstanceMethod): Removed the `m_arguments' field; we now
+	inherit the `GenericArguments' property from `MethodReference'.
+
+	* Mono.Cecil/GenericContext.cs
+	(GenericContext): We now operate on type/method references and not
+	definitions.
+	(GenericContext.Type): Changed type to `TypeReference'.
+	(GenericContext.Method): Changed type to `MethodReference'.	
+
+2005-11-23  Martin Baulig  <martin@ximian.com>
+
 	* Mono.Cecil.Metadata/TokenType.cs: Added `GenericParam'.
 
 	* Mono.Cecil.Metadata/Utilities.cs

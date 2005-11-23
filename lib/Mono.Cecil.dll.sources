@@ -61,6 +61,7 @@
 ./Mono.Cecil/IFieldDefinitionCollection.cs
 ./Mono.Cecil/IFieldLayoutInfo.cs
 ./Mono.Cecil/IFunctionPointerType.cs
+./Mono.Cecil/IGenericArgumentProvider.cs
 ./Mono.Cecil/IGenericArgumentCollection.cs
 ./Mono.Cecil/IGenericInstance.cs
 ./Mono.Cecil/IGenericInstanceMethod.cs

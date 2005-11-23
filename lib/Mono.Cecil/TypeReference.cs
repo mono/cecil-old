@@ -45,7 +45,7 @@ namespace Mono.Cecil {
 		MetadataToken m_token;
 
 		CustomAttributeCollection m_customAttrs;
-		GenericParameterCollection m_genparams;
+		GenericArgumentCollection m_arguments;
 
 		protected ModuleDefinition m_module;
 
@@ -97,14 +97,12 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericParameterCollection GenericParameters {
+		public GenericArgumentCollection GenericArguments {
 			get {
-				if (m_genparams == null) {
-					m_genparams = new GenericParameterCollection (this);
-					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
-				}
+				if (m_arguments == null)
+					m_arguments = new GenericArgumentCollection (this);
 
-				return m_genparams;
+				return m_arguments;
 			}
 		}
 
@@ -155,11 +153,6 @@ namespace Mono.Cecil {
 		internal void AttachToScope (IMetadataScope scope)
 		{
 			m_scope = scope;
-		}
-
-		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
-		{
-			ea.GenericParameter.Position = m_genparams.Count + 1;
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

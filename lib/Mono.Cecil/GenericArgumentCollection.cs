@@ -39,7 +39,7 @@ namespace Mono.Cecil {
 	public sealed class GenericArgumentCollection : IGenericArgumentCollection {
 
 		IList m_items;
-		IGenericInstance m_container;
+		IGenericArgumentProvider m_container;
 
 		public event GenericArgumentEventHandler OnGenericArgumentAdded;
 		public event GenericArgumentEventHandler OnGenericArgumentRemoved;
@@ -49,7 +49,7 @@ namespace Mono.Cecil {
 			set { m_items [index] = value; }
 		}
 
-		public IGenericInstance Container {
+		public IGenericArgumentProvider Container {
 			get { return m_container; }
 		}
 
@@ -65,7 +65,7 @@ namespace Mono.Cecil {
 			get { return this; }
 		}
 
-		public GenericArgumentCollection (IGenericInstance container)
+		public GenericArgumentCollection (IGenericArgumentProvider container)
 		{
 			m_container = container;
 			m_items = new ArrayList ();

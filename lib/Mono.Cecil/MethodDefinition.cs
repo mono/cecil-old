@@ -44,6 +44,7 @@ namespace Mono.Cecil {
 		MethodSemanticsAttributes m_semAttrs;
 		SecurityDeclarationCollection m_secDecls;
 		CustomAttributeCollection m_customAttrs;
+		GenericParameterCollection m_genparams;
 
 		ModuleDefinition m_module;
 
@@ -92,6 +93,17 @@ namespace Mono.Cecil {
 					m_customAttrs = new CustomAttributeCollection (this);
 
 				return m_customAttrs;
+			}
+		}
+
+		public GenericParameterCollection GenericParameters {
+			get {
+				if (m_genparams == null) {
+					m_genparams = new GenericParameterCollection (this);
+					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
+				}
+
+				return m_genparams;
 			}
 		}
 
@@ -252,6 +264,12 @@ namespace Mono.Cecil {
 		public MethodDefinition Clone ()
 		{
 			return Clone (this, null);
+		}
+
+		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
+		{
+			ea.GenericParameter.Position = m_genparams.Count + 1;
+			GenericArguments.Add (ea.GenericParameter);
 		}
 
 		internal static MethodDefinition Clone (MethodDefinition meth, ReflectionHelper helper)

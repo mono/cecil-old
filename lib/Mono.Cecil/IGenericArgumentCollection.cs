@@ -55,7 +55,7 @@ namespace Mono.Cecil {
 
 		TypeReference this [int index] { get; }
 
-		IGenericInstance Container { get; }
+		IGenericArgumentProvider Container { get; }
 
 		event GenericArgumentEventHandler OnGenericArgumentAdded;
 		event GenericArgumentEventHandler OnGenericArgumentRemoved;

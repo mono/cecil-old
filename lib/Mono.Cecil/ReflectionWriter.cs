@@ -909,10 +909,10 @@ namespace Mono.Cecil {
 				gi.ValueType = git.IsValueType;
 				gi.Type = GetTypeDefOrRefToken (git.ElementType);
 				gi.Signature = new GenericInstSignature ();
-				gi.Signature.Arity = git.Arguments.Count;
+				gi.Signature.Arity = git.GenericArguments.Count;
 				gi.Signature.Types = new SigType [gi.Signature.Arity];
-				for (int i = 0; i < git.Arguments.Count; i++)
-					gi.Signature.Types [i] = GetSigType (git.Arguments [i]);
+				for (int i = 0; i < git.GenericArguments.Count; i++)
+					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
 
 				return gi;
 			} else if (type is IArrayType) {
@@ -1128,7 +1128,7 @@ namespace Mono.Cecil {
 			gis.Arity = gim.Arity;
 			gis.Types = new SigType [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = GetSigType (gim.Arguments [i]);
+				gis.Types [i] = GetSigType (gim.GenericArguments [i]);
 
 			return new MethodSpec (gis);
 		}

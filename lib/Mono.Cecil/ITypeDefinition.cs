@@ -30,7 +30,8 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity {
+	public interface ITypeDefinition : ITypeReference, IMemberDefinition, IHasSecurity,
+		IGenericParameterProvider {
 
 		TypeAttributes Attributes { get; set; }
 		TypeReference BaseType { get; set; }

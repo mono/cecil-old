@@ -44,8 +44,7 @@ namespace Mono.Cecil {
 		bool m_hasThis;
 		bool m_explicitThis;
 		MethodCallingConvention m_callConv;
-
-		GenericParameterCollection m_genparams;
+		GenericArgumentCollection m_arguments;
 
 		public virtual bool HasThis {
 			get { return m_hasThis; }
@@ -70,20 +69,17 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public GenericArgumentCollection GenericArguments {
+			get {
+				if (m_arguments == null)
+					m_arguments = new GenericArgumentCollection (this);
+				return m_arguments;
+			}
+		}
+
 		public virtual MethodReturnType ReturnType {
 			get { return m_returnType;}
 			set { m_returnType = value; }
-		}
-
-		public virtual GenericParameterCollection GenericParameters {
-			get {
-				if (m_genparams == null) {
-					m_genparams = new GenericParameterCollection (this);
-					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
-				}
-
-				return m_genparams;
-			}
 		}
 
 		internal MethodReference (string name, bool hasThis,
@@ -107,11 +103,6 @@ namespace Mono.Cecil {
 		{
 			this.DeclaringType = declaringType;
 			this.ReturnType.ReturnType = returnType;
-		}
-
-		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
-		{
-			ea.GenericParameter.Position = m_genparams.Count + 1;
 		}
 
 		public virtual void Accept (IReflectionVisitor visitor)

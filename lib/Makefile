@@ -1,9 +1,10 @@
 include config.make
 
 MCS = mcs
+MCS_FLAGS =
 
 all: 
-	$(MCS) @Mono.Cecil.dll.sources /target:library /out:Mono.Cecil.dll
+	$(MCS) $(MCS_FLAGS) @Mono.Cecil.dll.sources /target:library /out:Mono.Cecil.dll
 
 clean:
 	rm -f *.dll

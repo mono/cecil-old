@@ -48,6 +48,7 @@ namespace Mono.Cecil {
 		EventDefinitionCollection m_events;
 		PropertyDefinitionCollection m_properties;
 		SecurityDeclarationCollection m_secDecls;
+		GenericParameterCollection m_genparams;
 
 		public TypeAttributes Attributes {
 			get { return m_attributes; }
@@ -175,6 +176,17 @@ namespace Mono.Cecil {
 					m_secDecls = new SecurityDeclarationCollection (this);
 
 				return m_secDecls;
+			}
+		}
+
+		public GenericParameterCollection GenericParameters {
+			get {
+				if (m_genparams == null) {
+					m_genparams = new GenericParameterCollection (this);
+					m_genparams.OnGenericParameterAdded += new GenericParameterEventHandler (OnGenericParameterAdded);
+				}
+
+				return m_genparams;
 			}
 		}
 
@@ -347,6 +359,12 @@ namespace Mono.Cecil {
 		void DetachMember (MemberReference member)
 		{
 			member.DeclaringType = null;
+		}
+
+		void OnGenericParameterAdded (object sender, GenericParameterEventArgs ea)
+		{
+			ea.GenericParameter.Position = m_genparams.Count + 1;
+			GenericArguments.Add (ea.GenericParameter);
 		}
 
 		object ICloneable.Clone ()

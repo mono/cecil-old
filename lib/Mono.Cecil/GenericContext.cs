@@ -32,15 +32,15 @@ namespace Mono.Cecil {
 
 	internal class GenericContext {
 
-		TypeDefinition m_type;
-		MethodDefinition m_method;
+		TypeReference m_type;
+		MethodReference m_method;
 
-		public TypeDefinition Type {
+		public TypeReference Type {
 			get { return m_type; }
 			set { m_type = value; }
 		}
 
-		public MethodDefinition Method {
+		public MethodReference Method {
 			get { return m_method; }
 			set { m_method = value; }
 		}
@@ -53,18 +53,7 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public GenericContext (TypeDefinition type)
-		{
-			m_type = type;
-		}
-
-		public GenericContext (MethodDefinition meth)
-		{
-			m_type = (TypeDefinition) meth.DeclaringType;
-			m_method = meth;
-		}
-
-		public GenericContext (TypeDefinition type, MethodDefinition meth)
+		public GenericContext (TypeReference type, MethodReference meth)
 		{
 			m_type = type;
 			m_method = meth;
@@ -72,11 +61,11 @@ namespace Mono.Cecil {
 
 		public GenericContext (IGenericParameterProvider provider)
 		{
-			if (provider is TypeDefinition)
-				m_type = provider as TypeDefinition;
+			if (provider is TypeReference)
+				m_type = provider as TypeReference;
 			else {
-				m_method = provider as MethodDefinition;
-				m_type = m_method.DeclaringType as TypeDefinition;
+				m_method = provider as MethodReference;
+				m_type = m_method.DeclaringType;
 			}
 		}
 

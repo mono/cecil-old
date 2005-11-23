@@ -63,10 +63,6 @@ namespace Mono.Cecil {
 			get { return m_elementMethod.Parameters; }
 		}
 
-		public override GenericParameterCollection GenericParameters {
-			get { return m_elementMethod.GenericParameters; }
-		}
-
 		internal MethodSpecification (MethodReference elemMethod) : base (string.Empty)
 		{
 			m_elementMethod = elemMethod;

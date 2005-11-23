@@ -151,12 +151,8 @@ namespace Mono.Cecil {
 				TypeReference declaringType = GetTypeDefOrRef (mrefRow.Class, context);
 				GenericContext nc = context.Clone ();
 
-				if (declaringType is GenericInstanceType) {
-					TypeDefinition type = ((GenericInstanceType) declaringType).ElementType as TypeDefinition;
-					if (type != null)
-						nc.Type = type;
-				} else if (declaringType is TypeDefinition)
-					nc.Type = declaringType as TypeDefinition;
+				if (mrefRow.Class.TokenType == TokenType.TypeSpec)
+					nc.Type = declaringType;
 
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
@@ -167,14 +163,6 @@ namespace Mono.Cecil {
 				} else {
 					string name = m_root.Streams.StringsHeap [mrefRow.Name];
 					MethodSig ms = sig as MethodSig;
-					if (sig is MethodDefSig) {
-						TypeDefinition owner = GetTypeDefAt (mrefRow.Class.RID);
-						MethodDefinition [] meths = owner.Methods.GetMethod (name);
-						for (int i = 0; i < meths.Length; i++)
-							// TODO compare sig, this is wrong
-							if (meths [i].Parameters.Count == ms.ParamCount)
-								nc.Method = meths [i];
-					}
 
 					MethodReference methref = new MethodReference (
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
@@ -191,6 +179,7 @@ namespace Mono.Cecil {
 						methref.Parameters.Add (pdef);
 					}
 					member = methref;
+					nc.Method = methref;
 				}
 				break;
 			case TokenType.Method :
@@ -253,7 +242,7 @@ namespace Mono.Cecil {
 			gim = new GenericInstanceMethod (meth);
 			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
 			foreach (SigType st in sig.Signature.Types)
-				gim.Arguments.Add (GetTypeRefFromSig (st, context));
+				gim.GenericArguments.Add (GetTypeRefFromSig (st, context));
 
 			m_methodSpecs [index] = gim;
 
@@ -928,16 +917,16 @@ namespace Mono.Cecil {
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return context.Type.GenericParameters [var.Index];
+				return context.Type.GenericArguments [var.Index];
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return context.Method.GenericParameters [mvar.Index];
+				return context.Method.GenericArguments [mvar.Index];
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));
 				instance.IsValueType = ginst.ValueType;
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.Arguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
+					instance.GenericArguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
 
 				return instance;
 			default:
