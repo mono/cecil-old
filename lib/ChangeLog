@@ -1,3 +1,11 @@
+2005-11-23  Martin Baulig  <martin@ximian.com>
+
+	* Mono.Cecil.Metadata/TokenType.cs: Added `GenericParam'.
+
+	* Mono.Cecil.Metadata/Utilities.cs
+	(GetMetadataToken): In `case CodedIndex.HasCustomAttribute', add
+	`TokenType.GenericParam'.
+
 2005-11-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethodDefinitionCollection.cs

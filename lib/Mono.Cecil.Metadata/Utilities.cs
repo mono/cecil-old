@@ -239,6 +239,8 @@ namespace Mono.Cecil.Metadata {
 					return new MetadataToken (TokenType.ExportedType, rid);
 				case 18 :
 					return new MetadataToken (TokenType.ManifestResource, rid);
+				case 19 :
+					return new MetadataToken (TokenType.GenericParam, rid);
 				default :
 					throw new MetadataFormatException("Non valid tag for HasCustomAttribute");
 				}
