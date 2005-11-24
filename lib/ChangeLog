@@ -1,3 +1,7 @@
+2005-11-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/Utilities.cs: re-codegenerated.
+
 2005-11-23  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IGenericArgumentProvider.cs
