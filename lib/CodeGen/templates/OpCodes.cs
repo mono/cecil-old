@@ -43,7 +43,7 @@ namespace Mono.Cecil.Cil {
 			"<%=op.name%>", <%=op.op1%>, <%=op.op2%>, <%=op.size%>, <%=op.flowcontrol%>,
 			<%=op.opcodetype%>, <%=op.operandtype%>,
 			<%=op.stackbehaviourpop%>, <%=op.stackbehaviourpush%>);
-<% print("\n"); } %>		public sealed class Cache {
+<% } %>		public sealed class Cache {
 
 			public static readonly Cache Instance = new Cache ();
 

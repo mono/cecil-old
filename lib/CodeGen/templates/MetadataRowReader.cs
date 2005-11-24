@@ -106,5 +106,5 @@ namespace Mono.Cecil.Metadata {
 %>			row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (typeof (<%=col.target%>Table)));
 <% end
 }%>		}
-<%  print("\n") ; } %>	}
+<%  } %>	}
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # extern libraries used by code generator
 
-require 'eruby'
+require 'erb'
 require 'rexml/document'
 
 # our library
@@ -98,18 +98,15 @@ doc.root.each_element("/cecil/collections//collection") { |node|
 		(node.attribute("usecontainerinterface").nil? ? false : node.attribute("usecontainerinterface").value == "true")))
 }
 
-$compiler = ERuby::Compiler.new()
-
 def cecil_compile(file, template)
+
+	erb = ERB.new(IO.read(template))
+	res = erb.result
 
 	if (!File.exists?(file))
 
 		File.open(file, File::CREAT|File::WRONLY|File::TRUNC) { |cur_file|
-			$> = cur_file
-			File.open(template) { |tpl|
-				eval($compiler.compile_file(tpl))
-			}
-			$> = STDOUT
+			cur_file.write(res)
 		}
 
 		puts("#Created: #{file}")
@@ -119,11 +116,7 @@ def cecil_compile(file, template)
 		ext = ".tmp"
 
 		File.open(file + ext, File::CREAT|File::WRONLY|File::TRUNC) { |temp_file|
-			$> = temp_file
-			File.open(template) { |tpl|
-				eval($compiler.compile_file(tpl))
-			}
-			$> = STDOUT
+			temp_file.write(res)
 		}
 
 		save = Array.new

@@ -101,5 +101,5 @@ namespace Mono.Cecil.Metadata {
 			for (int i = 0; i < number; i++)
 				table.Rows.Add (new <%=table.row_name%> ());
 		}
-<% print("\n"); } %>	}
+<% } %>	}
 }

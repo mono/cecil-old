@@ -1,5 +1,18 @@
 2005-11-24  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/cecil-gen.rb
+	  CodeGen/templates/MetadataTableReader.cs
+	  CodeGen/templates/PEFileHeader.cs
+	  CodeGen/templates/CLIHeader.cs
+	  CodeGen/templates/PEOptionalHeader.cs
+	  CodeGen/templates/Table.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/OpCodes.cs
+	  CodeGen/templates/Section.cs
+	  CodeGen/templates/ImageReader.cs:
+		Update the codegen engine so that everyone can run it
+		without having to install a dependency (eruby).
+
 	* Mono.Cecil.Metadata/Utilities.cs: re-codegenerated.
 
 2005-11-23  Jb Evain  <jbevain@gmail.com>

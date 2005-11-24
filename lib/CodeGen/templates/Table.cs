@@ -65,7 +65,8 @@ namespace Mono.Cecil.Metadata {
 		public static readonly int RowSize = <%=$cur_table.row_size%>;
 		public static readonly int RowColumns = <%=$cur_table.columns.length%>;
 
-<% $cur_table.columns.each { |col| %>		public <%=col.type%> <%=col.property_name%>;<% print("\n") } %>
+<% $cur_table.columns.each { |col| %>		public <%=col.type%> <%=col.property_name%>;
+<% } %>
 		internal <%=$cur_table.row_name%> ()
 		{
 		}

@@ -112,8 +112,8 @@ namespace Mono.Cecil.Binary {
 			if (sect.Name == Section.Text)
 				m_image.TextSection = sect;
 			m_binaryReader.BaseStream.Position += 8 - read - 1;
-<% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
-		}
+<% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
+<% } %>		}
 
 		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
@@ -130,7 +130,8 @@ namespace Mono.Cecil.Binary {
 
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
-<% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% print("\n") } %>
+<% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
+<% } %>
 			if (header.StrongNameSignature != DataDirectory.Zero) {
 				m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 					header.StrongNameSignature.VirtualAddress);

@@ -59,14 +59,16 @@ namespace Mono.Cecil.Binary {
 <% header = $headers["PEOptionalHeader.StandardFieldsHeader"] %>
 		public sealed class StandardFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;
+<% } %>
 			internal StandardFieldsHeader ()
 			{
 			}
 
 			public void SetDefaultValues ()
-			{<% header.fields.each { |f| print("\n\t\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-			}
+			{
+<% header.fields.each { |f| unless f.default.nil? %>				<%=f.property_name%> = <%=f.default%>;
+<% end } %>			}
 
 			public void Accept (IBinaryVisitor visitor)
 			{
@@ -76,14 +78,16 @@ namespace Mono.Cecil.Binary {
 <% header = $headers["PEOptionalHeader.NTSpecificFieldsHeader"] %>
 		public sealed class NTSpecificFieldsHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;
+<% } %>
 			internal NTSpecificFieldsHeader ()
 			{
 			}
 
 			public void SetDefaultValues ()
-			{<% header.fields.each { |f| print("\n\t\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-			}
+			{
+<% header.fields.each { |f| unless f.default.nil? %>				<%=f.property_name%> = <%=f.default%>;
+<% end } %>			}
 
 			public void Accept (IBinaryVisitor visitor)
 			{
@@ -93,14 +97,16 @@ namespace Mono.Cecil.Binary {
 <% header = $headers["PEOptionalHeader.DataDirectoriesHeader"] %>
 		public sealed class DataDirectoriesHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+<% header.fields.each { |f| %>			public <%=f.type%> <%=f.property_name%>;
+<% } %>
 			internal DataDirectoriesHeader ()
 			{
 			}
 
 			public void SetDefaultValues ()
-			{<% header.fields.each { |f| print("\n\t\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-			}
+			{
+<% header.fields.each { |f| unless f.default.nil? %>				<%=f.property_name%> = <%=f.default%>;
+<% end } %>			}
 
 			public void Accept (IBinaryVisitor visitor)
 			{

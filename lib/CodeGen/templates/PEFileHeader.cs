@@ -33,14 +33,16 @@ namespace Mono.Cecil.Binary {
 
 	public sealed class PEFileHeader : IHeader, IBinaryVisitable {
 
-<% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;<% print("\n") } %>
+<% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;
+<% } %>
 		internal PEFileHeader ()
 		{
 		}
 
 		public void SetDefaultValues ()
-		{<% header.fields.each { |f| print("\n\t\t\t" +  f.property_name + " = " + f.default + ";") unless f.default.nil? } %>
-		}
+		{
+<% header.fields.each { |f| unless f.default.nil? %>			<%=f.property_name%> = <%=f.default%>;
+<% end } %>		}
 
 		public void Accept (IBinaryVisitor visitor)
 		{
