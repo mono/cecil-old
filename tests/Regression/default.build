@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<project name="cecil regression tests" default="test">
+
+	<include buildfile="../nunit.inc" />
+	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
+	
+	<property name="cecil.lib.dir" value="${path::get-full-path('../../lib')}" />
+	
+	<target name="test" depends="build">
+		<nunit2>       
+			<formatter type="Plain" />
+			<test>
+				<assemblies basedir="bin">				
+					<include name="*.Tests.*dll" />					
+				</assemblies>
+			</test>
+		</nunit2>
+	</target>
+	
+	<target name="build" depends="update-fixture, cecil">
+		<exec program="booc">
+			<arg value="-out:bin/Mono.Cecil.Tests.Regression.dll" />
+			<arg value="-t:library" />
+			<arg value="-debug" />
+			<arg value="-r:bin/Mono.Cecil.dll" />
+			<arg value="-r:${nunit.framework.dll}" />
+			
+			<arg file="Mono.Cecil.Tests.Regression/AssemblyInfo.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/AbstractPrinter.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/CecilAssemblyPrinter.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/ReflectionAssemblyPrinter.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/RegressionTestFixture.boo" />
+			
+		</exec>
+	</target>
+	
+	<target name="update-fixture" depends="init">
+	</target>
+	
+	<target name="cecil" depends="init">
+		<nant buildfile="${cecil.lib.dir}/cecil.build" inheritall="false" />
+		<copy todir="bin">
+			<fileset basedir="${cecil.lib.dir}/bin">
+				<include name="Mono.Cecil.*" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="bin" />
+		
+		<!--
+		if boo.dir is set copy the necessary assemblies
+		from there, otherwise just assume they will be
+		in the GAC
+		-->
+		<if test="${property::exists('boo.dir')}">
+			<copy todir="bin">
+				<fileset basedir="${boo.dir}">
+					<include name="Boo.Lang.dll" />
+				</fileset>
+			</copy>
+		</if>
+	</target>
+	
+	<target name="clean">
+		<delete dir="bin" />
+	</target>
+</project>
