@@ -1,0 +1,35 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldstr "A"
+		IL_0006: callvirt bool string::StartsWith(string)
+		IL_000b: brfalse.s IL_001b
+	successors:
+		block 3
+		block 2
+block 2:
+	body:
+		IL_000d: ldarg.0
+		IL_000e: callvirt int32 string::get_Length()
+		IL_0013: ldc.i4.3
+		IL_0014: clt
+		IL_0016: ldc.i4.0
+		IL_0017: ceq
+		IL_0019: br.s IL_001c
+	successors:
+		block 4
+block 3:
+	body:
+		IL_001b: ldc.i4.0
+	successors:
+		block 4
+block 4:
+	body:
+		IL_001c: stloc.0
+		IL_001d: br.s IL_001f
+	successors:
+		block 5
+block 5:
+	body:
+		IL_001f: ldloc.0
+		IL_0020: ret

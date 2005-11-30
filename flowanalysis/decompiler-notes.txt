@@ -1,0 +1,50 @@
+Code Structure Decoding
+***********************
+
+Basic Flow Analysis
+===================
+
+* input: raw instruction list
+
+* output: instruction block list
+
+* a instruction block is defined by a start instruction and a finishing instruction +
+a list of successor blocks
+
+* split bytecode into multiple instruction blocks:
+	* the first instruction of a method starts a block
+	* the target of a branch instruction start a block
+	* a branch instruction finishes a block
+	* the instruction after a branch instruction starts a block
+	* the last instruction of a method finishes a block
+
+Action/Low-level statement Delimitation
+=============================
+
+* input: control flow graph
+
+* output: action flow graph
+
+1) ASSIGN EXPRESSION
+2) INVOKE EXPRESSION+
+3) BRANCH
+4) COND_BRANCH EXPRESSION
+5) RETURN
+
+1) stloc, starg, stfld, stsfld
+3) call, callvirt
+3) br.s, br
+4) ble, beq, ...
+5) ret
+
+Deoptimization
+==============
+
+* replace ret instructions in leaves by a connection to a single
+ret block from both leaves
+
+Expression Aggregation
+======================
+
+Simple Copy Propagation
+=======================

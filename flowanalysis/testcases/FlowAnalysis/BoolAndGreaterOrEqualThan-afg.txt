@@ -1,0 +1,3 @@
+local0 = (s.StartsWith("A") && (s.get_Length() >= 3))
+goto block3
+block3: return local0

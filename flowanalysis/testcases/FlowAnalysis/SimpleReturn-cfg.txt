@@ -1,0 +1,11 @@
+block 1:
+	body:
+		IL_0000: ldc.i4.1
+		IL_0001: stloc.0
+		IL_0002: br.s IL_0004
+	successors:
+		block 2
+block 2:
+	body:
+		IL_0004: ldloc.0
+		IL_0005: ret

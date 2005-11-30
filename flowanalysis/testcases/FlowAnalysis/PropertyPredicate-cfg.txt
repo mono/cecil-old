@@ -1,0 +1,14 @@
+block 1:
+	body:
+		IL_0000: ldarg.1
+		IL_0001: callvirt string Cat::get_Name()
+		IL_0006: ldstr "Occam"
+		IL_000b: call bool string::op_Equality(string, string)
+		IL_0010: stloc.0
+		IL_0011: br.s IL_0013
+	successors:
+		block 2
+block 2:
+	body:
+		IL_0013: ldloc.0
+		IL_0014: ret

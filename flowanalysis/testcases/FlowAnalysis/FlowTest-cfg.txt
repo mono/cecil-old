@@ -1,0 +1,57 @@
+block 1:
+	body:
+		IL_0000: ldc.i4.1
+		IL_0001: stloc.0
+		IL_0002: br.s IL_002b
+	successors:
+		block 6
+block 2:
+	body:
+		IL_0004: ldloc.0
+		IL_0005: ldc.i4.2
+		IL_0006: rem
+		IL_0007: brtrue.s IL_0027
+	successors:
+		block 5
+		block 3
+block 3:
+	body:
+		IL_0009: ldstr "Even number"
+		IL_000e: call void System.Console::WriteLine(string)
+		IL_0013: ldc.i4.0
+		IL_0014: stloc.1
+	successors:
+		block 4
+block 4:
+	body:
+		IL_0015: ldstr "!"
+		IL_001a: call void System.Console::WriteLine(string)
+		IL_001f: ldloc.1
+		IL_0020: ldc.i4.1
+		IL_0021: add
+		IL_0022: stloc.1
+		IL_0023: ldloc.1
+		IL_0024: ldloc.0
+		IL_0025: blt.s IL_0015
+	successors:
+		block 4
+		block 5
+block 5:
+	body:
+		IL_0027: ldloc.0
+		IL_0028: ldc.i4.1
+		IL_0029: add
+		IL_002a: stloc.0
+	successors:
+		block 6
+block 6:
+	body:
+		IL_002b: ldloc.0
+		IL_002c: ldc.i4.5
+		IL_002d: blt.s IL_0004
+	successors:
+		block 2
+		block 7
+block 7:
+	body:
+		IL_002f: ret

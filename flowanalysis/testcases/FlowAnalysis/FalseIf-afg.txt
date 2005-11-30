@@ -1,0 +1,5 @@
+if (x <= 0) goto block3
+System.Console.WriteLine("x > 0")
+block3: local0 = (x < 0)
+goto block5
+block5: return local0

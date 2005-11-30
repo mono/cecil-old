@@ -1,0 +1,1 @@
+return (string.op_Equality(s, "foo") || string.op_Equality(s, "bar"))

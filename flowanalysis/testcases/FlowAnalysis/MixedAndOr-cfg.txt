@@ -1,0 +1,39 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldc.i4.3
+		IL_0002: ble.s IL_0009
+	successors:
+		block 3
+		block 2
+block 2:
+	body:
+		IL_0004: ldarg.0
+		IL_0005: ldc.i4.s 42
+		IL_0007: blt.s IL_0010
+	successors:
+		block 4
+		block 3
+block 3:
+	body:
+		IL_0009: ldarg.0
+		IL_000a: ldc.i4.s 100
+		IL_000c: cgt
+		IL_000e: br.s IL_0011
+	successors:
+		block 5
+block 4:
+	body:
+		IL_0010: ldc.i4.1
+	successors:
+		block 5
+block 5:
+	body:
+		IL_0011: stloc.0
+		IL_0012: br.s IL_0014
+	successors:
+		block 6
+block 6:
+	body:
+		IL_0014: ldloc.0
+		IL_0015: ret
