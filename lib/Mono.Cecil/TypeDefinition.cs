@@ -384,7 +384,8 @@ namespace Mono.Cecil {
 				type.Namespace,
 				type.Attributes);
 
-			nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
+			if (type.BaseType != null)
+				nt.BaseType = helper == null ? type.BaseType : helper.ImportTypeReference (type.BaseType);
 
 			if (type.LayoutInfo.HasLayoutInfo) {
 				nt.LayoutInfo.ClassSize = type.LayoutInfo.ClassSize;

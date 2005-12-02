@@ -1,3 +1,8 @@
+2005-12-02  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeDefinition.cs:
+		Fix interface import. Patch by Thomas Gil.
+
 2005-11-24  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/cecil-gen.rb
