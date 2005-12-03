@@ -1,3 +1,12 @@
+2005-12-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodSpecification.cs:
+		Override the declaring type.
+	* Mono.Cecil/GenericInstanceType.cs:
+		Correctly set the FullName.
+	* Mono.Cecil/GenericInstanceMethod.cs:
+		Style.
+
 2005-12-02  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/TypeDefinition.cs:

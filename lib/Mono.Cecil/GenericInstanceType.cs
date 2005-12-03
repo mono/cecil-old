@@ -44,7 +44,7 @@ namespace Mono.Cecil {
 		public override string FullName {
 			get {
 				StringBuilder sb = new StringBuilder ();
-				sb.Append (this.Name);
+				sb.Append (base.FullName);
 				sb.Append ("<");
 				for (int i = 0; i < this.GenericArguments.Count; i++) {
 					if (i > 0)
@@ -57,6 +57,7 @@ namespace Mono.Cecil {
 		}
 
 		public GenericInstanceType (TypeReference elementType) : base (elementType)
-		{ }
+		{
+		}
 	}
 }

@@ -59,6 +59,11 @@ namespace Mono.Cecil {
 			set { throw new InvalidOperationException (); }
 		}
 
+		public override TypeReference DeclaringType {
+			get { return m_elementMethod.DeclaringType; }
+			set { throw new InvalidOperationException (); }
+		}
+
 		public override ParameterDefinitionCollection Parameters {
 			get { return m_elementMethod.Parameters; }
 		}

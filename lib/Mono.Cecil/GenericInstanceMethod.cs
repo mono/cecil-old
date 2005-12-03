@@ -37,7 +37,8 @@ namespace Mono.Cecil {
 		}
 
 		public GenericInstanceMethod (MethodReference elemMethod) : base (elemMethod)
-		{ }
+		{
+		}
 
 		public override string ToString ()
 		{
