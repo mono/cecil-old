@@ -1,7 +1,8 @@
 2005-12-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/MethodSpecification.cs:
-		Override the declaring type.
+		Override the declaring type and the name property to
+		match the inner method.
 	* Mono.Cecil/GenericInstanceType.cs:
 		Correctly set the FullName.
 	* Mono.Cecil/GenericInstanceMethod.cs:

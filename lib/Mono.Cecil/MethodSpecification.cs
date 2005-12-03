@@ -39,6 +39,11 @@ namespace Mono.Cecil {
 			set { m_elementMethod = value; }
 		}
 
+		public override string Name {
+			get { return m_elementMethod.Name; }
+			set { throw new InvalidOperationException (); }
+		}
+
 		public override MethodCallingConvention CallingConvention {
 			get { return m_elementMethod.CallingConvention; }
 			set { throw new InvalidOperationException (); }
