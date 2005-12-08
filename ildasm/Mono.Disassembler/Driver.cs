@@ -106,22 +106,29 @@ namespace Mono.Disassembler {
 			sd.DisassembleAssembly (AssemblyFactory.GetAssembly (m_assembly), cw);
 		}
 
+		string AssemblyName {
+			get { return m_assembly; }
+			set {
+				if (m_assembly != null) {
+					m_error = "Multiple input files specified !";
+					return;
+				}
+					
+				m_assembly = value;
+				if (!File.Exists (m_assembly)) {
+					m_error = "Specified file does not exists !";
+				}
+			}
+		}
+
 		void Parse (string [] args)
 		{
 			string cmd_arg;
 			foreach (string cmd in args) {
 				if (cmd [0] != '-' && cmd [0] != '/') {
-					if (m_assembly == null) {
-						m_assembly = cmd;
-						if (!File.Exists (m_assembly)) {
-							m_error = "Specified file does not exists !";
-							break;
-						}
-						continue;
-					} else {
-						m_error = "Multiple input files specified !";
+					AssemblyName = cmd;
+					if (m_error != null)
 						break;
-					}
 				}
 
 				switch (GetCommand (cmd, out cmd_arg)) {
@@ -144,6 +151,11 @@ namespace Mono.Disassembler {
 				case "-version":
 					Version ();
 					break;
+				default:
+					if (cmd [0] == '-')
+						break;
+					AssemblyName = cmd;
+					break;	
 				}
 			}
 
