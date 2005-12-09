@@ -1,3 +1,8 @@
+2005-12-09  Aaron Tomb  <atomb@soe.ucsc.edu>
+
+	* Merged rules for double-check locking and bad recursive
+	invocation checking.
+
 2005-11-02  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Initial import into SVN.

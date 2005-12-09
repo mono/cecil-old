@@ -1,0 +1,8 @@
+<rules>
+	<rule	Name="BadRecursiveInvocationRule" 
+		Type="Gendarme.Rules.Correctness.BadRecursiveInvocationRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme" >
+		<problem></problem>
+		<solution></solution>
+	</rule>
+</rules>

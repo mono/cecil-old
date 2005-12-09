@@ -1,0 +1,8 @@
+<rules>
+	<rule	Name="DoubleCheckLockingRule" 
+		Type="Gendarme.Rules.Concurrency.DoubleCheckLockingRule, Gendarme.Rules.Concurrency, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme" >
+		<problem></problem>
+		<solution></solution>
+	</rule>
+</rules>

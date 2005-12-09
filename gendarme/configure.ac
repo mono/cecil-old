@@ -58,4 +58,10 @@ rules/Gendarme.Rules.Security/Test/Makefile
 rules/Gendarme.Rules.Performance/Makefile
 rules/Gendarme.Rules.Performance/Gendarme.Rules.Performance.xml
 rules/Gendarme.Rules.Performance/Test/Makefile
+rules/Gendarme.Rules.Concurrency/Makefile
+rules/Gendarme.Rules.Concurrency/Gendarme.Rules.Concurrency.xml
+rules/Gendarme.Rules.Concurrency/Test/Makefile
+rules/Gendarme.Rules.Correctness/Makefile
+rules/Gendarme.Rules.Correctness/Gendarme.Rules.Correctness.xml
+rules/Gendarme.Rules.Correctness/Test/Makefile
 ])
