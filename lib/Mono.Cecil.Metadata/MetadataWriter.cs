@@ -305,7 +305,7 @@ namespace Mono.Cecil.Metadata {
 				m_root.Header.Version = "v1.1.4322";
 				break;
 			case TargetRuntime.NET_2_0 :
-				m_root.Header.Version = "Standard CLI 2005";
+				m_root.Header.Version = "v2.0.50727";
 				break;
 			}
 

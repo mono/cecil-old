@@ -1,6 +1,7 @@
 2005-12-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Set the correct version for .net 2 assemblies.
 		Correctly write embedded resources.
 		Fix #76963.
 
