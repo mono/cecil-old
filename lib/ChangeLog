@@ -1,3 +1,9 @@
+2005-12-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Correctly write embedded resources.
+		Fix #76963.
+
 2005-12-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/MethodSpecification.cs:

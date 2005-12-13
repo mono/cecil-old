@@ -229,6 +229,7 @@ namespace Mono.Cecil.Metadata {
 		public uint AddResource (byte [] data)
 		{
 			uint offset = (uint) m_resWriter.BaseStream.Position;
+			m_resWriter.Write (data.Length);
 			m_resWriter.Write (data);
 			m_resWriter.QuadAlign ();
 			return offset;
@@ -244,7 +245,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			if (m_assembly.Name.PublicKey != null) {
 				// in fx 2.0 the key may be from 384 to 16384 bits
-				// so we must calculate the signature size based on 
+				// so we must calculate the signature size based on
 				// the size of the public key (minus the 32 byte header)
 				int size = m_assembly.Name.PublicKey.Length;
 				if (size > 0)
