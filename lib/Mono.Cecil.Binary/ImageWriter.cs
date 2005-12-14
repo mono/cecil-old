@@ -212,18 +212,6 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write (header.NumberOfDataDir);
 		}
 
-		public override void VisitDebugHeader (DebugHeader header)
-		{
-			m_binaryWriter.Write (header.Characteristics);
-			m_binaryWriter.Write (header.TimeDateStamp);
-			m_binaryWriter.Write (header.MajorVersion);
-			m_binaryWriter.Write (header.MinorVersion);
-			m_binaryWriter.Write ((uint) header.Type);
-			m_binaryWriter.Write (header.SizeOfData);
-			m_binaryWriter.Write (header.AddressOfRawData.Value);
-			m_binaryWriter.Write (header.PointerToRawData);
-		}
-
 		public override void VisitStandardFieldsHeader (PEOptionalHeader.StandardFieldsHeader header)
 		{
 			m_binaryWriter.Write (header.Magic);
