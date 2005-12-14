@@ -258,12 +258,10 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.BaseStream.Position = 0x200;
 
 			m_binaryWriter.Write (m_textWriter);
-			m_binaryWriter.Write (
-				new byte [(int) (m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length)]);
+			m_binaryWriter.BaseStream.Position += m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length;
 
 			m_binaryWriter.Write (m_relocWriter);
-			m_binaryWriter.Write (
-				new byte [(int) (m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length)]);
+			m_binaryWriter.BaseStream.Position += m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length;
 		}
 	}
 }

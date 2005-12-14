@@ -1,3 +1,9 @@
+2005-12-14  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil.Binary/ImageWriter.cs:
+		Don't allocate potential big arrays here.
+
 2005-12-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/MetadataWriter.cs:
