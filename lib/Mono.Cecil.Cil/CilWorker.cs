@@ -330,5 +330,17 @@ namespace Mono.Cecil.Cil {
 
 			m_instrs.Add (current);
 		}
+
+		public void Remove (Instruction instr)
+		{
+			if (!m_instrs.Contains (instr))
+				throw new ReflectionException ("Instruction not in method body");
+
+			if (instr.Previous != null)
+				instr.Previous.Next = instr.Next;
+			if (instr.Next != null)
+				instr.Next.Previous = instr.Previous;
+			m_instrs.Remove (instr);
+		}
 	}
 }

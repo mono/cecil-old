@@ -77,5 +77,6 @@ namespace Mono.Cecil.Cil {
 		void InsertBefore (Instruction target, Instruction instr);
 		void InsertAfter (Instruction target, Instruction instr);
 		void Append (Instruction instr);
+		void Remove (Instruction instr);
 	}
 }

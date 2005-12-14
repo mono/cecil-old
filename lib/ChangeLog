@@ -1,5 +1,9 @@
 2005-12-14  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Cil/CilWorker.cs:
+		Add a remove method.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs:
 		Don't allocate potential big arrays here.
