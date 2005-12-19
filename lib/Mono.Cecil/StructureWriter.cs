@@ -46,15 +46,31 @@ namespace Mono.Cecil {
 			get { return m_asm; }
 		}
 
+		void ResetImage (ModuleDefinition mod)
+		{
+			Image ni = Image.CreateImage ();
+			if (mod.Image.DebugHeader != null) {
+				ni.AddDebugHeader ();
+				DebugHeader old = mod.Image.DebugHeader;
+				ni.DebugHeader.Age = old.Age + 1;
+				ni.DebugHeader.Characteristics = old.Characteristics;
+				ni.DebugHeader.FileName = old.FileName;
+				ni.DebugHeader.Signature = old.Signature;
+				ni.DebugHeader.TimeDateStamp = ImageInitializer.TimeDateStampFromEpoch ();
+				ni.DebugHeader.Type = old.Type;
+			}
+
+			mod.Image = ni;
+		}
+
 		public StructureWriter (AssemblyDefinition asm, MemoryBinaryWriter writer)
 		{
 			m_asm = asm;
 			m_binaryWriter = writer;
 
-			// reset images
 			foreach (ModuleDefinition module in asm.Modules)
 				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
-					module.Image = Image.CreateImage ();
+					ResetImage (module);
 
 			ReflectionWriter rw = asm.MainModule.Controller.Writer;
 			rw.StructureWriter = this;

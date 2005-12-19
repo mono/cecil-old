@@ -144,7 +144,7 @@ def cecil_compile(file, template)
 end
 
 [ "PEFileHeader.cs", "PEOptionalHeader.cs", "Section.cs",
-  "CLIHeader.cs", "ImageReader.cs", "ImageWriter.cs" ].each { |file|
+  "CLIHeader.cs", "ImageReader.cs", "ImageWriter.cs", "DebugHeader.cs" ].each { |file|
 	cecil_compile(fullpath = "../Mono.Cecil.Binary/" + file, "./templates/" + file)
 }
 

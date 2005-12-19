@@ -48,6 +48,7 @@ namespace Mono.Cecil.Binary {
 		ImportLookupTable m_importLookupTable;
 		HintNameTable m_hintNameTable;
 
+		DebugHeader m_debugHeader;
 		MetadataRoot m_mdRoot;
 
 		FileInfo m_img;
@@ -79,6 +80,11 @@ namespace Mono.Cecil.Binary {
 
 		public CLIHeader CLIHeader {
 			get { return m_cliHeader; }
+		}
+
+		public DebugHeader DebugHeader {
+			get { return m_debugHeader; }
+			set { m_debugHeader = value; }
 		}
 
 		public MetadataRoot MetadataRoot {
@@ -136,6 +142,12 @@ namespace Mono.Cecil.Binary {
 			return 0;
 		}
 
+		public void AddDebugHeader ()
+		{
+			m_debugHeader = new DebugHeader ();
+			m_debugHeader.SetDefaultValues ();
+		}
+
 		public void Accept (IBinaryVisitor visitor)
 		{
 			visitor.VisitImage (this);
@@ -148,6 +160,9 @@ namespace Mono.Cecil.Binary {
 
 			m_importAddressTable.Accept (visitor);
 			m_cliHeader.Accept (visitor);
+
+			if (m_debugHeader != null)
+				m_debugHeader.Accept (visitor);
 
 			m_importTable.Accept (visitor);
 			m_importLookupTable.Accept (visitor);

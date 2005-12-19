@@ -1,5 +1,22 @@
 2005-12-19  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugStoreType.cs:
+		New files to store debug header infos.
+	* Mono.Cecil.dll.sources: updated
+	* CodeGen/cecil.xml
+	  CodeGen/cecil-gen.rb
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil.Binary/IBinaryVisitor.cs
+	  Mono.Cecil.Binary/ImageWriter.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil.Binary/BaseImageVisitor.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		Read and write debug header.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs:
 		Revert revision 54409.

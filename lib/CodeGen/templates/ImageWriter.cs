@@ -204,6 +204,31 @@ namespace Mono.Cecil.Binary {
 			<%=field.write_binary("header", "m_textWriter")%>;<% } %>
 		}
 
+		public override void VisitDebugHeader (DebugHeader header)
+		{
+			m_textWriter.BaseStream.Position = m_mdWriter.DebugHeaderPosition;
+			uint sizeUntilData = 0x1c;
+			header.AddressOfRawData = m_img.TextSection.VirtualAddress + m_mdWriter.DebugHeaderPosition + sizeUntilData;
+			header.PointerToRawData = 0x200 + m_mdWriter.DebugHeaderPosition + sizeUntilData;
+			header.SizeOfData = 0x18 + (uint) header.FileName.Length + 1;
+
+			m_textWriter.Write (header.Characteristics);
+			m_textWriter.Write (header.TimeDateStamp);
+			m_textWriter.Write (header.MajorVersion);
+			m_textWriter.Write (header.MinorVersion);
+			m_textWriter.Write ((uint) header.Type);
+			m_textWriter.Write (header.SizeOfData);
+			m_textWriter.Write (header.AddressOfRawData.Value);
+			m_textWriter.Write (header.PointerToRawData);
+
+			m_textWriter.Write (header.Magic);
+			m_textWriter.Write (header.Signature.ToByteArray ());
+			m_textWriter.Write (header.Age);
+			foreach (char c in header.FileName)
+				m_textWriter.Write (c);
+			m_textWriter.Write ((byte) 0);
+		}
+
 		public override void VisitImportTable (ImportTable it)
 		{
 			m_textWriter.BaseStream.Position = m_mdWriter.ImportTablePosition;

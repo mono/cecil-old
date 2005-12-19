@@ -66,6 +66,7 @@ namespace Mono.Cecil.Metadata {
 		uint m_mdStart, m_mdSize;
 		uint m_resStart, m_resSize;
 		uint m_snsStart, m_snsSize;
+		uint m_debugHeaderStart;
 		uint m_imporTableStart;
 
 		uint m_entryPointToken;
@@ -74,6 +75,10 @@ namespace Mono.Cecil.Metadata {
 
 		public MemoryBinaryWriter CilWriter {
 			get { return m_cilWriter; }
+		}
+
+		public uint DebugHeaderPosition {
+			get { return m_debugHeaderStart; }
 		}
 
 		public uint ImportTablePosition {
@@ -270,6 +275,13 @@ namespace Mono.Cecil.Metadata {
 				m_binaryWriter.QuadAlign ();
 			}
 
+			// save place for debug header
+			if (m_imgWriter.GetImage ().DebugHeader != null) {
+				m_debugHeaderStart = (uint) m_binaryWriter.BaseStream.Position;
+				m_binaryWriter.Write (new byte [m_imgWriter.GetImage ().DebugHeader.GetSize ()]);
+				m_binaryWriter.QuadAlign ();
+			}
+
 			m_mdStart = (uint) m_binaryWriter.BaseStream.Position;
 
 			if (m_stringWriter.BaseStream.Length > 1) {
@@ -448,6 +460,10 @@ namespace Mono.Cecil.Metadata {
 			if (m_snsStart > 0)
 				img.CLIHeader.StrongNameSignature = new DataDirectory (
 					img.TextSection.VirtualAddress + m_snsStart, m_snsSize);
+
+			if (m_debugHeaderStart > 0)
+				img.PEOptionalHeader.DataDirectories.Debug = new DataDirectory (
+					img.TextSection.VirtualAddress + m_debugHeaderStart, 0x1c);
 		}
 
 		public override void TerminateMetadataRoot (MetadataRoot root)

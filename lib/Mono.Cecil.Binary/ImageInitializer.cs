@@ -66,8 +66,7 @@ namespace Mono.Cecil.Binary {
 		public override void VisitPEFileHeader (PEFileHeader header)
 		{
 			header.SetDefaultValues ();
-			header.TimeDateStamp = (uint) DateTime.UtcNow.Subtract (
-				new DateTime (1970, 1, 1)).TotalSeconds;
+			header.TimeDateStamp = TimeDateStampFromEpoch ();
 		}
 
 		public override void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header)
@@ -107,6 +106,12 @@ namespace Mono.Cecil.Binary {
 			sect.SetDefaultValues ();
 		}
 
+		public override void VisitDebugHeader (DebugHeader dh)
+		{
+			if (dh != null)
+				dh.SetDefaultValues ();
+		}
+
 		public override void VisitCLIHeader (CLIHeader header)
 		{
 			header.SetDefaultValues ();
@@ -124,6 +129,12 @@ namespace Mono.Cecil.Binary {
 			hnt.RuntimeLibrary = HintNameTable.RuntimeCorEE;
 			hnt.EntryPoint = 0x25ff;
 			hnt.RVA = new RVA (0x402000);
+		}
+
+		public static uint TimeDateStampFromEpoch ()
+		{
+			return (uint) DateTime.UtcNow.Subtract (
+				new DateTime (1970, 1, 1)).TotalSeconds;
 		}
 	}
 }

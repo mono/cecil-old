@@ -9,6 +9,7 @@
 		<type name="int" size="4" />
 		<type name="Mono.Cecil.Binary.DataDirectory" size="8" />
 		<type name="Mono.Cecil.Binary.ImageCharacteristics" underlying="ushort" size="2" />
+		<type name="Mono.Cecil.Binary.DebugStoreType" underlying="uint" size="4" />
 		<type name="Mono.Cecil.Binary.SubSystem" underlying="ushort" size="2" />
 		<type name="Mono.Cecil.Binary.SectionCharacteristics" underlying="uint" size="4" />
 		<type name="Mono.Cecil.Binary.RVA" size="4" />
@@ -78,6 +79,17 @@
 			<field name="HeapCommitSize" type="uint" default="0x1000" />
 			<field name="LoaderFlags" type="uint" default="0" />
 			<field name="NumberOfDataDir" type="uint" default="0x10" />
+		</header>
+
+		<header name="DebugHeader">
+			<field name="Characteristics" type="uint" default="0" />
+			<field name="TimeDateStamp" type="uint" />
+			<field name="MajorVersion" type="ushort" />
+			<field name="MinorVersion" type="ushort" />
+			<field name="Type" type="Mono.Cecil.Binary.DebugStoreType" />
+			<field name="SizeOfData" type="uint" />
+			<field name="AddressOfRawData" type="Mono.Cecil.Binary.RVA" />
+			<field name="PointerToRawData" type="uint" />
 		</header>
 
 		<header name="PEOptionalHeader.DataDirectoriesHeader">

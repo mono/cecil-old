@@ -70,6 +70,10 @@ namespace Mono.Cecil.Binary {
 		{
 		}
 
+		public virtual void VisitDebugHeader (DebugHeader dh)
+		{
+		}
+
 		public virtual void VisitCLIHeader (CLIHeader header)
 		{
 		}

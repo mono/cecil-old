@@ -35,7 +35,6 @@ namespace Mono.Cecil.Binary {
 	using System.IO;
 	using System.Text;
 
-	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
 	class ImageReader : BaseImageVisitor {
@@ -84,7 +83,7 @@ namespace Mono.Cecil.Binary {
 
 				throw new ImageFormatException ("Invalid PE File Signature");
 		}
-<% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" %>
+<% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" && name != "DebugHeader" %>
 		public override void Visit<%=name.index('.') ? name[(name.index('.') + 1)..name.length] : name%> (<%=name%> header)
 		{<% header.fields.each { |field| %>
 			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;<% } %>
@@ -128,6 +127,11 @@ namespace Mono.Cecil.Binary {
 			if (m_image.PEOptionalHeader.DataDirectories.CLIHeader == DataDirectory.Zero)
 				throw new ImageFormatException ("Non Pure CLI Image");
 
+			if (m_image.PEOptionalHeader.DataDirectories.Debug != DataDirectory.Zero) {
+				m_image.DebugHeader = new DebugHeader ();
+				VisitDebugHeader (m_image.DebugHeader);
+			}
+
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
 <% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
@@ -142,6 +146,36 @@ namespace Mono.Cecil.Binary {
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.CLIHeader.Metadata.VirtualAddress);
 			m_image.MetadataRoot.Accept (m_mdReader);
+		}
+<% cur_header = $headers["DebugHeader"] %>
+		public override void VisitDebugHeader (DebugHeader header)
+		{
+			if (m_image.PEOptionalHeader.DataDirectories.Debug == DataDirectory.Zero)
+				return;
+
+			long pos = m_binaryReader.BaseStream.Position;
+
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.PEOptionalHeader.DataDirectories.Debug.VirtualAddress);
+<% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
+<% } %>
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
+				m_image.DebugHeader.AddressOfRawData);
+
+			header.Magic = m_binaryReader.ReadUInt32 ();
+			header.Signature = new Guid (m_binaryReader.ReadBytes (16));
+			header.Age = m_binaryReader.ReadUInt32 ();
+
+			StringBuilder buffer = new StringBuilder ();
+			while (true) {
+				byte cur =  m_binaryReader.ReadByte ();
+				if (cur == 0)
+					break;
+				buffer.Append ((char) cur);
+			}
+			header.FileName = buffer.ToString ();
+
+			m_binaryReader.BaseStream.Position = pos;
 		}
 
 		public override void VisitImportTable (ImportTable it)
@@ -170,13 +204,13 @@ namespace Mono.Cecil.Binary {
 				m_image.ImportAddressTable.HintNameTableRVA);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();
-			
+
 			byte [] bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeMain = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
 			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
 				m_image.ImportTable.Name);
-				
+
 			bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeLibrary = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 

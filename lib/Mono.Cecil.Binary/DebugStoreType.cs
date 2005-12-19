@@ -1,5 +1,5 @@
 //
-// IBinaryVisitor.cs
+// DebugStoreType.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,23 +28,18 @@
 
 namespace Mono.Cecil.Binary {
 
-	public interface IBinaryVisitor {
-		void VisitImage (Image img);
-		void VisitDOSHeader (DOSHeader header);
-		void VisitPEFileHeader (PEFileHeader header);
-		void VisitPEOptionalHeader (PEOptionalHeader header);
-		void VisitStandardFieldsHeader (PEOptionalHeader.StandardFieldsHeader header);
-		void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header);
-		void VisitDataDirectoriesHeader (PEOptionalHeader.DataDirectoriesHeader header);
-		void VisitSectionCollection (SectionCollection coll);
-		void VisitSection (Section section);
-		void VisitImportAddressTable (ImportAddressTable iat);
-		void VisitDebugHeader (DebugHeader dh);
-		void VisitCLIHeader (CLIHeader header);
-		void VisitImportTable (ImportTable it);
-		void VisitImportLookupTable (ImportLookupTable ilt);
-		void VisitHintNameTable (HintNameTable hnt);
-
-		void TerminateImage (Image img);
+	public enum DebugStoreType : uint {
+		Unknown = 0x00000000,
+		COFF = 0x00000001,
+		CodeView = 0x00000002,
+		FPO = 0x00000003,
+		Misc = 0x00000004,
+		Exception = 0x00000005,
+		Fixup = 0x00000006,
+		OMAPToSrc = 0x00000007,
+		OMAPFromSrc = 0x00000008,
+		Borland = 0x00000009,
+		Reserved10 = 0x0000000a,
+		CLSID = 0x0000000b
 	}
 }
