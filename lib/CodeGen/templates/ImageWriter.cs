@@ -31,10 +31,6 @@
 
 namespace Mono.Cecil.Binary {
 
-	using System;
-	using System.Text;
-
-	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
 	class ImageWriter : BaseImageVisitor {
@@ -175,7 +171,7 @@ namespace Mono.Cecil.Binary {
 			m_binaryWriter.Write ((ushort) 0x4550);
 			m_binaryWriter.Write ((ushort) 0);
 		}
-<% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" %>
+<% $headers.each { |name, header| if name != "Section" && name != "CLIHeader" && name != "DebugHeader" %>
 		public override void Visit<%=name.index('.') ? name[(name.index('.') + 1)..name.length] : name%> (<%=name%> header)
 		{<% header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_binaryWriter")%>;<% } %>
@@ -203,7 +199,7 @@ namespace Mono.Cecil.Binary {
 		{<% cur_header.fields.each { |field| %>
 			<%=field.write_binary("header", "m_textWriter")%>;<% } %>
 		}
-
+<% cur_header = $headers["DebugHeader"] %>
 		public override void VisitDebugHeader (DebugHeader header)
 		{
 			m_textWriter.BaseStream.Position = m_mdWriter.DebugHeaderPosition;
