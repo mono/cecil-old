@@ -1,5 +1,14 @@
 2005-12-19  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
+	* Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	  testcases/FlowAnalysis/IntPropertyEquals2.il
+	  testcases/FlowAnalysis/IntPropertyEquals1-afg.txt
+	  testcases/FlowAnalysis/IntPropertyEquals2-afg.txt:
+	  	more test cases
+
+testcases/FlowAnalysis/IntPropertyEquals1.il
+2005-12-19  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
 	* Cecil.FlowAnalysis.Tests/AbstractFlowAnalysisTestFixture.cs:
 		take into account that the path to the temp directory might contain
 		spaces

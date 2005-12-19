@@ -1,0 +1,1 @@
+return (pilot.get_Points() == 100)

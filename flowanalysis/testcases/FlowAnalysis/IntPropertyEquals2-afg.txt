@@ -1,0 +1,2 @@
+local0 = (pilot.get_Points() == 100)
+return local0
