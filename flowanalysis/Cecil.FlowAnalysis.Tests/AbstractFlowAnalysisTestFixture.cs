@@ -39,7 +39,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		{
 			string sourceFile = MapTestCasePath (name + ".il");
 			Assert.IsTrue (File.Exists (sourceFile), sourceFile + " not found!");
-			ilasm (string.Format ("/DLL /OUTPUT:{0} {1}", TestAssemblyPath, sourceFile));
+			ilasm (string.Format ("/DLL \"/OUTPUT:{0}\" {1}", TestAssemblyPath, sourceFile));
 		}
 
 		protected string LoadTestCaseFile (string fname)
