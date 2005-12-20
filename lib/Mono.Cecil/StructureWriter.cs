@@ -108,7 +108,8 @@ namespace Mono.Cecil {
 
 		public override void VisitAssemblyNameReferenceCollection (AssemblyNameReferenceCollection references)
 		{
-			VisitCollection (references);
+			foreach (AssemblyNameReference name in references)
+				VisitAssemblyNameReference (name);
 		}
 
 		public override void VisitAssemblyNameReference (AssemblyNameReference name)

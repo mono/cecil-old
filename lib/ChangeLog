@@ -1,5 +1,8 @@
 2005-12-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/StructureWriter.cs:
+		Ensure every assembly reference is processed.
+
 	* Mono.Cecil/ReflectionHelper.cs:
 		Don't assume the cache is magically loaded.
 		Aka: most stupid bug of the year.
