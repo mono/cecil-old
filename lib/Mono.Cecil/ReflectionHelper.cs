@@ -46,7 +46,7 @@ namespace Mono.Cecil {
 			m_module = module;
 			m_asmCache = new Hashtable ();
 			m_memberRefCache = new Hashtable ();
-			m_cacheLoaded = true;
+			m_cacheLoaded = false;
 		}
 
 		void ImportCache ()

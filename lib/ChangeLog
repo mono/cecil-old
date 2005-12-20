@@ -1,3 +1,9 @@
+2005-12-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Don't assume the cache is magically loaded.
+		Aka: most stupid bug of the year.
+
 2005-12-19  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/DebugHeader.cs
