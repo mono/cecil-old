@@ -331,6 +331,16 @@ namespace Mono.Cecil.Cil {
 			m_instrs.Add (current);
 		}
 
+		public void Replace (Instruction old, Instruction instr)
+		{
+			int index = m_instrs.IndexOf (old);
+			if (index == -1)
+				throw new ReflectionException ("Target instruction not in method body");
+
+			InsertAfter (old, instr);
+			Remove (old);
+		}
+
 		public void Remove (Instruction instr)
 		{
 			if (!m_instrs.Contains (instr))

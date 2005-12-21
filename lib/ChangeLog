@@ -1,3 +1,9 @@
+2005-12-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/ICilWorker.cs
+	  Mono.Cecil.Cil/CilWorker.cs:
+		Add a new replace method.
+
 2005-12-20  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/StructureWriter.cs:
