@@ -1,5 +1,8 @@
 2005-12-21  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/StructureWriter.cs:
+		Don't increment pdb age. Not Cecil's job.
+
 	* Mono.Cecil.Cil/ICilWorker.cs
 	  Mono.Cecil.Cil/CilWorker.cs:
 		Add a new replace method.

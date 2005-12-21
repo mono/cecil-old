@@ -52,7 +52,7 @@ namespace Mono.Cecil {
 			if (mod.Image.DebugHeader != null) {
 				ni.AddDebugHeader ();
 				DebugHeader old = mod.Image.DebugHeader;
-				ni.DebugHeader.Age = old.Age + 1;
+				ni.DebugHeader.Age = old.Age;
 				ni.DebugHeader.Characteristics = old.Characteristics;
 				ni.DebugHeader.FileName = old.FileName;
 				ni.DebugHeader.Signature = old.Signature;
