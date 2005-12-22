@@ -223,11 +223,17 @@ namespace Mono.Cecil {
 
 		public TypeReference Import (Type type)
 		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+
 			return m_controller.Helper.ImportSystemType (type);
 		}
 
 		public MethodReference Import (SR.MethodBase meth)
 		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+
 			if (meth is SR.ConstructorInfo)
 				return m_controller.Helper.ImportConstructorInfo (meth as SR.ConstructorInfo);
 			else
@@ -236,36 +242,57 @@ namespace Mono.Cecil {
 
 		public FieldReference Import (SR.FieldInfo field)
 		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+
 			return m_controller.Helper.ImportFieldInfo (field);
 		}
 
 		public TypeReference Import (TypeReference type)
 		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+
 			return m_controller.Helper.ImportTypeReference (type);
 		}
 
 		public MethodReference Import (MethodReference meth)
 		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+
 			return m_controller.Helper.ImportMethodReference (meth);
 		}
 
 		public FieldReference Import (FieldReference field)
 		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+
 			return m_controller.Helper.ImportFieldReference (field);
 		}
 
 		public TypeDefinition Import (TypeDefinition type)
 		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+
 			return m_controller.Helper.ImportTypeDefinition (type);
 		}
 
 		public MethodDefinition Import (MethodDefinition meth)
 		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+
 			return m_controller.Helper.ImportMethodDefinition (meth);
 		}
 
 		public FieldDefinition Import (FieldDefinition field)
 		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+
 			return m_controller.Helper.ImportFieldDefinition (field);
 		}
 
