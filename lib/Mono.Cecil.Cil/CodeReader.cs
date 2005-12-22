@@ -79,12 +79,12 @@ namespace Mono.Cecil.Cil {
 			}
 		}
 
-		uint GetRid (int token)
+		public static uint GetRid (int token)
 		{
 			return (uint) token & 0x00ffffff;
 		}
 
-		bool IsToken (int token, TokenType t)
+		public static bool IsToken (int token, TokenType t)
 		{
 			return token >> 24 == (int) t >> 24;
 		}

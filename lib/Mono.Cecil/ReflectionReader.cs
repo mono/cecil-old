@@ -636,8 +636,8 @@ namespace Mono.Cecil {
 				}
 			}
 
-			uint eprid = m_reader.Image.CLIHeader.EntryPointToken & 0x00ffffff;
-			if (eprid != 0)
+			uint eprid = CodeReader.GetRid ((int) m_reader.Image.CLIHeader.EntryPointToken);
+			if (eprid > 0 && eprid <= m_meths.Length)
 				m_module.Assembly.EntryPoint = GetMethodDefAt (eprid);
 		}
 

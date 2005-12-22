@@ -1,5 +1,11 @@
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Make helper methods public static.
+	* Mono.Cecil/ReflectionReader.cs:
+		Don't try to get the entry point method
+		if it don't point on a valid method RID.
+
 	* CodeGen/templates/NamedCollectionImplem.cs
 	  Mono.Cecil/ExternTypeCollection.cs
 	  Mono.Cecil/TypeDefinitionCollection.cs
