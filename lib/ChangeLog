@@ -1,5 +1,9 @@
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionReader.cs:
+		Unsure that primitive value types are viewed as
+		value types.
+
 	* CodeGen/templates/Section.cs
 	  CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Metadata/MetadataReader.cs

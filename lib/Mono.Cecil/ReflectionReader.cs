@@ -285,6 +285,9 @@ namespace Mono.Cecil {
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
 				coreType = new TypeReference (parts [1], parts [0], m_corlib);
+				m_module.TypeReferences.Add (coreType);
+			}
+			if (!coreType.IsValueType) {
 				switch (coreType.FullName) {
 				case Constants.Boolean :
 				case Constants.Char :
@@ -303,7 +306,6 @@ namespace Mono.Cecil {
 					coreType.IsValueType = true;
 					break;
 				}
-				m_module.TypeReferences.Add (coreType);
 			}
 			return coreType;
 		}
