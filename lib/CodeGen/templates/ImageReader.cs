@@ -112,7 +112,12 @@ namespace Mono.Cecil.Binary {
 				m_image.TextSection = sect;
 			m_binaryReader.BaseStream.Position += 8 - read - 1;
 <% cur_header.fields.each { |field| %>			sect.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
-<% } %>		}
+<% } %>
+			long pos = m_binaryReader.BaseStream.Position;
+			m_binaryReader.BaseStream.Position = sect.PointerToRawData;
+			sect.Data = m_binaryReader.ReadBytes ((int) sect.SizeOfRawData);
+			m_binaryReader.BaseStream.Position = pos;
+		}
 
 		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{

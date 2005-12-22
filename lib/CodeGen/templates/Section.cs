@@ -41,6 +41,7 @@ namespace Mono.Cecil.Binary {
 <% header.fields.each { |f| %>		public <%=f.type%> <%=f.property_name%>;
 <% } %>
 		public string Name;
+		public byte [] Data;
 
 		internal Section ()
 		{

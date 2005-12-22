@@ -142,6 +142,21 @@ namespace Mono.Cecil.Binary {
 			return 0;
 		}
 
+		public BinaryReader GetReaderAtVirtualAddress (RVA rva)
+		{
+			foreach (Section sect in this.Sections) {
+				if (rva >= sect.VirtualAddress &&
+					rva < sect.VirtualAddress + sect.SizeOfRawData) {
+
+					BinaryReader br = new BinaryReader (new MemoryStream (sect.Data));
+					br.BaseStream.Position = rva - sect.VirtualAddress;
+					return br;
+				}
+			}
+
+			return null;
+		}
+
 		public void AddDebugHeader ()
 		{
 			m_debugHeader = new DebugHeader ();

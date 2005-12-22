@@ -1,5 +1,14 @@
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/Section.cs
+	  CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/Section.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Simplify the way you read binary data whithin
+		high level layer.
+
 	* Mono.Cecil.Cil/CodeReader.cs:
 		Make helper methods public static.
 	* Mono.Cecil/ReflectionReader.cs:
