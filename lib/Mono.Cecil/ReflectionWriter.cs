@@ -231,6 +231,8 @@ namespace Mono.Cecil {
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
 				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);
+				if (meth.PInvokeInfo != null)
+					VisitPInvokeInfo (meth.PInvokeInfo);
 			}
 
 			foreach (TypeDefinition t in orderedTypes)

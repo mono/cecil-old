@@ -1,5 +1,8 @@
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter:
+		Write pinvoke infos as well.
+
 	* Mono.Cecil/ReflectionReader.cs:
 		Unsure that primitive value types are viewed as
 		value types.
