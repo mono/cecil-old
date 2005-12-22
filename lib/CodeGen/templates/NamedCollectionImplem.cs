@@ -80,7 +80,10 @@ namespace <%=$cur_coll.target%> {
 			if (value == null)
 				throw new ArgumentNullException ("value");
 
-			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
+			if (this.Contains (value))
+				throw new ArgumentException ("Duplicated value");
+
+			if (On<%=$cur_coll.item_name%>Added != null)
 				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 
 			this.BaseSet (value.FullName, value);

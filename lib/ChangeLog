@@ -1,5 +1,11 @@
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  Mono.Cecil/TypeReferenceCollection.cs:
+		Don't add existing values.
+
 	* Mono.Cecil/ModuleDefinition.cs:
 		Protect import from null refs.
 
