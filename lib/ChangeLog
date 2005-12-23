@@ -1,5 +1,8 @@
 2005-12-23  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/AssemblyInfo.cs:
+		Version 0.2 to be released.
+
 	* Mono.Cecil/ReflectionWriter.cs:
 		IGenericInstance are typespecs as well.
 

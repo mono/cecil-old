@@ -41,5 +41,5 @@ using System.Runtime.InteropServices;
 [assembly: CLSCompliant (false)]
 [assembly: ComVisible (false)]
 
-[assembly: AssemblyVersion ("0.1.1.1")]
+[assembly: AssemblyVersion ("0.2.0.0")]
 
