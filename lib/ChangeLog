@@ -1,6 +1,9 @@
 2005-12-23  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyInfo.cs:
+		Version 0.2.2.2 devel.
+
+	* Mono.Cecil/AssemblyInfo.cs:
 		Version 0.2 to be released.
 
 	* Mono.Cecil/ReflectionWriter.cs:
