@@ -3,11 +3,6 @@ Cecil TODO
 * bugs generics
 
 	For sure, bugs remains in the generic suppport.
-	
-* import typespec
-
-	When importing System.Type or TypeReference, Cecil does not handle
-	type specs like pointers, reference types, or arrays.
 
 * array types
 

@@ -1,3 +1,13 @@
+2005-12-23  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs:
+		Add a single dimension in the default ctor.
+	* Mono.Cecil/ReflectionReader.cs:
+		Don't manually add the default dimension as it's done
+		int the array type ctor.
+	* Mono.Cecil/ReflectionHelper.cs:
+		Import type specs.
+
 2005-12-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionWriter:

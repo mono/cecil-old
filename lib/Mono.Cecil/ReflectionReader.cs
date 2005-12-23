@@ -897,7 +897,6 @@ namespace Mono.Cecil {
 			case ElementType.SzArray :
 				SZARRAY szary = t as SZARRAY;
 				ArrayType at = new ArrayType (GetTypeRefFromSig (szary.Type, context));
-				(at.Dimensions as ArrayDimensionCollection).Add (new ArrayDimension (0, 0));
 				return at;
 			case ElementType.Ptr :
 				PTR pointer = t as PTR;

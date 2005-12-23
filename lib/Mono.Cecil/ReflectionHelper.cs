@@ -93,15 +93,39 @@ namespace Mono.Cecil {
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
+		TypeReference GetTypeSpec (Type t)
+		{
+			Type elem = t;
+			while (elem.HasElementType)
+				elem = t.GetElementType ();
+
+			TypeReference elementType = ImportSystemType (elem);
+			while (t.HasElementType) {
+				if (t.IsPointer)
+					elementType = new PointerType (elementType);
+				else if (t.IsArray) // deal with complex arrays
+					elementType = new ArrayType (elementType);
+				else if (t.IsByRef)
+					elementType = new ReferenceType (elementType);
+				else
+					throw new ReflectionException ("Unkown element type");
+
+				t = t.GetElementType ();
+			}
+			return elementType;
+		}
+
 		public TypeReference ImportSystemType (Type t)
 		{
+			if (t.HasElementType)
+				return GetTypeSpec (t);
+
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null)
 				return type;
 
 			AssemblyNameReference asm = ImportAssembly (t.Assembly);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
-
 			m_module.TypeReferences.Add (type);
 			return type;
 		}

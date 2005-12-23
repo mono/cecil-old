@@ -90,6 +90,7 @@ namespace Mono.Cecil {
 		public ArrayType (TypeReference elementsType) : base (elementsType)
 		{
 			m_dimensions = new ArrayDimensionCollection (this);
+			m_dimensions.Add (new ArrayDimension (0, 0));
 		}
 	}
 }
