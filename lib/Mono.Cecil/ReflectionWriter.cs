@@ -137,9 +137,15 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
+		bool IsTypeSpec (ITypeReference type)
+		{
+			return type is IArrayType || type is IFunctionPointerType ||
+				type is IPointerType || type is IGenericInstance;
+		}
+
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
-			if (type is IArrayType || type is IFunctionPointerType || type is IPointerType) {
+			if (IsTypeSpec (type)) {
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
 				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
 					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));

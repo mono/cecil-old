@@ -1,5 +1,8 @@
 2005-12-23  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		IGenericInstance are typespecs as well.
+
 	* Mono.Cecil/ArrayType.cs:
 		Add a single dimension in the default ctor.
 	* Mono.Cecil/ReflectionReader.cs:
