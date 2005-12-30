@@ -1,3 +1,12 @@
+2005-12-30  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Add support to assemblies where the metadata is defined
+		outside of the text section. (c++/cli /safe for instance)
+
 2005-12-23  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyInfo.cs:

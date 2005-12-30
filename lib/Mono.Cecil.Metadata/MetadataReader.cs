@@ -133,7 +133,7 @@ namespace Mono.Cecil.Metadata {
 			if (header.Name.Length == 0)
 				throw new MetadataFormatException ("Invalid stream name");
 
-			long rootpos = m_root.GetImage ().ResolveTextVirtualAddress (
+			long rootpos = m_root.GetImage ().ResolveVirtualAddress (
 				m_root.GetImage ().CLIHeader.Metadata.VirtualAddress);
 
 			long curpos = m_binaryReader.BaseStream.Position;
@@ -223,7 +223,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			long cursor = m_binaryReader.BaseStream.Position;
 
-			m_binaryReader.BaseStream.Position = m_root.GetImage ().ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_root.GetImage ().ResolveVirtualAddress (
 				m_root.GetImage ().CLIHeader.Metadata.VirtualAddress)
 				+ heap.GetStream ().Header.Offset;
 

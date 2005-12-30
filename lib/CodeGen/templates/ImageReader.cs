@@ -121,7 +121,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
 
 			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
@@ -137,18 +137,18 @@ namespace Mono.Cecil.Binary {
 				VisitDebugHeader (m_image.DebugHeader);
 			}
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
 <% cur_header.fields.each { |field| %>			header.<%=field.property_name%> = <%=field.read_binary("m_binaryReader")%>;
 <% } %>
 			if (header.StrongNameSignature != DataDirectory.Zero) {
-				m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+				m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 					header.StrongNameSignature.VirtualAddress);
 				header.ImageHash = m_binaryReader.ReadBytes ((int) header.StrongNameSignature.Size);
 			} else {
 				header.ImageHash = new byte [0];
 			}
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.CLIHeader.Metadata.VirtualAddress);
 			m_image.MetadataRoot.Accept (m_mdReader);
 		}
@@ -185,7 +185,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportTable (ImportTable it)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
 
 			it.ImportLookupTable = new RVA (m_binaryReader.ReadUInt32 ());
@@ -197,7 +197,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportLookupTable (ImportLookupTable ilt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.ImportTable.ImportLookupTable.Value);
 
 			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
@@ -205,7 +205,7 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitHintNameTable (HintNameTable hnt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.ImportAddressTable.HintNameTableRVA);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();
@@ -213,13 +213,13 @@ namespace Mono.Cecil.Binary {
 			byte [] bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeMain = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.ImportTable.Name);
 
 			bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeLibrary = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveTextVirtualAddress (
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
 				m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
 			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
 			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());

@@ -126,11 +126,6 @@ namespace Mono.Cecil.Binary {
 			m_img = img;
 		}
 
-		public long ResolveTextVirtualAddress (RVA rva)
-		{
-			return rva + m_textSection.PointerToRawData - m_textSection.VirtualAddress;
-		}
-
 		public long ResolveVirtualAddress (RVA rva)
 		{
 			foreach (Section sect in this.Sections) {
