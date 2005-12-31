@@ -1,3 +1,8 @@
+2005-12-31  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Fix import of type specs.
+
 2005-12-30  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/ImageReader.cs

@@ -95,12 +95,15 @@ namespace Mono.Cecil {
 
 		TypeReference GetTypeSpec (Type t)
 		{
-			Type elem = t;
-			while (elem.HasElementType)
-				elem = t.GetElementType ();
-
-			TypeReference elementType = ImportSystemType (elem);
+			Stack s = new Stack ();
 			while (t.HasElementType) {
+				s.Push (t);
+				t = t.GetElementType ();
+			}
+
+			TypeReference elementType = ImportSystemType (t);
+			while (s.Count > 0) {
+				t = s.Pop () as Type;
 				if (t.IsPointer)
 					elementType = new PointerType (elementType);
 				else if (t.IsArray) // deal with complex arrays
@@ -109,9 +112,8 @@ namespace Mono.Cecil {
 					elementType = new ReferenceType (elementType);
 				else
 					throw new ReflectionException ("Unkown element type");
-
-				t = t.GetElementType ();
 			}
+
 			return elementType;
 		}
 
@@ -227,10 +229,37 @@ namespace Mono.Cecil {
 			return asmRef;
 		}
 
+		TypeReference GetTypeSpec (TypeReference t)
+		{
+			Stack s = new Stack ();
+			while (t is TypeSpecification) {
+				s.Push (t);
+				t = (t as TypeSpecification).ElementType;
+			}
+
+			TypeReference elementType = ImportTypeReference (t);
+			while (s.Count > 0) {
+				t = s.Pop () as TypeReference;
+				if (t is PointerType)
+					elementType = new PointerType (elementType);
+				else if (t is ArrayType) // deal with complex arrays
+					elementType = new ArrayType (elementType);
+				else if (t is ReferenceType)
+					elementType = new ReferenceType (elementType);
+				else
+					throw new ReflectionException ("Unknown element type");
+			}
+
+			return elementType;
+		}
+
 		public TypeReference ImportTypeReference (TypeReference t)
 		{
 			if (t.Module == m_module)
 				return t;
+
+			if (t is TypeSpecification)
+				return GetTypeSpec (t);
 
 			TypeReference type = m_module.TypeReferences [t.FullName];
 			if (type != null)
