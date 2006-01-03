@@ -1,3 +1,11 @@
+2006-01-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Work on generics.
+
 2005-12-31  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionHelper.cs:

@@ -63,11 +63,13 @@ namespace Mono.Cecil {
 
 		public override string Name {
 			get {
-				string name = m_name != null ? m_name : m_position.ToString ();
+				if (m_name != null)
+					return m_name;
+
 				if (m_owner is TypeDefinition)
-					return string.Concat ("!", name);
+					return string.Concat ("!", m_position.ToString ());
 				else if (m_owner is MethodDefinition)
-					return string.Concat ("!!", name);
+					return string.Concat ("!!", m_position.ToString ());
 				else
 					throw new InvalidOperationException ();
 			}

@@ -111,7 +111,7 @@ namespace Mono.Cecil {
 				else if (t.IsByRef)
 					elementType = new ReferenceType (elementType);
 				else
-					throw new ReflectionException ("Unkown element type");
+					throw new ReflectionException ("Unknown element type");
 			}
 
 			return elementType;
