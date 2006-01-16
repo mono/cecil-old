@@ -119,7 +119,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("AbstractMethodsClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("VirtualMethodsClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NoVirtualMethodsClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NotInheritanceDemandClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 	}

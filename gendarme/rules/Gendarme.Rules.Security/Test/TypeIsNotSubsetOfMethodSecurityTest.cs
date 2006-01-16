@@ -149,49 +149,49 @@ namespace Test.Rules.Security {
 		public void NoSecurity ()
 		{
 			ITypeDefinition type = GetTest ("NoSecurityClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemand ()
 		{
 			ITypeDefinition type = GetTest ("LinkDemandClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("InheritanceDemandClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void AssertNotSubset ()
 		{
 			ITypeDefinition type = GetTest ("AssertNotSubsetClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DemandSubset ()
 		{
 			ITypeDefinition type = GetTest ("DemandSubsetClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DenyNotSubset ()
 		{
 			ITypeDefinition type = GetTest ("DenyNotSubsetClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void PermitOnlySubset ()
 		{
 			ITypeDefinition type = GetTest ("PermitOnlySubsetClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}
 }

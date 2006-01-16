@@ -128,7 +128,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("SubsetInheritClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -137,7 +137,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NotASubsetInheritClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("SubsetCallClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NotASubsetCallClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 	}

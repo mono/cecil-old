@@ -39,6 +39,8 @@ namespace Gendarme.Framework {
 
 		private Rules rules;
 		private Violations violations;
+		private static IList failure = new ArrayList();
+		protected bool debug = false;
 
 		public Rules Rules {
 			get {
@@ -53,6 +55,24 @@ namespace Gendarme.Framework {
 				if (violations == null)
 					violations = new Violations ();
 				return violations;
+			}
+		}
+
+		public bool Debug {
+			get {
+				return debug;
+			}
+		}
+
+		public IList RuleSuccess {
+			get {
+				return null;
+			}
+		}
+
+		public IList RuleFailure {
+			get {
+				return failure;
 			}
 		}
 
@@ -96,30 +116,35 @@ namespace Gendarme.Framework {
 
 		public void Process (IAssemblyDefinition assembly)
 		{
+			IList messages;
 			foreach (IAssemblyRule rule in Rules.Assembly) {
-				if (!rule.CheckAssembly (assembly))
-					Violations.Add (rule, assembly);
+				messages = rule.CheckAssembly(assembly, this);
+				if (messages != RuleSuccess)
+					Violations.Add (rule, assembly, messages);
 			}
 
 			foreach (IModuleDefinition module in assembly.Modules) {
 
 				foreach (IModuleRule rule in Rules.Module) {
-					if (!rule.CheckModule (assembly, module))
-						Violations.Add (rule, module);
+					messages = rule.CheckModule(assembly, module, this);
+					if (messages != RuleSuccess)
+						Violations.Add (rule, module, messages);
 				}
 
 				foreach (ITypeDefinition type in module.Types) {
 
 					foreach (ITypeRule rule in Rules.Type) {
-						if (!rule.CheckType (assembly, module, type))
-							Violations.Add (rule, type);
+						messages = rule.CheckType(assembly, module, type, this);
+						if (messages != RuleSuccess)
+							Violations.Add (rule, type, messages);
 					}
 
 					foreach (IMethodDefinition method in type.Methods) {
 
 						foreach (IMethodRule rule in Rules.Method) {
-							if (!rule.CheckMethod (assembly, module, type, method))
-								Violations.Add (rule, method);
+							messages = rule.CheckMethod(assembly, module, type, method, this);
+							if (messages != RuleSuccess)
+								Violations.Add (rule, method, messages);
 						}
 					}
 				}

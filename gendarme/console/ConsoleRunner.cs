@@ -86,6 +86,9 @@ class ConsoleRunner : Runner {
 			case "--set":
 				set = GetNext (args, ++i, defaultRuleSet);
 				break;
+			case "--debug":
+				debug = true;
+				break;
 			case "--help":
 				return false;
 			default:
@@ -154,6 +157,7 @@ class ConsoleRunner : Runner {
 		Console.WriteLine ("Where");
 		Console.WriteLine ("  --config configfile\tSpecify the configuration file. Default is 'rules.xml'.");
 		Console.WriteLine ("  --set ruleset\t\tSpecify the set of rules to verify. Default is '*'.");
+		Console.WriteLine ("  --debug\t\tEnable debugging output.");
 		Console.WriteLine ("  assembly\t\tSpecify the assembly to verify.");
 		Console.WriteLine ();
 	}
@@ -202,6 +206,13 @@ class ConsoleRunner : Runner {
 			Console.WriteLine ();
 			Console.WriteLine ("Problem: {0}", String.Format (ri.Problem, v.Violator));
 			Console.WriteLine ();
+			if(v.Messages != null && v.Messages.Count > 0) {
+				Console.WriteLine ("Details:");
+				foreach(object message in v.Messages) {
+					Console.WriteLine("  {0}", message);
+				}
+				Console.WriteLine ();
+			}
 			Console.WriteLine ("Solution: {0}", String.Format (ri.Solution, v.Violator));
 			Console.WriteLine ();
 			string url = ri.Uri;

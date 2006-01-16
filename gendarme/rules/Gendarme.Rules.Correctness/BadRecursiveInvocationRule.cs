@@ -1,6 +1,6 @@
 /*
- * BadRecChecker.cs: looks for instances of problematic recursive
- * invocations.
+ * BadRecursiveInvocationRule.cs: looks for instances of problematic
+ * recursive invocations.
  *
  * Authors:
  *   Aaron Tomb <atomb@soe.ucsc.edu>
@@ -13,17 +13,21 @@
  **********************************************************************/
 
 using System;
+using System.Collections;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
+namespace Gendarme.Rules.Correctness {
+
 public class BadRecursiveInvocationRule : IMethodRule {
 
-    public bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module,
-            ITypeDefinition type, IMethodDefinition method)
+    public IList CheckMethod (IAssemblyDefinition assembly,
+            IModuleDefinition module, ITypeDefinition type,
+            IMethodDefinition method, Runner runner)
     {
         if(method.Body == null)
-            return true;
+            return runner.RuleSuccess;
 
         IInstructionCollection instructions = method.Body.Instructions;
 
@@ -56,21 +60,19 @@ public class BadRecursiveInvocationRule : IMethodRule {
                 }
                 if(rName.Equals(mName) && rDecl.Equals(mDecl) && argsEqual) {
                     if(LoadsVerbatimArgs(method, i)) {
-                        return false;
-                        /* TODO: restore the ability to generate
-                         * messages. */
-                        /*
+                        IList messages = new ArrayList();
                         string etype = method.DeclaringType.FullName;
                         Location loc = new Location(etype, method.Name,
                                 insn.Offset);
-                        report.AddMessage(new Message("suspicious recursive call",
-                                    loc, MessageType.Warning));
-                                    */
+                        Message msg = new Message("suspicious recursive call",
+                                    loc, MessageType.Warning);
+                        messages.Add(msg);
+                        return messages;
                     }
                 }
             }
         }
-        return true;
+        return runner.RuleSuccess;
     }
 
     private bool LoadsVerbatimArgs([NonNull] IMethodDefinition method,
@@ -104,4 +106,6 @@ public class BadRecursiveInvocationRule : IMethodRule {
         }
         return false;
     }
+}
+
 }

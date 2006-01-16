@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 
 using Mono.Cecil;
 using Gendarme.Framework;
@@ -35,22 +36,22 @@ namespace Gendarme.Rules.Security {
 
 	public class SealedTypeWithInheritanceDemandRule : ITypeRule {
 
-		public bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type)
+		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
 		{
 			// 1 - this applies only to sealed types
 			if (!type.IsSealed)
-				return true;
+				return runner.RuleSuccess;
 
 			// 2 - the type must have an InheritanceDemand
 			if (type.SecurityDeclarations.Count == 0)
-				return true;
+				return runner.RuleSuccess;
 
 			foreach (ISecurityDeclaration declsec in type.SecurityDeclarations) {
 				if (declsec.Action == SecurityAction.InheritDemand)
-					return false;
+					return runner.RuleFailure;
 			}
 			// the action wasn't an inheritance demand check
-			return true;
+			return runner.RuleSuccess;
 		}
 	}
 }

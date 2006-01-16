@@ -6,8 +6,10 @@ DISTCLEANFILES = ../AssemblyInfo.cs Makefile.in
 
 framework_sources_in = ../AssemblyInfo.cs.in
 framework_generated_sources = $(framework_sources_in:.in=)
-framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs RuleInformation.cs \
-	RuleInformationManager.cs Rules.cs Runner.cs Violation.cs Violations.cs
+framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
+		    RuleInformation.cs  RuleInformationManager.cs \
+		    Rules.cs Runner.cs Violation.cs Violations.cs \
+		    Message.cs Location.cs MinimalRunner.cs
 
 framework_build_sources = $(addprefix $(srcdir)/, $(framework_sources))
 framework_build_sources += $(framework_generated_sources)

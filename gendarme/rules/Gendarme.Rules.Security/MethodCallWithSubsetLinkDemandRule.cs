@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Security;
 using System.Security.Permissions;
 
@@ -61,17 +62,17 @@ namespace Gendarme.Rules.Security {
 			return calleeLinkDemand.IsSubsetOf (GetLinkDemand (caller));
 		}
 
-		public bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method)
+		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply to methods are publicly accessible
 			//	note that the type doesn't have to be public (indirect access)
 			if ((method.Attributes & MethodAttributes.Public) != MethodAttributes.Public)
-				return true;
+				return runner.RuleSuccess;
 
 			// #2 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			//	otherwise we don't know what it's calling
 			if (method.Body == null)
-				return true;
+				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
 
@@ -82,15 +83,16 @@ namespace Gendarme.Rules.Security {
 				case "callvirt":
 					IMethodDefinition callee = AssemblyManager.GetMethod (ins.Operand);
 					if (callee == null) {
-						return true; // ignore (missing reference)
+						return runner.RuleSuccess; // ignore (missing reference)
 					}
 					// 4 - and if it has security, ensure we don't reduce it's strength
-					if ((callee.SecurityDeclarations.Count > 0) && !Check (method, callee))
-						return false;
+					if ((callee.SecurityDeclarations.Count > 0) && !Check (method, callee)) {
+						return runner.RuleFailure;
+					}
 					break;
 				}
 			}
-			return true;
+			return runner.RuleSuccess;
 		}
 	}
 }

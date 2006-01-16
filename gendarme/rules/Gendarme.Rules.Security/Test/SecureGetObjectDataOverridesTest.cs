@@ -155,7 +155,7 @@ namespace Test.Rules.Security {
 			ITypeDefinition type = GetTest ("SerializableClass");
 			// there's no GetObjectData method here so the test should never fail
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("ISerializableClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -172,7 +172,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("InheritISerializableClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -180,7 +180,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("LinkDemandClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -188,7 +188,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("InheritanceDemandClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -196,7 +196,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("DemandClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsTrue (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -204,7 +204,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("DemandWrongPermissionClass");
 			IMethodDefinition method = GetObjectData (type);
-			Assert.IsFalse (rule.CheckMethod (assembly, module, type, method));
+			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 	}
 }

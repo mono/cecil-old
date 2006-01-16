@@ -2,7 +2,13 @@
 	<rule	Name="BadRecursiveInvocationRule" 
 		Type="Gendarme.Rules.Correctness.BadRecursiveInvocationRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme" >
-                <problem>Method or property '{0}' invokes itself recursively in a suspcious way.</problem>
+		<problem>Method or property '{0}' invokes itself recursively in a suspcious way.</problem>
 		<solution>Ensure that the parameters to the vary in such a way that the recursion will terminate.</solution>
+	</rule>
+	<rule	Name="NullDerefRule"
+		Type="Gendarme.Rules.Correctness.NullDerefRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme" >
+		<problem>Method or property '{0}' might dereference a null pointer, or cause other code to do so.</problem>
+		<solution>Examine the detailed listing of problem locations, and ensure that the variables in question cannot be null.</solution>
 	</rule>
 </rules>

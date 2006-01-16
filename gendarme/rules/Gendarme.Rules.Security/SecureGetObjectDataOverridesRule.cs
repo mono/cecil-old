@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
@@ -51,19 +52,19 @@ namespace Gendarme.Rules.Security {
 			}
 		}
 
-		public bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method)
+		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
 		{
 			// check that the method is called "GetObjectData"
 			if (method.Name != "GetObjectData")
-				return true;
+				return runner.RuleSuccess;
 
 			// check parameters
 			if (method.Parameters.Count != 2)
-				return true;
+				return runner.RuleSuccess;
 			if (method.Parameters[0].ParameterType.ToString () != "System.Runtime.Serialization.SerializationInfo")
-				return true;
+				return runner.RuleSuccess;
 			if (method.Parameters[1].ParameterType.ToString () != "System.Runtime.Serialization.StreamingContext")
-				return true;
+				return runner.RuleSuccess;
 
 			// check for ISerializable
 			bool iserialize = true; // FIXME
@@ -78,7 +79,7 @@ namespace Gendarme.Rules.Security {
 
 			// is there any security applied ?
 			if (method.SecurityDeclarations.Count < 1)
-				return false;
+				return runner.RuleFailure;
 
 			// the SerializationFormatter must be a subset of the one (of the) demand(s)
 			foreach (ISecurityDeclaration declsec in method.SecurityDeclarations) {
@@ -88,12 +89,12 @@ namespace Gendarme.Rules.Security {
 				case Mono.Cecil.SecurityAction.LinkDemand:
 				case Mono.Cecil.SecurityAction.NonCasLinkDemand:
 					if (RuleSet.IsSubsetOf (declsec.PermissionSet))
-						return true;
+						return runner.RuleSuccess;
 					break;
 				}
 			}
 
-			return false;
+			return runner.RuleFailure;
 		}
 	}
 }

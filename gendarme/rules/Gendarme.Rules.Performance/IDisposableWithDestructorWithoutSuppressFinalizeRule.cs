@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -45,11 +46,12 @@ namespace Gendarme.Rules.Performance {
 			return (md.ReturnType.ReturnType.ToString () == "System.Void");
 		}
 
-		private bool Recurse (IMethodDefinition method, int level)
+		private IList Recurse (IMethodDefinition method, int level, Runner runner)
 		{
 			// some methods have no body (e.g. p/invokes, icalls)
-			if (method.Body == null)
-				return false;
+			if (method.Body == null) {
+				return runner.RuleFailure;
+			}
 
 			foreach (IInstruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
@@ -57,21 +59,21 @@ namespace Gendarme.Rules.Performance {
 				case "callvirt":
 					// are we calling GC.SuppressFinalize ?
 					if (ins.Operand.ToString () == "System.Void System.GC::SuppressFinalize(System.Object)")
-						return true;
+						return runner.RuleSuccess;
 					else if (level < 3) {
 						IMethodDefinition callee = (ins.Operand as IMethodDefinition);
 						if (callee != null) {
-							if (Recurse (callee, level + 1))
-								return true;
+							if (Recurse (callee, level + 1, runner) == null)
+								return runner.RuleSuccess;
 						}
 					}
 					break;
 				}
 			}
-			return false;
+			return runner.RuleFailure;
 		}
 
-		public bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type)
+		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
 		{
 			// #1 - does the type implements System.IDisposable ?
 			bool idisposable = false;
@@ -82,7 +84,7 @@ namespace Gendarme.Rules.Performance {
 				}
 			}
 			if (!idisposable)
-				return true;
+				return runner.RuleSuccess;
 
 			// #2 - look for the Dispose method
 			IMethodDefinition dispose = null;
@@ -95,7 +97,7 @@ namespace Gendarme.Rules.Performance {
 				}
 			}
 			if (dispose == null)
-				return true;
+				return runner.RuleSuccess;
 
 			// #3 - look for a destructor
 			IMethodDefinition destructor = null;
@@ -106,11 +108,11 @@ namespace Gendarme.Rules.Performance {
 				}
 			}
 			if (destructor == null)
-				return true;
+				return runner.RuleSuccess;
 
 			// #4 - look if GC.SuppressFinalize is being called in the 
 			// Dispose method - or one of the method it calls
-			return Recurse (dispose, 0);
+			return Recurse (dispose, 0, runner);
 		}
 	}
 }

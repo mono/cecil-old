@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Security;
 using System.Text;
 
@@ -37,11 +38,11 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeIsNotSubsetOfMethodSecurityRule : ITypeRule {
 
-		public bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type)
+		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
 		{
 			// #1 - this rules apply if type as security permissions
 			if (type.SecurityDeclarations.Count == 0)
-				return true;
+				return runner.RuleSuccess;
 
 			PermissionSet assert = null;
 			PermissionSet deny = null;
@@ -73,7 +74,7 @@ namespace Gendarme.Rules.Security {
 			// #2 - this rules doesn't apply to LinkDemand (both are executed) 
 			// and to InheritanceDemand (both are executed at different time).
 			if (!apply)
-				return true;
+				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
 
@@ -89,32 +90,32 @@ namespace Gendarme.Rules.Security {
 						if (assert == null)
 							continue;
 						if (!assert.IsSubsetOf (declsec.PermissionSet))
-							return false;
+							return runner.RuleFailure;
 						break;
 					case Mono.Cecil.SecurityAction.Deny:
 						if (deny == null)
 							continue;
 						if (!deny.IsSubsetOf (declsec.PermissionSet))
-							return false;
+							return runner.RuleFailure;
 						break;
 					case Mono.Cecil.SecurityAction.PermitOnly:
 						if (permitonly == null)
 							continue;
 						if (!permitonly.IsSubsetOf (declsec.PermissionSet))
-							return false;
+							return runner.RuleFailure;
 						break;
 					case Mono.Cecil.SecurityAction.Demand:
 					case Mono.Cecil.SecurityAction.NonCasDemand:
 						if (demand == null)
 							continue;
 						if (!demand.IsSubsetOf (declsec.PermissionSet))
-							return false;
+							return runner.RuleFailure;
 						break;
 					}
 				}
 			}
 			// other types security applies
-			return true;
+			return runner.RuleSuccess;
 		}
 	}
 }

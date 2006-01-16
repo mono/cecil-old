@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using System.Security;
 
 using Mono.Cecil;
@@ -36,7 +37,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeLinkDemandRule: ITypeRule {
 
-		public bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type)
+		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
 		{
 			// #1 - rule apply to types (and nested types) that are publicly visible
 			switch (type.Attributes & TypeAttributes.VisibilityMask) {
@@ -44,12 +45,12 @@ namespace Gendarme.Rules.Security {
 			case TypeAttributes.NestedPublic:
 				break;
 			default:
-				return true;
+				return runner.RuleSuccess;
 			}
 
 			// #2 - rule apply to types that aren't sealed
 			if (type.IsSealed)
-				return true;
+				return runner.RuleSuccess;
 
 			PermissionSet link = null;
 			PermissionSet inherit = null;
@@ -68,7 +69,7 @@ namespace Gendarme.Rules.Security {
 			}
 
 			if (link == null)
-				return true; // no LinkDemand == no problem
+				return runner.RuleSuccess; // no LinkDemand == no problem
 
 			// #4 - rule apply if there are virtual methods defined
 			bool virt = false;
@@ -79,14 +80,17 @@ namespace Gendarme.Rules.Security {
 			}
 
 			if (!virt)
-				return true; // no virtual method == no problem
+				return runner.RuleSuccess; // no virtual method == no problem
 
 			// *** ok, the rule applies! ***
 
 			// #5 - and ensure the LinkDemand is a subset of the InheritanceDemand
 			if (inherit == null)
-				return false; // LinkDemand without InheritanceDemand
-			return link.IsSubsetOf (inherit);
+				return runner.RuleFailure; // LinkDemand without InheritanceDemand
+			if (link.IsSubsetOf (inherit))
+				return runner.RuleSuccess;
+			else
+				return runner.RuleFailure;
 		}
 	}
 }

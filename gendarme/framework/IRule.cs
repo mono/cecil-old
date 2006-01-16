@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 using Mono.Cecil;
 
 namespace Gendarme.Framework {
@@ -35,18 +36,18 @@ namespace Gendarme.Framework {
 	}
 
 	public interface IAssemblyRule : IRule {
-		bool CheckAssembly (IAssemblyDefinition assembly);
+		IList CheckAssembly (IAssemblyDefinition assembly, Runner runner);
 	}
 
 	public interface IModuleRule : IRule {
-		bool CheckModule (IAssemblyDefinition assembly, IModuleDefinition module);
+		IList CheckModule (IAssemblyDefinition assembly, IModuleDefinition module, Runner runner);
 	}
 
 	public interface ITypeRule : IRule {
-		bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type);
+		IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner);
 	}
 
 	public interface IMethodRule : IRule {
-		bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method);
+		IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner);
 	}
 }

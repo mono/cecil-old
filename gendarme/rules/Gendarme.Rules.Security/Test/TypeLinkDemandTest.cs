@@ -147,56 +147,56 @@ namespace Test.Rules.Security {
 		public void NonPublic ()
 		{
 			ITypeDefinition type = GetTest ("NonPublicClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Sealed ()
 		{
 			ITypeDefinition type = GetTest ("SealedClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemand ()
 		{
 			ITypeDefinition type = GetTest ("LinkDemandClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemandVirtualMethod ()
 		{
 			ITypeDefinition type = GetTest ("LinkDemandVirtualMethodClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("InheritanceDemandClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoIntersection ()
 		{
 			ITypeDefinition type = GetTest ("NoIntersectionClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoIntersectionVirtualMethod ()
 		{
 			ITypeDefinition type = GetTest ("NoIntersectionVirtualMethodClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Intersection ()
 		{
 			ITypeDefinition type = GetTest ("IntersectionClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}
 }

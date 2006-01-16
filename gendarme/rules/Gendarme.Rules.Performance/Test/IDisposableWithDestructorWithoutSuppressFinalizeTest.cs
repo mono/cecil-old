@@ -141,56 +141,56 @@ namespace Test.Rules.Performance {
 		public void NoDestructor ()
 		{
 			ITypeDefinition type = GetTest ("NoDestructorClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Destructor ()
 		{
 			ITypeDefinition type = GetTest ("DestructorClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void IDisposableNoDestructorWithoutSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("IDisposableNoDestructorWithoutSuppressFinalizeClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void IDisposableNoDestructorWithSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("IDisposableNoDestructorWithSuppressFinalizeClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void IDisposableDestructorWithoutSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("IDisposableDestructorWithoutSuppressFinalizeClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void IDisposableDestructorWithSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("IDisposableDestructorWithSuppressFinalizeClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void ExplicitIDisposableDestructorWithoutSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("ExplicitIDisposableDestructorWithoutSuppressFinalizeClass");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void ExplicitIDisposableDestructorWithSuppressFinalize ()
 		{
 			ITypeDefinition type = GetTest ("ExplicitIDisposableDestructorWithSuppressFinalizeClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}
 }

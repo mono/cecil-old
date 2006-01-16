@@ -48,14 +48,14 @@ namespace Gendarme.Framework {
 			}
 		}
 
-		public void Add (IRule rule, object obj)
+		public void Add (IRule rule, object obj, IList messages)
 		{
 			if (rule == null)
 				throw new ArgumentNullException ("rule");
 			if (obj == null)
 				throw new ArgumentNullException ("obj");
 
-			List.Add (new Violation (rule, obj));
+			List.Add (new Violation (rule, obj, messages));
 		}
 
 		public void Add (Violation v)

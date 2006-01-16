@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 
 using Mono.Cecil;
 using Gendarme.Framework;
@@ -35,11 +36,11 @@ namespace Gendarme.Rules.Security {
 
 	public class NonVirtualMethodWithInheritanceDemandRule : IMethodRule {
 
-		public bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method)
+		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
 		{
 			// #1 - this rule apply only to methods with an inheritance demand
 			if (method.SecurityDeclarations.Count == 0)
-				return true;
+				return runner.RuleSuccess;
 
 			bool inherit = false;
 			foreach (ISecurityDeclaration declsec in method.SecurityDeclarations) {
@@ -51,12 +52,15 @@ namespace Gendarme.Rules.Security {
 				}
 			}
 			if (!inherit)
-				return true;
+				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
 
 			// #2 - InheritanceDemand doesn't make sense on methods that cannot be overriden
-			return method.IsVirtual;
+			if(method.IsVirtual)
+				return runner.RuleSuccess;
+			else
+				return runner.RuleFailure;
 		}
 	}
 }

@@ -27,17 +27,20 @@
 //
 
 using System;
+using System.Collections;
 
 namespace Gendarme.Framework {
 
 	public struct Violation {
 		public IRule Rule;
 		public object Violator;
+		public IList Messages;
 
-		public Violation (IRule rule, object violator)
+		public Violation (IRule rule, object violator, IList messages)
 		{
 			Rule = rule;
 			Violator = violator;
+			Messages = messages;
 		}
 	}
 }

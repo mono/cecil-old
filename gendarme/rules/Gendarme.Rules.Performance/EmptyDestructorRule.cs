@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -36,7 +37,7 @@ namespace Gendarme.Rules.Performance {
 
 	public class EmptyDestructorRule : ITypeRule {
 
-		public bool CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type)
+		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
 		{
 			IMethodDefinition destructor = null;
 			// #1 - look for a destructor
@@ -47,7 +48,7 @@ namespace Gendarme.Rules.Performance {
 				}
 			}
 			if (destructor == null)
-				return true;
+				return null;
 
 			// #2 - destructor is present, look if it has any code within it
 			// i.e. look if is does anything else than calling it's base class
@@ -57,7 +58,7 @@ namespace Gendarme.Rules.Performance {
 					// it's empty if we're calling the base class destructor
 					IMethodReference mr = (ins.Operand as IMethodReference);
 					if ((mr == null) || (mr.Name != "Finalize"))
-						return true;
+						return null;
 					break;
 				case "nop":
 				case "leave.s":
@@ -68,11 +69,11 @@ namespace Gendarme.Rules.Performance {
 					break;
 				default:
 					// destructor isn't empty (normal)
-					return true;
+					return null;
 				}
 			}
 			// destructor is empty (bad / useless)
-			return false;
+			return new ArrayList();
 		}
 	}
 }

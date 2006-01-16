@@ -94,28 +94,28 @@ namespace Test.Rules.Security {
 		public void NonSealed ()
 		{
 			ITypeDefinition type = GetTest ("NonSealedClass");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void SealedWithoutSecurity ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithoutSecurity");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void SealedWithoutInheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithoutInheritanceDemand");
-			Assert.IsTrue (rule.CheckType (assembly, module, type));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void SealedWithInheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithInheritanceDemand");
-			Assert.IsFalse (rule.CheckType (assembly, module, type));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}
 }

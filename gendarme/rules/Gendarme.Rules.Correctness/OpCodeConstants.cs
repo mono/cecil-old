@@ -12,6 +12,8 @@
  * See the included LICENSE.MIT file for details.
  **********************************************************************/
 
+namespace Gendarme.Rules.Correctness {
+
 public class OpCodeConstants {
 
     /* Opcodes starting with 0x00FF */
@@ -233,4 +235,6 @@ public class OpCodeConstants {
     public const int Rethrow = 0xFE1A;
     public const int Sizeof = 0xFE1C;
     public const int Refanytype = 0xFE1D;
+}
+
 }

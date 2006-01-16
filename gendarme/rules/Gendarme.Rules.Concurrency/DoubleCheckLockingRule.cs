@@ -1,5 +1,5 @@
 /*
- * DCLChecker.cs: looks for instances of double-check locking.
+ * DoubleCheckLockingRule.cs: looks for instances of double-check locking.
  *
  * Authors:
  *   Aaron Tomb <atomb@soe.ucsc.edu>
@@ -17,15 +17,19 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
+namespace Gendarme.Rules.Concurrency {
+
 public class DoubleCheckLockingRule : IMethodRule {
 
-    public bool CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module,
-            ITypeDefinition type, IMethodDefinition method)
+    public IList CheckMethod (IAssemblyDefinition assembly,
+            IModuleDefinition module,
+            ITypeDefinition type, IMethodDefinition method,
+            Runner runner)
     {
         Hashtable comparisons = new Hashtable();
 
         if(method.Body == null)
-            return true;
+            return runner.RuleSuccess;
 
         IInstructionCollection insns = method.Body.Instructions;
 
@@ -40,22 +44,25 @@ public class DoubleCheckLockingRule : IMethodRule {
                     foreach(IInstruction insn in comparisons.Keys) {
                         IInstruction[] twoBeforeI =
                             (IInstruction[])comparisons[insn];
-                        if(EffectivelyEqual(insn, insns[i]) &&
-                           EffectivelyEqual(twoBeforeI[0], twoBefore[0]) &&
-                           EffectivelyEqual(twoBeforeI[1], twoBefore[1]) &&
-                           mcount > 0 &&
-                           insn.Offset < (int)monitorOffsetList[mcount - 1]) {
-                            return false;
-                            /* TODO: restore messages */
-                            /*
-                            string etype = method.DeclaringType.FullName;
-                            Location loc = new Location(etype, method.Name,
-                                    insn.Offset);
-                            report.AddMessage(new Message(
-                                        "possible double-check locking",
-                                        loc, MessageType.Warning));
-                                        */
-                        }
+                        if(!EffectivelyEqual(insn, insns[i]))
+                            continue;
+                        if(!EffectivelyEqual(twoBeforeI[0], twoBefore[0]))
+                            continue;
+                        if(!EffectivelyEqual(twoBeforeI[1], twoBefore[1]))
+                            continue;
+                        if(mcount <= 0)
+                            continue;
+                        if(insn.Offset >= (int)monitorOffsetList[mcount - 1])
+                            continue;
+                        IList messages = new ArrayList();
+                        string etype = method.DeclaringType.FullName;
+                        Location loc = new Location(etype, method.Name,
+                                insn.Offset);
+                        Message msg = new Message(
+                                    "possible double-check locking",
+                                    loc, MessageType.Warning);
+                        messages.Add(msg);
+                        return messages;
                     }
                 }
                 comparisons[insns[i]] = twoBefore;
@@ -66,7 +73,7 @@ public class DoubleCheckLockingRule : IMethodRule {
                 if(mcount > 0)
                     monitorOffsetList.RemoveAt(monitorOffsetList.Count - 1);
         }
-        return true;
+        return runner.RuleSuccess;
     }
 
     private bool IsMonitorMethod(IInstruction insn, string methodName)
@@ -109,4 +116,6 @@ public class DoubleCheckLockingRule : IMethodRule {
                 return true;
         return false;
     }
+}
+
 }
