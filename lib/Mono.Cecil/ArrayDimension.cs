@@ -51,7 +51,7 @@ namespace Mono.Cecil {
 
 		public override string ToString ()
 		{
-			if (m_lowerBound == 0 && m_upperBound == 0)
+			if (m_upperBound == 0)
 				return string.Empty;
 			return string.Concat (m_lowerBound, "...", m_upperBound);
 		}

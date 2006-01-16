@@ -4,10 +4,6 @@ Cecil TODO
 
 	For sure, bugs remains in the generic suppport.
 
-* array types
-
-	Arrays support is buggy.
-
 * debugs infos
 
 	Cecil should be able to emit debug infos along with assemblies.

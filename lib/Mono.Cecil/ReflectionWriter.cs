@@ -931,7 +931,22 @@ namespace Mono.Cecil {
 					return szary;
 				}
 
-				throw new NotImplementedException ("Complex arrays are not implemented"); // TODO
+				// not optimized
+				ArrayShape shape = new ArrayShape ();
+				shape.Rank = aryType.Dimensions.Count;
+				shape.Sizes = new int [shape.Rank];
+				shape.LoBounds = new int [shape.Rank];
+
+				for (int i = 0; i < shape.Rank; i++) {
+					ArrayDimension dim = aryType.Dimensions [i];
+					shape.LoBounds [i] = dim.LowerBound;
+					shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
+				}
+
+				ARRAY ary = new ARRAY ();
+				ary.Shape = shape;
+				ary.Type = GetSigType (aryType.ElementType);
+				return ary;
 			} else if (type is IPointerType) {
 				PTR p = new PTR ();
 				ITypeReference elementType = (type as IPointerType).ElementType;

@@ -1,3 +1,10 @@
+2006-01-17  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/ArrayDimension.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		End arrays support.
+
 2006-01-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericParameter.cs

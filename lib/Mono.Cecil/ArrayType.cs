@@ -50,7 +50,7 @@ namespace Mono.Cecil {
 				if (this.Rank != 1)
 					return false;
 				IArrayDimension dim = m_dimensions [0];
-				return dim.LowerBound == 0 && dim.UpperBound == 0;
+				return dim.UpperBound == 0;
 			}
 		}
 
@@ -76,14 +76,16 @@ namespace Mono.Cecil {
 
 		internal ArrayType (TypeReference elementsType, ArrayShape shape) : this (elementsType)
 		{
-			for (int i = 0; i < shape.Rank; i++) { // TODO
-				ArrayDimension dim;
+			for (int i = 0; i < shape.Rank; i++) {
+				int lower = 0, upper = 0;
 				if (i < shape.NumSizes)
-					dim = new ArrayDimension (shape.LoBounds [i], shape.LoBounds [i] + shape.Sizes [i] - 1);
-				else
-					dim = new ArrayDimension (0, 0);
+					if (i < shape.NumLoBounds) {
+						lower = shape.LoBounds [i];
+						upper = shape.LoBounds [i] + shape.Sizes [i] - 1;
+					} else
+						upper = shape.Sizes [i] - 1;
 
-				m_dimensions.Add (dim);
+				m_dimensions.Add (new ArrayDimension (lower, upper));
 			}
 		}
 
