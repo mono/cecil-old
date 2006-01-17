@@ -98,6 +98,7 @@ namespace Mono.Cecil {
 				arow.MajorVersion, arow.MinorVersion,
 				arow.BuildNumber, arow.RevisionNumber);
 			name.HashAlgorithm = arow.HashAlgId;
+			name.MetadataToken = new MetadataToken (TokenType.Assembly, 1);
 		}
 
 		public override void VisitAssemblyNameReferenceCollection (AssemblyNameReferenceCollection names)
@@ -115,6 +116,7 @@ namespace Mono.Cecil {
 								 arRow.BuildNumber, arRow.RevisionNumber));
 				aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.PublicKeyOrToken);
 				aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.HashValue);
+				aname.MetadataToken = new MetadataToken (TokenType.AssemblyRef, (uint) i + 1);
 				names.Add (aname);
 			}
 		}
@@ -176,6 +178,7 @@ namespace Mono.Cecil {
 			string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
 			ModuleDefinition main = new ModuleDefinition (name, m_asmDef, m_ir, true);
 			main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
+			main.MetadataToken = new MetadataToken (TokenType.Module, 1);
 			modules.Add (main);
 			m_module = main;
 			m_module.Accept (this);
@@ -218,8 +221,9 @@ namespace Mono.Cecil {
 			ModuleRefTable mrTable = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
-				modules.Add (
-					new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]));
+				ModuleReference mod = new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]);
+				mod.MetadataToken = new MetadataToken (TokenType.ModuleRef, (uint) i + 1);
+				modules.Add (mod);
 			}
 		}
 

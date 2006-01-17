@@ -1,3 +1,13 @@
+2006-01-18  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ModuleReference.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/IMetadataScope.cs:
+		Make IMetadataScope implement IMetadataTokenProvider.
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix a typo when saving nested type refs.
+
 2006-01-17  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ArrayType.cs

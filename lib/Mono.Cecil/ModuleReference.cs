@@ -29,14 +29,21 @@
 namespace Mono.Cecil {
 
 	using Mono.Cecil;
+	using Mono.Cecil.Metadata;
 
 	public class ModuleReference : IModuleReference {
 
 		string m_name;
+		MetadataToken m_token;
 
 		public string Name {
 			get { return m_name; }
 			set { m_name = value; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
 		}
 
 		public ModuleReference (string name)

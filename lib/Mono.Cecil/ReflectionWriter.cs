@@ -265,7 +265,7 @@ namespace Mono.Cecil {
 
 				if (t.DeclaringType != null)
 					scope = new MetadataToken (TokenType.TypeRef, GetRidFor (t.DeclaringType));
-				if (t.Scope is AssemblyNameReference)
+				else if (t.Scope is AssemblyNameReference)
 					scope = new MetadataToken (TokenType.AssemblyRef,
 						GetRidFor ((AssemblyNameReference) t.Scope));
 				else if (t.Scope is ModuleDefinition)
