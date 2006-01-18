@@ -68,7 +68,7 @@ namespace Mono.Cecil.Cil {
 			if (token.RID == 0)
 				m_codeWriter.Write (0);
 			else
-				m_codeWriter.Write (((uint) token.TokenType) | token.RID);
+				m_codeWriter.Write (token.ToUInt ());
 		}
 
 		int GetParameterIndex (MethodBody body, ParameterDefinition p)

@@ -52,6 +52,11 @@ namespace Mono.Cecil.Metadata {
 			return new MetadataToken (table, (uint) rowIndex + 1);
 		}
 
+		public uint ToUInt ()
+		{
+			return (uint) m_type | m_rid;
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("{0} [0x{1}]",

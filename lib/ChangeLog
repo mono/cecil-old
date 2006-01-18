@@ -1,5 +1,12 @@
 2006-01-18  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Metadata/MetadataToken.cs:
+		Add an use an ToUInt method and use it.
+	  CodeGen/templates/DebugHeader.cs
+	  Mono.Cecil.Binary/DebugHeader.cs:
+		Fix the size of the debug header.
+
 	* Mono.Cecil/ModuleReference.cs
 	  Mono.Cecil/AssemblyName.cs
 	  Mono.Cecil/StructureReader.cs

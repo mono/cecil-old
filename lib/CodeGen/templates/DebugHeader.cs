@@ -57,7 +57,7 @@ namespace Mono.Cecil.Binary {
 
 		public uint GetSize ()
 		{
-			return 0x34 + (uint) FileName.Length;
+			return 0x34 + (uint) FileName.Length + 1;
 		}
 
 		public void Accept (IBinaryVisitor visitor)
