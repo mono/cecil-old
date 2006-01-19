@@ -81,7 +81,7 @@ namespace Mono.Cecil {
 		public byte [] PublicKeyToken {
 			get {
 #if !CF_1_0
-				if ((m_publicKeyToken == null) && (m_publicKey != null)) {
+				if ((m_publicKeyToken == null || m_publicKeyToken.Length == 0) && (m_publicKey != null && m_publicKey.Length > 0)) {
 					HashAlgorithm ha = null;
 					switch (m_hashAlgo) {
 					case AssemblyHashAlgorithm.Reserved:
