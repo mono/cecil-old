@@ -74,8 +74,9 @@ namespace Mono.Cecil {
 			}
 		}
 
-		internal ArrayType (TypeReference elementsType, ArrayShape shape) : this (elementsType)
+		internal ArrayType (TypeReference elementsType, ArrayShape shape) : base (elementsType)
 		{
+			m_dimensions = new ArrayDimensionCollection (this);
 			for (int i = 0; i < shape.Rank; i++) {
 				int lower = 0, upper = 0;
 				if (i < shape.NumSizes)

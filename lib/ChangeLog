@@ -1,3 +1,13 @@
+2006-01-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ArrayType.cs:
+		Bug reported by  Vladislav Spivak (spivak@mainsoft.com).
+		Fix a bug in array handling.
+	* Mono.Cecil/ConstructorCollection.cs
+	  CodeGen/templates/IndexedCollectionImplem.cs:
+		Bug reported by Oleg Varchovsky (olegv@mainsoft.com).
+		Fix the lookup of constructors.
+
 2006-01-19  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyName.cs:
