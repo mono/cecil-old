@@ -32,21 +32,21 @@ namespace Mono.Cecil {
 
 	internal class GenericContext {
 
-		GenericArgumentCollection m_typeArgs;
-		GenericArgumentCollection m_methodArgs;
+		TypeReference m_type;
+		MethodReference m_method;
 
-		public GenericArgumentCollection TypeArguments {
-			get { return m_typeArgs; }
-			set { m_typeArgs = value; }
+		public TypeReference Type {
+			get { return m_type; }
+			set { m_type = value; }
 		}
 
-		public GenericArgumentCollection MethodArguments {
-			get { return m_methodArgs; }
-			set { m_methodArgs = value; }
+		public MethodReference Method {
+			get { return m_method; }
+			set { m_method = value; }
 		}
 
 		public bool Null {
-			get { return m_typeArgs == null && m_methodArgs == null; }
+			get { return m_type == null && m_method == null; }
 		}
 
 		public GenericContext ()
@@ -55,26 +55,26 @@ namespace Mono.Cecil {
 
 		public GenericContext (TypeReference type, MethodReference meth)
 		{
-			m_typeArgs = type.GenericArguments;
-			m_methodArgs = meth.GenericArguments;
+			m_type = type;
+			m_method = meth;
 		}
 
 		public GenericContext (IGenericParameterProvider provider)
 		{
 			if (provider is TypeReference)
-				m_typeArgs = (provider as TypeReference).GenericArguments;
+				m_type = provider as TypeReference;
 			else {
 				MethodReference meth = provider as MethodReference;
-				m_methodArgs = meth.GenericArguments;
-				m_typeArgs = meth.DeclaringType.GenericArguments;
+				m_method = meth;
+				m_type = meth.DeclaringType;
 			}
 		}
 
 		public GenericContext Clone ()
 		{
 			GenericContext ctx = new GenericContext ();
-			ctx.TypeArguments = m_typeArgs;
-			ctx.MethodArguments = m_methodArgs;
+			ctx.Type = m_type;
+			ctx.Method = m_method;
 			return ctx;
 		}
 	}

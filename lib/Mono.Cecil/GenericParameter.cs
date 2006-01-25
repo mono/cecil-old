@@ -66,9 +66,9 @@ namespace Mono.Cecil {
 				if (m_name != null)
 					return m_name;
 
-				if (m_owner is TypeDefinition)
+				if (m_owner is TypeReference)
 					return string.Concat ("!", m_position.ToString ());
-				else if (m_owner is MethodDefinition)
+				else if (m_owner is MethodReference)
 					return string.Concat ("!!", m_position.ToString ());
 				else
 					throw new InvalidOperationException ();

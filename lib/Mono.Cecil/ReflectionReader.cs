@@ -152,7 +152,7 @@ namespace Mono.Cecil {
 				GenericContext nc = context.Clone ();
 
 				if (mrefRow.Class.TokenType == TokenType.TypeSpec)
-					nc.TypeArguments = declaringType.GenericArguments;
+					nc.Type = declaringType;
 
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
@@ -179,7 +179,7 @@ namespace Mono.Cecil {
 						methref.Parameters.Add (pdef);
 					}
 					member = methref;
-					nc.MethodArguments = methref.GenericArguments;
+					nc.Method = methref;
 				}
 				break;
 			case TokenType.Method :
@@ -232,12 +232,13 @@ namespace Mono.Cecil {
 			MethodSpecRow msRow = msTable [index];
 
 			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
-			GenericArgumentCollection methArgs = new GenericArgumentCollection (null);
+
+			GenericInstanceMethod temp = new GenericInstanceMethod (null);
 			foreach (SigType st in sig.Signature.Types)
-				methArgs.Add (GetTypeRefFromSig (st, context));
+				temp.GenericArguments.Add (GetTypeRefFromSig (st, context));
 
 			GenericContext nc = context.Clone ();
-			nc.MethodArguments = methArgs;
+			nc.Method = temp;
 
 			MethodReference meth;
 			if (msRow.Method.TokenType == TokenType.Method)
@@ -248,7 +249,7 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			foreach (TypeReference arg in methArgs)
+			foreach (TypeReference arg in temp.GenericArguments)
 				gim.GenericArguments.Add (arg);
 
 			m_methodSpecs [index] = gim;
@@ -925,10 +926,16 @@ namespace Mono.Cecil {
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
-				return context.TypeArguments [var.Index];
+				if (context.Type is GenericInstanceType)
+					return (context.Type as GenericInstanceType).GenericArguments [var.Index];
+				else
+					return context.Type.GenericParameters [var.Index];
 			case ElementType.MVar:
 				MVAR mvar = t as MVAR;
-				return context.MethodArguments [mvar.Index];
+				if (context.Method is GenericInstanceMethod)
+					return (context.Method as GenericInstanceMethod).GenericArguments [mvar.Index];
+				else
+					return context.Method.GenericParameters [mvar.Index];
 			case ElementType.GenericInst:
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));

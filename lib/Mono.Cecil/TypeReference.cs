@@ -45,7 +45,7 @@ namespace Mono.Cecil {
 		MetadataToken m_token;
 
 		CustomAttributeCollection m_customAttrs;
-		GenericArgumentCollection m_arguments;
+		GenericParameterCollection m_genparams;
 
 		protected ModuleDefinition m_module;
 
@@ -97,12 +97,11 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericArgumentCollection GenericArguments {
+		public GenericParameterCollection GenericParameters {
 			get {
-				if (m_arguments == null)
-					m_arguments = new GenericArgumentCollection (this);
-
-				return m_arguments;
+				if (m_genparams == null)
+					m_genparams = new GenericParameterCollection (this);
+				return m_genparams;
 			}
 		}
 

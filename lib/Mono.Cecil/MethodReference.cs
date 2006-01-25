@@ -44,7 +44,7 @@ namespace Mono.Cecil {
 		bool m_hasThis;
 		bool m_explicitThis;
 		MethodCallingConvention m_callConv;
-		GenericArgumentCollection m_arguments;
+		GenericParameterCollection m_genparams;
 
 		public virtual bool HasThis {
 			get { return m_hasThis; }
@@ -69,11 +69,11 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public GenericArgumentCollection GenericArguments {
+		public GenericParameterCollection GenericParameters {
 			get {
-				if (m_arguments == null)
-					m_arguments = new GenericArgumentCollection (this);
-				return m_arguments;
+				if (m_genparams == null)
+					m_genparams = new GenericParameterCollection (this);
+				return m_genparams;
 			}
 		}
 

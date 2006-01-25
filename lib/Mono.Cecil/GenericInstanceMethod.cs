@@ -32,8 +32,14 @@ namespace Mono.Cecil {
 
 	public sealed class GenericInstanceMethod : MethodSpecification, IGenericInstanceMethod {
 
-		public int Arity {
-			get { return GenericArguments.Count; }
+		private GenericArgumentCollection m_genArgs;
+
+		public GenericArgumentCollection GenericArguments {
+			get {
+				if (m_genArgs == null)
+					m_genArgs = new GenericArgumentCollection (this);
+				return m_genArgs;
+			}
 		}
 
 		public GenericInstanceMethod (MethodReference elemMethod) : base (elemMethod)

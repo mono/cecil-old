@@ -28,9 +28,8 @@
 
 namespace Mono.Cecil {
 
-	public interface IGenericInstance {
+	public interface IGenericInstance : IMetadataTokenProvider {
 
-		int Arity { get; }
 		GenericArgumentCollection GenericArguments { get; }
 	}
 }

@@ -905,9 +905,9 @@ namespace Mono.Cecil {
 			if (type is IGenericParameter) {
 				GenericParameter gp = type as GenericParameter;
 				int pos = gp.Owner.GenericParameters.IndexOf (gp);
-				if (gp.Owner is TypeDefinition)
+				if (gp.Owner is TypeReference)
 					return new VAR (pos);
-				else if (gp.Owner is MethodDefinition)
+				else if (gp.Owner is MethodReference)
 					return new MVAR (pos);
 				else
 					throw new ReflectionException ("Unkown generic parameter type");
@@ -1148,7 +1148,7 @@ namespace Mono.Cecil {
 		public MethodSpec GetMethodSpecSig (GenericInstanceMethod gim)
 		{
 			GenericInstSignature gis = new GenericInstSignature ();
-			gis.Arity = gim.Arity;
+			gis.Arity = gim.GenericArguments.Count;
 			gis.Types = new SigType [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
 				gis.Types [i] = GetSigType (gim.GenericArguments [i]);

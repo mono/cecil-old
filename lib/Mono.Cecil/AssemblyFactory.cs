@@ -43,23 +43,13 @@ namespace Mono.Cecil {
 
 		public static AssemblyDefinition GetAssembly (string file)
 		{
-			try {
-				ImageReader brv = new ImageReader (file);
-				StructureReader srv = new StructureReader (brv);
-				AssemblyDefinition asm = new AssemblyDefinition (
-					new AssemblyNameDefinition (), srv);
+			ImageReader brv = new ImageReader (file);
+			StructureReader srv = new StructureReader (brv);
+			AssemblyDefinition asm = new AssemblyDefinition (
+				new AssemblyNameDefinition (), srv);
 
-				asm.Accept (srv);
-				return asm;
-			} catch (ReflectionException) {
-				throw;
-			} catch (MetadataFormatException) {
-				throw;
-			} catch (ImageFormatException) {
-				throw;
-			} catch (Exception e) {
-				throw new ReflectionException ("Can not disassemble assembly", e);
-			}
+			asm.Accept (srv);
+			return asm;
 		}
 
 		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt, AssemblyKind kind)
@@ -97,7 +87,7 @@ namespace Mono.Cecil {
 
 #if !CF_1_0
 		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
-		{			
+		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
 				WriteAssembly (asm, writer);

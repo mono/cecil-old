@@ -1,3 +1,28 @@
+2006-01-25  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs:
+		Don't trap exceptions.
+
+	* Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/IMethod.cs
+	  Mono.Cecil/GenericInstanceType.cs
+	  Mono.Cecil/TypeReference.cs
+	  Mono.Cecil/GenericInstanceMethod.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IGenericArgumentCollection.cs
+	  Mono.Cecil/ITypeReference.cs
+	  Mono.Cecil/IGenericInstance.cs
+	  Mono.Cecil/GenericArgumentCollection.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/MethodReference.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/IGenericArgumentProvider.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/GenericContext.cs
+	  CodeGen/cecil.xml:
+		Clean the generic api. This is not stable yet.
+
 2006-01-24  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ArrayType.cs:

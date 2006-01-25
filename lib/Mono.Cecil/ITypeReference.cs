@@ -29,7 +29,7 @@
 namespace Mono.Cecil {
 
 	public interface ITypeReference : IType, IMemberReference,
-		IGenericArgumentProvider, ICustomAttributeProvider {
+		IGenericParameterProvider, ICustomAttributeProvider {
 
 		string Namespace { get; set; }
 		IMetadataScope Scope { get; }
