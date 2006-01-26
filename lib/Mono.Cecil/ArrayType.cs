@@ -54,24 +54,30 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public override string Name {
+			get { return string.Concat (base.Name, Suffix ()); }
+		}
+
 		public override string FullName {
-			get {
-				StringBuilder sb = new StringBuilder ();
-				sb.Append (base.FullName);
-				sb.Append ("[");
-				for (int i = 0; i < m_dimensions.Count; i++) {
-					IArrayDimension dim = m_dimensions [i];
-					string rank = dim.ToString ();
-					if (i < m_dimensions.Count - 1)
-						sb.Append (",");
-					if (rank.Length > 0) {
-						sb.Append (" ");
-						sb.Append (rank);
-					}
+			get { return string.Concat (base.Name, Suffix ()); }
+		}
+
+		string Suffix ()
+		{
+			StringBuilder sb = new StringBuilder ();
+			sb.Append ("[");
+			for (int i = 0; i < m_dimensions.Count; i++) {
+				IArrayDimension dim = m_dimensions [i];
+				string rank = dim.ToString ();
+				if (i < m_dimensions.Count - 1)
+					sb.Append (",");
+				if (rank.Length > 0) {
+					sb.Append (" ");
+					sb.Append (rank);
 				}
-				sb.Append ("]");
-				return sb.ToString ();
 			}
+			sb.Append ("]");
+			return sb.ToString ();
 		}
 
 		internal ArrayType (TypeReference elementsType, ArrayShape shape) : base (elementsType)

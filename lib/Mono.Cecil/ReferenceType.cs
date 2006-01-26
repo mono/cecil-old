@@ -30,8 +30,12 @@ namespace Mono.Cecil {
 
 	public sealed class ReferenceType : TypeSpecification, IReferenceType {
 
+		public override string Name {
+			get { return string.Concat (base.Name, "&"); }
+		}
+
 		public override string FullName {
-			get { return string.Concat (this.ElementType.FullName, "&"); }
+			get { return string.Concat (base.FullName, "&"); }
 		}
 
 		public ReferenceType (TypeReference type) : base (type)

@@ -1,5 +1,10 @@
 2006-01-26  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ArrayType.cs
+	  Mono.Cecil/ReferenceType.cs
+	  Mono.Cecil/PointerType.cs:
+		Fix names of typespecs.
+
 	* Mono.Cecil/TypeReferenceCollection.cs
 	  Mono.Cecil/ExternTypeCollection.cs
 	  CodeGen/templates/NamedCollectionImplem.cs:
