@@ -59,7 +59,7 @@ namespace Mono.Cecil {
 		}
 
 		public override string FullName {
-			get { return string.Concat (base.Name, Suffix ()); }
+			get { return string.Concat (base.FullName, Suffix ()); }
 		}
 
 		string Suffix ()
