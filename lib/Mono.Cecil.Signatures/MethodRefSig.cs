@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil.Signatures {
 
-	internal sealed class MethodRefSig : MethodSig {
+	internal class MethodRefSig : MethodSig {
 
 		public int Sentinel;
 

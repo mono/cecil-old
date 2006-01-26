@@ -168,6 +168,14 @@ namespace Mono.Cecil {
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
 					methref.DeclaringType = declaringType;
 
+					if (sig is MethodDefSig) {
+						int arity = (sig as MethodDefSig).GenericParameterCount;
+						for (int i = 0; i < arity; i++)
+							methref.GenericParameters.Add (new GenericParameter (i, methref));
+					}
+
+					nc.Method = methref;
+
 					methref.ReturnType = GetMethodReturnType (ms, nc);
 
 					methref.ReturnType.Method = methref;
@@ -233,24 +241,17 @@ namespace Mono.Cecil {
 
 			MethodSpec sig = m_sigReader.GetMethodSpec (msRow.Instantiation);
 
-			GenericInstanceMethod temp = new GenericInstanceMethod (null);
-			foreach (SigType st in sig.Signature.Types)
-				temp.GenericArguments.Add (GetTypeRefFromSig (st, context));
-
-			GenericContext nc = context.Clone ();
-			nc.Method = temp;
-
 			MethodReference meth;
 			if (msRow.Method.TokenType == TokenType.Method)
 				meth = GetMethodDefAt (msRow.Method.RID);
 			else if (msRow.Method.TokenType == TokenType.MemberRef)
-				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, nc);
+				meth = (MethodReference) GetMemberRefAt (msRow.Method.RID, context);
 			else
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			foreach (TypeReference arg in temp.GenericArguments)
-				gim.GenericArguments.Add (arg);
+			foreach (SigType st in sig.Signature.Types)
+				gim.GenericArguments.Add (GetTypeRefFromSig (st, context));
 
 			m_methodSpecs [index] = gim;
 
@@ -940,8 +941,21 @@ namespace Mono.Cecil {
 				GENERICINST ginst = t as GENERICINST;
 				GenericInstanceType instance = new GenericInstanceType (GetTypeDefOrRef (ginst.Type, context));
 				instance.IsValueType = ginst.ValueType;
+
+				GenericContext ctx = context.Clone ();
+
+				for (int i = 0; i < ginst.Signature.Arity; i++) {
+					if (ginst.Signature.Types [i] is VAR && instance.ElementType.GetType () == typeof (TypeReference)) {
+						VAR v = ginst.Signature.Types [i] as VAR;
+						if (v.Index >= instance.ElementType.GenericParameters.Count)
+							for (int j = 0; j <= v.Index; j++)
+								instance.ElementType.GenericParameters.Add (new GenericParameter (j, instance.ElementType));
+						ctx.Type = instance.ElementType;
+					}
+				}
+
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.GenericArguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], context));
+					instance.GenericArguments.Add (GetTypeRefFromSig (ginst.Signature.Types [i], ctx));
 
 				return instance;
 			default:

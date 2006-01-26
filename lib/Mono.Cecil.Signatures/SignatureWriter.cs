@@ -270,6 +270,7 @@ namespace Mono.Cecil.Signatures {
 
 		void Write (MethodSpec ms)
 		{
+			Write (0x0a);
 			Write (ms.Signature);
 		}
 

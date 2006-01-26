@@ -1,5 +1,12 @@
 2006-01-26  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/MethodRefSig.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+	  Mono.Cecil.Signatures/MethodDefSig.cs:
+		Work on generics.
+
 	* Mono.Cecil/ArrayType.cs
 	  Mono.Cecil/ReferenceType.cs
 	  Mono.Cecil/PointerType.cs:

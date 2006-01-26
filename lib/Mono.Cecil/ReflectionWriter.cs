@@ -1067,7 +1067,11 @@ namespace Mono.Cecil {
 
 		public MethodRefSig GetMethodRefSig (IMethodReference meth)
 		{
+			if (meth.GenericParameters.Count > 0)
+				return GetMethodDefSig (meth);
+
 			MethodRefSig methSig = new MethodRefSig ();
+
 			CompleteMethodSig (meth, methSig);
 
 			if ((meth.CallingConvention & MethodCallingConvention.C) != 0)
@@ -1082,15 +1086,17 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (IMethodDefinition meth)
+		public MethodDefSig GetMethodDefSig (IMethodReference meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
+
+			CompleteMethodSig (meth, sig);
+
 			if (meth.GenericParameters.Count > 0) {
 				sig.CallingConvention |= 0x10;
 				sig.GenericParameterCount = meth.GenericParameters.Count;
 			}
 
-			CompleteMethodSig (meth, sig);
 			return sig;
 		}
 
