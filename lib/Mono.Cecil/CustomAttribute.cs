@@ -125,6 +125,12 @@ namespace Mono.Cecil {
 		internal static CustomAttribute Clone (CustomAttribute custattr, ReflectionHelper helper)
 		{
 			CustomAttribute ca = new CustomAttribute (custattr.Constructor);
+			if (!custattr.IsReadable) {
+				ca.IsReadable = false;
+				ca.Blob = custattr.Blob;
+				return ca;
+			}
+
 			foreach (object o in custattr.ConstructorParameters)
 				ca.ConstructorParameters.Add (o);
 			foreach (DictionaryEntry de in custattr.Fields)
