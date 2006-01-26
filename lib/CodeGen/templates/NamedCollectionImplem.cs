@@ -79,10 +79,10 @@ namespace <%=$cur_coll.target%> {
 		{
 			if (value == null)
 				throw new ArgumentNullException ("value");
-
+<% if ($cur_coll.name == "TypeDefinitionCollection") %>
 			if (this.Contains (value))
 				throw new ArgumentException ("Duplicated value");
-
+<% end %>
 			if (On<%=$cur_coll.item_name%>Added != null)
 				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 

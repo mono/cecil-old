@@ -1,3 +1,10 @@
+2006-01-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs:
+		Allow multiple key by names in type references.
+
 2006-01-25  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFactory.cs:
