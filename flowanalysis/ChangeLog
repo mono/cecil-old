@@ -1,3 +1,8 @@
+2006-01-30  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Makefile
+		a simple Makefile to get mono hackers started
+
 2005-12-19  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
 	* Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
