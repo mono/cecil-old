@@ -32,6 +32,7 @@ namespace Cecil.Tools {
 	using System;
 
 	using Mono.Cecil;
+	using Mono.Cecil.Cil;
 
 	class Echo {
 
@@ -44,11 +45,23 @@ namespace Cecil.Tools {
 
 			try {
 				AssemblyDefinition asm = AssemblyFactory.GetAssembly (args [0]);
+				foreach (ModuleDefinition mod in asm.Modules) {
+					foreach (TypeDefinition type in mod.Types) {
+						foreach (MethodDefinition meth in type.Methods)
+							Bang (meth.Body);
+						foreach (MethodDefinition ctor in type.Constructors)
+							Bang (ctor.Body);
+					}
+				}
 				Console.WriteLine ("Assembly {0} succesfully loaded", asm.Name.FullName);
 			} catch (Exception e) {
 				Console.WriteLine ("Failed to load assembly {0}", args [0]);
 				Console.WriteLine (e);
 			}
+		}
+
+		static void Bang (MethodBody b)
+		{
 		}
 	}
 }
