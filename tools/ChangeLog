@@ -1,0 +1,4 @@
+2006-02-07  Jb Evain  <jbevain@gmail.com>
+
+	* cecil-echo.cs, cecil-roundtrip.cs:
+		first commit in svn.
