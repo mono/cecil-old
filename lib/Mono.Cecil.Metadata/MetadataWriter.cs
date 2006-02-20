@@ -253,8 +253,10 @@ namespace Mono.Cecil.Metadata {
 				// so we must calculate the signature size based on
 				// the size of the public key (minus the 32 byte header)
 				int size = m_assembly.Name.PublicKey.Length;
-				if (size > 0)
+				if (size > 32)
 					return (uint) (size - 32);
+				// note: size == 16 for the ECMA "key" which is replaced
+				// by the runtime with a 1024 bits key (128 bytes)
 			}
 			return 128; // default strongname signature size
 		}
