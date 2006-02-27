@@ -121,21 +121,21 @@ namespace Mono.Cecil.Cil {
 				// nasty hack: use Labels as operand to resolve branches later
 				case OperandType.InlineSwitch :
 					uint length = br.ReadUInt32 ();
-					Label [] branches = new Label [length];
+					int [] branches = new int [length];
 					int [] buf = new int [length];
 					for (int i = 0; i < length; i++)
 						buf [i] = br.ReadInt32 ();
 					for (int i = 0; i < length; i++)
-						branches [i] = new Label (Convert.ToInt32 (br.BaseStream.Position - start + buf [i]));
+						branches [i] = Convert.ToInt32 (br.BaseStream.Position - start + buf [i]);
 					instr.Operand = branches;
 					break;
 				case OperandType.ShortInlineBrTarget :
 					sbyte sbrtgt = br.ReadSByte ();
-					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt));
+					instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + sbrtgt);
 					break;
 				case OperandType.InlineBrTarget :
 					int brtgt = br.ReadInt32 ();
-					instr.Operand = new Label (Convert.ToInt32 (br.BaseStream.Position - start + brtgt));
+					instr.Operand = Convert.ToInt32 (br.BaseStream.Position - start + brtgt);
 					break;
 				case OperandType.ShortInlineI :
 					if (op == OpCodes.Ldc_I4_S)
@@ -242,14 +242,13 @@ namespace Mono.Cecil.Cil {
 				switch (i.OpCode.OperandType) {
 				case OperandType.ShortInlineBrTarget:
 				case OperandType.InlineBrTarget:
-					Label lbl = (Label) i.Operand;
-					i.Operand = instructions [lbl.Offset];
+					i.Operand = instructions [(int) i.Operand];
 					break;
 				case OperandType.InlineSwitch:
-					Label [] lbls = (Label []) i.Operand;
+					int [] lbls = (int []) i.Operand;
 					Instruction [] instrs = new Instruction [lbls.Length];
 					for (int j = 0; j < lbls.Length; j++)
-						instrs [j] = instructions [lbls [j].Offset] as Instruction;
+						instrs [j] = instructions [lbls [j]] as Instruction;
 					i.Operand = instrs;
 					break;
 				}

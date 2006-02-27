@@ -1,5 +1,9 @@
 2006-02-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/Label.cs:
+		Remove Label.
+
 	* Mono.Cecil/ReflectionReader.cs:
 		Fix typo.
 

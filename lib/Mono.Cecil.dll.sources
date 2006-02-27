@@ -284,7 +284,6 @@
 ./Mono.Cecil.Cil/InstructionCollection.cs
 ./Mono.Cecil.Cil/IVariable.cs
 ./Mono.Cecil.Cil/IVariableDefinitionCollection.cs
-./Mono.Cecil.Cil/Label.cs
 ./Mono.Cecil.Cil/MethodBody.cs
 ./Mono.Cecil.Cil/MethodDataSection.cs
 ./Mono.Cecil.Cil/MethodHeader.cs
