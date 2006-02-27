@@ -1,5 +1,12 @@
 2006-02-27  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/IndexedCollectionImplem.cs
+	  CodeGen/templates/IIndexedCollection.cs
+	  Mono.Cecil.Cil/InstructionCollection.cs
+	  Mono.Cecil.Cil/IInstructionCollection.cs:
+		Small API fix, prevent the user from not using
+		the CilWorker.
+
 	* Mono.Cecil.Cil/CodeReader.cs
 	  Mono.Cecil.Cil/Label.cs:
 		Remove Label.

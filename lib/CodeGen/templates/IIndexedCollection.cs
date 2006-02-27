@@ -60,14 +60,14 @@ namespace <%=$cur_coll.target%> {
 		event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
 		event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
 
-		void Add (<%=$cur_coll.type%> value);
-		void Clear ();
+<% if $cur_coll.type != "Instruction" %>		void Add (<%=$cur_coll.type%> value);
+<% end %>		void Clear ();
 		bool Contains (<%=$cur_coll.type%> value);
 		int IndexOf (<%=$cur_coll.type%> value);
-		void Insert (int index, <%=$cur_coll.type%> value);
+<% if $cur_coll.type != "Instruction" %>		void Insert (int index, <%=$cur_coll.type%> value);
 		void Remove (<%=$cur_coll.type%> value);
 		void RemoveAt (int index);
-<%
+<% end
 	case $cur_coll.item_name
 		when "MethodDefinition"
 		%>

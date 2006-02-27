@@ -71,7 +71,7 @@ namespace <%=$cur_coll.target%> {
 			m_items = new ArrayList ();
 		}
 
-		public void Add (<%=$cur_coll.type%> value)
+		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Add (<%=$cur_coll.type%> value)
 		{
 			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
 				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
@@ -96,21 +96,21 @@ namespace <%=$cur_coll.target%> {
 			return m_items.IndexOf (value);
 		}
 
-		public void Insert (int index, <%=$cur_coll.type%> value)
+		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Insert (int index, <%=$cur_coll.type%> value)
 		{
 			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
 				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Insert (index, value);
 		}
 
-		public void Remove (<%=$cur_coll.type%> value)
+		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Remove (<%=$cur_coll.type%> value)
 		{
 			if (On<%=$cur_coll.item_name%>Removed != null && this.Contains (value))
 				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (value));
 			m_items.Remove (value);
 		}
 
-		public void RemoveAt (int index)
+		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void RemoveAt (int index)
 		{
 			if (On<%=$cur_coll.item_name%>Removed != null)
 				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
