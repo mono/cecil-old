@@ -284,9 +284,10 @@ namespace Mono.Cecil {
 			if (coreType == null) {
 				if (m_corlib == null) {
 					foreach (IAssemblyNameReference ar in m_module.AssemblyReferences) {
-						if (ar.Name == Constants.Corlib)
+						if (ar.Name == Constants.Corlib) {
 							m_corlib = ar;
-						break;
+							break;
+						}
 					}
 				}
 

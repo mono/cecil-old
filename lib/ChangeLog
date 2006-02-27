@@ -1,3 +1,8 @@
+2006-02-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix typo.
+
 2006-02-20  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Signatures/SignatureWriter.cs:
