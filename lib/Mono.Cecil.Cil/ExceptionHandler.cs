@@ -32,15 +32,15 @@ namespace Mono.Cecil.Cil {
 
 	public sealed class ExceptionHandler : IExceptionHandler {
 
-		private Instruction m_tryStart;
-		private Instruction m_tryEnd;
-		private Instruction m_filterStart;
-		private Instruction m_filterEnd;
-		private Instruction m_handlerStart;
-		private Instruction m_handlerEnd;
+		Instruction m_tryStart;
+		Instruction m_tryEnd;
+		Instruction m_filterStart;
+		Instruction m_filterEnd;
+		Instruction m_handlerStart;
+		Instruction m_handlerEnd;
 
-		private TypeReference m_catchType;
-		private ExceptionHandlerType m_type;
+		TypeReference m_catchType;
+		ExceptionHandlerType m_type;
 
 		public Instruction TryStart {
 			get { return m_tryStart; }
