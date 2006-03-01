@@ -1,0 +1,7 @@
+2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodCallWithSubsetLinkDemandTest.cs, 
+	  NonVirtualMethodWithInheritanceDemandTest.cs, 
+	  SealedTypeWithInheritanceDemandTest.cs:
+		Conditions for success/failure were inverted when Gendarme 
+		framework was updated.

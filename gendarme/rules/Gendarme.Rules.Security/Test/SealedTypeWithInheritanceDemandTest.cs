@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -94,28 +94,29 @@ namespace Test.Rules.Security {
 		public void NonSealed ()
 		{
 			ITypeDefinition type = GetTest ("NonSealedClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithoutSecurity ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithoutSecurity");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithoutInheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithoutInheritanceDemand");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithInheritanceDemand ()
 		{
 			ITypeDefinition type = GetTest ("SealedClassWithInheritanceDemand");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			int n = rule.CheckType (assembly, module, type, new MinimalRunner ()).Count;
+			Assert.AreEqual (0, n, type.ToString ());
 		}
 	}
 }

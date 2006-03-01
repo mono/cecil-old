@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -128,7 +128,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("SubsetInheritClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()), method.ToString ());
 			}
 		}
 
@@ -137,7 +137,8 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NotASubsetInheritClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+				int n = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()).Count;
+				Assert.AreEqual (0, n, method.ToString ());
 			}
 		}
 
@@ -146,7 +147,7 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("SubsetCallClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()), method.ToString ());
 			}
 		}
 
@@ -155,7 +156,8 @@ namespace Test.Rules.Security {
 		{
 			ITypeDefinition type = GetTest ("NotASubsetCallClass");
 			foreach (IMethodDefinition method in type.Methods) {
-				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+				int n = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()).Count;
+				Assert.AreEqual (0, n, method.ToString ());
 			}
 		}
 	}

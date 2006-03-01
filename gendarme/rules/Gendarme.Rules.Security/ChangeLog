@@ -1,0 +1,3 @@
+2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Fix deps on run-test

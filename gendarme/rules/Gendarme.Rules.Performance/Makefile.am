@@ -39,5 +39,5 @@ Test.Rules.Performance.dll: $(performance_rules_build_sources)
 
 test: Gendarme.Rules.Performance.dll Test.Rules.Performance.dll
 
-run-test: Test.Rules.Performance.dll
+run-test: Gendarme.Rules.Performance.dll Test.Rules.Performance.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Performance.dll

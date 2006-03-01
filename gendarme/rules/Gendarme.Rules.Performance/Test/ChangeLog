@@ -1,0 +1,6 @@
+2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EmptyDestructorTest.cs,
+	  IDisposableWithDestructorWithoutSuppressFinalizeTest.cs:
+		Conditions for success/failure were inverted when Gendarme 
+		framework was updated.

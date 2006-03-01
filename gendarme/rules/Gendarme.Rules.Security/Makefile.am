@@ -43,5 +43,5 @@ Test.Rules.Security.dll: $(security_rules_build_sources)
 
 test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
 
-run-test: Test.Rules.Security.dll
+run-test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll

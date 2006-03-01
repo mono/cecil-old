@@ -8,3 +8,17 @@ install-data-hook:
 
 uninstall-hook:
 	rm -f $(DESTDIR)$(pkglibdir)/`basename rules.xml`;
+
+test:
+	for ASM in $(SUBDIRS); do \
+		cd $$ASM;	\
+		make test;	\
+		cd ..;		\
+	done;
+
+run-test:
+	for ASM in $(SUBDIRS); do \
+		cd $$ASM;	\
+		make run-test;	\
+		cd ..;		\
+	done;

@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -87,21 +87,21 @@ namespace Test.Rules.Performance {
 		public void NoDestructor ()
 		{
 			ITypeDefinition type = GetTest ("NoDestructorClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void EmptyDestructor ()
 		{
 			ITypeDefinition type = GetTest ("EmptyDestructorClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void Destructor ()
 		{
 			ITypeDefinition type = GetTest ("DestructorClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 	}
 }
