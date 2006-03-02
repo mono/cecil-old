@@ -24,12 +24,15 @@
 			<arg value="-debug" />
 			<arg value="-r:bin/Mono.Cecil.dll" />
 			<arg value="-r:${nunit.framework.dll}" />
+			<arg value="-r:Boo.Lang.Useful" />
 			
 			<arg file="Mono.Cecil.Tests.Regression/AssemblyInfo.boo" />
 			<arg file="Mono.Cecil.Tests.Regression/AbstractPrinter.boo" />
 			<arg file="Mono.Cecil.Tests.Regression/CecilAssemblyPrinter.boo" />
 			<arg file="Mono.Cecil.Tests.Regression/ReflectionAssemblyPrinter.boo" />
 			<arg file="Mono.Cecil.Tests.Regression/RegressionTestFixture.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/CSharpCompilationServices.boo" />
+			<arg file="Mono.Cecil.Tests.Regression/RoundtripTestFixture.boo" />
 			
 		</exec>
 	</target>
@@ -58,6 +61,7 @@
 			<copy todir="bin">
 				<fileset basedir="${boo.dir}">
 					<include name="Boo.Lang.dll" />
+					<include name="Boo.Lang.Useful.dll" />
 				</fileset>
 			</copy>
 		</if>

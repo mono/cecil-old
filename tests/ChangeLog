@@ -1,3 +1,11 @@
+2006-03-02  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Regression/Mono.Cecil.Tests.Regression/CSharpCompilationServices.cs
+	  Regression/Mono.Cecil.Tests.Regression/RoundtripTestFixture.cs
+	  Regression/Mono.Cecil.Tests.Regression/RegressionTestFixture.cs:
+	  	Assembly roundtripping test case exposing a bug on
+		the handling of IEnumerator<T>::get_Current.
+
 2005-11-29  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
 	* Initial import

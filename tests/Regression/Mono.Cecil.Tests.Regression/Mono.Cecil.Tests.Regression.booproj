@@ -27,11 +27,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml" />
     <Reference Include="Boo.Lang.Useful" />
+    <Reference Include="nunit.framework" />
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\bin\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\..\lib\bin\Mono.Cecil.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.boo" />
@@ -39,6 +39,8 @@
     <Compile Include="ReflectionAssemblyPrinter.boo" />
     <Compile Include="RegressionTestFixture.boo" />
     <Compile Include="AbstractPrinter.boo" />
+    <Compile Include="CSharpCompilationServices.boo" />
+    <Compile Include="RoundtripTestFixture.boo" />
   </ItemGroup>
   <Import Project="$(BooBinPath)\Boo.Microsoft.Build.targets" />
 </Project>
