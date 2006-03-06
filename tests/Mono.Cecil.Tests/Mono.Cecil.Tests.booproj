@@ -1,8 +1,8 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>Mono.Cecil.Tests.Regression</RootNamespace>
-    <AssemblyName>Mono.Cecil.Tests.Regression</AssemblyName>
+    <RootNamespace>Mono.Cecil.Tests</RootNamespace>
+    <AssemblyName>Mono.Cecil.Tests</AssemblyName>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BD1A515B-6A2A-4A1E-885F-6CBE9CE0C3BD}</ProjectGuid>
@@ -29,7 +29,7 @@
     <Reference Include="Boo.Lang.Useful" />
     <Reference Include="nunit.framework" />
     <Reference Include="Mono.Cecil">
-      <HintPath>..\..\..\lib\bin\Mono.Cecil.dll</HintPath>
+      <HintPath>..\..\lib\bin\Mono.Cecil.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
@@ -41,6 +41,8 @@
     <Compile Include="AbstractPrinter.boo" />
     <Compile Include="CSharpCompilationServices.boo" />
     <Compile Include="RoundtripTestFixture.boo" />
+    <Compile Include="AssemblyCreationTestFixture.boo" />
+    <Compile Include="Globals.boo" />
   </ItemGroup>
   <Import Project="$(BooBinPath)\Boo.Microsoft.Build.targets" />
 </Project>

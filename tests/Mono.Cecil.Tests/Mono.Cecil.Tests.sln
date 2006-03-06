@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 9.00
 # SharpDevelop 2.0.0.727
-Project("{A33008B1-5DAC-44D5-9060-242E3B6E38F2}") = "Mono.Cecil.Tests.Regression", "Mono.Cecil.Tests.Regression.booproj", "{BD1A515B-6A2A-4A1E-885F-6CBE9CE0C3BD}"
+Project("{A33008B1-5DAC-44D5-9060-242E3B6E38F2}") = "Mono.Cecil.Tests", "Mono.Cecil.Tests.booproj", "{BD1A515B-6A2A-4A1E-885F-6CBE9CE0C3BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-namespace Mono.Cecil.Tests.Regression
+namespace Mono.Cecil.Tests
 
 import System
 import System.IO
@@ -35,11 +35,11 @@ public class Program
 		InstrumentAndExecute("1\n2\n3", code)
 
 	def InstrumentAndExecute(expectedOutput as string, code as string):
-		fname = Path.Combine(Path.GetTempPath(), "source.exe")
+		fname = BuildTempPath("source.exe")
 		EmitCSharpAssembly(fname, code)
 		assembly = AssemblyFactory.GetAssembly(fname)
 		
-		roundtripped = Path.Combine(Path.GetTempPath(), "target.exe")
+		roundtripped = BuildTempPath("target.exe")
 		AssemblyFactory.SaveAssembly(assembly, roundtripped)
 		output = shellm(roundtripped, array(string, 0))
 		Assert.AreEqual(expectedOutput.Trim(), output.Trim())

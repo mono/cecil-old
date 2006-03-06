@@ -1,4 +1,4 @@
-namespace Mono.Cecil.Tests.Regression
+namespace Mono.Cecil.Tests
 
 import System.IO
 import System.Reflection

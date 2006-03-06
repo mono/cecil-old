@@ -33,6 +33,8 @@
 			<arg file="Mono.Cecil.Tests/RegressionTestFixture.boo" />
 			<arg file="Mono.Cecil.Tests/CSharpCompilationServices.boo" />
 			<arg file="Mono.Cecil.Tests/RoundtripTestFixture.boo" />
+			<arg file="Mono.Cecil.Tests/AssemblyCreationTestFixture.boo" />
+			<arg file="Mono.Cecil.Tests/Globals.boo" />
 			
 		</exec>
 	</target>

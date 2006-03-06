@@ -1,4 +1,15 @@
 2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+	
+	* Mono.Cecil.Tests/Globals.boo
+	  Mono.Cecil.Tests/AssemblyCreationTestFixture.boo:
+	  	Test cases for the assembly emission capabilities of cecil.
+
+2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Mono.Cecil.Tests/*:
+		Mono.Cecil.Tests.Regression => Mono.Cecil.Tests
+		
+2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
 	* Regression/*:
 		Moved one folder up to KISS.
