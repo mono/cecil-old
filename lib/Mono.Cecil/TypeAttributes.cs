@@ -55,7 +55,7 @@ namespace Mono.Cecil {
 		Interface			= 0x00000020,	// Type is an interface
 
 		// Special semantics in addition to class semantics
-		Abstract			= 0x00000060,	// Class is abstract
+		Abstract			= 0x00000080,	// Class is abstract
 		Sealed				= 0x00000100,	// Class cannot be extended
 		SpecialName			= 0x00000400,	// Class name is special
 
