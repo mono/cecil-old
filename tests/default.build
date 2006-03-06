@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <project name="cecil regression tests" default="test">
 
-	<include buildfile="../nunit.inc" />
+	<include buildfile="nunit.inc" />
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 	
-	<property name="cecil.lib.dir" value="${path::get-full-path('../../lib')}" />
+	<property name="cecil.lib.dir" value="${path::get-full-path('../lib')}" />
 	
 	<target name="test" depends="build">
 		<nunit2>       
@@ -19,20 +19,20 @@
 	
 	<target name="build" depends="update-fixture, cecil">
 		<exec program="booc">
-			<arg value="-out:bin/Mono.Cecil.Tests.Regression.dll" />
+			<arg value="-out:bin/Mono.Cecil.Tests.dll" />
 			<arg value="-t:library" />
 			<arg value="-debug" />
 			<arg value="-r:bin/Mono.Cecil.dll" />
 			<arg value="-r:${nunit.framework.dll}" />
 			<arg value="-r:Boo.Lang.Useful" />
 			
-			<arg file="Mono.Cecil.Tests.Regression/AssemblyInfo.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/AbstractPrinter.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/CecilAssemblyPrinter.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/ReflectionAssemblyPrinter.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/RegressionTestFixture.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/CSharpCompilationServices.boo" />
-			<arg file="Mono.Cecil.Tests.Regression/RoundtripTestFixture.boo" />
+			<arg file="Mono.Cecil.Tests/AssemblyInfo.boo" />
+			<arg file="Mono.Cecil.Tests/AbstractPrinter.boo" />
+			<arg file="Mono.Cecil.Tests/CecilAssemblyPrinter.boo" />
+			<arg file="Mono.Cecil.Tests/ReflectionAssemblyPrinter.boo" />
+			<arg file="Mono.Cecil.Tests/RegressionTestFixture.boo" />
+			<arg file="Mono.Cecil.Tests/CSharpCompilationServices.boo" />
+			<arg file="Mono.Cecil.Tests/RoundtripTestFixture.boo" />
 			
 		</exec>
 	</target>
