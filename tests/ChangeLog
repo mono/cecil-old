@@ -1,8 +1,13 @@
+2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Regression/*:
+		Moved one folder up to KISS.
+		
 2006-03-02  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
-	* Regression/Mono.Cecil.Tests.Regression/CSharpCompilationServices.cs
-	  Regression/Mono.Cecil.Tests.Regression/RoundtripTestFixture.cs
-	  Regression/Mono.Cecil.Tests.Regression/RegressionTestFixture.cs:
+	* Regression/Mono.Cecil.Tests.Regression/CSharpCompilationServices.boo
+	  Regression/Mono.Cecil.Tests.Regression/RoundtripTestFixture.boo
+	  Regression/Mono.Cecil.Tests.Regression/RegressionTestFixture.boo:
 	  	Assembly roundtripping test case exposing a bug on
 		the handling of IEnumerator<T>::get_Current.
 
