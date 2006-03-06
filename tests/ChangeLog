@@ -1,4 +1,9 @@
 2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Mono.Cecil.Tests/RoundtripTestFixture.boo:
+		GenericInstanceMethod test case.
+
+2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 	
 	* Mono.Cecil.Tests/Globals.boo
 	  Mono.Cecil.Tests/AssemblyCreationTestFixture.boo:

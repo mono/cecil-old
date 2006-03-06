@@ -12,10 +12,6 @@ def EmitCSharpAssembly(assemblyFileName as string, *code as (string)):
 	sourceFiles = WriteSourceFiles(Path.GetTempPath(), code)
 	CompileCSharpFiles(assemblyFileName, sourceFiles)
 
-def CreateDirectoryIfNeeded(directory as string):
-	return if Directory.Exists(directory)
-	Directory.CreateDirectory(directory)
-
 def WriteSourceFiles(basePath as string, code as (string)):
 	sourceFiles = array(string, len(code))
 	for i in range(len(code)):

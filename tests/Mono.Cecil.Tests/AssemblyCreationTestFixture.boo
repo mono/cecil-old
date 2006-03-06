@@ -45,7 +45,8 @@ class AssemblyCreationTestFixture:
 		
 		worker.Emit(OpCodes.Ret)
 		
-		ExecuteAssemblyAndExpect("Foo")		
+		ExecuteAssemblyAndExpect("Foo")
+		
 		
 	def SetUpAssembly(assemblyName as string):
 		_assembly = AssemblyFactory.DefineAssembly(assemblyName, "${assemblyName}.exe", TargetRuntime.NET_2_0, AssemblyKind.Console)		
@@ -68,7 +69,7 @@ class AssemblyCreationTestFixture:
 	def ExecuteAssemblyAndExpect(expected as string):
 		fname = BuildTempPath("${_assembly.Name.Name}.exe")
 		AssemblyFactory.SaveAssembly(_assembly, fname)
-		output = shellm(fname, array(string, 0))		
+		output = ExecuteAssembly(fname)
 		Assert.AreEqual(expected.Trim(), output.Trim())
 		
 	def Import(type as System.Type):

@@ -41,6 +41,6 @@ class RegressionTestFixture:
 		
 	static def GetTestCasesLocation():
 		return Path.Combine(
-			Path.GetDirectoryName(System.Uri(typeof(RegressionTestFixture).Assembly.CodeBase).LocalPath),
+			Path.GetDirectoryName(typeof(RegressionTestFixture).Module.FullyQualifiedName),
 			"../TestCases")
 	
