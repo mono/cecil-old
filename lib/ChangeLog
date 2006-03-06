@@ -1,3 +1,8 @@
+2006-03-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix array reading in custom attributes.
+
 2006-03-06  Joshua Tauberer <tauberer@for.net>
 
 	* Mono.Cecil/TypeAttributes.cs: Fixed typo

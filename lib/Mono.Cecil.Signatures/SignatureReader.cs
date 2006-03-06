@@ -608,6 +608,9 @@ namespace Mono.Cecil.Signatures {
 					return fa;
 				}
 
+				if (param is ArrayType)
+					param = ((ArrayType) param).ElementType;
+
 				fa.Elems = new CustomAttrib.Elem [fa.NumElem];
 				for (int i = 0; i < fa.NumElem; i++)
 					fa.Elems [i] = ReadElem (data, br, param, ref read);
@@ -646,7 +649,7 @@ namespace Mono.Cecil.Signatures {
 
 			length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
 			br.BaseStream.Position = next;
-			
+
 			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
 			byte [] bytes = br.ReadBytes (length);
 			na.FieldOrPropName = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
