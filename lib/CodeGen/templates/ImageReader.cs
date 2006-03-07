@@ -51,10 +51,17 @@ namespace Mono.Cecil.Binary {
 			get { return m_image; }
 		}
 
-		public ImageReader (string file)
+		ImageReader (Image img)
 		{
-			m_image = Image.GetImage (file);
-			m_image.Accept (this);
+			m_image = img;
+		}
+
+		public static ImageReader Read (string file)
+		{
+			Image img = new Image (file);
+			ImageReader reader = new ImageReader (img);
+			img.Accept (reader);
+			return reader;
 		}
 
 		public BinaryReader GetReader ()

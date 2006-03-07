@@ -43,7 +43,7 @@ namespace Mono.Cecil {
 
 		public static AssemblyDefinition GetAssembly (string file)
 		{
-			ImageReader brv = new ImageReader (file);
+			ImageReader brv = ImageReader.Read (file);
 			StructureReader srv = new StructureReader (brv);
 			AssemblyDefinition asm = new AssemblyDefinition (
 				new AssemblyNameDefinition (), srv);

@@ -1,3 +1,14 @@
+2006-03-07  Jb Evain  <jbevain@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+		Allow users to get a loaded image using
+		Image.GetImage as they have no access to
+		the ImageReader.
+
 2006-03-06  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Signatures/SignatureReader.cs:

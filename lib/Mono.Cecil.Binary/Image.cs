@@ -121,7 +121,7 @@ namespace Mono.Cecil.Binary {
 			m_mdRoot = new MetadataRoot (this);
 		}
 
-		Image (FileInfo img) : this ()
+		internal Image (FileInfo img) : this ()
 		{
 			m_img = img;
 		}
@@ -193,15 +193,14 @@ namespace Mono.Cecil.Binary {
 
 		public static Image GetImage (string file)
 		{
-			if (file == null || file.Length == 0)
-				throw new ArgumentException ("file");
+			if (file == null)
+				throw new ArgumentNullException ("file");
 
 			FileInfo img = new FileInfo (file);
 			if (!File.Exists (img.FullName))
 				throw new FileNotFoundException (img.FullName);
 
-			Image ret = new Image (img);
-			return ret;
+			return ImageReader.Read (file).Image;
 		}
 	}
 }
