@@ -74,6 +74,8 @@ namespace Mono.Cecil.Cil {
 		int GetParameterIndex (MethodBody body, ParameterDefinition p)
 		{
 			int idx = body.Method.Parameters.IndexOf (p);
+			if (idx == -1 && p == body.Method.This)
+				return 0;
 			if (body.Method.HasThis)
 				idx++;
 

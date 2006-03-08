@@ -266,11 +266,15 @@ namespace Mono.Cecil {
 		void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
 		{
 			AttachMember (ea.MethodDefinition);
+			if (!ea.MethodDefinition.IsStatic)
+				ea.MethodDefinition.This.ParameterType = this;
 		}
 
 		void OnMethodRemoved (object sender, MethodDefinitionEventArgs ea)
 		{
 			DetachMember (ea.MethodDefinition);
+			if (!ea.MethodDefinition.IsStatic)
+				ea.MethodDefinition.This.ParameterType = null;
 		}
 
 		void OnFieldAdded (object sender, FieldDefinitionEventArgs ea)
@@ -286,11 +290,15 @@ namespace Mono.Cecil {
 		void OnCtorAdded (object sender, ConstructorEventArgs ea)
 		{
 			AttachMember (ea.Constructor);
+			if (!ea.Constructor.IsStatic)
+				ea.Constructor.This.ParameterType = this;
 		}
 
 		void OnCtorRemoved (object sender, ConstructorEventArgs ea)
 		{
 			DetachMember (ea.Constructor);
+			if (!ea.Constructor.IsStatic)
+				ea.Constructor.This.ParameterType = null;
 		}
 
 		void OnEventAdded (object sender, EventDefinitionEventArgs ea)

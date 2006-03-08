@@ -1,3 +1,13 @@
+2006-03-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Add support for the very special case ldarg 0.
+		Patch idea by Vladislav Spivak <spivak@mainsoft.com>
+
 2006-03-07  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/ImageReader.cs

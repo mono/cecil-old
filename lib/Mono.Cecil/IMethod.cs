@@ -57,6 +57,8 @@ namespace Mono.Cecil {
 		MethodBody Body { get; }
 		PInvokeInfo PInvokeInfo { get; }
 
+		ParameterDefinition This { get; }
+
 		MethodBody CreateBody ();
 
 		MethodDefinition Clone ();

@@ -51,6 +51,7 @@ namespace Mono.Cecil {
 		RVA m_rva;
 		OverrideCollection m_overrides;
 		PInvokeInfo m_pinvoke;
+		readonly ParameterDefinition m_this;
 
 		public MethodAttributes Attributes {
 			get { return m_attributes; }
@@ -120,6 +121,10 @@ namespace Mono.Cecil {
 
 				return m_overrides;
 			}
+		}
+
+		public ParameterDefinition This {
+			get { return m_this; }
 		}
 
 		public bool IsAbstract {
@@ -218,11 +223,17 @@ namespace Mono.Cecil {
 			m_rva = rva;
 			m_attributes = attrs;
 			m_implAttrs = implAttrs;
+
+			if (!IsStatic)
+				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}
 
 		internal MethodDefinition (string name, MethodAttributes attrs) : base (name)
 		{
 			m_attributes = attrs;
+
+			if (!IsStatic)
+				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}
 
 		public MethodDefinition (string name, MethodAttributes attrs, TypeReference returnType) :

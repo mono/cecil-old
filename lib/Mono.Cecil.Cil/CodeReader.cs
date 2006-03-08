@@ -91,8 +91,11 @@ namespace Mono.Cecil.Cil {
 
 		ParameterDefinition GetParameter (MethodBody body, int index)
 		{
-			if (body.Method.HasThis)
+			if (body.Method.HasThis) {
+				if (index == 0)
+					return body.Method.This;
 				index--;
+			}
 
 			return body.Method.Parameters [index];
 		}
