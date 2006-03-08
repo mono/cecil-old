@@ -1,5 +1,10 @@
 2006-03-08  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/cecil-gen-tests.rb
+	  CodeGen/templates/Tests.cs:
+		Start of a very small infrastructure to use tests from
+		rotor/mono with Cecil.
+
 	* Mono.Cecil/IMethod.cs
 	  Mono.Cecil/TypeDefinition.cs
 	  Mono.Cecil/MethodDefinition.cs
