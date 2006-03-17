@@ -26,3 +26,13 @@ DISTCLEANFILES = \
 	INSTALL \
 	COPYING \
 	missing
+
+test: all
+	cd rules;	\
+	make test;	\
+	cd ..;
+
+run-test: test
+	cd rules;	\
+	make run-test;	\
+	cd ..;
