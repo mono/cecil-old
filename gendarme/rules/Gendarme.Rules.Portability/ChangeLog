@@ -1,0 +1,7 @@
+2006-03-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: New. Build Gendarme.Rules.Portability rules and tests.
+	* Gendarme.Rules.Portability.xml.in: New. Configuration for Gendarme.
+	Rules.Portability.
+	* NewLineLiteralRule.cs: New. Rule to check if a method is directly
+	using \r, \n or \r\n instead of Environment.NewLine.

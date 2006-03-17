@@ -4,6 +4,7 @@
 		<rules include="*" from="Gendarme.Rules.Correctness.dll" />
 		<rules include="*" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
+		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 	</ruleset>
 	<ruleset name="concurrency">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
@@ -16,5 +17,8 @@
 	</ruleset>
 	<ruleset name="performance">
 		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+	</ruleset>
+	<ruleset name="portability">
+		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 	</ruleset>
 </gendarme>

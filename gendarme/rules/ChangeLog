@@ -1,3 +1,7 @@
+2006-03-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Added Gendarme.Rules.Portability
+
 2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Added test and run-test targets.

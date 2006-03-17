@@ -1,5 +1,7 @@
 SUBDIRS= Gendarme.Rules.Performance Gendarme.Rules.Security \
-	 Gendarme.Rules.Correctness Gendarme.Rules.Concurrency
+	 Gendarme.Rules.Correctness Gendarme.Rules.Concurrency \
+	 Gendarme.Rules.Portability
+
 EXTRA_DIST = rules.xml
 DISTCLEANFILES = Makefile.in
 

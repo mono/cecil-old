@@ -64,4 +64,7 @@ rules/Gendarme.Rules.Concurrency/Test/Makefile
 rules/Gendarme.Rules.Correctness/Makefile
 rules/Gendarme.Rules.Correctness/Gendarme.Rules.Correctness.xml
 rules/Gendarme.Rules.Correctness/Test/Makefile
+rules/Gendarme.Rules.Portability/Makefile
+rules/Gendarme.Rules.Portability/Gendarme.Rules.Portability.xml
+rules/Gendarme.Rules.Portability/Test/Makefile
 ])
