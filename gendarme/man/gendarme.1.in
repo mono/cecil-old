@@ -4,7 +4,7 @@
 .\" Author:
 .\"	Sebastien Pouliot  <sebastien@ximian.com>
 .\"
-.\" Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+.\" Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 .\"
 
 .de Sp
@@ -27,14 +27,23 @@ Specify the configuration file. Default is 'rules.xml'.
 .I "--set ruleset"
 Specify the set of rules to verify. Default is '*'.
 .TP
+.I "--debug"
+Enable debugging output.
+.TP
 .I "assembly"
 Specify the assembly to verify.
+.SH FILES
+.TP
+.I rules.xml
+This files contains a list of all the rulesets available to Gendarme. Each 
+ruleset includes a list of assemblies in which some, or all, rules can be
+verified (include) or not (exclude).
 .SH COPYRIGHT
-Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 .SH MAILING LISTS
 Mailing lists are listed at the
 http://www.mono-project.com/Mailing_Lists
 .SH WEB SITE
-http://www.mono-project.com
+http://www.mono-project.com/Gendarme
 .SH SEE ALSO
 .BR mono(1)
