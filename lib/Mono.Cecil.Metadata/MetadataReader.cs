@@ -166,19 +166,20 @@ namespace Mono.Cecil.Metadata {
 
 			heap [(uint) 0] = string.Empty;
 
-			BinaryReader br = new BinaryReader (new MemoryStream (heap.Data),
-													   Encoding.UTF8);
+			BinaryReader br = new BinaryReader (
+				new MemoryStream (heap.Data), Encoding.UTF8);
+
 			try {
 
 				br.BaseStream.Position++;
 
 				StringBuilder buffer = new StringBuilder ();
-				for (int i = 1, index = 1 ; i < heap.Data.Length ; i++) {
+				for (long index = br.BaseStream.Position ; br.BaseStream.Position < br.BaseStream.Length ; ) {
 					char cur = br.ReadChar ();
 					if (cur == '\0' && buffer.Length > 0) {
 						heap [(uint) index] = buffer.ToString ();
 						buffer = new StringBuilder ();
-						index = i + 1;
+						index = br.BaseStream.Position;
 					} else
 						buffer.Append (cur);
 				}

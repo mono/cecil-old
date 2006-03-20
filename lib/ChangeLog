@@ -1,3 +1,8 @@
+2006-03-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataReader.cs:
+		#Strings heap is utf8, fix #77820.
+
 2006-03-08  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/cecil-gen-tests.rb
