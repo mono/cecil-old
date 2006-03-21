@@ -1,5 +1,10 @@
 2006-03-21  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix for security declarations reading on .net 2.0.
+
 	* Mono.Cecil/ReflectionReader.cs
 	  Mono.Cecil/GenericContext.cs:
 		Fix test case RoundtripTestFixture.boo.

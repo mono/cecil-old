@@ -37,6 +37,9 @@ namespace Mono.Cecil {
 		SecurityAction m_action;
 		PermissionSet m_permSet;
 
+		bool m_readable;
+		byte [] m_blob;
+
 		public SecurityAction Action {
 			get { return m_action; }
 			set { m_action = value; }
@@ -47,9 +50,20 @@ namespace Mono.Cecil {
 			set { m_permSet = value; }
 		}
 
+		public bool IsReadable {
+			get { return m_readable; }
+			set { m_readable = value; }
+		}
+
+		public byte [] Blob {
+			get { return m_blob; }
+			set { m_blob = value; }
+		}
+
 		public SecurityDeclaration (SecurityAction action)
 		{
 			m_action = action;
+			m_readable = true;
 		}
 
 		object ICloneable.Clone ()
@@ -65,6 +79,12 @@ namespace Mono.Cecil {
 		internal static SecurityDeclaration Clone (SecurityDeclaration sec)
 		{
 			SecurityDeclaration sd = new SecurityDeclaration (sec.Action);
+			if (!sec.IsReadable) {
+				sd.IsReadable = false;
+				sd.Blob = sec.Blob;
+				return sd;
+			}
+
 			sd.PermissionSet = sec.PermissionSet.Copy ();
 			return sd;
 		}

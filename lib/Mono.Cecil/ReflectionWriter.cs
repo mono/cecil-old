@@ -575,8 +575,8 @@ namespace Mono.Cecil {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					parent,
-					m_mdWriter.AddBlob (
-						m_mod.GetAsByteArray (secDec)));
+					m_mdWriter.AddBlob (secDec.IsReadable ?
+						m_mod.GetAsByteArray (secDec) : secDec.Blob));
 
 				dsTable.Rows.Add (dsRow);
 			}
