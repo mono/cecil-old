@@ -140,7 +140,7 @@ namespace Mono.Cecil {
 		bool IsTypeSpec (ITypeReference type)
 		{
 			return type is IArrayType || type is IFunctionPointerType ||
-				type is IPointerType || type is IGenericInstance;
+				type is IPointerType || type is IGenericInstance || type is IGenericParameter;
 		}
 
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
@@ -234,6 +234,7 @@ namespace Mono.Cecil {
 				VisitCustomAttributeCollection (field.CustomAttributes);
 
 			foreach (MethodDefinition meth in m_methodStack) {
+				VisitGenericParameterCollection (meth.GenericParameters);
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
 				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);

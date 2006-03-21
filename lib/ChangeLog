@@ -1,5 +1,8 @@
 2006-03-21  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Correctly write generic parameters.
+
 	* Mono.Cecil/SecurityDeclarationReader.cs
 	  Mono.Cecil/SecurityDeclaration.cs
 	  Mono.Cecil/ReflectionWriter.cs:
