@@ -34,6 +34,7 @@ namespace Mono.Cecil {
 
 		TypeReference m_type;
 		MethodReference m_method;
+		bool m_allowCreation;
 
 		public TypeReference Type {
 			get { return m_type; }
@@ -43,6 +44,11 @@ namespace Mono.Cecil {
 		public MethodReference Method {
 			get { return m_method; }
 			set { m_method = value; }
+		}
+
+		public bool AllowCreation {
+			get { return m_allowCreation; }
+			set { m_allowCreation = value; }
 		}
 
 		public bool Null {

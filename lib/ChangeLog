@@ -1,3 +1,9 @@
+2006-03-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/GenericContext.cs:
+		Fix test case RoundtripTestFixture.boo.
+
 2006-03-20  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/MetadataReader.cs:
