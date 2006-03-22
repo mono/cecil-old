@@ -50,6 +50,7 @@ namespace Mono.Cecil {
 
 		IList m_methodStack;
 		IList m_fieldStack;
+		IDictionary m_typeSpecCache;
 
 		uint m_methodIndex;
 		uint m_fieldIndex;
@@ -102,6 +103,7 @@ namespace Mono.Cecil {
 
 			m_methodStack = new ArrayList ();
 			m_fieldStack = new ArrayList ();
+			m_typeSpecCache = new Hashtable ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -146,11 +148,15 @@ namespace Mono.Cecil {
 		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
 		{
 			if (IsTypeSpec (type)) {
+				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
+				if (m_typeSpecCache.Contains (sig))
+					return (m_typeSpecCache [sig] as TypeReference).MetadataToken;
+
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
-				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (
-					m_sigWriter.AddTypeSpec (GetTypeSpecSig (type)));
+				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (sig);
 				tsTable.Rows.Add (tsRow);
 				type.MetadataToken = new MetadataToken (TokenType.TypeSpec, (uint) tsTable.Rows.Count);
+				m_typeSpecCache [sig] = type;
 				return type.MetadataToken;
 			} else if (type != null)
 				return type.MetadataToken;

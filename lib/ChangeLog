@@ -1,3 +1,8 @@
+2006-03-22  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Avoid duplicates in the typespec table.
+
 2006-03-21  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionWriter.cs:
