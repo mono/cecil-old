@@ -228,15 +228,33 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
+		bool IsRangeFat (Instruction start, Instruction end)
+		{
+			return end.Offset - start.Offset >= 256 || start.Offset >= 65536;
+		}
+
 		bool IsFat (ExceptionHandlerCollection seh)
 		{
-			bool fat = false;
-			for (int i = 0; i < seh.Count && !fat; i++) {
+			for (int i = 0; i < seh.Count; i++) {
 				IExceptionHandler eh = seh [i];
-				fat = eh.TryEnd.Offset - eh.TryStart.Offset > 255;
+				if (IsRangeFat (eh.TryStart, eh.TryEnd))
+					return true;
+
+				switch (eh.Type) {
+				case ExceptionHandlerType.Catch :
+				case ExceptionHandlerType.Fault :
+				case ExceptionHandlerType.Finally :
+					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd))
+						return true;
+					break;
+				case ExceptionHandlerType.Filter :
+					if (IsRangeFat (eh.FilterStart, eh.FilterEnd))
+						return true;
+					break;
+				}
 			}
 
-			return fat;
+			return false;
 		}
 
 		void WriteExceptionHandlerCollection (ExceptionHandlerCollection seh)
