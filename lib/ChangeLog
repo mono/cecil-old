@@ -1,3 +1,9 @@
+2006-03-23  Jb Evain <jbevain@gmail.com>
+
+	* Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Rename method to avoid confusion.
+
 2006-03-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CodeWriter.cs:

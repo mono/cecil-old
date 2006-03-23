@@ -60,9 +60,9 @@ namespace Mono.Cecil {
 		MethodReference Import (MethodReference meth);
 		FieldReference Import (FieldReference field);
 
-		TypeDefinition Import (TypeDefinition type);
-		MethodDefinition Import (MethodDefinition meth);
-		FieldDefinition Import (FieldDefinition field);
+		TypeDefinition Inject (TypeDefinition type);
+		MethodDefinition Inject (MethodDefinition meth);
+		FieldDefinition Inject (FieldDefinition field);
 
 		byte [] GetAsByteArray (CustomAttribute ca);
 		byte [] GetAsByteArray (SecurityDeclaration dec);

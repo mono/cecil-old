@@ -272,7 +272,7 @@ namespace Mono.Cecil {
 			return m_controller.Helper.ImportFieldReference (field);
 		}
 
-		public TypeDefinition Import (TypeDefinition type)
+		public TypeDefinition Inject (TypeDefinition type)
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -280,7 +280,7 @@ namespace Mono.Cecil {
 			return m_controller.Helper.ImportTypeDefinition (type);
 		}
 
-		public MethodDefinition Import (MethodDefinition meth)
+		public MethodDefinition Inject (MethodDefinition meth)
 		{
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
@@ -288,7 +288,7 @@ namespace Mono.Cecil {
 			return m_controller.Helper.ImportMethodDefinition (meth);
 		}
 
-		public FieldDefinition Import (FieldDefinition field)
+		public FieldDefinition Inject (FieldDefinition field)
 		{
 			if (field == null)
 				throw new ArgumentNullException ("field");
