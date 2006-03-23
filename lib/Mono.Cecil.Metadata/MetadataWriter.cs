@@ -181,7 +181,7 @@ namespace Mono.Cecil.Metadata {
 		{
 			if (data == null || data.Length == 0)
 				return 0;
-//
+
 			string key = GetBlobKey (data);
 			if (m_blobCache.Contains (key))
 				return (uint) m_blobCache [key];
