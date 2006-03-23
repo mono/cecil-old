@@ -169,13 +169,20 @@ namespace Mono.Cecil.Metadata {
 			return pointer;
 		}
 
+		string GetBlobKey (byte [] data)
+		{
+			StringBuilder sb = new StringBuilder ();
+			for (int i = 0; i < data.Length; i++)
+				sb.Append (data [i]);
+			return sb.ToString ();
+		}
+
 		public uint AddBlob (byte [] data)
 		{
 			if (data == null || data.Length == 0)
 				return 0;
-
-			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported
-			string key = Encoding.ASCII.GetString (data, 0, data.Length);
+//
+			string key = GetBlobKey (data);
 			if (m_blobCache.Contains (key))
 				return (uint) m_blobCache [key];
 
