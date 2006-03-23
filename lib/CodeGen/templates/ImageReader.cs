@@ -58,7 +58,14 @@ namespace Mono.Cecil.Binary {
 
 		public static ImageReader Read (string file)
 		{
-			Image img = new Image (file);
+			if (file == null)
+				throw new ArgumentNullException ("file");
+
+			FileInfo fi = new FileInfo (file);
+			if (!File.Exists (fi.FullName))
+				throw new FileNotFoundException (fi.FullName);
+
+			Image img = new Image (fi);
 			ImageReader reader = new ImageReader (img);
 			img.Accept (reader);
 			return reader;

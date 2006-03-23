@@ -1,5 +1,13 @@
 2006-03-23  Jb Evain <jbevain@gmail.com>
 
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  CodeGen/templates/ImageReader.cs:
+		Ensure type with the same name are added
+		to the collection.
+
 	* Mono.Cecil.Metadata/MetadataWriter.cs:
 		Ensure every blob signature is unique.
 

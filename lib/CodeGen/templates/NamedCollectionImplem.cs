@@ -86,7 +86,7 @@ namespace <%=$cur_coll.target%> {
 			if (On<%=$cur_coll.item_name%>Added != null)
 				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
 
-			this.BaseSet (value.FullName, value);
+			this.BaseAdd (value.FullName, value);
 		}
 
 		public void Clear ()
