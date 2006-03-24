@@ -1,5 +1,8 @@
 2006-03-24  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Cache method specs as well.
+
 	* CodeGen/templates/ImageWriter.cs
 	  Mono.Cecil.Metadata/MetadataWriter.cs
 	  Mono.Cecil.Binary/ImageWriter.cs:

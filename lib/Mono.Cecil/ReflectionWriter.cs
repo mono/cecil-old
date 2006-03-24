@@ -51,6 +51,7 @@ namespace Mono.Cecil {
 		IList m_methodStack;
 		IList m_fieldStack;
 		IDictionary m_typeSpecCache;
+		IDictionary m_methodSpecCache;
 
 		uint m_methodIndex;
 		uint m_fieldIndex;
@@ -104,6 +105,7 @@ namespace Mono.Cecil {
 			m_methodStack = new ArrayList ();
 			m_fieldStack = new ArrayList ();
 			m_typeSpecCache = new Hashtable ();
+			m_methodSpecCache = new Hashtable ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -166,12 +168,17 @@ namespace Mono.Cecil {
 
 		public MetadataToken GetMethodSpecToken (GenericInstanceMethod gim)
 		{
+			uint sig = m_sigWriter.AddMethodSpec (GetMethodSpecSig (gim));
+			if (m_methodSpecCache.Contains (sig))
+				return (m_methodSpecCache [sig] as MethodReference).MetadataToken;
+
 			MethodSpecTable msTable = m_tableWriter.GetMethodSpecTable ();
 			MethodSpecRow msRow = m_rowWriter.CreateMethodSpecRow (
 				gim.ElementMethod.MetadataToken,
-				m_sigWriter.AddMethodSpec (GetMethodSpecSig (gim)));
+				sig);
 			msTable.Rows.Add (msRow);
 			gim.MetadataToken = new MetadataToken (TokenType.MethodSpec, (uint) msTable.Rows.Count);
+			m_methodSpecCache [sig] = gim;
 			return gim.MetadataToken;
 		}
 
