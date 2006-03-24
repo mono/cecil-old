@@ -163,8 +163,7 @@ namespace Mono.Cecil.Metadata {
 
 			uint pointer = (uint) m_stringWriter.BaseStream.Position;
 			m_stringCache [str] = pointer;
-			foreach (char c in str)
-				m_stringWriter.Write (c);
+			m_stringWriter.Write (Encoding.UTF8.GetBytes (str));
 			m_stringWriter.Write ('\0');
 			return pointer;
 		}
@@ -335,8 +334,7 @@ namespace Mono.Cecil.Metadata {
 			m_binaryWriter.Write (header.MinorVersion);
 			m_binaryWriter.Write (header.Reserved);
 			m_binaryWriter.Write (header.Version.Length + 3 & (~3));
-			foreach (char c in header.Version)
-				m_binaryWriter.Write (c);
+			m_binaryWriter.Write (Encoding.ASCII.GetBytes (header.Version));
 			m_binaryWriter.QuadAlign ();
 			m_binaryWriter.Write (header.Flags);
 			m_binaryWriter.Write ((ushort) m_root.Streams.Count);
@@ -376,8 +374,7 @@ namespace Mono.Cecil.Metadata {
 
 				size += (uint) (container.BaseStream.Length + 3 & (~3));
 				m_binaryWriter.Write (size);
-				foreach (char c in name)
-					m_binaryWriter.Write (c);
+				m_binaryWriter.Write (Encoding.ASCII.GetBytes (name));
 				m_binaryWriter.QuadAlign ();
 			}
 		}

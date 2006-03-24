@@ -31,6 +31,8 @@
 
 namespace Mono.Cecil.Binary {
 
+	using System.Text;
+
 	using Mono.Cecil.Metadata;
 
 	class ImageWriter : BaseImageVisitor {
@@ -179,8 +181,7 @@ namespace Mono.Cecil.Binary {
 <% end } ; cur_header = $headers["Section"] %>
 		public override void VisitSection (Section sect)
 		{
-			foreach (char c in sect.Name)
-				m_binaryWriter.Write (c);
+			m_binaryWriter.Write (Encoding.ASCII.GetBytes (sect.Name));
 			int more = 8 - sect.Name.Length;
 			for (int i = 0; i < more; i++)
 				m_binaryWriter.Write ((byte) 0);
@@ -220,8 +221,7 @@ namespace Mono.Cecil.Binary {
 			m_textWriter.Write (header.Magic);
 			m_textWriter.Write (header.Signature.ToByteArray ());
 			m_textWriter.Write (header.Age);
-			foreach (char c in header.FileName)
-				m_textWriter.Write (c);
+			m_textWriter.Write (Encoding.ASCII.GetBytes (header.FileName));
 			m_textWriter.Write ((byte) 0);
 		}
 
@@ -245,11 +245,9 @@ namespace Mono.Cecil.Binary {
 		public override void VisitHintNameTable (HintNameTable hnt)
 		{
 			m_textWriter.Write (hnt.Hint);
-			foreach (char c in hnt.RuntimeMain)
-				m_textWriter.Write (c);
+			m_textWriter.Write (Encoding.ASCII.GetBytes (hnt.RuntimeMain));
 			m_textWriter.Write ('\0');
-			foreach (char c in hnt.RuntimeLibrary)
-				m_textWriter.Write (c);
+			m_textWriter.Write (Encoding.ASCII.GetBytes (hnt.RuntimeLibrary));
 			m_textWriter.Write ('\0');
 			m_textWriter.Write (new byte [4]);
 
