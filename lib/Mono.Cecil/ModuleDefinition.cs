@@ -296,6 +296,16 @@ namespace Mono.Cecil {
 			return m_controller.Helper.ImportFieldDefinition (field);
 		}
 
+		public void FullLoad ()
+		{
+			foreach (TypeDefinition type in this.Types) {
+				foreach (MethodDefinition meth in type.Methods)
+					meth.LoadBody ();
+				foreach (MethodDefinition ctor in type.Constructors)
+					ctor.LoadBody ();
+			}
+		}
+
 		public byte [] GetAsByteArray (CustomAttribute ca)
 		{
 			CustomAttribute customAttr = ca as CustomAttribute;

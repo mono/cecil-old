@@ -64,6 +64,8 @@ namespace Mono.Cecil {
 		MethodDefinition Inject (MethodDefinition meth);
 		FieldDefinition Inject (FieldDefinition field);
 
+		void FullLoad ();
+
 		byte [] GetAsByteArray (CustomAttribute ca);
 		byte [] GetAsByteArray (SecurityDeclaration dec);
 

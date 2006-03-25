@@ -186,13 +186,7 @@ namespace Mono.Cecil {
 
 		public override void VisitModuleDefinition (ModuleDefinition mod)
 		{
-			// ensure that everything is loaded before writing
-			foreach (TypeDefinition type in mod.Types) {
-				foreach (MethodDefinition meth in type.Methods)
-					meth.LoadBody ();
-				foreach (MethodDefinition ctor in type.Constructors)
-					ctor.LoadBody ();
-			}
+			mod.FullLoad ();
 		}
 
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
