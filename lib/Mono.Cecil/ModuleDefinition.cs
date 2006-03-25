@@ -323,6 +323,9 @@ namespace Mono.Cecil {
 		{
 			// TODO - add support for 2.0 format
 			// note: the 1.x format is still supported in 2.0 so this isn't an immediate problem
+			if (!dec.IsReadable)
+				return dec.Blob;
+
 			if (dec.PermissionSet != null)
 				return Encoding.Unicode.GetBytes (dec.PermissionSet.ToXml ().ToString ());
 

@@ -1,5 +1,9 @@
 2006-03-25  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ModuleDefinition.cs:
+		Support the unreadable security declarations
+		when converting one to byte [].
+
 	* Mono.Cecil/IModuleDefinition.cs
 	  Mono.Cecil/ModuleDefinition.cs
 	  Mono.Cecil/ReflectionWriter.cs:
