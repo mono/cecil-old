@@ -1,5 +1,9 @@
 2006-03-25  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix a  few bugs in generics type emitting.
+
 	* Mono.Cecil.Cil/CodeWriter.cs:
 		Cache local sig as well.
 

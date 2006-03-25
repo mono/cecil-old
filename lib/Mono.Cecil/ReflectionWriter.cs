@@ -48,6 +48,7 @@ namespace Mono.Cecil {
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
 
+		IList m_typeDefStack;
 		IList m_methodStack;
 		IList m_fieldStack;
 		IDictionary m_typeSpecCache;
@@ -102,6 +103,7 @@ namespace Mono.Cecil {
 		{
 			m_mod = mod;
 
+			m_typeDefStack = new ArrayList ();
 			m_methodStack = new ArrayList ();
 			m_fieldStack = new ArrayList ();
 			m_typeSpecCache = new Hashtable ();
@@ -195,7 +197,6 @@ namespace Mono.Cecil {
 
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
-			ArrayList orderedTypes = new ArrayList (types.Count);
 			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
 
 			if (types [Constants.ModuleType] == null)
@@ -203,19 +204,19 @@ namespace Mono.Cecil {
 						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
 
 			foreach (ITypeDefinition t in types)
-				orderedTypes.Add (t);
+				m_typeDefStack.Add (t);
 
-			orderedTypes.Sort (TableComparers.TypeDef.Instance);
+			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
 
-			for (int i = 0; i < orderedTypes.Count; i++) {
-				TypeDefinition t = (TypeDefinition) orderedTypes [i];
+			for (int i = 0; i < m_typeDefStack.Count; i++) {
+				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
 				if (t.Module.Assembly != m_mod.Assembly)
 					throw new ReflectionException ("A type as not been correctly imported");
 
 				t.MetadataToken = new MetadataToken (TokenType.TypeDef, (uint) (i + 1));
 			}
 
-			foreach (TypeDefinition t in orderedTypes) {
+			foreach (TypeDefinition t in m_typeDefStack) {
 				TypeDefRow tdRow = m_rowWriter.CreateTypeDefRow (
 					t.Attributes,
 					m_mdWriter.AddString (t.Name),
@@ -225,14 +226,16 @@ namespace Mono.Cecil {
 					0);
 
 				tdTable.Rows.Add (tdRow);
-
-				if (t.LayoutInfo.HasLayoutInfo)
-					WriteLayout (t);
 			}
+		}
 
-			for (int i = 0; i < orderedTypes.Count; i++) {
+		public void CompleteTypeDefinitions ()
+		{
+			TypeDefTable tdTable = m_tableWriter.GetTypeDefTable ();
+
+			for (int i = 0; i < m_typeDefStack.Count; i++) {
 				TypeDefRow tdRow = tdTable [i];
-				TypeDefinition t = (TypeDefinition) orderedTypes [i];
+				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
 				tdRow.FieldList = m_fieldIndex;
 				tdRow.MethodList = m_methodIndex;
 				foreach (FieldDefinition field in t.Fields)
@@ -241,6 +244,9 @@ namespace Mono.Cecil {
 					VisitMethodDefinition (ctor);
 				foreach (MethodDefinition meth in t.Methods)
 					VisitMethodDefinition (meth);
+
+				if (t.LayoutInfo.HasLayoutInfo)
+					WriteLayout (t);
 			}
 
 			foreach (FieldDefinition field in m_fieldStack)
@@ -255,7 +261,7 @@ namespace Mono.Cecil {
 					VisitPInvokeInfo (meth.PInvokeInfo);
 			}
 
-			foreach (TypeDefinition t in orderedTypes)
+			foreach (TypeDefinition t in m_typeDefStack)
 				t.Accept (this);
 		}
 
