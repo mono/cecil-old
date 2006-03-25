@@ -29,6 +29,7 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
+	using System.Collections;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
@@ -41,11 +42,15 @@ namespace Mono.Cecil.Cil {
 		MemoryBinaryWriter m_binaryWriter;
 		MemoryBinaryWriter m_codeWriter;
 
+		IDictionary m_localSigCache;
+
 		public CodeWriter (ReflectionWriter reflectWriter, MemoryBinaryWriter writer)
 		{
 			m_reflectWriter = reflectWriter;
 			m_binaryWriter = writer;
 			m_codeWriter = new MemoryBinaryWriter ();
+
+			m_localSigCache = new Hashtable ();
 		}
 
 		public RVA WriteMethodBody (MethodDefinition meth)
@@ -313,13 +318,21 @@ namespace Mono.Cecil.Cil {
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
 			MethodBody body = variables.Container;
+			uint sig = m_reflectWriter.SignatureWriter.AddLocalVarSig (
+					GetLocalVarSig (variables));
+
+			if (m_localSigCache.Contains (sig)) {
+				body.LocalVarToken = (int) m_localSigCache [sig];
+				return;
+			}
+
 			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
 			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (
-				m_reflectWriter.SignatureWriter.AddLocalVarSig (
-					GetLocalVarSig (variables)));
+				sig);
 
 			sasTable.Rows.Add (sasRow);
 			body.LocalVarToken = sasTable.Rows.Count;
+			m_localSigCache [sig] = body.LocalVarToken;
 		}
 
 		public override void TerminateMethodBody (MethodBody body)
