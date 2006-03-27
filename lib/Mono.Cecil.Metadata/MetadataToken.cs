@@ -57,6 +57,26 @@ namespace Mono.Cecil.Metadata {
 			return (uint) m_type | m_rid;
 		}
 
+		public override bool Equals (object other)
+		{
+			if (other is MetadataToken) {
+				MetadataToken o = (MetadataToken) other;
+				return o.m_rid == m_rid && o.m_type == m_type;
+			}
+
+			return false;
+		}
+
+		public static bool operator == (MetadataToken one, MetadataToken other)
+		{
+			return one.Equals (other);
+		}
+
+		public static bool operator != (MetadataToken one, MetadataToken other)
+		{
+			return !one.Equals (other);
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("{0} [0x{1}]",

@@ -1,5 +1,12 @@
 2006-03-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix method spec "caching"
+	  Mono.Cecil.Cil/OpCode.cs:
+		Override ToString ();
+	  Mono.Cecil.Metadata/MetadataToken.cs:
+		Implement operator ==
+
 	* Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil/TableComparers.cs:
 		Better handling of generic tables sorting.

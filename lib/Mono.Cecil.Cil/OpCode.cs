@@ -118,5 +118,10 @@ namespace Mono.Cecil.Cil {
 		{
 			return !one.Equals (other);
 		}
+
+		public override string ToString ()
+		{
+			return m_name;
+		}
 	}
 }
