@@ -1,3 +1,9 @@
+2006-03-27  Jb Evain  <jbevain@gmail.com>
+
+	* cecil-echo.cs:
+		Use the FullLoad method of the module to ensure
+		everything is loaded.
+
 2006-02-07  Jb Evain  <jbevain@gmail.com>
 
 	* cecil-echo.cs, cecil-roundtrip.cs:
