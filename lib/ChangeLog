@@ -2,6 +2,10 @@
 
 	* Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil/TableComparers.cs:
+		Better handling of generic tables sorting.
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
 		Sort generic tables as well.
 
 2006-03-27	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>

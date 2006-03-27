@@ -51,6 +51,7 @@ namespace Mono.Cecil {
 		IList m_typeDefStack;
 		IList m_methodStack;
 		IList m_fieldStack;
+		IList m_genericParamStack;
 		IDictionary m_typeSpecCache;
 		IDictionary m_methodSpecCache;
 
@@ -106,6 +107,7 @@ namespace Mono.Cecil {
 			m_typeDefStack = new ArrayList ();
 			m_methodStack = new ArrayList ();
 			m_fieldStack = new ArrayList ();
+			m_genericParamStack = new ArrayList ();
 			m_typeSpecCache = new Hashtable ();
 			m_methodSpecCache = new Hashtable ();
 
@@ -329,31 +331,8 @@ namespace Mono.Cecil {
 			if (parameters.Count == 0)
 				return;
 
-			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
-			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
-
-			for (int i = 0; i < parameters.Count; i++) {
-
-				GenericParameter gp = parameters [i];
-				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
-					(ushort) i,
-					gp.Attributes,
-					gp.Owner.MetadataToken,
-					m_mdWriter.AddString (gp.Name));
-
-				gpTable.Rows.Add (gpRow);
-
-				if (gp.Constraints.Count == 0)
-					continue;
-
-				foreach (TypeReference constraint in gp.Constraints) {
-					GenericParamConstraintRow gpcRow = m_rowWriter.CreateGenericParamConstraintRow (
-						(uint) gpTable.Rows.Count,
-						GetTypeDefOrRefToken (constraint));
-
-					gpcTable.Rows.Add (gpcRow);
-				}
-			}
+			foreach (GenericParameter gp in parameters)
+				m_genericParamStack.Add (gp);
 		}
 
 		public override void VisitInterfaceCollection (InterfaceCollection interfaces)
@@ -753,15 +732,41 @@ namespace Mono.Cecil {
 				m_tableWriter.GetDeclSecurityTable ().Rows.Sort (
 					TableComparers.SecurityDeclaration.Instance);
 			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (DeclSecurityTable)));
+		}
 
-			if (th.HasTable (typeof (GenericParamTable)))
-				m_tableWriter.GetGenericParamTable ().Rows.Sort (
-					TableComparers.GenericParam.Instance);
+		void CompleteGenericTables ()
+		{
+			if (m_genericParamStack.Count == 0)
+				return;
+
+			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
+			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
+
+			(m_genericParamStack as ArrayList).Sort (TableComparers.GenericParam.Instance);
+
+			foreach (GenericParameter gp in m_genericParamStack) {
+				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
+					(ushort) gp.Owner.GenericParameters.IndexOf (gp),
+					gp.Attributes,
+					gp.Owner.MetadataToken,
+					m_mdWriter.AddString (gp.Name));
+
+				gpTable.Rows.Add (gpRow);
+
+				if (gp.Constraints.Count == 0)
+					continue;
+
+				foreach (TypeReference constraint in gp.Constraints) {
+					GenericParamConstraintRow gpcRow = m_rowWriter.CreateGenericParamConstraintRow (
+						(uint) gpTable.Rows.Count,
+						GetTypeDefOrRefToken (constraint));
+
+					gpcTable.Rows.Add (gpcRow);
+				}
+			}
+
 			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamTable)));
-
-			if (th.HasTable (typeof (GenericParamConstraintTable)))
-				m_tableWriter.GetGenericParamConstraintTable ().Rows.Sort (
-					TableComparers.GenericParamConstraint.Instance);
 			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamConstraintTable)));
 		}
 
@@ -772,6 +777,7 @@ namespace Mono.Cecil {
 			VisitCustomAttributeCollection (module.CustomAttributes);
 
 			SortTables ();
+			CompleteGenericTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {
