@@ -173,7 +173,9 @@ namespace Mono.Cecil.Metadata {
 			if (data == null || data.Length == 0)
 				return 0;
 
-			string key = Convert.ToBase64String (data);
+			// using CompactFramework compatible version of
+			// Convert.ToBase64String
+			string key = Convert.ToBase64String (data, 0, data.Length);
 			if (m_blobCache.Contains (key))
 				return (uint) m_blobCache [key];
 
