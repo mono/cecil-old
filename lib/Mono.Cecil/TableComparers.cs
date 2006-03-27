@@ -245,5 +245,33 @@ namespace Mono.Cecil {
 				return Comparer.Default.Compare (a.Parent, b.Parent);
 			}
 		}
+
+		public class GenericParam : IComparer {
+
+			public static readonly GenericParam Instance = new GenericParam ();
+
+			public int Compare (object x, object y)
+			{
+				GenericParamRow a = x as GenericParamRow;
+				GenericParamRow b = y as GenericParamRow;
+
+				return Comparer.Default.Compare (
+					Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, a.Owner),
+					Utilities.CompressMetadataToken (CodedIndex.TypeOrMethodDef, b.Owner));
+			}
+		}
+
+		public class GenericParamConstraint : IComparer {
+
+			public static readonly GenericParamConstraint Instance = new GenericParamConstraint ();
+
+			public int Compare (object x, object y)
+			{
+				GenericParamConstraintRow a = x as GenericParamConstraintRow;
+				GenericParamConstraintRow b = y as GenericParamConstraintRow;
+
+				return Comparer.Default.Compare (a.Owner, b.Owner);
+			}
+		}
 	}
 }

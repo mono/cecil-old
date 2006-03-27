@@ -1,3 +1,9 @@
+2006-03-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
+		Sort generic tables as well.
+
 2006-03-27	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
 	* Mono.Cecil.Metadata/MetadataWriter.cs:
 		Use CompactFramework compatible version of

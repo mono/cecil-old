@@ -692,54 +692,77 @@ namespace Mono.Cecil {
 		void SortTables ()
 		{
 			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
+			th.Sorted = 0;
 
 			if (th.HasTable (typeof (NestedClassTable)))
 				m_tableWriter.GetNestedClassTable ().Rows.Sort (
 					TableComparers.NestedClass.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (NestedClassTable)));
 
 			if (th.HasTable (typeof (InterfaceImplTable)))
 				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
 					TableComparers.InterfaceImpl.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (InterfaceImplTable)));
 
 			if (th.HasTable (typeof (ConstantTable)))
 				m_tableWriter.GetConstantTable ().Rows.Sort (
 					TableComparers.Constant.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ConstantTable)));
 
 			if (th.HasTable (typeof (MethodSemanticsTable)))
 				m_tableWriter.GetMethodSemanticsTable ().Rows.Sort (
 					TableComparers.MethodSem.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodSemanticsTable)));
 
 			if (th.HasTable (typeof (FieldMarshalTable)))
 				m_tableWriter.GetFieldMarshalTable ().Rows.Sort (
 					TableComparers.FieldMarshal.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldMarshalTable)));
 
 			if (th.HasTable (typeof (ClassLayoutTable)))
 				m_tableWriter.GetClassLayoutTable ().Rows.Sort (
 					TableComparers.TypeLayout.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ClassLayoutTable)));
 
 			if (th.HasTable (typeof (FieldLayoutTable)))
 				m_tableWriter.GetFieldLayoutTable ().Rows.Sort (
 					TableComparers.FieldLayout.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldLayoutTable)));
 
 			if (th.HasTable (typeof (ImplMapTable)))
 				m_tableWriter.GetImplMapTable ().Rows.Sort (
 					TableComparers.PInvoke.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ImplMapTable)));
 
 			if (th.HasTable (typeof (FieldRVATable)))
 				m_tableWriter.GetFieldRVATable ().Rows.Sort (
 					TableComparers.FieldRVA.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldRVATable)));
 
 			if (th.HasTable (typeof (MethodImplTable)))
 				m_tableWriter.GetMethodImplTable ().Rows.Sort (
 					TableComparers.Override.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodImplTable)));
 
 			if (th.HasTable (typeof (CustomAttributeTable)))
 				m_tableWriter.GetCustomAttributeTable ().Rows.Sort (
 					TableComparers.CustomAttribute.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (CustomAttributeTable)));
 
 			if (th.HasTable (typeof (DeclSecurityTable)))
 				m_tableWriter.GetDeclSecurityTable ().Rows.Sort (
 					TableComparers.SecurityDeclaration.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (DeclSecurityTable)));
+
+			if (th.HasTable (typeof (GenericParamTable)))
+				m_tableWriter.GetGenericParamTable ().Rows.Sort (
+					TableComparers.GenericParam.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamTable)));
+
+			if (th.HasTable (typeof (GenericParamConstraintTable)))
+				m_tableWriter.GetGenericParamConstraintTable ().Rows.Sort (
+					TableComparers.GenericParamConstraint.Instance);
+			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamConstraintTable)));
 		}
 
 		public override void TerminateModuleDefinition (ModuleDefinition module)
@@ -1031,7 +1054,7 @@ namespace Mono.Cecil {
 		{
 			Param [] ret = new Param [parameters.Count];
 			for (int i = 0; i < ret.Length; i++) {
-				IParameterDefinition pDef =parameters [i];
+				IParameterDefinition pDef = parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
