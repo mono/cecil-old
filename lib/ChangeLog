@@ -1,3 +1,9 @@
+2006-03-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/GenericInstanceType.cs:
+		Correctly return if the instance is a value type
+		or not.
+
 2006-03-25  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ModuleDefinition.cs:

@@ -45,6 +45,7 @@ namespace Mono.Cecil {
 
 		public override bool IsValueType {
 			set { m_isValueType = value; }
+			get { return m_isValueType; }
 		}
 
 		public override string FullName {
