@@ -55,7 +55,7 @@ namespace Mono.Cecil {
 		public ConstraintCollection Constraints {
 			get {
 				if (m_constraints == null)
-					m_constraints = new ConstraintCollection (null);
+					m_constraints = new ConstraintCollection (this);
 
 				return m_constraints;
 			}
