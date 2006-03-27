@@ -1,5 +1,14 @@
 2006-03-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ConstraintCollection.cs
+	  Mono.Cecil/IGenericParameter.cs
+	  Mono.Cecil/IConstraintCollection.cs
+	  CodeGen/cecil.xml:
+		Add a ConstraintCollection to be used within
+		generic parameters.
+
 	* Mono.Cecil/GenericInstanceType.cs:
 		Correctly return if the instance is a value type
 		or not.

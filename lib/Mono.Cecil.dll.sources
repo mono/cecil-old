@@ -17,6 +17,7 @@
 ./Mono.Cecil/CallSite.cs
 ./Mono.Cecil/CompactFrameworkCompatibility.cs
 ./Mono.Cecil/Constants.cs
+./Mono.Cecil/ConstraintCollection.cs
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs
 ./Mono.Cecil/CustomAttributeCollection.cs
@@ -48,6 +49,7 @@
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
 ./Mono.Cecil/ICallSite.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
+./Mono.Cecil/IConstraintCollection.cs
 ./Mono.Cecil/IConstructorCollection.cs
 ./Mono.Cecil/ICustomAttribute.cs
 ./Mono.Cecil/ICustomAttributeCollection.cs
