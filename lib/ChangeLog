@@ -1,5 +1,9 @@
 2006-03-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TableComparers.cs:
+		Fix the ordering of generic parameters.
+		This revision roundtrips C5. Yeah! 
+
 	* Mono.Cecil/ReflectionWriter.cs:
 		Fix method spec "caching"
 	  Mono.Cecil.Cil/OpCode.cs:
