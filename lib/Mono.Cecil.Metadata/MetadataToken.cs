@@ -57,6 +57,11 @@ namespace Mono.Cecil.Metadata {
 			return (uint) m_type | m_rid;
 		}
 
+		public override int GetHashCode ()
+		{
+			return (int) ToUInt ();
+		}
+
 		public override bool Equals (object other)
 		{
 			if (other is MetadataToken) {
