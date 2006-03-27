@@ -45,7 +45,7 @@ namespace Cecil.Tools {
 			try {
 				AssemblyDefinition asm = AssemblyFactory.GetAssembly (args [0]);
 				AssemblyFactory.SaveAssembly (asm, args [1]);
-				Console.WriteLine ("Assembly {0} succesfully roundtripped to {1}",
+				Console.WriteLine ("Assembly {0}\n   successfully roundtripped to {1}",
 					asm.Name.FullName, args [1]);
 			} catch (Exception e) {
 				Console.WriteLine ("Failed to roundtrip assembly {0}", args [0]);
