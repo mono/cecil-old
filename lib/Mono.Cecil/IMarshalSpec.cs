@@ -48,7 +48,7 @@ namespace Mono.Cecil {
 
 		Guid Guid { get; set; }
 		string UnmanagedType { get; set; }
-		TypeDefinition ManagedType { get; set; }
+		string ManagedType { get; set; }
 		string Cookie { get; set; }
 	}
 

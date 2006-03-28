@@ -246,8 +246,11 @@ namespace Mono.Cecil {
 					WriteLayout (t);
 			}
 
-			foreach (FieldDefinition field in m_fieldStack)
+			foreach (FieldDefinition field in m_fieldStack) {
 				VisitCustomAttributeCollection (field.CustomAttributes);
+				if (field.MarshalSpec != null)
+					VisitMarshalSpec (field.MarshalSpec);
+			}
 
 			foreach (MethodDefinition meth in m_methodStack) {
 				VisitGenericParameterCollection (meth.GenericParameters);
@@ -407,6 +410,10 @@ namespace Mono.Cecil {
 
 				pTable.Rows.Add (pRow);
 				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+
+				if (param.MarshalSpec != null)
+					param.MarshalSpec.Accept (this);
+
 				m_paramIndex++;
 			}
 		}
@@ -437,6 +444,11 @@ namespace Mono.Cecil {
 
 				pTable.Rows.Add (pRow);
 				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+
+				if (method.ReturnType.MarshalSpec != null)
+					method.ReturnType.MarshalSpec.Accept (this);
+
+				m_paramIndex++;
 			}
 
 			VisitParameterDefinitionCollection (method.Parameters);
@@ -1264,7 +1276,7 @@ namespace Mono.Cecil {
 				MarshalSig.CustomMarshaler cm = new MarshalSig.CustomMarshaler ();
 				cm.Guid = cmd.Guid.ToString ();
 				cm.UnmanagedType = cmd.UnmanagedType;
-				cm.ManagedType = cmd.ManagedType.FullName;
+				cm.ManagedType = cmd.ManagedType;
 				cm.Cookie = cmd.Cookie;
 				ms.Spec = cm;
 			} else if (mSpec is FixedArrayDesc) {

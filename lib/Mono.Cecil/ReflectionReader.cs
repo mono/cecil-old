@@ -613,7 +613,11 @@ namespace Mono.Cecil {
 						pRow = paramTable [start];
 
 					if (pRow != null && pRow.Sequence == 0) { // ret type
-						retparam = new ParameterDefinition (string.Empty, 0, (ParamAttributes) 0, null);
+						retparam = new ParameterDefinition (
+							m_root.Streams.StringsHeap [pRow.Name],
+							0,
+							pRow.Flags,
+							null);
 						retparam.Method = mdef;
 						m_parameters [start] = retparam;
 						start++;
@@ -800,7 +804,7 @@ namespace Mono.Cecil {
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
 				cmd.Guid = cmsig.Guid.Length > 0 ? new Guid (cmsig.Guid) : new Guid ();
 				cmd.UnmanagedType = cmsig.UnmanagedType;
-				cmd.ManagedType = m_module.Types [cmsig.ManagedType];
+				cmd.ManagedType = cmsig.ManagedType;
 				cmd.Cookie = cmsig.Cookie;
 				return cmd;
 			} else if (ms.Spec is MarshalSig.FixedArray) {

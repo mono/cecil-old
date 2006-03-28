@@ -93,7 +93,7 @@ namespace Mono.Cecil {
 
 		Guid m_guid;
 		string m_unmanagedType;
-		TypeDefinition m_managedType;
+		string m_managedType;
 		string m_cookie;
 
 		public Guid Guid {
@@ -106,7 +106,7 @@ namespace Mono.Cecil {
 			set { m_unmanagedType = value; }
 		}
 
-		public TypeDefinition ManagedType {
+		public string ManagedType {
 			get { return m_managedType; }
 			set { m_managedType = value; }
 		}
