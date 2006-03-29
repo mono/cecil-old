@@ -402,20 +402,27 @@ namespace Mono.Cecil {
 
 			ushort seq = 1;
 			ParamTable pTable = m_tableWriter.GetParamTable ();
-			foreach (ParameterDefinition param in parameters) {
-				ParamRow pRow = m_rowWriter.CreateParamRow (
-					param.Attributes,
-					seq++,
-					m_mdWriter.AddString (param.Name));
+			foreach (ParameterDefinition param in parameters)
+				InsertParameter (pTable, param, seq);
+		}
 
-				pTable.Rows.Add (pRow);
-				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
+		void InsertParameter (ParamTable pTable, ParameterDefinition param, ushort seq)
+		{
+			ParamRow pRow = m_rowWriter.CreateParamRow (
+				param.Attributes,
+				seq++,
+				m_mdWriter.AddString (param.Name));
 
-				if (param.MarshalSpec != null)
-					param.MarshalSpec.Accept (this);
+			pTable.Rows.Add (pRow);
+			param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
 
-				m_paramIndex++;
-			}
+			if (param.MarshalSpec != null)
+				param.MarshalSpec.Accept (this);
+
+			if (param.HasConstant)
+				WriteConstant (param, param.ParameterType);
+
+			m_paramIndex++;
 		}
 
 		public override void VisitMethodDefinition (MethodDefinition method)
@@ -437,18 +444,7 @@ namespace Mono.Cecil {
 			if (method.ReturnType.CustomAttributes.Count > 0 || method.ReturnType.MarshalSpec != null) {
 				ParameterDefinition param = (method.ReturnType as MethodReturnType).Parameter;
 				ParamTable pTable = m_tableWriter.GetParamTable ();
-				ParamRow pRow = m_rowWriter.CreateParamRow (
-					param.Attributes,
-					0,
-					0);
-
-				pTable.Rows.Add (pRow);
-				param.MetadataToken = new MetadataToken (TokenType.Param, (uint) pTable.Rows.Count);
-
-				if (method.ReturnType.MarshalSpec != null)
-					method.ReturnType.MarshalSpec.Accept (this);
-
-				m_paramIndex++;
+				InsertParameter (pTable, param, 0);
 			}
 
 			VisitParameterDefinitionCollection (method.Parameters);
@@ -516,7 +512,7 @@ namespace Mono.Cecil {
 			m_fieldIndex++;
 
 			if (field.HasConstant)
-				WriteConstant (field, field.MetadataToken, field.FieldType);
+				WriteConstant (field, field.FieldType);
 
 			if (field.LayoutInfo.HasLayoutInfo)
 				WriteLayout (field);
@@ -555,19 +551,10 @@ namespace Mono.Cecil {
 			if (property.SetMethod != null)
 				WriteSemantic (MethodSemanticsAttributes.Setter, property, property.SetMethod);
 
+			if (property.HasConstant)
+				WriteConstant (property, property.PropertyType);
+
 			m_propertyIndex++;
-		}
-
-		private MetadataToken GetMetadataToken (IHasSecurity container)
-		{
-			if (container is IAssemblyDefinition)
-				return new MetadataToken (TokenType.Assembly, 1);
-
-			IMetadataTokenProvider provider = (container as IMetadataTokenProvider);
-			if (container == null)
-				throw new ReflectionException ("Unknown Security Declaration parent");
-
-			return provider.MetadataToken;
 		}
 
 		public override void VisitSecurityDeclarationCollection (SecurityDeclarationCollection secDecls)
@@ -575,12 +562,11 @@ namespace Mono.Cecil {
 			if (secDecls.Count == 0)
 				return;
 
-			MetadataToken parent = GetMetadataToken (secDecls.Container);
 			DeclSecurityTable dsTable = m_tableWriter.GetDeclSecurityTable ();
 			foreach (SecurityDeclaration secDec in secDecls) {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
-					parent,
+					secDecls.Container.MetadataToken,
 					m_mdWriter.AddBlob (secDec.IsReadable ?
 						m_mod.GetAsByteArray (secDec) : secDec.Blob));
 
@@ -627,7 +613,7 @@ namespace Mono.Cecil {
 			fmTable.Rows.Add (fmRow);
 		}
 
-		void WriteConstant (IHasConstant hc, MetadataToken parent, TypeReference type)
+		void WriteConstant (IHasConstant hc, TypeReference type)
 		{
 			ConstantTable cTable = m_tableWriter.GetConstantTable ();
 			ElementType et;
@@ -642,7 +628,7 @@ namespace Mono.Cecil {
 
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
-				parent,
+				hc.MetadataToken,
 				m_mdWriter.AddBlob (EncodeConstant (et, hc.Constant)));
 
 			cTable.Rows.Add (cRow);

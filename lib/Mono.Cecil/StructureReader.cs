@@ -62,6 +62,7 @@ namespace Mono.Cecil {
 			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
 				throw new ReflectionException ("No assembly manifest");
 
+			asm.MetadataToken = new MetadataToken (TokenType.Assembly, 1);
 			m_asmDef = asm;
 
 			switch (m_img.MetadataRoot.Header.Version) {

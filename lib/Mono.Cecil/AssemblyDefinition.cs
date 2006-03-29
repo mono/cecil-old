@@ -31,8 +31,11 @@ namespace Mono.Cecil {
 	using System;
 	using System.Reflection;
 
+	using Mono.Cecil.Metadata;
+
 	public class AssemblyDefinition : IAssemblyDefinition {
 
+		MetadataToken m_token;
 		AssemblyNameDefinition m_asmName;
 		ModuleDefinitionCollection m_modules;
 		SecurityDeclarationCollection m_secDecls;
@@ -43,6 +46,11 @@ namespace Mono.Cecil {
 
 		ModuleDefinition m_mainModule;
 		StructureReader m_reader;
+
+		public MetadataToken MetadataToken {
+			get { return m_token; }
+			set { m_token = value; }
+		}
 
 		public AssemblyNameDefinition Name {
 			get { return m_asmName; }

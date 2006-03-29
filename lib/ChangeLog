@@ -1,3 +1,16 @@
+2006-03-29  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IHasSecurity.cs
+	  Mono.Cecil/IHasConstant.cs
+	  Mono.Cecil/IHasMarshalSpec.cs:
+	  Mono.Cecil/MethodReturnType.cs
+	  Mono.Cecil/AssemblyDefinition.cs:
+		Implement IMetadataTokenProvider.
+
+	* Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Use more the token providers.
+
 2006-03-28  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs

@@ -30,6 +30,8 @@ namespace Mono.Cecil {
 
 	using System.Reflection;
 
+	using Mono.Cecil.Metadata;
+
 	public sealed class MethodReturnType : IMethodReturnType {
 
 		MethodReference m_method;
@@ -50,6 +52,11 @@ namespace Mono.Cecil {
 		internal ParameterDefinition Parameter {
 			get { return m_param; }
 			set { m_param = value; }
+		}
+
+		public MetadataToken MetadataToken {
+			get { return m_param.MetadataToken; }
+			set { m_param.MetadataToken = value; }
 		}
 
 		public CustomAttributeCollection CustomAttributes {
