@@ -50,19 +50,19 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
     [NonNull]
     public object NewTop()
     {
-        return new NullDerefFrame(stackDepth, locals, args, false);
+        return new NullDerefFrame(stackDepth, locals, args, false, runner);
     }
 
     [NonNull]
     public object NewEntry()
     {
         NullDerefFrame result =
-            new NullDerefFrame(stackDepth, locals, args, true);
+            new NullDerefFrame(stackDepth, locals, args, true, runner);
         if(method.HasThis)
             result.SetArgNullity(0, Nullity.NonNull);
         foreach(IParameterReference param in method.Parameters)
             if(nnaCollector.HasNonNullAttribute(method, param))
-                result.SetArgNullity(param.Sequence, Nullity.NonNull);
+                result.SetArgNullity(param.Sequence - 1, Nullity.NonNull);
         return result;
     }
 
@@ -70,12 +70,12 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
     public object NewCatch()
     {
         NullDerefFrame result =
-            new NullDerefFrame(stackDepth, locals, args, true);
+            new NullDerefFrame(stackDepth, locals, args, true, runner);
         if(method.HasThis)
             result.SetArgNullity(0, Nullity.NonNull);
         foreach(IParameterReference param in method.Parameters)
             if(nnaCollector.HasNonNullAttribute(method, param))
-                result.SetArgNullity(param.Sequence, Nullity.NonNull);
+                result.SetArgNullity(param.Sequence - 1, Nullity.NonNull);
         /* The exception being caught is pushed onto the stack. */
         result.PushStack(Nullity.NonNull);
         return result;
@@ -155,7 +155,8 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 case Ldarg_S: {
                     IParameterReference param =
                         (IParameterReference)insn.Operand;
-                    outFrame.PushStack(outFrame.GetArgNullity(param.Sequence));
+                    outFrame.PushStack(
+                            outFrame.GetArgNullity(param.Sequence - 1));
                     break;
                 }
                 case Ldarga:
@@ -173,7 +174,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 case Starg_S: {
                     IParameterReference param =
                         (IParameterReference)insn.Operand;
-                    outFrame.SetArgNullity(param.Sequence, 
+                    outFrame.SetArgNullity(param.Sequence - 1, 
                             outFrame.PopStack());
                     break;
                 }

@@ -13,6 +13,7 @@
  **********************************************************************/
 
 using System;
+using Gendarme.Framework;
 
 namespace Gendarme.Rules.Correctness {
 
@@ -20,6 +21,7 @@ public class NullDerefFrame : ICloneable {
     [NonNull] private Nullity[] stack;
     [NonNull] private Nullity[] locals;
     [NonNull] private Nullity[] args;
+    [NonNull] private Runner runner;
     int stackDepth;
 
     /* Unused   Null     NonNull  Unknown            */
@@ -40,7 +42,7 @@ public class NullDerefFrame : ICloneable {
     };
 
     public NullDerefFrame(int maxStackDepth, int numLocals, int numArgs,
-            bool entry)
+            bool entry, [NonNull] Runner runner)
     {
         int i;
 
@@ -62,6 +64,7 @@ public class NullDerefFrame : ICloneable {
             for(i = 0; i < numArgs; i++)
                 args[i] = Nullity.Unused;
         }
+        this.runner = runner;
     }
 
     public void PushStack(Nullity n)
@@ -70,7 +73,7 @@ public class NullDerefFrame : ICloneable {
             throw new Exception("Nullity stack overflow");
         }
         /*
-        if(BugFinder.opts.Debug)
+        if(runner.Debug)
             Console.WriteLine("Push: {0} {1} {2}", stackDepth,
                     stack.Length, n);
                     */
@@ -85,7 +88,7 @@ public class NullDerefFrame : ICloneable {
             throw new Exception("Nullity stack underflow");
         }
         /*
-        if(BugFinder.opts.Debug)
+        if(runner.Debug)
             Console.WriteLine("Pop: {0} {1} {2}", stackDepth,
                     stack.Length, stack[stackDepth - 1]);
                     */
@@ -117,41 +120,36 @@ public class NullDerefFrame : ICloneable {
 
     public void SetLocNullity(int index, Nullity n)
     {
-        /*
-        if(BugFinder.opts.Debug)
+        if(runner.Debug)
             Console.WriteLine("SetLoc {0} {1} {2}", index, locals.Length, n);
-            */
         locals[index] = n;
     }
 
     [NonNull]
     public Nullity GetLocNullity(int index)
     {
-        /*
-        if(BugFinder.opts.Debug)
+        if(runner.Debug)
             Console.WriteLine("GetLoc {0} {1} {2}", index, locals.Length,
                     locals[index]);
-                    */
         return locals[index];
     }
 
     public void SetArgNullity(int index, Nullity n)
     {
-        /*
-        if(BugFinder.opts.Debug)
+        if(runner.Debug) {
             Console.WriteLine("SetArg {0} {1} {2}", index, args.Length, n);
-            */
+            Console.Out.Flush();
+        }
         args[index] = n;
     }
 
     [NonNull]
     public Nullity GetArgNullity(int index)
     {
-        /*
-        if(BugFinder.opts.Debug)
-            Console.WriteLine("GetArg {0} {1} {2}", index, args.Length,
-                    args[index]);
-                    */
+        if(runner.Debug) {
+            Console.WriteLine("GetArg {0} {1}", index, args.Length);
+            Console.Out.Flush();
+        }
         return args[index];
     }
 
@@ -215,7 +213,7 @@ public class NullDerefFrame : ICloneable {
     public object Clone()
     {
         NullDerefFrame result = new NullDerefFrame(stack.Length,
-                locals.Length, args.Length, false);
+                locals.Length, args.Length, false, runner);
         int i;
 
         for(i = 0; i < locals.Length; i++)

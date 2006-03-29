@@ -98,7 +98,9 @@ public class BadRecursiveInvocationRule : IMethodRule {
             case OpCodeConstants.Ldarg:
                 if((int)insn.Operand == paramNum) return true; break;
             case OpCodeConstants.Ldarg_S:
-                if((byte)insn.Operand == paramNum) return true; break;
+                IParameterReference param = (IParameterReference)insn.Operand;
+                if((param.Sequence - 1) == paramNum) return true;
+                break;
             case OpCodeConstants.Ldarg_0: if(paramNum == 0) return true; break;
             case OpCodeConstants.Ldarg_1: if(paramNum == 1) return true; break;
             case OpCodeConstants.Ldarg_2: if(paramNum == 2) return true; break;

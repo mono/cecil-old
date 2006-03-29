@@ -298,6 +298,8 @@ public class CFG : Graph {
         IInstruction prevInstr = null;
 
         Console.WriteLine(method.Name);
+        Console.WriteLine("Number of parameters: {0}",
+                method.Parameters.Count);
         foreach(IInstruction instr in instructions) {
             if(StartsTryRegion(instr) != null)
                 Console.WriteLine("Try {");
