@@ -1,3 +1,12 @@
+2006-03-30  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ParamAttributes.cs:
+		Update the Optional flag.
+	  Mono.Cecil/ReflectionWriter.cs:
+		Fix the encoding of nullref.
+		Fixes #77959. Based on a patch by
+		Armand Du Plessis < armand@dotnet.org.za>
+
 2006-03-29  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IHasSecurity.cs

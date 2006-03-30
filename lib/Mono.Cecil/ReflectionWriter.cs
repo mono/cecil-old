@@ -851,6 +851,9 @@ namespace Mono.Cecil {
 		{
 			m_constWriter.Empty ();
 
+			if (value == null)
+				et = ElementType.Class;
+
 			switch (et) {
 			case ElementType.Boolean :
 				m_constWriter.Write ((byte) (((bool) value) ? 1 : 0));
