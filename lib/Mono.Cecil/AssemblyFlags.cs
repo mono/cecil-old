@@ -34,7 +34,7 @@ namespace Mono.Cecil {
 	public enum AssemblyFlags : uint {
 		PublicKey					 	= 0x0001,
 		SideBySideCompatible			= 0x0000,
-
+		Retargetable					= 0x0100,
 		EnableJITcompileTracking		= 0x8000,
 		DisableJITcompileOptimizer	  	= 0x4000
 	}
