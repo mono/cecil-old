@@ -67,6 +67,9 @@ namespace Mono.Cecil {
 #if !CF_1_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
 
+			if (declaration == null || declaration.Length == 0)
+				return dec;
+
 			if (declaration[0] == 0x2e) {
 				// new binary format introduced in 2.0
 				int pos = 1;

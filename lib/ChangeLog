@@ -1,5 +1,8 @@
 2006-03-30  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Don't crash if the declaration is empty.
+
 	* Mono.Cecil/ParamAttributes.cs:
 		Update the Optional flag.
 	  Mono.Cecil/ReflectionWriter.cs:
