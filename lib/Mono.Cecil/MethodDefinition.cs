@@ -262,7 +262,7 @@ namespace Mono.Cecil {
 
 		public MethodDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (null, this));
+			return Clone (this, new ImportContext (this));
 		}
 
 		internal static MethodDefinition Clone (MethodDefinition meth, ImportContext context)

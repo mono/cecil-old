@@ -133,7 +133,7 @@ namespace Mono.Cecil {
 
 		public EventDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (null, this.DeclaringType));
+			return Clone (this, new ImportContext (this.DeclaringType));
 		}
 
 		internal static EventDefinition Clone (EventDefinition evt, ImportContext context)

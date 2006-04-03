@@ -47,10 +47,15 @@ namespace Mono.Cecil {
 			m_helper = helper;
 		}
 
-		public ImportContext (ReflectionHelper helper, IGenericParameterProvider owner)
+		public ImportContext (IGenericParameterProvider provider)
+		{
+			m_genContext = new GenericContext (provider);
+		}
+
+		public ImportContext (ReflectionHelper helper, IGenericParameterProvider provider)
 		{
 			m_helper = helper;
-			m_genContext = new GenericContext (owner);
+			m_genContext = new GenericContext (provider);
 		}
 
 		public TypeReference Import (TypeReference type)

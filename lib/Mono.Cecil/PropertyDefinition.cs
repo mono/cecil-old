@@ -163,7 +163,7 @@ namespace Mono.Cecil {
 
 		public PropertyDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (null, this.DeclaringType));
+			return Clone (this, new ImportContext (this.DeclaringType));
 		}
 
 		internal static PropertyDefinition Clone (PropertyDefinition prop, ImportContext context)
