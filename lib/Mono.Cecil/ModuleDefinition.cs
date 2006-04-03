@@ -221,12 +221,41 @@ namespace Mono.Cecil {
 			return LookupByToken (new MetadataToken (table, (uint) rid));
 		}
 
+		void CheckContext (TypeDefinition context)
+		{
+			if (context == null)
+				throw new ArgumentNullException ("context");
+			if (context.Module != this)
+				throw new ArgumentException ("The context parameter does not belongs to this module");
+			if (context.GenericParameters.Count == 0)
+				throw new ArithmeticException ("The context parameter is not a generic type");
+		}
+
+		ImportContext GetContext ()
+		{
+			return new ImportContext (m_controller.Helper);
+		}
+
+		ImportContext GetContext (TypeDefinition context)
+		{
+			return new ImportContext (m_controller.Helper, context);
+		}
+
 		public TypeReference Import (Type type)
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
 
-			return m_controller.Helper.ImportSystemType (type);
+			return m_controller.Helper.ImportSystemType (type, GetContext ());
+		}
+
+		public TypeReference Import (Type type, TypeDefinition context)
+		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportSystemType (type, GetContext (context));
 		}
 
 		public MethodReference Import (SR.MethodBase meth)
@@ -235,9 +264,25 @@ namespace Mono.Cecil {
 				throw new ArgumentNullException ("meth");
 
 			if (meth is SR.ConstructorInfo)
-				return m_controller.Helper.ImportConstructorInfo (meth as SR.ConstructorInfo);
+				return m_controller.Helper.ImportConstructorInfo (
+					meth as SR.ConstructorInfo, GetContext ());
 			else
-				return m_controller.Helper.ImportMethodInfo (meth as SR.MethodInfo);
+				return m_controller.Helper.ImportMethodInfo (
+					meth as SR.MethodInfo, GetContext ());
+		}
+
+		public MethodReference Import (SR.MethodBase meth, TypeDefinition context)
+		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+			CheckContext (context);
+
+			if (meth is SR.ConstructorInfo)
+				return m_controller.Helper.ImportConstructorInfo (
+					meth as SR.ConstructorInfo, GetContext (context));
+			else
+				return m_controller.Helper.ImportMethodInfo (
+					meth as SR.MethodInfo, GetContext (context));
 		}
 
 		public FieldReference Import (SR.FieldInfo field)
@@ -245,7 +290,16 @@ namespace Mono.Cecil {
 			if (field == null)
 				throw new ArgumentNullException ("field");
 
-			return m_controller.Helper.ImportFieldInfo (field);
+			return m_controller.Helper.ImportFieldInfo (field, GetContext ());
+		}
+
+		public FieldReference Import (SR.FieldInfo field, TypeDefinition context)
+		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportFieldInfo (field, GetContext (context));
 		}
 
 		public TypeReference Import (TypeReference type)
@@ -253,7 +307,16 @@ namespace Mono.Cecil {
 			if (type == null)
 				throw new ArgumentNullException ("type");
 
-			return m_controller.Helper.ImportTypeReference (type);
+			return m_controller.Helper.ImportTypeReference (type, GetContext ());
+		}
+
+		public TypeReference Import (TypeReference type, TypeDefinition context)
+		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportTypeReference (type, GetContext (context));
 		}
 
 		public MethodReference Import (MethodReference meth)
@@ -261,7 +324,16 @@ namespace Mono.Cecil {
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
 
-			return m_controller.Helper.ImportMethodReference (meth);
+			return m_controller.Helper.ImportMethodReference (meth, GetContext ());
+		}
+
+		public MethodReference Import (MethodReference meth, TypeDefinition context)
+		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportMethodReference (meth, GetContext (context));
 		}
 
 		public FieldReference Import (FieldReference field)
@@ -269,7 +341,16 @@ namespace Mono.Cecil {
 			if (field == null)
 				throw new ArgumentNullException ("field");
 
-			return m_controller.Helper.ImportFieldReference (field);
+			return m_controller.Helper.ImportFieldReference (field, GetContext ());
+		}
+
+		public FieldReference Import (FieldReference field, TypeDefinition context)
+		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportFieldReference (field, GetContext (context));
 		}
 
 		public TypeDefinition Inject (TypeDefinition type)
@@ -277,7 +358,16 @@ namespace Mono.Cecil {
 			if (type == null)
 				throw new ArgumentNullException ("type");
 
-			return m_controller.Helper.ImportTypeDefinition (type);
+			return m_controller.Helper.ImportTypeDefinition (type, GetContext (type));
+		}
+
+		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context)
+		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportTypeDefinition (type, GetContext (context));
 		}
 
 		public MethodDefinition Inject (MethodDefinition meth)
@@ -285,7 +375,16 @@ namespace Mono.Cecil {
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
 
-			return m_controller.Helper.ImportMethodDefinition (meth);
+			return m_controller.Helper.ImportMethodDefinition (meth, GetContext ());
+		}
+
+		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context)
+		{
+			if (meth == null)
+				throw new ArgumentNullException ("meth");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportMethodDefinition (meth, GetContext (context));
 		}
 
 		public FieldDefinition Inject (FieldDefinition field)
@@ -293,7 +392,16 @@ namespace Mono.Cecil {
 			if (field == null)
 				throw new ArgumentNullException ("field");
 
-			return m_controller.Helper.ImportFieldDefinition (field);
+			return m_controller.Helper.ImportFieldDefinition (field, GetContext ());
+		}
+
+		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context)
+		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+			CheckContext (context);
+
+			return m_controller.Helper.ImportFieldDefinition (field, GetContext (context));
 		}
 
 		public void FullLoad ()

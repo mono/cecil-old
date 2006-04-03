@@ -171,14 +171,14 @@ namespace Mono.Cecil {
 
 		public FieldDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, this.DeclaringType));
 		}
 
-		internal static FieldDefinition Clone (FieldDefinition field, ReflectionHelper helper)
+		internal static FieldDefinition Clone (FieldDefinition field, ImportContext context)
 		{
 			FieldDefinition nf = new FieldDefinition (
 				field.Name,
-				helper == null ? field.FieldType : helper.ImportTypeReference (field.FieldType),
+				context.Import (field.FieldType),
 				field.Attributes);
 
 			if (field.HasConstant)
@@ -193,7 +193,7 @@ namespace Mono.Cecil {
 				nf.LayoutInfo.Offset = field.LayoutInfo.Offset;
 
 			foreach (CustomAttribute ca in field.CustomAttributes)
-				nf.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nf.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			return nf;
 		}

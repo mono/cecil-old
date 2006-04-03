@@ -159,6 +159,11 @@ namespace Mono.Cecil {
 			m_hashAlgo = AssemblyHashAlgorithm.None;
 		}
 
+		public override string ToString ()
+		{
+			return this.FullName;
+		}
+
 		public virtual void Accept (IReflectionStructureVisitor visitor)
 		{
 			visitor.VisitAssemblyNameReference (this);

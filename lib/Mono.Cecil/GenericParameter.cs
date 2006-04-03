@@ -98,5 +98,26 @@ namespace Mono.Cecil {
 			m_name = name;
 			m_owner = owner;
 		}
+
+		internal static GenericParameter Clone (GenericParameter gp, ImportContext context)
+		{
+			GenericParameter ngp;
+			if (gp.Owner is TypeReference)
+				ngp = new GenericParameter (gp.m_name, context.GenericContext.Type);
+			else if (gp.Owner is MethodReference)
+				ngp = new GenericParameter (gp.m_name, context.GenericContext.Method);
+			else
+				throw new NotSupportedException ();
+
+			ngp.Position = gp.Owner.GenericParameters.IndexOf (gp);
+			ngp.Attributes = gp.Attributes;
+
+			foreach (TypeReference constraint in gp.Constraints)
+				ngp.Constraints.Add (context.Import (constraint));
+			foreach (CustomAttribute ca in gp.CustomAttributes)
+				ngp.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
+
+			return ngp;
+		}
 	}
 }

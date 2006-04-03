@@ -1,3 +1,25 @@
+2006-04-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil/GenericParameter.cs
+	  Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IModuleDefinition.cs
+	  Mono.Cecil/ImportContext.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/GenericContext.cs
+	  Mono.Cecil/ParameterDefinition.cs
+	  Mono.Cecil/PropertyDefinition.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Work on generic assemblies manipulation via
+		import stuff.
+
 2006-03-31  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFlags.cs:

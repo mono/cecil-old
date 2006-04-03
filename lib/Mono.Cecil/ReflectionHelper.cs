@@ -5,6 +5,7 @@
 //   Jb Evain (jbevain@gmail.com)
 //
 // (C) 2005 Jb Evain
+// (C) 2006 Evaluant RC S.A.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -54,6 +55,8 @@ namespace Mono.Cecil {
 			if (m_cacheLoaded)
 				return;
 
+			m_module.FullLoad ();
+
 			foreach (AssemblyNameReference ar in m_module.AssemblyReferences)
 				m_asmCache [ar.FullName] = ar;
 			foreach (MemberReference member in m_module.MemberReferences)
@@ -93,7 +96,42 @@ namespace Mono.Cecil {
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
-		TypeReference GetTypeSpec (Type t)
+		static bool GetProperty (object o, string prop)
+		{
+			SR.PropertyInfo pi = o.GetType ().GetProperty (prop);
+			if (pi == null)
+				return false;
+
+			return (bool) pi.GetValue (o, null);
+		}
+
+		public static bool IsGenericType (Type t)
+		{
+			return GetProperty (t, "IsGenericType");
+		}
+
+		static bool IsGenericParameter (Type t)
+		{
+			return GetProperty (t, "IsGenericParameter");
+		}
+
+		static bool IsGenericTypeDefinition (Type t)
+		{
+			return GetProperty (t, "IsGenericTypeDefinition");
+		}
+
+		static bool IsGenericTypeSpec (Type t)
+		{
+			return IsGenericType (t) && !IsGenericTypeDefinition (t);
+		}
+
+		GenericParameter GetGenericParameter (Type t, ImportContext context)
+		{
+			return context.GenericContext.Type.GenericParameters [
+				(int) t.GetType ().GetProperty ("GenericParameterPosition").GetValue (t, null)];
+		}
+
+		TypeReference GetTypeSpec (Type t, ImportContext context)
 		{
 			Stack s = new Stack ();
 			while (t.HasElementType) {
@@ -101,7 +139,7 @@ namespace Mono.Cecil {
 				t = t.GetElementType ();
 			}
 
-			TypeReference elementType = ImportSystemType (t);
+			TypeReference elementType = ImportSystemType (t, context);
 			while (s.Count > 0) {
 				t = s.Pop () as Type;
 				if (t.IsPointer)
@@ -117,10 +155,13 @@ namespace Mono.Cecil {
 			return elementType;
 		}
 
-		public TypeReference ImportSystemType (Type t)
+		public TypeReference ImportSystemType (Type t, ImportContext context)
 		{
-			if (t.HasElementType)
-				return GetTypeSpec (t);
+			if (t.HasElementType || IsGenericTypeSpec (t))
+				return GetTypeSpec (t, context);
+
+			if (IsGenericParameter (t))
+				return GetGenericParameter (t, context);
 
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null)
@@ -151,8 +192,27 @@ namespace Mono.Cecil {
 			return sb.ToString ();
 		}
 
-		MethodReference ImportMethodBase (SR.MethodBase mb, Type retType)
+		static bool IsGenericMethod (SR.MethodBase mb)
 		{
+			return GetProperty (mb, "IsGenericMethod");
+		}
+
+		static bool IsGenericMethodDefinition (SR.MethodBase mb)
+		{
+			return GetProperty (mb, "IsGenericMethodDefinition");
+		}
+
+		MethodReference ImportGenericInstanceMethod (SR.MethodInfo mi, ImportContext context)
+		{
+			SR.MethodInfo gmd = (SR.MethodInfo) mi.GetType ().GetMethod ("GetGenericInstanceMethod").Invoke (mi, null);
+			return new GenericInstanceMethod (ImportMethodBase (gmd, gmd.ReturnType, context));
+		}
+
+		MethodReference ImportMethodBase (SR.MethodBase mb, Type retType, ImportContext context)
+		{
+			if (IsGenericMethod (mb) && !IsGenericMethodDefinition (mb))
+				return ImportGenericInstanceMethod ((SR.MethodInfo) mb, context);
+
 			string sig = GetMethodBaseSignature (mb, retType);
 			MethodReference meth = m_memberRefCache [sig] as MethodReference;
 			if (meth != null)
@@ -160,29 +220,30 @@ namespace Mono.Cecil {
 
 			meth = new MethodReference (
 				mb.Name,
-				ImportSystemType (mb.DeclaringType),
-				ImportSystemType (retType),
+				ImportSystemType (mb.DeclaringType, context),
+				ImportSystemType (retType, context),
 				(mb.CallingConvention & SR.CallingConventions.HasThis) > 0,
 				(mb.CallingConvention & SR.CallingConventions.ExplicitThis) > 0,
 				MethodCallingConvention.Default); // TODO: get the real callconv
 
 			SR.ParameterInfo [] parameters = mb.GetParameters ();
 			for (int i = 0; i < parameters.Length; i++)
-				meth.Parameters.Add (new ParameterDefinition (ImportSystemType (parameters [i].ParameterType)));
+				meth.Parameters.Add (new ParameterDefinition (
+					ImportSystemType (parameters [i].ParameterType, context)));
 
 			m_module.MemberReferences.Add (meth);
 			m_memberRefCache [sig] = meth;
 			return meth;
 		}
 
-		public MethodReference ImportConstructorInfo (SR.ConstructorInfo ci)
+		public MethodReference ImportConstructorInfo (SR.ConstructorInfo ci, ImportContext context)
 		{
-			return ImportMethodBase (ci, typeof (void));
+			return ImportMethodBase (ci, typeof (void), context);
 		}
 
-		public MethodReference ImportMethodInfo (SR.MethodInfo mi)
+		public MethodReference ImportMethodInfo (SR.MethodInfo mi, ImportContext context)
 		{
-			return ImportMethodBase (mi, mi.ReturnType);
+			return ImportMethodBase (mi, mi.ReturnType, context);
 		}
 
 		static string GetFieldSignature (SR.FieldInfo field)
@@ -196,7 +257,7 @@ namespace Mono.Cecil {
 			return sb.ToString ();
 		}
 
-		public FieldReference ImportFieldInfo (SR.FieldInfo fi)
+		public FieldReference ImportFieldInfo (SR.FieldInfo fi, ImportContext context)
 		{
 			string sig = GetFieldSignature (fi);
 			FieldReference f = (FieldReference) m_memberRefCache [sig];
@@ -204,7 +265,9 @@ namespace Mono.Cecil {
 				return f;
 
 			f = new FieldReference (
-				fi.Name, ImportSystemType (fi.DeclaringType), ImportSystemType (fi.FieldType));
+				fi.Name,
+				ImportSystemType (fi.DeclaringType, context),
+				ImportSystemType (fi.FieldType, context));
 
 			m_module.MemberReferences.Add (f);
 			m_memberRefCache [sig] = f;
@@ -229,7 +292,7 @@ namespace Mono.Cecil {
 			return asmRef;
 		}
 
-		TypeReference GetTypeSpec (TypeReference t)
+		TypeReference GetTypeSpec (TypeReference t, ImportContext context)
 		{
 			Stack s = new Stack ();
 			while (t is TypeSpecification) {
@@ -237,7 +300,7 @@ namespace Mono.Cecil {
 				t = (t as TypeSpecification).ElementType;
 			}
 
-			TypeReference elementType = ImportTypeReference (t);
+			TypeReference elementType = ImportTypeReference (t, context);
 			while (s.Count > 0) {
 				t = s.Pop () as TypeReference;
 				if (t is PointerType)
@@ -246,20 +309,48 @@ namespace Mono.Cecil {
 					elementType = new ArrayType (elementType);
 				else if (t is ReferenceType)
 					elementType = new ReferenceType (elementType);
-				else
-					throw new ReflectionException ("Unknown element type");
+				else if (t is GenericInstanceType) {
+					GenericInstanceType git = t as GenericInstanceType;
+					GenericInstanceType genElemType = new GenericInstanceType (elementType);
+					foreach (TypeReference arg in git.GenericArguments)
+						genElemType.GenericArguments.Add (ImportTypeReference (arg, context));
+
+					elementType = genElemType;
+				}else
+					throw new ReflectionException ("Unknown element type: {0}", t.GetType ().Name);
 			}
 
 			return elementType;
 		}
 
-		public TypeReference ImportTypeReference (TypeReference t)
+		GenericParameter GetGenericParameter (GenericParameter gp, ImportContext context)
+		{
+			GenericParameter p;
+			if (gp.Owner is TypeReference)
+				p = context.GenericContext.Type.GenericParameters [gp.Position];
+			else if (gp.Owner is MethodReference)
+				p = context.GenericContext.Method.GenericParameters [gp.Position];
+			else
+				throw new NotSupportedException ();
+
+			return p;
+		}
+
+		public TypeReference ImportTypeReference (TypeReference t, ImportContext context)
 		{
 			if (t.Module == m_module)
 				return t;
 
+			ImportCache ();
+
 			if (t is TypeSpecification)
-				return GetTypeSpec (t);
+				return GetTypeSpec (t, context);
+
+			if (t is GenericParameter)
+				return GetGenericParameter (t as GenericParameter, context);
+
+			if (t.FullName == context.GenericContext.Type.FullName)
+				return context.GenericContext.Type;
 
 			TypeReference type = m_module.TypeReferences [t.FullName];
 			if (type != null)
@@ -275,14 +366,39 @@ namespace Mono.Cecil {
 
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
 
+			context.GenericContext.Type = type;
+
+			foreach (GenericParameter gp in t.GenericParameters)
+				type.GenericParameters.Add (GenericParameter.Clone (gp, context));
+
 			m_module.TypeReferences.Add (type);
 			return type;
 		}
 
-		public MethodReference ImportMethodReference (MethodReference mr)
+		MethodReference GetMethodSpec (MethodReference meth, ImportContext context)
+		{
+			if (!(meth is GenericInstanceMethod))
+				return null;
+
+			GenericInstanceMethod gim = meth as GenericInstanceMethod;
+			GenericInstanceMethod ngim = new GenericInstanceMethod (
+				ImportMethodReference (gim.ElementMethod, context));
+
+			foreach (TypeReference arg in gim.GenericArguments)
+				ngim.GenericArguments.Add (ImportTypeReference (arg, context));
+
+			return ngim;
+		}
+
+		public MethodReference ImportMethodReference (MethodReference mr, ImportContext context)
 		{
 			if (mr.DeclaringType.Module == m_module)
 				return mr;
+
+			ImportCache ();
+
+			if (mr is MethodSpecification)
+				return GetMethodSpec (mr, context);
 
 			MethodReference meth = m_memberRefCache [mr.ToString ()] as MethodReference;
 			if (meth != null)
@@ -290,24 +406,38 @@ namespace Mono.Cecil {
 
 			meth = new MethodReference (
 				mr.Name,
-				ImportTypeReference (mr.DeclaringType),
-				ImportTypeReference (mr.ReturnType.ReturnType),
 				mr.HasThis,
 				mr.ExplicitThis,
 				mr.CallingConvention);
+			meth.DeclaringType = ImportTypeReference (mr.DeclaringType, context);
+
+			TypeReference contextType = meth.DeclaringType;
+			while (contextType is TypeSpecification)
+				contextType = (contextType as TypeSpecification).ElementType;
+
+			context.GenericContext.Method = meth;
+			context.GenericContext.Type = contextType;
+
+			foreach (GenericParameter gp in mr.GenericParameters)
+				meth.GenericParameters.Add (GenericParameter.Clone (gp, context));
+
+			meth.ReturnType.ReturnType = ImportTypeReference (mr.ReturnType.ReturnType, context);
 
 			foreach (ParameterDefinition param in mr.Parameters)
-				meth.Parameters.Add (new ParameterDefinition (ImportTypeReference (param.ParameterType)));
+				meth.Parameters.Add (new ParameterDefinition (
+					ImportTypeReference (param.ParameterType, context)));
 
 			m_module.MemberReferences.Add (meth);
 			m_memberRefCache [mr.ToString ()] = meth;
 			return meth;
 		}
 
-		public FieldReference ImportFieldReference (FieldReference field)
+		public FieldReference ImportFieldReference (FieldReference field, ImportContext context)
 		{
 			if (field.DeclaringType.Module == m_module)
 				return field;
+
+			ImportCache ();
 
 			FieldReference f = (FieldReference) m_memberRefCache [field.ToString ()];
 			if (f != null)
@@ -315,27 +445,27 @@ namespace Mono.Cecil {
 
 			f = new FieldReference (
 				field.Name,
-				ImportTypeReference (field.DeclaringType),
-				ImportTypeReference (field.FieldType));
+				ImportTypeReference (field.DeclaringType, context),
+				ImportTypeReference (field.FieldType, context));
 
 			m_module.MemberReferences.Add (f);
 			m_memberRefCache [field.ToString ()] = f;
 			return f;
 		}
 
-		public FieldDefinition ImportFieldDefinition (FieldDefinition field)
+		public FieldDefinition ImportFieldDefinition (FieldDefinition field, ImportContext context)
 		{
-			return FieldDefinition.Clone (field, this);
+			return FieldDefinition.Clone (field, context);
 		}
 
-		public MethodDefinition ImportMethodDefinition (MethodDefinition meth)
+		public MethodDefinition ImportMethodDefinition (MethodDefinition meth, ImportContext context)
 		{
-			return MethodDefinition.Clone (meth, this);
+			return MethodDefinition.Clone (meth, context);
 		}
 
-		public TypeDefinition ImportTypeDefinition (TypeDefinition type)
+		public TypeDefinition ImportTypeDefinition (TypeDefinition type, ImportContext context)
 		{
-			return TypeDefinition.Clone (type, this);
+			return TypeDefinition.Clone (type, context);
 		}
 	}
 }

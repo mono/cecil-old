@@ -163,23 +163,29 @@ namespace Mono.Cecil {
 
 		public PropertyDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, this.DeclaringType));
 		}
 
-		internal static PropertyDefinition Clone (PropertyDefinition prop, ReflectionHelper helper)
+		internal static PropertyDefinition Clone (PropertyDefinition prop, ImportContext context)
 		{
 			PropertyDefinition np = new PropertyDefinition (
 				prop.Name,
-				helper == null ? prop.PropertyType : helper.ImportTypeReference (prop.PropertyType),
+				context.Import (prop.PropertyType),
 				prop.Attributes);
 
 			if (prop.HasConstant)
 				np.Constant = prop.Constant;
 
-			// TODO: get methods or clone them
+			if (context != null && context.GenericContext.Type is TypeDefinition) {
+				TypeDefinition type = context.GenericContext.Type as TypeDefinition;
+				if (prop.SetMethod != null)
+					np.SetMethod = type.Methods.GetMethod (prop.SetMethod.Name) [0];
+				if (prop.GetMethod != null)
+					np.GetMethod = type.Methods.GetMethod (prop.GetMethod.Name) [0];
+			}
 
 			foreach (CustomAttribute ca in prop.CustomAttributes)
-				np.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				np.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			return np;
 		}

@@ -92,6 +92,7 @@
 ./Mono.Cecil/IModuleDefinitionCollection.cs
 ./Mono.Cecil/IModuleReference.cs
 ./Mono.Cecil/IModuleReferenceCollection.cs
+./Mono.Cecil/ImportContext.cs
 ./Mono.Cecil/INestedTypeCollection.cs
 ./Mono.Cecil/InterfaceCollection.cs
 ./Mono.Cecil/IOverrideCollection.cs

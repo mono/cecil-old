@@ -108,7 +108,7 @@ namespace Mono.Cecil.Cil {
 			return newBody.Instructions [pos];
 		}
 
-		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ReflectionHelper helper)
+		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ImportContext context)
 		{
 			MethodBody nb = new MethodBody (parent);
 			nb.MaxStack = body.MaxStack;
@@ -116,8 +116,8 @@ namespace Mono.Cecil.Cil {
 			nb.CodeSize = body.CodeSize;
 
 			foreach (VariableDefinition var in body.Variables)
-				nb.Variables.Add (new VariableDefinition (helper == null ?
-					var.Variable : helper.ImportTypeReference (var.Variable)));
+				nb.Variables.Add (new VariableDefinition (
+					context.Import (var.Variable)));
 
 			foreach (Instruction instr in body.Instructions) {
 				Instruction ni = new Instruction (instr.OpCode);
@@ -134,27 +134,21 @@ namespace Mono.Cecil.Cil {
 					ni.Operand = nb.Variables [var];
 					break;
 				case OperandType.InlineField :
-					ni.Operand = helper == null ?
-						instr.Operand : helper.ImportFieldReference ((FieldReference) instr.Operand);
+					ni.Operand = context.Import ((FieldReference) instr.Operand);
 					break;
 				case OperandType.InlineMethod :
-					ni.Operand = helper == null ?
-						instr.Operand : helper.ImportMethodReference ((MethodReference) instr.Operand);
+					ni.Operand = context.Import ((MethodReference) instr.Operand);
 					break;
 				case OperandType.InlineType :
-					ni.Operand = helper == null ?
-						instr.Operand : helper.ImportTypeReference ((TypeReference) instr.Operand);
+					ni.Operand = context.Import ((TypeReference) instr.Operand);
 					break;
 				case OperandType.InlineTok :
 					if (instr.Operand is TypeReference)
-						ni.Operand = helper == null ?
-							instr.Operand : helper.ImportTypeReference ((TypeReference) instr.Operand);
+						ni.Operand = context.Import ((TypeReference) instr.Operand);
 					else if (instr.Operand is FieldReference)
-						ni.Operand = helper == null ?
-							instr.Operand : helper.ImportFieldReference ((FieldReference) instr.Operand);
+						ni.Operand = context.Import ((FieldReference) instr.Operand);
 					else if (instr.Operand is MethodReference)
-						ni.Operand = helper == null ?
-							instr.Operand : helper.ImportMethodReference ((MethodReference) instr.Operand);
+						ni.Operand = context.Import ((MethodReference) instr.Operand);
 					break;
 				case OperandType.ShortInlineBrTarget :
 				case OperandType.InlineBrTarget :
@@ -185,7 +179,7 @@ namespace Mono.Cecil.Cil {
 
 				switch (eh.Type) {
 				case ExceptionHandlerType.Catch :
-					neh.CatchType = helper == null ? eh.CatchType : helper.ImportTypeReference (eh.CatchType);
+					neh.CatchType = context.Import (eh.CatchType);
 					break;
 				case ExceptionHandlerType.Filter :
 					neh.FilterStart = GetInstruction (body, nb, eh.FilterStart);

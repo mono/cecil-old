@@ -133,20 +133,28 @@ namespace Mono.Cecil {
 
 		public EventDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, this.DeclaringType));
 		}
 
-		internal static EventDefinition Clone (EventDefinition evt, ReflectionHelper helper)
+		internal static EventDefinition Clone (EventDefinition evt, ImportContext context)
 		{
 			EventDefinition ne = new EventDefinition (
 				evt.Name,
-				helper == null ? evt.EventType : helper.ImportTypeReference (evt.EventType),
+				context.Import (evt.EventType),
 				evt.Attributes);
 
-			// TODO: get methods or clone them
+			if (context != null && context.GenericContext.Type is TypeDefinition) {
+				TypeDefinition type = context.GenericContext.Type as TypeDefinition;
+				if (evt.AddMethod != null)
+					ne.AddMethod = type.Methods.GetMethod (evt.AddMethod.Name) [0];
+				if (evt.InvokeMethod != null)
+					ne.InvokeMethod = type.Methods.GetMethod (evt.InvokeMethod.Name) [0];
+				if (evt.RemoveMethod != null)
+					ne.RemoveMethod = type.Methods.GetMethod (evt.RemoveMethod.Name) [0];
+			}
 
 			foreach (CustomAttribute ca in evt.CustomAttributes)
-				ne.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				ne.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			return ne;
 		}

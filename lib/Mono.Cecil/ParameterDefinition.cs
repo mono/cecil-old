@@ -124,16 +124,16 @@ namespace Mono.Cecil {
 
 		public ParameterDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, m_method));
 		}
 
-		internal static ParameterDefinition Clone (ParameterDefinition param, ReflectionHelper helper)
+		internal static ParameterDefinition Clone (ParameterDefinition param, ImportContext context)
 		{
 			ParameterDefinition np = new ParameterDefinition (
 				param.Name,
 				param.Sequence,
 				param.Attributes,
-				helper == null ? param.ParameterType : helper.ImportTypeReference (param.ParameterType));
+				context.Import (param.ParameterType));
 
 			if (param.HasConstant)
 				np.Constant = param.Constant;
@@ -142,7 +142,7 @@ namespace Mono.Cecil {
 				np.MarshalSpec = param.MarshalSpec;
 
 			foreach (CustomAttribute ca in param.CustomAttributes)
-				np.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				np.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			return np;
 		}

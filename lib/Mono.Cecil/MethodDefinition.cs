@@ -262,10 +262,10 @@ namespace Mono.Cecil {
 
 		public MethodDefinition Clone ()
 		{
-			return Clone (this, null);
+			return Clone (this, new ImportContext (null, this));
 		}
 
-		internal static MethodDefinition Clone (MethodDefinition meth, ReflectionHelper helper)
+		internal static MethodDefinition Clone (MethodDefinition meth, ImportContext context)
 		{
 			MethodDefinition nm = new MethodDefinition (
 				meth.Name,
@@ -276,9 +276,12 @@ namespace Mono.Cecil {
 				meth.ExplicitThis,
 				meth.CallingConvention);
 
-			nm.ReturnType.ReturnType =
-				helper == null ? meth.ReturnType.ReturnType :
-					helper.ImportTypeReference (meth.ReturnType.ReturnType);
+			context.GenericContext.Method = nm;
+
+			foreach (GenericParameter p in meth.GenericParameters)
+				nm.GenericParameters.Add (GenericParameter.Clone (p, context));
+
+			nm.ReturnType.ReturnType = context.Import (meth.ReturnType.ReturnType);
 
 			if (meth.ReturnType.HasConstant)
 				nm.ReturnType.Constant = meth.ReturnType.Constant;
@@ -287,21 +290,21 @@ namespace Mono.Cecil {
 				nm.ReturnType.MarshalSpec = meth.ReturnType.MarshalSpec;
 
 			foreach (CustomAttribute ca in meth.ReturnType.CustomAttributes)
-				nm.ReturnType.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nm.ReturnType.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			if (meth.PInvokeInfo != null)
 				nm.PInvokeInfo = meth.PInvokeInfo; // TODO: import module ?
 			foreach (ParameterDefinition param in meth.Parameters)
-				nm.Parameters.Add (ParameterDefinition.Clone (param, helper));
+				nm.Parameters.Add (ParameterDefinition.Clone (param, context));
 			foreach (MethodReference ov in meth.Overrides)
-				nm.Overrides.Add (helper == null ? ov : helper.ImportMethodReference (ov));
+				nm.Overrides.Add (context.Import (ov));
 			foreach (CustomAttribute ca in meth.CustomAttributes)
-				nm.CustomAttributes.Add (CustomAttribute.Clone (ca, helper));
+				nm.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 			foreach (SecurityDeclaration sec in meth.SecurityDeclarations)
 				nm.SecurityDeclarations.Add (SecurityDeclaration.Clone (sec));
 
 			if (meth.Body != null)
-				nm.Body = MethodBody.Clone (meth.Body, nm, helper);
+				nm.Body = MethodBody.Clone (meth.Body, nm, context);
 
 			return nm;
 		}

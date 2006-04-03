@@ -1,10 +1,10 @@
 //
-// GenericContext.cs
+// ImportContext.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Evaluant RC S.A.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,60 +28,44 @@
 
 namespace Mono.Cecil {
 
-	using System.Text;
+	internal class ImportContext {
 
-	internal class GenericContext {
+		GenericContext m_genContext;
+		ReflectionHelper m_helper;
 
-		TypeReference m_type;
-		MethodReference m_method;
-		bool m_allowCreation;
-
-		public TypeReference Type {
-			get { return m_type; }
-			set { m_type = value; }
+		public GenericContext GenericContext {
+			get { return m_genContext; }
 		}
 
-		public MethodReference Method {
-			get { return m_method; }
-			set { m_method = value; }
-		}
-
-		public bool AllowCreation {
-			get { return m_allowCreation; }
-			set { m_allowCreation = value; }
-		}
-
-		public bool Null {
-			get { return m_type == null && m_method == null; }
-		}
-
-		public GenericContext ()
+		public ImportContext ()
 		{
+			m_genContext = new GenericContext ();
 		}
 
-		public GenericContext (TypeReference type, MethodReference meth)
+		public ImportContext (ReflectionHelper helper) : this ()
 		{
-			m_type = type;
-			m_method = meth;
+			m_helper = helper;
 		}
 
-		public GenericContext (IGenericParameterProvider provider)
+		public ImportContext (ReflectionHelper helper, IGenericParameterProvider owner)
 		{
-			if (provider is TypeReference)
-				m_type = provider as TypeReference;
-			else if (provider is MethodReference) {
-				MethodReference meth = provider as MethodReference;
-				m_method = meth;
-				m_type = meth.DeclaringType;
-			}
+			m_helper = helper;
+			m_genContext = new GenericContext (owner);
 		}
 
-		public GenericContext Clone ()
+		public TypeReference Import (TypeReference type)
 		{
-			GenericContext ctx = new GenericContext ();
-			ctx.Type = m_type;
-			ctx.Method = m_method;
-			return ctx;
+			return m_helper == null ? type : m_helper.ImportTypeReference (type, this);
+		}
+
+		public MethodReference Import (MethodReference meth)
+		{
+			return m_helper == null ? meth : m_helper.ImportMethodReference (meth, this);
+		}
+
+		public FieldReference Import (FieldReference field)
+		{
+			return m_helper == null ? field : m_helper.ImportFieldReference (field, this);
 		}
 	}
 }

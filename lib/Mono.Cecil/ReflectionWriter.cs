@@ -335,8 +335,10 @@ namespace Mono.Cecil {
 			if (parameters.Count == 0)
 				return;
 
-			foreach (GenericParameter gp in parameters)
+			foreach (GenericParameter gp in parameters) {
 				m_genericParamStack.Add (gp);
+				VisitCustomAttributeCollection (gp.CustomAttributes);
+			}
 		}
 
 		public override void VisitInterfaceCollection (InterfaceCollection interfaces)
@@ -403,14 +405,14 @@ namespace Mono.Cecil {
 			ushort seq = 1;
 			ParamTable pTable = m_tableWriter.GetParamTable ();
 			foreach (ParameterDefinition param in parameters)
-				InsertParameter (pTable, param, seq);
+				InsertParameter (pTable, param, seq++);
 		}
 
 		void InsertParameter (ParamTable pTable, ParameterDefinition param, ushort seq)
 		{
 			ParamRow pRow = m_rowWriter.CreateParamRow (
 				param.Attributes,
-				seq++,
+				seq,
 				m_mdWriter.AddString (param.Name));
 
 			pTable.Rows.Add (pRow);
@@ -421,6 +423,8 @@ namespace Mono.Cecil {
 
 			if (param.HasConstant)
 				WriteConstant (param, param.ParameterType);
+
+			VisitCustomAttributeCollection (param.CustomAttributes);
 
 			m_paramIndex++;
 		}
