@@ -42,11 +42,21 @@
         </csc>
     </target>
 	
-	<target name="compactframework" depends="init" description="compiles cecil to run on the CompactFramework">
+	<target name="compactframework" depends="init" description="compiles cecil to run on the CompactFramework 1.0">
+		<property name="compactframework.defines" value="CF_1_0" />
+		<call target="compactframework-compilation" />
+	</target>
+	
+	<target name="compactframework2" depends="init" description="compiles cecil to run on the CompactFramework 2.0">
+		<property name="compactframework.defines" value="CF_2_0" />
+		<call target="compactframework-compilation" />
+	</target>
+	
+	<target name="compactframework-compilation">
 		<csc output="${outdir}/Mono.Cecil.dll"
 			target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
 			noconfig="true" nostdlib="true"
-			define="CF_1_0">			
+			define="${compactframework.defines}">			
 			<sources refid="all-files" />
 			
 			<references basedir="${compactframework.dir}">

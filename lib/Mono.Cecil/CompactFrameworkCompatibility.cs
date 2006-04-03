@@ -39,7 +39,9 @@ namespace System {
 		}
 	}
 }
+#endif
 
+#if CF_1_0 || CF_2_0
 namespace System.Security {
 	
 	public class PermissionSet {

@@ -139,7 +139,7 @@ namespace Mono.Cecil {
 			visitor.VisitTypeReferenceCollection (this);
 		}
 
-#if CF_1_0
+#if CF_1_0 || CF_2_0
 		internal object [] BaseGetAllValues ()
 		{ 
 			object [] values = new object [this.Count];

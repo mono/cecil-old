@@ -142,7 +142,7 @@ namespace <%=$cur_coll.target%> {
 			visitor.<%=$cur_coll.visitThis%> (this);
 		}
 <% end %>
-#if CF_1_0
+#if CF_1_0 || CF_2_0
 		internal object [] BaseGetAllValues ()
 		{ 
 			object [] values = new object [this.Count];

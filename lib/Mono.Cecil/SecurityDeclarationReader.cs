@@ -64,7 +64,7 @@ namespace Mono.Cecil {
 		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration)
 		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
-#if !CF_1_0
+#if !CF_1_0 && !CF_2_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
 
 			if (declaration == null || declaration.Length == 0)
@@ -104,7 +104,7 @@ namespace Mono.Cecil {
 			return dec;
 		}
 
-#if !CF_1_0
+#if !CF_1_0 && !CF_2_0
 		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);

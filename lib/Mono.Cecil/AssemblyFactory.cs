@@ -85,7 +85,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-#if !CF_1_0
+#if !CF_1_0 && !CF_2_0
 		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
 		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
