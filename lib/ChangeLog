@@ -1,5 +1,7 @@
 2006-04-04  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/AssemblyInfo.cs: Go 0.4.
+
 	* Mono.Cecil.Metadata/MetadataHeap.cs
 	  Mono.Cecil.Metadata/MetadataStream.cs:
 		Read #- stream has well.
