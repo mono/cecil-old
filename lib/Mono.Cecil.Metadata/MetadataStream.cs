@@ -32,6 +32,7 @@ namespace Mono.Cecil.Metadata {
 
 		public const string Strings = "#Strings";
 		public const string Tables = "#~";
+		public const string IncrementalTables = "#-";
 		public const string Blob = "#Blob";
 		public const string GUID = "#GUID";
 		public const string UserStrings = "#US";

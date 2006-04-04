@@ -59,9 +59,8 @@ namespace Mono.Cecil.Metadata {
 		{
 			switch (stream.Header.Name) {
 			case MetadataStream.Tables :
+			case MetadataStream.IncrementalTables :
 				return new TablesHeap (stream);
-			case "#-" :
-				throw new MetadataFormatException ("Non standard #- heap found");
 			case MetadataStream.GUID :
 				return new GuidHeap (stream);
 			case MetadataStream.Strings :

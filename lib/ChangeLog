@@ -1,5 +1,9 @@
 2006-04-04  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Metadata/MetadataHeap.cs
+	  Mono.Cecil.Metadata/MetadataStream.cs:
+		Read #- stream has well.
+
 	* Mono.Cecil/ReflectionHelper.cs:
 		Implement Import stuff for System.Type and SR.*
 
