@@ -87,6 +87,32 @@ namespace Mono.Cecil {
 
 		public static string GetTypeSignature (Type t)
 		{
+			if (t.HasElementType) {
+				if (t.IsPointer)
+					return string.Concat (GetTypeSignature (t.GetElementType ()), "*");
+				else if (t.IsArray) // deal with complex arrays
+					return string.Concat (GetTypeSignature (t.GetElementType ()), "[]");
+				else if (t.IsByRef)
+					return string.Concat (GetTypeSignature (t.GetElementType ()), "&");
+			}
+
+			if (IsGenericTypeSpec (t)) {
+				StringBuilder sb = new StringBuilder ();
+				sb.Append (GetTypeSignature (GetGenericTypeDefinition (t)));
+				sb.Append ("<");
+				Type [] genArgs = GetGenericArguments (t);
+				for (int i = 0; i < genArgs.Length; i++) {
+					if (i > 0)
+						sb.Append (",");
+					sb.Append (GetTypeSignature (genArgs [i]));
+				}
+				sb.Append (">");
+				return sb.ToString ();
+			}
+
+			if (IsGenericParameter (t))
+				return t.Name;
+
 			if (t.DeclaringType != null)
 				return string.Concat (t.DeclaringType.FullName, "/", t.Name);
 
@@ -125,18 +151,50 @@ namespace Mono.Cecil {
 			return IsGenericType (t) && !IsGenericTypeDefinition (t);
 		}
 
-		GenericParameter GetGenericParameter (Type t, ImportContext context)
+		static Type GetGenericTypeDefinition (Type t)
 		{
-			return context.GenericContext.Type.GenericParameters [
-				(int) t.GetType ().GetProperty ("GenericParameterPosition").GetValue (t, null)];
+			return (Type) t.GetType ().GetMethod ("GetGenericTypeDefinition").Invoke (t, null);
+		}
+
+		static Type [] GetGenericArguments (Type t)
+		{
+			return (Type []) t.GetType ().GetMethod ("GetGenericArguments").Invoke (t, null);
+		}
+
+		GenericInstanceType GetGenericType (Type t, TypeReference element, ImportContext context)
+		{
+			GenericInstanceType git = new GenericInstanceType (element);
+			foreach (Type genArg in GetGenericArguments (t))
+				git.GenericArguments.Add (ImportSystemType (genArg, context));
+
+			return git;
+		}
+
+		static bool GenericParameterOfMethod (Type t)
+		{
+			return t.GetType ().GetProperty ("DeclaringMethod").GetValue (t, null) != null;
+		}
+
+		static GenericParameter GetGenericParameter (Type t, ImportContext context)
+		{
+			int pos = (int) t.GetType ().GetProperty ("GenericParameterPosition").GetValue (t, null);
+			if (GenericParameterOfMethod (t))
+				return context.GenericContext.Method.GenericParameters [pos];
+			else
+				return context.GenericContext.Type.GenericParameters [pos];
 		}
 
 		TypeReference GetTypeSpec (Type t, ImportContext context)
 		{
 			Stack s = new Stack ();
-			while (t.HasElementType) {
+			while (t.HasElementType || IsGenericTypeSpec (t)) {
 				s.Push (t);
-				t = t.GetElementType ();
+				if (t.HasElementType)
+					t = t.GetElementType ();
+				else if (IsGenericTypeSpec (t)) {
+					t = (Type) t.GetType ().GetMethod ("GetGenericTypeDefinition").Invoke (t, null);
+					break;
+				}
 			}
 
 			TypeReference elementType = ImportSystemType (t, context);
@@ -148,6 +206,8 @@ namespace Mono.Cecil {
 					elementType = new ArrayType (elementType);
 				else if (t.IsByRef)
 					elementType = new ReferenceType (elementType);
+				else if (IsGenericTypeSpec (t))
+					elementType = GetGenericType (t, elementType, context);
 				else
 					throw new ReflectionException ("Unknown element type");
 			}
@@ -163,24 +223,43 @@ namespace Mono.Cecil {
 			if (IsGenericParameter (t))
 				return GetGenericParameter (t, context);
 
+			ImportCache ();
+
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null)
 				return type;
 
 			AssemblyNameReference asm = ImportAssembly (t.Assembly);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
+
+			if (IsGenericTypeDefinition (t))
+				foreach (Type genParam in GetGenericArguments (t))
+					type.GenericParameters.Add (new GenericParameter (genParam.Name, type));
+
+			context.GenericContext.Type = type;
+
 			m_module.TypeReferences.Add (type);
 			return type;
 		}
 
-		static string GetMethodBaseSignature (SR.MethodBase meth, Type retType)
+		static string GetMethodBaseSignature (SR.MethodBase meth, Type declaringType, Type retType)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (GetTypeSignature (retType));
 			sb.Append (' ');
-			sb.Append (GetTypeSignature (meth.DeclaringType));
+			sb.Append (GetTypeSignature (declaringType));
 			sb.Append ("::");
 			sb.Append (meth.Name);
+			if (IsGenericMethodSpec (meth)) {
+				sb.Append ("<");
+				Type [] genArgs = GetGenericArguments (meth as SR.MethodInfo);
+				for (int i = 0; i < genArgs.Length; i++) {
+					if (i > 0)
+						sb.Append (",");
+					sb.Append (GetTypeSignature (genArgs [i]));
+				}
+				sb.Append (">");
+			}
 			sb.Append ("(");
 			SR.ParameterInfo [] parameters = meth.GetParameters ();
 			for (int i = 0; i < parameters.Length; i++) {
@@ -202,10 +281,31 @@ namespace Mono.Cecil {
 			return GetProperty (mb, "IsGenericMethodDefinition");
 		}
 
+		static bool IsGenericMethodSpec (SR.MethodBase mb)
+		{
+			return IsGenericMethod (mb) && !IsGenericMethodDefinition (mb);
+		}
+
+		static Type [] GetGenericArguments (SR.MethodInfo mi)
+		{
+			return (Type []) mi.GetType ().GetMethod ("GetGenericArguments").Invoke (mi, null);
+		}
+
+		static int GetMetadataToken (SR.MethodInfo mi)
+		{
+			return (int) mi.GetType ().GetProperty ("MetadataToken").GetValue (mi, null);
+		}
+
 		MethodReference ImportGenericInstanceMethod (SR.MethodInfo mi, ImportContext context)
 		{
-			SR.MethodInfo gmd = (SR.MethodInfo) mi.GetType ().GetMethod ("GetGenericInstanceMethod").Invoke (mi, null);
-			return new GenericInstanceMethod (ImportMethodBase (gmd, gmd.ReturnType, context));
+			SR.MethodInfo gmd = (SR.MethodInfo) mi.GetType ().GetMethod ("GetGenericMethodDefinition").Invoke (mi, null);
+			GenericInstanceMethod gim = new GenericInstanceMethod (
+				ImportMethodBase (gmd, gmd.ReturnType, context));
+
+			foreach (Type genArg in GetGenericArguments (mi))
+				gim.GenericArguments.Add (ImportSystemType (genArg, context));
+
+			return gim;
 		}
 
 		MethodReference ImportMethodBase (SR.MethodBase mb, Type retType, ImportContext context)
@@ -213,18 +313,45 @@ namespace Mono.Cecil {
 			if (IsGenericMethod (mb) && !IsGenericMethodDefinition (mb))
 				return ImportGenericInstanceMethod ((SR.MethodInfo) mb, context);
 
-			string sig = GetMethodBaseSignature (mb, retType);
+			ImportCache ();
+
+			Type originalDecType = mb.DeclaringType;
+			Type declaringTypeDef = originalDecType;
+			while (IsGenericTypeSpec (declaringTypeDef))
+				declaringTypeDef = GetGenericTypeDefinition (declaringTypeDef);
+
+			if (mb.DeclaringType != declaringTypeDef && mb is SR.MethodInfo) {
+				int mt = GetMetadataToken (mb as SR.MethodInfo);
+				// hack to get the generic method definition from the constructed method
+				foreach (SR.MethodInfo mi in declaringTypeDef.GetMethods ()) {
+					if (GetMetadataToken (mi) == mt) {
+						mb = mi;
+						retType = mi.ReturnType;
+						break;
+					}
+				}
+			}
+
+			string sig = GetMethodBaseSignature (mb, originalDecType, retType);
 			MethodReference meth = m_memberRefCache [sig] as MethodReference;
 			if (meth != null)
 				return meth;
 
 			meth = new MethodReference (
 				mb.Name,
-				ImportSystemType (mb.DeclaringType, context),
-				ImportSystemType (retType, context),
 				(mb.CallingConvention & SR.CallingConventions.HasThis) > 0,
 				(mb.CallingConvention & SR.CallingConventions.ExplicitThis) > 0,
 				MethodCallingConvention.Default); // TODO: get the real callconv
+			meth.DeclaringType = ImportSystemType (originalDecType, context);
+
+			if (IsGenericMethod (mb))
+				foreach (Type genParam in GetGenericArguments (mb as SR.MethodInfo))
+					meth.GenericParameters.Add (new GenericParameter (genParam.Name, meth));
+
+			context.GenericContext.Method = meth;
+			context.GenericContext.Type = ImportSystemType (declaringTypeDef, context);
+
+			meth.ReturnType.ReturnType = ImportSystemType (retType, context);
 
 			SR.ParameterInfo [] parameters = mb.GetParameters ();
 			for (int i = 0; i < parameters.Length; i++)
@@ -259,6 +386,8 @@ namespace Mono.Cecil {
 
 		public FieldReference ImportFieldInfo (SR.FieldInfo fi, ImportContext context)
 		{
+			ImportCache ();
+
 			string sig = GetFieldSignature (fi);
 			FieldReference f = (FieldReference) m_memberRefCache [sig];
 			if (f != null)

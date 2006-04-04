@@ -1,17 +1,22 @@
+2006-04-04  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionHelper.cs:
+		Implement Import stuff for System.Type and SR.*
+
 2006-04-03	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
 
-	Mono.Cecil/SecurityDeclarationReader.cs
-	Mono.Cecil/TypeReferenceCollection.cs
-	Mono.Cecil/CompactFrameworkCompatibility.cs
-	Mono.Cecil/AssemblyFactory.cs
-	Mono.Cecil/AssemblyName.cs
-	Mono.Cecil/ExternTypeCollection.cs
-	Mono.Cecil/TypeDefinitionCollection.cs
-	CodeGen/templates/NamedCollectionImplem.cs
-	Mono.Cecil.Metadata/CultureUtils.cs
-	cecil.build:
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/CompactFrameworkCompatibility.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs
+	  Mono.Cecil.Metadata/CultureUtils.cs
+	  cecil.build:
 		CompactFramework 2.0 support through CF_2_0 compilation symbol.
-	
+
 2006-04-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.dll.sources
