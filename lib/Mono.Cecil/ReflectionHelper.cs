@@ -478,9 +478,6 @@ namespace Mono.Cecil {
 			if (t is GenericParameter)
 				return GetGenericParameter (t as GenericParameter, context);
 
-			if (t.FullName == context.GenericContext.Type.FullName)
-				return context.GenericContext.Type;
-
 			TypeReference type = m_module.TypeReferences [t.FullName];
 			if (type != null)
 				return type;
