@@ -429,6 +429,12 @@ namespace Mono.Cecil {
 			m_paramIndex++;
 		}
 
+		bool RequiresParameterRow (MethodReturnType mrt)
+		{
+			return mrt.HasConstant || mrt.MarshalSpec != null ||
+				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParamAttributes) 0;
+		}
+
 		public override void VisitMethodDefinition (MethodDefinition method)
 		{
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
@@ -445,11 +451,8 @@ namespace Mono.Cecil {
 			method.MetadataToken = new MetadataToken (TokenType.Method, (uint) mTable.Rows.Count);
 			m_methodIndex++;
 
-			if (method.ReturnType.CustomAttributes.Count > 0 || method.ReturnType.MarshalSpec != null) {
-				ParameterDefinition param = (method.ReturnType as MethodReturnType).Parameter;
-				ParamTable pTable = m_tableWriter.GetParamTable ();
-				InsertParameter (pTable, param, 0);
-			}
+			if (RequiresParameterRow (method.ReturnType))
+				InsertParameter (m_tableWriter.GetParamTable (), method.ReturnType.Parameter, 0);
 
 			VisitParameterDefinitionCollection (method.Parameters);
 		}

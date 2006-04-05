@@ -1,3 +1,8 @@
+2006-04-05  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Ensure the param[0] is written when it should be.
+
 2006-04-04  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionHelper.cs:
