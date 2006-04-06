@@ -335,10 +335,8 @@ namespace Mono.Cecil {
 			if (parameters.Count == 0)
 				return;
 
-			foreach (GenericParameter gp in parameters) {
+			foreach (GenericParameter gp in parameters)
 				m_genericParamStack.Add (gp);
-				VisitCustomAttributeCollection (gp.CustomAttributes);
-			}
 		}
 
 		public override void VisitInterfaceCollection (InterfaceCollection interfaces)
@@ -759,6 +757,9 @@ namespace Mono.Cecil {
 					m_mdWriter.AddString (gp.Name));
 
 				gpTable.Rows.Add (gpRow);
+				gp.MetadataToken = new MetadataToken (TokenType.GenericParam, (uint) gpTable.Rows.Count);
+
+				VisitCustomAttributeCollection (gp.CustomAttributes);
 
 				if (gp.Constraints.Count == 0)
 					continue;
@@ -782,8 +783,8 @@ namespace Mono.Cecil {
 			VisitSecurityDeclarationCollection (module.Assembly.SecurityDeclarations);
 			VisitCustomAttributeCollection (module.CustomAttributes);
 
-			SortTables ();
 			CompleteGenericTables ();
+			SortTables ();
 
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {

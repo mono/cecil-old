@@ -489,6 +489,7 @@ namespace Mono.Cecil {
 				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
 				gp.Attributes = gpRow.Flags;
 				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
+				gp.MetadataToken = MetadataToken.FromMetadataRow (TokenType.GenericParam, i);
 
 				owner.GenericParameters.Add (gp);
 				m_genericParameters [i] = gp;

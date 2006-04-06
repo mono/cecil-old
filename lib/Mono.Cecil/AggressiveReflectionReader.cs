@@ -336,6 +336,9 @@ namespace Mono.Cecil {
 				case TokenType.Param :
 					owner = GetParamDefAt (caRow.Parent.RID).CustomAttributes;
 					break;
+				case TokenType.GenericParam :
+					owner = GetGenericParameterAt (caRow.Parent.RID).CustomAttributes;
+					break;
 				default :
 					//TODO: support other ?
 					break;
