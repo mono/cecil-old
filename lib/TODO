@@ -1,9 +1,5 @@
 Cecil TODO
 
-* bugs generics
-
-	For sure, bugs remains in the generic suppport.
-
 * debugs infos
 
 	Cecil should be able to emit debug infos along with assemblies.

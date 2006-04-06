@@ -450,6 +450,12 @@ namespace Mono.Cecil.Signatures {
 				Utilities.WriteCompressedInteger (writer, data.Length);
 				writer.Write (data);
 				break;
+			case ElementType.Object :
+				if (elem.Value != null)
+					throw new NotSupportedException ();
+
+				Write ((byte) 0xff);
+				break;
 			default :
 				throw new NotImplementedException ("WriteElem " + elem.FieldOrPropType.ToString ());
 			}

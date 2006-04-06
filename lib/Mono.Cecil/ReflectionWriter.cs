@@ -851,6 +851,8 @@ namespace Mono.Cecil {
 				return ElementType.String;
 			case Constants.Type :
 				return ElementType.Type;
+			case Constants.Object :
+				return ElementType.Object;
 			default:
 				return ElementType.Class;
 			}
@@ -1221,36 +1223,33 @@ namespace Mono.Cecil {
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
 			cas.Prolog = CustomAttrib.StdProlog;
 
-			cas.FixedArgs = new CustomAttrib.FixedArg [0];
-
 			cas.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
 
 			for (int i = 0; i < cas.FixedArgs.Length; i++) {
 				object o = ca.ConstructorParameters [i];
 				CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
-//				if (o is object []) {
-//					object [] values = o as object [];
-//					fa.Elems = new CustomAttrib.Elem [values.Length];
-//					for (int j = 0; j < values.Length; j++) {
-//						CustomAttrib.Elem elem = new CustomAttrib.Elem ();
-//						elem.Value = values [j];
-//						elem.FieldOrPropType = ElementType.Object;
-//						elem.ElemType = ca.Constructor.Parameters [i].ParameterType;
-//						fa.Elems [j] = elem;
-//					}
-//				} else {
-					fa.Elems = new CustomAttrib.Elem [1];
-					fa.Elems [0].Value = o;
-					fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
-					fa.Elems [0].FieldOrPropType = GetCorrespondingType (fa.Elems [0].ElemType.FullName);
-					if (fa.Elems [0].FieldOrPropType == ElementType.Class)
-						fa.Elems [0].FieldOrPropType = ElementType.I4; // buggy
-//				}
+				if (o is object [])
+					throw new NotImplementedException ();
+
+				fa.Elems = new CustomAttrib.Elem [1];
+				fa.Elems [0].Value = o;
+				fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
+				if (fa.Elems [0].ElemType.FullName == Constants.Object && o != null) {
+					Type coreType = o.GetType ();
+					if (!(coreType.IsPrimitive || coreType == typeof (string)))
+						throw new NotSupportedException ();
+
+					fa.Elems [0].FieldOrPropType = GetCorrespondingType (
+						string.Concat (coreType.Namespace, ".", coreType.Name));
+				} else
+					fa.Elems [0].FieldOrPropType = GetCorrespondingType (
+						fa.Elems [0].ElemType.FullName);
 
 				cas.FixedArgs [i] = fa;
 			}
 
-			cas.NumNamed = 0;
+			if (ca.Fields.Count != 0 || ca.Properties.Count != 0)
+				throw new NotImplementedException ();
 
 			cas.NamedArgs = new CustomAttrib.NamedArg [0];
 

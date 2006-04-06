@@ -1,5 +1,10 @@
 2006-04-06  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Clean up things a little bit prior ending
+		custom attribute encoding.
+
 	* Mono.Cecil/ReflectionWriter.cs:
 		Write custom attributes of parameters
 		onyl when all methods have their tokens.
