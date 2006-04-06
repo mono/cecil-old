@@ -1,5 +1,9 @@
 2006-04-06  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Write custom attributes of parameters
+		onyl when all methods have their tokens.
+
 	* Mono.Cecil/ReflectionReader.cs
 	  Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil/AggressiveReflectionReader.cs:

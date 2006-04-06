@@ -253,6 +253,9 @@ namespace Mono.Cecil {
 			}
 
 			foreach (MethodDefinition meth in m_methodStack) {
+				VisitCustomAttributeCollection (meth.ReturnType.CustomAttributes);
+				foreach (ParameterDefinition param in meth.Parameters)
+					VisitCustomAttributeCollection (param.CustomAttributes);
 				VisitGenericParameterCollection (meth.GenericParameters);
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
@@ -421,8 +424,6 @@ namespace Mono.Cecil {
 
 			if (param.HasConstant)
 				WriteConstant (param, param.ParameterType);
-
-			VisitCustomAttributeCollection (param.CustomAttributes);
 
 			m_paramIndex++;
 		}
