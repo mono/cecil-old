@@ -398,36 +398,7 @@ namespace Mono.Cecil {
 				m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
 				for (int i = 0; i < typesRef.Rows.Count; i++) {
-					TypeRefRow type = typesRef [i];
-					IMetadataScope scope = null;
-					TypeReference parent = null;
-					switch (type.ResolutionScope.TokenType) {
-					case TokenType.AssemblyRef :
-						scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
-						break;
-					case TokenType.ModuleRef :
-						scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
-						break;
-					case TokenType.Module :
-						scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
-						break;
-					case TokenType.TypeRef :
-						parent = GetTypeRefAt (type.ResolutionScope.RID);
-						scope = parent.Scope;
-						break;
-					}
-
-					TypeReference t = new TypeReference (
-						m_root.Streams.StringsHeap [type.Name],
-						m_root.Streams.StringsHeap [type.Namespace],
-						scope);
-					t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
-
-					if (parent != null)
-						t.DeclaringType = parent;
-
-					m_typeRefs [i] = t;
-					m_module.TypeReferences.Add (t);
+					AddTypeRef (typesRef, i);
 				}
 
 			} else
@@ -449,6 +420,45 @@ namespace Mono.Cecil {
 			CompleteMethods ();
 			ReadAllFields ();
 			ReadMemberReferences ();
+		}
+
+		void AddTypeRef (TypeRefTable typesRef, int i)
+		{
+			// Check if index has been already added.
+			if (m_typeRefs [i] != null)
+				return;
+
+			TypeRefRow type = typesRef [i];
+			IMetadataScope scope = null;
+			TypeReference parent = null;
+			switch (type.ResolutionScope.TokenType) {
+			case TokenType.AssemblyRef :
+				scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
+				break;
+			case TokenType.ModuleRef :
+				scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+				break;
+			case TokenType.Module :
+				scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
+				break;
+			case TokenType.TypeRef :
+				AddTypeRef (typesRef, (int) type.ResolutionScope.RID - 1);
+				parent = GetTypeRefAt (type.ResolutionScope.RID);
+				scope = parent.Scope;
+				break;
+			}
+
+			TypeReference t = new TypeReference (
+				m_root.Streams.StringsHeap [type.Name],
+				m_root.Streams.StringsHeap [type.Namespace],
+				scope);
+			t.MetadataToken = MetadataToken.FromMetadataRow (TokenType.TypeRef, i);
+
+			if (parent != null)
+				t.DeclaringType = parent;
+
+			m_typeRefs [i] = t;
+			m_module.TypeReferences.Add (t);
 		}
 
 		void ReadTypeSpecs ()
