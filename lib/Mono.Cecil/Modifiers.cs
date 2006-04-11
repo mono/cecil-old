@@ -48,12 +48,42 @@ namespace Mono.Cecil {
 		public ModifierOptional (TypeReference elemType, TypeReference modType) : base (elemType, modType)
 		{
 		}
+
+		public override string Name
+		{
+			get { return string.Concat (base.Name, Suffix ()); }
+		}
+
+		public override string FullName
+		{
+			get { return string.Concat (base.FullName, Suffix ()); }
+		}
+
+		string Suffix ()
+		{
+			return string.Concat (" modopt(", this.ModifierType.FullName, ")");
+		}
 	}
 
 	public sealed class ModifierRequired : ModType, IModifierRequired {
 
 		public ModifierRequired (TypeReference elemType, TypeReference modType) : base (elemType, modType)
 		{
+		}
+
+		public override string Name
+		{
+			get { return string.Concat (base.Name, Suffix ()); }
+		}
+
+		public override string FullName
+		{
+			get { return string.Concat (base.FullName, Suffix ()); }
+		}
+
+		string Suffix ()
+		{
+			return string.Concat (" modreq(", this.ModifierType.FullName, ")");
 		}
 	}
 }

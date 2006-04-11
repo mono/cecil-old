@@ -314,6 +314,7 @@ namespace Mono.Cecil.Signatures {
 			lv.ByRef = false;
 			int cursor;
 			while (true) {
+				lv.CustomMods = ReadCustomMods (data, start, out start);
 				cursor = start;
 				int current = Utilities.ReadCompressedInteger (data, start, out start);
 				if (current == (int) ElementType.Pinned) // the only possible constraint

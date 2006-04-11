@@ -378,6 +378,9 @@ namespace Mono.Cecil.Cil {
 			for (int i = 0; i < lvs.Count; i++) {
 				LocalVarSig.LocalVariable lv = new LocalVarSig.LocalVariable ();
 				ITypeReference type = vars [i].Variable;
+
+				lv.CustomMods = m_reflectWriter.GetCustomMods (type);
+
 				if (type is PinnedType) {
 					lv.Constraint |= Constraint.Pinned;
 					type = (type as PinnedType).ElementType;

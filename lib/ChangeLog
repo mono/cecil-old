@@ -1,4 +1,24 @@
+2006-04-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/Modifiers.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Signatures/LocalVarSig.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Fix modifiers on localvar signatures.
+		Fix roundtrip of delphi assemblies.
+
+	* Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs 
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Work on complex custom attributes encoding.
+
+	* Mono.Cecil/TableComparers.cs:
+		Style.
+
 2006-04-09  Eyal Alaluf  <eyala@mainsoft.com>
+
     * Mono.Cecil/ReflectionReader.cs
 	    Cannot assume that TypeRefs are ordered is such a way that an outer
 		class index comes always before all its inner classes.

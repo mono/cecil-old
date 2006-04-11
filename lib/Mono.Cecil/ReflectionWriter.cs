@@ -118,7 +118,7 @@ namespace Mono.Cecil {
 			m_constWriter = new MemoryBinaryWriter ();
 		}
 
-		public ITypeReference GetCoreType (string name)
+		public TypeReference GetCoreType (string name)
 		{
 			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
@@ -1014,6 +1014,8 @@ namespace Mono.Cecil {
 				return p;
 			} else if (type is IFunctionPointerType) {
 				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
+			} else if (type is ITypeSpecification) {
+				return GetSigType ((type as ITypeSpecification).ElementType);
 			} else if (type.IsValueType) {
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);
@@ -1218,6 +1220,85 @@ namespace Mono.Cecil {
 			return new MethodSpec (gis);
 		}
 
+		string GetObjectTypeName (object o)
+		{
+			Type t = o.GetType ();
+			return string.Concat (t.Namespace, ".", t.Name);
+		}
+
+		CustomAttrib.Elem CreateElem (TypeReference type, object value)
+		{
+			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
+			elem.Value = value;
+			elem.ElemType = type;
+			elem.FieldOrPropType = GetCorrespondingType (type.FullName);
+
+			switch (elem.FieldOrPropType) {
+			case ElementType.Boolean :
+			case ElementType.Char :
+			case ElementType.R4 :
+			case ElementType.R8 :
+			case ElementType.I1 :
+			case ElementType.I2 :
+			case ElementType.I4 :
+			case ElementType.I8 :
+			case ElementType.U1 :
+			case ElementType.U2 :
+			case ElementType.U4 :
+			case ElementType.U8 :
+				elem.Simple = true;
+				break;
+			case ElementType.String:
+				elem.String = true;
+				break;
+			case ElementType.Type:
+				elem.Type = true;
+				break;
+			case ElementType.Object:
+				elem.BoxedValueType = true;
+				if (value == null)
+					elem.FieldOrPropType = ElementType.String;
+				else
+					elem.FieldOrPropType = GetCorrespondingType (
+						GetObjectTypeName (value));
+				break;
+			}
+
+			return elem;
+		}
+
+		CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
+		{
+			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
+			if (value is object []) {
+				fa.SzArray = true;
+				object [] values = value as object [];
+				TypeReference obj = ((ArrayType) type).ElementType;
+				fa.NumElem = (uint) values.Length;
+				fa.Elems = new CustomAttrib.Elem [values.Length];
+				for (int i = 0; i < values.Length; i++)
+					fa.Elems [i] = CreateElem (obj, values [i]);
+			} else {
+				fa.Elems = new CustomAttrib.Elem [1];
+				fa.Elems [0] = CreateElem (type, value);
+			}
+
+			return fa;
+		}
+
+		CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
+			object value, bool field)
+		{
+			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
+			na.Field = field;
+			na.Property = !field;
+
+			na.FieldOrPropName = name;
+			na.FixedArg = CreateFixedArg (type, value);
+
+			return na;
+		}
+
 		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
 		{
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
@@ -1225,33 +1306,28 @@ namespace Mono.Cecil {
 
 			cas.FixedArgs = new CustomAttrib.FixedArg [ca.Constructor.Parameters.Count];
 
-			for (int i = 0; i < cas.FixedArgs.Length; i++) {
-				object o = ca.ConstructorParameters [i];
-				CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
-				if (o is object [])
-					throw new NotImplementedException ();
+			for (int i = 0; i < cas.FixedArgs.Length; i++)
+				cas.FixedArgs [i] = CreateFixedArg (
+					ca.Constructor.Parameters [i].ParameterType, ca.ConstructorParameters [i]);
 
-				fa.Elems = new CustomAttrib.Elem [1];
-				fa.Elems [0].Value = o;
-				fa.Elems [0].ElemType = ca.Constructor.Parameters [i].ParameterType;
-				if (fa.Elems [0].ElemType.FullName == Constants.Object && o != null) {
-					Type coreType = o.GetType ();
-					if (!(coreType.IsPrimitive || coreType == typeof (string)))
-						throw new NotSupportedException ();
+			int nn = ca.Fields.Count + ca.Properties.Count;
+			cas.NumNamed = (ushort) nn;
+			cas.NamedArgs = new CustomAttrib.NamedArg [nn];
 
-					fa.Elems [0].FieldOrPropType = GetCorrespondingType (
-						string.Concat (coreType.Namespace, ".", coreType.Name));
-				} else
-					fa.Elems [0].FieldOrPropType = GetCorrespondingType (
-						fa.Elems [0].ElemType.FullName);
+			if (cas.NamedArgs.Length > 0) {
+				int curs = 0;
+				foreach (DictionaryEntry entry in ca.Fields) {
+					string field = (string) entry.Key;
+					cas.NamedArgs [curs++] = CreateNamedArg (
+						ca.GetFieldType (field), field, entry.Value, true);
+				}
 
-				cas.FixedArgs [i] = fa;
+				foreach (DictionaryEntry entry in ca.Properties) {
+					string property = (string) entry.Key;
+					cas.NamedArgs [curs++] = CreateNamedArg (
+						ca.GetPropertyType (property), property, entry.Value, false);
+				}
 			}
-
-			if (ca.Fields.Count != 0 || ca.Properties.Count != 0)
-				throw new NotImplementedException ();
-
-			cas.NamedArgs = new CustomAttrib.NamedArg [0];
 
 			return cas;
 		}

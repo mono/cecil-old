@@ -122,6 +122,12 @@ namespace Mono.Cecil {
 			return Clone (this, new ImportContext ());
 		}
 
+		static void Clone (IDictionary original, IDictionary target)
+		{
+			foreach (DictionaryEntry entry in original)
+				target.Add (entry.Key, entry.Value);
+		}
+
 		internal static CustomAttribute Clone (CustomAttribute custattr, ImportContext context)
 		{
 			CustomAttribute ca = new CustomAttribute (context.Import (custattr.Constructor));
@@ -133,10 +139,10 @@ namespace Mono.Cecil {
 
 			foreach (object o in custattr.ConstructorParameters)
 				ca.ConstructorParameters.Add (o);
-			foreach (DictionaryEntry de in custattr.Fields)
-				ca.Fields.Add (de.Key, de.Value);
-			foreach (DictionaryEntry de in custattr.Properties)
-				ca.Properties.Add (de.Key, de.Value);
+			Clone (custattr.m_fields, ca.m_fields);
+			Clone (custattr.m_fieldTypes, ca.m_fieldTypes);
+			Clone (custattr.m_properties, ca.m_properties);
+			Clone (custattr.m_propTypes, ca.m_propTypes);
 			return ca;
 		}
 

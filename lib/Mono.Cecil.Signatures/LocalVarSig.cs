@@ -49,6 +49,7 @@ namespace Mono.Cecil.Signatures {
 
 		public struct LocalVariable {
 
+			public CustomMod [] CustomMods;
 			public Constraint Constraint;
 			public bool ByRef;
 			public SigType Type;

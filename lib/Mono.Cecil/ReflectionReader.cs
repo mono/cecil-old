@@ -397,10 +397,8 @@ namespace Mono.Cecil {
 
 				m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
-				for (int i = 0; i < typesRef.Rows.Count; i++) {
+				for (int i = 0; i < typesRef.Rows.Count; i++)
 					AddTypeRef (typesRef, i);
-				}
-
 			} else
 				m_typeRefs = new TypeReference [0];
 
@@ -837,7 +835,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		protected TypeReference GetModifierType (CustomMod [] cmods, TypeReference type)
+		public TypeReference GetModifierType (CustomMod [] cmods, TypeReference type)
 		{
 			TypeReference ret = type;
 			for (int i = cmods.Length - 1; i >= 0; i--) {
