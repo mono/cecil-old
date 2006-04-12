@@ -35,7 +35,6 @@ namespace Mono.Cecil {
 		TypeAttributes m_attributes;
 		TypeReference m_baseType;
 
-		bool m_layoutLoaded;
 		bool m_hasInfo;
 		ushort m_packingSize;
 		uint m_classSize;
@@ -57,15 +56,6 @@ namespace Mono.Cecil {
 		public TypeReference BaseType {
 			get { return m_baseType; }
 			set { m_baseType = value; }
-		}
-
-		public IClassLayoutInfo LayoutInfo {
-			get { return this; }
-		}
-
-		public bool LayoutLoaded {
-			get { return m_layoutLoaded; }
-			set { m_layoutLoaded = value; }
 		}
 
 		public bool HasLayoutInfo {
@@ -382,9 +372,9 @@ namespace Mono.Cecil {
 			if (type.BaseType != null)
 				nt.BaseType = context.Import (type.BaseType);
 
-			if (type.LayoutInfo.HasLayoutInfo) {
-				nt.LayoutInfo.ClassSize = type.LayoutInfo.ClassSize;
-				nt.LayoutInfo.PackingSize = type.LayoutInfo.PackingSize;
+			if (type.HasLayoutInfo) {
+				nt.ClassSize = type.ClassSize;
+				nt.PackingSize = type.PackingSize;
 			}
 
 			foreach (FieldDefinition field in type.Fields)

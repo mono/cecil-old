@@ -1,5 +1,18 @@
 2006-04-11  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/IField.cs
+	  Mono.Cecil/ITypeDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil.Cil/IVariable.cs
+	  Mono.Cecil.Cil/MethodBody.cs
+	  Mono.Cecil.Cil/VariableDefinition.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Don't use interfaces internally.
+
 	* Mono.Cecil/TypeReference.cs:
 		Make TypeReference extend MemberReference.
 

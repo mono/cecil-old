@@ -143,13 +143,12 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		bool IsTypeSpec (ITypeReference type)
+		bool IsTypeSpec (TypeReference type)
 		{
-			return type is IArrayType || type is IFunctionPointerType ||
-				type is IPointerType || type is IGenericInstance || type is IGenericParameter;
+			return type is TypeSpecification || type is GenericParameter;
 		}
 
-		public MetadataToken GetTypeDefOrRefToken (ITypeReference type)
+		public MetadataToken GetTypeDefOrRefToken (TypeReference type)
 		{
 			if (IsTypeSpec (type)) {
 				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
@@ -200,7 +199,7 @@ namespace Mono.Cecil {
 				types.Add (new TypeDefinition (
 						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
 
-			foreach (ITypeDefinition t in types)
+			foreach (TypeDefinition t in types)
 				m_typeDefStack.Add (t);
 
 			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
@@ -242,7 +241,7 @@ namespace Mono.Cecil {
 				foreach (MethodDefinition meth in t.Methods)
 					VisitMethodDefinition (meth);
 
-				if (t.LayoutInfo.HasLayoutInfo)
+				if (t.HasLayoutInfo)
 					WriteLayout (t);
 			}
 
@@ -318,10 +317,10 @@ namespace Mono.Cecil {
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
 			foreach (MemberReference member in members) {
 				uint sig = 0;
-				if (member is IFieldReference)
-					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as IFieldReference));
-				else if (member is IMethodReference)
-					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as IMethodReference));
+				if (member is FieldReference)
+					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
+				else if (member is MethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as MethodReference));
 				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
 					GetTypeDefOrRefToken (member.DeclaringType),
 					m_mdWriter.AddString (member.Name),
@@ -375,7 +374,7 @@ namespace Mono.Cecil {
 			MethodImplTable miTable = m_tableWriter.GetMethodImplTable ();
 			foreach (MethodReference ov in meths) {
 				MethodImplRow miRow = m_rowWriter.CreateMethodImplRow (
-					GetRidFor (meths.Container.DeclaringType as ITypeDefinition),
+					GetRidFor (meths.Container.DeclaringType as TypeDefinition),
 					new MetadataToken (TokenType.Method, GetRidFor (meths.Container)),
 					ov.MetadataToken);
 
@@ -520,7 +519,7 @@ namespace Mono.Cecil {
 			if (field.HasConstant)
 				WriteConstant (field, field.FieldType);
 
-			if (field.LayoutInfo.HasLayoutInfo)
+			if (field.HasLayoutInfo)
 				WriteLayout (field);
 
 			m_fieldStack.Add (field);
@@ -588,9 +587,9 @@ namespace Mono.Cecil {
 			CustomAttributeTable caTable = m_tableWriter.GetCustomAttributeTable ();
 			foreach (CustomAttribute ca in customAttrs) {
 				MetadataToken parent;
-				if (customAttrs.Container is IAssemblyDefinition)
+				if (customAttrs.Container is AssemblyDefinition)
 					parent = new MetadataToken (TokenType.Assembly, 1);
-				else if (customAttrs.Container is IModuleDefinition)
+				else if (customAttrs.Container is ModuleDefinition)
 					parent = new MetadataToken (TokenType.Module, 1);
 				else if (customAttrs.Container is IMetadataTokenProvider)
 					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
@@ -644,7 +643,7 @@ namespace Mono.Cecil {
 		{
 			FieldLayoutTable flTable = m_tableWriter.GetFieldLayoutTable ();
 			FieldLayoutRow flRow = m_rowWriter.CreateFieldLayoutRow (
-				field.LayoutInfo.Offset,
+				field.Offset,
 				GetRidFor (field));
 
 			flTable.Rows.Add (flRow);
@@ -654,15 +653,15 @@ namespace Mono.Cecil {
 		{
 			ClassLayoutTable clTable = m_tableWriter.GetClassLayoutTable ();
 			ClassLayoutRow clRow = m_rowWriter.CreateClassLayoutRow (
-				type.LayoutInfo.PackingSize,
-				type.LayoutInfo.ClassSize,
+				type.PackingSize,
+				type.ClassSize,
 				GetRidFor (type));
 
 			clTable.Rows.Add (clRow);
 		}
 
 		void WriteSemantic (MethodSemanticsAttributes attrs,
-			IMemberDefinition member, MethodDefinition meth)
+			IMetadataTokenProvider member, MethodDefinition meth)
 		{
 			MethodSemanticsTable msTable = m_tableWriter.GetMethodSemanticsTable ();
 			MethodSemanticsRow msRow = m_rowWriter.CreateMethodSemanticsRow (
@@ -796,7 +795,7 @@ namespace Mono.Cecil {
 
 			if (m_fieldStack.Count > 0) {
 				FieldRVATable frTable = null;
-				foreach (IFieldDefinition field in m_fieldStack) {
+				foreach (FieldDefinition field in m_fieldStack) {
 					if (field.InitialValue != null && field.InitialValue.Length > 0) {
 						if (frTable == null)
 							frTable = m_tableWriter.GetFieldRVATable ();
@@ -915,7 +914,7 @@ namespace Mono.Cecil {
 			return m_constWriter.ToArray ();
 		}
 
-		public SigType GetSigType (ITypeReference type)
+		public SigType GetSigType (TypeReference type)
 		{
 			string name = type.FullName;
 
@@ -958,7 +957,7 @@ namespace Mono.Cecil {
 				return new SigType (ElementType.TypedByRef);
 			}
 
-			if (type is IGenericParameter) {
+			if (type is GenericParameter) {
 				GenericParameter gp = type as GenericParameter;
 				int pos = gp.Owner.GenericParameters.IndexOf (gp);
 				if (gp.Owner is TypeReference)
@@ -979,8 +978,8 @@ namespace Mono.Cecil {
 					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
 
 				return gi;
-			} else if (type is IArrayType) {
-				IArrayType aryType = type as IArrayType;
+			} else if (type is ArrayType) {
+				ArrayType aryType = type as ArrayType;
 				if (aryType.IsSizedArray) {
 					SZARRAY szary = new SZARRAY ();
 					szary.Type = GetSigType (aryType.ElementType);
@@ -1003,19 +1002,19 @@ namespace Mono.Cecil {
 				ary.Shape = shape;
 				ary.Type = GetSigType (aryType.ElementType);
 				return ary;
-			} else if (type is IPointerType) {
+			} else if (type is PointerType) {
 				PTR p = new PTR ();
-				ITypeReference elementType = (type as IPointerType).ElementType;
+				TypeReference elementType = (type as PointerType).ElementType;
 				p.Void = elementType.FullName == Constants.Void;
 				if (!p.Void) {
 					p.CustomMods = GetCustomMods (elementType);
 					p.PtrType = GetSigType (elementType);
 				}
 				return p;
-			} else if (type is IFunctionPointerType) {
+			} else if (type is FunctionPointerType) {
 				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
-			} else if (type is ITypeSpecification) {
-				return GetSigType ((type as ITypeSpecification).ElementType);
+			} else if (type is TypeSpecification) {
+				return GetSigType ((type as TypeSpecification).ElementType);
 			} else if (type.IsValueType) {
 				VALUETYPE vt = new VALUETYPE ();
 				vt.Type = GetTypeDefOrRefToken (type);
@@ -1027,41 +1026,41 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public CustomMod [] GetCustomMods (ITypeReference type)
+		public CustomMod [] GetCustomMods (TypeReference type)
 		{
-			if (!(type is IModifierType))
+			if (!(type is ModType))
 				return new CustomMod [0];
 
 			ArrayList cmods = new ArrayList ();
-			ITypeReference cur = type;
-			while (cur is IModifierType) {
-				if (cur is IModifierOptional) {
+			TypeReference cur = type;
+			while (cur is ModType) {
+				if (cur is ModifierOptional) {
 					CustomMod cmod = new CustomMod ();
 					cmod.CMOD = CustomMod.CMODType.OPT;
-					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierOptional).ModifierType);
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as ModifierOptional).ModifierType);
 					cmods.Add (cmod);
-				} else if (cur is IModifierRequired) {
+				} else if (cur is ModifierRequired) {
 					CustomMod cmod = new CustomMod ();
 					cmod.CMOD = CustomMod.CMODType.REQD;
-					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as IModifierRequired).ModifierType);
+					cmod.TypeDefOrRef = GetTypeDefOrRefToken ((cur as ModifierRequired).ModifierType);
 					cmods.Add (cmod);
 				}
 
-				cur = (cur as IModifierType).ElementType;
+				cur = (cur as ModType).ElementType;
 			}
 
 			return cmods.ToArray (typeof (CustomMod)) as CustomMod [];
 		}
 
-		public Signature GetMemberRefSig (IMemberReference member)
+		public Signature GetMemberRefSig (MemberReference member)
 		{
-			if (member is IFieldReference)
-				return GetFieldSig (member as IFieldReference);
+			if (member is FieldReference)
+				return GetFieldSig (member as FieldReference);
 			else
-				return GetMemberRefSig (member as IMethodReference);
+				return GetMemberRefSig (member as MethodReference);
 		}
 
-		public FieldSig GetFieldSig (IFieldReference field)
+		public FieldSig GetFieldSig (FieldReference field)
 		{
 			FieldSig sig = new FieldSig ();
 			sig.CallingConvention |= 0x6;
@@ -1071,19 +1070,19 @@ namespace Mono.Cecil {
 			return sig;
 		}
 
-		Param [] GetParametersSig (IParameterDefinitionCollection parameters)
+		Param [] GetParametersSig (ParameterDefinitionCollection parameters)
 		{
 			Param [] ret = new Param [parameters.Count];
 			for (int i = 0; i < ret.Length; i++) {
-				IParameterDefinition pDef = parameters [i];
+				ParameterDefinition pDef = parameters [i];
 				Param p = new Param ();
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
 					p.TypedByRef = true;
-				else if (pDef.ParameterType is IReferenceType) {
+				else if (pDef.ParameterType is ReferenceType) {
 					p.ByRef = true;
 					p.Type = GetSigType (
-						(pDef.ParameterType as IReferenceType).ElementType);
+						(pDef.ParameterType as ReferenceType).ElementType);
 				} else
 					p.Type = GetSigType (pDef.ParameterType);
 				ret [i] = p;
@@ -1091,7 +1090,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		void CompleteMethodSig (IMethodReference meth, MethodSig sig)
+		void CompleteMethodSig (MethodReference meth, MethodSig sig)
 		{
 			sig.HasThis = meth.HasThis;
 			sig.ExplicitThis = meth.ExplicitThis;
@@ -1113,17 +1112,17 @@ namespace Mono.Cecil {
 				rtSig.Void = true;
 			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
 				rtSig.TypedByRef = true;
-			else if (meth.ReturnType.ReturnType is IReferenceType) {
+			else if (meth.ReturnType.ReturnType is ReferenceType) {
 				rtSig.ByRef = true;
 				rtSig.Type = GetSigType (
-					(meth.ReturnType.ReturnType as IReferenceType).ElementType);
+					(meth.ReturnType.ReturnType as ReferenceType).ElementType);
 			} else
 				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 
 			sig.RetType = rtSig;
 		}
 
-		public MethodRefSig GetMethodRefSig (IMethodReference meth)
+		public MethodRefSig GetMethodRefSig (MethodReference meth)
 		{
 			if (meth.GenericParameters.Count > 0)
 				return GetMethodDefSig (meth);
@@ -1144,7 +1143,7 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (IMethodReference meth)
+		public MethodDefSig GetMethodDefSig (MethodReference meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
 
@@ -1158,7 +1157,7 @@ namespace Mono.Cecil {
 			return sig;
 		}
 
-		public PropertySig GetPropertySig (IPropertyDefinition prop)
+		public PropertySig GetPropertySig (PropertyDefinition prop)
 		{
 			PropertySig ps = new PropertySig ();
 			ps.CallingConvention |= 0x8;
@@ -1166,9 +1165,9 @@ namespace Mono.Cecil {
 			bool hasThis;
 			bool explicitThis;
 			MethodCallingConvention mcc;
-			IParameterDefinitionCollection parameters = prop.Parameters;
+			ParameterDefinitionCollection parameters = prop.Parameters;
 
-			IMethodDefinition meth;
+			MethodDefinition meth;
 			if (prop.GetMethod != null)
 				meth = prop.GetMethod;
 			else if (prop.SetMethod != null)
@@ -1203,7 +1202,7 @@ namespace Mono.Cecil {
 			return ps;
 		}
 
-		public TypeSpec GetTypeSpecSig (ITypeReference type)
+		public TypeSpec GetTypeSpecSig (TypeReference type)
 		{
 			TypeSpec ts = new TypeSpec (GetSigType (type));
 			return ts;
@@ -1299,7 +1298,7 @@ namespace Mono.Cecil {
 			return na;
 		}
 
-		public CustomAttrib GetCustomAttributeSig (ICustomAttribute ca)
+		public CustomAttrib GetCustomAttributeSig (CustomAttribute ca)
 		{
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
 			cas.Prolog = CustomAttrib.StdProlog;
@@ -1332,7 +1331,7 @@ namespace Mono.Cecil {
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (IMarshalSpec mSpec)
+		public MarshalSig GetMarshalSig (MarshalDesc mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 

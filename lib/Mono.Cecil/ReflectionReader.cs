@@ -62,7 +62,7 @@ namespace Mono.Cecil {
 		protected GenericInstanceMethod [] m_methodSpecs;
 
 		bool m_isCorlib;
-		IAssemblyNameReference m_corlib;
+		AssemblyNameReference m_corlib;
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
@@ -289,7 +289,7 @@ namespace Mono.Cecil {
 			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
 			if (coreType == null) {
 				if (m_corlib == null) {
-					foreach (IAssemblyNameReference ar in m_module.AssemblyReferences) {
+					foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
 						if (ar.Name == Constants.Corlib) {
 							m_corlib = ar;
 							break;
@@ -709,7 +709,7 @@ namespace Mono.Cecil {
 				if (etRow.Implementation.TokenType != TokenType.ExportedType)
 					continue;
 
-				ITypeReference owner = buffer [etRow.Implementation.RID - 1];
+				TypeReference owner = buffer [etRow.Implementation.RID - 1];
 				string name = m_root.Streams.StringsHeap [etRow.TypeName];
 				buffer [i] = m_module.TypeReferences [string.Concat (owner.FullName, '/', name)];
 			}
@@ -1025,10 +1025,10 @@ namespace Mono.Cecil {
 
 		protected void SetInitialValue (FieldDefinition field)
 		{
-			if (field.RVA != RVA.Zero && field.FieldType is ITypeDefinition) {
+			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
 				BinaryReader br = this.Module.ImageReader.MetadataReader.GetDataReader (field.RVA);
 				field.InitialValue = br.ReadBytes (
-					(int) (field.FieldType as ITypeDefinition).LayoutInfo.ClassSize);
+					(int) (field.FieldType as TypeDefinition).ClassSize);
 			} else
 				field.InitialValue = new byte [0];
 		}

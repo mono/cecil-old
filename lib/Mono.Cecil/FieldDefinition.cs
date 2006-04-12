@@ -50,10 +50,6 @@ namespace Mono.Cecil {
 
 		MarshalDesc m_marshalDesc;
 
-		public IFieldLayoutInfo LayoutInfo {
-			get { return this; }
-		}
-
 		public bool HasLayoutInfo {
 			get { return m_hasInfo; }
 		}
@@ -189,8 +185,8 @@ namespace Mono.Cecil {
 				nf.InitialValue = field.InitialValue;
 			else
 				nf.InitialValue = new byte [0];
-			if (field.LayoutInfo.HasLayoutInfo)
-				nf.LayoutInfo.Offset = field.LayoutInfo.Offset;
+			if (field.HasLayoutInfo)
+				nf.Offset = field.Offset;
 
 			foreach (CustomAttribute ca in field.CustomAttributes)
 				nf.CustomAttributes.Add (CustomAttribute.Clone (ca, context));

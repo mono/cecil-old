@@ -307,7 +307,7 @@ namespace Mono.Cecil {
 				} else
 					cattr = BuildCustomAttribute (ctor, ca);
 
-				ICustomAttributeCollection owner = null;
+				CustomAttributeCollection owner = null;
 				switch (caRow.Parent.TokenType) {
 				case TokenType.Assembly :
 					owner = this.Module.Assembly.CustomAttributes;

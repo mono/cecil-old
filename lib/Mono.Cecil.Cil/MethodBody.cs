@@ -117,7 +117,7 @@ namespace Mono.Cecil.Cil {
 
 			foreach (VariableDefinition var in body.Variables)
 				nb.Variables.Add (new VariableDefinition (
-					context.Import (var.Variable)));
+					context.Import (var.VariableType)));
 
 			foreach (Instruction instr in body.Instructions) {
 				Instruction ni = new Instruction (instr.OpCode);
