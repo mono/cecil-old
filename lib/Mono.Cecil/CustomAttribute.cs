@@ -58,21 +58,37 @@ namespace Mono.Cecil {
 
 		public IDictionary Fields {
 			get {
-				if (m_fields == null) {
+				if (m_fields == null)
 					m_fields = new Hashtable ();
-					m_fieldTypes = new Hashtable ();
-				}
+
 				return m_fields;
 			}
 		}
 
 		public IDictionary Properties {
 			get {
-				if (m_properties == null) {
+				if (m_properties == null)
 					m_properties = new Hashtable ();
-					m_propTypes = new Hashtable ();
-				}
+
 				return m_properties;
+			}
+		}
+
+		internal IDictionary FieldTypes {
+			get {
+				if (m_fieldTypes == null)
+					m_fieldTypes = new Hashtable ();
+
+				return m_fieldTypes;
+			}
+		}
+
+		internal IDictionary PropertyTypes {
+			get {
+				if (m_propTypes == null)
+					m_propTypes = new Hashtable ();
+
+				return m_propTypes;
 			}
 		}
 
@@ -94,22 +110,22 @@ namespace Mono.Cecil {
 
 		public TypeReference GetFieldType (string fieldName)
 		{
-			return (TypeReference) m_fieldTypes [fieldName];
+			return (TypeReference) this.FieldTypes [fieldName];
 		}
 
 		public TypeReference GetPropertyType (string propertyName)
 		{
-			return (TypeReference) m_propTypes [propertyName];
+			return (TypeReference) this.PropertyTypes [propertyName];
 		}
 
 		public void SetFieldType (string fieldName, ITypeReference type)
 		{
-			m_fieldTypes [fieldName] = type;
+			this.FieldTypes [fieldName] = type;
 		}
 
 		public void SetPropertyType (string propertyName, ITypeReference type)
 		{
-			m_propTypes [propertyName] = type;
+			this.PropertyTypes [propertyName] = type;
 		}
 
 		object ICloneable.Clone ()
@@ -139,10 +155,10 @@ namespace Mono.Cecil {
 
 			foreach (object o in custattr.ConstructorParameters)
 				ca.ConstructorParameters.Add (o);
-			Clone (custattr.m_fields, ca.m_fields);
-			Clone (custattr.m_fieldTypes, ca.m_fieldTypes);
-			Clone (custattr.m_properties, ca.m_properties);
-			Clone (custattr.m_propTypes, ca.m_propTypes);
+			Clone (custattr.Fields, ca.Fields);
+			Clone (custattr.FieldTypes, ca.FieldTypes);
+			Clone (custattr.Properties, ca.Properties);
+			Clone (custattr.PropertyTypes, ca.PropertyTypes);
 			return ca;
 		}
 
