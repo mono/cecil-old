@@ -33,9 +33,10 @@ public class Program
 		}
 	}
 }"""
-		InstrumentAndExecute("1\n2\n3", "GenericEnumerator", code) do (assembly as AssemblyDefinition):
-			pass // no instrumentation for now
+		InstrumentAndExecute("1\n2\n3", "GenericEnumerator", code, NoInstrumentation)		
 		
+	def NoInstrumentation(assembly as AssemblyDefinition):
+		pass
 		
 	[Test]
 	def ReplaceByGenericInstanceMethod():
@@ -82,18 +83,22 @@ public class Program
 		for instr as Instruction in body.Instructions:
 			if instr.OpCode.Value == opcode.Value:
 				return instr
+				
+	callable Instrumentation(assembly as AssemblyDefinition)
 
 	def InstrumentAndExecute(expectedOutput as string, assemblyName as string, code as string,
-							instrument as callable(AssemblyDefinition)):
-		fname = BuildTempPath(Path.Combine("before", "${assemblyName}.exe"))
-		EmitCSharpAssembly(fname, code)
-		assembly = AssemblyFactory.GetAssembly(fname)
-		
-		instrument(assembly) if instrument is not null
+							instrument as Instrumentation):
+								
+		assembly = Instrument(assemblyName, code, instrument)
 		
 		roundtripped = BuildTempPath(Path.Combine("after", "${assemblyName}.exe"))
 		AssemblyFactory.SaveAssembly(assembly, roundtripped)
+		ExecuteAssemblyAndExpect(roundtripped, expectedOutput)
 		
-		output = ExecuteAssembly(roundtripped)
-		Assert.AreEqual(expectedOutput.Trim(), output.Trim())
+	def Instrument(assemblyName as string, code as string, instrument as Instrumentation):
+		fname = BuildTempPath(Path.Combine("before", "${assemblyName}.exe"))
+		EmitCSharpAssembly(fname, code)
+		assembly = AssemblyFactory.GetAssembly(fname)
+		instrument(assembly) if instrument is not null
+		return assembly
 

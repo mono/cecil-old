@@ -1,3 +1,11 @@
+2006-03-17	Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
+	* Mono.Cecil.Tests/Globals.boo
+	  Mono.Cecil.Tests/RegressionTestFixture.boo
+	  Mono.Cecil.Tests/AssemblyCreationTestFixture.boo
+	  Mono.Cecil.Tests/RoundtripTestFixture.boo:
+	  	Execute peverify.exe for additional level of protection.
+
 2006-03-06  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
 	* Mono.Cecil.Tests/RoundtripTestFixture.boo:

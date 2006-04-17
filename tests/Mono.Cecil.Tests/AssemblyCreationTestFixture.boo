@@ -22,7 +22,7 @@ class AssemblyCreationTestFixture:
 		worker.Emit(OpCodes.Call, ImportConsoleWriteLine())
 		worker.Emit(OpCodes.Ret)	
 		
-		ExecuteAssemblyAndExpect("Hello, world!")
+		ExecuteAndExpect("Hello, world!")
 		
 	[Test]
 	def HelloGenericWorld():
@@ -45,7 +45,7 @@ class AssemblyCreationTestFixture:
 		
 		worker.Emit(OpCodes.Ret)
 		
-		ExecuteAssemblyAndExpect("Foo")
+		ExecuteAndExpect("Foo")
 		
 		
 	def SetUpAssembly(assemblyName as string):
@@ -66,11 +66,10 @@ class AssemblyCreationTestFixture:
 	def ImportConsoleWriteLine():
 		return Import(typeof(Console).GetMethod("WriteLine", (string,)))
 		
-	def ExecuteAssemblyAndExpect(expected as string):
+	def ExecuteAndExpect(expected as string):
 		fname = BuildTempPath("${_assembly.Name.Name}.exe")
 		AssemblyFactory.SaveAssembly(_assembly, fname)
-		output = ExecuteAssembly(fname)
-		Assert.AreEqual(expected.Trim(), output.Trim())
+		ExecuteAssemblyAndExpect(fname, expected)
 		
 	def Import(type as System.Type):
 		return _assembly.MainModule.Import(type)

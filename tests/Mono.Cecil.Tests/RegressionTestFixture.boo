@@ -40,7 +40,12 @@ class RegressionTestFixture:
 		return CecilAssemblyPrinter.ToString(asm)
 		
 	static def GetTestCasesLocation():
-		return Path.Combine(
-			Path.GetDirectoryName(typeof(RegressionTestFixture).Module.FullyQualifiedName),
-			"../TestCases")
+		basePath = Path.GetDirectoryName(System.Uri(typeof(RegressionTestFixture).Assembly.CodeBase).LocalPath)
+		while true:
+			location = Path.Combine(basePath, "TestCases")
+			return location if Directory.Exists(location)
+			oldBasePath = basePath
+			basePath = Path.GetDirectoryName(basePath)
+			break if oldBasePath == basePath
+		raise "TestCases path not found!"
 	
