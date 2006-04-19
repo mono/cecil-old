@@ -73,6 +73,7 @@
 ./Mono.Cecil/IHasConstant.cs
 ./Mono.Cecil/IHasMarshalSpec.cs
 ./Mono.Cecil/IHasSecurity.cs
+./Mono.Cecil/IIndexedCollection.cs
 ./Mono.Cecil/IInterfaceCollection.cs
 ./Mono.Cecil/ILinkedResource.cs
 ./Mono.Cecil/IMarshalSpec.cs

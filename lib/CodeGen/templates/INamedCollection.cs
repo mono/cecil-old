@@ -51,9 +51,9 @@ namespace <%=$cur_coll.target%> {
 	public delegate void <%=$cur_coll.item_name%>EventHandler (
 		object sender, <%=$cur_coll.item_name%>EventArgs ea);
 
-	public interface <%=$cur_coll.intf%> : ICollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
+	public interface <%=$cur_coll.intf%> : IIndexedCollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
-		<%=$cur_coll.type%> this [int index] { get; }
+		new <%=$cur_coll.type%> this [int index] { get; }
 		<%=$cur_coll.type%> this [string fullName] { get; }
 
 		<%=$cur_coll.container%> Container { get; }
