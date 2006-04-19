@@ -47,7 +47,7 @@ namespace <%=$cur_coll.target%> {
 		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
 		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
 	
-		public new <%=$cur_coll.type%> this [int index] {
+		public <%=$cur_coll.type%> this [int index] {
 			get { return this.BaseGet (index) as <%=$cur_coll.type%>; }
 			set { this.BaseSet (index, value); }
 		}
