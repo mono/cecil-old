@@ -197,7 +197,7 @@ namespace Mono.Cecil {
 
 			if (types [Constants.ModuleType] == null)
 				types.Add (new TypeDefinition (
-						Constants.ModuleType, string.Empty, (TypeAttributes) 0));
+						Constants.ModuleType, string.Empty, TypeAttributes.NotPublic));
 
 			foreach (TypeDefinition t in types)
 				m_typeDefStack.Add (t);
@@ -612,7 +612,7 @@ namespace Mono.Cecil {
 		{
 			FieldMarshalTable fmTable = m_tableWriter.GetFieldMarshalTable ();
 			FieldMarshalRow fmRow = m_rowWriter.CreateFieldMarshalRow (
-				((IMetadataTokenProvider) marshalSpec.Container).MetadataToken,
+				marshalSpec.Container.MetadataToken,
 				m_sigWriter.AddMarshalSig (GetMarshalSig (marshalSpec)));
 
 			fmTable.Rows.Add (fmRow);

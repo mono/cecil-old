@@ -1,3 +1,10 @@
+2006-04-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/TableComparers.cs:
+		Ensure <Module> will always be the first type.
+		Fix roundtrip of Nemerle.
+
 2006-04-19  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CodeWriter.cs:
