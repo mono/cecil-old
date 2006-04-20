@@ -989,13 +989,23 @@ namespace Mono.Cecil {
 				// not optimized
 				ArrayShape shape = new ArrayShape ();
 				shape.Rank = aryType.Dimensions.Count;
-				shape.Sizes = new int [shape.Rank];
-				shape.LoBounds = new int [shape.Rank];
+				shape.NumSizes = 0;
+
+				for (int i = 0; i < shape.Rank; i++) {
+					ArrayDimension dim = aryType.Dimensions [i];
+					if (dim.UpperBound > 0)
+						shape.NumSizes++;
+				}
+
+				shape.Sizes = new int [shape.NumSizes];
+				shape.NumLoBounds = shape.Rank;
+				shape.LoBounds = new int [shape.NumLoBounds];
 
 				for (int i = 0; i < shape.Rank; i++) {
 					ArrayDimension dim = aryType.Dimensions [i];
 					shape.LoBounds [i] = dim.LowerBound;
-					shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
+					if (dim.UpperBound > 0)
+						shape.Sizes [i] = dim.UpperBound - dim.LowerBound + 1;
 				}
 
 				ARRAY ary = new ARRAY ();

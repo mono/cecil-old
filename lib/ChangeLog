@@ -1,5 +1,9 @@
 2006-04-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix writing of complex arrays.
+		Now we roundtrip SharpDevelop.
+
 	* Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil/TableComparers.cs:
 		Ensure <Module> will always be the first type.
