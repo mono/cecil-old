@@ -118,7 +118,7 @@ namespace <%=$cur_coll.target%> {
 		{
 			if (On<%=$cur_coll.item_name%>Removed != null)
 				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
-			m_items.Remove (index);
+			m_items.RemoveAt (index);
 		}
 
 		public void CopyTo (Array ary, int index)
