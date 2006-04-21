@@ -44,34 +44,6 @@ namespace System {
 #if CF_1_0 || CF_2_0
 namespace System.Security {
 	
-	public class PermissionSet {
-		
-		public PermissionSet Copy ()
-		{
-			return this;
-		}
-
-		public PermissionSet Union (PermissionSet other)
-		{
-			return this;
-		}
-
-		public bool IsSubsetOf (PermissionSet other)
-		{
-			return false;
-		}
-
-		public string ToXml ()
-		{
-			return string.Empty;
-		}
-		
-		public static PermissionSet FromXml (string xml)
-		{
-			return new PermissionSet ();
-		}
-	}
-
 	public class SecurityElement 	{
 		
 		public SecurityElement (string tag)
@@ -91,13 +63,6 @@ namespace System.Security {
 		public void AddAttribute (string name, string value)
 		{	
 		}
-	}
-}
-
-namespace System.Security.Permissions {
-	
-	public class SecurityAttribute {
-		
 	}
 }
 #endif

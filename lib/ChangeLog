@@ -1,3 +1,15 @@
+2006-04-21	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>:
+
+	* Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/ISecurityDeclaration.cs
+	  Mono.Cecil/SecurityDeclarationCollection.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+	  	Patch by Almann T. Goo (almann.goo@gmail.com) conditionally
+		removing references to PermissionSet when compiling for the CompactFramework.
+		
+	* Mono.Cecil/CompactFrameworkCompatibility.cs:
+		System.Security.PermissionSet definition no longer needed.
+
 2006-04-21  Jb Evain  <jbevain@gmail.com>
 
 	* *Collection.cs:

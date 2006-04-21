@@ -434,8 +434,10 @@ namespace Mono.Cecil {
 			if (!dec.IsReadable)
 				return dec.Blob;
 
+#if !CF_1_0 && !CF_2_0
 			if (dec.PermissionSet != null)
 				return Encoding.Unicode.GetBytes (dec.PermissionSet.ToXml ().ToString ());
+#endif
 
 			return new byte [0];
 		}

@@ -33,6 +33,10 @@ namespace Mono.Cecil {
 	public interface ISecurityDeclaration : IReflectionVisitable {
 
 		SecurityAction Action { get; set; }
+
+#if !CF_1_0 && !CF_2_0
 		PermissionSet PermissionSet { get; set; }
+#endif
+
 	}
 }

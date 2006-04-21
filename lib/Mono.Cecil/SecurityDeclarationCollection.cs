@@ -85,7 +85,9 @@ namespace Mono.Cecil {
 			SecurityDeclaration current = (SecurityDeclaration) m_items[value.Action];
 			if (current != null) {
 				// ... further additions are transformed into unions
-				current.PermissionSet = current.PermissionSet.Union (value.PermissionSet);
+#if !CF_1_0 && !CF_2_0
+                current.PermissionSet = current.PermissionSet.Union (value.PermissionSet);
+#endif
 			} else {
 				m_items.Add (value.Action, value);
 				SetHasSecurity (true);
@@ -115,7 +117,12 @@ namespace Mono.Cecil {
 			if (item == null)
 				return false;
 
+#if !CF_1_0 && !CF_2_0            
 			return value.PermissionSet.IsSubsetOf (item.PermissionSet);
+#else
+            // XXX For CF, this concept does not exist--so always be true
+            return true;
+#endif
 		}
 
 		public void Remove (SecurityAction action)

@@ -35,8 +35,11 @@ namespace Mono.Cecil {
 	public sealed class SecurityDeclaration : ISecurityDeclaration, ICloneable {
 
 		SecurityAction m_action;
-		PermissionSet m_permSet;
 
+#if !CF_1_0 && !CF_2_0
+		PermissionSet m_permSet;
+#endif
+        
 		bool m_readable;
 		byte [] m_blob;
 
@@ -45,10 +48,12 @@ namespace Mono.Cecil {
 			set { m_action = value; }
 		}
 
+#if !CF_1_0 && !CF_2_0
 		public PermissionSet PermissionSet {
 			get { return m_permSet; }
 			set { m_permSet = value; }
 		}
+#endif
 
 		public bool IsReadable {
 			get { return m_readable; }
@@ -85,7 +90,9 @@ namespace Mono.Cecil {
 				return sd;
 			}
 
-			sd.PermissionSet = sec.PermissionSet.Copy ();
+#if !CF_1_0 && !CF_2_0
+            sd.PermissionSet = sec.PermissionSet.Copy ();
+#endif
 			return sd;
 		}
 
