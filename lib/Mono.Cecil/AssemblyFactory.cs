@@ -78,7 +78,7 @@ namespace Mono.Cecil {
 
 					MemoryBinaryWriter writer = new MemoryBinaryWriter ();
 					WriteAssembly (asm, writer);
-					bw.Write (writer.ToArray ());
+					writer.MemoryStream.WriteTo (bw.BaseStream);
 				} finally {
 					bw.Close();
 				}

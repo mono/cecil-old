@@ -1,4 +1,10 @@
-2006-04-21	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>:
+2006-04-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil.Binary/MemoryBinaryWriter.cs:
+		Use MemoryStream::WriteTo when it's possible.
+
+2006-04-21	Rodrigo B. de Oliveira	<rodrigobamboo@gmail.com>
 
 	* Mono.Cecil/SecurityDeclaration.cs
 	  Mono.Cecil/ISecurityDeclaration.cs

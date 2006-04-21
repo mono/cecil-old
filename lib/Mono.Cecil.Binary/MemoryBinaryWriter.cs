@@ -53,7 +53,7 @@ namespace Mono.Cecil.Binary {
 
 		public void Write (MemoryBinaryWriter writer)
 		{
-			Write (writer.ToArray ());
+			writer.MemoryStream.WriteTo (this.BaseStream);
 		}
 
 		public byte [] ToArray ()
