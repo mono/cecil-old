@@ -1,5 +1,11 @@
 2006-03-17	Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
+	* Mono.Cecil.Tests/Globals.boo:
+		Roundtrip assemblies before execution in order to expose
+		any roundtripping errors.
+
+2006-03-17	Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
+
 	* Mono.Cecil.Tests/Globals.boo
 	  Mono.Cecil.Tests/RegressionTestFixture.boo
 	  Mono.Cecil.Tests/AssemblyCreationTestFixture.boo

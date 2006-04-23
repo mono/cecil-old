@@ -1,6 +1,7 @@
 namespace Mono.Cecil.Tests
 
 import System.IO
+import Mono.Cecil
 
 def BuildTempPath(fname as string):
 	path = Path.Combine(Path.Combine(Path.GetTempPath(), "Mono.Cecil.Tests"), fname)
@@ -15,9 +16,14 @@ def ExecuteAssembly(fname as string):
 	CopyBooLangTo(Path.GetDirectoryName(fname))
 	return shell(fname, "")
 	
+def RoundtripAssembly(fname as string):
+	assembly = AssemblyFactory.GetAssembly(fname)
+	AssemblyFactory.SaveAssembly(assembly, fname)
+	
 def ExecuteAssemblyAndExpect(fname as string, expected as string):
+	RoundtripAssembly(fname)
 	output = ExecuteAssembly(fname)
-	NUnit.Framework.Assert.AreEqual(expected.Trim(), output.Trim().Replace("\r\n", "\n"))
+	NUnit.Framework.Assert.AreEqual(expected.Trim(), output.Trim().Replace("\r\n", "\n"))	
 	VerifyAssembly(fname)
 
 def CopyBooLangTo(path as string):
