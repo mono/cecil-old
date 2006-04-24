@@ -105,7 +105,9 @@ namespace Mono.Cecil.Cil {
 		internal static Instruction GetInstruction (MethodBody oldBody, MethodBody newBody, Instruction i)
 		{
 			int pos = oldBody.Instructions.IndexOf (i);
-			return newBody.Instructions [pos];
+			if (pos > -1 && pos < newBody.Instructions.Count)
+				return newBody.Instructions [pos];
+			return null;
 		}
 
 		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ImportContext context)
