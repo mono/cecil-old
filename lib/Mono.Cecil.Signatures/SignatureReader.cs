@@ -42,15 +42,7 @@ namespace Mono.Cecil.Signatures {
 		ReflectionReader m_reflectReader;
 		byte [] m_blobData;
 
-		// flyweights
-		IDictionary m_fieldSigs;
-		IDictionary m_propSigs;
-		IDictionary m_typeSpecs;
-		IDictionary m_methodSpecs;
-		IDictionary m_methodsDefSigs;
-		IDictionary m_methodsRefSigs;
-		IDictionary m_localVars;
-		IDictionary m_marshalSpecs;
+		IDictionary m_signatures;
 
 		public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
 		{
@@ -59,95 +51,84 @@ namespace Mono.Cecil.Signatures {
 
 			m_blobData = m_root.Streams.BlobHeap != null ? m_root.Streams.BlobHeap.Data : new byte [0];
 
-			m_fieldSigs = new Hashtable ();
-			m_propSigs = new Hashtable ();
-			m_methodsDefSigs = new Hashtable ();
-			m_methodsRefSigs = new Hashtable ();
-			m_localVars = new Hashtable ();
-			m_marshalSpecs = new Hashtable ();
+			m_signatures = new Hashtable ();
 		}
 
 		public FieldSig GetFieldSig (uint index)
 		{
-			FieldSig f = m_fieldSigs [index] as FieldSig;
+			FieldSig f = m_signatures [index] as FieldSig;
 			if (f == null) {
 				f = new FieldSig (index);
 				f.Accept (this);
-				m_fieldSigs [index] = f;
+				m_signatures [index] = f;
 			}
 			return f;
 		}
 
 		public PropertySig GetPropSig (uint index)
 		{
-			PropertySig p = m_propSigs [index] as PropertySig;
+			PropertySig p = m_signatures [index] as PropertySig;
 			if (p == null) {
 				p = new PropertySig (index);
 				p.Accept (this);
-				m_propSigs [index] = p;
+				m_signatures [index] = p;
 			}
 			return p;
 		}
 
 		public MethodDefSig GetMethodDefSig (uint index)
 		{
-			MethodDefSig m = m_methodsDefSigs [index] as MethodDefSig;
+			MethodDefSig m = m_signatures [index] as MethodDefSig;
 			if (m == null) {
 				m = new MethodDefSig (index);
 				m.Accept (this);
-				m_methodsDefSigs [index] = m;
+				m_signatures [index] = m;
 			}
 			return m;
 		}
 
 		public MethodRefSig GetMethodRefSig (uint index)
 		{
-			MethodRefSig m = m_methodsRefSigs [index] as MethodRefSig;
+			MethodRefSig m = m_signatures [index] as MethodRefSig;
 			if (m == null) {
 				m = new MethodRefSig (index);
 				m.Accept (this);
-				m_methodsRefSigs [index] = m;
+				m_signatures [index] = m;
 			}
 			return m;
 		}
 
 		public TypeSpec GetTypeSpec (uint index)
 		{
-			TypeSpec ts = null;
-			if (m_typeSpecs == null)
-				m_typeSpecs = new Hashtable ();
-			else
-				ts = m_typeSpecs [index] as TypeSpec;
+			TypeSpec ts = m_signatures [index] as TypeSpec;
 
 			if (ts == null) {
 				ts = ReadTypeSpec (m_blobData, (int) index);
-				m_typeSpecs [index] = ts;
+				m_signatures [index] = ts;
 			}
+
 			return ts;
 		}
 
 		public MethodSpec GetMethodSpec (uint index)
 		{
-			MethodSpec ms = null;
-			if (m_methodSpecs == null)
-				m_methodSpecs = new Hashtable ();
-			else
-				ms = m_methodSpecs [index] as MethodSpec;
+			MethodSpec ms = m_signatures [index] as MethodSpec;
 
 			if (ms == null) {
 				ms = ReadMethodSpec (m_blobData, (int) index);
-				m_methodSpecs [index] = ms;
+				m_signatures [index] = ms;
 			}
+
 			return ms;
 		}
 
 		public LocalVarSig GetLocalVarSig (uint index)
 		{
-			LocalVarSig lv = m_localVars [index] as LocalVarSig;
+			LocalVarSig lv = m_signatures [index] as LocalVarSig;
 			if (lv == null) {
 				lv = new LocalVarSig (index);
 				lv.Accept (this);
-				m_localVars [index] = lv;
+				m_signatures [index] = lv;
 			}
 			return lv;
 		}
@@ -187,11 +168,11 @@ namespace Mono.Cecil.Signatures {
 
 		public MarshalSig GetMarshalSig (uint index)
 		{
-			MarshalSig ms = m_marshalSpecs [index] as MarshalSig;
+			MarshalSig ms = m_signatures [index] as MarshalSig;
 			if (ms == null) {
 				byte [] data = m_root.Streams.BlobHeap.Read (index);
 				ms = ReadMarshalSig (data);
-				m_marshalSpecs [index] = ms;
+				m_signatures [index] = ms;
 			}
 			return ms;
 		}

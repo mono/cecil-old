@@ -1,4 +1,9 @@
-2006-04-24 Jb Evain  <jbveain@gmail.com>
+2006-04-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Don't create tons of hashtables.
+
+2006-04-24  Jb Evain  <jbveain@gmail.com>
 
        * Mono.Cecil.Cil/MethodBody.cs:
                Fix cloning.
