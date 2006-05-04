@@ -1,5 +1,8 @@
 2006-05-04  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TableComparers.cs:
+		TypeDef.Compare: the name is enough against <Module>.
+
 	* Mono.Cecil/ReflectionWriter.cs:
 		Fix writing of namedargs in custom attributes.
 

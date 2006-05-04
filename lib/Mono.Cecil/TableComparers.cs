@@ -47,11 +47,11 @@ namespace Mono.Cecil {
 				if (a == null || b == null)
 					throw new ReflectionException ("TypeDefComparer can only compare TypeDefinition");
 
-				if (a.FullName == Constants.ModuleType && b.FullName == Constants.ModuleType)
+				if (a.Name == Constants.ModuleType && b.Name == Constants.ModuleType)
 					return 0;
-				else if (a.FullName == Constants.ModuleType)
+				else if (a.Name == Constants.ModuleType)
 					return -1;
-				else if (b.FullName == Constants.ModuleType)
+				else if (b.Name == Constants.ModuleType)
 					return 1;
 
 				return Comparer.Default.Compare (a.FullName, b.FullName);
