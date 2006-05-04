@@ -1,3 +1,8 @@
+2006-05-04  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix writing of namedargs in custom attributes.
+
 2006-04-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Signatures/SignatureReader.cs:

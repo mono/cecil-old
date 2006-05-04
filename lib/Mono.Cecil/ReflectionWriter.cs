@@ -1303,6 +1303,7 @@ namespace Mono.Cecil {
 			na.Property = !field;
 
 			na.FieldOrPropName = name;
+			na.FieldOrPropType = GetCorrespondingType (type.FullName);
 			na.FixedArg = CreateFixedArg (type, value);
 
 			return na;
