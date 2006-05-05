@@ -1,3 +1,10 @@
+2006-05-05  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Add an AssemblyFactory.GetAssemblyManifest method.
+
 2006-05-04  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/TableComparers.cs:

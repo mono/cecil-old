@@ -38,9 +38,14 @@ namespace Mono.Cecil {
 
 		ImageReader m_ir;
 		Image m_img;
+		bool m_manifestOnly;
 		AssemblyDefinition m_asmDef;
 		ModuleDefinition m_module;
 		TablesHeap m_tHeap;
+
+		public bool ManifestOnly {
+			get { return m_manifestOnly; }
+		}
 
 		public ImageReader ImageReader {
 			get { return m_ir; }
@@ -55,6 +60,11 @@ namespace Mono.Cecil {
 			m_ir = ir;
 			m_img = ir.Image;
 			m_tHeap = m_img.MetadataRoot.Streams.TablesHeap;
+		}
+
+		public StructureReader (ImageReader ir, bool manifestOnly) : this (ir)
+		{
+			m_manifestOnly = manifestOnly;
 		}
 
 		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
@@ -177,7 +187,7 @@ namespace Mono.Cecil {
 
 			ModuleRow mr = mt.Rows [0] as ModuleRow;
 			string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
-			ModuleDefinition main = new ModuleDefinition (name, m_asmDef, m_ir, true);
+			ModuleDefinition main = new ModuleDefinition (name, m_asmDef, this, true);
 			main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 			main.MetadataToken = new MetadataToken (TokenType.Module, 1);
 			modules.Add (main);
@@ -200,7 +210,8 @@ namespace Mono.Cecil {
 								throw new ReflectionException ("Can not read module : " + name);
 
 							mr = mt.Rows [0] as ModuleRow;
-							ModuleDefinition modext = new ModuleDefinition (name, m_asmDef, module, false);
+							ModuleDefinition modext = new ModuleDefinition (name, m_asmDef,
+								new StructureReader (module, m_manifestOnly), false);
 							modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 
 							modules.Add (modext);
@@ -230,6 +241,9 @@ namespace Mono.Cecil {
 
 		public override void TerminateAssemblyDefinition (AssemblyDefinition asm)
 		{
+			if (m_manifestOnly)
+				return;
+
 			foreach (ModuleDefinition mod in asm.Modules)
 				mod.Controller.Reader.VisitModuleDefinition (mod);
 		}

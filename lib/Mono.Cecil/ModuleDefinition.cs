@@ -43,7 +43,7 @@ namespace Mono.Cecil {
 
 		Guid m_mvid;
 		bool m_main;
-		bool m_new;
+		bool m_manifestOnly;
 
 		AssemblyNameReferenceCollection m_asmRefs;
 		ModuleReferenceCollection m_modRefs;
@@ -69,11 +69,6 @@ namespace Mono.Cecil {
 		public bool Main {
 			get { return m_main; }
 			set { m_main = value; }
-		}
-
-		public bool IsNew {
-			get { return m_new; }
-			set { m_new = value; }
 		}
 
 		public AssemblyNameReferenceCollection AssemblyReferences {
@@ -148,12 +143,12 @@ namespace Mono.Cecil {
 		{
 		}
 
-		internal ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader) :
+		internal ModuleDefinition (string name, AssemblyDefinition asm, StructureReader reader) :
 			this (name, asm, reader, false)
 		{
 		}
 
-		internal ModuleDefinition (string name, AssemblyDefinition asm, ImageReader reader, bool main) : base (name)
+		internal ModuleDefinition (string name, AssemblyDefinition asm, StructureReader reader, bool main) : base (name)
 		{
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
@@ -165,11 +160,10 @@ namespace Mono.Cecil {
 #if !CF_1_0
 			m_mvid = Guid.NewGuid ();
 #endif
-			m_new = reader == null;
-
-			if (!m_new) {
+			if (reader != null) {
 				m_image = reader.Image;
-				m_imgReader = reader;
+				m_imgReader = reader.ImageReader;
+				m_manifestOnly = reader.ManifestOnly;
 			} else
 				m_image = Image.CreateImage ();
 
@@ -406,6 +400,9 @@ namespace Mono.Cecil {
 
 		public void FullLoad ()
 		{
+			if (m_manifestOnly)
+				m_controller.Reader.VisitModuleDefinition (this);
+
 			foreach (TypeDefinition type in this.Types) {
 				foreach (MethodDefinition meth in type.Methods)
 					meth.LoadBody ();

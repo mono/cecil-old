@@ -52,6 +52,17 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
+		public static AssemblyDefinition GetAssemblyManifest (string file)
+		{
+			ImageReader brv = ImageReader.Read (file);
+			StructureReader srv = new StructureReader (brv, true);
+			AssemblyDefinition asm = new AssemblyDefinition (
+				new AssemblyNameDefinition (), srv);
+
+			asm.Accept (srv);
+			return asm;
+		}
+
 		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt, AssemblyKind kind)
 		{
 			AssemblyNameDefinition asmName = new AssemblyNameDefinition ();
