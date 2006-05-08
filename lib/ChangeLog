@@ -1,5 +1,8 @@
 2006-05-08  Jb Evain  <jbevain@gmail.com>
 
+	* Makefile:
+		Sign the assembly.
+
 	* cecil.csproj:
 		Add an msbuild file.
 
