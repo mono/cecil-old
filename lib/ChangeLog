@@ -1,3 +1,8 @@
+2006-05-08  Jb Evain  <jbevain@gmail.com>
+
+	* cecil.csproj:
+		Add an msbuild file.
+
 2006-05-05  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFactory.cs
