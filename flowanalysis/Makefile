@@ -1,9 +1,11 @@
 MCS = mcs
+KEY_FILE = ../../mcs/class/mono.snk
+MCS_FLAGS = -keyfile:$(KEY_FILE)
 BUILD.DIR = bin
 MONO.CECIL.DLL = ../lib/Mono.Cecil.dll
 
 all: init
-	$(MCS) @Cecil.FlowAnalysis.sources /target:library /out:$(BUILD.DIR)/Cecil.FlowAnalysis.dll /r:$(BUILD.DIR)/Mono.Cecil.dll
+	$(MCS) $(MCS_FLAGS) @Cecil.FlowAnalysis.sources /target:library /out:$(BUILD.DIR)/Cecil.FlowAnalysis.dll /r:$(BUILD.DIR)/Mono.Cecil.dll
 	
 init:
 	mkdir -p $(BUILD.DIR)
