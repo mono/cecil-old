@@ -1,3 +1,7 @@
+2006-05-09  Jb Evain  <jbevain@gmail.com>
+
+	* cecil.build: rename to default.build
+
 2006-05-08  Jb Evain  <jbevain@gmail.com>
 
 	* Makefile:
