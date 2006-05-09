@@ -33,7 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-
   <ItemGroup>
     <Compile Include="Mono.Cecil.Binary\BaseImageVisitor.cs" />
     <Compile Include="Mono.Cecil.Binary\CLIHeader.cs" />
@@ -374,7 +373,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AUTHORS" />
-    <None Include="cecil.build" />
     <None Include="ChangeLog" />
     <None Include="CodeGen\cecil-gen-sources.rb" />
     <None Include="CodeGen\cecil-gen-tests.rb" />
@@ -404,10 +402,10 @@
     <None Include="CodeGen\templates\Tests.cs" />
     <None Include="CodeGen\templates\Utilities.cs" />
     <None Include="configure" />
+    <None Include="default.build" />
     <None Include="Makefile" />
     <None Include="mono-cecil.pc.in" />
     <None Include="Mono.Cecil.dll.sources" />
-    <None Include="mono.snk" />
     <None Include="Mono.Xml\ChangeLog" />
     <None Include="NEWS" />
     <None Include="README" />
