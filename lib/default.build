@@ -3,10 +3,7 @@
 
     <property name="debug" value="true" />
 	<property name="optimize" value="false" />
-    <property name="version" value="0.0.1" />
-    <property name="outdir" value="bin" />
-    <property name="src-name" value="Cecil-${version}-src.zip" />
-    <property name="bin-name" value="Cecil-${version}-bin.zip" />
+    <property name="build.dir" value="bin" />
 	
 	<!-- allow properties to be customized in external file" -->
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
@@ -22,7 +19,7 @@
                 <items>
                     <include name="**/bin" />
                     <include name="**/obj" />
-                    <include name="${outdir}" />
+                    <include name="${build.dir}" />
                 </items>
             </in>
             <do>
@@ -32,11 +29,11 @@
     </target>
     
     <target name="init">
-        <mkdir dir="${outdir}" />
+        <mkdir dir="${build.dir}" />
     </target>
     
     <target name="cecil" depends="init">
-        <csc output="${outdir}/Mono.Cecil.dll" 
+        <csc output="${build.dir}/Mono.Cecil.dll" 
              target="library" debug="${debug}" unsafe="false" optimize="${optimize}">
             <sources refid="all-files"/>
         </csc>
@@ -53,7 +50,7 @@
 	</target>
 	
 	<target name="compactframework-compilation">
-		<csc output="${outdir}/Mono.Cecil.dll"
+		<csc output="${build.dir}/Mono.Cecil.dll"
 			target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
 			noconfig="true" nostdlib="true"
 			define="${compactframework.defines}">			
