@@ -1,3 +1,8 @@
+2006-05-12  Jb Evain  <jbevain@gmail.com>
+
+	* Cecil.FlowAnalysis/AssemblyInfo.cs:
+		Hide the info if FlowAnalysis is embedded.
+
 2006-05-08  Jb Evain  <jbevain@gmail.com>
 
 	* Cecil.FlowAnalysis/AssemblyInfo.cs

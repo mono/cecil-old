@@ -26,14 +26,17 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+#if !EMBEDDED
+
+[assembly: AssemblyTitle("Cecil.FlowAnalysis")]
+[assembly: AssemblyDescription("A flow analysis framework for Mono.Cecil")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCompany("db4objects Inc.")]
+[assembly: AssemblyProduct("Cecil.FlowAnalysis")]
+[assembly: AssemblyCopyright("(C) db4objects Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.0.0")]
 
+#endif
