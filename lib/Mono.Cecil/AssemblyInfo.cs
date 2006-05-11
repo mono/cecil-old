@@ -31,10 +31,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("Cecil")]
+#if !EMBEDDED
+
+[assembly: AssemblyTitle ("Mono.Cecil")]
 [assembly: AssemblyDescription ("Library for reading and writing CIL images")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyProduct ("Cecil")]
+[assembly: AssemblyProduct ("Mono.Cecil")]
 [assembly: AssemblyCopyright ("(C) 2005, Jb Evain")]
 [assembly: AssemblyCulture ("")]
 
@@ -42,3 +44,5 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible (false)]
 
 [assembly: AssemblyVersion ("0.4.2.0")]
+
+#endif
