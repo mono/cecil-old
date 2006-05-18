@@ -81,8 +81,6 @@ namespace Mono.Cecil.Metadata {
 
 <% } %>		public override void VisitTableCollection (TableCollection coll)
 		{
-			coll.Sort ();
-
 <% $stables.each { |table|  %>			if (m_heap.HasTable (<%=table.table_name%>.RId))
 				m_binaryWriter.Write (m_heap [<%=table.table_name%>.RId].Rows.Count);
 <% } %>		}

@@ -33,7 +33,7 @@ namespace Mono.Cecil.Metadata {
 
 	public class TableCollection : ICollection, IMetadataTableVisitable	{
 
-		IMetadataTable [] m_tables = new IMetadataTable [44];
+		IMetadataTable [] m_tables = new IMetadataTable [45];
 
 		TablesHeap m_heap;
 
@@ -97,11 +97,6 @@ namespace Mono.Cecil.Metadata {
 			return tables;
 		}
 
-		public void Sort ()
-		{
-			Array.Sort (m_tables, TableComparer.Instance);
-		}
-
 		public IEnumerator GetEnumerator ()
 		{
 			return GetList ().GetEnumerator ();
@@ -115,19 +110,6 @@ namespace Mono.Cecil.Metadata {
 				table.Accept (visitor);
 
 			visitor.TerminateTableCollection (this);
-		}
-
-		class TableComparer : IComparer {
-
-			public static readonly TableComparer Instance = new TableComparer ();
-
-			public int Compare (object x, object y)
-			{
-				IMetadataTable a = x as IMetadataTable;
-				IMetadataTable b = y as IMetadataTable;
-
-				return Comparer.Default.Compare (a.Id, b.Id);
-			}
 		}
 	}
 }

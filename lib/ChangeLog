@@ -1,5 +1,10 @@
 2006-05-18  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/TableCollection.cs:
+		Fix for last changeset.
+
 	* Mono.Cecil.Metadata/RIdAttribute.cs:
 		deleted.
 
