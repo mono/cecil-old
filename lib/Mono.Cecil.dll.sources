@@ -256,7 +256,6 @@
 ./Mono.Cecil.Metadata/Param.cs
 ./Mono.Cecil.Metadata/Property.cs
 ./Mono.Cecil.Metadata/PropertyMap.cs
-./Mono.Cecil.Metadata/RIdAttribute.cs
 ./Mono.Cecil.Metadata/RowCollection.cs
 ./Mono.Cecil.Metadata/StandAloneSig.cs
 ./Mono.Cecil.Metadata/StringsHeap.cs
