@@ -42,7 +42,7 @@ namespace Mono.Cecil.Metadata {
 		MetadataRowReader m_mrrv;
 		BinaryReader m_binaryReader;
 
-		public readonly int [] m_rows = new int [TablesHeap.MaxTableCount];
+		int [] m_rows = new int [TablesHeap.MaxTableCount];
 
 		public MetadataTableReader (MetadataReader mrv)
 		{

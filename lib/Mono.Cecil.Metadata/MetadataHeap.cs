@@ -87,6 +87,6 @@ namespace Mono.Cecil.Metadata {
 			return buffer;
 		}
 
-		public abstract void Accept(IMetadataVisitor visitor);
+		public abstract void Accept (IMetadataVisitor visitor);
 	}
 }
