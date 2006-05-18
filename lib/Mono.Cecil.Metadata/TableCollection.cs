@@ -33,7 +33,7 @@ namespace Mono.Cecil.Metadata {
 
 	public class TableCollection : ICollection, IMetadataTableVisitable	{
 
-		IMetadataTable [] m_tables = new IMetadataTable [45];
+		IMetadataTable [] m_tables = new IMetadataTable [TablesHeap.MaxTableCount];
 
 		TablesHeap m_heap;
 

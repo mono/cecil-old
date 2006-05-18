@@ -43,6 +43,8 @@ namespace Mono.Cecil.Metadata {
 
 		TableCollection m_tables;
 
+		public const int MaxTableCount = 45;
+
 		public TableCollection Tables {
 			get { return m_tables; }
 			set { m_tables = value; }

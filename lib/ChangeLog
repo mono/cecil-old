@@ -1,5 +1,11 @@
 2006-05-18  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/TableCollection.cs
+	  Mono.Cecil.Metadata/TablesHeap.cs:
+		Optimize a little bit.
+
 	* CodeGen/templates/MetadataTableWriter.cs
 	  Mono.Cecil.Metadata/MetadataTableWriter.cs
 	  Mono.Cecil.Metadata/TableCollection.cs:

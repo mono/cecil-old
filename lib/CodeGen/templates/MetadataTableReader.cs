@@ -42,7 +42,7 @@ namespace Mono.Cecil.Metadata {
 		MetadataRowReader m_mrrv;
 		BinaryReader m_binaryReader;
 
-		public readonly IDictionary Rows = new Hashtable (<%=$tables.length%>);
+		public readonly int [] m_rows = new int [TablesHeap.MaxTableCount];
 
 		public MetadataTableReader (MetadataReader mrv)
 		{
@@ -68,17 +68,9 @@ namespace Mono.Cecil.Metadata {
 			return m_mrrv;
 		}
 
-		void ReadNumberOfRows (int rid)
-		{
-			this.Rows [rid] = m_binaryReader.ReadInt32 ();
-		}
-
 		public int GetNumberOfRows (int rid)
 		{
-			object n = this.Rows [rid];
-			if (n != null)
-				return (int) n;
-			return 0;
+			return m_rows [rid];
 		}
 <% $tables.each { |table|  %>
 		public <%=table.table_name%> Get<%=table.table_name%> ()
@@ -90,13 +82,13 @@ namespace Mono.Cecil.Metadata {
 		{
 <% $stables.each { |table|  %>			if (m_heap.HasTable (<%=table.table_name%>.RId)) {
 				coll.Add (new <%=table.table_name%> ());
-				ReadNumberOfRows (<%=table.table_name%>.RId);
+				m_rows [<%=table.table_name%>.RId] = m_binaryReader.ReadInt32 ();
 			}
 <% } %>		}
 
 <% $tables.each { |table| %>		public override void Visit<%=table.table_name%> (<%=table.table_name%> table)
 		{
-			int number = GetNumberOfRows (<%=table.table_name%>.RId);
+			int number = m_rows [<%=table.table_name%>.RId];
 			table.Rows = new RowCollection (number);
 			for (int i = 0; i < number; i++)
 				table.Rows.Add (new <%=table.row_name%> ());
