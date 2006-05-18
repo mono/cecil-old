@@ -34,8 +34,9 @@ namespace Mono.Cecil.Metadata {
 	using <%=ns%>;
 <% }
 %>
-	[RId (<%=$cur_table.rid%>)]
 	public sealed class <%=$cur_table.table_name%> : IMetadataTable {
+
+		public const int RId = <%=$cur_table.rid%>;
 
 		RowCollection m_rows;
 
@@ -47,6 +48,10 @@ namespace Mono.Cecil.Metadata {
 		public RowCollection Rows {
 			get { return m_rows; }
 			set { m_rows = value; }
+		}
+
+		public int Id {
+			get { return RId; }
 		}
 
 		internal <%=$cur_table.table_name%> ()

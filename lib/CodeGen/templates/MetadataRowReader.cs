@@ -56,9 +56,9 @@ namespace Mono.Cecil.Metadata {
 			m_ciCache = new Hashtable ();
 		}
 
-		int GetIndexSize (Type table)
+		int GetIndexSize (int rid)
 		{
-			return m_mtrv.GetNumberOfRows (table) < (1 << 16) ? 2 : 4;
+			return m_mtrv.GetNumberOfRows (rid) < (1 << 16) ? 2 : 4;
 		}
 
 		int GetCodedIndexSize (CodedIndex ci)
@@ -103,7 +103,7 @@ namespace Mono.Cecil.Metadata {
 %>			row.<%=col.property_name%> = Utilities.GetMetadataToken (CodedIndex.<%=col.target%>,
 				ReadByIndexSize (GetCodedIndexSize (CodedIndex.<%=col.target%>)));
 <% else
-%>			row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (typeof (<%=col.target%>Table)));
+%>			row.<%=col.property_name%> = ReadByIndexSize (GetIndexSize (<%=col.target%>Table.RId));
 <% end
 }%>		}
 <%  } %>	}

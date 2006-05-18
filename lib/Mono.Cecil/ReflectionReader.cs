@@ -75,6 +75,10 @@ namespace Mono.Cecil {
 			get { return m_sigReader; }
 		}
 
+		public MetadataTableReader TableReader {
+			get { return m_tableReader; }
+		}
+
 		public CodeReader Code {
 			get { return m_codeReader; }
 		}
@@ -362,7 +366,7 @@ namespace Mono.Cecil {
 		public override void VisitTypeDefinitionCollection (TypeDefinitionCollection types)
 		{
 			// type def reading
-			TypeDefTable typesTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
+			TypeDefTable typesTable = m_tableReader.GetTypeDefTable ();
 			m_typeDefs = new TypeDefinition [typesTable.Rows.Count];
 			for (int i = 0; i < typesTable.Rows.Count; i++) {
 				TypeDefRow type = typesTable [i];
@@ -376,8 +380,8 @@ namespace Mono.Cecil {
 			}
 
 			// nested types
-			NestedClassTable nested = m_tHeap [typeof (NestedClassTable)] as NestedClassTable;
-			if (m_tHeap.HasTable (typeof(NestedClassTable))) {
+			if (m_tHeap.HasTable (NestedClassTable.RId)) {
+				NestedClassTable nested = m_tableReader.GetNestedClassTable ();
 				for (int i = 0; i < nested.Rows.Count; i++) {
 					NestedClassRow row = nested [i];
 
@@ -392,8 +396,8 @@ namespace Mono.Cecil {
 				types.Add (type);
 
 			// type ref reading
-			if (m_tHeap.HasTable(typeof (TypeRefTable))) {
-				TypeRefTable typesRef = m_tHeap [typeof (TypeRefTable)] as TypeRefTable;
+			if (m_tHeap.HasTable (TypeRefTable.RId)) {
+				TypeRefTable typesRef = m_tableReader.GetTypeRefTable ();
 
 				m_typeRefs = new TypeReference [typesRef.Rows.Count];
 
@@ -461,7 +465,7 @@ namespace Mono.Cecil {
 
 		void ReadTypeSpecs ()
 		{
-			if (!m_tHeap.HasTable (typeof (TypeSpecTable)))
+			if (!m_tHeap.HasTable (TypeSpecTable.RId))
 				return;
 
 			TypeSpecTable tsTable = m_tableReader.GetTypeSpecTable ();
@@ -470,7 +474,7 @@ namespace Mono.Cecil {
 
 		void ReadMethodSpecs ()
 		{
-			if (!m_tHeap.HasTable (typeof (MethodSpecTable)))
+			if (!m_tHeap.HasTable (MethodSpecTable.RId))
 				return;
 
 			MethodSpecTable msTable = m_tableReader.GetMethodSpecTable ();
@@ -479,7 +483,7 @@ namespace Mono.Cecil {
 
 		void ReadGenericParameters ()
 		{
-			if (!m_tHeap.HasTable (typeof (GenericParamTable)))
+			if (!m_tHeap.HasTable (GenericParamTable.RId))
 				return;
 
 			GenericParamTable gpTable = m_tableReader.GetGenericParamTable ();
@@ -506,13 +510,14 @@ namespace Mono.Cecil {
 
 		void ReadAllFields ()
 		{
-			TypeDefTable tdefTable = m_tHeap [typeof (TypeDefTable)] as TypeDefTable;
-			if (!m_tHeap.HasTable(typeof (FieldTable))) {
+			TypeDefTable tdefTable = m_tableReader.GetTypeDefTable ();
+
+			if (!m_tHeap.HasTable(FieldTable.RId)) {
 				m_fields = new FieldDefinition [0];
 				return;
 			}
 
-			FieldTable fldTable = m_tHeap [typeof (FieldTable)] as FieldTable;
+			FieldTable fldTable = m_tableReader.GetFieldTable ();
 			m_fields = new FieldDefinition [fldTable.Rows.Count];
 
 			for (int i = 0; i < m_typeDefs.Length; i++) {
@@ -545,7 +550,7 @@ namespace Mono.Cecil {
 
 		void ReadMethods ()
 		{
-			if (!m_tHeap.HasTable (typeof (MethodTable))) {
+			if (!m_tHeap.HasTable (MethodTable.RId)) {
 				m_meths = new MethodDefinition [0];
 				return;
 			}
@@ -570,14 +575,14 @@ namespace Mono.Cecil {
 		{
 			TypeDefTable tdefTable = m_tableReader.GetTypeDefTable ();
 
-			if (!m_tHeap.HasTable (typeof (MethodTable))) {
+			if (!m_tHeap.HasTable (MethodTable.RId)) {
 				m_meths = new MethodDefinition [0];
 				return;
 			}
 
 			MethodTable methTable = m_tableReader.GetMethodTable ();
 			ParamTable paramTable = m_tableReader.GetParamTable ();
-			if (!m_tHeap.HasTable (typeof (ParamTable)))
+			if (!m_tHeap.HasTable (ParamTable.RId))
 				m_parameters = new ParameterDefinition [0];
 			else
 				m_parameters = new ParameterDefinition [paramTable.Rows.Count];
@@ -674,7 +679,7 @@ namespace Mono.Cecil {
 
 		void ReadMemberReferences ()
 		{
-			if (!m_tHeap.HasTable (typeof (MemberRefTable)))
+			if (!m_tHeap.HasTable (MemberRefTable.RId))
 				return;
 
 			MemberRefTable mrefTable = m_tableReader.GetMemberRefTable ();
@@ -685,10 +690,10 @@ namespace Mono.Cecil {
 		{
 			ExternTypeCollection ext = externs as ExternTypeCollection;
 
-			if (!m_tHeap.HasTable (typeof (ExportedTypeTable)))
+			if (!m_tHeap.HasTable (ExportedTypeTable.RId))
 				return;
 
-			ExportedTypeTable etTable = m_tHeap [typeof (ExportedTypeTable)] as ExportedTypeTable;
+			ExportedTypeTable etTable = m_tableReader.GetExportedTypeTable ();
 			TypeReference [] buffer = new TypeReference [etTable.Rows.Count];
 
 			for (int i = 0; i < etTable.Rows.Count; i++) {

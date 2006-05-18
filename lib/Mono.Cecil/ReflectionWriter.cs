@@ -677,65 +677,65 @@ namespace Mono.Cecil {
 			TablesHeap th = m_mdWriter.GetMetadataRoot ().Streams.TablesHeap;
 			th.Sorted = 0;
 
-			if (th.HasTable (typeof (NestedClassTable)))
+			if (th.HasTable (NestedClassTable.RId))
 				m_tableWriter.GetNestedClassTable ().Rows.Sort (
 					TableComparers.NestedClass.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (NestedClassTable)));
+			th.Sorted |= ((long) 1 << NestedClassTable.RId);
 
-			if (th.HasTable (typeof (InterfaceImplTable)))
+			if (th.HasTable (InterfaceImplTable.RId))
 				m_tableWriter.GetInterfaceImplTable ().Rows.Sort (
 					TableComparers.InterfaceImpl.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (InterfaceImplTable)));
+			th.Sorted |= ((long) 1 << InterfaceImplTable.RId);
 
-			if (th.HasTable (typeof (ConstantTable)))
+			if (th.HasTable (ConstantTable.RId))
 				m_tableWriter.GetConstantTable ().Rows.Sort (
 					TableComparers.Constant.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ConstantTable)));
+			th.Sorted |= ((long) 1 << ConstantTable.RId);
 
-			if (th.HasTable (typeof (MethodSemanticsTable)))
+			if (th.HasTable (MethodSemanticsTable.RId))
 				m_tableWriter.GetMethodSemanticsTable ().Rows.Sort (
 					TableComparers.MethodSem.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodSemanticsTable)));
+			th.Sorted |= ((long) 1 << MethodSemanticsTable.RId);
 
-			if (th.HasTable (typeof (FieldMarshalTable)))
+			if (th.HasTable (FieldMarshalTable.RId))
 				m_tableWriter.GetFieldMarshalTable ().Rows.Sort (
 					TableComparers.FieldMarshal.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldMarshalTable)));
+			th.Sorted |= ((long) 1 << FieldMarshalTable.RId);
 
-			if (th.HasTable (typeof (ClassLayoutTable)))
+			if (th.HasTable (ClassLayoutTable.RId))
 				m_tableWriter.GetClassLayoutTable ().Rows.Sort (
 					TableComparers.TypeLayout.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ClassLayoutTable)));
+			th.Sorted |= ((long) 1 << ClassLayoutTable.RId);
 
-			if (th.HasTable (typeof (FieldLayoutTable)))
+			if (th.HasTable (FieldLayoutTable.RId))
 				m_tableWriter.GetFieldLayoutTable ().Rows.Sort (
 					TableComparers.FieldLayout.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldLayoutTable)));
+			th.Sorted |= ((long) 1 << FieldLayoutTable.RId);
 
-			if (th.HasTable (typeof (ImplMapTable)))
+			if (th.HasTable (ImplMapTable.RId))
 				m_tableWriter.GetImplMapTable ().Rows.Sort (
 					TableComparers.PInvoke.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (ImplMapTable)));
+			th.Sorted |= ((long) 1 << ImplMapTable.RId);
 
-			if (th.HasTable (typeof (FieldRVATable)))
+			if (th.HasTable (FieldRVATable.RId))
 				m_tableWriter.GetFieldRVATable ().Rows.Sort (
 					TableComparers.FieldRVA.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (FieldRVATable)));
+			th.Sorted |= ((long) 1 << FieldRVATable.RId);
 
-			if (th.HasTable (typeof (MethodImplTable)))
+			if (th.HasTable (MethodImplTable.RId))
 				m_tableWriter.GetMethodImplTable ().Rows.Sort (
 					TableComparers.Override.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (MethodImplTable)));
+			th.Sorted |= ((long) 1 << MethodImplTable.RId);
 
-			if (th.HasTable (typeof (CustomAttributeTable)))
+			if (th.HasTable (CustomAttributeTable.RId))
 				m_tableWriter.GetCustomAttributeTable ().Rows.Sort (
 					TableComparers.CustomAttribute.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (CustomAttributeTable)));
+			th.Sorted |= ((long) 1 << CustomAttributeTable.RId);
 
-			if (th.HasTable (typeof (DeclSecurityTable)))
+			if (th.HasTable (DeclSecurityTable.RId))
 				m_tableWriter.GetDeclSecurityTable ().Rows.Sort (
 					TableComparers.SecurityDeclaration.Instance);
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (DeclSecurityTable)));
+			th.Sorted |= ((long) 1 << DeclSecurityTable.RId);
 		}
 
 		void CompleteGenericTables ()
@@ -773,8 +773,8 @@ namespace Mono.Cecil {
 				}
 			}
 
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamTable)));
-			th.Sorted |= ((long) 1 << TablesHeap.GetTableId (typeof (GenericParamConstraintTable)));
+			th.Sorted |= ((long) 1 << GenericParamTable.RId);
+			th.Sorted |= ((long) 1 << GenericParamConstraintTable.RId);
 		}
 
 		public override void TerminateModuleDefinition (ModuleDefinition module)

@@ -68,13 +68,13 @@ namespace Mono.Cecil.Metadata {
 
 <% $tables.each { |table| %>		public <%=table.table_name%> Get<%=table.table_name%> ()
 		{
-			Type tt = typeof (<%=table.table_name%>);
-			if (m_heap.HasTable (tt))
-				return m_heap [tt] as <%=table.table_name%>;
+			int rid = <%=table.table_name%>.RId;
+			if (m_heap.HasTable (rid))
+				return m_heap [rid] as <%=table.table_name%>;
 
 			<%=table.table_name%> table = new <%=table.table_name%> ();
 			table.Rows = new RowCollection ();
-			m_heap.Valid |= 1L << TablesHeap.GetTableId (tt);
+			m_heap.Valid |= 1L << rid;
 			m_heap.Tables.Add (table);
 			return table;
 		}
@@ -83,8 +83,8 @@ namespace Mono.Cecil.Metadata {
 		{
 			coll.Sort ();
 
-<% $stables.each { |table|  %>			if (m_heap.HasTable (typeof (<%=table.table_name%>)))
-				m_binaryWriter.Write (m_heap [typeof (<%=table.table_name%>)].Rows.Count);
+<% $stables.each { |table|  %>			if (m_heap.HasTable (<%=table.table_name%>.RId))
+				m_binaryWriter.Write (m_heap [<%=table.table_name%>.RId].Rows.Count);
 <% } %>		}
 	}
 }

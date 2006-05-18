@@ -31,44 +31,21 @@ namespace Mono.Cecil.Metadata {
 	using System;
 	using System.Collections;
 
-	public class TableCollection : ICollection, IMetadataTableVisitable {
+	public class TableCollection : ICollection, IMetadataTableVisitable	{
 
-		ArrayList m_items;
-		Hashtable m_index;
+		IMetadataTable [] m_tables = new IMetadataTable [44];
 
 		TablesHeap m_heap;
 
 		public IMetadataTable this [int index] {
-			get { return m_items [index] as IMetadataTable; }
-			set { m_items [index] = value; }
-		}
-
-		public IMetadataTable this [ushort id]
-		{
-			get {
-				if (m_index.ContainsKey (id))
-					return m_items [(int) m_index [id]] as IMetadataTable;
-
-				for (int i = 0; i < m_items.Count; i++) {
-					IMetadataTable table = m_items [i] as IMetadataTable;
-					if (TablesHeap.GetTableId (table.GetType ()) == id) {
-						m_index [id] = i;
-						return table;
-					}
-				}
-				return null;
-			}
-			set {
-				int index = IndexOf (value);
-				if (index > -1) {
-					m_items [index] = value;
-					m_index [id] = index;
-				}
-			}
+			get { return m_tables [index]; }
+			set { m_tables [index] = value; }
 		}
 
 		public int Count {
-			get { return m_items.Count; }
+			get {
+				return GetList ().Count;
+			}
 		}
 
 		public bool IsSynchronized {
@@ -86,67 +63,56 @@ namespace Mono.Cecil.Metadata {
 		internal TableCollection (TablesHeap heap)
 		{
 			m_heap = heap;
-			m_items = new ArrayList ();
-			m_index = new Hashtable ();
 		}
 
 		internal void Add (IMetadataTable value)
 		{
-			m_items.Add (value);
-		}
-
-		internal void Clear ()
-		{
-			m_items.Clear ();
+			m_tables [value.Id] = value;
 		}
 
 		public bool Contains (IMetadataTable value)
 		{
-			return m_items.Contains (value);
-		}
-
-		public int IndexOf (IMetadataTable value)
-		{
-			return m_items.IndexOf (value);
-		}
-
-		internal void Insert (int index, IMetadataTable value)
-		{
-			m_items.Insert (index, value);
+			return m_tables [value.Id] != null;
 		}
 
 		internal void Remove (IMetadataTable value)
 		{
-			m_items.Remove (value);
+			m_tables [value.Id] = null;
 		}
 
-		internal void RemoveAt (int index)
+		public void CopyTo (Array array, int index)
 		{
-			m_items.Remove (index);
+			GetList ().CopyTo (array, index);
 		}
 
-		public void CopyTo (Array ary, int index)
+		internal IList GetList ()
 		{
-			m_items.CopyTo (ary, index);
+			IList tables = new ArrayList ();
+			for (int i = 0; i < m_tables.Length; i++) {
+				IMetadataTable table = m_tables [i];
+				if (table != null)
+					tables.Add (table);
+			}
+
+			return tables;
 		}
 
 		public void Sort ()
 		{
-			m_index.Clear ();
-			m_items.Sort (TableComparer.Instance);
+			Array.Sort (m_tables, TableComparer.Instance);
 		}
 
 		public IEnumerator GetEnumerator ()
 		{
-			return m_items.GetEnumerator ();
+			return GetList ().GetEnumerator ();
 		}
 
 		public void Accept (IMetadataTableVisitor visitor)
 		{
 			visitor.VisitTableCollection (this);
 
-			for (int i = 0; i < m_items.Count; i++)
-				this [i].Accept (visitor);
+			foreach (IMetadataTable table in GetList ())
+				table.Accept (visitor);
 
 			visitor.TerminateTableCollection (this);
 		}
@@ -157,9 +123,10 @@ namespace Mono.Cecil.Metadata {
 
 			public int Compare (object x, object y)
 			{
-				return Comparer.Default.Compare (
-					TablesHeap.GetTableId (x.GetType ()),
-					TablesHeap.GetTableId (y.GetType ()));
+				IMetadataTable a = x as IMetadataTable;
+				IMetadataTable b = y as IMetadataTable;
+
+				return Comparer.Default.Compare (a.Id, b.Id);
 			}
 		}
 	}

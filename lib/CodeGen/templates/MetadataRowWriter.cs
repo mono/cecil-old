@@ -68,9 +68,9 @@ namespace Mono.Cecil.Metadata {
 			WriteByIndexSize (pointer, m_guidHeapIdxSz);
 		}
 
-		void WriteTablePointer (uint pointer, Type table)
+		void WriteTablePointer (uint pointer, int rid)
 		{
-			WriteByIndexSize (pointer, GetNumberOfRows (table) < (1 << 16) ? 2 : 4);
+			WriteByIndexSize (pointer, GetNumberOfRows (rid) < (1 << 16) ? 2 : 4);
 		}
 
 		void WriteMetadataToken (MetadataToken token, CodedIndex ci)
@@ -80,9 +80,9 @@ namespace Mono.Cecil.Metadata {
 					ci, new Utilities.TableRowCounter (GetNumberOfRows), m_ciCache));
 		}
 
-		int GetNumberOfRows (Type table)
+		int GetNumberOfRows (int rid)
 		{
-			IMetadataTable t = m_root.Streams.TablesHeap [table];
+			IMetadataTable t = m_root.Streams.TablesHeap [rid];
 			if (t == null || t.Rows == null)
 				return 0;
 			return t.Rows.Count;
@@ -137,7 +137,7 @@ namespace Mono.Cecil.Metadata {
 <% elsif (col.type == "MetadataToken")
 %>			WriteMetadataToken (row.<%=col.property_name%>, CodedIndex.<%=col.target%>);
 <% else
-%>			WriteTablePointer (row.<%=col.property_name%>, typeof (<%=col.target%>Table));
+%>			WriteTablePointer (row.<%=col.property_name%>, <%=col.target%>Table.RId);
 <% end
 }%>		}
 

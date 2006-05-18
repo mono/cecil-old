@@ -176,7 +176,7 @@ namespace Mono.Cecil.Metadata {
 			}
 		}
 
-		internal delegate int TableRowCounter (Type table);
+		internal delegate int TableRowCounter (int rid);
 
 		internal static int GetCodedIndexSize (CodedIndex ci, TableRowCounter rowCounter, IDictionary codedIndexCache)
 		{
@@ -185,22 +185,24 @@ namespace Mono.Cecil.Metadata {
 				return (int) codedIndexCache [ci];
 
 			int res = 0;
-			Type [] tables;
+			int [] rids;
 			switch (ci) {
 <% $coded_indexes.each { |ci| %>			case CodedIndex.<%=ci.name%> :
 				bits = <%=ci.size%>;
-				tables = new Type [<%=ci.tables.length%>];
+				rids = new int [<%=ci.tables.length%>];
 <%	ci.tables.each_with_index { |tbl, i|
-%>				tables [<%=i%>] = typeof (<%=tbl.name%>Table);
+%>				rids [<%=i%>] = <%=tbl.name%>Table.RId;
 <%	}
 %>				break;
 <% } %>			default :
 				throw new MetadataFormatException ("Non valid CodedIndex");
 			}
-			foreach (Type t in tables) {
-				int rows = rowCounter (t);
+
+			for (int i = 0; i < rids.Length; i++) {
+				int rows = rowCounter (rids [i]);
 				if (rows > max) max = rows;
 			}
+
 			res = max < (1 << (16 - bits)) ? 2 : 4;
 			codedIndexCache [ci] = res;
 			return res;

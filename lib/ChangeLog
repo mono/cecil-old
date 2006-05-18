@@ -1,5 +1,64 @@
 2006-05-18  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  CodeGen/templates/Utilities.cs
+	  CodeGen/templates/MetadataTableReader.cs
+	  CodeGen/templates/MetadataTableWriter.cs
+	  CodeGen/templates/Table.cs
+	  CodeGen/templates/MetadataRowReader.cs
+	  CodeGen/templates/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/Assembly.cs
+	  Mono.Cecil.Metadata/InterfaceImpl.cs
+	  Mono.Cecil.Metadata/PropertyMap.cs
+	  Mono.Cecil.Metadata/Constant.cs
+	  Mono.Cecil.Metadata/MethodSpec.cs
+	  Mono.Cecil.Metadata/DeclSecurity.cs
+	  Mono.Cecil.Metadata/TypeDef.cs
+	  Mono.Cecil.Metadata/GenericParamConstraint.cs
+	  Mono.Cecil.Metadata/MethodImpl.cs
+	  Mono.Cecil.Metadata/NestedClass.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/AssemblyRefProcessor.cs
+	  Mono.Cecil.Metadata/AssemblyRef.cs
+	  Mono.Cecil.Metadata/AssemblyRefOS.cs
+	  Mono.Cecil.Metadata/Method.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/ExportedType.cs
+	  Mono.Cecil.Metadata/CustomAttribute.cs
+	  Mono.Cecil.Metadata/Param.cs
+	  Mono.Cecil.Metadata/ClassLayout.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/Utilities.cs
+	  Mono.Cecil.Metadata/AssemblyOS.cs
+	  Mono.Cecil.Metadata/ModuleRef.cs
+	  Mono.Cecil.Metadata/FieldMarshal.cs
+	  Mono.Cecil.Metadata/GenericParam.cs
+	  Mono.Cecil.Metadata/ImplMap.cs
+	  Mono.Cecil.Metadata/TableCollection.cs
+	  Mono.Cecil.Metadata/TablesHeap.cs
+	  Mono.Cecil.Metadata/TypeRef.cs
+	  Mono.Cecil.Metadata/ManifestResource.cs
+	  Mono.Cecil.Metadata/File.cs
+	  Mono.Cecil.Metadata/EventMap.cs
+	  Mono.Cecil.Metadata/AssemblyProcessor.cs
+	  Mono.Cecil.Metadata/FieldLayout.cs
+	  Mono.Cecil.Metadata/Event.cs
+	  Mono.Cecil.Metadata/Field.cs
+	  Mono.Cecil.Metadata/Property.cs
+	  Mono.Cecil.Metadata/Module.cs
+	  Mono.Cecil.Metadata/MethodSemantics.cs
+	  Mono.Cecil.Metadata/StandAloneSig.cs
+	  Mono.Cecil.Metadata/FieldRVA.cs
+	  Mono.Cecil.Metadata/TypeSpec.cs
+	  Mono.Cecil.Metadata/IMetadataTable.cs
+	  Mono.Cecil.Metadata/MemberRef.cs:
+		Fix the way the metadata tables are handled.
+
 	* Mono.Cecil.Signatures/SignatureWriter.cs:
 		Fix bug in string writing.
 

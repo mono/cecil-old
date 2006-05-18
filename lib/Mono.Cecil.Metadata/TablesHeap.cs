@@ -43,48 +43,29 @@ namespace Mono.Cecil.Metadata {
 
 		TableCollection m_tables;
 
-		static IDictionary m_tidCache = new Hashtable (46);
-
 		public TableCollection Tables {
 			get { return m_tables; }
 			set { m_tables = value; }
 		}
 
-		public IMetadataTable this [Type table]
+		public IMetadataTable this [int id]
 		{
-			get { return m_tables [GetTableId (table)] as IMetadataTable; }
-			set { m_tables [GetTableId (table)] = value; }
+			get { return m_tables [id] as IMetadataTable; }
+			set { m_tables [id] = value; }
 		}
 
 		internal TablesHeap (MetadataStream stream) : base(stream, MetadataStream.Tables)
 		{
 		}
 
-		public bool HasTable (Type table)
+		public bool HasTable (int id)
 		{
-			return (Valid & (1L << GetTableId (table))) != 0;
+			return (Valid & (1L << id)) != 0;
 		}
 
 		public override void Accept (IMetadataVisitor visitor)
 		{
 			visitor.VisitTablesHeap (this);
-		}
-
-		public static ushort GetTableId (Type table)
-		{
-			object id = m_tidCache [table];
-			if (id != null)
-				return (ushort) id;
-
-			RIdAttribute [] rid = table.GetCustomAttributes (
-				typeof(RIdAttribute), false) as RIdAttribute [];
-
-			if (rid != null && rid.Length == 1) {
-				m_tidCache [table] = (ushort) rid [0].Id;
-				return (ushort) rid [0].Id;
-			}
-
-			throw new ArgumentException ("No RId attribute found on type");
 		}
 	}
 }

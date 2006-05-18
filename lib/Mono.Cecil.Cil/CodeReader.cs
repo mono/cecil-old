@@ -331,7 +331,7 @@ namespace Mono.Cecil.Cil {
 
 		CallSite GetCallSiteAt (int token, GenericContext context)
 		{
-			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
+			StandAloneSigTable sasTable = m_reflectReader.TableReader.GetStandAloneSigTable ();
 			MethodSig ms = m_reflectReader.SigReader.GetStandAloneMethodSig (
 				sasTable [(int) GetRid (token) - 1].Signature);
 			CallSite cs = new CallSite (ms.HasThis, ms.ExplicitThis,
@@ -355,7 +355,7 @@ namespace Mono.Cecil.Cil {
 			if (body.LocalVarToken == 0)
 				return;
 
-			StandAloneSigTable sasTable = m_root.Streams.TablesHeap [typeof (StandAloneSigTable)] as StandAloneSigTable;
+			StandAloneSigTable sasTable = m_reflectReader.TableReader.GetStandAloneSigTable ();
 			StandAloneSigRow sasRow = sasTable [(int) GetRid (body.LocalVarToken) - 1];
 			LocalVarSig sig = m_reflectReader.SigReader.GetLocalVarSig (sasRow.Signature);
 			for (int i = 0; i < sig.Count; i++) {

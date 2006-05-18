@@ -42,6 +42,7 @@ namespace Mono.Cecil {
 		AssemblyDefinition m_asmDef;
 		ModuleDefinition m_module;
 		TablesHeap m_tHeap;
+		MetadataTableReader m_tableReader;
 
 		public bool ManifestOnly {
 			get { return m_manifestOnly; }
@@ -60,6 +61,7 @@ namespace Mono.Cecil {
 			m_ir = ir;
 			m_img = ir.Image;
 			m_tHeap = m_img.MetadataRoot.Streams.TablesHeap;
+			m_tableReader = ir.MetadataReader.TableReader;
 		}
 
 		public StructureReader (ImageReader ir, bool manifestOnly) : this (ir)
@@ -69,7 +71,7 @@ namespace Mono.Cecil {
 
 		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
 		{
-			if (!m_tHeap.HasTable (typeof (AssemblyTable)))
+			if (!m_tHeap.HasTable (AssemblyTable.RId))
 				throw new ReflectionException ("No assembly manifest");
 
 			asm.MetadataToken = new MetadataToken (TokenType.Assembly, 1);
@@ -98,7 +100,7 @@ namespace Mono.Cecil {
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)
 		{
-			AssemblyTable atable = m_tHeap [typeof(AssemblyTable)] as AssemblyTable;
+			AssemblyTable atable = m_tableReader.GetAssemblyTable ();
 			AssemblyRow arow = atable [0];
 			name.Name = m_img.MetadataRoot.Streams.StringsHeap [arow.Name];
 			name.Flags = arow.Flags;
@@ -114,10 +116,10 @@ namespace Mono.Cecil {
 
 		public override void VisitAssemblyNameReferenceCollection (AssemblyNameReferenceCollection names)
 		{
-			if (!m_tHeap.HasTable (typeof (AssemblyRefTable)))
+			if (!m_tHeap.HasTable (AssemblyRefTable.RId))
 				return;
 
-			AssemblyRefTable arTable = m_tHeap [typeof(AssemblyRefTable)] as AssemblyRefTable;
+			AssemblyRefTable arTable = m_tableReader.GetAssemblyRefTable ();
 			for (int i = 0; i < arTable.Rows.Count; i++) {
 				AssemblyRefRow arRow = arTable [i];
 				AssemblyNameReference aname = new AssemblyNameReference (
@@ -134,11 +136,11 @@ namespace Mono.Cecil {
 
 		public override void VisitResourceCollection (ResourceCollection resources)
 		{
-			if (!m_tHeap.HasTable (typeof (ManifestResourceTable)))
+			if (!m_tHeap.HasTable (ManifestResourceTable.RId))
 				return;
 
-			ManifestResourceTable mrTable = m_tHeap [typeof(ManifestResourceTable)] as ManifestResourceTable;
-			FileTable fTable = m_tHeap [typeof(FileTable)] as FileTable;
+			ManifestResourceTable mrTable = m_tableReader.GetManifestResourceTable ();
+			FileTable fTable = m_tableReader.GetFileTable ();
 
 			BinaryReader br;
 
@@ -181,7 +183,7 @@ namespace Mono.Cecil {
 
 		public override void VisitModuleDefinitionCollection (ModuleDefinitionCollection modules)
 		{
-			ModuleTable mt = m_tHeap [typeof(ModuleTable)] as ModuleTable;
+			ModuleTable mt = m_tableReader.GetModuleTable ();
 			if (mt == null || mt.Rows.Count != 1)
 				throw new ReflectionException ("Can not read main module");
 
@@ -194,7 +196,7 @@ namespace Mono.Cecil {
 			m_module = main;
 			m_module.Accept (this);
 
-			FileTable ftable = m_tHeap [typeof(FileTable)] as FileTable;
+			FileTable ftable = m_tableReader.GetFileTable ();
 			if (ftable != null && ftable.Rows.Count > 0) {
 				foreach (FileRow frow in ftable.Rows) {
 					if (frow.Flags == Mono.Cecil.FileAttributes.ContainsMetaData) {
@@ -205,7 +207,7 @@ namespace Mono.Cecil {
 
 						try {
 							ImageReader module = ImageReader.Read (location.FullName);
-							mt = module.Image.MetadataRoot.Streams.TablesHeap [typeof(ModuleTable)] as ModuleTable;
+							mt = module.Image.MetadataRoot.Streams.TablesHeap [ModuleTable.RId] as ModuleTable;
 							if (mt == null || mt.Rows.Count != 1)
 								throw new ReflectionException ("Can not read module : " + name);
 
@@ -227,10 +229,10 @@ namespace Mono.Cecil {
 
 		public override void VisitModuleReferenceCollection (ModuleReferenceCollection modules)
 		{
-			if (!m_tHeap.HasTable (typeof (ModuleRefTable)))
+			if (!m_tHeap.HasTable (ModuleRefTable.RId))
 				return;
 
-			ModuleRefTable mrTable = m_tHeap [typeof(ModuleRefTable)] as ModuleRefTable;
+			ModuleRefTable mrTable = m_tableReader.GetModuleRefTable ();
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
 				ModuleReference mod = new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]);
