@@ -474,8 +474,9 @@ namespace Mono.Cecil.Signatures {
 
 		void Write (string s)
 		{
-			Write (s.Length);
-			m_sigWriter.Write (Encoding.UTF8.GetBytes (s));
+			byte [] str = Encoding.UTF8.GetBytes (s);
+			Write (str.Length);
+			m_sigWriter.Write (str);
 		}
 
 		void Write (int i)
