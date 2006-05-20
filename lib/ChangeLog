@@ -1,5 +1,16 @@
 2006-05-20  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/ImageReader.cs
+	  CodeGen/templates/ImageWriter.cs
+	  Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/Binary/ImageReader.cs
+	  Mono.Cecil/Binary/Image.cs
+	  Mono.Cecil/Binary/ImageWriter.cs
+	  Mono.Cecil.Metadata/MetadataWriter.cs:
+		Optimize assembly writing.
+		Add methods to read assemblies from byte arrays.
+
 	* Mono.Cecil/StructureWriter.cs:
 		Throw an exception when the target is an exe
 		and no entry point have been setted.

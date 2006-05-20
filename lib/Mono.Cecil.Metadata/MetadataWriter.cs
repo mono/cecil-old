@@ -30,6 +30,7 @@ namespace Mono.Cecil.Metadata {
 
 	using System;
 	using System.Collections;
+	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil;
@@ -91,7 +92,7 @@ namespace Mono.Cecil.Metadata {
 		}
 
 		public MetadataWriter (AssemblyDefinition asm, MetadataRoot root,
-			AssemblyKind kind, TargetRuntime rt, MemoryBinaryWriter writer)
+			AssemblyKind kind, TargetRuntime rt, BinaryWriter writer)
 		{
 			m_assembly = asm;
 			m_root = root;

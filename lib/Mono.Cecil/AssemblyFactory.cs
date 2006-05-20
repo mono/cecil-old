@@ -41,10 +41,9 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public static AssemblyDefinition GetAssembly (string file)
+		static AssemblyDefinition GetAssembly (ImageReader irv, bool manifestOnly)
 		{
-			ImageReader brv = ImageReader.Read (file);
-			StructureReader srv = new StructureReader (brv);
+			StructureReader srv = new StructureReader (irv, manifestOnly);
 			AssemblyDefinition asm = new AssemblyDefinition (
 				new AssemblyNameDefinition (), srv);
 
@@ -52,15 +51,24 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
+		public static AssemblyDefinition GetAssembly (string file)
+		{
+			return GetAssembly (ImageReader.Read (file), false);
+		}
+
+		public static AssemblyDefinition GetAssembly (byte [] assembly)
+		{
+			return GetAssembly (ImageReader.Read (assembly), false);
+		}
+
 		public static AssemblyDefinition GetAssemblyManifest (string file)
 		{
-			ImageReader brv = ImageReader.Read (file);
-			StructureReader srv = new StructureReader (brv, true);
-			AssemblyDefinition asm = new AssemblyDefinition (
-				new AssemblyNameDefinition (), srv);
+			return GetAssembly (ImageReader.Read (file), true);
+		}
 
-			asm.Accept (srv);
-			return asm;
+		public static AssemblyDefinition GetAssemblyManifest (byte [] assembly)
+		{
+			return GetAssembly (ImageReader.Read (assembly), true);
 		}
 
 		static TargetRuntime CurrentRuntime ()
@@ -94,7 +102,7 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
-		static void WriteAssembly (AssemblyDefinition asm, MemoryBinaryWriter bw)
+		static void WriteAssembly (AssemblyDefinition asm, BinaryWriter bw)
 		{
 			asm.Accept (new StructureWriter (asm, bw));
 		}
@@ -102,16 +110,19 @@ namespace Mono.Cecil {
 		public static void SaveAssembly (AssemblyDefinition asm, string file)
 		{
 			using (FileStream fs = new FileStream (
-					file, FileMode.Create, FileAccess.Write, FileShare.None)) {
-				BinaryWriter bw = new BinaryWriter (fs);
-				try {
+				file, FileMode.Create, FileAccess.Write, FileShare.None)) {
 
-					MemoryBinaryWriter writer = new MemoryBinaryWriter ();
-					WriteAssembly (asm, writer);
-					writer.MemoryStream.WriteTo (bw.BaseStream);
-				} finally {
-					bw.Close();
-				}
+				SaveAssembly (asm, fs);
+			}
+		}
+
+		public static void SaveAssembly (AssemblyDefinition asm, Stream stream)
+		{
+			BinaryWriter bw = new BinaryWriter (stream);
+			try {
+				WriteAssembly (asm, bw);
+			} finally {
+				bw.Close ();
 			}
 		}
 

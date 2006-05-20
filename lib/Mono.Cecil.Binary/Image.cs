@@ -107,7 +107,7 @@ namespace Mono.Cecil.Binary {
 			get { return m_img; }
 		}
 
-		Image ()
+		internal Image ()
 		{
 			m_dosHeader = new DOSHeader ();
 			m_peFileHeader = new PEFileHeader ();
@@ -193,14 +193,12 @@ namespace Mono.Cecil.Binary {
 
 		public static Image GetImage (string file)
 		{
-			if (file == null)
-				throw new ArgumentNullException ("file");
-
-			FileInfo img = new FileInfo (file);
-			if (!File.Exists (img.FullName))
-				throw new FileNotFoundException (img.FullName);
-
 			return ImageReader.Read (file).Image;
+		}
+
+		public static Image GetImage (byte [] image)
+		{
+			return ImageReader.Read (image).Image;
 		}
 	}
 }

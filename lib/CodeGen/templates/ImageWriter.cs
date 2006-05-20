@@ -31,6 +31,7 @@
 
 namespace Mono.Cecil.Binary {
 
+	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil.Metadata;
@@ -40,14 +41,14 @@ namespace Mono.Cecil.Binary {
 		Image m_img;
 		AssemblyKind m_kind;
 		MetadataWriter m_mdWriter;
-		MemoryBinaryWriter m_binaryWriter;
+		BinaryWriter m_binaryWriter;
 
 		Section m_textSect;
 		MemoryBinaryWriter m_textWriter;
 		Section m_relocSect;
 		MemoryBinaryWriter m_relocWriter;
 
-		public ImageWriter (MetadataWriter writer, AssemblyKind kind, MemoryBinaryWriter bw)
+		public ImageWriter (MetadataWriter writer, AssemblyKind kind, BinaryWriter bw)
 		{
 			m_mdWriter= writer;
 			m_img = writer.GetMetadataRoot ().GetImage ();
@@ -276,11 +277,11 @@ namespace Mono.Cecil.Binary {
 		{
 			m_binaryWriter.BaseStream.Position = 0x200;
 
-			m_binaryWriter.Write (m_textWriter);
+			m_textWriter.MemoryStream.WriteTo (m_binaryWriter.BaseStream);
 			m_binaryWriter.Write (new byte [
 				m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length]);
 
-			m_binaryWriter.Write (m_relocWriter);
+			m_relocWriter.MemoryStream.WriteTo (m_binaryWriter.BaseStream);
 			m_binaryWriter.Write (new byte [
 				m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length]);
 		}

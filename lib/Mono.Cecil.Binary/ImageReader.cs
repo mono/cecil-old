@@ -51,9 +51,10 @@ namespace Mono.Cecil.Binary {
 			get { return m_image; }
 		}
 
-		ImageReader (Image img)
+		ImageReader (Image img, BinaryReader reader)
 		{
 			m_image = img;
+			m_binaryReader = reader;
 		}
 
 		public static ImageReader Read (string file)
@@ -66,7 +67,24 @@ namespace Mono.Cecil.Binary {
 				throw new FileNotFoundException (fi.FullName);
 
 			Image img = new Image (fi);
-			ImageReader reader = new ImageReader (img);
+			ImageReader reader = new ImageReader (img, new BinaryReader (
+				new FileStream (img.FileInformation.FullName, FileMode.Open,
+				FileAccess.Read, FileShare.Read)));
+			img.Accept (reader);
+			return reader;
+		}
+
+		public static ImageReader Read (byte [] image)
+		{
+			if (image == null)
+				throw new ArgumentNullException ("image");
+
+			if (image.Length == 0)
+				throw new ArgumentException ("Empty image array");
+
+			Image img = new Image ();
+			ImageReader reader = new ImageReader (img, new BinaryReader (
+				new MemoryStream (image)));
 			img.Accept (reader);
 			return reader;
 		}
@@ -78,9 +96,6 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImage (Image img)
 		{
-			m_binaryReader = new BinaryReader (
-				new FileStream (img.FileInformation.FullName, FileMode.Open,
-					FileAccess.Read, FileShare.Read));
 			m_mdReader = new MetadataReader (this);
 		}
 

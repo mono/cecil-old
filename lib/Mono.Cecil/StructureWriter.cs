@@ -29,6 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.IO;
 
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
@@ -40,7 +41,7 @@ namespace Mono.Cecil {
 		MetadataRowWriter m_rowWriter;
 
 		AssemblyDefinition m_asm;
-		MemoryBinaryWriter m_binaryWriter;
+		BinaryWriter m_binaryWriter;
 
 		public AssemblyDefinition Assembly {
 			get { return m_asm; }
@@ -63,13 +64,13 @@ namespace Mono.Cecil {
 			mod.Image = ni;
 		}
 
-		public StructureWriter (AssemblyDefinition asm, MemoryBinaryWriter writer)
+		public StructureWriter (AssemblyDefinition asm, BinaryWriter writer)
 		{
 			m_asm = asm;
 			m_binaryWriter = writer;
 		}
 
-		public MemoryBinaryWriter GetWriter ()
+		public BinaryWriter GetWriter ()
 		{
 			return m_binaryWriter;
 		}
