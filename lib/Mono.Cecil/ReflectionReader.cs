@@ -1031,7 +1031,7 @@ namespace Mono.Cecil {
 		protected void SetInitialValue (FieldDefinition field)
 		{
 			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
-				BinaryReader br = this.Module.ImageReader.MetadataReader.GetDataReader (field.RVA);
+				BinaryReader br = m_reader.MetadataReader.GetDataReader (field.RVA);
 				field.InitialValue = br.ReadBytes (
 					(int) (field.FieldType as TypeDefinition).ClassSize);
 			} else

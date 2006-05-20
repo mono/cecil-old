@@ -200,7 +200,7 @@ namespace Mono.Cecil {
 				semMeth.SemanticsAttributes = semRow.Semantics;
 				switch (semRow.Association.TokenType) {
 				case TokenType.Event :
-					EventDefinition evt = m_events [semRow.Association.RID - 1];
+					EventDefinition evt = GetEventDefAt (semRow.Association.RID);
 					if ((semRow.Semantics & MethodSemanticsAttributes.AddOn) != 0)
 						evt.AddMethod = semMeth;
 					else if ((semRow.Semantics & MethodSemanticsAttributes.Fire) != 0)
@@ -209,7 +209,7 @@ namespace Mono.Cecil {
 						evt.RemoveMethod = semMeth;
 					break;
 				case TokenType.Property :
-					PropertyDefinition prop = m_properties [semRow.Association.RID - 1];
+					PropertyDefinition prop = GetPropertyDefAt (semRow.Association.RID);
 					if ((semRow.Semantics & MethodSemanticsAttributes.Getter) != 0)
 						prop.GetMethod = semMeth;
 					else if ((semRow.Semantics & MethodSemanticsAttributes.Setter) != 0)
@@ -307,37 +307,37 @@ namespace Mono.Cecil {
 				} else
 					cattr = BuildCustomAttribute (ctor, ca);
 
-				CustomAttributeCollection owner = null;
+				ICustomAttributeProvider owner = null;
 				switch (caRow.Parent.TokenType) {
 				case TokenType.Assembly :
-					owner = this.Module.Assembly.CustomAttributes;
+					owner = this.Module.Assembly;
 					break;
 				case TokenType.Module :
-					owner = this.Module.CustomAttributes;
+					owner = this.Module;
 					break;
 				case TokenType.TypeDef :
-					owner = GetTypeDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetTypeDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.TypeRef :
-					owner = GetTypeRefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetTypeRefAt (caRow.Parent.RID);
 					break;
 				case TokenType.Field :
-					owner = GetFieldDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetFieldDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.Method :
-					owner = GetMethodDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetMethodDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.Property :
-					owner = GetPropertyDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetPropertyDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.Event :
-					owner = GetEventDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetEventDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.Param :
-					owner = GetParamDefAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetParamDefAt (caRow.Parent.RID);
 					break;
 				case TokenType.GenericParam :
-					owner = GetGenericParameterAt (caRow.Parent.RID).CustomAttributes;
+					owner = GetGenericParameterAt (caRow.Parent.RID);
 					break;
 				default :
 					//TODO: support other ?
@@ -345,7 +345,7 @@ namespace Mono.Cecil {
 				}
 
 				if (owner != null)
-					owner.Add (cattr);
+					owner.CustomAttributes.Add (cattr);
 			}
 		}
 
