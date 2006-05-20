@@ -104,7 +104,7 @@ namespace Mono.Cecil.Cil {
 		{
 			long start = br.BaseStream.Position, offset;
 			Instruction last = null;
-			InstructionCollection code = body.Instructions as InstructionCollection;
+			InstructionCollection code = body.Instructions;
 			instructions = new Hashtable ();
 			GenericContext context = new GenericContext (body.Method);
 
@@ -121,7 +121,6 @@ namespace Mono.Cecil.Cil {
 				switch (op.OperandType) {
 				case OperandType.InlineNone :
 					break;
-				// nasty hack: use Labels as operand to resolve branches later
 				case OperandType.InlineSwitch :
 					uint length = br.ReadUInt32 ();
 					int [] branches = new int [length];

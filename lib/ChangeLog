@@ -1,3 +1,17 @@
+2006-05-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureWriter.cs:
+		Throw an exception when the target is an exe
+		and no entry point have been setted.
+	* Mono.Cecil/AssemblyFactory.cs:
+		Add helpers method to defines assemblies.
+	* Mono.Cecil/MethodDefinition.cs:
+		Set the hasThis flag to the correct value.
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Remove old comment.
+	* Mono.Xml/SmallXmlParser.cs:
+		Make private.
+
 2006-05-18  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/MetadataTableReader.cs

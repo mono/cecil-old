@@ -69,12 +69,7 @@ namespace Mono.Xml
 		}
 	}
 
-	#if INSIDE_CORLIB
-	internal
-	#else
-	public
-	#endif
-	class SmallXmlParser
+	internal class SmallXmlParser
 	{
 		public interface IContentHandler
 		{

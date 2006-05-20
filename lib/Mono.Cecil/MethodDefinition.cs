@@ -232,6 +232,7 @@ namespace Mono.Cecil {
 		{
 			m_attributes = attrs;
 
+			this.HasThis = !this.IsStatic;
 			if (!IsStatic)
 				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
 		}

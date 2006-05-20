@@ -67,6 +67,17 @@ namespace Mono.Cecil {
 		{
 			m_asm = asm;
 			m_binaryWriter = writer;
+		}
+
+		public MemoryBinaryWriter GetWriter ()
+		{
+			return m_binaryWriter;
+		}
+
+		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
+		{
+			if (asm.Kind != AssemblyKind.Dll && asm.EntryPoint == null)
+				throw new ReflectionException ("Assembly does not have an entry point defined");
 
 			foreach (ModuleDefinition module in asm.Modules)
 				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
@@ -78,11 +89,6 @@ namespace Mono.Cecil {
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
 			m_rowWriter = rw.MetadataRowWriter;
-		}
-
-		public MemoryBinaryWriter GetWriter ()
-		{
-			return m_binaryWriter;
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)

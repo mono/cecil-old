@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 	using System.IO;
-	using System.Reflection;
+	using SR = System.Reflection;
 
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
@@ -61,6 +61,25 @@ namespace Mono.Cecil {
 
 			asm.Accept (srv);
 			return asm;
+		}
+
+		static TargetRuntime CurrentRuntime ()
+		{
+			Version corlib = typeof (object).Assembly.GetName ().Version;
+			if (corlib.Major == 1)
+				return corlib.Minor == 0 ? TargetRuntime.NET_1_0 : TargetRuntime.NET_1_1;
+			else // if (corlib.Major == 2)
+				return TargetRuntime.NET_2_0;
+		}
+
+		public static AssemblyDefinition DefineAssembly (string name, AssemblyKind kind)
+		{
+			return DefineAssembly (name, name, CurrentRuntime (), kind);
+		}
+
+		public static AssemblyDefinition DefineAssembly (string name, TargetRuntime rt, AssemblyKind kind)
+		{
+			return DefineAssembly (name, name, rt, kind);
 		}
 
 		public static AssemblyDefinition DefineAssembly (string assemblyName, string moduleName, TargetRuntime rt, AssemblyKind kind)
@@ -97,7 +116,7 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
+		public static SR.Assembly CreateReflectionAssembly (AssemblyDefinition asm, AppDomain domain)
 		{
 			using (MemoryBinaryWriter writer = new MemoryBinaryWriter ()) {
 
@@ -106,7 +125,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public static Assembly CreateReflectionAssembly (AssemblyDefinition asm)
+		public static SR.Assembly CreateReflectionAssembly (AssemblyDefinition asm)
 		{
 			return CreateReflectionAssembly (asm, AppDomain.CurrentDomain);
 		}
