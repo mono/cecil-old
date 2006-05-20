@@ -200,5 +200,10 @@ namespace Mono.Cecil.Binary {
 		{
 			return ImageReader.Read (image).Image;
 		}
+
+		public static Image GetImage (Stream stream)
+		{
+			return ImageReader.Read (stream).Image;
+		}
 	}
 }

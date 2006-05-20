@@ -51,24 +51,44 @@ namespace Mono.Cecil {
 			return asm;
 		}
 
+		static AssemblyDefinition GetAssembly (ImageReader reader)
+		{
+			return GetAssembly (reader, false);
+		}
+
+		static AssemblyDefinition GetAssemblyManifest (ImageReader reader)
+		{
+			return GetAssembly (reader, true);
+		}
+
 		public static AssemblyDefinition GetAssembly (string file)
 		{
-			return GetAssembly (ImageReader.Read (file), false);
+			return GetAssembly (ImageReader.Read (file));
 		}
 
 		public static AssemblyDefinition GetAssembly (byte [] assembly)
 		{
-			return GetAssembly (ImageReader.Read (assembly), false);
+			return GetAssembly (ImageReader.Read (assembly));
+		}
+
+		public static AssemblyDefinition GetAssembly (Stream stream)
+		{
+			return GetAssembly (ImageReader.Read (stream));
 		}
 
 		public static AssemblyDefinition GetAssemblyManifest (string file)
 		{
-			return GetAssembly (ImageReader.Read (file), true);
+			return GetAssemblyManifest (ImageReader.Read (file));
 		}
 
 		public static AssemblyDefinition GetAssemblyManifest (byte [] assembly)
 		{
-			return GetAssembly (ImageReader.Read (assembly), true);
+			return GetAssemblyManifest (ImageReader.Read (assembly));
+		}
+
+		public static AssemblyDefinition GetAssemblyManifest (Stream stream)
+		{
+			return GetAssemblyManifest (ImageReader.Read (stream));
 		}
 
 		static TargetRuntime CurrentRuntime ()
@@ -114,6 +134,13 @@ namespace Mono.Cecil {
 
 				SaveAssembly (asm, fs);
 			}
+		}
+
+		public static void SaveAssembly (AssemblyDefinition asm, out byte [] assembly)
+		{
+			MemoryBinaryWriter bw = new MemoryBinaryWriter ();
+			SaveAssembly (asm, bw.BaseStream);
+			assembly = bw.ToArray ();
 		}
 
 		public static void SaveAssembly (AssemblyDefinition asm, Stream stream)

@@ -57,6 +57,13 @@ namespace Mono.Cecil.Binary {
 			m_binaryReader = reader;
 		}
 
+		static ImageReader Read (Image img, Stream stream)
+		{
+			ImageReader reader = new ImageReader (img, new BinaryReader (stream));
+			img.Accept (reader);
+			return reader;
+		}
+
 		public static ImageReader Read (string file)
 		{
 			if (file == null)
@@ -66,12 +73,9 @@ namespace Mono.Cecil.Binary {
 			if (!File.Exists (fi.FullName))
 				throw new FileNotFoundException (fi.FullName);
 
-			Image img = new Image (fi);
-			ImageReader reader = new ImageReader (img, new BinaryReader (
-				new FileStream (img.FileInformation.FullName, FileMode.Open,
-				FileAccess.Read, FileShare.Read)));
-			img.Accept (reader);
-			return reader;
+			return Read (new Image (fi), new FileStream (
+				fi.FullName, FileMode.Open,
+				FileAccess.Read, FileShare.Read));
 		}
 
 		public static ImageReader Read (byte [] image)
@@ -82,11 +86,18 @@ namespace Mono.Cecil.Binary {
 			if (image.Length == 0)
 				throw new ArgumentException ("Empty image array");
 
-			Image img = new Image ();
-			ImageReader reader = new ImageReader (img, new BinaryReader (
-				new MemoryStream (image)));
-			img.Accept (reader);
-			return reader;
+			return Read (new Image (), new MemoryStream (image));
+		}
+
+		public static ImageReader Read (Stream stream)
+		{
+			if (stream == null)
+				throw new ArgumentNullException ("stream");
+
+			if (!stream.CanRead)
+				throw new ArgumentException ("Can not read from stream");
+
+			return Read (new Image (), stream);
 		}
 
 		public BinaryReader GetReader ()
