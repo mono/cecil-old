@@ -211,7 +211,7 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction Emit (OpCode opcode, FieldReference field)
 		{
-			Instruction instr = Create (opcode);
+			Instruction instr = Create (opcode, field);
 			Append (instr);
 			return instr;
 		}
