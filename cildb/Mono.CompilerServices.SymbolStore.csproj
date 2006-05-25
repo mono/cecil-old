@@ -1,0 +1,78 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A43C651D-C467-4214-86EE-23EDF2242A1F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mono.CompilerServices.SymbolStore</RootNamespace>
+    <AssemblyName>Mono.CompilerServices.SymbolStore</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <Compile Include="Mono.CompilerServices.SymbolStore\AssemblyInfo.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\BaseSymbolStoreVisitor.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Comparers.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Constant.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\ConstantCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Document.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\DocumentCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\DocumentType.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\GuidAttribute.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\HashAlgorithm.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\IScopeContainer.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\ISymbolStoreVisitable.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\ISymbolStoreVisitor.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Language.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\LanguageVendor.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Method.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\MethodCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Scope.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\ScopeCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SequencePoint.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SequencePointCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStore.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreFactory.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreReader.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\SymbolStoreWriter.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Using.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\UsingCollection.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\Variable.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\VariableAttributes.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolStore\VariableCollection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+</Project>
