@@ -1,3 +1,10 @@
+2006-05-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Read/Write this awful load of crap that is sharepoint.
+
 2006-05-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CilWorker.cs:

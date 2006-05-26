@@ -95,6 +95,7 @@ namespace Mono.Cecil {
 				Parser.LoadXml (Encoding.Unicode.GetString (declaration));
 				try {
 					dec.PermissionSet.FromXml (Parser.ToXml ());
+					dec.PermissionSet.ToXml ();
 				} catch {
 					dec.IsReadable = false;
 					dec.Blob = declaration;

@@ -563,6 +563,9 @@ namespace Mono.Cecil.Signatures {
 				ca.FixedArgs [i] = ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
 					ctor.Parameters [i].ParameterType, ref read);
 
+			if (br.BaseStream.Position == br.BaseStream.Length)
+				read = false;
+
 			if (!read) {
 				ca.Read = read;
 				return ca;

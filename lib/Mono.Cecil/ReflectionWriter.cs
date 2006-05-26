@@ -866,40 +866,40 @@ namespace Mono.Cecil {
 
 			switch (et) {
 			case ElementType.Boolean :
-				m_constWriter.Write ((byte) (((bool) value) ? 1 : 0));
+				m_constWriter.Write ((byte) (Convert.ToBoolean (value) ? 1 : 0));
 				break;
 			case ElementType.Char :
-				m_constWriter.Write ((ushort) (char) value);
+				m_constWriter.Write ((ushort) Convert.ToChar (value));
 				break;
 			case ElementType.I1 :
-				m_constWriter.Write ((sbyte) value);
+				m_constWriter.Write (Convert.ToSByte (value));
 				break;
 			case ElementType.I2 :
-				m_constWriter.Write ((short) value);
+				m_constWriter.Write (Convert.ToInt16 (value));
 				break;
 			case ElementType.I4 :
-				m_constWriter.Write ((int) value);
+				m_constWriter.Write (Convert.ToInt32 (value));
 				break;
 			case ElementType.I8 :
-				m_constWriter.Write ((long) value);
+				m_constWriter.Write (Convert.ToInt64 (value));
 				break;
 			case ElementType.U1 :
-				m_constWriter.Write ((byte) value);
+				m_constWriter.Write (Convert.ToByte (value));
 				break;
 			case ElementType.U2 :
-				m_constWriter.Write ((ushort) value);
+				m_constWriter.Write (Convert.ToUInt16 (value));
 				break;
 			case ElementType.U4 :
-				m_constWriter.Write ((uint) value);
+				m_constWriter.Write (Convert.ToUInt32 (value));
 				break;
 			case ElementType.U8 :
-				m_constWriter.Write ((ulong) value);
+				m_constWriter.Write (Convert.ToUInt64 (value));
 				break;
 			case ElementType.R4 :
-				m_constWriter.Write ((float) value);
+				m_constWriter.Write (Convert.ToSingle (value));
 				break;
 			case ElementType.R8 :
-				m_constWriter.Write ((double) value);
+				m_constWriter.Write (Convert.ToDouble (value));
 				break;
 			case ElementType.String :
 				m_constWriter.Write (Encoding.Unicode.GetBytes ((string) value));
