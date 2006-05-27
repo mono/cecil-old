@@ -80,6 +80,9 @@ namespace Mono.Cecil {
 			if (asm.Kind != AssemblyKind.Dll && asm.EntryPoint == null)
 				throw new ReflectionException ("Assembly does not have an entry point defined");
 
+			if ((asm.MainModule.Image.CLIHeader.Flags & RuntimeImage.ILOnly) == 0)
+				throw new NotImplementedException ("Can not write a mixed mode assembly");
+
 			foreach (ModuleDefinition module in asm.Modules)
 				if (module.Image.CLIHeader.Metadata.VirtualAddress != RVA.Zero)
 					ResetImage (module);

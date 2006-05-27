@@ -1,5 +1,12 @@
 2006-05-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/StructureWriter.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil.Metadata/MetadataToken.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs:
+		Play better with mixed mode assemblies.
+
 	* Mono.Cecil/SecurityDeclarationReader.cs
 	  Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil.Signatures/SignatureReader.cs:

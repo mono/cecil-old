@@ -41,6 +41,8 @@ namespace Mono.Cecil.Metadata {
 			get { return m_type; }
 		}
 
+		public static readonly MetadataToken Zero = new MetadataToken ((TokenType) 0, 0);
+
 		public MetadataToken (TokenType table, uint rid)
 		{
 			m_type = table;

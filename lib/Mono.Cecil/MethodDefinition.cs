@@ -250,7 +250,7 @@ namespace Mono.Cecil {
 
 		internal void LoadBody ()
 		{
-			if (m_module != null && m_body == null && m_rva != RVA.Zero) {
+			if (m_module != null && m_body == null && m_rva != RVA.Zero && (m_attributes & MethodAttributes.PInvokeImpl) == 0) {
 				m_body = new MethodBody (this);
 				m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
