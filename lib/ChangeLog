@@ -1,3 +1,9 @@
+2006-05-29  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethodDefinition.cs
+	  Mono.Cecil/MethodDefinition.cs:
+		Remove the useless CreateBody method.
+
 2006-05-27  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/StructureWriter.cs

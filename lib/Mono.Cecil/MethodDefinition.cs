@@ -243,11 +243,6 @@ namespace Mono.Cecil {
 			this.ReturnType.ReturnType = returnType;
 		}
 
-		public MethodBody CreateBody ()
-		{
-			return m_body = new MethodBody (this);
-		}
-
 		internal void LoadBody ()
 		{
 			if (m_module != null && m_body == null && m_rva != RVA.Zero && (m_attributes & MethodAttributes.PInvokeImpl) == 0) {

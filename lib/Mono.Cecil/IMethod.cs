@@ -59,8 +59,6 @@ namespace Mono.Cecil {
 
 		ParameterDefinition This { get; }
 
-		MethodBody CreateBody ();
-
 		MethodDefinition Clone ();
 	}
 }
