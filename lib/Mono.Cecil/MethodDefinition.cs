@@ -243,11 +243,19 @@ namespace Mono.Cecil {
 			this.ReturnType.ReturnType = returnType;
 		}
 
+		internal bool HasBody ()
+		{
+			return (m_attributes & MethodAttributes.Abstract) == 0 &&
+				(m_attributes & MethodAttributes.PInvokeImpl) == 0 &&
+				(m_implAttrs & MethodImplAttributes.InternalCall) == 0 &&
+				(m_implAttrs & MethodImplAttributes.Runtime) == 0;
+		}
+
 		internal void LoadBody ()
 		{
 			if (m_body == null) {
 				m_body = new MethodBody (this);
-				if (m_module != null && m_rva != RVA.Zero && (m_attributes & MethodAttributes.PInvokeImpl) == 0)
+				if (m_module != null && m_rva != RVA.Zero && HasBody ())
 					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
 		}

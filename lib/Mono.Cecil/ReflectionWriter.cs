@@ -259,8 +259,10 @@ namespace Mono.Cecil {
 				VisitOverrideCollection (meth.Overrides);
 				VisitCustomAttributeCollection (meth.CustomAttributes);
 				VisitSecurityDeclarationCollection (meth.SecurityDeclarations);
-				if (meth.PInvokeInfo != null)
+				if (meth.PInvokeInfo != null) {
+					meth.Attributes |= MethodAttributes.PInvokeImpl;
 					VisitPInvokeInfo (meth.PInvokeInfo);
+				}
 			}
 
 			foreach (TypeDefinition t in m_typeDefStack)
@@ -789,7 +791,7 @@ namespace Mono.Cecil {
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {
 				MethodDefinition meth = (MethodDefinition) m_methodStack [i];
-				if (!meth.IsAbstract && meth.PInvokeInfo == null)
+				if (meth.HasBody ())
 					mTable [i].RVA = m_codeWriter.WriteMethodBody (meth);
 			}
 

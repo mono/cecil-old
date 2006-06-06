@@ -1,3 +1,9 @@
+2006-06-07  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Read and write method bodies only when allowed.
+
 2006-05-29  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethodDefinition.cs
