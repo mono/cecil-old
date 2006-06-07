@@ -248,6 +248,8 @@ namespace Mono.Cecil {
 			return (m_attributes & MethodAttributes.Abstract) == 0 &&
 				(m_attributes & MethodAttributes.PInvokeImpl) == 0 &&
 				(m_implAttrs & MethodImplAttributes.InternalCall) == 0 &&
+				(m_implAttrs & MethodImplAttributes.Native) == 0 &&
+				(m_implAttrs & MethodImplAttributes.Unmanaged) == 0 &&
 				(m_implAttrs & MethodImplAttributes.Runtime) == 0;
 		}
 
