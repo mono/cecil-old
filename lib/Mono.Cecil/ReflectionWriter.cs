@@ -791,7 +791,7 @@ namespace Mono.Cecil {
 			MethodTable mTable = m_tableWriter.GetMethodTable ();
 			for (int i = 0; i < m_methodStack.Count; i++) {
 				MethodDefinition meth = (MethodDefinition) m_methodStack [i];
-				if (meth.HasBody ())
+				if (meth.HasBody)
 					mTable [i].RVA = m_codeWriter.WriteMethodBody (meth);
 			}
 

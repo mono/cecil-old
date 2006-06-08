@@ -1,3 +1,10 @@
+2006-06-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/IMethod.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		Add a public HasBody property.
+
 2006-06-07  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/MethodDefinition.cs
