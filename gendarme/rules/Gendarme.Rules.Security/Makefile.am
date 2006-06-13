@@ -47,4 +47,4 @@ run-test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll
 
 self-test: test
-	gendarme Test.Rules.Security.dll
+	gendarme Gendarme.Rules.Security.dll
