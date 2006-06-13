@@ -44,10 +44,13 @@ correctness_test_sources = BadRecursiveInvocationTest.cs
 correctness_test_build_sources = $(addprefix $(srcdir)/Test/, $(correctness_test_sources))
 
 Test.Rules.Correctness.dll: $(correctness_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:nunit.framework.dll -r:../../framework/Gendarme.Framework.dll \
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
 		-r:Gendarme.Rules.Correctness.dll -out:$@ $(correctness_test_build_sources)
 
 test: Gendarme.Rules.Correctness.dll Test.Rules.Correctness.dll
 
 run-test: Test.Rules.Correctness.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Correctness.dll
+
+self-test: test
+	gendarme Gendarme.Rules.Correctness.dll
