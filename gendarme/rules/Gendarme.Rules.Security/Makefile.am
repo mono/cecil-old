@@ -38,10 +38,13 @@ security_test_sources = MethodCallWithSubsetLinkDemandTest.cs NonVirtualMethodWi
 security_test_build_sources = $(addprefix $(srcdir)/Test/, $(security_test_sources))
 
 Test.Rules.Security.dll: $(security_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:nunit.framework.dll -r:../../framework/Gendarme.Framework.dll \
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
 		-r:Gendarme.Rules.Security.dll -out:$@ $(security_test_build_sources)
 
 test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
 
 run-test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll
+
+self-test: test
+	gendarme Test.Rules.Security.dll
