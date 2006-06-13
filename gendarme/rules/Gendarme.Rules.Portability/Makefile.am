@@ -34,10 +34,13 @@ portability_test_sources = NewLineLiteralTest.cs
 portability_test_build_sources = $(addprefix $(srcdir)/Test/, $(portability_test_sources))
 
 Test.Rules.Portability.dll: $(portability_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:nunit.framework.dll -r:../../framework/Gendarme.Framework.dll \
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
 		-r:Gendarme.Rules.Portability.dll -out:$@ $(portability_test_build_sources)
 
 test: Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
 
 run-test: Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Portability.dll
+
+self-test: test
+	gendarme Gendarme.Rules.Portability.dll
