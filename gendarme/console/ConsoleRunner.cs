@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -136,7 +136,7 @@ class ConsoleRunner : Runner {
 					result = (result || (n > 0));
 				}
 				catch (Exception e) {
-					Console.WriteLine ("Error reading rules\nDetails: {0}", e);
+					Console.WriteLine ("Error reading rules{1}Details: {0}", e, Environment.NewLine);
 					return false;
 				}
 			}
@@ -146,8 +146,10 @@ class ConsoleRunner : Runner {
 
 	static void Header ()
 	{
-		Console.WriteLine ("Gendarme v{0}", Assembly.GetName ().Version);
-		Console.WriteLine ("Copyright (C) 2005 Novell, Inc (http://www.novell.com)");
+		Assembly a = Assembly.GetExecutingAssembly();
+		Console.WriteLine ("Gendarme v{0}", a.GetName ().Version);
+		object[] attr = a.GetCustomAttributes (typeof (AssemblyCopyrightAttribute), false);
+		Console.WriteLine (((attr.Length > 0) ? ((AssemblyCopyrightAttribute) attr [0]).Copyright : String.Empty));
 		Console.WriteLine ();
 	}
 

@@ -1,0 +1,6 @@
+2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConsoleRunner.cs: Read the copyright informations from the attribute
+	in AssemblyInfo.cs file. Fix NewLineLiteralRule in LoadConfiguration 
+	method (self-test).
+	* Makefile.am: Added self-test to promote compliance ;-)
