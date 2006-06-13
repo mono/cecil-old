@@ -1,3 +1,12 @@
+2006-06-13  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionWriter.cs:
+		Fix for compiling on CF 1.
+	* Mono.Cecil/StructureReader.cs:
+		Fix for a "bug" when csc 7.1 emits an assembly
+		with an assembly row, but no blob heap.
+		Plus style fix.
+
 2006-06-08  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/IMethod.cs

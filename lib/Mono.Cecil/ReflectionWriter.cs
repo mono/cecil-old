@@ -30,6 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 	using System.Collections;
+	using System.Globalization;
 	using System.IO;
 	using System.Text;
 
@@ -866,42 +867,45 @@ namespace Mono.Cecil {
 			if (value == null)
 				et = ElementType.Class;
 
+			IConvertible ic = value as IConvertible;
+			IFormatProvider fp = CultureInfo.CurrentCulture.NumberFormat;
+
 			switch (et) {
 			case ElementType.Boolean :
-				m_constWriter.Write ((byte) (Convert.ToBoolean (value) ? 1 : 0));
+				m_constWriter.Write ((byte) (ic.ToBoolean (fp) ? 1 : 0));
 				break;
 			case ElementType.Char :
-				m_constWriter.Write ((ushort) Convert.ToChar (value));
+				m_constWriter.Write ((ushort) ic.ToChar (fp));
 				break;
 			case ElementType.I1 :
-				m_constWriter.Write (Convert.ToSByte (value));
+				m_constWriter.Write (ic.ToSByte (fp));
 				break;
 			case ElementType.I2 :
-				m_constWriter.Write (Convert.ToInt16 (value));
+				m_constWriter.Write (ic.ToInt16 (fp));
 				break;
 			case ElementType.I4 :
-				m_constWriter.Write (Convert.ToInt32 (value));
+				m_constWriter.Write (ic.ToInt32 (fp));
 				break;
 			case ElementType.I8 :
-				m_constWriter.Write (Convert.ToInt64 (value));
+				m_constWriter.Write (ic.ToInt64 (fp));
 				break;
 			case ElementType.U1 :
-				m_constWriter.Write (Convert.ToByte (value));
+				m_constWriter.Write (ic.ToByte (fp));
 				break;
 			case ElementType.U2 :
-				m_constWriter.Write (Convert.ToUInt16 (value));
+				m_constWriter.Write (ic.ToUInt16 (fp));
 				break;
 			case ElementType.U4 :
-				m_constWriter.Write (Convert.ToUInt32 (value));
+				m_constWriter.Write (ic.ToUInt32 (fp));
 				break;
 			case ElementType.U8 :
-				m_constWriter.Write (Convert.ToUInt64 (value));
+				m_constWriter.Write (ic.ToUInt64 (fp));
 				break;
 			case ElementType.R4 :
-				m_constWriter.Write (Convert.ToSingle (value));
+				m_constWriter.Write (ic.ToSingle (fp));
 				break;
 			case ElementType.R8 :
-				m_constWriter.Write (Convert.ToDouble (value));
+				m_constWriter.Write (ic.ToDouble (fp));
 				break;
 			case ElementType.String :
 				m_constWriter.Write (Encoding.Unicode.GetBytes ((string) value));

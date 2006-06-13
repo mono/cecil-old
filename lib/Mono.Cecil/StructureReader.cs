@@ -41,6 +41,7 @@ namespace Mono.Cecil {
 		bool m_manifestOnly;
 		AssemblyDefinition m_asmDef;
 		ModuleDefinition m_module;
+		MetadataStreamCollection m_streams;
 		TablesHeap m_tHeap;
 		MetadataTableReader m_tableReader;
 
@@ -60,13 +61,27 @@ namespace Mono.Cecil {
 		{
 			m_ir = ir;
 			m_img = ir.Image;
-			m_tHeap = m_img.MetadataRoot.Streams.TablesHeap;
+			m_streams = m_img.MetadataRoot.Streams;
+			m_tHeap = m_streams.TablesHeap;
 			m_tableReader = ir.MetadataReader.TableReader;
 		}
 
 		public StructureReader (ImageReader ir, bool manifestOnly) : this (ir)
 		{
 			m_manifestOnly = manifestOnly;
+		}
+
+		byte [] ReadBlob (uint pointer)
+		{
+			if (pointer == 0)
+				return new byte [0];
+
+			return m_streams.BlobHeap.Read (pointer);
+		}
+
+		string ReadString (uint pointer)
+		{
+			return m_streams.StringsHeap [pointer];
 		}
 
 		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
@@ -102,11 +117,11 @@ namespace Mono.Cecil {
 		{
 			AssemblyTable atable = m_tableReader.GetAssemblyTable ();
 			AssemblyRow arow = atable [0];
-			name.Name = m_img.MetadataRoot.Streams.StringsHeap [arow.Name];
+			name.Name = ReadString (arow.Name);
 			name.Flags = arow.Flags;
-			name.PublicKey = m_img.MetadataRoot.Streams.BlobHeap.Read (arow.PublicKey);
+			name.PublicKey = ReadBlob (arow.PublicKey);
 
-			name.Culture = m_img.MetadataRoot.Streams.StringsHeap [arow.Culture];
+			name.Culture = ReadString (arow.Culture);
 			name.Version = new Version (
 				arow.MajorVersion, arow.MinorVersion,
 				arow.BuildNumber, arow.RevisionNumber);
@@ -123,12 +138,12 @@ namespace Mono.Cecil {
 			for (int i = 0; i < arTable.Rows.Count; i++) {
 				AssemblyRefRow arRow = arTable [i];
 				AssemblyNameReference aname = new AssemblyNameReference (
-					m_img.MetadataRoot.Streams.StringsHeap [arRow.Name],
-					m_img.MetadataRoot.Streams.StringsHeap [arRow.Culture],
+					ReadString (arRow.Name),
+					ReadString (arRow.Culture),
 					new Version (arRow.MajorVersion, arRow.MinorVersion,
 								 arRow.BuildNumber, arRow.RevisionNumber));
-				aname.PublicKeyToken = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.PublicKeyOrToken);
-				aname.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (arRow.HashValue);
+				aname.PublicKeyToken = ReadBlob (arRow.PublicKeyOrToken);
+				aname.Hash = ReadBlob (arRow.HashValue);
 				aname.MetadataToken = new MetadataToken (TokenType.AssemblyRef, (uint) i + 1);
 				names.Add (aname);
 			}
@@ -148,7 +163,7 @@ namespace Mono.Cecil {
 				ManifestResourceRow mrRow = mrTable [i];
 				if (mrRow.Implementation.RID == 0) {
 					EmbeddedResource eres = new EmbeddedResource (
-						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags);
+						ReadString (mrRow.Name), mrRow.Flags);
 
 					br = m_ir.MetadataReader.GetDataReader (
 						m_img.CLIHeader.Resources.VirtualAddress);
@@ -164,16 +179,16 @@ namespace Mono.Cecil {
 				case TokenType.File :
 					FileRow fRow = fTable [(int) mrRow.Implementation.RID - 1];
 					LinkedResource lres = new LinkedResource (
-						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name], mrRow.Flags,
-						m_img.MetadataRoot.Streams.StringsHeap [fRow.Name]);
-					lres.Hash = m_img.MetadataRoot.Streams.BlobHeap.Read (fRow.HashValue);
+						ReadString (mrRow.Name), mrRow.Flags,
+						ReadString (fRow.Name));
+					lres.Hash = ReadBlob (fRow.HashValue);
 					resources.Add (lres);
 					break;
 				case TokenType.AssemblyRef :
 					AssemblyNameReference asm =
 						m_module.AssemblyReferences [(int) mrRow.Implementation.RID - 1];
 					AssemblyLinkedResource alr = new AssemblyLinkedResource (
-						m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name],
+						ReadString (mrRow.Name),
 						mrRow.Flags, asm);
 					resources.Add (alr);
 					break;
@@ -188,9 +203,9 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Can not read main module");
 
 			ModuleRow mr = mt.Rows [0] as ModuleRow;
-			string name = m_img.MetadataRoot.Streams.StringsHeap [mr.Name];
+			string name = ReadString (mr.Name);
 			ModuleDefinition main = new ModuleDefinition (name, m_asmDef, this, true);
-			main.Mvid = m_img.MetadataRoot.Streams.GuidHeap [mr.Mvid];
+			main.Mvid = m_streams.GuidHeap [mr.Mvid];
 			main.MetadataToken = new MetadataToken (TokenType.Module, 1);
 			modules.Add (main);
 			m_module = main;
@@ -200,7 +215,7 @@ namespace Mono.Cecil {
 			if (ftable != null && ftable.Rows.Count > 0) {
 				foreach (FileRow frow in ftable.Rows) {
 					if (frow.Flags == Mono.Cecil.FileAttributes.ContainsMetaData) {
-						name = m_img.MetadataRoot.Streams.StringsHeap [frow.Name];
+						name = ReadString (frow.Name);
 						FileInfo location = new FileInfo (Path.Combine(m_img.FileInformation.DirectoryName, name));
 						if (!File.Exists (location.FullName))
 							throw new FileNotFoundException ("Module not found : " + name);
@@ -235,7 +250,7 @@ namespace Mono.Cecil {
 			ModuleRefTable mrTable = m_tableReader.GetModuleRefTable ();
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
-				ModuleReference mod = new ModuleReference (m_img.MetadataRoot.Streams.StringsHeap [mrRow.Name]);
+				ModuleReference mod = new ModuleReference (ReadString (mrRow.Name));
 				mod.MetadataToken = new MetadataToken (TokenType.ModuleRef, (uint) i + 1);
 				modules.Add (mod);
 			}
