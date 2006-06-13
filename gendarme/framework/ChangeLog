@@ -1,0 +1,3 @@
+2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Added self-test to promote compliance ;-)
