@@ -24,3 +24,10 @@ run-test:
 		make run-test;	\
 		cd ..;		\
 	done;
+
+self-test: all
+	for ASM in $(SUBDIRS); do \
+		cd $$ASM;	\
+		make self-test;	\
+		cd ..;		\
+	done;

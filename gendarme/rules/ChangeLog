@@ -1,3 +1,7 @@
+2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Added self-test target to promote compliance ;-)
+
 2006-03-06  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Added Gendarme.Rules.Portability
