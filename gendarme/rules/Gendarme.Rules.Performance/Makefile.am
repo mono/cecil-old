@@ -34,10 +34,13 @@ performance_test_sources = EmptyDestructorTest.cs IDisposableWithDestructorWitho
 performance_test_build_sources = $(addprefix $(srcdir)/Test/, $(performance_test_sources))
 
 Test.Rules.Performance.dll: $(performance_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:nunit.framework.dll -r:../../framework/Gendarme.Framework.dll \
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
 		-r:Gendarme.Rules.Performance.dll -out:$@ $(performance_test_build_sources)
 
 test: Gendarme.Rules.Performance.dll Test.Rules.Performance.dll
 
 run-test: Gendarme.Rules.Performance.dll Test.Rules.Performance.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Performance.dll
+
+self-test: test
+	gendarme Gendarme.Rules.Performance.dll
