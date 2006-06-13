@@ -40,9 +40,9 @@ run-test: test
 self-test: all
 	cd framework;	\
 	make self-test;	\
-	cd ..\console;	\
+	cd ../console;	\
 	make self-test;	\
-	cd ..\rules;	\
+	cd ../rules;	\
 	make self-test;	\
 	cd ..
 
