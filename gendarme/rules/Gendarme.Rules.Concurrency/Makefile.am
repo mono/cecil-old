@@ -34,10 +34,13 @@ concurrency_test_sources = DoubleCheckLockingTest.cs
 concurrency_test_build_sources = $(addprefix $(srcdir)/Test/, $(concurrency_test_sources))
 
 Test.Rules.Concurrency.dll: $(concurrency_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:nunit.framework.dll -r:../../framework/Gendarme.Framework.dll \
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
 		-r:Gendarme.Rules.Concurrency.dll -out:$@ $(concurrency_test_build_sources)
 
 test: Gendarme.Rules.Concurrency.dll Test.Rules.Concurrency.dll
 
 run-test: Test.Rules.Concurrency.dll
 	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Concurrency.dll
+
+self-test: test
+	gendarme Gendarme.Rules.Concurrency.dll
