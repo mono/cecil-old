@@ -36,3 +36,15 @@ run-test: test
 	cd rules;	\
 	make run-test;	\
 	cd ..;
+
+self-test: all
+	cd framework;	\
+	make self-test;	\
+	cd ..\console;	\
+	make self-test;	\
+	cd ..\rules;	\
+	make self-test;	\
+	cd ..
+
+dist:
+	make dist-zip

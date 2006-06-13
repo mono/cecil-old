@@ -1,3 +1,11 @@
+2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs.in: Updated copyright notice (as this is the string
+	that will be displayed by the Gendarme's console runner).
+	* Makefile.am: Added self-test target to run gendarme on itself (in
+	order to promote compliance ;-). Added an alias for dist to dist-zip
+	so all files can be added into the distribution (zip) archive.
+
 2005-12-09  Aaron Tomb  <atomb@soe.ucsc.edu>
 
 	* Merged rules for double-check locking and bad recursive
