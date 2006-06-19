@@ -1,4 +1,8 @@
-This is the first release of "Gendarme" which includes only a few rules
-(mostly for security checks).
+This is the second release of "Gendarme" which includes a few rules for
+* Concurrency;
+* Correctness;
+* Exceptions;
+* Performance; and
+* Security
 
 Thanks to Duncan for the "Gendarme" name and to JB Evain for Cecil.

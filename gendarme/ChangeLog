@@ -1,3 +1,14 @@
+2006-06-19  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AUTHORS: Added Russell Morris to the author's list.
+	* configure.ac: Updated version to 0.0.2.0.
+	* NEWS: Updated for second release.
+	* README: Updated for second release.
+
+2006-06-19  Russell Morris <russell@russellsprojects.com>
+
+	* configure.ac: Merged initial build of exception-usage checks rule(s)
+
 2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs.in: Updated copyright notice (as this is the string

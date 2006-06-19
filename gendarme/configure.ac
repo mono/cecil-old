@@ -1,6 +1,6 @@
 AC_INIT(README)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(gendarme, 0.0.1.0)
+AM_INIT_AUTOMAKE(gendarme, 0.0.2.0)
 AM_MAINTAINER_MODE
 
 AC_PROG_INSTALL
@@ -35,6 +35,9 @@ AC_SUBST(MCS)
 PKG_CHECK_MODULES(MONO_CECIL, mono-cecil)
 AC_SUBST(MONO_CECIL_LIBS)
 
+PKG_CHECK_MODULES(NUNIT, mono-nunit)
+AC_SUBST(NUNIT_LIBS)
+
 dnl find assembly paths for unstable installed assemblies that will be
 dnl copied into gendarme installation directory for local usage with the app
 UNSTABLE_INSTALL_ASSEMBLIES="mono-cecil"
@@ -67,4 +70,7 @@ rules/Gendarme.Rules.Correctness/Test/Makefile
 rules/Gendarme.Rules.Portability/Makefile
 rules/Gendarme.Rules.Portability/Gendarme.Rules.Portability.xml
 rules/Gendarme.Rules.Portability/Test/Makefile
+rules/Gendarme.Rules.Exceptions/Makefile
+rules/Gendarme.Rules.Exceptions/Gendarme.Rules.Exceptions.xml
+rules/Gendarme.Rules.Exceptions/Test/Makefile
 ])
