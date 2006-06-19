@@ -1,3 +1,8 @@
+2006-06-19  Russell Morris  <russell@russellsprojects.com>
+
+	* Makefile.am: Added Gendarme.Rules.Exceptions
+	* rules.xml:  Added Gendarme.Rules.Exceptions entries
+
 2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Added self-test target to promote compliance ;-)
