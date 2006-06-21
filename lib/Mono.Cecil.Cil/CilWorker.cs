@@ -95,8 +95,8 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction Create (OpCode opcode, sbyte b)
 		{
-			if (opcode.OperandType != OperandType.ShortInlineI ||
-				opcode == OpCodes.Ldc_I4_S)
+			if (opcode.OperandType != OperandType.ShortInlineI &&
+				opcode != OpCodes.Ldc_I4_S)
 				throw new ArgumentException ("opcode");
 
 			return FinalCreate (opcode, b);
@@ -104,8 +104,8 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction Create (OpCode opcode, byte b)
 		{
-			if (opcode.OperandType != OperandType.ShortInlineI &&
-				opcode != OpCodes.Ldc_I4_S)
+			if (opcode.OperandType != OperandType.ShortInlineI ||
+				opcode == OpCodes.Ldc_I4_S)
 				throw new ArgumentException ("opcode");
 
 			return FinalCreate (opcode, b);

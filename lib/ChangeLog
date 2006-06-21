@@ -1,3 +1,8 @@
+2006-06-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CilWorker.cs:
+		Fix ldc.i4.s emitting.
+
 2006-06-13  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionWriter.cs:
