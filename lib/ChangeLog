@@ -1,3 +1,13 @@
+2006-07-02	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* CodeGen/templates/ImageReader.cs
+	  Mono.Cecil.Binary/ImageReader.cs:
+	  	Proper FileNotFoundException construction.
+		
+	* Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/IMethod.cs:
+		Helper properties IsInternalCall and IsRuntime.
+		
 2006-06-21  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CilWorker.cs:

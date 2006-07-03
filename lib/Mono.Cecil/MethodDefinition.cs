@@ -176,6 +176,26 @@ namespace Mono.Cecil {
 					m_attributes &= ~MethodAttributes.RTSpecialName;
 			}
 		}
+		
+		public bool IsInternalCall {
+			get { return MethodImplAttributes.InternalCall == (m_implAttrs & MethodImplAttributes.InternalCall); }
+			set {
+				if (value)
+					m_implAttrs |= MethodImplAttributes.InternalCall;
+				else
+					m_implAttrs &= ~MethodImplAttributes.InternalCall;
+			}
+		}
+
+		public bool IsRuntime {
+			get { return MethodImplAttributes.Runtime == (m_implAttrs & MethodImplAttributes.Runtime); }
+			set {
+				if (value)
+					m_implAttrs |= MethodImplAttributes.Runtime;
+				else
+					m_implAttrs &= ~MethodImplAttributes.Runtime;
+			}
+		}
 
 		public bool IsSpecialName {
 			get { return (m_attributes & MethodAttributes.SpecialName) != 0; }
