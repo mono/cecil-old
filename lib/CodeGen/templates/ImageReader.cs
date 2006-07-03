@@ -71,7 +71,11 @@ namespace Mono.Cecil.Binary {
 
 			FileInfo fi = new FileInfo (file);
 			if (!File.Exists (fi.FullName))
-				throw new FileNotFoundException (string.Format("File '{0}' not found.", fi.FullName), fi.FullName);
+			#if CF_1_0 || CF_2_0
+				throw new FileNotFoundException (fi.FullName);
+			#else
+				throw new FileNotFoundException (string.Format ("File '{0}' not found.", fi.FullName), fi.FullName);
+			#endif
 
 			return Read (new Image (fi), new FileStream (
 				fi.FullName, FileMode.Open,
