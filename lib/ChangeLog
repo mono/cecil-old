@@ -1,5 +1,14 @@
 2006-07-19  Jb Evain  <jbevain@gmail.com>
 
+	* CodeGen/templates/IIndexedCollection.cs
+	  CodeGen/templates/IndexedCollectionImplem.cs
+	  Mono.Cecil/IConstructorCollection.cs
+	  Mono.Cecil/IMethodDefinitionCollection.cs
+	  Mono.Cecil/MethodDefinitionCollection.cs
+	  Mono.Cecil/ConstructorCollection.cs:
+		Add a GetConstructor(bool,ParameterDefinitionCollection) method
+		required by the linker.
+
 	* Mono.Cecil.Metadata/MetadataReader.cs
 	  Mono.Cecil.Metadata/StringsHeap.cs:
 		Read the string on demand, based on the index.

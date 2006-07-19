@@ -73,7 +73,7 @@ namespace <%=$cur_coll.target%> {
 		%>
 		MethodDefinition [] GetMethod (string name);
 		MethodDefinition GetMethod (string name, Type [] parameters);
-		MethodDefinition GetMethod (string name, ITypeReference [] parameters);
+		MethodDefinition GetMethod (string name, TypeReference [] parameters);
 		MethodDefinition GetMethod (string name, ParameterDefinitionCollection parameters);
 <%
 		when "FieldDefinition"
@@ -83,7 +83,8 @@ namespace <%=$cur_coll.target%> {
 		when "Constructor"
 %>
 		MethodDefinition GetConstructor (bool isStatic, Type [] parameters);
-		MethodDefinition GetConstructor (bool isStatic, ITypeReference [] parameters);
+		MethodDefinition GetConstructor (bool isStatic, TypeReference [] parameters);
+		MethodDefinition GetConstructor (bool isStatic, ParameterDefinitionCollection parameters);
 <%
 		when "EventDefinition"
 %>

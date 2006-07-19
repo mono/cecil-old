@@ -157,7 +157,7 @@ namespace <%=$cur_coll.target%> {
 			return null;
 		}
 
-		public MethodDefinition GetMethod (string name, ITypeReference [] parameters)
+		public MethodDefinition GetMethod (string name, TypeReference [] parameters)
 		{
 			foreach (MethodDefinition meth in this)
 				if (meth.Name == name && meth.Parameters.Count == parameters.Length) {
@@ -178,7 +178,7 @@ namespace <%=$cur_coll.target%> {
 						return meth;
 					for (int i = 0; i < parameters.Count; i++)
 						if (meth.Parameters [i].ParameterType.FullName == parameters [i].ParameterType.FullName)
-							return meth;	
+							return meth;
 				}
 			return null;
 		}
@@ -211,7 +211,7 @@ namespace <%=$cur_coll.target%> {
 			return null;
 		}
 
-		public MethodDefinition GetConstructor (bool isStatic, ITypeReference [] parameters)
+		public MethodDefinition GetConstructor (bool isStatic, TypeReference [] parameters)
 		{
 			foreach (MethodDefinition ctor in this)
 				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
@@ -219,6 +219,19 @@ namespace <%=$cur_coll.target%> {
 						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].FullName)
 							return ctor;
 
+			return null;
+		}
+
+		public MethodDefinition GetConstructor (bool isStatic, ParameterDefinitionCollection parameters)
+		{
+			foreach (MethodDefinition ctor in this)
+				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Count) {
+					if (parameters.Count == 0)
+						return ctor;
+					for (int i = 0; i < parameters.Count; i++)
+						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].ParameterType.FullName)
+							return ctor;
+				}
 			return null;
 		}
 <%
