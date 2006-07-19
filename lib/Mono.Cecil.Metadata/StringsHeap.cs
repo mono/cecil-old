@@ -29,19 +29,51 @@
 namespace Mono.Cecil.Metadata {
 
 	using System.Collections;
+	using System.IO;
+	using System.Text;
 
 	public class StringsHeap : MetadataHeap {
 
 		IDictionary m_strings;
 
 		public string this [uint index] {
-			get { return m_strings.Contains (index) ? m_strings [index] as string : string.Empty; }
+			get {
+				string str = m_strings [index] as string;
+				if (str == null) {
+					str = ReadStringAt (index);
+					m_strings [index] = str;
+				}
+				return str;
+			}
 			set { m_strings [index] = value; }
 		}
 
 		internal StringsHeap (MetadataStream stream) : base (stream, MetadataStream.Strings)
 		{
 			m_strings = new Hashtable ();
+		}
+
+		string ReadStringAt (uint index)
+		{
+			StringBuilder sb = new StringBuilder ();
+			BinaryReader br = new BinaryReader (
+				new MemoryStream (this.Data), Encoding.UTF8);
+
+			try {
+				br.BaseStream.Position = index;
+				
+				while (br.BaseStream.Position < br.BaseStream.Length) {
+					char c = br.ReadChar ();
+					if (c == '\0')
+						break;
+					else
+						sb.Append (c);
+				}
+			} finally {
+				br.Close ();
+			}
+			
+			return sb.ToString ();
 		}
 
 		public override void Accept (IMetadataVisitor visitor)

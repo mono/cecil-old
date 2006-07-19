@@ -1,3 +1,11 @@
+2006-07-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataReader.cs
+	  Mono.Cecil.Metadata/StringsHeap.cs:
+		Read the string on demand, based on the index.
+		Needed due to some obfuscators that create a string entry like
+		xClassName, and make the pointer points to after the x.
+
 2006-07-03	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 	* CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Binary/ImageReader.cs:

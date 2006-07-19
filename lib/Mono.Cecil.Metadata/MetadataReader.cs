@@ -165,28 +165,6 @@ namespace Mono.Cecil.Metadata {
 				throw new MetadataFormatException ("Malformed #Strings heap");
 
 			heap [(uint) 0] = string.Empty;
-
-			BinaryReader br = new BinaryReader (
-				new MemoryStream (heap.Data), Encoding.UTF8);
-
-			try {
-
-				br.BaseStream.Position++;
-
-				StringBuilder buffer = new StringBuilder ();
-				for (long index = br.BaseStream.Position ; br.BaseStream.Position < br.BaseStream.Length ; ) {
-					char cur = br.ReadChar ();
-					if (cur == '\0' && buffer.Length > 0) {
-						heap [(uint) index] = buffer.ToString ();
-						buffer = new StringBuilder ();
-						index = br.BaseStream.Position;
-					} else
-						buffer.Append (cur);
-				}
-			} finally {
-				// COMPACT FRAMEWORK NOTE: BinaryReader is not IDisposable
-				br.Close();
-			}
 		}
 
 		public override void VisitTablesHeap (TablesHeap heap)
