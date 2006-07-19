@@ -33,7 +33,6 @@ namespace Mono.Cecil.Cil {
 	using System.IO;
 
 	using Mono.Cecil;
-	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 	using Mono.Cecil.Signatures;
 
@@ -50,8 +49,8 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitMethodBody (MethodBody body)
 		{
-			MethodDefinition meth = body.Method as MethodDefinition;
-			MethodBody methBody = body as MethodBody;
+			MethodDefinition meth = body.Method;
+			MethodBody methBody = body;
 			BinaryReader br = m_reflectReader.Module.ImageReader.MetadataReader.GetDataReader (meth.RVA);
 
 			// lets read the method
@@ -146,10 +145,10 @@ namespace Mono.Cecil.Cil {
 						instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.ShortInlineVar :
-					instr.Operand = body.Variables [(int) br.ReadByte ()];
+					instr.Operand = body.Variables [br.ReadByte ()];
 					break;
 				case OperandType.ShortInlineParam :
-					instr.Operand = GetParameter (body, (int) br.ReadByte ());
+					instr.Operand = GetParameter (body, br.ReadByte ());
 					break;
 				case OperandType.InlineSig :
 					instr.Operand = GetCallSiteAt (br.ReadInt32 (), context);
@@ -158,10 +157,10 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineVar :
-					instr.Operand = body.Variables [(int) br.ReadInt16 ()];
+					instr.Operand = body.Variables [br.ReadInt16 ()];
 					break;
 				case OperandType.InlineParam :
-					instr.Operand = GetParameter (body, (int) br.ReadInt16 ());
+					instr.Operand = GetParameter (body, br.ReadInt16 ());
 					break;
 				case OperandType.InlineI8 :
 					instr.Operand = br.ReadInt64 ();

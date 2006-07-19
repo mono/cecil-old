@@ -44,32 +44,32 @@ namespace Mono.Cecil.Cil {
 
 		public Instruction TryStart {
 			get { return m_tryStart; }
-			set { m_tryStart = value as Instruction; }
+			set { m_tryStart = value; }
 		}
 
 		public Instruction TryEnd {
 			get { return m_tryEnd; }
-			set { m_tryEnd = value as Instruction; }
+			set { m_tryEnd = value; }
 		}
 
 		public Instruction FilterStart {
 			get { return m_filterStart; }
-			set { m_filterStart = value as Instruction; }
+			set { m_filterStart = value; }
 		}
 
 		public Instruction FilterEnd {
 			get { return m_filterEnd; }
-			set { m_filterEnd = value as Instruction; }
+			set { m_filterEnd = value; }
 		}
 
 		public Instruction HandlerStart {
 			get { return m_handlerStart; }
-			set { m_handlerStart = value as Instruction; }
+			set { m_handlerStart = value; }
 		}
 
 		public Instruction HandlerEnd {
 			get { return m_handlerEnd; }
-			set { m_handlerEnd = value as Instruction; }
+			set { m_handlerEnd = value; }
 		}
 
 		public TypeReference CatchType {
