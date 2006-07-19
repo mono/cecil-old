@@ -257,7 +257,7 @@ namespace <%=$cur_coll.target%> {
 
 			return ret.ToArray (typeof (PropertyDefinition)) as PropertyDefinition [];
 		}
-<% end 
+<% end
   if !$cur_coll.visitor.nil? then %>
 		public void Accept (<%=$cur_coll.visitor%> visitor)
 		{

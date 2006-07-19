@@ -19,17 +19,17 @@
 	* CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Binary/ImageReader.cs:
 	  	CompactFramework compatibility.
-		
+
 2006-07-02	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 
 	* CodeGen/templates/ImageReader.cs
 	  Mono.Cecil.Binary/ImageReader.cs:
 	  	Proper FileNotFoundException construction.
-		
+
 	* Mono.Cecil/MethodDefinition.cs
 	  Mono.Cecil/IMethod.cs:
 		Helper properties IsInternalCall and IsRuntime.
-		
+
 2006-06-21  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CilWorker.cs:
@@ -241,7 +241,7 @@
 	  Mono.Cecil/ModuleDefinition.cs:
 	  	Patch by Almann T. Goo (almann.goo@gmail.com) conditionally
 		removing references to PermissionSet when compiling for the CompactFramework.
-		
+
 	* Mono.Cecil/CompactFrameworkCompatibility.cs:
 		System.Security.PermissionSet definition no longer needed.
 
@@ -304,7 +304,7 @@
 
 	* Mono.Cecil/CustomAttribute.cs
 	  Mono.Cecil/ReflectionReader.cs
-	  Mono.Cecil/ReflectionWriter.cs 
+	  Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil.Signatures/SignatureWriter.cs:
 		Work on complex custom attributes encoding.
 
@@ -434,7 +434,7 @@
 
 	* Mono.Cecil/TableComparers.cs:
 		Fix the ordering of generic parameters.
-		This revision roundtrips C5. Yeah! 
+		This revision roundtrips C5. Yeah!
 
 	* Mono.Cecil/ReflectionWriter.cs:
 		Fix method spec "caching"
@@ -927,7 +927,7 @@
 	(GenericContext): We now operate on type/method references and not
 	definitions.
 	(GenericContext.Type): Changed type to `TypeReference'.
-	(GenericContext.Method): Changed type to `MethodReference'.	
+	(GenericContext.Method): Changed type to `MethodReference'.
 
 2005-11-23  Martin Baulig  <martin@ximian.com>
 
@@ -959,7 +959,7 @@
 2005-11-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Mono.Cecil.Metadata/MetadataWriter.cs
-		Add support for different strongname key size (between 384 
+		Add support for different strongname key size (between 384
 		and 16384 bits) as now supported in fx 2.0. Default is still
 		1024 bits.
 
@@ -984,7 +984,7 @@
 	  Mono.Cecil.Binary/ImageReader.cs
 	  cecil.build
 	  	Implement support for compiling on the CompactFramework
-	
+
 2005-11-08  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/GenericInstanceType.cs
@@ -1222,7 +1222,7 @@
 	to use the new SecurityDeclarationReader (supporting both formats).
 	* Mono.Cecil/SecurityAction.cs: Removed actions that were "cutted" out
 	of 2.0 final.
-	* Mono.Cecil/SecurityDeclarationReader.cs: New. Handle both the 1.x 
+	* Mono.Cecil/SecurityDeclarationReader.cs: New. Handle both the 1.x
 	and 2.0 formats for reading declarative security.
 
 2005-10-18  Jb Evain  <jbevain@gmail.com>
@@ -1282,7 +1282,7 @@
 	  Mono.Cecil/IGenericInstanceMethod.cs
 	  Mono.Cecil/GenericInstanceMethod.cs:
 		Generics API elements.
-	  
+	
 	* Mono.Cecil/IMethod.cs
 	  Mono.Cecil/MethodReference.cs
 	  Mono.Cecil/ITypeReference.cs
@@ -1389,7 +1389,7 @@
 
 	* Hopefully, this is the last API change before the release of Cecil 0.1.
 	  Mono.Cecil.Implem has been moved to Mono.Cecil. The interfaces where
-	  very convenient for a reading API, it was far less convenient for a 
+	  very convenient for a reading API, it was far less convenient for a
 	  modification and writing one. The modification API still needs some work,
 	  but this should be easier this way.
 
@@ -1505,7 +1505,7 @@
 	  Mono.Cecil.Implem/ConstructorCollection.cs
 	  Mono.Cecil.Signatures/SignatureWriter.cs:
 		Get rid of the complexity introduced by the
-		internal lazy loading. 
+		internal lazy loading.
 
 	* Mono.Cecil.Implem/EventDefinition.cs
 	  Mono.Cecil.Implem/PropertyDefinition.cs:
@@ -1703,7 +1703,7 @@
 	* CodeGen/templates/Utilities.cs
 	  Mono.Cecil.Metadata/Utilities.cs:
 		Return a null token if the rid of a md token
-		is 0. Fix the crash when Mono try to read 
+		is 0. Fix the crash when Mono try to read
 		assemblies emitted by Cecil.
 
 2005-08-19  Jb Evain  <jbevain@gmail.com>
@@ -2611,7 +2611,7 @@
 	* Mono.Cecil/IModuleDefinition.cs
 	  Mono.Cecil.Implem/ModuleDefinition.cs
 	  Mono.Cecil.Implem/ReflectionReader.cs:
-		Add methods to lookup items from their tokens 
+		Add methods to lookup items from their tokens
 
 2005-07-27  Jb Evain  <jbevain@gmail.com>
 

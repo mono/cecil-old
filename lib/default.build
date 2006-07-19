@@ -4,7 +4,7 @@
     <property name="debug" value="true" />
 	<property name="optimize" value="false" />
     <property name="build.dir" value="bin" />
-	
+
 	<!-- allow properties to be customized in external file" -->
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 
@@ -12,7 +12,7 @@
         <include name="./**/*.cs" />
         <exclude name="CodeGen/**/*.*" />
     </fileset>
-    
+
     <target name="clean">
         <foreach item="Folder" property="f">
             <in>
@@ -27,44 +27,44 @@
             </do>
         </foreach>
     </target>
-    
+
     <target name="init">
         <mkdir dir="${build.dir}" />
     </target>
-    
+
     <target name="cecil" depends="init">
-        <csc output="${build.dir}/Mono.Cecil.dll" 
+        <csc output="${build.dir}/Mono.Cecil.dll"
              target="library" debug="${debug}" unsafe="false" optimize="${optimize}">
             <sources refid="all-files"/>
         </csc>
     </target>
-	
+
 	<target name="compactframework" depends="init" description="compiles cecil to run on the CompactFramework 1.0">
 		<property name="compactframework.defines" value="CF_1_0" />
 		<call target="compactframework-compilation" />
 	</target>
-	
+
 	<target name="compactframework2" depends="init" description="compiles cecil to run on the CompactFramework 2.0">
 		<property name="compactframework.defines" value="CF_2_0" />
 		<call target="compactframework-compilation" />
 	</target>
-	
+
 	<target name="compactframework-compilation">
 		<csc output="${build.dir}/Mono.Cecil.dll"
 			target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
 			noconfig="true" nostdlib="true"
-			define="${compactframework.defines}">			
+			define="${compactframework.defines}">
 			<sources refid="all-files" />
-			
+
 			<references basedir="${compactframework.dir}">
 				<include name="mscorlib.dll" />
 				<include name="System.dll" />
 			</references>
 		</csc>
 	</target>
-    
+
     <target name="codegen">
         <exec program="ruby" commandline="cecil-gen.rb" workingdir="CodeGen" />
     </target>
-    
+
 </project>

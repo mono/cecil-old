@@ -4,7 +4,7 @@ MCS = mcs
 KEY_FILE = ../../mcs/class/mono.snk
 MCS_FLAGS = -keyfile:$(KEY_FILE)
 
-all: 
+all:
 	$(MCS) $(MCS_FLAGS) @Mono.Cecil.dll.sources /target:library /out:Mono.Cecil.dll
 
 clean:

@@ -46,7 +46,7 @@ namespace <%=$cur_coll.target%> {
 
 		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
 		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
-	
+
 		public <%=$cur_coll.type%> this [int index] {
 			get { return this.BaseGet (index) as <%=$cur_coll.type%>; }
 			set { this.BaseSet (index, value); }
@@ -148,10 +148,10 @@ namespace <%=$cur_coll.target%> {
 <% end %>
 #if CF_1_0 || CF_2_0
 		internal object [] BaseGetAllValues ()
-		{ 
+		{
 			object [] values = new object [this.Count];
 			for (int i=0; i < values.Length; ++i) {
-				values [i] = this.BaseGet (i); 
+				values [i] = this.BaseGet (i);
 			}
 			return values;
 		}

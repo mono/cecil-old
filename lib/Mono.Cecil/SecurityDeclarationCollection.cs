@@ -117,7 +117,7 @@ namespace Mono.Cecil {
 			if (item == null)
 				return false;
 
-#if !CF_1_0 && !CF_2_0            
+#if !CF_1_0 && !CF_2_0
 			return value.PermissionSet.IsSubsetOf (item.PermissionSet);
 #else
             // XXX For CF, this concept does not exist--so always be true

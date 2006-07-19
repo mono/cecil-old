@@ -176,7 +176,7 @@ namespace Mono.Cecil {
 					m_attributes &= ~MethodAttributes.RTSpecialName;
 			}
 		}
-		
+
 		public bool IsInternalCall {
 			get { return MethodImplAttributes.InternalCall == (m_implAttrs & MethodImplAttributes.InternalCall); }
 			set {

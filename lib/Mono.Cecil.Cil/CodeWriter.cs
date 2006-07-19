@@ -362,7 +362,7 @@ namespace Mono.Cecil.Cil {
 				m_binaryWriter.Write (((int) TokenType.Signature | body.LocalVarToken));
 
 				WriteExceptionHandlerCollection (body.ExceptionHandlers);
-			} else 
+			} else
 				m_binaryWriter.Write ((byte) ((byte) MethodHeader.TinyFormat |
 					m_codeWriter.BaseStream.Length << 2));
 

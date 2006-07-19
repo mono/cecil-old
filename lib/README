@@ -11,16 +11,16 @@ Cecil is a library to generate and inspect programs and libraries in the ECMA CI
 	Please report bugs at:
 		http://bugzilla.ximian.com,
 		Product: Mono Class Library,
-		Component: Mono.Cecil 
+		Component: Mono.Cecil
 
 * Layout
 
 	CodeGen/
 		Here is a ruby code generation script. Do not modify generated files.
 		Please modify template then run:
-		
+
 			./cecil-gen.rb
-			
+
 		in this folder. If you add or remove files, please run:
 
 			./cecil-gen-sources.rb
@@ -62,10 +62,10 @@ Cecil is a library to generate and inspect programs and libraries in the ECMA CI
     distribute, sublicense, and/or sell copies of the Software, and to
     permit persons to whom the Software is furnished to do so, subject to
     the following conditions:
-    
+
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
-    
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND

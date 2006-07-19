@@ -46,7 +46,7 @@ namespace Mono.Cecil {
 
 		public event ExternTypeEventHandler OnExternTypeAdded;
 		public event ExternTypeEventHandler OnExternTypeRemoved;
-	
+
 		public TypeReference this [int index] {
 			get { return this.BaseGet (index) as TypeReference; }
 			set { this.BaseSet (index, value); }
@@ -145,10 +145,10 @@ namespace Mono.Cecil {
 
 #if CF_1_0 || CF_2_0
 		internal object [] BaseGetAllValues ()
-		{ 
+		{
 			object [] values = new object [this.Count];
 			for (int i=0; i < values.Length; ++i) {
-				values [i] = this.BaseGet (i); 
+				values [i] = this.BaseGet (i);
 			}
 			return values;
 		}

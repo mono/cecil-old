@@ -12,7 +12,7 @@ profile=default
 
 while [ $# -ne 0 ]; do
   case $1 in
-    --help)  
+    --help)
     	help
     	exit 0
 	;;

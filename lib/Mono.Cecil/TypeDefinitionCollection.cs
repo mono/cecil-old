@@ -46,7 +46,7 @@ namespace Mono.Cecil {
 
 		public event TypeDefinitionEventHandler OnTypeDefinitionAdded;
 		public event TypeDefinitionEventHandler OnTypeDefinitionRemoved;
-	
+
 		public TypeDefinition this [int index] {
 			get { return this.BaseGet (index) as TypeDefinition; }
 			set { this.BaseSet (index, value); }
@@ -148,10 +148,10 @@ namespace Mono.Cecil {
 
 #if CF_1_0 || CF_2_0
 		internal object [] BaseGetAllValues ()
-		{ 
+		{
 			object [] values = new object [this.Count];
 			for (int i=0; i < values.Length; ++i) {
-				values [i] = this.BaseGet (i); 
+				values [i] = this.BaseGet (i);
 			}
 			return values;
 		}

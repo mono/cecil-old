@@ -83,7 +83,7 @@ $ops.sort!() { |a, b|
 	elsif a.op1 == "0xff"
 		-1
 	else
-		1	
+		1
 	end
 }
 

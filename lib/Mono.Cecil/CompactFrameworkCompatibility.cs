@@ -27,15 +27,15 @@
 //
 #if CF_1_0
 namespace System {
-	
+
 	internal class NotImplementedException : System.Exception {
-		
+
 		public NotImplementedException (string message) : base (message)
 		{
 		}
 
 		public NotImplementedException ()
-		{	
+		{
 		}
 	}
 }
@@ -43,11 +43,11 @@ namespace System {
 
 #if CF_1_0 || CF_2_0
 namespace System.Security {
-	
+
 	public class SecurityElement 	{
-		
+
 		public SecurityElement (string tag)
-		{	
+		{
 		}
 
 		public string Text
@@ -57,11 +57,11 @@ namespace System.Security {
 		}
 
 		public void AddChild (SecurityElement child)
-		{	
+		{
 		}
 
 		public void AddAttribute (string name, string value)
-		{	
+		{
 		}
 	}
 }

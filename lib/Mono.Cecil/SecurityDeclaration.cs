@@ -39,7 +39,7 @@ namespace Mono.Cecil {
 #if !CF_1_0 && !CF_2_0
 		PermissionSet m_permSet;
 #endif
-        
+
 		bool m_readable;
 		byte [] m_blob;
 

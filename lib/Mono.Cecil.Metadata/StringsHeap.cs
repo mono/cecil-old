@@ -61,7 +61,7 @@ namespace Mono.Cecil.Metadata {
 
 			try {
 				br.BaseStream.Position = index;
-				
+
 				while (br.BaseStream.Position < br.BaseStream.Length) {
 					char c = br.ReadChar ();
 					if (c == '\0')
@@ -72,7 +72,7 @@ namespace Mono.Cecil.Metadata {
 			} finally {
 				br.Close ();
 			}
-			
+
 			return sb.ToString ();
 		}
 
