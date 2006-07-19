@@ -46,7 +46,7 @@ namespace Mono.Cecil.Metadata {
 				return;
 
 #if CF_1_0 || CF_2_0
-			CultureInfo [] cultures = new CultureInfo[0];
+			CultureInfo [] cultures = new CultureInfo [0];
 #else
 			CultureInfo [] cultures = CultureInfo.GetCultures (CultureTypes.AllCultures);
 #endif

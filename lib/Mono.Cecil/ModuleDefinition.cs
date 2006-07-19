@@ -413,7 +413,7 @@ namespace Mono.Cecil {
 
 		public byte [] GetAsByteArray (CustomAttribute ca)
 		{
-			CustomAttribute customAttr = ca as CustomAttribute;
+			CustomAttribute customAttr = ca;
 			if (!ca.IsReadable)
 				if (customAttr.Blob != null)
 					return customAttr.Blob;

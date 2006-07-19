@@ -100,7 +100,7 @@ namespace Mono.Cecil {
 
 		public MarshalDesc MarshalSpec {
 			get { return m_marshalDesc; }
-			set { m_marshalDesc = value as MarshalDesc; }
+			set { m_marshalDesc = value; }
 		}
 
 		public bool IsLiteral {

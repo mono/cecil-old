@@ -288,9 +288,9 @@ namespace Mono.Cecil {
 		public TypeReference SearchCoreType (string fullName)
 		{
 			if (m_isCorlib)
-				return m_module.Types [fullName] as TypeReference;
+				return m_module.Types [fullName];
 
-			TypeReference coreType =  m_module.TypeReferences [fullName] as TypeReference;
+			TypeReference coreType =  m_module.TypeReferences [fullName];
 			if (coreType == null) {
 				if (m_corlib == null) {
 					foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
@@ -501,7 +501,7 @@ namespace Mono.Cecil {
 				else
 					throw new ReflectionException ("Unknown owner type for generic parameter");
 
-				GenericParameter gp = new GenericParameter ((int) gpRow.Number, owner);
+				GenericParameter gp = new GenericParameter (gpRow.Number, owner);
 				gp.Attributes = gpRow.Flags;
 				gp.Name = MetadataRoot.Streams.StringsHeap [gpRow.Name];
 				gp.MetadataToken = MetadataToken.FromMetadataRow (TokenType.GenericParam, i);
@@ -666,7 +666,7 @@ namespace Mono.Cecil {
 					}
 
 					mdef.ReturnType = GetMethodReturnType (msig, context);
-					MethodReturnType mrt = mdef.ReturnType as MethodReturnType;
+					MethodReturnType mrt = mdef.ReturnType;
 					mrt.Method = mdef;
 					if (retparam != null) {
 						mrt.Parameter = retparam;
@@ -691,7 +691,7 @@ namespace Mono.Cecil {
 
 		public override void VisitExternTypeCollection (ExternTypeCollection externs)
 		{
-			ExternTypeCollection ext = externs as ExternTypeCollection;
+			ExternTypeCollection ext = externs;
 
 			if (!m_tHeap.HasTable (ExportedTypeTable.RId))
 				return;
@@ -777,7 +777,7 @@ namespace Mono.Cecil {
 			ParamAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
-			TypeReference paramType = null;
+			TypeReference paramType;
 
 			if (psig.ByRef)
 				paramType = new ReferenceType (GetTypeRefFromSig (psig.Type, context));
@@ -848,7 +848,7 @@ namespace Mono.Cecil {
 			TypeReference ret = type;
 			for (int i = cmods.Length - 1; i >= 0; i--) {
 				CustomMod cmod = cmods [i];
-				TypeReference modType = null;
+				TypeReference modType;
 
 				if (cmod.TypeDefOrRef.TokenType == TokenType.TypeDef)
 					modType = GetTypeDefAt (cmod.TypeDefOrRef.RID);
@@ -865,7 +865,7 @@ namespace Mono.Cecil {
 
 		public MethodReturnType GetMethodReturnType (MethodSig msig, GenericContext context)
 		{
-			TypeReference retType = null;
+			TypeReference retType;
 			if (msig.RetType.Void)
 				retType = SearchCoreType (Constants.Void);
 			else if (msig.RetType.ByRef)

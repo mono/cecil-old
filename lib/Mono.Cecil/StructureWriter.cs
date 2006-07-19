@@ -205,7 +205,7 @@ namespace Mono.Cecil {
 			if (module.Main) {
 				ModuleTable modTable = m_tableWriter.GetModuleTable ();
 				ModuleRow modRow = m_rowWriter.CreateModuleRow (
-					(ushort) 0,
+					0,
 					m_mdWriter.AddString (module.Name),
 					m_mdWriter.AddGuid (module.Mvid),
 					(uint) 0,

@@ -52,7 +52,7 @@ namespace Mono.Cecil.Metadata {
 
 		public IMetadataTable this [int id]
 		{
-			get { return m_tables [id] as IMetadataTable; }
+			get { return m_tables [id]; }
 			set { m_tables [id] = value; }
 		}
 
