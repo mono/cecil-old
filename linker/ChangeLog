@@ -1,0 +1,4 @@
+2006-07-20  Jb Evain  <jbevain@gmail.com>
+
+	* very first commit.
+	  draft implementation of the mark phase of the linker.
