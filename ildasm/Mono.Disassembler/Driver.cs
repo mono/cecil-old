@@ -57,7 +57,7 @@ namespace Mono.Disassembler {
 		}
 
 		string [] m_args;
-		Output m_output = Output.Gui;
+		Output m_output = Output.Console;
 		OutputEncoding m_encoding = OutputEncoding.ASCII;
 		string m_assembly;
 		string m_outputFile;
@@ -127,8 +127,7 @@ namespace Mono.Disassembler {
 			foreach (string cmd in args) {
 				if (cmd [0] != '-' && cmd [0] != '/') {
 					AssemblyName = cmd;
-					if (m_error != null)
-						break;
+					continue;
 				}
 
 				switch (GetCommand (cmd, out cmd_arg)) {
@@ -154,7 +153,6 @@ namespace Mono.Disassembler {
 				default:
 					if (cmd [0] == '-')
 						break;
-					AssemblyName = cmd;
 					break;	
 				}
 			}

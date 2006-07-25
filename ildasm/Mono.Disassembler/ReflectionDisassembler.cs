@@ -126,9 +126,9 @@ namespace Mono.Disassembler {
 
 			if (type.HasLayoutInfo) {
 				m_writer.Write (".pack ");
-				m_writer.BaseWriter.WriteLine (type.LayoutInfo.PackingSize);
+				m_writer.BaseWriter.WriteLine (type.PackingSize);
 				m_writer.Write (".size ");
-				m_writer.BaseWriter.WriteLine (type.LayoutInfo.ClassSize);
+				m_writer.BaseWriter.WriteLine (type.ClassSize);
 			}
 
 			VisitFieldDefinitionCollection (type.Fields);

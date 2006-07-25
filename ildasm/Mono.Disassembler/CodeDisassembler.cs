@@ -82,7 +82,7 @@ namespace Mono.Disassembler {
 
 		public override void VisitVariableDefinition (VariableDefinition var)
 		{
-			m_writer.Write (Formater.Signature (var.Variable));
+			m_writer.Write (Formater.Signature (var.VariableType));
 			m_writer.BaseWriter.Write (" ");
 			m_writer.BaseWriter.Write (Formater.Escape (var.Name));
 		}
