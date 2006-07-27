@@ -30,7 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
@@ -48,15 +48,17 @@
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />
     <Compile Include="Mono.Linker\FieldMarker.cs" />
-    <Compile Include="Mono.Linker\IPipelineStep.cs" />
+    <Compile Include="Mono.Linker\IStep.cs" />
     <Compile Include="Mono.Linker\LinkContext.cs" />
     <Compile Include="Mono.Linker\LinkException.cs" />
     <Compile Include="Mono.Linker\MarkStep.cs" />
     <Compile Include="Mono.Linker\Marker.cs" />
     <Compile Include="Mono.Linker\MethodAction.cs" />
     <Compile Include="Mono.Linker\MethodMarker.cs" />
+    <Compile Include="Mono.Linker\OutputStep.cs" />
     <Compile Include="Mono.Linker\Pipeline.cs" />
     <Compile Include="Mono.Linker\PrintStep.cs" />
+    <Compile Include="Mono.Linker\SweepStep.cs" />
     <Compile Include="Mono.Linker\TypeMarker.cs" />
   </ItemGroup>
   <ItemGroup>

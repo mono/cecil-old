@@ -1,5 +1,5 @@
 //
-// IPipelineStep.cs
+// IStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -27,7 +27,7 @@
 //
 namespace Mono.Linker {
 
-	interface IPipelineStep {
+	interface IStep {
 		void Process (LinkContext context);
 	}
 }

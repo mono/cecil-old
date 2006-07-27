@@ -40,6 +40,7 @@ namespace Mono.Linker {
 		{
 			AssemblyDefinition asm = AssemblyFactory.GetAssembly (args [0]);
 			LinkContext context = new LinkContext ();
+			context.OutputDirectory = "lnk";
 			context.PreserveCoreLibraries = true;
 
 			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Preserve, asm);
@@ -57,6 +58,8 @@ namespace Mono.Linker {
 			Pipeline p = new Pipeline ();
 			p.AddStep (new MarkStep ());
 			p.AddStep (new PrintStep (Console.Out));
+			p.AddStep (new SweepStep ());
+			p.AddStep (new OutputStep ());
 
 			p.Process (context);
 		}

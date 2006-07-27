@@ -39,14 +39,14 @@ namespace Mono.Linker {
 			_queue = new Queue ();
 		}
 
-		public void AddStep (IPipelineStep step)
+		public void AddStep (IStep step)
 		{
 			_queue.Enqueue (step);
 		}
 
 		public void Process (LinkContext context)
 		{
-			foreach (IPipelineStep step in _queue) {
+			foreach (IStep step in _queue) {
 				step.Process (context);
 			}
 		}

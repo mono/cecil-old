@@ -1,5 +1,5 @@
 //
-// PrintStep.cs
+// OutputStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,65 +28,39 @@
 
 namespace Mono.Linker {
 
+	using System;
 	using System.IO;
 
-	class PrintStep : IStep {
+	using Mono.Cecil;
 
-		TextWriter _writer;
-		int _inc;
-		const string _indent = "  ";
-
-		public PrintStep (TextWriter writer)
-		{
-			_writer = writer;
-		}
-
-		void Inc ()
-		{
-			_inc++;
-		}
-
-		void Dec ()
-		{
-			_inc--;
-		}
-
-		void P (string s)
-		{
-			for (int i = 0; i < _inc; i++)
-				_writer.Write (_indent);
-			_writer.WriteLine (s);
-		}
-
-		void P (string s, params object [] parameters)
-		{
-			for (int i = 0; i < _inc; i++)
-				_writer.Write (_indent);
-			_writer.WriteLine (s, parameters);
-		}
+	class OutputStep : IStep {
 
 		public void Process (LinkContext context)
 		{
-			P ("PrintStep");
-			Inc ();
-			foreach (AssemblyMarker am in context.GetAssemblies ()) {
-				P ("Assembly: " + am.Assembly);
-				P ("Action:   " + am.Action);
-				Inc ();
-				foreach (TypeMarker tm in am.GetTypes ()) {
-					P ("Type: " + tm.Type);
-					Inc ();
-					foreach (FieldMarker fm in tm.GetFields ())
-						P ("Field: " + fm.Field);
-					foreach (MethodMarker mm in tm.GetMethods ()) {
-						P ("Method:" + mm.Method);
-						P ("Action:" + mm.Action);
-					}
-					Dec ();
-				}
-				Dec ();
-			}
-			Dec ();
+			if (!Directory.Exists(context.OutputDirectory))
+				Directory.CreateDirectory (context.OutputDirectory);
+
+			foreach (AssemblyMarker am in context.GetAssemblies())
+				OutputAssembly (am, context.OutputDirectory);
+		}
+
+		void OutputAssembly(AssemblyMarker am, string directory)
+		{
+			if (am.Action == AssemblyAction.Link)
+				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
+			else
+				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
+		}
+
+		void CopyAssembly (FileInfo fi, string directory)
+		{
+			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
+		}
+
+		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
+		{
+			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
+			return Path.Combine (directory, file);
 		}
 	}
 }

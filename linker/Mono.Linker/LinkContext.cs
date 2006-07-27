@@ -26,21 +26,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Globalization;
-using System.Text;
-
 namespace Mono.Linker {
 
 	using System.Collections;
 	using System.IO;
+	using System.Text;
 
 	using Mono.Cecil;
 
 	class LinkContext {
 
 		Hashtable _asmCtx;
+		string _outputDirectory;
 		bool _preserveCoreLibraries;
+
+		public string OutputDirectory {
+			get { return _outputDirectory; }
+			set { _outputDirectory = value; }
+		}
 
 		public bool PreserveCoreLibraries {
 			get { return _preserveCoreLibraries; }

@@ -28,14 +28,12 @@
 
 namespace Mono.Linker {
 
-	using System;
 	using System.Collections;
-	using System.Text;
 
 	using Mono.Cecil;
 	using Mono.Cecil.Cil;
 
-	class MarkStep : IPipelineStep {
+	class MarkStep : IStep {
 
 		LinkContext _context;
 		Queue _queue;
