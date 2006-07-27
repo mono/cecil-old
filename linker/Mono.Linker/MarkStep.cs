@@ -135,6 +135,9 @@ namespace Mono.Linker {
 
 		void MarkMethod (MethodReference method)
 		{
+			while (method is MethodSpecification)
+				method = ((MethodSpecification) method).ElementMethod;
+
 			AssemblyMarker am = _context.Resolve (method.DeclaringType.Scope);
 			MethodDefinition md = method as MethodDefinition;
 			if (md == null)
