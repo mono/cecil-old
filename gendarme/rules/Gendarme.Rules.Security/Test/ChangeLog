@@ -1,5 +1,6 @@
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* Test.Rules.Security.mdp: New. Project file for MonoDevelop.
 	* NonVirtualMethodWithInheritanceDemandTest.cs: Made static methods
 	public to avoid compiler warnings.
 

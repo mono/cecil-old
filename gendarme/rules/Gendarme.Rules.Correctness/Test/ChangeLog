@@ -1,3 +1,4 @@
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* Test.Rules.Correctness.mdp: New. Project file for MonoDevelop.
 	* BadRecursiveInvocationTest.cs: Convert (and add) tests to NUnit format.

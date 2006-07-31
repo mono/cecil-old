@@ -1,3 +1,9 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* rules.mds: New. (Sub-)solution file for MonoDevelop.
+	* rules.md-unit: New. MonoDevelop NUnit project file.
+	* tests.mds: New. (Sub-)solution file for MonoDevelop.
+
 2006-06-19  Russell Morris  <russell@russellsprojects.com>
 
 	* Makefile.am: Added Gendarme.Rules.Exceptions

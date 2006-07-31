@@ -1,3 +1,9 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* console.mdp: New. Project file for MonoDevelop.
+	* ConsoleRunner.cs: Adjust header display when Gendarme is compiled 
+	from a MD project.
+
 2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConsoleRunner.cs: Read the copyright informations from the attribute

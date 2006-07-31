@@ -1,5 +1,6 @@
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* Test.Rules.Portability.mdp: New. Project file for MonoDevelop.
 	* NewLineLiteralTest.cs: Avoid compiler warnings.
 
 2006-03-17  Sebastien Pouliot  <sebastien@ximian.com>

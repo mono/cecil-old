@@ -1,3 +1,7 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Exceptions.mdp: New. Project file for MonoDevelop.
+
 2006-06-19  Russell Morris  <russell@russellsprojects.com>
 
 	* Initial import of exception-management rule assembly

@@ -1,5 +1,6 @@
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* Test.Rules.Performance.mdp: New. Project file for MonoDevelop.
 	* EmptyDestructorTest.cs,
 	  IDisposableWithDestructorWithoutSuppressFinalizeTest.cs:
 		Add a property for the IntPtr to remove compiler warnings.

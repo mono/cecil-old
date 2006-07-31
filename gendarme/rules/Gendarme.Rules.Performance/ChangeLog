@@ -1,3 +1,7 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Performance.mdp: New. Project file for MonoDevelop.
+
 2006-06-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Use -pkg:mono-nunit to reference nunit assemblies.

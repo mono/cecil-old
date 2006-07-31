@@ -147,9 +147,15 @@ class ConsoleRunner : Runner {
 	static void Header ()
 	{
 		Assembly a = Assembly.GetExecutingAssembly();
-		Console.WriteLine ("Gendarme v{0}", a.GetName ().Version);
-		object[] attr = a.GetCustomAttributes (typeof (AssemblyCopyrightAttribute), false);
-		Console.WriteLine (((attr.Length > 0) ? ((AssemblyCopyrightAttribute) attr [0]).Copyright : String.Empty));
+		Version v = a.GetName ().Version;
+		if (v.ToString () != "0.0.0.0") {
+			Console.WriteLine ("Gendarme v{0}", v);
+			object[] attr = a.GetCustomAttributes (typeof (AssemblyCopyrightAttribute), false);
+			if (attr.Length > 0)
+				Console.WriteLine (((AssemblyCopyrightAttribute) attr [0]).Copyright);
+		} else {
+			Console.WriteLine ("Gendarme - Development Snapshot");
+		}
 		Console.WriteLine ();
 	}
 

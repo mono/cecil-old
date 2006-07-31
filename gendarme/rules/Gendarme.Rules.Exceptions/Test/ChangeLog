@@ -1,5 +1,6 @@
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* Test.Rules.Exeptions.mdp: New. Project file for MonoDevelop.
 	* TestPatterns.cs: Renamed namespace and class to match other existing
 	unit tests. Fixed some compiler warnings.
 
