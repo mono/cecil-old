@@ -1,3 +1,8 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NonVirtualMethodWithInheritanceDemandTest.cs: Made static methods
+	public to avoid compiler warnings.
+
 2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodCallWithSubsetLinkDemandTest.cs, 

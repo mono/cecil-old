@@ -69,7 +69,7 @@ namespace Test.Rules.Security {
 			}
 
 			[SecurityPermission (SSP.SecurityAction.InheritanceDemand, ControlAppDomain = true)]
-			static void StaticMethod ()
+			static public void StaticMethod ()
 			{
 			}
 		}
@@ -90,7 +90,7 @@ namespace Test.Rules.Security {
 			}
 
 			[SecurityPermission (SSP.SecurityAction.Demand, ControlAppDomain = true)]
-			static void StaticMethod ()
+			static public void StaticMethod ()
 			{
 			}
 		}
