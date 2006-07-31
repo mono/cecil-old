@@ -1,3 +1,9 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EmptyDestructorTest.cs,
+	  IDisposableWithDestructorWithoutSuppressFinalizeTest.cs:
+		Add a property for the IntPtr to remove compiler warnings.
+
 2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EmptyDestructorTest.cs,

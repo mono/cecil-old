@@ -58,6 +58,10 @@ namespace Test.Rules.Performance {
 				ptr = (IntPtr) 1;
 			}
 
+			public IntPtr Handle {
+				get { return ptr; }
+			}
+
 			~DestructorClass ()
 			{
 				ptr = IntPtr.Zero;
