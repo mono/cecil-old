@@ -1,0 +1,3 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* BadRecursiveInvocationTest.cs: Convert (and add) tests to NUnit format.
