@@ -6,20 +6,16 @@ using Gendarme.Rules.Exceptions;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Gendarme.Rules.Exceptions.Tests {
+namespace Test.Rules.Exceptions {
 
 	[TestFixture]	
-	public class TestPatterns {
+	public class DontDestroyStackTraceTest {
 	
 		private IMethodRule rule;
 		private IAssemblyDefinition assembly;
 		private IModuleDefinition module;
 		private ITypeDefinition type;
 		
-		public TestPatterns ()
-		{
-		}
-
 		// Test setup
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -27,7 +23,7 @@ namespace Gendarme.Rules.Exceptions.Tests {
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
 			module = assembly.MainModule;
-			string fullname = "Gendarme.Rules.Exceptions.Tests.TestPatterns";
+			string fullname = "Test.Rules.Exceptions.DontDestroyStackTraceTest";
 			type = module.Types [fullname];
 			rule = new DontDestroyStackTrace ();
 		}
@@ -102,9 +98,8 @@ namespace Gendarme.Rules.Exceptions.Tests {
 
 		public void ThrowOriginalEx ()
 		{
-			int i = 0;
 			try  {
-				i = Int32.Parse("Broken!");
+				Int32.Parse("Broken!");
 			}
 			catch (Exception ex) {
 				// Throw exception immediately.
@@ -115,9 +110,8 @@ namespace Gendarme.Rules.Exceptions.Tests {
 
 		public void ThrowOriginalExWithJunk ()
 		{
-			int i = 0;
 			try {
-				i = Int32.Parse ("Broken!");
+				Int32.Parse ("Broken!");
 			}
 			catch (Exception ex) {
 				int j = 0;
@@ -135,11 +129,12 @@ namespace Gendarme.Rules.Exceptions.Tests {
 
 		public void RethrowOriginalEx ()
 		{
-			int i = 0;
 			try {
-				i = Int32.Parse ("Broken!");
+				Int32.Parse ("Broken!");
 			}
 			catch (Exception ex) {
+				// avoid compiler warning
+				Assert.IsNotNull (ex);
 				// This should NOT trip the DontDestroyStackTrace rule, because we're
 				// rethrowing the original exception.
 				throw;
