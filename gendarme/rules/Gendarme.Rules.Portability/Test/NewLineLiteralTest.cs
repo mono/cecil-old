@@ -44,32 +44,32 @@ namespace Test.Rules.Interop {
 		private IModuleDefinition module;
 		private ITypeDefinition type;
 
-		private string GetNewLineLiteral_13 ()
+		public string GetNewLineLiteral_13 ()
 		{
 			return "Hello\nMono";
 		}
 
-		private string GetNewLineLiteral_10 ()
+		public string GetNewLineLiteral_10 ()
 		{
 			return "\rHello Mono";
 		}
 
-		private string GetNewLineLiteral ()
+		public string GetNewLineLiteral ()
 		{
 			return "Hello Mono\r\n";
 		}
 
-		private string GetNewLine ()
+		public string GetNewLine ()
 		{
 			return String.Concat ("Hello Mono", Environment.NewLine);
 		}
 
-		private string GetNull ()
+		public string GetNull ()
 		{
 			return null;
 		}
 
-		private string GetEmpty ()
+		public string GetEmpty ()
 		{
 			return "";
 		}

@@ -1,3 +1,7 @@
+2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NewLineLiteralTest.cs: Avoid compiler warnings.
+
 2006-03-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* NewLineLiteralTest.cs: New. Unit tests for the NewLineLiteralRule.
