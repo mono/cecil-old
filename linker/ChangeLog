@@ -1,5 +1,7 @@
 2006-08-15  Jb Evain  <jbevain@gmail.com>
 
+	* clean properties
+
 	* mark interfaces as well
 
 	* work in progress + unit tests.

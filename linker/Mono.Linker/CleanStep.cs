@@ -28,10 +28,41 @@
 
 namespace Mono.Linker {
 
+	using System.Collections;
+
+	using Mono.Cecil;
+
 	public class CleanStep : IStep {
 
 		public void Process (LinkContext context)
 		{
+			foreach (AssemblyMarker am in context.GetAssemblies())
+				CleanAssembly (am.Assembly);
+		}
+
+		void CleanAssembly (AssemblyDefinition asm)
+		{
+			foreach (TypeDefinition type in asm.MainModule.Types)
+				CleanType (type);
+		}
+
+		void CleanType (TypeDefinition type)
+		{
+			CleanProperties (type);
+		}
+
+		static void CleanProperties (TypeDefinition type)
+		{
+			ArrayList properties = new ArrayList (type.Properties);
+			foreach (PropertyDefinition prop in properties) {
+				if (prop.GetMethod != null && !type.Methods.Contains (prop.GetMethod))
+					prop.GetMethod = null;
+				if (prop.SetMethod != null && !type.Methods.Contains (prop.SetMethod))
+					prop.SetMethod = null;
+
+				if (prop.GetMethod == null && prop.SetMethod == null)
+					type.Properties.Remove (prop);
+			}
 		}
 	}
 }
