@@ -128,6 +128,8 @@ namespace Mono.Linker {
 				tm.Processed = true;
 
 			MarkType (td.BaseType);
+			foreach (TypeReference iface in td.Interfaces)
+				MarkType (iface);
 			MarkCustomAttributes (td);
 
 			am.Mark (td);

@@ -1,5 +1,7 @@
 2006-08-15  Jb Evain  <jbevain@gmail.com>
 
+	* mark interfaces as well
+
 	* work in progress + unit tests.
 
 2006-07-27  Jb Evain  <jbevain@gmail.com>

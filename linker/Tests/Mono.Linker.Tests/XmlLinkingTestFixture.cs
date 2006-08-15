@@ -42,6 +42,12 @@ namespace Mono.Linker.Tests {
 			Test ("SimpleXml");
 		}
 
+		[Test]
+		public void TestInterface ()
+		{
+			Test ("Interface");
+		}
+
 		protected override void Test (string testCase)
 		{
 			base.Test (testCase);
