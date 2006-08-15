@@ -1,3 +1,11 @@
+2006-08-15  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs:
+		Fix the CopyTo method.
+
 2006-07-19  Jb Evain  <jbevain@gmail.com>
 
 	* CodeGen/templates/IIndexedCollection.cs

@@ -133,7 +133,7 @@ namespace <%=$cur_coll.target%> {
 
 		public void CopyTo (Array ary, int index)
 		{
-			(this as ICollection).CopyTo (ary, index);
+			this.BaseGetAllValues ().CopyTo (ary, index);
 		}
 
 		public new IEnumerator GetEnumerator ()
