@@ -30,38 +30,145 @@ namespace Mono.Linker {
 
 	using System;
 	using System.Collections;
-
-	using Mono.Cecil;
-	using Mono.Cecil.Cil;
+	using System.Xml.XPath;
 
 	public class Driver {
 
-		public static void Main (string [] args)
+		static readonly string _linker = "Mono CIL Linker";
+
+		public static int Main (string [] args)
 		{
-			AssemblyDefinition asm = AssemblyFactory.GetAssembly (args [0]);
-			LinkContext context = new LinkContext ();
-			context.OutputDirectory = "lnk";
-			context.PreserveCoreLibraries = true;
+			if (args.Length == 0)
+				Usage ();
 
-			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Preserve, asm);
-			foreach (TypeDefinition type in asm.MainModule.Types) {
-				TypeMarker tm = marker.Mark (type);
+			try {
 
-				foreach (MethodDefinition meth in type.Methods)
-					tm.Mark (meth, MethodAction.ForceParse);
-				foreach (MethodDefinition ctor in type.Constructors)
-					tm.Mark (ctor, MethodAction.ForceParse);
+				Run(new Queue(args));
+
+			} catch (Exception e) {
+				Console.WriteLine ("Fatal error in {0}", _linker);
+				Console.WriteLine (e);
 			}
 
-			context.AddMarker (marker);
+			return 0;
+		}
 
+		static void Run (Queue q)
+		{
+			LinkContext context = GetDefaultContext ();
+			Pipeline p = GetStandardPipeline ();
+
+			bool resolver = false;
+			while (q.Count > 0) {
+				string token = (string) q.Dequeue ();
+				if (token.Length < 2)
+					Usage ();
+
+				if (! (token [0] == '-' || token [1] == '/'))
+					Usage ();
+
+				if (token [0] == '-' && token [1] == '-') {
+
+					if (token.Length < 3)
+						Usage ();
+
+					switch (token [2]) {
+					case 'v':
+						Version ();
+						break;
+					case 'a':
+						About ();
+						break;
+					default:
+						Usage ();
+						break;
+					}
+				}
+
+				string param = (string) q.Dequeue ();
+				switch (token [1]) {
+				case 'o':
+					context.OutputDirectory = param;
+					break;
+				case 'p':
+					context.PreserveCoreLibraries = bool.Parse (param);
+					break;
+				case 'x':
+					if (resolver)
+						Usage ();
+
+					p.PrependStep (new ResolveFromXmlStep (new XPathDocument (param)));
+					resolver = true;
+					break;
+				case 'a':
+					if (resolver)
+						Usage ();
+
+					p.PrependStep (new ResolveFromAssemblyStep (param));
+					resolver = true;
+					break;
+				default:
+					Usage ();
+					break;
+				}
+			}
+
+			if (!resolver)
+				Usage ();
+
+			p.Process(context);
+		}
+
+		static LinkContext GetDefaultContext ()
+		{
+			LinkContext context = new LinkContext ();
+			context.PreserveCoreLibraries = true;
+			context.OutputDirectory = ".";
+			return context;
+		}
+
+		static void Usage ()
+		{
+			Console.WriteLine (_linker);
+			Console.WriteLine ("linker [options] -x|-a file");
+
+			Console.WriteLine ("   --about     About the {0}", _linker);
+			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
+			Console.WriteLine ("   -out        Specify the output directory, default to .");
+			Console.WriteLine ("   -p          Preserve the core libraries, true or false, default to true");
+			Console.WriteLine ("   -x          Link from an XML descriptor");
+			Console.WriteLine ("   -a          Link from an assembly");
+			Console.WriteLine ("");
+			Console.WriteLine ("   you have to choose one from -x and -a but not both");
+
+			Environment.Exit (1);
+		}
+
+		static void Version ()
+		{
+			Console.WriteLine ("{0} Version {1}",
+				_linker,
+			    System.Reflection.Assembly.GetExecutingAssembly ().GetName ().Version);
+
+			Environment.Exit(1);
+		}
+
+		static void About ()
+		{
+			Console.WriteLine ("For more information, visit the project Web site");
+			Console.WriteLine ("   http://www.mono-project.com/");
+
+			Environment.Exit(1);
+		}
+
+		static Pipeline GetStandardPipeline ()
+		{
 			Pipeline p = new Pipeline ();
-			p.AddStep (new MarkStep ());
-			p.AddStep (new PrintStep (Console.Out));
-			p.AddStep (new SweepStep ());
-			p.AddStep (new OutputStep ());
-
-			p.Process (context);
+			p.AppendStep (new MarkStep ());
+			p.AppendStep (new SweepStep ());
+			p.AppendStep (new CleanStep ());
+			p.AppendStep (new OutputStep ());
+			return p;
 		}
 	}
 }

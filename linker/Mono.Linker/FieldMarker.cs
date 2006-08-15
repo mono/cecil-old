@@ -30,7 +30,7 @@ namespace Mono.Linker {
 
 	using Mono.Cecil;
 
-	class FieldMarker : Marker {
+	public class FieldMarker : Marker {
 
 		FieldDefinition _field;
 

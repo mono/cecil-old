@@ -30,7 +30,7 @@ namespace Mono.Linker {
 
 	using System.IO;
 
-	class PrintStep : IStep {
+	public class PrintStep : IStep {
 
 		TextWriter _writer;
 		int _inc;
@@ -67,26 +67,21 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
-			P ("PrintStep");
-			Inc ();
 			foreach (AssemblyMarker am in context.GetAssemblies ()) {
-				P ("Assembly: " + am.Assembly);
-				P ("Action:   " + am.Action);
+				P ("A: {0}; {1}", am.Assembly, am.Action);
 				Inc ();
 				foreach (TypeMarker tm in am.GetTypes ()) {
-					P ("Type: " + tm.Type);
+					P ("T: " + tm.Type);
 					Inc ();
 					foreach (FieldMarker fm in tm.GetFields ())
-						P ("Field: " + fm.Field);
+						P ("F: " + fm.Field);
 					foreach (MethodMarker mm in tm.GetMethods ()) {
-						P ("Method:" + mm.Method);
-						P ("Action:" + mm.Action);
+						P ("M: {0}; {1}" + mm.Method, mm.Action);
 					}
 					Dec ();
 				}
 				Dec ();
 			}
-			Dec ();
 		}
 	}
 }

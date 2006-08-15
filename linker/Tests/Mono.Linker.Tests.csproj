@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mono.Linker</RootNamespace>
-    <AssemblyName>linker</AssemblyName>
+    <RootNamespace>Mono.Linker.Tests</RootNamespace>
+    <AssemblyName>Mono.Linker.Tests</AssemblyName>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
@@ -38,38 +38,29 @@
   </Target>
   -->
   <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mono.Linker\AssemblyAction.cs" />
-    <Compile Include="Mono.Linker\AssemblyMarker.cs" />
-    <Compile Include="Mono.Linker\AssemblyInfo.cs" />
-    <Compile Include="Mono.Linker\AssemblyResolver.cs" />
-    <Compile Include="Mono.Linker\CleanStep.cs" />
-    <Compile Include="Mono.Linker\ResolveFromAssemblyStep.cs" />
-    <Compile Include="Mono.Linker\Driver.cs" />
-    <Compile Include="Mono.Linker\FieldMarker.cs" />
-    <Compile Include="Mono.Linker\IStep.cs" />
-    <Compile Include="Mono.Linker\LinkContext.cs" />
-    <Compile Include="Mono.Linker\LinkException.cs" />
-    <Compile Include="Mono.Linker\MarkStep.cs" />
-    <Compile Include="Mono.Linker\Marker.cs" />
-    <Compile Include="Mono.Linker\MethodAction.cs" />
-    <Compile Include="Mono.Linker\MethodMarker.cs" />
-    <Compile Include="Mono.Linker\OutputStep.cs" />
-    <Compile Include="Mono.Linker\Pipeline.cs" />
-    <Compile Include="Mono.Linker\PrintStep.cs" />
-    <Compile Include="Mono.Linker\ResolveFromXmlStep.cs" />
-    <Compile Include="Mono.Linker\ResolveStep.cs" />
-    <Compile Include="Mono.Linker\SweepStep.cs" />
-    <Compile Include="Mono.Linker\TypeMarker.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\lib\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\lib\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Mono.Linker.csproj">
+      <Project>{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}</Project>
+      <Name>Mono.Linker</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Mono.Linker.Tests\AbstractLinkingTestFixture.cs" />
+    <Compile Include="Mono.Linker.Tests\AbstractTestFixture.cs" />
+    <Compile Include="Mono.Linker.Tests\AssemblyLinkingTestFixture.cs" />
+    <Compile Include="Mono.Linker.Tests\AssemblyInfo.cs" />
+    <Compile Include="Mono.Linker.Tests\XmlLinkingTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

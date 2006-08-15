@@ -1,5 +1,5 @@
 //
-// OutputStep.cs
+// ResolveFromAssemblyStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,38 +28,31 @@
 
 namespace Mono.Linker {
 
-	using System.IO;
-
 	using Mono.Cecil;
 
-	public class OutputStep : IStep {
+	public class ResolveFromAssemblyStep : ResolveStep {
 
-		public void Process (LinkContext context)
+		string _assembly;
+
+		public ResolveFromAssemblyStep (string assembly)
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
-
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
+			_assembly = assembly;
 		}
 
-		void OutputAssembly(AssemblyMarker am, string directory)
+		public override void Process (LinkContext context)
 		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
-		}
+			AssemblyDefinition asm = AssemblyFactory.GetAssembly (_assembly);
+			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Preserve, asm);
+			foreach (TypeDefinition type in asm.MainModule.Types) {
+				TypeMarker tm = marker.Mark (type);
 
-		void CopyAssembly (FileInfo fi, string directory)
-		{
-			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
-		}
+				foreach (MethodDefinition meth in type.Methods)
+					tm.Mark (meth, MethodAction.ForceParse);
+				foreach (MethodDefinition ctor in type.Constructors)
+					tm.Mark (ctor, MethodAction.ForceParse);
+			}
 
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
-		{
-			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
-			return Path.Combine (directory, file);
+			context.AddMarker (marker);
 		}
 	}
 }

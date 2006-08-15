@@ -33,7 +33,7 @@ namespace Mono.Linker {
 	using Mono.Cecil;
 	using Mono.Cecil.Cil;
 
-	class MarkStep : IStep {
+	public class MarkStep : IStep {
 
 		LinkContext _context;
 		Queue _queue;

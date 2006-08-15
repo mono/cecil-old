@@ -28,7 +28,7 @@
 
 namespace Mono.Linker {
 
-	enum AssemblyAction {
+	public enum AssemblyAction {
 		Preserve,
 		Link
 	}

@@ -1,5 +1,5 @@
 //
-// OutputStep.cs
+// CleanStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,38 +28,10 @@
 
 namespace Mono.Linker {
 
-	using System.IO;
-
-	using Mono.Cecil;
-
-	public class OutputStep : IStep {
+	public class CleanStep : IStep {
 
 		public void Process (LinkContext context)
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
-
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
-		}
-
-		void OutputAssembly(AssemblyMarker am, string directory)
-		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
-		}
-
-		void CopyAssembly (FileInfo fi, string directory)
-		{
-			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
-		}
-
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
-		{
-			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
-			return Path.Combine (directory, file);
 		}
 	}
 }

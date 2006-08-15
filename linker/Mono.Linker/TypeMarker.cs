@@ -32,7 +32,7 @@ namespace Mono.Linker {
 
 	using Mono.Cecil;
 
-	class TypeMarker : Marker {
+	public class TypeMarker : Marker {
 
 		TypeDefinition _type;
 

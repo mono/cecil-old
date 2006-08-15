@@ -27,9 +27,14 @@
 //
 
 namespace Mono.Linker {
-	abstract class Marker {
+
+	public abstract class Marker {
 
 		bool _processed;
+
+		internal Marker ()
+		{
+		}
 
 		public bool Processed
 		{

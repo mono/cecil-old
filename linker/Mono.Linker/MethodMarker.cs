@@ -30,7 +30,7 @@ namespace Mono.Linker {
 
 	using Mono.Cecil;
 
-	class MethodMarker : Marker {
+	public class MethodMarker : Marker {
 
 		MethodDefinition _method;
 		MethodAction _action;

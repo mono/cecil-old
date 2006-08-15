@@ -29,12 +29,10 @@
 namespace Mono.Linker {
 
 	using System.Collections;
-	using System.IO;
-	using System.Text;
 
 	using Mono.Cecil;
 
-	class LinkContext {
+	public class LinkContext {
 
 		Hashtable _asmCtx;
 		string _outputDirectory;
@@ -57,67 +55,26 @@ namespace Mono.Linker {
 
 		public AssemblyMarker Resolve (IMetadataScope scope)
 		{
-			AssemblyNameReference reference = null;
-			if (scope is ModuleDefinition)
-				reference = ((ModuleDefinition) scope).Assembly.Name;
-			else
-				reference = ((AssemblyNameReference) scope);
+			AssemblyNameReference reference;
+			if (scope is ModuleDefinition) {
+				AssemblyDefinition asm = ((ModuleDefinition) scope).Assembly;
+				foreach (AssemblyMarker am in _asmCtx.Values)
+					if (am.Assembly == asm)
+						return am;
+
+				reference = asm.Name;
+			} else
+				reference = ((AssemblyNameReference)scope);
 
 			if (_asmCtx.Contains (reference.FullName))
 				return (AssemblyMarker) _asmCtx [reference.FullName];
 
 			AssemblyMarker marker = new AssemblyMarker (
 				_preserveCoreLibraries && IsCore (reference) ? AssemblyAction.Preserve : AssemblyAction.Link,
-				Resolve (reference));
+				AssemblyResolver.Resolve (reference));
 
 			_asmCtx.Add (reference.FullName, marker);
 			return marker;
-		}
-
-		AssemblyDefinition Resolve (AssemblyNameReference reference)
-		{
-			if (reference.Name == "mscorlib")
-				return AssemblyFactory.GetAssembly (typeof (object).Module.FullyQualifiedName);
-			else if (IsInGac (reference))
-				return AssemblyFactory.GetAssembly (GetFromGac (reference));
-			else if (File.Exists (reference.Name + ".dll"))
-				return AssemblyFactory.GetAssembly (reference.Name + ".dll");
-			else if (File.Exists (reference.Name + ".exe"))
-				return AssemblyFactory.GetAssembly (reference.Name + ".exe");
-			else
-				throw new FileNotFoundException ("Could not resolve reference: " + reference);
-		}
-
-		bool IsInGac (AssemblyNameReference reference)
-		{
-			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
-				return false;
-
-			return File.Exists (GetFromGac (reference));
-		}
-
-		string GetFromGac (AssemblyNameReference reference)
-		{
-			StringBuilder sb = new StringBuilder ();
-			sb.Append (reference.Version);
-			sb.Append ("__");
-			for (int i = 0; i < reference.PublicKeyToken.Length; i++)
-				sb.Append (reference.PublicKeyToken [i].ToString ("x2"));
-
-			return Path.Combine(
-				Path.Combine (
-					Path.Combine (GetGacPath (), reference.Name), sb.ToString ()),
-					string.Concat (reference.Name, ".dll"));
-		}
-
-		string GetGacPath ()
-		{
-			return Directory.GetParent (
-				Directory.GetParent (
-					Path.GetDirectoryName (
-						typeof (System.Xml.XmlDocument).Module.FullyQualifiedName)
-					).FullName
-				).FullName;
 		}
 
 		bool IsCore (AssemblyNameReference name)

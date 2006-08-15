@@ -1,5 +1,5 @@
 //
-// OutputStep.cs
+// XmlLinkingTestFixture.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,40 +26,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+namespace Mono.Linker.Tests {
 
 	using System.IO;
+	using System.Xml.XPath;
 
-	using Mono.Cecil;
+	using NUnit.Framework;
 
-	public class OutputStep : IStep {
+	[TestFixture]
+	public class XmlLinkingTestFixture : AbstractLinkingTestFixture {
 
-		public void Process (LinkContext context)
+		[Test]
+		public void TestSimpleXml ()
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
-
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
+			Test ("SimpleXml");
 		}
 
-		void OutputAssembly(AssemblyMarker am, string directory)
+		protected override void Test (string testCase)
 		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
-		}
+			base.Test (testCase);
+			Pipeline.PrependStep (
+				new ResolveFromXmlStep (
+					new XPathDocument (Path.Combine (GetTestCasePath (), "desc.xml"))));
 
-		void CopyAssembly (FileInfo fi, string directory)
-		{
-			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
-		}
-
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
-		{
-			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
-			return Path.Combine (directory, file);
+			Run ();
 		}
 	}
 }

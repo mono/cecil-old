@@ -26,12 +26,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System.Collections;
-using Mono.Cecil;
-
 namespace Mono.Linker {
 
-	class SweepStep : IStep {
+	using System.Collections;
+
+	using Mono.Cecil;
+
+	public class SweepStep : IStep {
 
 		public void Process (LinkContext context)
 		{
@@ -41,8 +42,15 @@ namespace Mono.Linker {
 
 		void SweepAssembly(AssemblyMarker am)
 		{
-			foreach (TypeMarker tm in am.GetTypes ())
+			Hashtable typesUsed = new Hashtable ();
+			foreach (TypeMarker tm in am.GetTypes ()) {
 				SweepType (tm);
+				typesUsed.Add (tm.Type.ToString (), tm.Type);
+			}
+
+			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types))
+				if (!typesUsed.Contains (type.ToString ()))
+					am.Assembly.MainModule.Types.Remove (type);
 		}
 
 		void SweepType (TypeMarker tm)
@@ -69,12 +77,17 @@ namespace Mono.Linker {
 				methodsUsed.Add (mm.Method.ToString (), mm.Method);
 
 			foreach (MethodDefinition meth in new ArrayList (tm.Type.Methods))
-				if (!methodsUsed.Contains (meth.ToString ()))
+				if (!methodsUsed.Contains (meth.ToString ()) && CanBeRemoved (meth))
 					tm.Type.Methods.Remove (meth);
 
 			foreach (MethodDefinition ctor in new ArrayList (tm.Type.Constructors))
-				if (!methodsUsed.Contains (ctor.ToString ()))
+				if (!methodsUsed.Contains (ctor.ToString ()) && CanBeRemoved (ctor))
 					tm.Type.Constructors.Remove (ctor);
+		}
+
+		bool CanBeRemoved (MethodDefinition meth)
+		{
+			return !meth.IsVirtual;
 		}
 	}
 }

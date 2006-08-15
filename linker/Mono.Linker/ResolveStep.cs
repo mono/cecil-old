@@ -1,5 +1,5 @@
 //
-// OutputStep.cs
+// ResolveStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,38 +28,32 @@
 
 namespace Mono.Linker {
 
-	using System.IO;
+	using System.Collections;
 
-	using Mono.Cecil;
+	public abstract class ResolveStep : IStep {
 
-	public class OutputStep : IStep {
+		ArrayList _unResolved;
 
-		public void Process (LinkContext context)
+		internal ResolveStep ()
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
-
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
+			_unResolved = new ArrayList ();
 		}
 
-		void OutputAssembly(AssemblyMarker am, string directory)
+		public bool AllMarkerResolved
 		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
+			get { return _unResolved.Count == 0; }
 		}
 
-		void CopyAssembly (FileInfo fi, string directory)
+		public string [] GetUnresolvedMarkers ()
 		{
-			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
+			return _unResolved.ToArray (typeof (string)) as string [];
 		}
 
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
+		protected void AddUnresolveMarker (string signature)
 		{
-			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
-			return Path.Combine (directory, file);
+			_unResolved.Add (signature);
 		}
+
+		public abstract void Process (LinkContext context);
 	}
 }

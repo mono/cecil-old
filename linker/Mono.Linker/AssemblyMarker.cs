@@ -32,7 +32,7 @@ namespace Mono.Linker {
 
 	using Mono.Cecil;
 
-	class AssemblyMarker {
+	public class AssemblyMarker {
 
 		AssemblyAction _action;
 		AssemblyDefinition _assembly;

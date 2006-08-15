@@ -28,25 +28,54 @@
 
 namespace Mono.Linker {
 
+	using System;
 	using System.Collections;
 
-	class Pipeline {
+	public class Pipeline {
 
-		Queue _queue;
+		ArrayList _steps;
 
 		public Pipeline ()
 		{
-			_queue = new Queue ();
+			_steps = new ArrayList();
 		}
 
-		public void AddStep (IStep step)
+		public void PrependStep (IStep step)
 		{
-			_queue.Enqueue (step);
+			_steps.Insert (0, step);
+		}
+
+		public void AppendStep (IStep step)
+		{
+			_steps.Add (step);
+		}
+
+		public void AddStepBefore (Type target, IStep step)
+		{
+			for (int i = 0; i < _steps.Count; i++) {
+				if (_steps [i].GetType () == target) {
+					_steps.Insert (i, step);
+					return;
+				}
+			}
+		}
+
+		public void AddStepAfter(Type target, IStep step)
+		{
+			for (int i = 0; i < _steps.Count; i++) {
+				if (_steps [i].GetType () == target) {
+					if (i == _steps.Count - 1)
+						_steps.Add (step);
+					else
+						_steps.Insert (i + 1, step);
+					return;
+				}
+			}
 		}
 
 		public void Process (LinkContext context)
 		{
-			foreach (IStep step in _queue) {
+			foreach (IStep step in _steps) {
 				step.Process (context);
 			}
 		}

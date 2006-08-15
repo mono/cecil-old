@@ -28,7 +28,7 @@
 
 namespace Mono.Linker {
 
-	enum MethodAction {
+	public enum MethodAction {
 		Nothing,
 		ParseIfLinked,
 		ForceParse

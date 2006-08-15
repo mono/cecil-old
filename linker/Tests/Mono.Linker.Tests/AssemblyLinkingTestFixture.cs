@@ -1,5 +1,5 @@
 //
-// OutputStep.cs
+// AssemblyLinkingTestFixture.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,40 +26,41 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+namespace Mono.Linker.Tests {
 
 	using System.IO;
 
-	using Mono.Cecil;
+	using NUnit.Framework;
 
-	public class OutputStep : IStep {
+	[TestFixture]
+	public class AssemblyLinkingTestFixture : AbstractLinkingTestFixture {
 
-		public void Process (LinkContext context)
+		[Test]
+		public void TestSimple ()
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
-
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
+			Test ("Simple");
 		}
 
-		void OutputAssembly(AssemblyMarker am, string directory)
+		[Test]
+		public void TestVirtualCall ()
 		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
+			Test ("VirtualCall");
 		}
 
-		void CopyAssembly (FileInfo fi, string directory)
+		[Test]
+		public void TestMultipleReferences ()
 		{
-			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
+			Test ("MultipleReferences");
 		}
 
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
+		protected override void Test (string testCase)
 		{
-			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
-			return Path.Combine (directory, file);
+			base.Test (testCase);
+			Pipeline.PrependStep (
+				new ResolveFromAssemblyStep (
+					Path.Combine (GetTestCasePath (), "Program.exe")));
+
+			Run ();
 		}
 	}
 }
