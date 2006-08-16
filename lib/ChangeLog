@@ -1,3 +1,9 @@
+2006-08-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix the initial value reading.
+		Based on a report and a patch of Roei Erez  <roeie@mainsoft.com>
+
 2006-08-15  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/TypeReferenceCollection.cs
@@ -1290,7 +1296,7 @@
 	  Mono.Cecil/IGenericInstanceMethod.cs
 	  Mono.Cecil/GenericInstanceMethod.cs:
 		Generics API elements.
-	
+
 	* Mono.Cecil/IMethod.cs
 	  Mono.Cecil/MethodReference.cs
 	  Mono.Cecil/ITypeReference.cs

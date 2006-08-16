@@ -1033,9 +1033,36 @@ namespace Mono.Cecil {
 
 		protected void SetInitialValue (FieldDefinition field)
 		{
-			if (field.RVA != RVA.Zero && field.FieldType is TypeDefinition) {
+			int size = 0;
+			switch (field.FieldType.FullName) {
+			case Constants.Byte:
+			case Constants.SByte:
+				size = 1;
+				break;
+			case Constants.Int16:
+			case Constants.UInt16:
+			case Constants.Char:
+				size = 2;
+				break;
+			case Constants.Int32:
+			case Constants.UInt32:
+			case Constants.Single:
+				size = 4;
+				break;
+			case Constants.Int64:
+			case Constants.UInt64:
+			case Constants.Double:
+				size = 8;
+				break;
+			default:
+				TypeDefinition fieldType = field.FieldType as TypeDefinition;
+				if (fieldType != null)
+					size = (int) fieldType.ClassSize;
+				break;
+			}
+
+			if (size > 0 && field.RVA != RVA.Zero) {
 				BinaryReader br = m_reader.MetadataReader.GetDataReader (field.RVA);
-				int size = (int) (field.FieldType as TypeDefinition).ClassSize;
 				field.InitialValue = br == null ? new byte [size] : br.ReadBytes (size);
 			} else
 				field.InitialValue = new byte [0];
