@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -203,6 +203,7 @@
     <Compile Include="Mono.Cecil\AssemblyLinkedResource.cs" />
     <Compile Include="Mono.Cecil\AssemblyName.cs" />
     <Compile Include="Mono.Cecil\AssemblyNameReferenceCollection.cs" />
+    <Compile Include="Mono.Cecil\BaseAssemblyResolver.cs" />
     <Compile Include="Mono.Cecil\BaseReflectionReader.cs" />
     <Compile Include="Mono.Cecil\BaseReflectionVisitor.cs" />
     <Compile Include="Mono.Cecil\BaseStructureVisitor.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Mono.Cecil\ConstructorCollection.cs" />
     <Compile Include="Mono.Cecil\CustomAttribute.cs" />
     <Compile Include="Mono.Cecil\CustomAttributeCollection.cs" />
+    <Compile Include="Mono.Cecil\DefaultAssemblyResolver.cs" />
     <Compile Include="Mono.Cecil\EmbeddedResource.cs" />
     <Compile Include="Mono.Cecil\EventAttributes.cs" />
     <Compile Include="Mono.Cecil\EventDefinition.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Mono.Cecil\IAssemblyLinkedResource.cs" />
     <Compile Include="Mono.Cecil\IAssemblyName.cs" />
     <Compile Include="Mono.Cecil\IAssemblyNameReferenceCollection.cs" />
+    <Compile Include="Mono.Cecil\IAssemblyResolver.cs" />
     <Compile Include="Mono.Cecil\ICallSite.cs" />
     <Compile Include="Mono.Cecil\IClassLayoutInfo.cs" />
     <Compile Include="Mono.Cecil\IConstraintCollection.cs" />

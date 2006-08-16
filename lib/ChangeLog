@@ -1,5 +1,11 @@
 2006-08-16  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IAssemblyResolver.cs
+	  Mono.Cecil/BaseAssemblyResolver.cs
+	  Mono.Cecil/DefaultAssemblyResolver.cs
+	  Mono.Cecil/AssemblyDefinition.cs
+		Implement an assembly resolver.
+
 	* Mono.Cecil/ReflectionReader.cs:
 		Fix the initial value reading.
 		Based on a report and a patch of Roei Erez  <roeie@mainsoft.com>
