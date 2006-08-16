@@ -11,6 +11,7 @@
 ./Mono.Cecil/AssemblyLinkedResource.cs
 ./Mono.Cecil/AssemblyName.cs
 ./Mono.Cecil/AssemblyNameReferenceCollection.cs
+./Mono.Cecil/BaseAssemblyResolver.cs
 ./Mono.Cecil/BaseReflectionReader.cs
 ./Mono.Cecil/BaseReflectionVisitor.cs
 ./Mono.Cecil/BaseStructureVisitor.cs
@@ -21,6 +22,7 @@
 ./Mono.Cecil/ConstructorCollection.cs
 ./Mono.Cecil/CustomAttribute.cs
 ./Mono.Cecil/CustomAttributeCollection.cs
+./Mono.Cecil/DefaultAssemblyResolver.cs
 ./Mono.Cecil/EmbeddedResource.cs
 ./Mono.Cecil/EventAttributes.cs
 ./Mono.Cecil/EventDefinition.cs
@@ -47,6 +49,7 @@
 ./Mono.Cecil/IAssemblyLinkedResource.cs
 ./Mono.Cecil/IAssemblyName.cs
 ./Mono.Cecil/IAssemblyNameReferenceCollection.cs
+./Mono.Cecil/IAssemblyResolver.cs
 ./Mono.Cecil/ICallSite.cs
 ./Mono.Cecil/IClassLayoutInfo.cs
 ./Mono.Cecil/IConstraintCollection.cs
