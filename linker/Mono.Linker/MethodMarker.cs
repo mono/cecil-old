@@ -44,7 +44,7 @@ namespace Mono.Linker {
 			get { return _action; }
 		}
 
-		public MethodMarker (MethodDefinition method) : this (method, MethodAction.ParseIfLinked)
+		public MethodMarker (MethodDefinition method) : this (method, MethodAction.Parse)
 		{
 		}
 
@@ -52,6 +52,11 @@ namespace Mono.Linker {
 		{
 			_method = method;
 			_action = action;
+		}
+
+		public override string ToString()
+		{
+			return "Method(" + _method + ")";
 		}
 	}
 }

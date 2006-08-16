@@ -76,7 +76,7 @@ namespace Mono.Linker {
 					foreach (FieldMarker fm in tm.GetFields ())
 						P ("F: " + fm.Field);
 					foreach (MethodMarker mm in tm.GetMethods ()) {
-						P ("M: {0}; {1}" + mm.Method, mm.Action);
+						P ("M: {0}; {1}", mm.Method, mm.Action);
 					}
 					Dec ();
 				}

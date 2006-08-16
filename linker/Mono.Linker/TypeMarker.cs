@@ -60,7 +60,7 @@ namespace Mono.Linker {
 
 		public MethodMarker Mark (MethodDefinition method)
 		{
-			return Mark (method, MethodAction.ParseIfLinked);
+			return Mark (method, MethodAction.Parse);
 		}
 
 		public MethodMarker Mark (MethodDefinition method, MethodAction action)
@@ -97,6 +97,11 @@ namespace Mono.Linker {
 			MethodMarker [] markers = new MethodMarker[_methods.Count];
 			_methods.Values.CopyTo (markers, 0);
 			return markers;
+		}
+
+		public override string ToString ()
+		{
+			return "Type(" + _type.FullName + ")";
 		}
 	}
 }

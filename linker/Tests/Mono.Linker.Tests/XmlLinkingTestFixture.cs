@@ -48,6 +48,12 @@ namespace Mono.Linker.Tests {
 			Test ("Interface");
 		}
 
+		[Test]
+		public void TestReferenceInVirtualMethod ()
+		{
+			Test ("ReferenceInVirtualMethod");
+		}
+
 		protected override void Test (string testCase)
 		{
 			base.Test (testCase);

@@ -83,7 +83,7 @@ namespace Mono.Linker {
 		public MethodDefinition Resolve (MethodReference method)
 		{
 			TypeDefinition type = Resolve (method.DeclaringType);
-			if (method.Name == MethodDefinition.Cctor)
+			if (method.Name == MethodDefinition.Cctor) // TODO: that sucks, (for generics methods mainly)
 				return type.Constructors.GetConstructor (true, method.Parameters);
 			else if (method.Name == MethodDefinition.Ctor)
 				return type.Constructors.GetConstructor (false, method.Parameters);
@@ -96,6 +96,11 @@ namespace Mono.Linker {
 			TypeMarker [] markers = new TypeMarker [_typeMarkers.Count];
 			_typeMarkers.Values.CopyTo (markers, 0);
 			return markers;
+		}
+
+		public override string ToString ()
+		{
+			return "Assembly(" + _assembly.Name.FullName + ")";
 		}
 	}
 }

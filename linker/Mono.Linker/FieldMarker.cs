@@ -43,5 +43,10 @@ namespace Mono.Linker {
 		{
 			_field = field;
 		}
+
+		public override string ToString()
+		{
+			return "Field(" + _field + ")";
+		}
 	}
 }

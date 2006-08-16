@@ -1,5 +1,9 @@
 2006-08-15  Jb Evain  <jbevain@gmail.com>
 
+	* when marking a type, also mark its virtual methods
+
+2006-08-15  Jb Evain  <jbevain@gmail.com>
+
 	* clean properties
 
 	* mark interfaces as well

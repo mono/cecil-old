@@ -116,6 +116,9 @@ namespace Mono.Linker {
 			while (type is TypeSpecification)
 				type = ((TypeSpecification) type).ElementType;
 
+			if (type is GenericParameter)
+				return;
+
 			AssemblyMarker am = _context.Resolve (type.Scope);
 			TypeDefinition td = type as TypeDefinition;
 			if (td == null)
@@ -128,9 +131,14 @@ namespace Mono.Linker {
 				tm.Processed = true;
 
 			MarkType (td.BaseType);
+			MarkCustomAttributes(td);
+
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
-			MarkCustomAttributes (td);
+
+			foreach (MethodDefinition meth in td.Methods)
+				if (meth.IsVirtual)
+					MarkMethod (meth);
 
 			am.Mark (td);
 		}
@@ -173,7 +181,7 @@ namespace Mono.Linker {
 			MarkCustomAttributes (md.ReturnType);
 
 			if (md.HasBody && (mm.Action == MethodAction.ForceParse ||
-				(am.Action == AssemblyAction.Link && mm.Action == MethodAction.ParseIfLinked))) {
+				(am.Action == AssemblyAction.Link && mm.Action == MethodAction.Parse))) {
 
 				MarkMethodBody (md.Body);
 			}
