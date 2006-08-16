@@ -1,4 +1,6 @@
-2006-08-15  Jb Evain  <jbevain@gmail.com>
+2006-08-16  Jb Evain  <jbevain@gmail.com>
+
+	* use the resolver from Cecil.
 
 	* when marking a type, also mark its virtual methods
 

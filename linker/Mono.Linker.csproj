@@ -45,7 +45,6 @@
     <Compile Include="Mono.Linker\AssemblyAction.cs" />
     <Compile Include="Mono.Linker\AssemblyMarker.cs" />
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
-    <Compile Include="Mono.Linker\AssemblyResolver.cs" />
     <Compile Include="Mono.Linker\CleanStep.cs" />
     <Compile Include="Mono.Linker\ResolveFromAssemblyStep.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />

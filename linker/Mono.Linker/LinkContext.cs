@@ -38,6 +38,8 @@ namespace Mono.Linker {
 		string _outputDirectory;
 		bool _preserveCoreLibraries;
 
+		IAssemblyResolver _resolver;
+
 		public string OutputDirectory {
 			get { return _outputDirectory; }
 			set { _outputDirectory = value; }
@@ -51,6 +53,7 @@ namespace Mono.Linker {
 		public LinkContext ()
 		{
 			_asmCtx = new Hashtable ();
+			_resolver = new DefaultAssemblyResolver ();
 		}
 
 		public AssemblyMarker Resolve (IMetadataScope scope)
@@ -64,14 +67,14 @@ namespace Mono.Linker {
 
 				reference = asm.Name;
 			} else
-				reference = ((AssemblyNameReference)scope);
+				reference = (AssemblyNameReference) scope;
 
 			if (_asmCtx.Contains (reference.FullName))
 				return (AssemblyMarker) _asmCtx [reference.FullName];
 
 			AssemblyMarker marker = new AssemblyMarker (
 				_preserveCoreLibraries && IsCore (reference) ? AssemblyAction.Preserve : AssemblyAction.Link,
-				AssemblyResolver.Resolve (reference));
+				_resolver.Resolve (reference));
 
 			_asmCtx.Add (reference.FullName, marker);
 			return marker;
