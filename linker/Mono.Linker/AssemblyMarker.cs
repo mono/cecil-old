@@ -76,19 +76,62 @@ namespace Mono.Linker {
 
 		public FieldDefinition Resolve (FieldReference field)
 		{
-			TypeDefinition type = Resolve (field.DeclaringType);
-			return type.Fields.GetField (field.Name);
+			TypeDefinition type = Resolve (GetGenericDefinition (field.DeclaringType));
+			return GetField (type.Fields, field);
+		}
+
+		FieldDefinition GetField (ICollection collection, FieldReference reference)
+		{
+			foreach (FieldDefinition field in collection) {
+				if (field.Name != reference.Name)
+					continue;
+
+				if (field.FieldType.FullName != field.FieldType.FullName)
+					continue;
+
+				return field;
+			}
+
+			return null;
 		}
 
 		public MethodDefinition Resolve (MethodReference method)
 		{
-			TypeDefinition type = Resolve (method.DeclaringType);
-			if (method.Name == MethodDefinition.Cctor) // TODO: that sucks, (for generics methods mainly)
-				return type.Constructors.GetConstructor (true, method.Parameters);
-			else if (method.Name == MethodDefinition.Ctor)
-				return type.Constructors.GetConstructor (false, method.Parameters);
+			TypeDefinition type = Resolve(GetGenericDefinition (method.DeclaringType));
+			if (method.Name == MethodDefinition.Cctor || method.Name == MethodDefinition.Ctor)
+				return GetMethod (type.Constructors, method);
 			else
-				return type.Methods.GetMethod (method.Name, method.Parameters);
+				return GetMethod (type.Methods, method);
+		}
+
+		TypeReference GetGenericDefinition (TypeReference type)
+		{
+			TypeReference t = type;
+			while (t is GenericInstanceType)
+				t = ((GenericInstanceType) t).ElementType;
+			return t;
+		}
+
+		MethodDefinition GetMethod (ICollection collection, MethodReference reference)
+		{
+			foreach (MethodDefinition meth in collection) {
+				if (meth.Name != reference.Name)
+					continue;
+
+				if (meth.Parameters.Count != reference.Parameters.Count)
+					continue;
+
+				if (meth.ReturnType.ReturnType.FullName != reference.ReturnType.ReturnType.FullName)
+					continue;
+
+				for (int i = 0; i < meth.Parameters.Count; i++)
+					if (meth.Parameters [i].ParameterType.FullName != reference.Parameters [i].ParameterType.FullName)
+						continue;
+
+				return meth;
+			}
+
+			return null;
 		}
 
 		public TypeMarker [] GetTypes ()

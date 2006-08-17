@@ -1,5 +1,7 @@
 2006-08-16  Jb Evain  <jbevain@gmail.com>
 
+	* work on generics assemblies linking
+
 	* use the resolver from Cecil.
 
 	* when marking a type, also mark its virtual methods

@@ -54,6 +54,12 @@ namespace Mono.Linker.Tests {
 			Test ("ReferenceInVirtualMethod");
 		}
 
+		[Test]
+		public void TestGenerics ()
+		{
+			Test ("Generics");
+		}
+
 		protected override void Test (string testCase)
 		{
 			base.Test (testCase);

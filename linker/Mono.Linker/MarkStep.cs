@@ -131,6 +131,8 @@ namespace Mono.Linker {
 				tm.Processed = true;
 
 			MarkType (td.BaseType);
+			if (td.DeclaringType != null)
+				MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
 
 			foreach (TypeReference iface in td.Interfaces)

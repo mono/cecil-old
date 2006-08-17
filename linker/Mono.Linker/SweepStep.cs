@@ -49,8 +49,13 @@ namespace Mono.Linker {
 			}
 
 			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types))
-				if (!typesUsed.Contains (type.ToString ()))
+				if (!typesUsed.Contains (type.ToString ())) {
 					am.Assembly.MainModule.Types.Remove (type);
+					if (type.DeclaringType != null) {
+						TypeDefinition declaringType = (TypeDefinition) type.DeclaringType;
+						declaringType.NestedTypes.Remove (type);
+					}
+				}
 		}
 
 		void SweepType (TypeMarker tm)
@@ -66,8 +71,17 @@ namespace Mono.Linker {
 				fieldsUsed.Add (fm.Field.ToString (), fm.Field);
 
 			foreach (FieldDefinition field in new ArrayList (tm.Type.Fields))
-				if (!fieldsUsed.Contains (field.ToString ()))
+				if (!fieldsUsed.Contains (field.ToString ()) && CanBeRemoved (field))
 					tm.Type.Fields.Remove (field);
+		}
+
+		bool CanBeRemoved (FieldDefinition field)
+		{
+			TypeDefinition declaringType = (TypeDefinition) field.DeclaringType;
+			if (declaringType.IsEnum && field.Name == "value__")
+				return false;
+
+			return true;
 		}
 
 		void SweepMethods (TypeMarker tm)
@@ -87,7 +101,16 @@ namespace Mono.Linker {
 
 		bool CanBeRemoved (MethodDefinition meth)
 		{
-			return !meth.IsVirtual;
+			TypeDefinition declaringType = (TypeDefinition) meth.DeclaringType;
+			if (meth.IsVirtual)
+				return false;
+
+			if (meth.Name == MethodDefinition.Ctor &&
+			    declaringType.BaseType != null &&
+			    declaringType.BaseType.FullName == "System.MulticastDelegate")
+				return false;
+
+			return true;
 		}
 	}
 }
