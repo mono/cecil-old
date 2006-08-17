@@ -38,7 +38,7 @@ namespace Mono.Cecil {
 		public virtual AssemblyDefinition Resolve (string fullName)
 		{
 			AssemblyNameReference name = new AssemblyNameReference ();
-			SR.AssemblyName srname = new SR.AssemblyName (fullName);
+			SR.AssemblyName srname = SR.AssemblyName.GetAssemblyName (fullName);
 
 			name.Name = srname.Name;
 			name.Version = srname.Version;
