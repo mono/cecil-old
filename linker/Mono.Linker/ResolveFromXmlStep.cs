@@ -161,12 +161,7 @@ namespace Mono.Linker {
 
 		AssemblyMarker GetAssemblyMarker(LinkContext context, string assemblyName)
 		{
-			SR.AssemblyName name = SR.AssemblyName.GetAssemblyName (assemblyName);
-			AssemblyNameReference nameRef = new AssemblyNameReference ();
-			nameRef.Name = name.Name;
-			nameRef.Version = name.Version;
-			nameRef.PublicKeyToken = name.GetPublicKeyToken ();
-			return context.Resolve (nameRef);
+			return context.Resolve (AssemblyNameReference.Parse (assemblyName));
 		}
 
 		static string GetSignature(XPathNavigator nav)
