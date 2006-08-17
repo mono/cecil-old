@@ -161,7 +161,7 @@ namespace Mono.Linker {
 
 		AssemblyMarker GetAssemblyMarker(LinkContext context, string assemblyName)
 		{
-			SR.AssemblyName name = new SR.AssemblyName (assemblyName);
+			SR.AssemblyName name = SR.AssemblyName.GetAssemblyName (assemblyName);
 			AssemblyNameReference nameRef = new AssemblyNameReference ();
 			nameRef.Name = name.Name;
 			nameRef.Version = name.Version;
