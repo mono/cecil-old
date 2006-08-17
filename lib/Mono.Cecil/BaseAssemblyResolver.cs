@@ -26,77 +26,72 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil {
+namespace Mono.Cecil
+{
 
 	using System;
 	using System.IO;
-	using SR = System.Reflection;
 	using System.Text;
 
-	public abstract class BaseAssemblyResolver : IAssemblyResolver {
+	public abstract class BaseAssemblyResolver : IAssemblyResolver
+	{
 
-		public virtual AssemblyDefinition Resolve (string fullName)
+		public virtual AssemblyDefinition Resolve(string fullName)
 		{
-			AssemblyNameReference name = new AssemblyNameReference ();
-			SR.AssemblyName srname = SR.AssemblyName.GetAssemblyName (fullName);
-
-			name.Name = srname.Name;
-			name.Version = srname.Version;
-			name.Culture = srname.CultureInfo.Name;
-			name.PublicKeyToken = srname.GetPublicKeyToken ();
-
-			return Resolve (name);
+			return Resolve(AssemblyNameReference.Parse(fullName));
 		}
 
-		public virtual AssemblyDefinition Resolve (AssemblyNameReference name)
+		public virtual AssemblyDefinition Resolve(AssemblyNameReference name)
 		{
 			if (name.Name == "mscorlib") // TODO: versions
-				return AssemblyFactory.GetAssembly (typeof (object).Module.FullyQualifiedName);
-			else if (IsInGac (name))
-				return AssemblyFactory.GetAssembly (GetFromGac (name));
+				return AssemblyFactory.GetAssembly(typeof(object).Module.FullyQualifiedName);
+			else if (IsInGac(name))
+				return AssemblyFactory.GetAssembly(GetFromGac(name));
 
-			string [] exts = new string [] {".dll", ".exe"};
-			string [] dirs = new string [] {".", "bin"};
+			string[] exts = new string[] { ".dll", ".exe" };
+			string[] dirs = new string[] { ".", "bin" };
 
-			foreach (string dir in dirs) {
-				foreach (string ext in exts) {
-					string file = Path.Combine (dir, name.Name + ext);
-					if (File.Exists (file))
-						return AssemblyFactory.GetAssembly (file);
+			foreach (string dir in dirs)
+			{
+				foreach (string ext in exts)
+				{
+					string file = Path.Combine(dir, name.Name + ext);
+					if (File.Exists(file))
+						return AssemblyFactory.GetAssembly(file);
 				}
 			}
 
-			throw new FileNotFoundException ("Could not resolve: " + name);
+			throw new FileNotFoundException("Could not resolve: " + name);
 		}
 
-		static bool IsInGac (AssemblyNameReference reference)
+		static bool IsInGac(AssemblyNameReference reference)
 		{
 			if (reference.PublicKeyToken == null || reference.PublicKeyToken.Length == 0)
 				return false;
 
-			return File.Exists (GetFromGac (reference));
+			return File.Exists(GetFromGac(reference));
 		}
 
-		static string GetFromGac (AssemblyNameReference reference)
+		static string GetFromGac(AssemblyNameReference reference)
 		{
-			StringBuilder sb = new StringBuilder ();
-			sb.Append (reference.Version);
-			sb.Append ("__");
+			StringBuilder sb = new StringBuilder();
+			sb.Append(reference.Version);
+			sb.Append("__");
 			for (int i = 0; i < reference.PublicKeyToken.Length; i++)
-				sb.Append (reference.PublicKeyToken [i].ToString ("x2"));
+				sb.Append(reference.PublicKeyToken[i].ToString("x2"));
 
-			return Path.Combine (
+			return Path.Combine(
 				Path.Combine(
-					Path.Combine (GetGacPath (), reference.Name), sb.ToString ()),
-					string.Concat (reference.Name, ".dll"));
+					Path.Combine(GetGacPath(), reference.Name), sb.ToString()),
+					string.Concat(reference.Name, ".dll"));
 		}
 
-		static string GetGacPath ()
+		static string GetGacPath()
 		{
-			return Directory.GetParent (
-				Directory.GetParent (
-					Path.GetDirectoryName (
-						typeof (Uri).Module.FullyQualifiedName)
+			return Directory.GetParent(
+				Directory.GetParent(
+					Path.GetDirectoryName(
+						typeof(Uri).Module.FullyQualifiedName)
 					).FullName
 				).FullName;
 		}

@@ -1,5 +1,9 @@
 2006-08-17  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/AssemblyName.cs
+	  Mono.Cecil/BaseAssemblyResolver.cs:
+		Implement a AssemblyNameReference.Parse(string)
+
 	* Mono.Cecil/TypeReferenceCollection.cs
 	  Mono.Cecil/ExternTypeCollection.cs
 	  Mono.Cecil/TypeDefinitionCollection.cs

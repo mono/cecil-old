@@ -29,6 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Globalization;
 	using System.Security.Cryptography;
 	using System.Text;
 
@@ -128,7 +129,49 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public AssemblyHashAlgorithm HashAlgorithm {
+		public static AssemblyNameReference Parse (string fullName)
+		{
+			if (fullName == null)
+				throw new ArgumentNullException ("fullName");
+			if (fullName.Length == 0)
+				throw new ArgumentException ("Name can not be empty");
+
+			AssemblyNameReference name = new AssemblyNameReference ();
+			string [] tokens = fullName.Split (',');
+			for (int i = 0; i < tokens.Length; i++) {
+				string token = tokens [i].Trim ();
+
+				if (i == 0) {
+					name.Name = token;
+					continue;
+				}
+
+				string [] parts = token.Split ('=');
+				if (parts.Length != 2)
+					throw new ArgumentException ("Malformed name");
+
+				switch (parts [0]) {
+				case "Version":
+					name.Version = new Version (parts [1]);
+					break;
+				case "Culture":
+					name.Culture = parts [1];
+					break;
+				case "PublicKeyToken":
+					string pkToken = parts [1];
+					name.PublicKeyToken = new byte [pkToken.Length / 2];
+					for (int j = 0; j < name.PublicKeyToken.Length; j++) {
+						name.PublicKeyToken [j] = Byte.Parse (pkToken.Substring (j * 2, 2), NumberStyles.HexNumber);
+					}
+					break;
+				}
+			}
+
+			return name;
+		}
+
+		public AssemblyHashAlgorithm HashAlgorithm
+		{
 			get { return m_hashAlgo; }
 			set { m_hashAlgo = value; }
 		}
