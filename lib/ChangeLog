@@ -1,5 +1,8 @@
 2006-08-17  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/BaseAssemblyResolver.cs:
+		Resolve the corlib depending on its version.
+
 	* Mono.Cecil/AssemblyName.cs
 	  Mono.Cecil/BaseAssemblyResolver.cs:
 		Implement a AssemblyNameReference.Parse(string)
