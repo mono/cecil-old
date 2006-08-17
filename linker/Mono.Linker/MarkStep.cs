@@ -137,6 +137,10 @@ namespace Mono.Linker {
 
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
+			
+			foreach (MethodDefinition ctor in td.Constructors)
+				if (ctor.Name == MethodDefinition.Cctor)
+					MarkMethod (ctor);
 
 			foreach (MethodDefinition meth in td.Methods)
 				if (meth.IsVirtual)
