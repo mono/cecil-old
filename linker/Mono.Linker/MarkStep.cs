@@ -137,7 +137,7 @@ namespace Mono.Linker {
 
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
-			
+
 			foreach (MethodDefinition ctor in td.Constructors)
 				if (ctor.Name == MethodDefinition.Cctor)
 					MarkMethod (ctor);
@@ -153,6 +153,9 @@ namespace Mono.Linker {
 		{
 			while (method is MethodSpecification)
 				method = ((MethodSpecification) method).ElementMethod;
+
+			if (method.DeclaringType is ArrayType)
+				return;
 
 			AssemblyMarker am = _context.Resolve (method.DeclaringType.Scope);
 			MethodDefinition md = method as MethodDefinition;

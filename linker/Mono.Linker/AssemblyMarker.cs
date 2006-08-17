@@ -76,7 +76,7 @@ namespace Mono.Linker {
 
 		public FieldDefinition Resolve (FieldReference field)
 		{
-			TypeDefinition type = Resolve (GetGenericDefinition (field.DeclaringType));
+			TypeDefinition type = Resolve (GetDeclaringType (field.DeclaringType));
 			return GetField (type.Fields, field);
 		}
 
@@ -86,7 +86,7 @@ namespace Mono.Linker {
 				if (field.Name != reference.Name)
 					continue;
 
-				if (field.FieldType.FullName != field.FieldType.FullName)
+				if (!AreSame (field.FieldType, reference.FieldType))
 					continue;
 
 				return field;
@@ -97,18 +97,18 @@ namespace Mono.Linker {
 
 		public MethodDefinition Resolve (MethodReference method)
 		{
-			TypeDefinition type = Resolve(GetGenericDefinition (method.DeclaringType));
+			TypeDefinition type = Resolve (GetDeclaringType (method.DeclaringType));
 			if (method.Name == MethodDefinition.Cctor || method.Name == MethodDefinition.Ctor)
 				return GetMethod (type.Constructors, method);
 			else
 				return GetMethod (type.Methods, method);
 		}
 
-		TypeReference GetGenericDefinition (TypeReference type)
+		TypeReference GetDeclaringType (TypeReference type)
 		{
 			TypeReference t = type;
-			while (t is GenericInstanceType)
-				t = ((GenericInstanceType) t).ElementType;
+			while (t is TypeSpecification)
+				t = ((TypeSpecification) t).ElementType;
 			return t;
 		}
 
@@ -121,17 +121,40 @@ namespace Mono.Linker {
 				if (meth.Parameters.Count != reference.Parameters.Count)
 					continue;
 
-				if (meth.ReturnType.ReturnType.FullName != reference.ReturnType.ReturnType.FullName)
+				if (!AreSame (meth.ReturnType.ReturnType, reference.ReturnType.ReturnType))
 					continue;
 
 				for (int i = 0; i < meth.Parameters.Count; i++)
-					if (meth.Parameters [i].ParameterType.FullName != reference.Parameters [i].ParameterType.FullName)
+					if (!AreSame (meth.Parameters [i].ParameterType, reference.Parameters [i].ParameterType))
 						continue;
 
 				return meth;
 			}
 
 			return null;
+		}
+
+		bool AreSame (TypeReference a, TypeReference b)
+		{
+			if (a is TypeSpecification || b is TypeSpecification) {
+				if (a.GetType () != b.GetType ())
+					return false;
+
+				a = ((TypeSpecification) a).ElementType;
+				b = ((TypeSpecification) b).ElementType;
+			}
+
+			if (a is GenericParameter || b is GenericParameter) {
+				if (a.GetType() != b.GetType())
+					return false;
+
+				GenericParameter pa = (GenericParameter) a;
+				GenericParameter pb = (GenericParameter) b;
+
+				return pa.Position == pb.Position;
+			}
+
+			return a.FullName == b.FullName;
 		}
 
 		public TypeMarker [] GetTypes ()
