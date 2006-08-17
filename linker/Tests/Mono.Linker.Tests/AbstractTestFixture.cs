@@ -120,8 +120,11 @@ namespace Mono.Linker.Tests {
 		{
 			string cd = Environment.CurrentDirectory;
 			Environment.CurrentDirectory = GetTestCasePath ();
-			_pipeline.Process (_context);
-			Environment.CurrentDirectory = cd;
+			try {
+				_pipeline.Process (_context);
+			} finally {
+				Environment.CurrentDirectory = cd;
+			}
 		}
 
 		protected static string GetAssemblyFileName (AssemblyDefinition asm)
