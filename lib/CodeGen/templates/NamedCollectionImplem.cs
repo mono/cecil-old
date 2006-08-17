@@ -66,11 +66,11 @@ namespace <%=$cur_coll.target%> {
 		}
 
 		public bool IsSynchronized {
-			get { return (this as ICollection).IsSynchronized; }
+			get { return false; }
 		}
 
 		public object SyncRoot {
-			get { return (this as ICollection).SyncRoot; }
+			get { return this; }
 		}
 
 		public <%=$cur_coll.name%> (<%=$cur_coll.container%> container) :

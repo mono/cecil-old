@@ -1,5 +1,11 @@
 2006-08-17  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TypeReferenceCollection.cs
+	  Mono.Cecil/ExternTypeCollection.cs
+	  Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollectionImplem.cs:
+		Avoid infinite recursion.
+
 	* Mono.Cecil/BaseAssemblyResolver.sc:
 		Stay .net 1.1 compatible
 
