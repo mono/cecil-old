@@ -49,6 +49,23 @@ namespace Mono.Linker {
 		void CleanType (TypeDefinition type)
 		{
 			CleanProperties (type);
+			CleanEvents (type);
+		}
+
+		static void CleanEvents (TypeDefinition type)
+		{
+			ArrayList events = new ArrayList (type.Events);
+			foreach (EventDefinition evt in events) {
+				if (evt.AddMethod != null && !type.Methods.Contains (evt.AddMethod))
+					evt.AddMethod = null;
+				if (evt.InvokeMethod != null && !type.Methods.Contains (evt.InvokeMethod))
+					evt.InvokeMethod = null;
+				if (evt.RemoveMethod != null && !type.Methods.Contains (evt.RemoveMethod))
+					evt.RemoveMethod = null;
+
+				if (evt.AddMethod == null && evt.InvokeMethod == null && evt.RemoveMethod == null)
+					type.Events.Remove (evt);
+			}
 		}
 
 		static void CleanProperties (TypeDefinition type)
