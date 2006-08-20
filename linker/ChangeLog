@@ -1,5 +1,7 @@
 2006-08-20  Jb Evain  <jbevain@gmail.com>
 
+	* preserve the fields of the value types
+
 	* clean also nested types in a proper way.
 
 	* clean events as well

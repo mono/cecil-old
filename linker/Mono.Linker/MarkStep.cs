@@ -135,6 +135,10 @@ namespace Mono.Linker {
 				MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
 
+			if (td.IsValueType)
+				foreach (FieldDefinition field in td.Fields)
+					MarkField (field);
+
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
 
