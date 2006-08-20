@@ -89,9 +89,27 @@ namespace Mono.Linker {
 				MarkMethod (ca.Constructor);
 		}
 
+		void MarkAssembly (AssemblyMarker am)
+		{
+			if (am.Processed)
+				return;
+			else
+				am.Processed = true;
+
+			MarkCustomAttributes (am.Assembly);
+			foreach (ModuleDefinition module in am.Assembly.Modules)
+				MarkModule (module);
+		}
+
+		void MarkModule (ModuleDefinition module)
+		{
+			MarkCustomAttributes (module);
+		}
+
 		void MarkField (FieldReference field)
 		{
 			AssemblyMarker am = _context.Resolve (field.DeclaringType.Scope);
+			MarkAssembly (am);
 			FieldDefinition fd = field as FieldDefinition;
 			if (fd == null)
 				fd = am.Resolve (field);
@@ -120,6 +138,7 @@ namespace Mono.Linker {
 				return;
 
 			AssemblyMarker am = _context.Resolve (type.Scope);
+			MarkAssembly (am);
 			TypeDefinition td = type as TypeDefinition;
 			if (td == null)
 				td = am.Resolve (type);
@@ -134,6 +153,9 @@ namespace Mono.Linker {
 			if (td.DeclaringType != null)
 				MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
+
+			foreach (GenericParameter p in td.GenericParameters)
+				MarkCustomAttributes (p);
 
 			if (td.IsValueType)
 				foreach (FieldDefinition field in td.Fields)
@@ -162,6 +184,7 @@ namespace Mono.Linker {
 				return;
 
 			AssemblyMarker am = _context.Resolve (method.DeclaringType.Scope);
+			MarkAssembly (am);
 			MethodDefinition md = method as MethodDefinition;
 			if (md == null)
 				md = am.Resolve (method);
@@ -184,6 +207,9 @@ namespace Mono.Linker {
 
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
+
+			foreach (GenericParameter p in md.GenericParameters)
+				MarkCustomAttributes (p);
 
 			if (IsPropertyMethod (md))
 				MarkProperty (GetProperty (md));
