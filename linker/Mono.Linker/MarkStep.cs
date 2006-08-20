@@ -246,6 +246,12 @@ namespace Mono.Linker {
 		void MarkEvent (EventDefinition evt)
 		{
 			MarkCustomAttributes (evt);
+			if (evt.AddMethod != null)
+				MarkMethod (evt.AddMethod);
+			if (evt.InvokeMethod != null)
+				MarkMethod (evt.InvokeMethod);
+			if (evt.RemoveMethod != null)
+				MarkMethod (evt.RemoveMethod);
 		}
 
 		void MarkInstruction (Instruction instruction)
