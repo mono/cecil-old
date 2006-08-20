@@ -40,16 +40,24 @@ namespace Mono.Linker {
 				CleanAssembly (am.Assembly);
 		}
 
-		void CleanAssembly (AssemblyDefinition asm)
+		static void CleanAssembly (AssemblyDefinition asm)
 		{
 			foreach (TypeDefinition type in asm.MainModule.Types)
 				CleanType (type);
 		}
 
-		void CleanType (TypeDefinition type)
+		static void CleanType (TypeDefinition type)
 		{
+			CleanNestedTypes (type);
 			CleanProperties (type);
 			CleanEvents (type);
+		}
+
+		static void CleanNestedTypes (TypeDefinition type)
+		{
+			foreach (TypeDefinition nested in new ArrayList (type.NestedTypes))
+				if (!type.Module.Types.Contains (nested))
+					type.NestedTypes.Remove (nested);
 		}
 
 		static void CleanEvents (TypeDefinition type)

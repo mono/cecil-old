@@ -60,6 +60,12 @@ namespace Mono.Linker.Tests {
 			Test ("Generics");
 		}
 
+		[Test]
+		public void TestNestedNested ()
+		{
+			Test ("NestedNested");
+		}
+
 		protected override void Test (string testCase)
 		{
 			base.Test (testCase);

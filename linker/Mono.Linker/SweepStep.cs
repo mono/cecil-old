@@ -49,13 +49,8 @@ namespace Mono.Linker {
 			}
 
 			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types))
-				if (!typesUsed.Contains (type.ToString ())) {
+				if (!typesUsed.Contains (type.ToString ()))
 					am.Assembly.MainModule.Types.Remove (type);
-					if (type.DeclaringType != null) {
-						TypeDefinition declaringType = (TypeDefinition) type.DeclaringType;
-						declaringType.NestedTypes.Remove (type);
-					}
-				}
 		}
 
 		void SweepType (TypeMarker tm)
