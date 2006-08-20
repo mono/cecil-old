@@ -1,5 +1,8 @@
 2006-08-20  Jb Evain  <jbevain@gmail.com>
 
+	* mark the custom attributes on the properties and the events
+		which are used.
+
 	* preserve the fields of the value types
 
 	* clean also nested types in a proper way.

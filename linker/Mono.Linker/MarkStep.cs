@@ -185,6 +185,11 @@ namespace Mono.Linker {
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
 
+			if (IsPropertyMethod (md))
+				MarkProperty (GetProperty (md));
+			else if (IsEventMethod (md))
+				MarkEvent (GetEvent (md));
+
 			foreach (ParameterDefinition pd in md.Parameters) {
 				MarkType (pd.ParameterType);
 				MarkCustomAttributes (pd);
@@ -198,6 +203,49 @@ namespace Mono.Linker {
 
 				MarkMethodBody (md.Body);
 			}
+		}
+
+		static bool IsPropertyMethod (MethodDefinition md)
+		{
+			return (md.SemanticsAttributes & MethodSemanticsAttributes.Getter) != 0 ||
+				(md.SemanticsAttributes & MethodSemanticsAttributes.Setter) != 0;
+		}
+
+		static bool IsEventMethod (MethodDefinition md)
+		{
+			return (md.SemanticsAttributes & MethodSemanticsAttributes.AddOn) != 0 ||
+				(md.SemanticsAttributes & MethodSemanticsAttributes.Fire) != 0 ||
+				(md.SemanticsAttributes & MethodSemanticsAttributes.RemoveOn) != 0;
+		}
+
+		static PropertyDefinition GetProperty (MethodDefinition md)
+		{
+			TypeDefinition declaringType = (TypeDefinition) md.DeclaringType;
+			foreach (PropertyDefinition prop in declaringType.Properties)
+				if (prop.GetMethod == md || prop.SetMethod == md)
+					return prop;
+
+			return null;
+		}
+
+		static EventDefinition GetEvent (MethodDefinition md)
+		{
+			TypeDefinition declaringType = (TypeDefinition) md.DeclaringType;
+			foreach (EventDefinition evt in declaringType.Events)
+				if (evt.AddMethod == md || evt.InvokeMethod == md || evt.RemoveMethod == md)
+					return evt;
+
+			return null;
+		}
+
+		void MarkProperty (PropertyDefinition prop)
+		{
+			MarkCustomAttributes (prop);
+		}
+
+		void MarkEvent (EventDefinition evt)
+		{
+			MarkCustomAttributes (evt);
 		}
 
 		void MarkInstruction (Instruction instruction)
