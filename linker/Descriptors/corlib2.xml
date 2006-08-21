@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <linker>
 	<assembly fullname="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
 		<type fullname="System.AppDomain" />
@@ -31,6 +31,7 @@
 		<type fullname="System.ExecutionEngineException" />
 		<type fullname="System.FieldAccessException" />
 		<type fullname="System.FormatException" />
+		<type fullname="System.Globalization.CultureInfo" />
 		<type fullname="System.IO.FileNotFoundException" />
 		<type fullname="System.IO.IOException" />
 		<type fullname="System.IndexOutOfRangeException" />
@@ -46,6 +47,10 @@
 		<type fullname="System.MethodAccessException" />
 		<type fullname="System.MissingFieldException" />
 		<type fullname="System.MissingMethodException" />
+		<type fullname="System.MonoAsyncCall" />
+		<type fullname="System.MonoCustomAttrs"/>
+		<type fullname="System.MonoCustomAttrs/AttributeInfo"/>
+		<type fullname="System.MonoEnumInfo" />
 		<type fullname="System.MonoType" />
 		<type fullname="System.MulticastDelegate" />
 		<type fullname="System.NotImplementedException" />
@@ -57,9 +62,23 @@
 		<type fullname="System.OutOfMemoryException" />
 		<type fullname="System.Reflection.Assembly" />
 		<type fullname="System.Reflection.ConstructorInfo" />
+		<type fullname="System.Reflection.Emit.MonoResource" />
+		<type fullname="System.Reflection.Emit.MonoWin32Resource" />
 		<type fullname="System.Reflection.EventInfo" />
 		<type fullname="System.Reflection.FieldInfo" />
 		<type fullname="System.Reflection.MethodInfo" />
+		<type fullname="System.Reflection.MonoArrayMethod" />
+		<type fullname="System.Reflection.MonoCMethod" />
+		<type fullname="System.Reflection.MonoEvent" />
+		<type fullname="System.Reflection.MonoEventInfo" />
+		<type fullname="System.Reflection.MonoField" />
+		<type fullname="System.Reflection.MonoGenericClass" />
+		<type fullname="System.Reflection.MonoGenericMethod" />
+		<type fullname="System.Reflection.MonoGenericCMethod" />
+		<type fullname="System.Reflection.MonoMethod" />
+		<type fullname="System.Reflection.MonoMethodInfo" />
+		<type fullname="System.Reflection.MonoPropertyInfo" />
+		<type fullname="System.Reflection.MonoProperty" />
 		<type fullname="System.Reflection.PropertyInfo" />
 		<type fullname="System.Reflection.ReflectionTypeLoadException" />
 		<type fullname="System.Reflection.TargetException" />
@@ -81,6 +100,7 @@
 		<type fullname="System.RuntimeMethodHandle" />
 		<type fullname="System.RuntimeTypeHandle" />
 		<type fullname="System.SByte" />
+		<type fullname="System.Security.Cryptography.RandomNumberGenerator" />
 		<type fullname="System.Security.RuntimeSecurityFrame" />
 		<type fullname="System.Security.SecurityException" />
 		<type fullname="System.Security.VerificationException" />
