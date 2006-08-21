@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <linker>
-	<assembly fullname="mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+	<assembly fullname="mscorlib">
 		<type fullname="System.AppDomain" />
 		<type fullname="System.AppDomainSetup" />
 		<type fullname="System.AppDomainUnloadedException" />
@@ -9,6 +9,7 @@
 		<type fullname="System.ArgumentOutOfRangeException" />
 		<type fullname="System.ArithmeticException" />
 		<type fullname="System.Array" />
+		<type fullname="System.Array/InternalArray`1" />
 		<type fullname="System.ArrayTypeMismatchException" />
 		<type fullname="System.BadImageFormatException" />
 		<type fullname="System.Boolean" />
@@ -16,10 +17,6 @@
 		<type fullname="System.CannotUnloadAppDomainException" />
 		<type fullname="System.Char" />
 		<type fullname="System.Delegate" />
-		<type fullname="System.Diagnostics.StackFrame" />
-		<type fullname="System.Diagnostics.StackFrame" />
-		<type fullname="System.Diagnostics.StackFrame" />
-		<type fullname="System.Diagnostics.StackFrame" />
 		<type fullname="System.Diagnostics.StackFrame" />
 		<type fullname="System.Diagnostics.StackTrace" />
 		<type fullname="System.DivideByZeroException" />
@@ -30,8 +27,14 @@
 		<type fullname="System.ExecutionEngineException" />
 		<type fullname="System.FieldAccessException" />
 		<type fullname="System.FormatException" />
+		<type fullname="System.Globalization.DateTimeFormatInfo" />
 		<type fullname="System.Globalization.CultureInfo" />
+		<type fullname="System.Globalization.NumberFormatInfo" />
+		<type fullname="System.Globalization.RegionInfo" />
+		<type fullname="System.Globalization.SortKey" />
 		<type fullname="System.IO.FileNotFoundException" />
+		<type fullname="System.IO.FileLoadException" />
+		<type fullname="System.IO.FileStreamAsyncResult" />
 		<type fullname="System.IO.IOException" />
 		<type fullname="System.IndexOutOfRangeException" />
 		<type fullname="System.Int16" />
@@ -55,15 +58,31 @@
 		<type fullname="System.NotImplementedException" />
 		<type fullname="System.NotSupportedException" />
 		<type fullname="System.NullReferenceException" />
+		<type fullname="System.Nullable`1" />
 		<type fullname="System.Object" />
 		<type fullname="System.Object" />
 		<type fullname="System.OutOfMemoryException" />
 		<type fullname="System.Reflection.Assembly" />
+		<type fullname="System.Reflection.AssemblyName" />
 		<type fullname="System.Reflection.ConstructorInfo" />
+		<type fullname="System.Reflection.Emit.ConstructorBuilder" />
+		<type fullname="System.Reflection.Emit.DynamicMethod" />
+		<type fullname="System.Reflection.Emit.EventBuilder" />
+		<type fullname="System.Reflection.Emit.FieldBuilder" />
+		<type fullname="System.Reflection.Emit.ILGenerator" />
+		<type fullname="System.Reflection.Emit.LocalBuilder" />
+		<type fullname="System.Reflection.Emit.MethodBuilder" />
 		<type fullname="System.Reflection.Emit.MonoResource" />
 		<type fullname="System.Reflection.Emit.MonoWin32Resource" />
+		<type fullname="System.Reflection.Emit.ParameterBuilder" />
+		<type fullname="System.Reflection.Emit.PropertyBuilder" />
+		<type fullname="System.Reflection.Emit.SignatureHelper" />
 		<type fullname="System.Reflection.EventInfo" />
+		<type fullname="System.Reflection.ExceptionHandlingClause" />
 		<type fullname="System.Reflection.FieldInfo" />
+		<type fullname="System.Reflection.LocalVariableInfo" />
+		<type fullname="System.Reflection.ManifestResourceInfo" />
+		<type fullname="System.Reflection.MethodBody" />
 		<type fullname="System.Reflection.MethodInfo" />
 		<type fullname="System.Reflection.MonoArrayMethod" />
 		<type fullname="System.Reflection.MonoCMethod" />
@@ -81,7 +100,11 @@
 		<type fullname="System.Reflection.ReflectionTypeLoadException" />
 		<type fullname="System.Reflection.TargetException" />
 		<type fullname="System.Reflection.TargetParameterCountException" />
+		<type fullname="System.Runtime.CompilerServices.InternalsVisibleToAttribute" />
+		<type fullname="System.Runtime.InteropServices.DllImportAttribute" />
+		<type fullname="System.Runtime.InteropServices.InterfaceTypeAttribute" />
 		<type fullname="System.Runtime.InteropServices.Marshal" />
+		<type fullname="System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute" />
 		<type fullname="System.Runtime.Remoting.Contexts.Context" />
 		<type fullname="System.Runtime.Remoting.IRemotingTypeInfo" />
 		<type fullname="System.Runtime.Remoting.Messaging" />

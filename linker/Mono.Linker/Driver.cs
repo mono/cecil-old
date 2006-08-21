@@ -116,9 +116,9 @@ namespace Mono.Linker {
 			}
 
 			if (!context.PreserveCoreLibraries) {
-				p.AddStepBefore (typeof (MarkStep), new ResolveFromXmlStep (
-					new XPathDocument (
-						GetCorlibDescriptor ())));
+				p.AddStepBefore (typeof (MarkStep),
+					new ResolveFromXmlStep (
+						GetCorlibDescriptor ()));
 			}
 
 			if (!resolver)
@@ -127,12 +127,26 @@ namespace Mono.Linker {
 			p.Process(context);
 		}
 
-		static Stream GetCorlibDescriptor ()
+		static XPathDocument GetCorlibDescriptor()
 		{
-			return SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream (
-				typeof (object).Assembly.GetName ().Version.Major == 2 ?
-				"Mono.Linker.Descriptors.corlib2.xml" :
-				"Mono.Linker.Descriptors.corlib.xml");
+			string corlibName;
+			if (typeof(object).Assembly.GetName().Version.Major == 2)
+				corlibName = "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+			else
+				corlibName = "mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+
+			StreamReader sr = new StreamReader (
+				SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream (
+					"Mono.Linker.Descriptors.corlib.xml"));
+
+			string xml = sr.ReadToEnd ();
+			int start = xml.IndexOf ("mscorlib");
+			int end = xml.IndexOf ("\"", start);
+			if (start == -1 || end == -1)
+				throw new FormatException ("Bad xml descriptor");
+
+			string res = xml.Substring (0, start) + corlibName + xml.Substring (end, xml.Length - end);
+			return new XPathDocument (new StringReader (res));
 		}
 
 		static LinkContext GetDefaultContext ()
