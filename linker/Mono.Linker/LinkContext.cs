@@ -80,6 +80,9 @@ namespace Mono.Linker {
 				_preserveCoreLibraries && IsCore (reference) ? AssemblyAction.Preserve : AssemblyAction.Link,
 				_resolver.Resolve (reference));
 
+			if (marker.Assembly.Name.Name == "mscorlib")
+				marker.Action = AssemblyAction.Preserve;
+
 			_asmCtx.Add (reference.FullName, marker);
 			return marker;
 		}

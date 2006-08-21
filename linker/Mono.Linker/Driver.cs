@@ -115,11 +115,13 @@ namespace Mono.Linker {
 				}
 			}
 
+			/*
 			if (!context.PreserveCoreLibraries) {
 				p.AddStepBefore (typeof (MarkStep),
 					new ResolveFromXmlStep (
 						GetCorlibDescriptor ()));
 			}
+			*/
 
 			if (!resolver)
 				Usage ();

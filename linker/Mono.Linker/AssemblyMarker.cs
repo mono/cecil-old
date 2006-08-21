@@ -45,6 +45,7 @@ namespace Mono.Linker {
 
 		public AssemblyAction Action {
 			get { return _action; }
+			set { _action = value; }
 		}
 
 		public AssemblyMarker (AssemblyAction action, AssemblyDefinition assembly)
