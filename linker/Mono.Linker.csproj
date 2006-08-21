@@ -74,9 +74,6 @@
     <EmbeddedResource Include="Descriptors\corlib.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Descriptors\corlib2.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 </Project>
