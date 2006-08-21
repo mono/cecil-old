@@ -30,6 +30,8 @@ namespace Mono.Linker {
 
 	using System;
 	using System.Collections;
+	using System.IO;
+	using SR = System.Reflection;
 	using System.Xml.XPath;
 
 	public class Driver {
@@ -113,10 +115,24 @@ namespace Mono.Linker {
 				}
 			}
 
+			if (!context.PreserveCoreLibraries) {
+				p.AddStepBefore (typeof (MarkStep), new ResolveFromXmlStep (
+					new XPathDocument (
+						GetCorlibDescriptor ())));
+			}
+
 			if (!resolver)
 				Usage ();
 
 			p.Process(context);
+		}
+
+		static Stream GetCorlibDescriptor ()
+		{
+			return SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream (
+				typeof (object).Assembly.GetName ().Version.Major == 2 ?
+				"Mono.Linker.Descriptors.corlib2.xml" :
+				"Mono.Linker.Descriptors.corlib.xml");
 		}
 
 		static LinkContext GetDefaultContext ()

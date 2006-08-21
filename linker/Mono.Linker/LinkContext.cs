@@ -50,6 +50,10 @@ namespace Mono.Linker {
 			set { _preserveCoreLibraries = value; }
 		}
 
+		public bool OnMono {
+			get { return BaseAssemblyResolver.OnMono (); }
+		}
+
 		public LinkContext ()
 		{
 			_asmCtx = new Hashtable ();

@@ -154,6 +154,10 @@ namespace Mono.Linker {
 				MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
 
+			if (td.BaseType != null && td.BaseType.FullName == "System.MulticastDelegate")
+				foreach (MethodDefinition ctor in td.Constructors)
+					MarkMethod (ctor);
+
 			foreach (GenericParameter p in td.GenericParameters)
 				MarkCustomAttributes (p);
 

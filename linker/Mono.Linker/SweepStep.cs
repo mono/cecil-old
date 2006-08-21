@@ -66,17 +66,8 @@ namespace Mono.Linker {
 				fieldsUsed.Add (fm.Field.ToString (), fm.Field);
 
 			foreach (FieldDefinition field in new ArrayList (tm.Type.Fields))
-				if (!fieldsUsed.Contains (field.ToString ()) && CanBeRemoved (field))
+				if (!fieldsUsed.Contains (field.ToString ()))
 					tm.Type.Fields.Remove (field);
-		}
-
-		bool CanBeRemoved (FieldDefinition field)
-		{
-			TypeDefinition declaringType = (TypeDefinition) field.DeclaringType;
-			if (declaringType.IsEnum && field.Name == "value__")
-				return false;
-
-			return true;
 		}
 
 		void SweepMethods (TypeMarker tm)
@@ -86,26 +77,12 @@ namespace Mono.Linker {
 				methodsUsed.Add (mm.Method.ToString (), mm.Method);
 
 			foreach (MethodDefinition meth in new ArrayList (tm.Type.Methods))
-				if (!methodsUsed.Contains (meth.ToString ()) && CanBeRemoved (meth))
+				if (!methodsUsed.Contains (meth.ToString ()))
 					tm.Type.Methods.Remove (meth);
 
 			foreach (MethodDefinition ctor in new ArrayList (tm.Type.Constructors))
-				if (!methodsUsed.Contains (ctor.ToString ()) && CanBeRemoved (ctor))
+				if (!methodsUsed.Contains (ctor.ToString ()))
 					tm.Type.Constructors.Remove (ctor);
-		}
-
-		bool CanBeRemoved (MethodDefinition meth)
-		{
-			TypeDefinition declaringType = (TypeDefinition) meth.DeclaringType;
-			if (meth.IsVirtual)
-				return false;
-
-			if (meth.Name == MethodDefinition.Ctor &&
-			    declaringType.BaseType != null &&
-			    declaringType.BaseType.FullName == "System.MulticastDelegate")
-				return false;
-
-			return true;
 		}
 	}
 }
