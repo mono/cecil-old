@@ -93,7 +93,7 @@ namespace Mono.Cecil {
 			return AssemblyFactory.GetAssembly (Path.Combine (path, "mscorlib.dll"));
 		}
 
-		bool OnMono ()
+		public static bool OnMono ()
 		{
 			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
 		}
