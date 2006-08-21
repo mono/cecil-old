@@ -118,15 +118,11 @@ namespace Mono.Linker {
 				if (meth.Name != reference.Name)
 					continue;
 
-				if (meth.Parameters.Count != reference.Parameters.Count)
-					continue;
-
 				if (!AreSame (meth.ReturnType.ReturnType, reference.ReturnType.ReturnType))
 					continue;
 
-				for (int i = 0; i < meth.Parameters.Count; i++)
-					if (!AreSame (meth.Parameters [i].ParameterType, reference.Parameters [i].ParameterType))
-						continue;
+				if (!AreSame (meth.Parameters, reference.Parameters))
+					continue;
 
 				return meth;
 			}
@@ -134,7 +130,22 @@ namespace Mono.Linker {
 			return null;
 		}
 
-		bool AreSame (TypeReference a, TypeReference b)
+		bool AreSame (ParameterDefinitionCollection a, ParameterDefinitionCollection b)
+		{
+			if (a.Count != b.Count)
+				return false;
+
+			if (a.Count == 0)
+				return true;
+
+			for (int i = 0; i < a.Count; i++)
+				if (!AreSame (a [i].ParameterType, b [i].ParameterType))
+					return false;
+
+			return true;
+		}
+
+		bool AreSame(TypeReference a, TypeReference b)
 		{
 			if (a is TypeSpecification || b is TypeSpecification) {
 				if (a.GetType () != b.GetType ())
