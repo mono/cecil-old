@@ -265,10 +265,10 @@ namespace Mono.Cecil.Metadata {
 		public override void VisitMetadataRoot (MetadataRoot root)
 		{
 			WriteMemStream (m_cilWriter);
+			WriteMemStream (m_fieldDataWriter);
 			m_resStart = (uint) m_binaryWriter.BaseStream.Position;
 			WriteMemStream (m_resWriter);
 			m_resSize = (uint) (m_binaryWriter.BaseStream.Position - m_resStart);
-			WriteMemStream (m_fieldDataWriter);
 
 			// for now, we only reserve the place for the strong name signature
 			if ((m_assembly.Name.Flags & AssemblyFlags.PublicKey) > 0) {
