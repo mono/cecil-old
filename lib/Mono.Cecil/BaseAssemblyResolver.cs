@@ -42,11 +42,6 @@ namespace Mono.Cecil {
 
 		public virtual AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
-			if (name.Name == "mscorlib")
-				return GetCorlib (name);
-			else if (IsInGac (name))
-				return AssemblyFactory.GetAssembly (GetFromGac (name));
-
 			string [] exts = new string [] { ".dll", ".exe" };
 			string [] dirs = new string [] { ".", "bin" };
 
@@ -57,6 +52,11 @@ namespace Mono.Cecil {
 						return AssemblyFactory.GetAssembly (file);
 				}
 			}
+
+			if (name.Name == "mscorlib")
+				return GetCorlib (name);
+			else if (IsInGac (name))
+				return AssemblyFactory.GetAssembly (GetFromGac (name));
 
 			throw new FileNotFoundException ("Could not resolve: " + name);
 		}
