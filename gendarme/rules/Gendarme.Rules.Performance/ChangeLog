@@ -1,3 +1,12 @@
+2006-08-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Performance.xml.in: Add description for new rule.
+	* Gendarme.Rules.Performance.mdp: Add new rule to MonoDevelop project.
+	* Makefile.am: Add UseStringEmptyRule.cs and UseStringEmptyTest.cs to
+	the build.
+	* UseStringEmptyRule.cs: New rule to check for the use of "" literal
+	instead of String.Empty.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Performance.mdp: New. Project file for MonoDevelop.
