@@ -1,3 +1,8 @@
+2006-08-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UseStringEmptyTest.cs: New. Unit tests for UseStringEmptyRule.
+	* Test.Rules.Performance.mdp: Add new test to MonoDevelop project.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Performance.mdp: New. Project file for MonoDevelop.
