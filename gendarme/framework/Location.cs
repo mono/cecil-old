@@ -12,6 +12,8 @@
  * See the included LICENSE.MIT file for details.
  **********************************************************************/
 
+using System;
+
 namespace Gendarme.Framework {
 
 public class Location {
@@ -28,7 +30,7 @@ public class Location {
 
     public override string ToString()
     {
-        string result = "";
+        string result = String.Empty;
         if(type != null)
             result += type;
         if(method != null) {

@@ -1,3 +1,7 @@
+2006-08-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Location.cs: Apply self compliance (UseStringEmptyRule).
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* framework.mdp: New. Project file for MonoDevelop.
