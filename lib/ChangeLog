@@ -1,3 +1,9 @@
+2006-08-26  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Fix a problem in the computation of the stack when the IL
+		is somewhat strange.
+
 2006-08-23  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyInfo.cs:

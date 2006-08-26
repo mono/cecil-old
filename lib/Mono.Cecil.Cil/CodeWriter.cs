@@ -466,6 +466,9 @@ namespace Mono.Cecil.Cil {
 					current -= 3;
 					break;
 				}
+
+				if (current < 0)
+					current = 0;
 			}
 
 			instructions.Container.MaxStack = max;
