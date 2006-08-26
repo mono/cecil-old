@@ -235,7 +235,44 @@ namespace Mono.Cecil.Cil {
 
 		int GetLength (Instruction start, Instruction end, Instruction last)
 		{
-			return (end == null ? last.Offset + last.OpCode.Size : end.Offset) - start.Offset;
+			return (end == null ? last.Offset + GetSize (last) : end.Offset) - start.Offset;
+		}
+
+		int GetSize (Instruction i)
+		{
+			int size = i.OpCode.Size;
+
+			switch (i.OpCode.OperandType) {
+			case OperandType.InlineSwitch:
+				size += ((Instruction []) i.Operand).Length * 4;
+				break;
+			case OperandType.InlineI8:
+			case OperandType.InlineR:
+				size += 8;
+				break;
+			case OperandType.InlineBrTarget:
+			case OperandType.InlineField:
+			case OperandType.InlineI:
+			case OperandType.InlineMethod:
+			case OperandType.InlineString:
+			case OperandType.InlineTok:
+			case OperandType.InlineType:
+			case OperandType.ShortInlineR:
+				size += 4;
+				break;
+			case OperandType.InlineParam:
+			case OperandType.InlineVar:
+				size += 2;
+				break;
+			case OperandType.ShortInlineBrTarget:
+			case OperandType.ShortInlineI:
+			case OperandType.ShortInlineParam:
+			case OperandType.ShortInlineVar:
+				size += 1;
+				break;
+			}
+
+			return size;
 		}
 
 		bool IsRangeFat (Instruction start, Instruction end, Instruction last)

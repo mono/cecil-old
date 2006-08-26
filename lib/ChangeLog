@@ -1,6 +1,10 @@
 2006-08-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Fix the computation of the size of the last opcode in case
+		of an exception handler is pointing outside the cil stream.
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
 		Don't use seh tiny headers when the size can't fit in a byte.
 
 	* Mono.Cecil.Cil/ReflectionWriter.cs:
