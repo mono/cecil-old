@@ -1,6 +1,9 @@
 2006-08-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/ReflectionWriter.cs:
+		Don't use seh tiny headers when the size can't fit in a byte.
+
+	* Mono.Cecil.Cil/ReflectionWriter.cs:
 		Fix a problem in the computation of the stack when the IL
 		is somewhat strange.
 

@@ -273,7 +273,7 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.QuadAlign ();
 			Instruction last = seh.Container.Instructions [seh.Container.Instructions.Count - 1];
 
-			if (!IsFat (seh, last)) {
+			if (seh.Count < 0x15 && !IsFat (seh, last)) {
 				m_codeWriter.Write ((byte) MethodDataSection.EHTable);
 				m_codeWriter.Write ((byte) (seh.Count * 12 + 4));
 				m_codeWriter.Write (new byte [2]);
