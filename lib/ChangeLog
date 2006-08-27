@@ -1,5 +1,10 @@
 2006-08-26  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix a bug when reading some parameters.
+
+2006-08-26  Jb Evain  <jbevain@gmail.com>
+
 	* Mono.Cecil.Cil/ReflectionWriter.cs:
 		Fix the computation of the size of the last opcode in case
 		of an exception handler is pointing outside the cil stream.

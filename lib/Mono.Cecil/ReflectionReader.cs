@@ -29,10 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
-	using System.Collections;
 	using System.IO;
-	using System.Security;
-	using System.Security.Permissions;
 	using System.Text;
 
 	using Mono.Cecil.Binary;
@@ -539,7 +536,7 @@ namespace Mono.Cecil {
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
 					FieldDefinition fdef = new FieldDefinition (
 						m_root.Streams.StringsHeap [frow.Name],
-						this.GetTypeRefFromSig (fsig.Type, context), frow.Flags);
+						GetTypeRefFromSig (fsig.Type, context), frow.Flags);
 					fdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Field, j - 1);
 
 					if (fsig.CustomMods.Length > 0)
@@ -623,26 +620,31 @@ namespace Mono.Cecil {
 					ParameterDefinition retparam = null;
 
 					//TODO: optimize this
-					ParamRow pRow = null;
 					int start = (int) methRow.ParamList - 1;
 
-					if (paramTable != null && start < prms - 1)
-						pRow = paramTable [start];
+					if (paramTable != null && start < prms - 1) {
 
-					if (pRow != null && pRow.Sequence == 0) { // ret type
-						retparam = new ParameterDefinition (
-							m_root.Streams.StringsHeap [pRow.Name],
-							0,
-							pRow.Flags,
-							null);
-						retparam.Method = mdef;
-						m_parameters [start] = retparam;
-						start++;
+						ParamRow pRetRow = paramTable [start];
+
+						if (pRetRow != null && pRetRow.Sequence == 0) { // ret type
+
+							retparam = new ParameterDefinition (
+								m_root.Streams.StringsHeap [pRetRow.Name],
+								0,
+								pRetRow.Flags,
+								null);
+
+							retparam.Method = mdef;
+							m_parameters [start] = retparam;
+							start++;
+						}
 					}
 
 					for (int k = 0; k < msig.ParamCount; k++) {
 
 						int pointer = start + k;
+
+						ParamRow pRow = null;
 
 						if (paramTable != null && pointer < prms - 1)
 							pRow = paramTable [pointer];
