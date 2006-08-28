@@ -1,3 +1,9 @@
+2006-08-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* framework.mdp: Rename the output assembly to Gendarme.Framework.dll
+	like it is built when using the Makefile (instead of framework.dll).
+	Found by Christian Birkl.
+
 2006-08-21  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Location.cs: Apply self compliance (UseStringEmptyRule).
