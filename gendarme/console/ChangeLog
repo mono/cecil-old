@@ -1,3 +1,8 @@
+2006-08-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConsoleRunner.cs: Fix exception when rules.xml contains XML 
+	comments. Patch by Christian Birkl.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* console.mdp: New. Project file for MonoDevelop.

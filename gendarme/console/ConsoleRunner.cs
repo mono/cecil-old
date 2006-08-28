@@ -124,10 +124,10 @@ class ConsoleRunner : Runner {
 			return false;
 
 		bool result = false;
-		foreach (XmlElement ruleset in doc.DocumentElement) {
+		foreach (XmlElement ruleset in doc.DocumentElement.SelectNodes("ruleset")) {
 			if (ruleset.Attributes["name"].Value != set)
 				continue;
-			foreach (XmlElement assembly in ruleset) {
+			foreach (XmlElement assembly in ruleset.SelectNodes("rules")) {
 				string include = GetAttribute (assembly, "include", "*");
 				string exclude = GetAttribute (assembly, "exclude", String.Empty);
 				string from = GetFullPath (GetAttribute (assembly, "from", String.Empty));
