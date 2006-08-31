@@ -12,6 +12,7 @@ $replaces = {
 	"IParameterReference" => "ParameterDefinition",
 	"IPropertyReference" => "PropertyDefinition",
 	"IEventReference" => "EventDefinition",
+	"IVariableReference" => "VariableDefinition"
 	"IMarshalDesc" => "MarshalSpec",
 	"MarshalDesc" => "MarshalSpec",
 	"IModifierType" => "ModType"
