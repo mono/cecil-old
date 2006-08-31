@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+#
+# usage cecil-mig.rb directory
+#
+
+dir = ARGV.length > 0 ? ARGV[0] : "."
+
 $replaces = {
 	"GenericParamAttributes" => "GenericParameterAttributes",
 	"ParamAttributes" => "ParameterAttributes",
@@ -129,9 +135,9 @@ def process(file)
 	}
 
 	File.open(file, File::WRONLY | File::TRUNC) { |f|
-    	f.write(buffer)
-    	puts("#{file} processed")
-    } if (original != buffer)
+		f.write(buffer)
+		puts("#{file} processed")
+	} if (original != buffer)
 
 end
 
