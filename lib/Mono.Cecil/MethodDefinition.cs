@@ -34,7 +34,8 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Cil;
 	using Mono.Cecil.Signatures;
 
-	public sealed class MethodDefinition : MethodReference, IMethodDefinition, ICloneable {
+	public sealed class MethodDefinition : MethodReference, IMemberDefinition,
+		IHasSecurity, ICustomAttributeProvider {
 
 		public const string Cctor = ".cctor";
 		public const string Ctor = ".ctor";
@@ -256,7 +257,7 @@ namespace Mono.Cecil {
 			m_implAttrs = implAttrs;
 
 			if (!IsStatic)
-				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
+				m_this = new ParameterDefinition ("this", 0, (ParameterAttributes) 0, null);
 		}
 
 		internal MethodDefinition (string name, MethodAttributes attrs) : base (name)
@@ -265,7 +266,7 @@ namespace Mono.Cecil {
 
 			this.HasThis = !this.IsStatic;
 			if (!IsStatic)
-				m_this = new ParameterDefinition ("this", 0, (ParamAttributes) 0, null);
+				m_this = new ParameterDefinition ("this", 0, (ParameterAttributes) 0, null);
 		}
 
 		public MethodDefinition (string name, MethodAttributes attrs, TypeReference returnType) :
@@ -281,11 +282,6 @@ namespace Mono.Cecil {
 				if (m_module != null && m_rva != RVA.Zero)
 					m_module.Controller.Reader.Code.VisitMethodBody (m_body);
 			}
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public MethodDefinition Clone ()

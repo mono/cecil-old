@@ -33,7 +33,24 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Cil;
 
-	public sealed class SecurityDeclarationCollection : ISecurityDeclarationCollection {
+	public class SecurityDeclarationEventArgs : EventArgs {
+
+		private SecurityDeclaration m_item;
+
+		public SecurityDeclaration SecurityDeclaration {
+			get { return m_item; }
+		}
+
+		public SecurityDeclarationEventArgs (SecurityDeclaration item)
+		{
+			m_item = item;
+		}
+	}
+
+	public delegate void SecurityDeclarationEventHandler (
+		object sender, SecurityDeclarationEventArgs ea);
+
+	public sealed class SecurityDeclarationCollection : IIndexedCollection, IReflectionVisitable {
 
 		IDictionary m_items;
 		IHasSecurity m_container;
@@ -49,6 +66,10 @@ namespace Mono.Cecil {
 		public SecurityDeclaration this [SecurityAction action] {
 			get { return m_items [action] as SecurityDeclaration; }
 			set { m_items [action] = value; }
+		}
+
+		object IIndexedCollection.this [int index] {
+			get { return m_items [index]; }
 		}
 
 		public IHasSecurity Container {
@@ -151,7 +172,7 @@ namespace Mono.Cecil {
 
 		private void SetHasSecurity (bool value)
 		{
-			ITypeDefinition td = (m_container as ITypeDefinition);
+			TypeDefinition td = (m_container as TypeDefinition);
 			if (td != null) {
 				if (value)
 					td.Attributes |= TypeAttributes.HasSecurity;
@@ -159,7 +180,7 @@ namespace Mono.Cecil {
 					td.Attributes &= ~TypeAttributes.HasSecurity;
 				return;
 			}
-			IMethodDefinition md = (m_container as IMethodDefinition);
+			MethodDefinition md = (m_container as MethodDefinition);
 			if (md != null) {
 				if (value)
 					md.Attributes |= MethodAttributes.HasSecurity;

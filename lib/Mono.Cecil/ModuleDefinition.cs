@@ -39,7 +39,8 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Metadata;
 	using Mono.Xml;
 
-	public sealed class ModuleDefinition : ModuleReference, IModuleDefinition {
+	public sealed class ModuleDefinition : ModuleReference, ICustomAttributeProvider, IMetadataScope,
+		IReflectionStructureVisitable, IReflectionVisitable {
 
 		Guid m_mvid;
 		bool m_main;

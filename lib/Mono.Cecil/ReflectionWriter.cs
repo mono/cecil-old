@@ -433,7 +433,7 @@ namespace Mono.Cecil {
 		bool RequiresParameterRow (MethodReturnType mrt)
 		{
 			return mrt.HasConstant || mrt.MarshalSpec != null ||
-				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParamAttributes) 0;
+				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParameterAttributes) 0;
 		}
 
 		public override void VisitMethodDefinition (MethodDefinition method)
@@ -611,7 +611,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public override void VisitMarshalSpec (MarshalDesc marshalSpec)
+		public override void VisitMarshalSpec (MarshalSpec marshalSpec)
 		{
 			FieldMarshalTable fmTable = m_tableWriter.GetFieldMarshalTable ();
 			FieldMarshalRow fmRow = m_rowWriter.CreateFieldMarshalRow (
@@ -1348,7 +1348,7 @@ namespace Mono.Cecil {
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (MarshalDesc mSpec)
+		public MarshalSig GetMarshalSig (MarshalSpec mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 

@@ -20,9 +20,9 @@
 		<type name="Mono.Cecil.TypeAttributes" underlying="uint" size="4" />
 		<type name="Mono.Cecil.FieldAttributes" underlying="ushort" size="2" />
 		<type name="Mono.Cecil.FileAttributes" underlying="uint" size="4" />
-		<type name="Mono.Cecil.GenericParamAttributes" underlying="ushort" size="2" />
+		<type name="Mono.Cecil.GenericParameterAttributes" underlying="ushort" size="2" />
 		<type name="Mono.Cecil.PInvokeAttributes" underlying="ushort" size="2" />
-		<type name="Mono.Cecil.ParamAttributes" underlying="ushort" size="2" />
+		<type name="Mono.Cecil.ParameterAttributes" underlying="ushort" size="2" />
 		<type name="Mono.Cecil.PropertyAttributes" underlying="ushort" size="2" />
 		<type name="Mono.Cecil.ManifestResourceAttributes" underlying="uint" size="4" />
 		<type name="Mono.Cecil.MethodAttributes" underlying="ushort" size="2" />
@@ -252,7 +252,7 @@
 			</table>
 			<table name="GenericParam" rid="0x2a" requires="NET_2_0">
 				<column name="Number" type="ushort" />
-				<column name="Flags" type="Mono.Cecil.GenericParamAttributes" />
+				<column name="Flags" type="Mono.Cecil.GenericParameterAttributes" />
 				<column name="Owner" type="Mono.Cecil.Metadata.MetadataToken" target="TypeOrMethodDef" />
 				<column name="Name" type="uint" target="StringsHeap" />
 			</table>
@@ -318,7 +318,7 @@
 				<column name="EnclosingClass" type="uint" target="TypeDef" />
 			</table>
 			<table name="Param" rid="0x08">
-				<column name="Flags" type="Mono.Cecil.ParamAttributes" />
+				<column name="Flags" type="Mono.Cecil.ParameterAttributes" />
 				<column name="Sequence" type="ushort" />
 				<column name="Name" type="uint" target="StringsHeap" />
 			</table>

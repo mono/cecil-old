@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public class TypeReference : MemberReference, ITypeReference {
+	public class TypeReference : MemberReference, IGenericParameterProvider, ICustomAttributeProvider {
 
 		string m_namespace;
 		bool m_fullNameDiscarded;
@@ -131,7 +131,7 @@ namespace Mono.Cecil {
 			m_scope = scope;
 		}
 
-		public virtual void Accept (IReflectionVisitor visitor)
+		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitTypeReference (this);
 		}

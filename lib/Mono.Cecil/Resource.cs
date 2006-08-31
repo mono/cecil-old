@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public abstract class Resource : IResource {
+	public abstract class Resource : IReflectionStructureVisitable {
 
 		string m_name;
 		ManifestResourceAttributes m_flags;

@@ -36,7 +36,7 @@ namespace Mono.Cecil {
 	using Mono.Cecil.Cil;
 	using Mono.Cecil.Signatures;
 
-	public class MethodReference : MemberReference, IMethodReference {
+	public class MethodReference : MemberReference, IMethodSignature, IGenericParameterProvider {
 
 		ParameterDefinitionCollection m_parameters;
 		MethodReturnType m_returnType;
@@ -103,10 +103,6 @@ namespace Mono.Cecil {
 		{
 			this.DeclaringType = declaringType;
 			this.ReturnType.ReturnType = returnType;
-		}
-
-		public virtual void Accept (IReflectionVisitor visitor)
-		{
 		}
 
 		public override string ToString ()

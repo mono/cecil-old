@@ -33,7 +33,8 @@ namespace Mono.Cecil {
 	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
-	public sealed class FieldDefinition : FieldReference, IFieldDefinition, IFieldLayoutInfo, ICloneable {
+	public sealed class FieldDefinition : FieldReference, IMemberDefinition,
+		ICustomAttributeProvider, IHasMarshalSpec, IHasConstant {
 
 		FieldAttributes m_attributes;
 
@@ -48,7 +49,7 @@ namespace Mono.Cecil {
 		bool m_hasConstant;
 		object m_const;
 
-		MarshalDesc m_marshalDesc;
+		MarshalSpec m_marshalDesc;
 
 		public bool HasLayoutInfo {
 			get { return m_hasInfo; }
@@ -98,7 +99,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public MarshalDesc MarshalSpec {
+		public MarshalSpec MarshalSpec {
 			get { return m_marshalDesc; }
 			set { m_marshalDesc = value; }
 		}
@@ -156,13 +157,7 @@ namespace Mono.Cecil {
 		public FieldDefinition (string name, TypeReference fieldType,
 			FieldAttributes attrs) : base (name, fieldType)
 		{
-			m_hasInfo = false;
 			m_attributes = attrs;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public FieldDefinition Clone ()
@@ -192,15 +187,6 @@ namespace Mono.Cecil {
 				nf.CustomAttributes.Add (CustomAttribute.Clone (ca, context));
 
 			return nf;
-		}
-
-		public override string ToString ()
-		{
-			if (this.DeclaringType == null)
-				return string.Concat (this.FieldType.ToString (), ' ', this.Name);
-
-			return string.Concat (this.FieldType.ToString (), ' ',
-				this.DeclaringType.ToString (), "::", this.Name);
 		}
 
 		public override void Accept (IReflectionVisitor visitor)

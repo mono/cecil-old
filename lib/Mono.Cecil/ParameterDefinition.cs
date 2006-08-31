@@ -32,13 +32,10 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class ParameterDefinition : IParameterDefinition, ICloneable {
+	public sealed class ParameterDefinition : ParameterReference, IHasMarshalSpec,
+		IMetadataTokenProvider, ICustomAttributeProvider, IHasConstant {
 
-		string m_name;
-		int m_sequence;
-		ParamAttributes m_attributes;
-		TypeReference m_paramType;
-		MetadataToken m_token;
+		ParameterAttributes m_attributes;
 
 		bool m_hasConstant;
 		object m_const;
@@ -46,31 +43,11 @@ namespace Mono.Cecil {
 		MethodReference m_method;
 		CustomAttributeCollection m_customAttrs;
 
-		MarshalDesc m_marshalDesc;
+		MarshalSpec m_marshalDesc;
 
-		public string Name {
-			get { return m_name; }
-			set { m_name = value; }
-		}
-
-		public int Sequence {
-			get { return m_sequence; }
-			set { m_sequence = value; }
-		}
-
-		public ParamAttributes Attributes {
+		public ParameterAttributes Attributes {
 			get { return m_attributes; }
 			set { m_attributes = value; }
-		}
-
-		public TypeReference ParameterType {
-			get { return m_paramType; }
-			set { m_paramType = value; }
-		}
-
-		public MetadataToken MetadataToken {
-			get { return m_token; }
-			set { m_token = value; }
 		}
 
 		public bool HasConstant {
@@ -99,27 +76,19 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public MarshalDesc MarshalSpec {
+		public MarshalSpec MarshalSpec {
 			get { return m_marshalDesc; }
 			set { m_marshalDesc = value; }
 		}
 
 		public ParameterDefinition (TypeReference paramType) :
-			this (string.Empty, -1, (ParamAttributes) 0, paramType)
+			this (string.Empty, -1, (ParameterAttributes) 0, paramType)
 		{
 		}
 
-		public ParameterDefinition (string name, int seq, ParamAttributes attrs, TypeReference paramType)
+		public ParameterDefinition (string name, int seq, ParameterAttributes attrs, TypeReference paramType) : base (name, seq, paramType)
 		{
-			m_name = name;
-			m_sequence = seq;
 			m_attributes = attrs;
-			m_paramType = paramType;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public ParameterDefinition Clone ()
@@ -147,15 +116,7 @@ namespace Mono.Cecil {
 			return np;
 		}
 
-		public override string ToString ()
-		{
-			if (m_name != null && m_name.Length > 0)
-				return m_name;
-
-			return string.Concat ("A_", m_sequence);
-		}
-
-		public void Accept (IReflectionVisitor visitor)
+		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitParameterDefinition (this);
 

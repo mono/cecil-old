@@ -28,55 +28,26 @@
 
 namespace Mono.Cecil.Cil {
 
-	public sealed class VariableDefinition : IVariableDefinition {
+	public sealed class VariableDefinition : VariableReference {
 
-		string m_name;
-		int m_index;
 		MethodDefinition m_method;
-		TypeReference m_variableType;
-
-		public string Name {
-			get { return m_name; }
-			set { m_name = value; }
-		}
-
-		public int Index {
-			get { return m_index; }
-			set { m_index = value; }
-		}
 
 		public MethodDefinition Method {
 			get { return m_method; }
 			set { m_method = value; }
 		}
 
-		public TypeReference VariableType {
-			get { return m_variableType; }
-			set { m_variableType = value; }
+		public VariableDefinition (TypeReference variableType) : base (variableType)
+		{
 		}
 
-		public VariableDefinition (TypeReference variableType)
+		public VariableDefinition (string name, int index, MethodDefinition method, TypeReference variableType) :
+			base (name, index, variableType)
 		{
-			m_variableType = variableType;
-		}
-
-		public VariableDefinition (string name, int index, MethodDefinition method, TypeReference variable) :
-			this (variable)
-		{
-			m_name = name;
-			m_index = index;
 			m_method = method;
 		}
 
-		public override string ToString ()
-		{
-			if (m_name != null && m_name.Length > 0)
-				return m_name;
-
-			return string.Concat ("V_", m_index);
-		}
-
-		public void Accept (ICodeVisitor visitor)
+		public override void Accept (ICodeVisitor visitor)
 		{
 			visitor.VisitVariableDefinition (this);
 		}

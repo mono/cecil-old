@@ -32,7 +32,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class MethodReturnType : IMethodReturnType {
+	public sealed class MethodReturnType : ICustomAttributeProvider, IHasMarshalSpec, IHasConstant {
 
 		MethodReference m_method;
 		ParameterDefinition m_param;
@@ -63,7 +63,7 @@ namespace Mono.Cecil {
 			get {
 				if (m_param == null) {
 					m_param = new ParameterDefinition (
-						string.Empty, 0, (ParamAttributes) 0, m_returnType);
+						string.Empty, 0, (ParameterAttributes) 0, m_returnType);
 					m_param.Method = m_method;
 				}
 
@@ -92,7 +92,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public MarshalDesc MarshalSpec {
+		public MarshalSpec MarshalSpec {
 			get {
 				if (m_param == null)
 					return null;

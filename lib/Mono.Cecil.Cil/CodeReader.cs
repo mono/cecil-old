@@ -340,7 +340,7 @@ namespace Mono.Cecil.Cil {
 				Param p = ms.Parameters [i];
 				cs.Parameters.Add (m_reflectReader.BuildParameterDefinition (
 						string.Concat ("A_", i),
-						i, (ParamAttributes) 0,
+						i, (ParameterAttributes) 0,
 						p, context));
 			}
 

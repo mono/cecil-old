@@ -31,7 +31,7 @@ namespace Mono.Cecil {
 	using System;
 	using System.Text;
 
-	public sealed class FunctionPointerType : TypeSpecification, IFunctionPointerType {
+	public sealed class FunctionPointerType : TypeSpecification, IMethodSignature {
 
 		MethodReference m_function;
 

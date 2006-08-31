@@ -33,7 +33,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class CallSite : ICallSite {
+	public sealed class CallSite : IMethodSignature, IMetadataTokenProvider {
 
 		MethodReference m_function;
 

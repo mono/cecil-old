@@ -30,11 +30,11 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public sealed class GenericParameter : TypeReference, IGenericParameter {
+	public sealed class GenericParameter : TypeReference {
 
 		int m_position;
 		string m_name;
-		GenericParamAttributes m_attributes;
+		GenericParameterAttributes m_attributes;
 		IGenericParameterProvider m_owner;
 		ConstraintCollection m_constraints;
 
@@ -43,7 +43,7 @@ namespace Mono.Cecil {
 			set { m_position = value; }
 		}
 
-		public GenericParamAttributes Attributes {
+		public GenericParameterAttributes Attributes {
 			get { return m_attributes; }
 			set { m_attributes = value; }
 		}

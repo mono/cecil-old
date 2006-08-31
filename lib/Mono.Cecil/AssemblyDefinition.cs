@@ -32,7 +32,8 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public class AssemblyDefinition : IAssemblyDefinition {
+	public class AssemblyDefinition : ICustomAttributeProvider,
+		IHasSecurity, IReflectionStructureVisitable {
 
 		MetadataToken m_token;
 		AssemblyNameDefinition m_asmName;

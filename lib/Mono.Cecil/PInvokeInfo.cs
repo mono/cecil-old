@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public sealed class PInvokeInfo : IPInvokeInfo {
+	public sealed class PInvokeInfo : IReflectionVisitable {
 
 		MethodDefinition m_meth;
 

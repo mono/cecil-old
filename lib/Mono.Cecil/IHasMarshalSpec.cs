@@ -30,6 +30,6 @@ namespace Mono.Cecil {
 
 	public interface IHasMarshalSpec : IMetadataTokenProvider {
 
-		MarshalDesc MarshalSpec { get; set; }
+		MarshalSpec MarshalSpec { get; set; }
 	}
 }

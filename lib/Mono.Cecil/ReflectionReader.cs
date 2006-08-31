@@ -189,7 +189,7 @@ namespace Mono.Cecil {
 					for (int j = 0; j < ms.ParamCount; j++) {
 						Param p = ms.Parameters [j];
 						ParameterDefinition pdef = BuildParameterDefinition (
-							string.Concat ("A_", j), j, new ParamAttributes (), p, nc);
+							string.Concat ("A_", j), j, new ParameterAttributes (), p, nc);
 						pdef.Method = methref;
 						methref.Parameters.Add (pdef);
 					}
@@ -661,7 +661,7 @@ namespace Mono.Cecil {
 						} else
 							pdef = BuildParameterDefinition (
 								string.Concat ("A_", mdef.IsStatic ? k : k + 1),
-								k + 1, (ParamAttributes) 0, psig, context);
+								k + 1, (ParameterAttributes) 0, psig, context);
 
 						pdef.Method = mdef;
 						mdef.Parameters.Add (pdef);
@@ -776,7 +776,7 @@ namespace Mono.Cecil {
 		}
 
 		public ParameterDefinition BuildParameterDefinition (string name, int sequence,
-			ParamAttributes attrs, Param psig, GenericContext context)
+			ParameterAttributes attrs, Param psig, GenericContext context)
 		{
 			ParameterDefinition ret = new ParameterDefinition (name, sequence, attrs, null);
 			TypeReference paramType;
@@ -808,7 +808,7 @@ namespace Mono.Cecil {
 			return m_secReader.FromByteArray (action, permset);
 		}
 
-		protected MarshalDesc BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
+		protected MarshalSpec BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
 		{
 			if (ms.Spec is MarshalSig.Array) {
 				ArrayMarshalDesc amd = new ArrayMarshalDesc (container);
@@ -841,7 +841,7 @@ namespace Mono.Cecil {
 				sad.ElemType = ((MarshalSig.SafeArray) ms.Spec).ArrayElemType;
 				return sad;
 			} else {
-				return new MarshalDesc (ms.NativeInstrinsic, container);
+				return new MarshalSpec (ms.NativeInstrinsic, container);
 			}
 		}
 
@@ -951,7 +951,7 @@ namespace Mono.Cecil {
 					Param p = funcptr.Method.Parameters [i];
 					fnptr.Parameters.Add (BuildParameterDefinition (
 							string.Concat ("A_", i),
-							i, (ParamAttributes) 0,
+							i, (ParameterAttributes) 0,
 							p, context));
 				}
 				return fnptr;

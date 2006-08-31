@@ -32,7 +32,7 @@ namespace Mono.Cecil {
 	using System.Security;
 	using System.Text;
 
-	public sealed class SecurityDeclaration : ISecurityDeclaration, ICloneable {
+	public sealed class SecurityDeclaration : IReflectionVisitable {
 
 		SecurityAction m_action;
 
@@ -69,11 +69,6 @@ namespace Mono.Cecil {
 		{
 			m_action = action;
 			m_readable = true;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public SecurityDeclaration Clone ()

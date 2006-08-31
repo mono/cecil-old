@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public sealed class TypeDefinition : TypeReference, ITypeDefinition, IClassLayoutInfo, ICloneable {
+	public sealed class TypeDefinition : TypeReference, IMemberDefinition, IHasSecurity {
 
 		TypeAttributes m_attributes;
 		TypeReference m_baseType;
@@ -345,11 +345,6 @@ namespace Mono.Cecil {
 		void DetachMember (MemberReference member)
 		{
 			member.DeclaringType = null;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public TypeDefinition Clone ()

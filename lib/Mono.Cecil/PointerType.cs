@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public sealed class PointerType : TypeSpecification, IPointerType {
+	public sealed class PointerType : TypeSpecification {
 
 		public override string Name {
 			get { return string.Concat (base.Name, "*"); }

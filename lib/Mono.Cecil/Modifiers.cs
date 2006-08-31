@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public abstract class ModType : TypeSpecification, IModifierType {
+	public abstract class ModType : TypeSpecification {
 
 		TypeReference m_modifierType;
 
@@ -43,7 +43,7 @@ namespace Mono.Cecil {
 		}
 	}
 
-	public sealed class ModifierOptional : ModType, IModifierOptional {
+	public sealed class ModifierOptional : ModType {
 
 		public ModifierOptional (TypeReference elemType, TypeReference modType) : base (elemType, modType)
 		{
@@ -65,7 +65,7 @@ namespace Mono.Cecil {
 		}
 	}
 
-	public sealed class ModifierRequired : ModType, IModifierRequired {
+	public sealed class ModifierRequired : ModType {
 
 		public ModifierRequired (TypeReference elemType, TypeReference modType) : base (elemType, modType)
 		{

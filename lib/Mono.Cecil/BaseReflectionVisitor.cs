@@ -168,7 +168,7 @@ namespace Mono.Cecil {
 		{
 		}
 
-		public virtual void VisitMarshalSpec (MarshalDesc marshalSpec)
+		public virtual void VisitMarshalSpec (MarshalSpec marshalSpec)
 		{
 		}
 

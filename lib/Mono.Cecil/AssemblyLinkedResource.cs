@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public sealed class AssemblyLinkedResource : Resource, IAssemblyLinkedResource {
+	public sealed class AssemblyLinkedResource : Resource {
 
 		private AssemblyNameReference m_asmRef;
 

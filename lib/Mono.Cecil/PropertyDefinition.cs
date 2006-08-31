@@ -31,10 +31,9 @@ namespace Mono.Cecil {
 	using System;
 	using System.Text;
 
-	public sealed class PropertyDefinition : MemberReference, IPropertyDefinition, ICloneable {
+	public sealed class PropertyDefinition : PropertyReference,
+		IMemberDefinition, ICustomAttributeProvider, IHasConstant {
 
-		TypeReference m_propertyType;
-		ParameterDefinitionCollection m_parameters;
 		PropertyAttributes m_attributes;
 
 		CustomAttributeCollection m_customAttrs;
@@ -44,11 +43,6 @@ namespace Mono.Cecil {
 
 		bool m_hasConstant;
 		object m_const;
-
-		public TypeReference PropertyType {
-			get { return m_propertyType; }
-			set { m_propertyType = value; }
-		}
 
 		public PropertyAttributes Attributes {
 			get { return m_attributes; }
@@ -64,17 +58,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public MethodDefinition GetMethod {
-			get { return m_getMeth; }
-			set { m_getMeth = value; }
-		}
-
-		public MethodDefinition SetMethod {
-			get { return m_setMeth; }
-			set { m_setMeth = value; }
-		}
-
-		public ParameterDefinitionCollection Parameters {
+		public override ParameterDefinitionCollection Parameters {
 			get {
 				if (this.GetMethod != null)
 					return CloneParameterCollection (this.GetMethod.Parameters);
@@ -91,6 +75,16 @@ namespace Mono.Cecil {
 
 				return m_parameters;
 			}
+		}
+
+		public MethodDefinition GetMethod {
+			get { return m_getMeth; }
+			set { m_getMeth = value; }
+		}
+
+		public MethodDefinition SetMethod {
+			get { return m_setMeth; }
+			set { m_setMeth = value; }
 		}
 
 		ParameterDefinitionCollection CloneParameterCollection (ParameterDefinitionCollection original)
@@ -134,9 +128,8 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public PropertyDefinition (string name, TypeReference propType, PropertyAttributes attrs) : base (name)
+		public PropertyDefinition (string name, TypeReference propertyType, PropertyAttributes attrs) : base (name, propertyType)
 		{
-			m_propertyType = propType;
 			m_attributes = attrs;
 		}
 
@@ -154,11 +147,6 @@ namespace Mono.Cecil {
 				string.Concat ("set_", prop.Name), (MethodAttributes) 0, prop.PropertyType);
 			prop.SetMethod = set;
 			return set;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public PropertyDefinition Clone ()
@@ -193,7 +181,7 @@ namespace Mono.Cecil {
 		public override string ToString ()
 		{
 			StringBuilder sb = new StringBuilder ();
-			sb.Append (m_propertyType.ToString ());
+			sb.Append (PropertyType.ToString ());
 			sb.Append (' ');
 
 			if (this.DeclaringType != null) {
@@ -203,7 +191,7 @@ namespace Mono.Cecil {
 
 			sb.Append (this.Name);
 			sb.Append ('(');
-			IParameterDefinitionCollection parameters = this.Parameters;
+			ParameterDefinitionCollection parameters = this.Parameters;
 			for (int i = 0; i < parameters.Count; i++) {
 				if (i > 0)
 					sb.Append (',');
@@ -213,7 +201,7 @@ namespace Mono.Cecil {
 			return sb.ToString ();
 		}
 
-		public void Accept (IReflectionVisitor visitor)
+		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitPropertyDefinition (this);
 

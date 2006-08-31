@@ -167,15 +167,11 @@ cecil_compile("../Mono.Cecil.Cil/OpCodes.cs", "./templates/OpCodes.cs")
 
 $colls.each { |coll|
 	$cur_coll = coll
-	files = [ "../#{coll.target}/" + coll.intf + ".cs",
-		"../#{coll.target}/" + coll.name + ".cs" ]
+	file = "../#{coll.target}/" + coll.name + ".cs"
 	type = coll.indexed ? "Indexed" : "Named"
-	templates = [ "./templates/I#{type}Collection.cs", "./templates/#{type}CollectionImplem.cs" ]
-	templates[1] = "./templates/Lz#{type}CollectionImplem.cs" if coll.lazyload
-	files.each_with_index { |file, i|
+	template = "./templates/#{type}Collection.cs"
 
-		cecil_compile(file, templates[i])
-	}
+	cecil_compile(file, template)
 }
 $cur_coll = nil
 

@@ -63,5 +63,9 @@ namespace Mono.Cecil {
 
 			return string.Concat (m_decType.FullName, "::", m_name);
 		}
+
+		public virtual void Accept (IReflectionVisitor visitor)
+		{
+		}
 	}
 }

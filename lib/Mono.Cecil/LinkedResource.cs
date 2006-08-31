@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class LinkedResource : Resource, ILinkedResource {
+	public sealed class LinkedResource : Resource {
 
 		byte [] m_hash;
 		string m_file;

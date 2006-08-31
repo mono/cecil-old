@@ -30,9 +30,8 @@ namespace Mono.Cecil {
 
 	using System;
 
-	public sealed class EventDefinition : MemberReference, IEventDefinition, ICloneable {
+	public sealed class EventDefinition : EventReference, IMemberDefinition, ICustomAttributeProvider {
 
-		TypeReference m_eventType;
 		EventAttributes m_attributes;
 
 		CustomAttributeCollection m_customAttrs;
@@ -40,11 +39,6 @@ namespace Mono.Cecil {
 		MethodDefinition m_addMeth;
 		MethodDefinition m_invMeth;
 		MethodDefinition m_remMeth;
-
-		public TypeReference EventType {
-			get { return m_eventType; }
-			set { m_eventType = value; }
-		}
 
 		public EventAttributes Attributes {
 			get { return m_attributes; }
@@ -96,9 +90,8 @@ namespace Mono.Cecil {
 		}
 
 		public EventDefinition (string name, TypeReference eventType,
-			EventAttributes attrs) : base (name)
+			EventAttributes attrs) : base (name, eventType)
 		{
-			m_eventType = eventType;
 			m_attributes = attrs;
 		}
 
@@ -124,11 +117,6 @@ namespace Mono.Cecil {
 				string.Concat ("raise_", evt.Name), (MethodAttributes) 0, evt.EventType);
 			evt.InvokeMethod = raise;
 			return raise;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public EventDefinition Clone ()
@@ -159,16 +147,7 @@ namespace Mono.Cecil {
 			return ne;
 		}
 
-		public override string ToString ()
-		{
-			if (this.DeclaringType == null)
-				return string.Concat (m_eventType.ToString (), ' ', this.Name);
-
-			return string.Concat (m_eventType.ToString (), ' ',
-				this.DeclaringType.ToString (), "::", this.Name);
-		}
-
-		public void Accept (IReflectionVisitor visitor)
+		public override void Accept (IReflectionVisitor visitor)
 		{
 			visitor.VisitEventDefinition (this);
 

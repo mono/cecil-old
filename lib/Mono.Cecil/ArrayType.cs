@@ -33,7 +33,7 @@ namespace Mono.Cecil {
 
 	using Mono.Cecil.Signatures;
 
-	public sealed class ArrayType : TypeSpecification, IArrayType {
+	public sealed class ArrayType : TypeSpecification {
 
 		private ArrayDimensionCollection m_dimensions;
 
@@ -49,7 +49,7 @@ namespace Mono.Cecil {
 			get {
 				if (this.Rank != 1)
 					return false;
-				IArrayDimension dim = m_dimensions [0];
+				ArrayDimension dim = m_dimensions [0];
 				return dim.UpperBound == 0;
 			}
 		}
@@ -67,7 +67,7 @@ namespace Mono.Cecil {
 			StringBuilder sb = new StringBuilder ();
 			sb.Append ("[");
 			for (int i = 0; i < m_dimensions.Count; i++) {
-				IArrayDimension dim = m_dimensions [i];
+				ArrayDimension dim = m_dimensions [i];
 				string rank = dim.ToString ();
 				if (i < m_dimensions.Count - 1)
 					sb.Append (",");

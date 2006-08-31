@@ -64,7 +64,7 @@ namespace Mono.Cecil {
 		void VisitCustomAttribute (CustomAttribute customAttr);
 		void VisitGenericParameterCollection (GenericParameterCollection genparams);
 		void VisitGenericParameter (GenericParameter genparam);
-		void VisitMarshalSpec (MarshalDesc marshalSpec);
+		void VisitMarshalSpec (MarshalSpec marshalSpec);
 
 		void TerminateModuleDefinition (ModuleDefinition module);
 	}

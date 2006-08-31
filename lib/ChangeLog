@@ -1,3 +1,14 @@
+2006-08-31  Jb Evain  <jbevain@gmail.com>
+
+	* /!\ Breaking changes:
+		On the way to Cecil 0.5. Remove meaningless interfaces.
+		GenericParamAttributes -> GenericParameterAttributes
+		ParamAttributes -> ParamAttributes
+
+		I'll provide a migration path with a script.
+
+		Please do not use this revision, other changes are on the way.
+
 2006-08-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs:

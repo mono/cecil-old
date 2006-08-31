@@ -31,7 +31,7 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 
-	public sealed class CustomAttribute : ICustomAttribute, ICloneable {
+	public sealed class CustomAttribute : IReflectionVisitable {
 
 		MethodReference m_ctor;
 		IList m_parameters;
@@ -118,19 +118,14 @@ namespace Mono.Cecil {
 			return (TypeReference) this.PropertyTypes [propertyName];
 		}
 
-		public void SetFieldType (string fieldName, ITypeReference type)
+		public void SetFieldType (string fieldName, TypeReference type)
 		{
 			this.FieldTypes [fieldName] = type;
 		}
 
-		public void SetPropertyType (string propertyName, ITypeReference type)
+		public void SetPropertyType (string propertyName, TypeReference type)
 		{
 			this.PropertyTypes [propertyName] = type;
-		}
-
-		object ICloneable.Clone ()
-		{
-			return this.Clone ();
 		}
 
 		public CustomAttribute Clone ()
