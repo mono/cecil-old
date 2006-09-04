@@ -40,6 +40,7 @@ $collections = [
 	"CustomAttributeCollection",
 	"ExternTypeCollection",
 	"NestedTypeCollection",
+	"SecurityDeclarationCollection",
 	"MemberReferenceCollection",
 	"GenericParameterCollection",
 	"GenericArgumentCollection",
