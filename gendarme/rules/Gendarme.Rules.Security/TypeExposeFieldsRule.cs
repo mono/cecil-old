@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeExposeFieldsRule : ITypeRule {
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - rule apply to types (and nested types) that are publicly visible
 			switch (type.Attributes & TypeAttributes.VisibilityMask) {
@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Security {
 				return runner.RuleSuccess;
 
 			bool demand = false;
-			foreach (ISecurityDeclaration declsec in type.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.Demand:
 				case Mono.Cecil.SecurityAction.LinkDemand:
@@ -68,7 +68,7 @@ namespace Gendarme.Rules.Security {
 			// *** ok, the rule applies! ***
 
 			// #3 - so it shouldn't have any public fields
-			foreach (IFieldDefinition field in type.Fields) {
+			foreach (FieldDefinition field in type.Fields) {
 				if ((field.Attributes & FieldAttributes.Public) == FieldAttributes.Public)
 					return runner.RuleFailure;
 			}

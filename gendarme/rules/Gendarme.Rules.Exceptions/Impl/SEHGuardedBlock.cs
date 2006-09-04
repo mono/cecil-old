@@ -7,8 +7,8 @@ namespace Gendarme.Rules.Exceptions {
 	
 	internal class SEHGuardedBlock : ISEHGuardedBlock {
 	
-		private IInstruction start;
-		private IInstruction end;
+		private Instruction start;
+		private Instruction end;
 		private SEHHandlerBlockCollection handler_blocks;
 		
 		public SEHGuardedBlock ()
@@ -16,12 +16,12 @@ namespace Gendarme.Rules.Exceptions {
 			handler_blocks = new SEHHandlerBlockCollection ();
 		}
 		
-		public IInstruction Start {
+		public Instruction Start {
 			get { return start; }
 			set { start = value; }			
 		}
 
-		public IInstruction End {
+		public Instruction End {
 			get { return end; }
 			set { end = value; }
 		}

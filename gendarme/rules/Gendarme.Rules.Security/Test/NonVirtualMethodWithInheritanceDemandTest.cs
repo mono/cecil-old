@@ -96,8 +96,8 @@ namespace Test.Rules.Security {
 		}
 
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -108,7 +108,7 @@ namespace Test.Rules.Security {
 			rule = new NonVirtualMethodWithInheritanceDemandRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.NonVirtualMethodWithInheritanceDemandTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -117,8 +117,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void AbstractMethods ()
 		{
-			ITypeDefinition type = GetTest ("AbstractMethodsClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("AbstractMethodsClass");
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 			}
 		}
@@ -126,8 +126,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void VirtualMethods ()
 		{
-			ITypeDefinition type = GetTest ("VirtualMethodsClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("VirtualMethodsClass");
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 			}
 		}
@@ -135,8 +135,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NoVirtualMethods ()
 		{
-			ITypeDefinition type = GetTest ("NoVirtualMethodsClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("NoVirtualMethodsClass");
+			foreach (MethodDefinition method in type.Methods) {
 				int n = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()).Count;
 				Assert.AreEqual (0, n, method.ToString ());
 			}
@@ -145,8 +145,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NotInheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("NotInheritanceDemandClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("NotInheritanceDemandClass");
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 			}
 		}

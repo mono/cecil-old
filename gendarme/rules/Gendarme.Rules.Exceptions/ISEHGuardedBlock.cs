@@ -14,10 +14,10 @@ namespace Gendarme.Rules.Exceptions {
 		/// The first guarded instruction
 		/// </summary>
 		/// <value>
-		/// An instance of <see cref="IInstruction"/> representing the first
+		/// An instance of <see cref="Instruction"/> representing the first
 		/// guarded instruction.
 		/// </value>
-		IInstruction Start {
+		Instruction Start {
 			get;
 		}
 
@@ -25,10 +25,10 @@ namespace Gendarme.Rules.Exceptions {
 		/// The last guarded instruction
 		/// </summary>
 		/// <value>
-		/// An instance of <see cref="IInstruction"/> representing the last
+		/// An instance of <see cref="Instruction"/> representing the last
 		/// guarded instruction.
 		/// </value>
-		IInstruction End {
+		Instruction End {
 			get;
 		}
 		

@@ -86,9 +86,9 @@ namespace Test.Rules.Concurrency {
 		}
 	
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private ITypeDefinition type;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private TypeDefinition type;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -100,10 +100,10 @@ namespace Test.Rules.Concurrency {
 			rule = new DoubleCheckLockingRule ();
 		}
 
-		private IMethodDefinition GetTest (string name)
+		private MethodDefinition GetTest (string name)
 		{
 			string get_name = "get_" + name;
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 			Console.WriteLine (method.Name);
 				if (method.Name == get_name)
 					return method;
@@ -114,21 +114,21 @@ namespace Test.Rules.Concurrency {
 		[Test]
 		public void SingleCheckBefore ()
 		{
-			IMethodDefinition method = GetTest ("SingleCheckBefore"); 
+			MethodDefinition method = GetTest ("SingleCheckBefore"); 
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void SingleCheckAfter ()
 		{
-			IMethodDefinition method = GetTest ("SingleCheckAfter"); 
+			MethodDefinition method = GetTest ("SingleCheckAfter"); 
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DoubleCheck ()
 		{
-			IMethodDefinition method = GetTest ("DoubleCheck"); 
+			MethodDefinition method = GetTest ("DoubleCheck"); 
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 	}

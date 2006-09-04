@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeLinkDemandRule: ITypeRule {
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - rule apply to types (and nested types) that are publicly visible
 			switch (type.Attributes & TypeAttributes.VisibilityMask) {
@@ -55,7 +55,7 @@ namespace Gendarme.Rules.Security {
 			PermissionSet link = null;
 			PermissionSet inherit = null;
 			// #3 - rule apply to types with a LinkDemand
-			foreach (ISecurityDeclaration declsec in type.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.LinkDemand:
 				case Mono.Cecil.SecurityAction.NonCasLinkDemand:
@@ -73,9 +73,9 @@ namespace Gendarme.Rules.Security {
 
 			// #4 - rule apply if there are virtual methods defined
 			bool virt = false;
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 				// #5 - ensure that the method is declared in this type (i.e. not in a parent)
-				if (method.IsVirtual && ((method.DeclaringType as ITypeDefinition) == type)) 
+				if (method.IsVirtual && ((method.DeclaringType as TypeDefinition) == type)) 
 					virt = true;
 			}
 

@@ -36,18 +36,18 @@ namespace Gendarme.Framework {
 	}
 
 	public interface IAssemblyRule : IRule {
-		IList CheckAssembly (IAssemblyDefinition assembly, Runner runner);
+		IList CheckAssembly (AssemblyDefinition assembly, Runner runner);
 	}
 
 	public interface IModuleRule : IRule {
-		IList CheckModule (IAssemblyDefinition assembly, IModuleDefinition module, Runner runner);
+		IList CheckModule (AssemblyDefinition assembly, ModuleDefinition module, Runner runner);
 	}
 
 	public interface ITypeRule : IRule {
-		IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner);
+		IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner);
 	}
 
 	public interface IMethodRule : IRule {
-		IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner);
+		IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner);
 	}
 }

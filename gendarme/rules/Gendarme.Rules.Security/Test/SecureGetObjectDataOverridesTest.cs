@@ -122,8 +122,8 @@ namespace Test.Rules.Security {
 		}
 
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -134,15 +134,15 @@ namespace Test.Rules.Security {
 			rule = new SecureGetObjectDataOverridesRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.SecureGetObjectDataOverridesTest/" + name;
 			return assembly.MainModule.Types[fullname];
 		}
 
-		private IMethodDefinition GetObjectData (ITypeDefinition type)
+		private MethodDefinition GetObjectData (TypeDefinition type)
 		{
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 				if (method.Name == "GetObjectData")
 					return method;
 			}
@@ -152,9 +152,9 @@ namespace Test.Rules.Security {
 		[Test]
 		public void Serializable ()
 		{
-			ITypeDefinition type = GetTest ("SerializableClass");
+			TypeDefinition type = GetTest ("SerializableClass");
 			// there's no GetObjectData method here so the test should never fail
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 			}
 		}
@@ -162,48 +162,48 @@ namespace Test.Rules.Security {
 		[Test]
 		public void ISerializable ()
 		{
-			ITypeDefinition type = GetTest ("ISerializableClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("ISerializableClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritISerializable ()
 		{
-			ITypeDefinition type = GetTest ("InheritISerializableClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("InheritISerializableClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemand ()
 		{
-			ITypeDefinition type = GetTest ("LinkDemandClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("LinkDemandClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("InheritanceDemandClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("InheritanceDemandClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Demand ()
 		{
-			ITypeDefinition type = GetTest ("DemandClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("DemandClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DemandWrongPermission ()
 		{
-			ITypeDefinition type = GetTest ("DemandWrongPermissionClass");
-			IMethodDefinition method = GetObjectData (type);
+			TypeDefinition type = GetTest ("DemandWrongPermissionClass");
+			MethodDefinition method = GetObjectData (type);
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 	}

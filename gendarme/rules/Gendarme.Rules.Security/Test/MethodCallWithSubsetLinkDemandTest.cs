@@ -105,8 +105,8 @@ namespace Test.Rules.Security {
 		}
 
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -117,7 +117,7 @@ namespace Test.Rules.Security {
 			rule = new MethodCallWithSubsetLinkDemandRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.MethodCallWithSubsetLinkDemandTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -126,8 +126,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void SubsetInherit ()
 		{
-			ITypeDefinition type = GetTest ("SubsetInheritClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("SubsetInheritClass");
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()), method.ToString ());
 			}
 		}
@@ -135,8 +135,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NotASubsetInherit ()
 		{
-			ITypeDefinition type = GetTest ("NotASubsetInheritClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("NotASubsetInheritClass");
+			foreach (MethodDefinition method in type.Methods) {
 				int n = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()).Count;
 				Assert.AreEqual (0, n, method.ToString ());
 			}
@@ -145,8 +145,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void SubsetCall ()
 		{
-			ITypeDefinition type = GetTest ("SubsetCallClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("SubsetCallClass");
+			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()), method.ToString ());
 			}
 		}
@@ -154,8 +154,8 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NotASubsetCall ()
 		{
-			ITypeDefinition type = GetTest ("NotASubsetCallClass");
-			foreach (IMethodDefinition method in type.Methods) {
+			TypeDefinition type = GetTest ("NotASubsetCallClass");
+			foreach (MethodDefinition method in type.Methods) {
 				int n = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()).Count;
 				Assert.AreEqual (0, n, method.ToString ());
 			}

@@ -11,7 +11,7 @@ namespace Gendarme.Rules.Exceptions {
 		{
 		}
 		
-		public ISEHGuardedBlock[] GetExceptionBlocks (IMethodDefinition method)
+		public ISEHGuardedBlock[] GetExceptionBlocks (MethodDefinition method)
 		{
 			Hashtable blockStarts = new Hashtable ();
 			ExceptionHandlerCollection ehc = null;

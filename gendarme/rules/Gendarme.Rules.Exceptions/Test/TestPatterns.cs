@@ -12,9 +12,9 @@ namespace Test.Rules.Exceptions {
 	public class DontDestroyStackTraceTest {
 	
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
-		private ITypeDefinition type;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
+		private TypeDefinition type;
 		
 		// Test setup
 		[TestFixtureSetUp]
@@ -29,7 +29,7 @@ namespace Test.Rules.Exceptions {
 		}
 
 		// Test infrastructure
-		private IMethodDefinition GetMethodToTest (string name)
+		private MethodDefinition GetMethodToTest (string name)
 		{
 			return type.Methods.GetMethod (name, new Type [0]);
 		}
@@ -39,7 +39,7 @@ namespace Test.Rules.Exceptions {
 		public void TestThrowOriginalEx ()
 		{
 			string testName = "ThrowOriginalEx";
-			IMethodDefinition method = GetMethodToTest (testName);
+			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in 1 warning message
 			IList list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
@@ -51,7 +51,7 @@ namespace Test.Rules.Exceptions {
 		public void TestThrowOriginalExWithJunk ()
 		{
 			string testName = "ThrowOriginalExWithJunk";
-			IMethodDefinition method = GetMethodToTest (testName);
+			MethodDefinition method = GetMethodToTest (testName);
 			
 			// Should result in 1 warning message
 			IList list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
@@ -63,7 +63,7 @@ namespace Test.Rules.Exceptions {
 		public void TestRethrowOriginalEx ()
 		{
 			string testName = "RethrowOriginalEx";
-			IMethodDefinition method = GetMethodToTest (testName);
+			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in 0 warning messages
 			IList list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
@@ -74,7 +74,7 @@ namespace Test.Rules.Exceptions {
 		public void TestThrowOriginalExAndRethrowWithJunk ()
 		{
 			string testName = "ThrowOriginalExAndRethrowWithJunk";
-			IMethodDefinition method = GetMethodToTest (testName);
+			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in one warning message
 			IList list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
@@ -86,7 +86,7 @@ namespace Test.Rules.Exceptions {
 		public void TestRethrowOriginalExAndThrowWithJunk ()
 		{
 			string testName = "RethrowOriginalExAndThrowWithJunk";
-			IMethodDefinition method = GetMethodToTest (testName);
+			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in one warning message
 			IList list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());

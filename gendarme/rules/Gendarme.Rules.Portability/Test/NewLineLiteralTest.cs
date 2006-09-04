@@ -40,9 +40,9 @@ namespace Test.Rules.Interop {
 	public class NewLineTest {
 
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
-		private ITypeDefinition type;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
+		private TypeDefinition type;
 
 		public string GetNewLineLiteral_13 ()
 		{
@@ -84,9 +84,9 @@ namespace Test.Rules.Interop {
 			rule = new NewLineLiteralRule ();
 		}
 
-		private IMethodDefinition GetTest (string name)
+		private MethodDefinition GetTest (string name)
 		{
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 				if (method.Name == name)
 					return method;
 			}
@@ -96,42 +96,42 @@ namespace Test.Rules.Interop {
 		[Test]
 		public void HasNewLineLiteral_13 ()
 		{
-			IMethodDefinition method = GetTest ("GetNewLineLiteral_13");
+			MethodDefinition method = GetTest ("GetNewLineLiteral_13");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLineLiteral_10 ()
 		{
-			IMethodDefinition method = GetTest ("GetNewLineLiteral_10");
+			MethodDefinition method = GetTest ("GetNewLineLiteral_10");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLineLiteral ()
 		{
-			IMethodDefinition method = GetTest ("GetNewLineLiteral");
+			MethodDefinition method = GetTest ("GetNewLineLiteral");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLine ()
 		{
-			IMethodDefinition method = GetTest ("GetNewLine");
+			MethodDefinition method = GetTest ("GetNewLine");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNull ()
 		{
-			IMethodDefinition method = GetTest ("GetNull");
+			MethodDefinition method = GetTest ("GetNull");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasEmpty ()
 		{
-			IMethodDefinition method = GetTest ("GetEmpty");
+			MethodDefinition method = GetTest ("GetEmpty");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
 		}
 	}

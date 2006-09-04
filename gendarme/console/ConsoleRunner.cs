@@ -190,7 +190,7 @@ class ConsoleRunner : Runner {
 		}
 
 		foreach (string assembly in runner.assemblies) {
-			IAssemblyDefinition ad = null;
+			AssemblyDefinition ad = null;
 			try {
 				ad = AssemblyFactory.GetAssembly (assembly);
 			}

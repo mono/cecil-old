@@ -127,8 +127,8 @@ namespace Test.Rules.Security {
 		}
 
 		private ITypeRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -139,7 +139,7 @@ namespace Test.Rules.Security {
 			rule = new TypeIsNotSubsetOfMethodSecurityRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.TypeIsNotSubsetOfMethodSecurityTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -148,49 +148,49 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NoSecurity ()
 		{
-			ITypeDefinition type = GetTest ("NoSecurityClass");
+			TypeDefinition type = GetTest ("NoSecurityClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemand ()
 		{
-			ITypeDefinition type = GetTest ("LinkDemandClass");
+			TypeDefinition type = GetTest ("LinkDemandClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("InheritanceDemandClass");
+			TypeDefinition type = GetTest ("InheritanceDemandClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void AssertNotSubset ()
 		{
-			ITypeDefinition type = GetTest ("AssertNotSubsetClass");
+			TypeDefinition type = GetTest ("AssertNotSubsetClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DemandSubset ()
 		{
-			ITypeDefinition type = GetTest ("DemandSubsetClass");
+			TypeDefinition type = GetTest ("DemandSubsetClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DenyNotSubset ()
 		{
-			ITypeDefinition type = GetTest ("DenyNotSubsetClass");
+			TypeDefinition type = GetTest ("DenyNotSubsetClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void PermitOnlySubset ()
 		{
-			ITypeDefinition type = GetTest ("PermitOnlySubsetClass");
+			TypeDefinition type = GetTest ("PermitOnlySubsetClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}

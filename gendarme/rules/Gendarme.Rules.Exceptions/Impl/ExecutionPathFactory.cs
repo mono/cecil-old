@@ -7,9 +7,9 @@ namespace Gendarme.Rules.Exceptions.Impl {
 
 	public class ExecutionPathFactory {
 	
-		private IMethodDefinition method;
+		private MethodDefinition method;
 
-		public ExecutionPathFactory (IMethodDefinition method)
+		public ExecutionPathFactory (MethodDefinition method)
 		{
 			this.method = method;
 		}
@@ -40,23 +40,23 @@ namespace Gendarme.Rules.Exceptions.Impl {
 			return ret;
 		}
 
-		private void CreatePathHelper (IInstruction start, 
-					       IInstruction end, 
+		private void CreatePathHelper (Instruction start, 
+					       Instruction end, 
 					       ExecutionPath path, 
 					       ArrayList completedPaths)
 		{
 			ExecutionBlock curBlock = new ExecutionBlock ();
 			curBlock.First = start;
 
-			IInstruction cur = start;
+			Instruction cur = start;
 			bool stop = false;
 			do {
 				switch (cur.OpCode.FlowControl) {
 				case FlowControl.Branch:
 				case FlowControl.Cond_Branch:
 					if (cur.OpCode == OpCodes.Switch) {
-						IInstruction[] targetOffsets = (IInstruction[])cur.Operand;
-						foreach (IInstruction target in targetOffsets) {
+						Instruction[] targetOffsets = (Instruction[])cur.Operand;
+						foreach (Instruction target in targetOffsets) {
 							if (!path.Contains (target)) {
 								curBlock.Last = cur;
 								path.Add (curBlock);
@@ -75,7 +75,7 @@ namespace Gendarme.Rules.Exceptions.Impl {
 						stop = true;
 						break;
 					} else {
-						IInstruction target = (IInstruction)cur.Operand;
+						Instruction target = (Instruction)cur.Operand;
 						if (!path.Contains (target)) {
 							curBlock.Last = cur;
 							path.Add (curBlock);

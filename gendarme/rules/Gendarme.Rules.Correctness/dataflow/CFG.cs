@@ -22,8 +22,8 @@ namespace Gendarme.Rules.Correctness {
 
 public class CFG : Graph { 
 
-    [NonNull] private IInstructionCollection instructions;
-    [NonNull] private IMethodDefinition method;
+    [NonNull] private InstructionCollection instructions;
+    [NonNull] private MethodDefinition method;
     [NonNull] private IDictionary branchTable;
     private BasicBlock entryPoint;
 
@@ -31,18 +31,18 @@ public class CFG : Graph {
         get { return entryPoint; }
     }
 
-    public CFG([NonNull] IMethodDefinition method)
+    public CFG([NonNull] MethodDefinition method)
     {
         Init(method.Body.Instructions, method);
     }
 
-    public CFG(IInstructionCollection instructions)
+    public CFG(InstructionCollection instructions)
     {
         Init(instructions, null);
     }
 
-    private void Init([NonNull] IInstructionCollection instructions,
-            [NonNull] IMethodDefinition method)
+    private void Init([NonNull] InstructionCollection instructions,
+            [NonNull] MethodDefinition method)
     {
         this.instructions = instructions;
         this.method = method;
@@ -50,7 +50,7 @@ public class CFG : Graph {
         BuildGraph();
     }
 
-    private bool IsBranch(IInstruction instruction)
+    private bool IsBranch(Instruction instruction)
     {
         if(instruction == null)
             return false;
@@ -67,7 +67,7 @@ public class CFG : Graph {
         return false;
     }
 
-    private bool HasNext([NonNull] IInstruction instruction)
+    private bool HasNext([NonNull] Instruction instruction)
     {
         if(instruction.OpCode.FlowControl == FlowControl.Branch)
             return false;
@@ -79,26 +79,26 @@ public class CFG : Graph {
             return true;
     }
 
-    private int[] BranchTargets([NonNull] IInstruction instruction)
+    private int[] BranchTargets([NonNull] Instruction instruction)
     {
         int[] result = null;
         switch(instruction.OpCode.OperandType) {
             case OperandType.InlineSwitch:
-                IInstruction[] targets = (IInstruction[])instruction.Operand;
+                Instruction[] targets = (Instruction[])instruction.Operand;
                 result = new int[targets.Length];
                 int i = 0;
-                foreach(IInstruction target in targets) {
+                foreach(Instruction target in targets) {
                     result[i] = target.Offset;
                     i++;
                 }
                 break;
             case OperandType.InlineBrTarget:
                 result = new int[1];
-                result[0] = ((IInstruction)instruction.Operand).Offset;
+                result[0] = ((Instruction)instruction.Operand).Offset;
                 break;
             case OperandType.ShortInlineBrTarget:
                 result = new int[1];
-                result[0] = ((IInstruction)instruction.Operand).Offset;
+                result[0] = ((Instruction)instruction.Operand).Offset;
                 break;
         }
         return result;
@@ -106,18 +106,18 @@ public class CFG : Graph {
 
     public bool BeginsCatch(BasicBlock bb)
     {
-        IExceptionHandler handler = StartsHandlerRegion(bb.FirstInstruction);
+        ExceptionHandler handler = StartsHandlerRegion(bb.FirstInstruction);
         if(handler != null && handler.Type == ExceptionHandlerType.Catch)
             return true;
         return false;
     }
 
-    private BasicBlock GetNearestFinally(IInstruction insn, Hashtable insnBB)
+    private BasicBlock GetNearestFinally(Instruction insn, Hashtable insnBB)
     {
         BasicBlock nearest = null;
-        IInstructionCollection insns = method.Body.Instructions;
+        InstructionCollection insns = method.Body.Instructions;
         int width = insns[insns.Count - 1].Offset;
-        foreach(IExceptionHandler handler in method.Body.ExceptionHandlers) {
+        foreach(ExceptionHandler handler in method.Body.ExceptionHandlers) {
             if(handler.Type == ExceptionHandlerType.Finally) {
                 if(insn.Offset >= handler.TryStart.Offset &&
                         insn.Offset < handler.TryEnd.Offset &&
@@ -129,7 +129,7 @@ public class CFG : Graph {
         return nearest;
     }
 
-    private bool OffsetsEqual(IInstruction insn1, IInstruction insn2)
+    private bool OffsetsEqual(Instruction insn1, Instruction insn2)
     {
         if(insn1 == insn2) return true;
         if(insn1 == null) return false;
@@ -138,9 +138,9 @@ public class CFG : Graph {
         return false;
     }
 
-    private IExceptionHandler EndsTryRegion([NonNull] IInstruction instruction)
+    private ExceptionHandler EndsTryRegion([NonNull] Instruction instruction)
     {
-        foreach(IExceptionHandler handler in method.Body.ExceptionHandlers) {
+        foreach(ExceptionHandler handler in method.Body.ExceptionHandlers) {
             if(instruction != null)
                 if(OffsetsEqual(instruction.Next, handler.TryEnd))
                     return handler;
@@ -148,10 +148,10 @@ public class CFG : Graph {
         return null;
     }
 
-    private IExceptionHandler EndsHandlerRegion(
-            [NonNull] IInstruction instruction)
+    private ExceptionHandler EndsHandlerRegion(
+            [NonNull] Instruction instruction)
     {
-        foreach(IExceptionHandler handler in method.Body.ExceptionHandlers) {
+        foreach(ExceptionHandler handler in method.Body.ExceptionHandlers) {
             if(instruction != null)
                 if(OffsetsEqual(instruction.Next, handler.HandlerEnd))
                     return handler;
@@ -159,28 +159,28 @@ public class CFG : Graph {
         return null;
     }
 
-    private IExceptionHandler StartsTryRegion(
-            [NonNull] IInstruction instruction)
+    private ExceptionHandler StartsTryRegion(
+            [NonNull] Instruction instruction)
     {
-        foreach(IExceptionHandler handler in method.Body.ExceptionHandlers) {
+        foreach(ExceptionHandler handler in method.Body.ExceptionHandlers) {
             if(OffsetsEqual(instruction, handler.TryStart))
                 return handler;
         }
         return null;
     }
 
-    private IExceptionHandler StartsHandlerRegion(
-            [NonNull] IInstruction instruction)
+    private ExceptionHandler StartsHandlerRegion(
+            [NonNull] Instruction instruction)
     {
-        foreach(IExceptionHandler handler in method.Body.ExceptionHandlers) {
+        foreach(ExceptionHandler handler in method.Body.ExceptionHandlers) {
             if(OffsetsEqual(instruction, handler.HandlerStart))
                 return handler;
         }
         return null;
     }
 
-    private bool IsLeader([NonNull] IInstruction instruction,
-            [NonNull] IInstruction previous)
+    private bool IsLeader([NonNull] Instruction instruction,
+            [NonNull] Instruction previous)
     {
         /* First instruction in the method */
         if(previous == null)
@@ -207,7 +207,7 @@ public class CFG : Graph {
 
     private void InitBranchTable() {
         branchTable = new Hashtable();
-        foreach(IInstruction instr in instructions) {
+        foreach(Instruction instr in instructions) {
             int[] targets = BranchTargets(instr);
             if(targets != null)
                 foreach(int target in targets)
@@ -224,7 +224,7 @@ public class CFG : Graph {
 
     private void BuildGraph() {
         BasicBlock tail = null;
-        IInstruction prevInsn = null;
+        Instruction prevInsn = null;
         BasicBlock prevBB = null;
         int currentInsnNum = 0;
         Hashtable insnBB = new Hashtable();
@@ -233,7 +233,7 @@ public class CFG : Graph {
         exit.isExit = true;
         AddNode(exit);
 
-        foreach(IInstruction insn in instructions) {
+        foreach(Instruction insn in instructions) {
             if(IsLeader(insn, prevInsn)) {
                 tail = new BasicBlock(instructions);
                 tail.first = currentInsnNum;
@@ -256,7 +256,7 @@ public class CFG : Graph {
             prevBB.last = currentInsnNum - 1;
         }
 
-        foreach(IInstruction insn in instructions) {
+        foreach(Instruction insn in instructions) {
             if((EndsTryRegion(insn) != null) ||
                     (EndsHandlerRegion(insn) != null)) { 
                 BasicBlock finallyBB = GetNearestFinally(insn, insnBB);
@@ -295,12 +295,12 @@ public class CFG : Graph {
     }
 
     public void PrintBasicBlocks() {
-        IInstruction prevInstr = null;
+        Instruction prevInstr = null;
 
         Console.WriteLine(method.Name);
         Console.WriteLine("Number of parameters: {0}",
                 method.Parameters.Count);
-        foreach(IInstruction instr in instructions) {
+        foreach(Instruction instr in instructions) {
             if(StartsTryRegion(instr) != null)
                 Console.WriteLine("Try {");
             if(StartsHandlerRegion(instr) != null)

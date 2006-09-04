@@ -7,8 +7,8 @@ namespace Gendarme.Rules.Exceptions.Impl {
 
 	public class ExecutionBlock : ICloneable {
 	
-		private IInstruction firstInstruction;
-		private IInstruction lastInstruction;
+		private Instruction firstInstruction;
+		private Instruction lastInstruction;
 
 		public ExecutionBlock ()
 		{
@@ -16,17 +16,17 @@ namespace Gendarme.Rules.Exceptions.Impl {
 			lastInstruction = null;
 		}
 
-		public IInstruction First {
+		public Instruction First {
 			get { return firstInstruction; }
 			set { firstInstruction = value; }
 		}
 
-		public IInstruction Last {
+		public Instruction Last {
 			get { return lastInstruction; }
 			set { lastInstruction = value; }
 		}
 
-		public bool Contains (IInstruction instruction)
+		public bool Contains (Instruction instruction)
 		{
 			if (firstInstruction == null || lastInstruction == null ||
 				firstInstruction.Offset > lastInstruction.Offset) {

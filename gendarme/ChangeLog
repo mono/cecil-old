@@ -1,3 +1,7 @@
+2006-09-05  Jb Evain  <jbevain@gmail.com>
+
+	* Update to latest Cecil API.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* gendarme.mds: New. Solution file for MonoDevelop.

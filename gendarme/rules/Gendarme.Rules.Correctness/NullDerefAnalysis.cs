@@ -25,12 +25,12 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
     int stackDepth;
     int locals;
     int args;
-    [NonNull] private IMethodDefinition method;
+    [NonNull] private MethodDefinition method;
     [NonNull] private NonNullAttributeCollector nnaCollector;
     [NonNull] private IList messages;
     [NonNull] private Runner runner;
 
-    public NullDerefAnalysis([NonNull] IMethodDefinition method,
+    public NullDerefAnalysis([NonNull] MethodDefinition method,
             [NonNull] IList messages,
             [NonNull] NonNullAttributeCollector nnaCollector,
             [NonNull] Runner runner)
@@ -60,7 +60,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
             new NullDerefFrame(stackDepth, locals, args, true, runner);
         if(method.HasThis)
             result.SetArgNullity(0, Nullity.NonNull);
-        foreach(IParameterReference param in method.Parameters)
+        foreach(ParameterDefinition param in method.Parameters)
             if(nnaCollector.HasNonNullAttribute(method, param))
                 result.SetArgNullity(param.Sequence - 1, Nullity.NonNull);
         return result;
@@ -73,7 +73,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
             new NullDerefFrame(stackDepth, locals, args, true, runner);
         if(method.HasThis)
             result.SetArgNullity(0, Nullity.NonNull);
-        foreach(IParameterReference param in method.Parameters)
+        foreach(ParameterDefinition param in method.Parameters)
             if(nnaCollector.HasNonNullAttribute(method, param))
                 result.SetArgNullity(param.Sequence - 1, Nullity.NonNull);
         /* The exception being caught is pushed onto the stack. */
@@ -90,7 +90,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         original.MergeWith(incoming);
     }
 
-    private bool IsVoid([NonNull] ITypeReference type)
+    private bool IsVoid([NonNull] TypeReference type)
     {
         if(type.FullName.Equals("System.Void"))
             return true;
@@ -108,7 +108,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
 
         //NullDerefFrame inFrame = (NullDerefFrame)inFact;
         NullDerefFrame outFrame = (NullDerefFrame)outFact;
-        IVariableDefinitionCollection vars = method.Body.Variables;
+        VariableDefinitionCollection vars = method.Body.Variables;
 
         if(runner.Debug) {
             Console.WriteLine("Basic block {0}", bb.ToString());
@@ -117,16 +117,16 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         }
         
         for(int i = bb.first; i <= bb.last; i++) {
-            IInstruction insn = bb.Instructions[i];
+            Instruction insn = bb.Instructions[i];
             OpCode opcode = insn.OpCode;
 
             if(runner.Debug) {
                 Console.Write("{0}", opcode.Name);
-                if(insn.Operand != null && !(insn.Operand is IInstruction)) {
+                if(insn.Operand != null && !(insn.Operand is Instruction)) {
                     Console.WriteLine(" {0}", insn.Operand.ToString());
-                } else if(insn.Operand is IInstruction) {
+                } else if(insn.Operand is Instruction) {
                     Console.WriteLine(" {0}",
-                            ((IInstruction)insn.Operand).Offset.ToString("X4"));
+                            ((Instruction)insn.Operand).Offset.ToString("X4"));
                 } else {
                     Console.WriteLine();
                 }
@@ -153,8 +153,8 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                             outFrame.GetArgNullity((int)insn.Operand));
                     break;
                 case Ldarg_S: {
-                    IParameterReference param =
-                        (IParameterReference)insn.Operand;
+                    ParameterDefinition param =
+                        (ParameterDefinition)insn.Operand;
                     outFrame.PushStack(
                             outFrame.GetArgNullity(param.Sequence - 1));
                     break;
@@ -172,8 +172,8 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                             outFrame.PopStack());
                     break;
                 case Starg_S: {
-                    IParameterReference param =
-                        (IParameterReference)insn.Operand;
+                    ParameterDefinition param =
+                        (ParameterDefinition)insn.Operand;
                     outFrame.SetArgNullity(param.Sequence - 1, 
                             outFrame.PopStack());
                     break;
@@ -257,7 +257,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 case Cpobj: outFrame.PopStack(2); break;
                 case Newobj:
                     outFrame.PopStack(
-                        ((IMethodReference)insn.Operand).Parameters.Count);
+                        ((MethodReference)insn.Operand).Parameters.Count);
                     outFrame.PushStack(Nullity.NonNull);
                     break;
                 case Ldobj:
@@ -270,7 +270,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                  /* Load field */
                 case Ldfld: {
                     Check(insn, warn, outFrame.PopStack(), "field");
-                    IFieldReference field = (IFieldReference)insn.Operand;
+                    FieldReference field = (FieldReference)insn.Operand;
                     if(nnaCollector.HasNonNullAttribute(field))
                         outFrame.PushStack(Nullity.NonNull);
                     else
@@ -282,7 +282,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                     outFrame.PushStack(Nullity.NonNull);
                     break;
                 case Ldsfld: {
-                    IFieldReference field = (IFieldReference)insn.Operand;
+                    FieldReference field = (FieldReference)insn.Operand;
                     if(nnaCollector.HasNonNullAttribute(field))
                         outFrame.PushStack(Nullity.NonNull);
                     else
@@ -296,7 +296,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                     /* FIXME: warn if writing null to non-null field */
                     Nullity n = outFrame.PopStack();
                     Check(insn, warn, outFrame.PopStack(), "field");
-                    IFieldReference field = (IFieldReference)insn.Operand;
+                    FieldReference field = (FieldReference)insn.Operand;
                     if(warn && nnaCollector.HasNonNullAttribute(field)) {
                         string etype = method.DeclaringType.FullName;
                         Location loc = new Location(etype,
@@ -316,7 +316,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 }
                 case Stsfld: {
                     Nullity n = outFrame.PopStack();
-                    IFieldReference field = (IFieldReference)insn.Operand;
+                    FieldReference field = (FieldReference)insn.Operand;
                     if(warn && nnaCollector.HasNonNullAttribute(field)) {
                         string etype = method.DeclaringType.FullName;
                         Location loc = new Location(etype,
@@ -776,7 +776,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         }
     } /* Transfer */
 
-    private void Check([NonNull]IInstruction insn, bool warn, Nullity n,
+    private void Check([NonNull]Instruction insn, bool warn, Nullity n,
             [NonNull] string type)
     {
         if(!warn) return;
@@ -807,7 +807,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         }
     }
 
-    private void ProcessCall([NonNull] IInstruction insn, bool warn,
+    private void ProcessCall([NonNull] Instruction insn, bool warn,
             bool indirect, [NonNull] NullDerefFrame frame)
     {
         string etype = method.DeclaringType.FullName;
@@ -815,7 +815,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         IMethodSignature csig = (IMethodSignature)insn.Operand;
         if(indirect)
             frame.PopStack(); /* Function pointer */
-        foreach(IParameterReference param in csig.Parameters) {
+        foreach(ParameterDefinition param in csig.Parameters) {
             Nullity n = frame.PopStack();
             if(warn && nnaCollector.HasNonNullAttribute(method, param)) {
                 if(n == Nullity.Null)

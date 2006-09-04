@@ -52,7 +52,7 @@ namespace Gendarme.Rules.Security {
 			}
 		}
 
-		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
+		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// check that the method is called "GetObjectData"
 			if (method.Name != "GetObjectData")
@@ -82,7 +82,7 @@ namespace Gendarme.Rules.Security {
 				return runner.RuleFailure;
 
 			// the SerializationFormatter must be a subset of the one (of the) demand(s)
-			foreach (ISecurityDeclaration declsec in method.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.Demand:
 				case Mono.Cecil.SecurityAction.NonCasDemand:

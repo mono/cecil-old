@@ -16,7 +16,7 @@ namespace Gendarme.Rules.Exceptions.Impl {
 			List.Add (block);
 		}
 
-		public bool Contains (IInstruction instruction)
+		public bool Contains (Instruction instruction)
 		{
 			foreach (ExecutionBlock block in List) {
 				if (block.Contains (instruction))

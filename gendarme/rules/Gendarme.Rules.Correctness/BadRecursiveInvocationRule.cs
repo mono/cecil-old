@@ -22,20 +22,20 @@ namespace Gendarme.Rules.Correctness {
 
 public class BadRecursiveInvocationRule : IMethodRule {
 
-    public IList CheckMethod (IAssemblyDefinition assembly,
-            IModuleDefinition module, ITypeDefinition type,
-            IMethodDefinition method, Runner runner)
+    public IList CheckMethod (AssemblyDefinition assembly,
+            ModuleDefinition module, TypeDefinition type,
+            MethodDefinition method, Runner runner)
     {
         if(method.Body == null)
             return runner.RuleSuccess;
 
-        IInstructionCollection instructions = method.Body.Instructions;
+        InstructionCollection instructions = method.Body.Instructions;
 
         for(int i = 0; i < instructions.Count; i++) {
-            IInstruction insn = instructions[i];
+            Instruction insn = instructions[i];
             if(insn.OpCode.Value == OpCodeConstants.Call ||
                insn.OpCode.Value == OpCodeConstants.Callvirt) {
-                IMethodReference mref = (IMethodReference)insn.Operand;
+                MethodReference mref = (MethodReference)insn.Operand;
                 string rName = mref.Name;
                 string rDecl = mref.DeclaringType.Name;
                 string mName = method.Name;
@@ -44,10 +44,10 @@ public class BadRecursiveInvocationRule : IMethodRule {
                     (mref.Parameters.Count == method.Parameters.Count);
                 if(argsEqual) {
                     for(int j = 0; j < mref.Parameters.Count; j++) {
-                        IParameterDefinition p1 =
-                            (IParameterDefinition)mref.Parameters[j];
-                        IParameterDefinition p2 =
-                            (IParameterDefinition)method.Parameters[j];
+                        ParameterDefinition p1 =
+                            (ParameterDefinition)mref.Parameters[j];
+                        ParameterDefinition p2 =
+                            (ParameterDefinition)method.Parameters[j];
 
                         if(!p1.Name.Equals(p2.Name))
                             argsEqual = false;
@@ -75,11 +75,11 @@ public class BadRecursiveInvocationRule : IMethodRule {
         return runner.RuleSuccess;
     }
 
-    private bool LoadsVerbatimArgs([NonNull] IMethodDefinition method,
+    private bool LoadsVerbatimArgs([NonNull] MethodDefinition method,
             int callIndex)
     {
         int pcount = method.Parameters.Count;
-        IInstructionCollection instructions = method.Body.Instructions;
+        InstructionCollection instructions = method.Body.Instructions;
 
         if(callIndex <= pcount)
             return false;
@@ -92,13 +92,13 @@ public class BadRecursiveInvocationRule : IMethodRule {
         return true;
     }
 
-    private bool IsLoadParam([NonNull] IInstruction insn, int paramNum)
+    private bool IsLoadParam([NonNull] Instruction insn, int paramNum)
     {
         switch((int)insn.OpCode.Value) {
             case OpCodeConstants.Ldarg:
                 if((int)insn.Operand == paramNum) return true; break;
             case OpCodeConstants.Ldarg_S:
-                IParameterReference param = (IParameterReference)insn.Operand;
+                ParameterDefinition param = (ParameterDefinition)insn.Operand;
                 if((param.Sequence - 1) == paramNum) return true;
                 break;
             case OpCodeConstants.Ldarg_0: if(paramNum == 0) return true; break;

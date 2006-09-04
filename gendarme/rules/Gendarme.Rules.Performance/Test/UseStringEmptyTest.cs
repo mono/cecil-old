@@ -88,9 +88,9 @@ namespace Test.Rules.Performance {
 
 
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
-		private ITypeDefinition type;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
+		private TypeDefinition type;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -102,13 +102,13 @@ namespace Test.Rules.Performance {
 			rule = new UseStringEmptyRule ();
 		}
 		
-		private IMethodDefinition GetTest (string name)
+		private MethodDefinition GetTest (string name)
 		{
-			foreach (IMethodDefinition md in type.Methods) {
+			foreach (MethodDefinition md in type.Methods) {
 				if (md.Name == name)
 					return md;
 			}
-			foreach (IMethodDefinition md in type.Constructors) {
+			foreach (MethodDefinition md in type.Constructors) {
 				if (md.Name == name)
 					return md;
 			}
@@ -118,21 +118,21 @@ namespace Test.Rules.Performance {
 		[Test]
 		public void GetConstField ()
 		{
-			IMethodDefinition method = GetTest ("GetConstField");
+			MethodDefinition method = GetTest ("GetConstField");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Append ()
 		{
-			IMethodDefinition method = GetTest ("Append");
+			MethodDefinition method = GetTest ("Append");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Enclose ()
 		{
-			IMethodDefinition method = GetTest ("Enclose");
+			MethodDefinition method = GetTest ("Enclose");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
@@ -140,7 +140,7 @@ namespace Test.Rules.Performance {
 		public void Constructor ()
 		{
 			// the "public_field" field is set to "" in the (hidden) ctor
-			IMethodDefinition method = GetTest (".ctor");
+			MethodDefinition method = GetTest (".ctor");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
@@ -148,35 +148,35 @@ namespace Test.Rules.Performance {
 		public void StaticConstructor ()
 		{
 			// the "private_static_field" field is set to "" in the (hidden) class ctor
-			IMethodDefinition method = GetTest (".cctor");
+			MethodDefinition method = GetTest (".cctor");
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void GetField ()
 		{
-			IMethodDefinition method = GetTest ("GetField");
+			MethodDefinition method = GetTest ("GetField");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void GetStaticField ()
 		{
-			IMethodDefinition method = GetTest ("GetStaticField");
+			MethodDefinition method = GetTest ("GetStaticField");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Prepend ()
 		{
-			IMethodDefinition method = GetTest ("Prepend");
+			MethodDefinition method = GetTest ("Prepend");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 		
 		[Test]
 		public void NoHarm ()
 		{
-			IMethodDefinition method = GetTest ("NoStringWereHarmedInThisTestCase");
+			MethodDefinition method = GetTest ("NoStringWereHarmedInThisTestCase");
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 	}

@@ -101,8 +101,8 @@ namespace Test.Rules.Security {
 		}
 
 		private ITypeRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -113,7 +113,7 @@ namespace Test.Rules.Security {
 			rule = new TypeExposeFieldsRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.TypeExposeFieldsTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -122,42 +122,42 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NonPublic ()
 		{
-			ITypeDefinition type = GetTest ("NonPublicClass");
+			TypeDefinition type = GetTest ("NonPublicClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoSecurity ()
 		{
-			ITypeDefinition type = GetTest ("NoSecurityClass");
+			TypeDefinition type = GetTest ("NoSecurityClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoDemand ()
 		{
-			ITypeDefinition type = GetTest ("NoDemandClass");
+			TypeDefinition type = GetTest ("NoDemandClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoPublicField ()
 		{
-			ITypeDefinition type = GetTest ("NoPublicFieldClass");
+			TypeDefinition type = GetTest ("NoPublicFieldClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemandWithField ()
 		{
-			ITypeDefinition type = GetTest ("LinkDemandWithFieldClass");
+			TypeDefinition type = GetTest ("LinkDemandWithFieldClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void DemandWithField ()
 		{
-			ITypeDefinition type = GetTest ("DemandWithFieldClass");
+			TypeDefinition type = GetTest ("DemandWithFieldClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}

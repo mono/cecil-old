@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Performance {
 
 	public class IDisposableWithDestructorWithoutSuppressFinalizeRule : ITypeRule {
 
-		private bool MethodMatchNameVoidEmpty (IMethodDefinition md, string methodName)
+		private bool MethodMatchNameVoidEmpty (MethodDefinition md, string methodName)
 		{
 			if (md.Name != methodName)
 				return false;
@@ -46,14 +46,14 @@ namespace Gendarme.Rules.Performance {
 			return (md.ReturnType.ReturnType.ToString () == "System.Void");
 		}
 
-		private IList Recurse (IMethodDefinition method, int level, Runner runner)
+		private IList Recurse (MethodDefinition method, int level, Runner runner)
 		{
 			// some methods have no body (e.g. p/invokes, icalls)
 			if (method.Body == null) {
 				return runner.RuleFailure;
 			}
 
-			foreach (IInstruction ins in method.Body.Instructions) {
+			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "call":
 				case "callvirt":
@@ -61,7 +61,7 @@ namespace Gendarme.Rules.Performance {
 					if (ins.Operand.ToString () == "System.Void System.GC::SuppressFinalize(System.Object)")
 						return runner.RuleSuccess;
 					else if (level < 3) {
-						IMethodDefinition callee = (ins.Operand as IMethodDefinition);
+						MethodDefinition callee = (ins.Operand as MethodDefinition);
 						if (callee != null) {
 							if (Recurse (callee, level + 1, runner) == null)
 								return runner.RuleSuccess;
@@ -73,11 +73,11 @@ namespace Gendarme.Rules.Performance {
 			return runner.RuleFailure;
 		}
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - does the type implements System.IDisposable ?
 			bool idisposable = false;
-			foreach (ITypeReference i in type.Interfaces) {
+			foreach (TypeReference i in type.Interfaces) {
 				if (i.ToString () == "System.IDisposable") {
 					idisposable = true;
 					break;
@@ -87,8 +87,8 @@ namespace Gendarme.Rules.Performance {
 				return runner.RuleSuccess;
 
 			// #2 - look for the Dispose method
-			IMethodDefinition dispose = null;
-			foreach (IMethodDefinition md in type.Methods) {
+			MethodDefinition dispose = null;
+			foreach (MethodDefinition md in type.Methods) {
 				if (MethodMatchNameVoidEmpty (md, "Dispose") || 
 					MethodMatchNameVoidEmpty (md, "System.IDisposable.Dispose")) {
 
@@ -100,8 +100,8 @@ namespace Gendarme.Rules.Performance {
 				return runner.RuleSuccess;
 
 			// #3 - look for a destructor
-			IMethodDefinition destructor = null;
-			foreach (IMethodDefinition md in type.Methods) {
+			MethodDefinition destructor = null;
+			foreach (MethodDefinition md in type.Methods) {
 				if (MethodMatchNameVoidEmpty (md, "Finalize")) {
 					destructor = md;
 					break;

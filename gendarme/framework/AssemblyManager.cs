@@ -38,17 +38,17 @@ namespace Gendarme.Framework {
 
 	public class AssemblyManager {
 
-		static public IMethodDefinition GetMethod (object method)
+		static public MethodDefinition GetMethod (object method)
 		{
-			IMethodDefinition md = (method as IMethodDefinition);
+			MethodDefinition md = (method as MethodDefinition);
 			if (md != null)
 				return md;
 
-			IMethodReference mr = (method as IMethodReference);
+			MethodReference mr = (method as MethodReference);
 			if (mr == null)
 				return null;
 
-			// convert the IMethodReference into a IMethodDefinition
+			// convert the MethodReference into a MethodDefinition
 			//AssemblyNameReference anr = (mr.DeclaringType.Scope as AssemblyNameReference);
 			return null;
 

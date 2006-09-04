@@ -72,8 +72,8 @@ namespace Test.Rules.Security {
 		}
 
 		private ITypeRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -84,7 +84,7 @@ namespace Test.Rules.Security {
 			rule = new SealedTypeWithInheritanceDemandRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.SealedTypeWithInheritanceDemandTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -93,28 +93,28 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NonSealed ()
 		{
-			ITypeDefinition type = GetTest ("NonSealedClass");
+			TypeDefinition type = GetTest ("NonSealedClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithoutSecurity ()
 		{
-			ITypeDefinition type = GetTest ("SealedClassWithoutSecurity");
+			TypeDefinition type = GetTest ("SealedClassWithoutSecurity");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithoutInheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("SealedClassWithoutInheritanceDemand");
+			TypeDefinition type = GetTest ("SealedClassWithoutInheritanceDemand");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SealedWithInheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("SealedClassWithInheritanceDemand");
+			TypeDefinition type = GetTest ("SealedClassWithInheritanceDemand");
 			int n = rule.CheckType (assembly, module, type, new MinimalRunner ()).Count;
 			Assert.AreEqual (0, n, type.ToString ());
 		}

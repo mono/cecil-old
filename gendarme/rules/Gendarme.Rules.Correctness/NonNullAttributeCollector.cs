@@ -31,22 +31,22 @@ public class NonNullAttributeCollector {
 
     }
 
-    public void AddAssembly([NonNull] IAssemblyDefinition assembly)
+    public void AddAssembly([NonNull] AssemblyDefinition assembly)
     {
-        foreach(IModuleDefinition module in assembly.Modules) {
-            foreach(ITypeDefinition type in module.Types) {
-                foreach(IMethodDefinition method in type.Methods) {
+        foreach(ModuleDefinition module in assembly.Modules) {
+            foreach(TypeDefinition type in module.Types) {
+                foreach(MethodDefinition method in type.Methods) {
                     if(DefHasNonNullAttribute(method)) {
                         nonNullMethods.Add(method.ToString(), method);
                     }
-                    foreach(IParameterDefinition param in method.Parameters) {
+                    foreach(ParameterDefinition param in method.Parameters) {
                         if(DefHasNonNullAttribute(param)) {
                             nonNullParams.Add(method.ToString() + "/"
                                     + param.Sequence, param);
                         }
                     }
                 }
-                foreach(IFieldDefinition field in type.Fields) {
+                foreach(FieldDefinition field in type.Fields) {
                     if(DefHasNonNullAttribute(field)) {
                         nonNullFields.Add(field.ToString(), field);
                     }
@@ -78,14 +78,14 @@ public class NonNullAttributeCollector {
     }
 
     public bool HasNonNullAttribute([NonNull] IMethodSignature msig,
-            [NonNull] IParameterReference param)
+            [NonNull] ParameterDefinition param)
     {
         if(nonNullParams.Contains(msig.ToString() + "/" + param.Sequence))
             return true;
         return false;
     }
 
-    public bool HasNonNullAttribute([NonNull] IFieldReference field)
+    public bool HasNonNullAttribute([NonNull] FieldReference field)
     {
         if(nonNullFields.Contains(field.ToString()))
             return true;
@@ -96,7 +96,7 @@ public class NonNullAttributeCollector {
             [NonNull] ICustomAttributeProvider provider)
     {
         string ctorName = "System.Void NonNullAttribute::.ctor()";
-        foreach(ICustomAttribute attrib in provider.CustomAttributes)
+        foreach(CustomAttribute attrib in provider.CustomAttributes)
             if(attrib.Constructor.ToString().Equals(ctorName))
                 return true;
         return false;

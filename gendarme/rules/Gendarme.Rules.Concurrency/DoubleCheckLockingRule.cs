@@ -21,9 +21,9 @@ namespace Gendarme.Rules.Concurrency {
 
 public class DoubleCheckLockingRule : IMethodRule {
 
-    public IList CheckMethod (IAssemblyDefinition assembly,
-            IModuleDefinition module,
-            ITypeDefinition type, IMethodDefinition method,
+    public IList CheckMethod (AssemblyDefinition assembly,
+            ModuleDefinition module,
+            TypeDefinition type, MethodDefinition method,
             Runner runner)
     {
         Hashtable comparisons = new Hashtable();
@@ -31,19 +31,19 @@ public class DoubleCheckLockingRule : IMethodRule {
         if(method.Body == null)
             return runner.RuleSuccess;
 
-        IInstructionCollection insns = method.Body.Instructions;
+        InstructionCollection insns = method.Body.Instructions;
 
         ArrayList monitorOffsetList = new ArrayList(10);
         for(int i = 0; i < insns.Count; i++) {
             int mcount = monitorOffsetList.Count;
-            IInstruction[] twoBefore = TwoBeforeBranch(insns[i]);
+            Instruction[] twoBefore = TwoBeforeBranch(insns[i]);
             if(twoBefore != null) {
                 if(monitorOffsetList.Count > 0) {
                     /* If there's a comparison in the list matching this
                      * one, we have double-check locking. */
-                    foreach(IInstruction insn in comparisons.Keys) {
-                        IInstruction[] twoBeforeI =
-                            (IInstruction[])comparisons[insn];
+                    foreach(Instruction insn in comparisons.Keys) {
+                        Instruction[] twoBeforeI =
+                            (Instruction[])comparisons[insn];
                         if(!EffectivelyEqual(insn, insns[i]))
                             continue;
                         if(!EffectivelyEqual(twoBeforeI[0], twoBefore[0]))
@@ -76,11 +76,11 @@ public class DoubleCheckLockingRule : IMethodRule {
         return runner.RuleSuccess;
     }
 
-    private bool IsMonitorMethod(IInstruction insn, string methodName)
+    private bool IsMonitorMethod(Instruction insn, string methodName)
     {
         if(!insn.OpCode.Name.Equals("call"))
             return false;
-        IMethodReference method = (IMethodReference)insn.Operand;
+        MethodReference method = (MethodReference)insn.Operand;
         if(!method.Name.Equals(methodName))
             return false;
         if(!method.DeclaringType.FullName.Equals("System.Threading.Monitor"))
@@ -88,19 +88,19 @@ public class DoubleCheckLockingRule : IMethodRule {
         return true;
     }
 
-    private IInstruction[] TwoBeforeBranch(IInstruction insn)
+    private Instruction[] TwoBeforeBranch(Instruction insn)
     {
         if(insn.OpCode.FlowControl != FlowControl.Cond_Branch)
             return null;
         if(insn.Previous == null || insn.Previous.Previous == null)
             return null;
-        IInstruction[] twoInsns = new IInstruction[2];
+        Instruction[] twoInsns = new Instruction[2];
         twoInsns[0] = insn.Previous;
         twoInsns[1] = insn.Previous.Previous;
         return twoInsns;
     }
 
-    private bool EffectivelyEqual(IInstruction insn1, IInstruction insn2)
+    private bool EffectivelyEqual(Instruction insn1, Instruction insn2)
     {
         if(!insn1.OpCode.Equals(insn2.OpCode))
             return false;

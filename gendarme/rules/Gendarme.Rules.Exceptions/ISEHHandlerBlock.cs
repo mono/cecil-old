@@ -12,7 +12,7 @@ namespace Gendarme.Rules.Exceptions {
 		/// Gets the first instruction in the handler
 		/// </summary>
 		/// <value>
-		/// An instance of <see cref="IInstruction"/> representing the first
+		/// An instance of <see cref="Instruction"/> representing the first
 		/// instruction in the handler.
 		/// </value>
 		Instruction Start {
@@ -23,7 +23,7 @@ namespace Gendarme.Rules.Exceptions {
 		/// Gest the last instruction in the handler
 		/// </summary>
 		/// <value>
-		/// An instance of <see cref="IInstruction"/> representing the last
+		/// An instance of <see cref="Instruction"/> representing the last
 		/// instruction in the handler.
 		/// </value>
 		Instruction End {

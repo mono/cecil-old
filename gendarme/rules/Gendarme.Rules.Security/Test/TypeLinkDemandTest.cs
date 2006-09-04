@@ -125,8 +125,8 @@ namespace Test.Rules.Security {
 		}
 
 		private ITypeRule rule;
-		private IAssemblyDefinition assembly;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -137,7 +137,7 @@ namespace Test.Rules.Security {
 			rule = new TypeLinkDemandRule ();
 		}
 
-		private ITypeDefinition GetTest (string name)
+		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Security.TypeLinkDemandTest/" + name;
 			return assembly.MainModule.Types[fullname];
@@ -146,56 +146,56 @@ namespace Test.Rules.Security {
 		[Test]
 		public void NonPublic ()
 		{
-			ITypeDefinition type = GetTest ("NonPublicClass");
+			TypeDefinition type = GetTest ("NonPublicClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Sealed ()
 		{
-			ITypeDefinition type = GetTest ("SealedClass");
+			TypeDefinition type = GetTest ("SealedClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemand ()
 		{
-			ITypeDefinition type = GetTest ("LinkDemandClass");
+			TypeDefinition type = GetTest ("LinkDemandClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void LinkDemandVirtualMethod ()
 		{
-			ITypeDefinition type = GetTest ("LinkDemandVirtualMethodClass");
+			TypeDefinition type = GetTest ("LinkDemandVirtualMethodClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void InheritanceDemand ()
 		{
-			ITypeDefinition type = GetTest ("InheritanceDemandClass");
+			TypeDefinition type = GetTest ("InheritanceDemandClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoIntersection ()
 		{
-			ITypeDefinition type = GetTest ("NoIntersectionClass");
+			TypeDefinition type = GetTest ("NoIntersectionClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void NoIntersectionVirtualMethod ()
 		{
-			ITypeDefinition type = GetTest ("NoIntersectionVirtualMethodClass");
+			TypeDefinition type = GetTest ("NoIntersectionVirtualMethodClass");
 			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Intersection ()
 		{
-			ITypeDefinition type = GetTest ("IntersectionClass");
+			TypeDefinition type = GetTest ("IntersectionClass");
 			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
 		}
 	}

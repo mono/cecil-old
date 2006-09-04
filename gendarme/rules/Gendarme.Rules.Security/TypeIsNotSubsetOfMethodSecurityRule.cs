@@ -38,7 +38,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeIsNotSubsetOfMethodSecurityRule : ITypeRule {
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - this rules apply if type as security permissions
 			if (type.SecurityDeclarations.Count == 0)
@@ -50,7 +50,7 @@ namespace Gendarme.Rules.Security {
 			PermissionSet demand = null;
 			bool apply = false;
 
-			foreach (ISecurityDeclaration declsec in type.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.Assert:
 					assert = declsec.PermissionSet;
@@ -80,11 +80,11 @@ namespace Gendarme.Rules.Security {
 
 			// ensure that method-level security doesn't replace type-level security
 			// with a subset of the original check
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 				if (method.SecurityDeclarations.Count == 0)
 					continue;
 
-				foreach (ISecurityDeclaration declsec in method.SecurityDeclarations) {
+				foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
 					switch (declsec.Action) {
 					case Mono.Cecil.SecurityAction.Assert:
 						if (assert == null)

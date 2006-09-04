@@ -57,14 +57,14 @@ namespace Gendarme.Rules.Portability {
 			results.Add (String.Format ("Found string: \"{0}\"", s));
 		}
 
-		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
+		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// methods can be empty (e.g. p/invoke declarations)
 			if ((method.Body == null) || (method.Body.Instructions == null))
 				return null;
 
 			results = null;
-			foreach (IInstruction ins in method.Body.Instructions) {
+			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "ldstr":
 					// check the string being referenced by the instruction

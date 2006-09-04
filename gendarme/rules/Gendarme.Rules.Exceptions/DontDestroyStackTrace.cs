@@ -16,10 +16,10 @@ namespace Gendarme.Rules.Exceptions {
 		{
 		}
 
-		public IList CheckMethod (IAssemblyDefinition assembly,
-					  IModuleDefinition module, 
-					  ITypeDefinition type,
-					  IMethodDefinition method, 
+		public IList CheckMethod (AssemblyDefinition assembly,
+					  ModuleDefinition module, 
+					  TypeDefinition type,
+					  MethodDefinition method, 
 					  Runner runner) 
 		{
 			if (void_reference == null)
@@ -52,7 +52,7 @@ namespace Gendarme.Rules.Exceptions {
 		}
 
 		private void ProcessCatchPath (ExecutionPath catchPath, 
-					       IMethodDefinition method, 
+					       MethodDefinition method, 
 					       ArrayList violations)
 		{
 			// Track original exception (top of stack at start) through to the final
@@ -64,7 +64,7 @@ namespace Gendarme.Rules.Exceptions {
 			int localVarPos = -1;
 			
 			foreach (ExecutionBlock block in catchPath) {
-				IInstruction cur = null;
+				Instruction cur = null;
 				while (cur != block.Last) {
 					if (cur == null)
 						cur = block.First;
@@ -135,7 +135,7 @@ namespace Gendarme.Rules.Exceptions {
 			return;
 		}
 
-		private int GetNumPops (IInstruction instr)
+		private int GetNumPops (Instruction instr)
 		{
 			switch (instr.OpCode.StackBehaviourPop) {
 			case StackBehaviour.Pop0:
@@ -176,7 +176,7 @@ namespace Gendarme.Rules.Exceptions {
 			return 0;
 		}
 
-		private int GetNumPushes (IInstruction instr)
+		private int GetNumPushes (Instruction instr)
 		{
 			switch (instr.OpCode.StackBehaviourPush) {
 			case StackBehaviour.Push0:
@@ -201,7 +201,7 @@ namespace Gendarme.Rules.Exceptions {
 			return 0;
 		}
 
-		private int GetVarIndex (IInstruction instr)
+		private int GetVarIndex (Instruction instr)
 		{
 			if (instr.OpCode == OpCodes.Stloc_0 || instr.OpCode == OpCodes.Ldloc_0)
 				return 0;

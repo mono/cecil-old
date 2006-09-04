@@ -37,11 +37,11 @@ namespace Gendarme.Rules.Performance {
 
 	public class EmptyDestructorRule : ITypeRule {
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
-			IMethodDefinition destructor = null;
+			MethodDefinition destructor = null;
 			// #1 - look for a destructor
-			foreach (IMethodDefinition md in type.Methods) {
+			foreach (MethodDefinition md in type.Methods) {
 				if (md.Name == "Finalize") {
 					destructor = md;
 					break;
@@ -52,11 +52,11 @@ namespace Gendarme.Rules.Performance {
 
 			// #2 - destructor is present, look if it has any code within it
 			// i.e. look if is does anything else than calling it's base class
-			foreach (IInstruction ins in destructor.Body.Instructions) {
+			foreach (Instruction ins in destructor.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "call":
 					// it's empty if we're calling the base class destructor
-					IMethodReference mr = (ins.Operand as IMethodReference);
+					MethodReference mr = (ins.Operand as MethodReference);
 					if ((mr == null) || (mr.Name != "Finalize"))
 						return null;
 					break;

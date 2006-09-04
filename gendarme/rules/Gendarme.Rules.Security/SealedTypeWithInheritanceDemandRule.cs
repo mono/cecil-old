@@ -36,7 +36,7 @@ namespace Gendarme.Rules.Security {
 
 	public class SealedTypeWithInheritanceDemandRule : ITypeRule {
 
-		public IList CheckType (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, Runner runner)
+		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// 1 - this applies only to sealed types
 			if (!type.IsSealed)
@@ -46,7 +46,7 @@ namespace Gendarme.Rules.Security {
 			if (type.SecurityDeclarations.Count == 0)
 				return runner.RuleSuccess;
 
-			foreach (ISecurityDeclaration declsec in type.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 				if (declsec.Action == SecurityAction.InheritDemand)
 					return runner.RuleFailure;
 			}

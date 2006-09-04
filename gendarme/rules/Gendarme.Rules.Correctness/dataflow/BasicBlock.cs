@@ -18,7 +18,7 @@ namespace Gendarme.Rules.Correctness {
 
 public class BasicBlock : Node {
     /* All instructions in the method */
-    [NonNull] private IInstructionCollection instructions;
+    [NonNull] private InstructionCollection instructions;
 
     /* Index of the first instruction in this basic block */
     public int first;
@@ -29,17 +29,17 @@ public class BasicBlock : Node {
     public bool isExit = false;
     public bool isException = false;
 
-    public BasicBlock([NonNull] IInstructionCollection instructions)
+    public BasicBlock([NonNull] InstructionCollection instructions)
     {
         this.instructions = instructions;
     }
 
-    public IInstructionCollection Instructions {
+    public InstructionCollection Instructions {
         [NonNull]
         get { return instructions; }
     }
 
-    public IInstruction FirstInstruction {
+    public Instruction FirstInstruction {
         get { return instructions[first]; }
     }
 

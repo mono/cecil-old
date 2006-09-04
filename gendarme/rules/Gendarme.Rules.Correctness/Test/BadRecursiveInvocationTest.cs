@@ -84,9 +84,9 @@ namespace Test.Rules.Correctness {
 		}
 		
 		private IMethodRule rule;
-		private IAssemblyDefinition assembly;
-		private ITypeDefinition type;
-		private IModuleDefinition module;
+		private AssemblyDefinition assembly;
+		private TypeDefinition type;
+		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -98,9 +98,9 @@ namespace Test.Rules.Correctness {
 			rule = new BadRecursiveInvocationRule ();
 		}
 
-		private IMethodDefinition GetTest (string name)
+		private MethodDefinition GetTest (string name)
 		{
-			foreach (IMethodDefinition method in type.Methods) {
+			foreach (MethodDefinition method in type.Methods) {
 			Console.WriteLine (method.Name);
 				if (method.Name == name)
 					return method;
@@ -111,42 +111,42 @@ namespace Test.Rules.Correctness {
 		[Test]
 		public void RecursiveProperty ()
 		{
-			IMethodDefinition method = GetTest ("get_Foo"); 
+			MethodDefinition method = GetTest ("get_Foo"); 
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 		
 		[Test]
 		public void Property ()
 		{
-			IMethodDefinition method = GetTest ("get_Bar"); 
+			MethodDefinition method = GetTest ("get_Bar"); 
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test, Ignore ("uncatched by rule")]
 		public void IndirectRecursiveProperty ()
 		{
-			IMethodDefinition method = GetTest ("get_FooBar"); 
+			MethodDefinition method = GetTest ("get_FooBar"); 
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void OverriddenMethod ()
 		{
-			IMethodDefinition method = GetTest ("GetHashCode"); 
+			MethodDefinition method = GetTest ("GetHashCode"); 
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 		
 		[Test]
 		public void BadRecursiveMethod ()
 		{
-			IMethodDefinition method = GetTest ("Equals"); 
+			MethodDefinition method = GetTest ("Equals"); 
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 		
 		[Test]
 		public void Fibonacci ()
 		{
-			IMethodDefinition method = GetTest ("Fibonacci"); 
+			MethodDefinition method = GetTest ("Fibonacci"); 
 			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
 	}

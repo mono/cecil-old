@@ -38,7 +38,7 @@ namespace Gendarme.Rules.Performance {
 
 	public class UseStringEmptyRule : IMethodRule {
 	
-		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
+		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			if (method.Body == null)
@@ -49,7 +49,7 @@ namespace Gendarme.Rules.Performance {
 			int empty = 0;
 
 			// #2 - look for string references
-			foreach (IInstruction ins in method.Body.Instructions) {
+			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.OperandType) {
 				case OperandType.InlineString:
 					string s = (ins.Operand as string);

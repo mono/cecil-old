@@ -114,7 +114,7 @@ namespace Gendarme.Framework {
 			return total;
 		}
 
-		public void Process (IAssemblyDefinition assembly)
+		public void Process (AssemblyDefinition assembly)
 		{
 			IList messages;
 			foreach (IAssemblyRule rule in Rules.Assembly) {
@@ -123,7 +123,7 @@ namespace Gendarme.Framework {
 					Violations.Add (rule, assembly, messages);
 			}
 
-			foreach (IModuleDefinition module in assembly.Modules) {
+			foreach (ModuleDefinition module in assembly.Modules) {
 
 				foreach (IModuleRule rule in Rules.Module) {
 					messages = rule.CheckModule(assembly, module, this);
@@ -131,7 +131,7 @@ namespace Gendarme.Framework {
 						Violations.Add (rule, module, messages);
 				}
 
-				foreach (ITypeDefinition type in module.Types) {
+				foreach (TypeDefinition type in module.Types) {
 
 					foreach (ITypeRule rule in Rules.Type) {
 						messages = rule.CheckType(assembly, module, type, this);
@@ -139,7 +139,7 @@ namespace Gendarme.Framework {
 							Violations.Add (rule, type, messages);
 					}
 
-					foreach (IMethodDefinition method in type.Methods) {
+					foreach (MethodDefinition method in type.Methods) {
 
 						foreach (IMethodRule rule in Rules.Method) {
 							messages = rule.CheckMethod(assembly, module, type, method, this);

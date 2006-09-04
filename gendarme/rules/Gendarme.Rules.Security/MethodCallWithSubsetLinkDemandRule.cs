@@ -39,9 +39,9 @@ namespace Gendarme.Rules.Security {
 
 	public class MethodCallWithSubsetLinkDemandRule : IMethodRule {
 
-		private PermissionSet GetLinkDemand (IMethodDefinition method)
+		private PermissionSet GetLinkDemand (MethodDefinition method)
 		{
-			foreach (ISecurityDeclaration declsec in method.SecurityDeclarations) {
+			foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.LinkDemand:
 				case Mono.Cecil.SecurityAction.NonCasLinkDemand:
@@ -51,7 +51,7 @@ namespace Gendarme.Rules.Security {
 			return null;
 		}
 
-		private bool Check (IMethodDefinition caller, IMethodDefinition callee)
+		private bool Check (MethodDefinition caller, MethodDefinition callee)
 		{
 			// 1 - look if the callee has a LinkDemand
 			PermissionSet calleeLinkDemand = GetLinkDemand (callee);
@@ -62,7 +62,7 @@ namespace Gendarme.Rules.Security {
 			return calleeLinkDemand.IsSubsetOf (GetLinkDemand (caller));
 		}
 
-		public IList CheckMethod (IAssemblyDefinition assembly, IModuleDefinition module, ITypeDefinition type, IMethodDefinition method, Runner runner)
+		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply to methods are publicly accessible
 			//	note that the type doesn't have to be public (indirect access)
@@ -77,11 +77,11 @@ namespace Gendarme.Rules.Security {
 			// *** ok, the rule applies! ***
 
 			// #3 - look for every method we call
-			foreach (IInstruction ins in method.Body.Instructions) {
+			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "call":
 				case "callvirt":
-					IMethodDefinition callee = AssemblyManager.GetMethod (ins.Operand);
+					MethodDefinition callee = AssemblyManager.GetMethod (ins.Operand);
 					if (callee == null) {
 						return runner.RuleSuccess; // ignore (missing reference)
 					}
