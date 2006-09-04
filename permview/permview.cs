@@ -4,7 +4,7 @@
 // Author:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2004-2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2004-2006 Novell, Inc (http://www.novell.com)
 //
 
 using System;
@@ -105,14 +105,14 @@ namespace Mono.Tools {
 			return tw;
 		}
 
-		static bool ProcessAssemblyOnly (TextWriter tw, IAssemblyDefinition ad) 
+		static bool ProcessAssemblyOnly (TextWriter tw, AssemblyDefinition ad) 
 		{
 			bool result = true;
 			string minimal = NotSpecified + Environment.NewLine;
 			string optional = NotSpecified + Environment.NewLine;
 			string refused = NotSpecified + Environment.NewLine;
 
-			foreach (ISecurityDeclaration decl in ad.SecurityDeclarations) {
+			foreach (SecurityDeclaration decl in ad.SecurityDeclarations) {
 				switch (decl.Action) {
 				case Mono.Cecil.SecurityAction.RequestMinimum:
 					minimal = decl.PermissionSet.ToString ();
@@ -140,29 +140,29 @@ namespace Mono.Tools {
 			return result;
 		}
 
-		static void ShowSecurity (TextWriter tw, string header, ISecurityDeclarationCollection declarations)
+		static void ShowSecurity (TextWriter tw, string header, SecurityDeclarationCollection declarations)
 		{
-			foreach (ISecurityDeclaration declsec in declarations) {
+			foreach (SecurityDeclaration declsec in declarations) {
 				tw.WriteLine ("{0} {1} Permission Set:{2}{3}", header,
 					declsec.Action, Environment.NewLine, declsec.PermissionSet);
 			}
 		}
 
-		static bool ProcessAssemblyComplete (TextWriter tw, IAssemblyDefinition ad)
+		static bool ProcessAssemblyComplete (TextWriter tw, AssemblyDefinition ad)
 		{
 			if (ad.SecurityDeclarations.Count > 0) {
 				ShowSecurity (tw, "Assembly", ad.SecurityDeclarations);
 			}
 
-			foreach (IModuleDefinition module in ad.Modules) {
+			foreach (ModuleDefinition module in ad.Modules) {
 
-				foreach (ITypeDefinition type in module.Types) {
+				foreach (TypeDefinition type in module.Types) {
 
 					if (type.SecurityDeclarations.Count > 0) {
 						ShowSecurity (tw, "Class " + type.ToString (), ad.SecurityDeclarations);
 					}
 
-					foreach (IMethodDefinition method in type.Methods) {
+					foreach (MethodDefinition method in type.Methods) {
 						if (method.SecurityDeclarations.Count > 0) {
 							ShowSecurity (tw, "Method " + method.ToString (), method.SecurityDeclarations);
 						}
@@ -178,10 +178,10 @@ namespace Mono.Tools {
 			se.AddAttribute (attr, value);
 		}
 
-		static SecurityElement AddSecurityXml (ISecurityDeclarationCollection declarations)
+		static SecurityElement AddSecurityXml (SecurityDeclarationCollection declarations)
 		{
 			ArrayList list = new ArrayList ();
-			foreach (ISecurityDeclaration declsec in declarations) {
+			foreach (SecurityDeclaration declsec in declarations) {
 				SecurityElement child = new SecurityElement ("Action");
 				AddAttribute (child, "Name", declsec.Action.ToString ());
 				child.AddChild (declsec.PermissionSet.ToXml ());
@@ -206,7 +206,7 @@ namespace Mono.Tools {
 			}
 		}
 
-		static bool ProcessAssemblyXml (TextWriter tw, IAssemblyDefinition ad)
+		static bool ProcessAssemblyXml (TextWriter tw, AssemblyDefinition ad)
 		{
 			SecurityElement se = new SecurityElement ("Assembly");
 			se.AddAttribute ("Name", ad.Name.FullName);
@@ -218,9 +218,9 @@ namespace Mono.Tools {
 			ArrayList tlist = new ArrayList ();
 			ArrayList mlist = new ArrayList ();
 
-			foreach (IModuleDefinition module in ad.Modules) {
+			foreach (ModuleDefinition module in ad.Modules) {
 
-				foreach (ITypeDefinition type in module.Types) {
+				foreach (TypeDefinition type in module.Types) {
 
 					SecurityElement klass = new SecurityElement ("Class");
 					SecurityElement methods = new SecurityElement ("Methods");
@@ -233,7 +233,7 @@ namespace Mono.Tools {
 					if (mlist.Count > 0)
 						mlist.Clear ();
 
-					foreach (IMethodDefinition method in type.Methods) {
+					foreach (MethodDefinition method in type.Methods) {
 						if (method.SecurityDeclarations.Count > 0) {
 							SecurityElement meth = new SecurityElement ("Method");
 							AddAttribute (meth, "Name", method.ToString ());
@@ -284,7 +284,7 @@ namespace Mono.Tools {
 					return 0;
 
 				string assemblyName = args [args.Length - 1];
-				IAssemblyDefinition ad = AssemblyFactory.GetAssembly (assemblyName);
+				AssemblyDefinition ad = AssemblyFactory.GetAssembly (assemblyName);
 				if (ad != null) {
 					bool complete = false;
 					

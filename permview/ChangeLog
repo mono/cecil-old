@@ -1,3 +1,10 @@
+2006-09-04  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* configure.ac: Bump version number.
+	* permview.cs: Updated to latest Cecil API using cecil-mig.rb
+	* permview.in: Update script template
+	* Makefile.am: Update build to work properly (well as expected ;-)
+
 2006-03-01  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Added all the build files required to build and install this special
