@@ -143,6 +143,6 @@ def process(file)
 
 end
 
-Dir[File.join(".", "**", "*.*")].each { |file|
+Dir[File.join(dir, "**", "*.*")].each { |file|
 	process(file) if not File.directory?(file)
 }
