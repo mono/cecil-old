@@ -15,6 +15,16 @@ $replaces = {
 	"IVariableReference" => "VariableDefinition",
 	"IMarshalDesc" => "MarshalSpec",
 	"MarshalDesc" => "MarshalSpec",
+	"IArrayMarshalDesc" => "ArrayMarshalSpec",
+	"ArrayMarshalDesc" => "ArrayMarshalSpec",
+	"ICustomMarshalerDesc" => "CustomMarshalerSpec",
+	"CustomMarshalerDesc" => "CustomMarshalerSpec",
+	"ISafeArrayDesc" => "SafeArraySpec",
+	"SafeArrayDesc" => "SafeArraySpec",
+	"IFixedArrayDesc" => "FixedArraySpec",
+	"FixedArrayDesc" => "FixedArraySpec",
+	"IFixedSysStringDesc" => "FixedSysStringSpec",
+	"FixedSysStringDesc" => "FixedSysStringSpec",
 	"IModifierType" => "ModType"
 }
 

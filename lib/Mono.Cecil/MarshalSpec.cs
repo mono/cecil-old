@@ -57,7 +57,7 @@ namespace Mono.Cecil {
 		}
 	}
 
-	public sealed class ArrayMarshalDesc : MarshalSpec {
+	public sealed class ArrayMarshalSpec : MarshalSpec {
 
 		NativeType m_elemType;
 		int m_paramNum;
@@ -84,12 +84,12 @@ namespace Mono.Cecil {
 			set { m_numElem = value; }
 		}
 
-		public ArrayMarshalDesc (IHasMarshalSpec container) : base (NativeType.ARRAY, container)
+		public ArrayMarshalSpec (IHasMarshalSpec container) : base (NativeType.ARRAY, container)
 		{
 		}
 	}
 
-	public sealed class CustomMarshalerDesc : MarshalSpec {
+	public sealed class CustomMarshalerSpec : MarshalSpec {
 
 		Guid m_guid;
 		string m_unmanagedType;
@@ -116,12 +116,12 @@ namespace Mono.Cecil {
 			set { m_cookie = value; }
 		}
 
-		public CustomMarshalerDesc (IHasMarshalSpec container) : base (NativeType.CUSTOMMARSHALER, container)
+		public CustomMarshalerSpec (IHasMarshalSpec container) : base (NativeType.CUSTOMMARSHALER, container)
 		{
 		}
 	}
 
-	public sealed class SafeArrayDesc : MarshalSpec {
+	public sealed class SafeArraySpec : MarshalSpec {
 
 		private VariantType m_elemType;
 
@@ -130,12 +130,12 @@ namespace Mono.Cecil {
 			set { m_elemType = value; }
 		}
 
-		public SafeArrayDesc (IHasMarshalSpec container) : base (NativeType.SAFEARRAY, container)
+		public SafeArraySpec (IHasMarshalSpec container) : base (NativeType.SAFEARRAY, container)
 		{
 		}
 	}
 
-	public sealed class FixedArrayDesc : MarshalSpec {
+	public sealed class FixedArraySpec : MarshalSpec {
 
 		private int m_numElem;
 		private NativeType m_elemType;
@@ -150,12 +150,12 @@ namespace Mono.Cecil {
 			set { m_elemType = value; }
 		}
 
-		public FixedArrayDesc (IHasMarshalSpec container) : base (NativeType.FIXEDARRAY, container)
+		public FixedArraySpec (IHasMarshalSpec container) : base (NativeType.FIXEDARRAY, container)
 		{
 		}
 	}
 
-	public sealed class FixedSysStringDesc : MarshalSpec {
+	public sealed class FixedSysStringSpec : MarshalSpec {
 
 		private int m_size;
 
@@ -164,7 +164,7 @@ namespace Mono.Cecil {
 			set { m_size = value; }
 		}
 
-		public FixedSysStringDesc (IHasMarshalSpec container) : base (NativeType.FIXEDSYSSTRING, container)
+		public FixedSysStringSpec (IHasMarshalSpec container) : base (NativeType.FIXEDSYSSTRING, container)
 		{
 		}
 	}

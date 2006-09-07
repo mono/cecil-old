@@ -811,7 +811,7 @@ namespace Mono.Cecil {
 		protected MarshalSpec BuildMarshalDesc (MarshalSig ms, IHasMarshalSpec container)
 		{
 			if (ms.Spec is MarshalSig.Array) {
-				ArrayMarshalDesc amd = new ArrayMarshalDesc (container);
+				ArrayMarshalSpec amd = new ArrayMarshalSpec (container);
 				MarshalSig.Array ar = (MarshalSig.Array) ms.Spec;
 				amd.ElemType = ar.ArrayElemType;
 				amd.NumElem = ar.NumElem;
@@ -819,7 +819,7 @@ namespace Mono.Cecil {
 				amd.ElemMult = ar.ElemMult;
 				return amd;
 			} else if (ms.Spec is MarshalSig.CustomMarshaler) {
-				CustomMarshalerDesc cmd = new CustomMarshalerDesc (container);
+				CustomMarshalerSpec cmd = new CustomMarshalerSpec (container);
 				MarshalSig.CustomMarshaler cmsig = (MarshalSig.CustomMarshaler) ms.Spec;
 				cmd.Guid = cmsig.Guid.Length > 0 ? new Guid (cmsig.Guid) : new Guid ();
 				cmd.UnmanagedType = cmsig.UnmanagedType;
@@ -827,17 +827,17 @@ namespace Mono.Cecil {
 				cmd.Cookie = cmsig.Cookie;
 				return cmd;
 			} else if (ms.Spec is MarshalSig.FixedArray) {
-				FixedArrayDesc fad = new FixedArrayDesc (container);
+				FixedArraySpec fad = new FixedArraySpec (container);
 				MarshalSig.FixedArray fasig = (MarshalSig.FixedArray) ms.Spec;
 				fad.ElemType = fasig.ArrayElemType;
 				fad.NumElem = fasig.NumElem;
 				return fad;
 			} else if (ms.Spec is MarshalSig.FixedSysString) {
-				FixedSysStringDesc fssc = new FixedSysStringDesc (container);
+				FixedSysStringSpec fssc = new FixedSysStringSpec (container);
 				fssc.Size = ((MarshalSig.FixedSysString) ms.Spec).Size;
 				return fssc;
 			} else if (ms.Spec is MarshalSig.SafeArray) {
-				SafeArrayDesc sad = new SafeArrayDesc (container);
+				SafeArraySpec sad = new SafeArraySpec (container);
 				sad.ElemType = ((MarshalSig.SafeArray) ms.Spec).ArrayElemType;
 				return sad;
 			} else {
