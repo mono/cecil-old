@@ -233,9 +233,10 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		int GetLength (Instruction start, Instruction end, Instruction last)
+		int GetLength (Instruction start, Instruction end, InstructionCollection instructions)
 		{
-			return (end == null ? last.Offset + GetSize (last) : end.Offset) - start.Offset;
+			Instruction last = instructions [instructions.Count - 1];
+			return (end == instructions.Outside ? last.Offset + GetSize (last) : end.Offset) - start.Offset;
 		}
 
 		int GetSize (Instruction i)
@@ -275,28 +276,28 @@ namespace Mono.Cecil.Cil {
 			return size;
 		}
 
-		bool IsRangeFat (Instruction start, Instruction end, Instruction last)
+		bool IsRangeFat (Instruction start, Instruction end, InstructionCollection instructions)
 		{
-			return GetLength (start, end, last) >= 256 ||
+			return GetLength (start, end, instructions) >= 256 ||
 				start.Offset >= 65536;
 		}
 
-		bool IsFat (ExceptionHandlerCollection seh, Instruction last)
+		bool IsFat (ExceptionHandlerCollection seh)
 		{
 			for (int i = 0; i < seh.Count; i++) {
 				ExceptionHandler eh = seh [i];
-				if (IsRangeFat (eh.TryStart, eh.TryEnd, last))
+				if (IsRangeFat (eh.TryStart, eh.TryEnd, seh.Container.Instructions))
 					return true;
 
 				switch (eh.Type) {
 				case ExceptionHandlerType.Catch :
 				case ExceptionHandlerType.Fault :
 				case ExceptionHandlerType.Finally :
-					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd, last))
+					if (IsRangeFat (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions))
 						return true;
 					break;
 				case ExceptionHandlerType.Filter :
-					if (IsRangeFat (eh.FilterStart, eh.FilterEnd, last))
+					if (IsRangeFat (eh.FilterStart, eh.FilterEnd, seh.Container.Instructions))
 						return true;
 					break;
 				}
@@ -308,9 +309,8 @@ namespace Mono.Cecil.Cil {
 		void WriteExceptionHandlerCollection (ExceptionHandlerCollection seh)
 		{
 			m_codeWriter.QuadAlign ();
-			Instruction last = seh.Container.Instructions [seh.Container.Instructions.Count - 1];
 
-			if (seh.Count < 0x15 && !IsFat (seh, last)) {
+			if (seh.Count < 0x15 && !IsFat (seh)) {
 				m_codeWriter.Write ((byte) MethodDataSection.EHTable);
 				m_codeWriter.Write ((byte) (seh.Count * 12 + 4));
 				m_codeWriter.Write (new byte [2]);
@@ -319,7 +319,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((ushort) eh.TryStart.Offset);
 					m_codeWriter.Write ((byte) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((ushort) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((byte) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
+					m_codeWriter.Write ((byte) GetLength (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions));
 					WriteHandlerSpecific (eh);
 				}
 			} else {
@@ -330,7 +330,7 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((uint) eh.TryStart.Offset);
 					m_codeWriter.Write ((uint) (eh.TryEnd.Offset - eh.TryStart.Offset));
 					m_codeWriter.Write ((uint) eh.HandlerStart.Offset);
-					m_codeWriter.Write ((uint) GetLength (eh.HandlerStart, eh.HandlerEnd, last));
+					m_codeWriter.Write ((uint) GetLength (eh.HandlerStart, eh.HandlerEnd, seh.Container.Instructions));
 					WriteHandlerSpecific (eh);
 				}
 			}
