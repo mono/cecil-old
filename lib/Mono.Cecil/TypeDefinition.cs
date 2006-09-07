@@ -89,11 +89,8 @@ namespace Mono.Cecil {
 
 		public NestedTypeCollection NestedTypes {
 			get {
-				if (m_nestedTypes == null) {
+				if (m_nestedTypes == null)
 					m_nestedTypes = new NestedTypeCollection (this);
-					m_nestedTypes.OnNestedTypeAdded += new NestedTypeEventHandler (OnNestedTypeAdded);
-					m_nestedTypes.OnNestedTypeRemoved += new NestedTypeEventHandler (OnNestedTypeRemoved);
-				}
 
 				return m_nestedTypes;
 			}
@@ -101,11 +98,8 @@ namespace Mono.Cecil {
 
 		public MethodDefinitionCollection Methods {
 			get {
-				if (m_methods == null) {
+				if (m_methods == null)
 					m_methods = new MethodDefinitionCollection (this);
-					m_methods.OnMethodDefinitionAdded += new MethodDefinitionEventHandler (OnMethodAdded);
-					m_methods.OnMethodDefinitionRemoved += new MethodDefinitionEventHandler (OnMethodRemoved);
-				}
 
 				return m_methods;
 			}
@@ -113,11 +107,8 @@ namespace Mono.Cecil {
 
 		public ConstructorCollection Constructors {
 			get {
-				if (m_ctors == null) {
+				if (m_ctors == null)
 					m_ctors = new ConstructorCollection (this);
-					m_ctors.OnConstructorAdded += new ConstructorEventHandler (OnCtorAdded);
-					m_ctors.OnConstructorRemoved += new ConstructorEventHandler (OnCtorRemoved);
-				}
 
 				return m_ctors;
 			}
@@ -125,11 +116,8 @@ namespace Mono.Cecil {
 
 		public FieldDefinitionCollection Fields {
 			get {
-				if (m_fields == null) {
+				if (m_fields == null)
 					m_fields = new FieldDefinitionCollection (this);
-					m_fields.OnFieldDefinitionAdded += new FieldDefinitionEventHandler (OnFieldAdded);
-					m_fields.OnFieldDefinitionRemoved += new FieldDefinitionEventHandler (OnFieldRemoved);
-				}
 
 				return m_fields;
 			}
@@ -137,11 +125,8 @@ namespace Mono.Cecil {
 
 		public EventDefinitionCollection Events {
 			get {
-				if (m_events == null) {
+				if (m_events == null)
 					m_events = new EventDefinitionCollection (this);
-					m_events.OnEventDefinitionAdded += new EventDefinitionEventHandler (OnEventAdded);
-					m_events.OnEventDefinitionRemoved += new EventDefinitionEventHandler (OnEventRemoved);
-				}
 
 				return m_events;
 			}
@@ -149,11 +134,8 @@ namespace Mono.Cecil {
 
 		public PropertyDefinitionCollection Properties {
 			get {
-				if (m_properties == null) {
+				if (m_properties == null)
 					m_properties = new PropertyDefinitionCollection (this);
-					m_properties.OnPropertyDefinitionAdded += new PropertyDefinitionEventHandler (OnPropertyAdded);
-					m_properties.OnPropertyDefinitionRemoved += new PropertyDefinitionEventHandler (OnPropertyRemoved);
-				}
 
 				return m_properties;
 			}
@@ -251,100 +233,6 @@ namespace Mono.Cecil {
 			this (name, ns, attributes)
 		{
 			this.BaseType = baseType;
-		}
-
-		void OnMethodAdded (object sender, MethodDefinitionEventArgs ea)
-		{
-			AttachMember (ea.MethodDefinition);
-			if (!ea.MethodDefinition.IsStatic)
-				ea.MethodDefinition.This.ParameterType = this;
-		}
-
-		void OnMethodRemoved (object sender, MethodDefinitionEventArgs ea)
-		{
-			DetachMember (ea.MethodDefinition);
-			if (!ea.MethodDefinition.IsStatic)
-				ea.MethodDefinition.This.ParameterType = null;
-		}
-
-		void OnFieldAdded (object sender, FieldDefinitionEventArgs ea)
-		{
-			AttachMember (ea.FieldDefinition);
-		}
-
-		void OnFieldRemoved (object sender, FieldDefinitionEventArgs ea)
-		{
-			DetachMember (ea.FieldDefinition);
-		}
-
-		void OnCtorAdded (object sender, ConstructorEventArgs ea)
-		{
-			AttachMember (ea.Constructor);
-			if (!ea.Constructor.IsStatic)
-				ea.Constructor.This.ParameterType = this;
-		}
-
-		void OnCtorRemoved (object sender, ConstructorEventArgs ea)
-		{
-			DetachMember (ea.Constructor);
-			if (!ea.Constructor.IsStatic)
-				ea.Constructor.This.ParameterType = null;
-		}
-
-		void OnEventAdded (object sender, EventDefinitionEventArgs ea)
-		{
-			AttachMember (ea.EventDefinition);
-		}
-
-		void OnEventRemoved (object sender, EventDefinitionEventArgs ea)
-		{
-			DetachMember (ea.EventDefinition);
-		}
-
-		void OnPropertyAdded (object sender, PropertyDefinitionEventArgs ea)
-		{
-			AttachMember (ea.PropertyDefinition);
-		}
-
-		void OnPropertyRemoved (object sender, PropertyDefinitionEventArgs ea)
-		{
-			DetachMember (ea.PropertyDefinition);
-		}
-
-		void OnNestedTypeAdded (object sender, NestedTypeEventArgs ea)
-		{
-			AttachType (ea.NestedType);
-		}
-
-		void OnNestedTypeRemoved (object sender, NestedTypeEventArgs ea)
-		{
-			DetachType (ea.NestedType);
-		}
-
-		void AttachType (TypeReference t)
-		{
-			if (t.DeclaringType != null)
-				throw new ReflectionException ("Member already attached, clone it instead");
-
-			t.DeclaringType = this;
-		}
-
-		void DetachType (TypeReference t)
-		{
-			t.DeclaringType = null;
-		}
-
-		void AttachMember (MemberReference member)
-		{
-			if (member.DeclaringType != null)
-				throw new ReflectionException ("Member already attached, clone it instead");
-
-			member.DeclaringType = this;
-		}
-
-		void DetachMember (MemberReference member)
-		{
-			member.DeclaringType = null;
 		}
 
 		public TypeDefinition Clone ()

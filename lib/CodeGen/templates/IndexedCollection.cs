@@ -28,7 +28,21 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+<%
+def member_visibility()
+	return $cur_coll.type == "Instruction" ? "internal" : "public"
+end
 
+def use_event?()
+	case $cur_coll.name
+		when "NestedTypeCollection", "MethodDefinitionCollection", "ConstructorCollection", "FieldDefinitionCollection", "EventDefinitionCollection", "PropertyDefinitionCollection"
+			return true
+	end
+
+	return false
+end
+
+%>
 namespace <%=$cur_coll.target%> {
 
 	using System;
@@ -36,30 +50,10 @@ namespace <%=$cur_coll.target%> {
 
 	using Mono.Cecil.Cil;
 
-	public class <%=$cur_coll.item_name%>EventArgs : EventArgs {
-
-		private <%=$cur_coll.type%> m_item;
-
-		public <%=$cur_coll.type%> <%=$cur_coll.item_name%> {
-			get { return m_item; }
-		}
-
-		public <%=$cur_coll.item_name%>EventArgs (<%=$cur_coll.type%> item)
-		{
-			m_item = item;
-		}
-	}
-
-	public delegate void <%=$cur_coll.item_name%>EventHandler (
-		object sender, <%=$cur_coll.item_name%>EventArgs ea);
-
 	public sealed class <%=$cur_coll.name%> : IIndexedCollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
 		IList m_items;
 		<%=$cur_coll.container_impl%> m_container;
-
-		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
-		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
 
 		public <%=$cur_coll.type%> this [int index] {
 			get { return m_items [index] as <%=$cur_coll.type%>; }
@@ -92,18 +86,21 @@ namespace <%=$cur_coll.target%> {
 			m_items = new ArrayList ();
 		}
 
-		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Add (<%=$cur_coll.type%> value)
-		{
-			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
-				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
+		<%= member_visibility() %> void Add (<%=$cur_coll.type%> value)
+		{<%
+if use_event?() %>
+			if (!this.Contains (value))
+				Attach (value);
+<% end %>
 			m_items.Add (value);
 		}
 
 		public void Clear ()
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null)
-				foreach (<%=$cur_coll.type%> item in this)
-					On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (item));
+		{<%
+if use_event?() %>
+			foreach (<%=$cur_coll.type%> item in this)
+				Detach (item);
+<% end %>
 			m_items.Clear ();
 		}
 
@@ -117,30 +114,35 @@ namespace <%=$cur_coll.target%> {
 			return m_items.IndexOf (value);
 		}
 
-		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Insert (int index, <%=$cur_coll.type%> value)
-		{
-			if (On<%=$cur_coll.item_name%>Added != null && !this.Contains (value))
-				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
+		<%= member_visibility() %> void Insert (int index, <%=$cur_coll.type%> value)
+		{<%
+if use_event?() %>
+			if (!this.Contains (value))
+				Attach (value);
+<% end %>
 			m_items.Insert (index, value);
 		}
 
-		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void Remove (<%=$cur_coll.type%> value)
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null && this.Contains (value))
-				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (value));
+		<%= member_visibility() %> void Remove (<%=$cur_coll.type%> value)
+		{<%
+if use_event?() %>
+			if (this.Contains (value))
+				Detach (value);
+<% end %>
 			m_items.Remove (value);
 		}
 
-		<% if $cur_coll.type != "Instruction"%>public<% else %>internal<% end %> void RemoveAt (int index)
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null)
-				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
+		<%= member_visibility() %> void RemoveAt (int index)
+		{<%
+if use_event?() %>
+			Detach (this [index]);
+<% end %>
 			m_items.RemoveAt (index);
 		}
 
-		public void CopyTo (Array ary, int index)
+		public void CopyTo (Array array, int index)
 		{
-			m_items.CopyTo (ary, index);
+			m_items.CopyTo (array, index);
 		}
 
 		public IEnumerator GetEnumerator ()
@@ -273,6 +275,23 @@ namespace <%=$cur_coll.target%> {
 					ret.Add (prop);
 
 			return ret.ToArray (typeof (PropertyDefinition)) as PropertyDefinition [];
+		}
+<%
+	end
+
+	if use_event?()
+%>
+		void Attach (MemberReference member)
+		{
+			if (member.DeclaringType != null)
+				throw new ReflectionException ("Member already attached, clone it instead");
+
+			member.DeclaringType = m_container;
+		}
+
+		void Detach (MemberReference member)
+		{
+			member.DeclaringType = null;
 		}
 <% end
   if !$cur_coll.visitor.nil? then %>

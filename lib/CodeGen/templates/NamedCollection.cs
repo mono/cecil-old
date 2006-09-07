@@ -28,7 +28,16 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+<%
+def use_event?()
+	case $cur_coll.name
+		when "TypeDefinitionCollection", "TypeReferenceCollection", "ExternTypeCollection"
+			return true
+	end
 
+	return false
+end
+%>
 namespace <%=$cur_coll.target%> {
 
 	using System;
@@ -40,29 +49,9 @@ namespace <%=$cur_coll.target%> {
 	using Hcp = Mono.Cecil.HashCodeProvider;
 	using Cmp = System.Collections.Comparer;
 
-	public class <%=$cur_coll.item_name%>EventArgs : EventArgs {
-
-		private <%=$cur_coll.type%> m_item;
-
-		public <%=$cur_coll.type%> <%=$cur_coll.item_name%> {
-			get { return m_item; }
-		}
-
-		public <%=$cur_coll.item_name%>EventArgs (<%=$cur_coll.type%> item)
-		{
-			m_item = item;
-		}
-	}
-
-	public delegate void <%=$cur_coll.item_name%>EventHandler (
-		object sender, <%=$cur_coll.item_name%>EventArgs ea);
-
 	public sealed class <%=$cur_coll.name%> : NameObjectCollectionBase, IIndexedCollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %>  {
 
 		<%=$cur_coll.container%> m_container;
-
-		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Added;
-		public event <%=$cur_coll.item_name%>EventHandler On<%=$cur_coll.item_name%>Removed;
 
 		public <%=$cur_coll.type%> this [int index] {
 			get { return this.BaseGet (index) as <%=$cur_coll.type%>; }
@@ -104,17 +93,17 @@ namespace <%=$cur_coll.target%> {
 			if (this.Contains (value))
 				throw new ArgumentException ("Duplicated value");
 <% end %>
-			if (On<%=$cur_coll.item_name%>Added != null)
-				On<%=$cur_coll.item_name%>Added (this, new <%=$cur_coll.item_name%>EventArgs (value));
+			<% if use_event?() %>Attach (value);<% end %>
 
 			this.BaseAdd (value.FullName, value);
 		}
 
 		public void Clear ()
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null)
-				foreach (<%=$cur_coll.type%> item in this)
-					On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (item));
+		{<%
+ if use_event?() %>
+			foreach (<%=$cur_coll.type%> item in this)
+				Detach (item);
+<% end %>
 			this.BaseClear ();
 		}
 
@@ -135,16 +124,19 @@ namespace <%=$cur_coll.target%> {
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null && this.Contains (value))
-				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (value));
+		{<%
+ if use_event?() %>
+			if (this.Contains (value))
+				Detach (value);
+<% end %>
 			this.BaseRemove (value.FullName);
 		}
 
 		public void RemoveAt (int index)
-		{
-			if (On<%=$cur_coll.item_name%>Removed != null)
-				On<%=$cur_coll.item_name%>Removed (this, new <%=$cur_coll.item_name%>EventArgs (this [index]));
+		{<%
+ if use_event?() %>
+			Detach (this [index]);
+<% end %>
 			this.BaseRemoveAt (index);
 		}
 
@@ -173,5 +165,26 @@ namespace <%=$cur_coll.target%> {
 			return values;
 		}
 #endif
+<%
+	if use_event?()
+%>
+		void Detach (TypeReference type)
+		{
+			type.Module = null;
+		}
+
+		void Attach (TypeReference type)
+		{
+			if (type.Module != null)
+				throw new ReflectionException ("Type is already attached, clone it instead");
+
+			type.Module = m_container;<%
+		if $cur_coll.type == "TypeDefinition" %>
+			type.AttachToScope (m_container);
+<% end %>
+		}<%
+
+	end
+%>
 	}
 }

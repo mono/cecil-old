@@ -85,7 +85,7 @@ $types = [
 	"TypeDefinition",
 	"TypeReference",
 	"TypeSpecification",
-	
+
 	"Instruction",
 	"ExceptionHandler",
 	"VariableDefinition",

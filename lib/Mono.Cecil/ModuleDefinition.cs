@@ -172,38 +172,10 @@ namespace Mono.Cecil {
 			m_asmRefs = new AssemblyNameReferenceCollection (this);
 			m_res = new ResourceCollection (this);
 			m_types = new TypeDefinitionCollection (this);
-			m_types.OnTypeDefinitionAdded += new TypeDefinitionEventHandler (OnTypeDefinitionAdded);
-			m_types.OnTypeDefinitionRemoved += new TypeDefinitionEventHandler (OnTypeDefinitionRemoved);
 			m_refs = new TypeReferenceCollection (this);
-			m_refs.OnTypeReferenceAdded += new TypeReferenceEventHandler (OnTypeReferenceAdded);
-			m_refs.OnTypeReferenceRemoved += new TypeReferenceEventHandler (OnTypeReferenceRemoved);
 			m_members = new MemberReferenceCollection (this);
 
 			m_controller = new ReflectionController (this);
-		}
-
-		void OnTypeDefinitionAdded (Object sender, TypeDefinitionEventArgs ea)
-		{
-			if (ea.TypeDefinition.Module != null)
-				throw new ReflectionException ("Type is already attached, clone it instead");
-
-			ea.TypeDefinition.Module = this;
-			ea.TypeDefinition.AttachToScope (this);
-		}
-
-		void OnTypeDefinitionRemoved (Object sender, TypeDefinitionEventArgs ea)
-		{
-			ea.TypeDefinition.Module = null;
-		}
-
-		void OnTypeReferenceAdded (Object sender, TypeReferenceEventArgs ea)
-		{
-			ea.TypeReference.Module = this;
-		}
-
-		void OnTypeReferenceRemoved (Object sender, TypeReferenceEventArgs ea)
-		{
-			ea.TypeReference.Module = null;
 		}
 
 		public IMetadataTokenProvider LookupByToken (MetadataToken token)
