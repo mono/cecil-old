@@ -10,7 +10,6 @@ require 'cecil-gen-types'
 
 # time to generate code now
 
-$headers = Hash.new
 $types = Hash.new
 $tables = Array.new
 $colls = Array.new
@@ -25,17 +24,6 @@ doc.root.each_element("/cecil/types//type") { |node|
 		node.attribute("size").value.to_i,
 		(node.attribute("underlying").nil? ? nil : node.attribute("underlying").value))
 	$types[type.name] = type
-}
-
-doc.root.each_element("/cecil/headers//header") { |node|
-	header = Cecil::Header.new(node.attribute("name").value)
-	node.each_element("field") { |fi|
-		header.add_field(Cecil::Field.new(
-			fi.attribute("name").value,
-			$types[fi.attribute("type").value],
-			(fi.attribute("default").nil? ? nil : fi.attribute("default").value)))
-	}
-	$headers[header.name] = header
 }
 
 doc.root.each_element("/cecil/metadata/tables//table") { |node|
@@ -142,11 +130,6 @@ def cecil_compile(file, template)
 		end
 	end
 end
-
-[ "PEFileHeader.cs", "PEOptionalHeader.cs", "Section.cs",
-  "CLIHeader.cs", "ImageReader.cs", "ImageWriter.cs", "DebugHeader.cs" ].each { |file|
-	cecil_compile(fullpath = "../Mono.Cecil.Binary/" + file, "./templates/" + file)
-}
 
 $tables.each { |table|
 	$cur_table = table

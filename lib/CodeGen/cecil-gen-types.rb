@@ -220,21 +220,6 @@ module Cecil
 		end
 	end
 
-	class Header
-
-		attr_reader(:name)
-		attr_reader(:fields)
-
-		def initialize(name)
-			@name = name
-			@fields = Array.new
-		end
-
-		def add_field(field)
-			@fields.push(field)
-		end
-	end
-
 	class Field < FieldWorker
 
 		attr_reader(:default)

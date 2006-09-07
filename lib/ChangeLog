@@ -1,5 +1,7 @@
 2006-09-07  Jb Evain  <jbevain@gmail.com>
 
+	* support PE32+ file format.
+
 	* Add an Outside instruction to an InstructionCollection.
 	Cleaner than the old null instruction.
 
