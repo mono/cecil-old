@@ -139,8 +139,8 @@ namespace Mono.Cecil.Binary {
 		ulong ReadIntOrLong ()
 		{
 			return m_image.PEOptionalHeader.StandardFields.IsPE64 ?
-				m_binaryReader.ReadUInt32 () :
-				m_binaryReader.ReadUInt64 ();
+				m_binaryReader.ReadUInt64 () :
+				m_binaryReader.ReadUInt32 ();
 		}
 
 		public override void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header)
