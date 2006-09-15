@@ -2,32 +2,32 @@
 <project name="Cecil.FlowAnalysis" default="test">
 
 	<include buildfile="nunit.inc" />
-	
+
 	<property name="Mono.Cecil.dll" value="../lib/bin/Mono.Cecil.dll" />
 	<property name="build.dir" value="bin" />
 	<property name="booi" value="booi" />
 	<property name="optimize" value="false" />
 	<property name="debug" value="true" />
-	
+
 	<target name="test" depends="build">
-		<nunit2>       
+		<nunit2>
 			<formatter type="Plain" />
 			<test>
-				<assemblies basedir="${build.dir}">				
-					<include name="*.Tests.dll" />					
+				<assemblies basedir="${build.dir}">
+					<include name="*.Tests.dll" />
 				</assemblies>
 			</test>
 		</nunit2>
 	</target>
-	
+
 	<target name="release" depends="clean, set-release, test">
 	</target>
-	
+
 	<target name="set-release">
 		<property name="optimize" value="true" />
 		<property name="debug" value="false" />
 	</target>
-	
+
 	<target name="build" depends="init">
 		<csc
 			target="library"
@@ -41,7 +41,7 @@
 				<include name="Mono.Cecil.dll" />
 			</references>
 		</csc>
-		
+
 		<csc
 			target="library"
 			output="${build.dir}/Cecil.FlowAnalysis.Tests.dll"
@@ -57,17 +57,17 @@
 			</references>
 		</csc>
 	</target>
-	
+
 	<target name="codegen" depends="init" description="generates CodeStructure and CecilUtilities classes">
 		<exec program="${booi}" workingdir=".">
 			<arg value="codegen/gen-CecilUtilities.boo" />
 		</exec>
-		
+
 		<exec program="${booi}" workingdir=".">
 			<arg value="codegen/gen-CodeStructure.boo" />
 		</exec>
 	</target>
-	
+
 	<target name="cfgtestgen" depends="build" description="generates control flow graph regression tests">
 		<exec program="${booi}">
 			<arg value="-r:${build.dir}/Mono.Cecil.dll" />
@@ -78,14 +78,14 @@
 			<arg value="${cfg.class}" />
 		</exec>
 	</target>
-	
+
 	<target name="init">
 		<mkdir dir="${build.dir}" unless="${directory::exists(build.dir)}" />
 		<copy todir="${build.dir}" file="${Mono.Cecil.dll}" />
 	</target>
-	
+
 	<target name="clean">
 		<delete dir="${build.dir}" if="${directory::exists(build.dir)}" />
 	</target>
-	
+
 </project>

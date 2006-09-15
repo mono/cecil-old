@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class MethodInvocationExpression : IMethodInvocationExpression	{
 		IExpression _target;
 		IExpressionCollection _arguments;
@@ -51,7 +51,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.MethodInvocationExpression; } 
+			get { return CodeElementType.MethodInvocationExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

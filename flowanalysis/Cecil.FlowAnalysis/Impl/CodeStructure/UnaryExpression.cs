@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class UnaryExpression : IUnaryExpression	{
 		UnaryOperator _operator;
 		IExpression _operand;
@@ -51,7 +51,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.UnaryExpression; } 
+			get { return CodeElementType.UnaryExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

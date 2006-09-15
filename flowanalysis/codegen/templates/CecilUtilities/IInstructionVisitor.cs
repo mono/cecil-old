@@ -26,11 +26,11 @@
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CecilUtilities {
-	
+
 	public interface IInstructionVisitor {
 <%
 	for instr in Instructions:
-%>		void On${instr.OpCodes[0]} (IInstruction instruction);
+%>		void On${instr.OpCodes[0]} (Instruction instruction);
 <%
 	end
 %>	}

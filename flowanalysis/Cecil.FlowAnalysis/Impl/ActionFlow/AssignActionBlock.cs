@@ -32,7 +32,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal class AssignActionBlock : AbstractFallThroughActionBlock, IAssignActionBlock {
 		private IAssignExpression _assignExpression;
 
-		public AssignActionBlock (IInstruction sourceInstruction, IAssignExpression assign)
+		public AssignActionBlock (Instruction sourceInstruction, IAssignExpression assign)
 		: base(sourceInstruction)
 		{
 			_assignExpression = assign;

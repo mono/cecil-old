@@ -32,7 +32,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal class BranchActionBlock : AbstractActionBlock, IBranchActionBlock {
 		IActionBlock _target;
 
-		public BranchActionBlock (IInstruction sourceInstruction) : base(sourceInstruction)
+		public BranchActionBlock (Instruction sourceInstruction) : base(sourceInstruction)
 		{
 		}
 

@@ -4,7 +4,7 @@
        extends [mscorlib]System.Object
 {
 	.field int32 _field
-	
+
 	.method public hidebysig int32 Main() cil managed
 	{
 		.locals init (bool local0)

@@ -32,7 +32,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal abstract class AbstractFallThroughActionBlock : AbstractActionBlock, IFallThroughActionBlock {
 		protected IActionBlock _next;
 
-		public AbstractFallThroughActionBlock (IInstruction sourceInstruction) : base(sourceInstruction)
+		public AbstractFallThroughActionBlock (Instruction sourceInstruction) : base(sourceInstruction)
 		{
 		}
 

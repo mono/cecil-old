@@ -33,19 +33,19 @@ using NUnit.Framework;
 namespace Cecil.FlowAnalysis.Tests {
 	[TestFixture]
 	public class ActionFlowTestFixture : AbstractFlowAnalysisTestFixture {
-		
+
 		[Test]
 		public void IntPropertyEquals1 ()
 		{
 			RunTestCase ("IntPropertyEquals1");
 		}
-		
+
 		[Test]
 		public void IntPropertyEquals2 ()
 		{
 			RunTestCase ("IntPropertyEquals2");
 		}
-		
+
 		[Test]
 		public void FloatGreaterThan ()
 		{
@@ -232,7 +232,7 @@ namespace Cecil.FlowAnalysis.Tests {
 
 		private IActionFlowGraph GetActionFlowGraph (string name)
 		{
-			IMethodDefinition method = LoadTestCaseMethod (name);
+			MethodDefinition method = LoadTestCaseMethod (name);
 			return FlowGraphFactory.CreateActionFlowGraph (FlowGraphFactory.CreateControlFlowGraph (method));
 		}
 

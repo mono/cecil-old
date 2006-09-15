@@ -30,22 +30,22 @@ using Mono.Cecil.Cil;
 namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 	internal class FlowGraph : IControlFlowGraph {
 		private InstructionBlock[] _blocks;
-		private IMethodBody _body;
+		private MethodBody _body;
 		private IDictionary _data;
 
-		public FlowGraph (IMethodBody body, InstructionBlock[] blocks, IDictionary instructionData)
+		public FlowGraph (MethodBody body, InstructionBlock[] blocks, IDictionary instructionData)
 		{
 			_body = body;
 			_blocks = blocks;
 			_data = instructionData;
 		}
 
-		public IInstructionData GetData (IInstruction instruction)
+		public IInstructionData GetData (Instruction instruction)
 		{
 			return (IInstructionData) _data [instruction.Offset];
 		}
 
-		public IMethodBody MethodBody {
+		public MethodBody MethodBody {
 			get {
 				return _body;
 			}

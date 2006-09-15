@@ -32,7 +32,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal class InvokeActionBlock : AbstractFallThroughActionBlock, IInvokeActionBlock {
 		private IMethodInvocationExpression _expression;
 
-		public InvokeActionBlock (IInstruction sourceInstruction, IMethodInvocationExpression expression)
+		public InvokeActionBlock (Instruction sourceInstruction, IMethodInvocationExpression expression)
 		: base(sourceInstruction)
 		{
 			_expression = expression;

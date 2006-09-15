@@ -42,9 +42,9 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		private IDictionary _instruction2block = new Hashtable();
 		private IDictionary _processed = new Hashtable();
 		private ExpressionDecompiler _expressionDecompiler;
-		private IMethodDefinition _method;
+		private MethodDefinition _method;
 		private IControlFlowGraph _cfg;
-		private IInstruction _current;
+		private Instruction _current;
 		private ActionFlowGraph _graph;
 
 		internal ActionGraphBuilder (IControlFlowGraph cfg)
@@ -173,9 +173,9 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 				: _blocks [index];
 		}
 
-		private IActionBlock GetBranchTarget (IInstruction instruction)
+		private IActionBlock GetBranchTarget (Instruction instruction)
 		{
-			return GetActionBlock ((IInstruction)instruction.Operand);
+			return GetActionBlock ((Instruction)instruction.Operand);
 		}
 
 		private void ProcessBlocks ()
@@ -239,7 +239,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		private void ProcessSimpleBlock (IInstructionBlock block)
 		{
-			foreach (IInstruction instruction in block) {
+			foreach (Instruction instruction in block) {
 				_expressionDecompiler.Visit (instruction);
 				if (0 == GetStackAfter (instruction)) {
 					CreateActionBlock (instruction);
@@ -340,7 +340,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		private void BuildExpression (IInstructionBlock block)
 		{
 			if (WasProcessed (block)) return;
-			foreach (IInstruction instruction in block) {
+			foreach (Instruction instruction in block) {
 				_expressionDecompiler.Visit (instruction);
 			}
 			MarkProcessed (block);
@@ -364,57 +364,57 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			throw new InvalidOperationException ("stack should be empty after a statement");
 		}
 
-		private void CreateActionBlock (IInstruction instruction)
+		private void CreateActionBlock (Instruction instruction)
 		{
 			Visit (instruction);
 			AssertStackIsEmpty ();
 		}
 
-		public override void OnBrfalse (IInstruction instruction)
+		public override void OnBrfalse (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBrtrue (IInstruction instruction)
+		public override void OnBrtrue (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBle (IInstruction instruction)
+		public override void OnBle (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBlt (IInstruction instruction)
+		public override void OnBlt (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBeq (IInstruction instruction)
+		public override void OnBeq (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBne_Un (IInstruction instruction)
+		public override void OnBne_Un (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		public override void OnBge (IInstruction instruction)
+		public override void OnBge (Instruction instruction)
 		{
 			AddConditionalBranch (instruction);
 		}
 
-		private void AddConditionalBranch (IInstruction instruction)
+		private void AddConditionalBranch (Instruction instruction)
 		{
 			Add (new ConditionalBranchActionBlock (instruction, Pop ()));
 		}
 
-		public override void OnNop (IInstruction instruction)
+		public override void OnNop (Instruction instruction)
 		{
 		}
 
-		public override void OnRet (IInstruction instruction)
+		public override void OnRet (Instruction instruction)
 		{
 			IExpression expression = null;
 			if (1 == GetStackBefore (instruction)) {
@@ -423,32 +423,32 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			Add (new ReturnActionBlock (instruction, expression));
 		}
 
-		public override void OnCall (IInstruction instruction)
+		public override void OnCall (Instruction instruction)
 		{
 			Add (new InvokeActionBlock (instruction, (IMethodInvocationExpression)Pop ()));
 		}
 
-		public override void OnBr (IInstruction instruction)
+		public override void OnBr (Instruction instruction)
 		{
 			Add (new BranchActionBlock (instruction));
 		}
 
-		public override void OnStloc_0 (IInstruction instruction)
+		public override void OnStloc_0 (Instruction instruction)
 		{
 			Add (new AssignActionBlock (instruction, (IAssignExpression) Pop ()));
 		}
 
-		private int GetStackBefore (IInstruction instruction)
+		private int GetStackBefore (Instruction instruction)
 		{
 			return GetInstructionData (instruction).StackBefore;
 		}
 
-		private int GetStackAfter (IInstruction instruction)
+		private int GetStackAfter (Instruction instruction)
 		{
 			return GetInstructionData (instruction).StackAfter;
 		}
 
-		private IInstructionData GetInstructionData (IInstruction instruction)
+		private IInstructionData GetInstructionData (Instruction instruction)
 		{
 			return _cfg.GetData (instruction);
 		}
@@ -460,7 +460,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_instruction2block.Add (_current, block);
 		}
 
-		IActionBlock GetActionBlock (IInstruction block)
+		IActionBlock GetActionBlock (Instruction block)
 		{
 			return (IActionBlock) _instruction2block [block];
 		}

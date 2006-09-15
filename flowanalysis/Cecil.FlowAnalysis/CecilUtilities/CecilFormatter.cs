@@ -33,31 +33,31 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 	/// <summary>
 	/// </summary>
 	public class CecilFormatter {
-		public static string FormatInstruction (IInstruction instruction)
+		public static string FormatInstruction (Instruction instruction)
 		{
 			StringWriter writer = new StringWriter ();
 			WriteInstruction (writer, instruction);
 			return writer.ToString ();
 		}
 
-		public static string FormatMethodBody (IMethodDefinition method)
+		public static string FormatMethodBody (MethodDefinition method)
 		{
 			StringWriter writer = new StringWriter ();
 			WriteMethodBody (writer, method);
 			return writer.ToString ();
 		}
 
-		public static void WriteMethodBody (TextWriter writer, IMethodDefinition method)
+		public static void WriteMethodBody (TextWriter writer, MethodDefinition method)
 		{
 			writer.WriteLine (method.ToString ());
-			foreach (IInstruction instruction in method.Body.Instructions) {
+			foreach (Instruction instruction in method.Body.Instructions) {
 				writer.Write ('\t');
 				WriteInstruction (writer, instruction);
 				writer.WriteLine ();
 			}
 		}
 
-		public static void WriteInstruction (TextWriter writer, IInstruction instruction)
+		public static void WriteInstruction (TextWriter writer, Instruction instruction)
 		{
 			writer.Write (FormatLabel (instruction.Offset));
 			writer.Write (": ");
@@ -78,19 +78,19 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 		{
 			if (null == operand) throw new ArgumentNullException ("operand");
 
-			IInstruction targetInstruction = operand as IInstruction;
+			Instruction targetInstruction = operand as Instruction;
 			if (null != targetInstruction) {
 				writer.Write (FormatLabel (targetInstruction.Offset));
 				return;
 			}
 
-			IVariableReference variableRef = operand as IVariableReference;
+			VariableReference variableRef = operand as VariableReference;
 			if (null != variableRef) {
 				writer.Write (variableRef.Index.ToString ());
 				return;
 			}
 
-			IMethodReference methodRef = operand as IMethodReference;
+			MethodReference methodRef = operand as MethodReference;
 			if (null != methodRef) {
 				WriteMethodReference (writer, methodRef);
 				return;
@@ -114,7 +114,7 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 				: value.ToString ();
 		}
 
-		private static void WriteMethodReference (TextWriter writer, IMethodReference method)
+		private static void WriteMethodReference (TextWriter writer, MethodReference method)
 		{
 			writer.Write (FormatTypeReference (method.ReturnType.ReturnType));
 			writer.Write (' ');
@@ -122,7 +122,7 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 			writer.Write ("::");
 			writer.Write (method.Name);
 			writer.Write ("(");
-			IParameterDefinitionCollection parameters = method.Parameters;
+			ParameterDefinitionCollection parameters = method.Parameters;
 			for (int i=0; i < parameters.Count; ++i) {
 				if (i > 0) writer.Write (", ");
 				writer.Write (FormatTypeReference (parameters [i].ParameterType));
@@ -130,7 +130,7 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 			writer.Write (")");
 		}
 
-		public static string FormatTypeReference (ITypeReference type)
+		public static string FormatTypeReference (TypeReference type)
 		{
 			string typeName = type.FullName;
 			switch (typeName) {

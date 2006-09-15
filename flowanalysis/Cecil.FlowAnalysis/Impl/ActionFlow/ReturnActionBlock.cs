@@ -33,7 +33,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal class ReturnActionBlock : AbstractActionBlock, IReturnActionBlock {
 		private IExpression _expression;
 
-		public ReturnActionBlock (IInstruction sourceInstruction, IExpression expression)
+		public ReturnActionBlock (Instruction sourceInstruction, IExpression expression)
 		: base(sourceInstruction)
 		{
 			_expression = expression;

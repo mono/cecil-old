@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class BinaryExpression : IBinaryExpression	{
 		BinaryOperator _operator;
 		IExpression _left;
@@ -58,7 +58,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.BinaryExpression; } 
+			get { return CodeElementType.BinaryExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

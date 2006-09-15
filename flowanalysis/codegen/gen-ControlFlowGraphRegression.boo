@@ -9,11 +9,11 @@ import Cecil.FlowAnalysis
 import Cecil.FlowAnalysis.CecilUtilities
 import Cecil.FlowAnalysis.Tests
 
-def WriteMethod(writer as TextWriter, method as IMethodDefinition):
-	
+def WriteMethod(writer as TextWriter, method as MethodDefinition):
+
 	returnType = CecilFormatter.FormatTypeReference(method.ReturnType.ReturnType)
-	args = "${CecilFormatter.FormatTypeReference(p.ParameterType)} ${p.Name}" for p as IParameterReference in method.Parameters
-	
+	args = "${CecilFormatter.FormatTypeReference(p.ParameterType)} ${p.Name}" for p as ParameterReference in method.Parameters
+
 	writer.WriteLine(""".assembly TestCase {}
 
 .class public auto ansi beforefieldinit TestCase
@@ -21,14 +21,14 @@ def WriteMethod(writer as TextWriter, method as IMethodDefinition):
 {
 	.method public hidebysig static ${returnType} Main(${join(args, ', ')}) cil managed
 	{""")
-	
+
 	for i in method.Body.Instructions:
 		writer.WriteLine("\t\t${CecilFormatter.FormatInstruction(i)}")
-		
+
 	writer.WriteLine("""	}
 }""")
 
-def WriteCFG(writer as TextWriter, method as IMethodDefinition):
+def WriteCFG(writer as TextWriter, method as MethodDefinition):
 	cfg = FlowGraphFactory.CreateControlFlowGraph(method)
 	AbstractControlFlowTestFixture.FormatControlFlowGraph(writer, cfg)
 
@@ -51,7 +51,7 @@ assembly = AssemblyFactory.GetAssembly(assemblyPath)
 examples = assembly.MainModule.Types[typeName]
 
 generated = []
-for method as IMethodDefinition in examples.Methods:
+for method as MethodDefinition in examples.Methods:
 	fname = "testcases/FlowAnalysis/${method.Name}.il"
 	if File.Exists(fname):
 		print fname, "already exists, skipping..."
@@ -63,5 +63,5 @@ for method as IMethodDefinition in examples.Methods:
 	fname = "testcases/FlowAnalysis/${method.Name}-cfg.txt"
 	using writer=StreamWriter(fname):
 		WriteCFG(writer, method)
-		
+
 WriteTestFixture(generated)

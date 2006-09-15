@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class AssignExpression : IAssignExpression	{
 		IExpression _target;
 		IExpression _expression;
@@ -51,7 +51,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.AssignExpression; } 
+			get { return CodeElementType.AssignExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

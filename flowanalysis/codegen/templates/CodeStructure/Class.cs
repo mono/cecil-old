@@ -32,7 +32,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class ${node.Name} : I${node.Name}	{
 <%	for field in fields:
 %>		${GetFieldTypeName(field)} ${ToFieldName(field.Name)};
@@ -55,7 +55,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 <%	end %>
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.${node.Name}; } 
+			get { return CodeElementType.${node.Name}; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

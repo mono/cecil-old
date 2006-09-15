@@ -24,9 +24,9 @@
 #endregion
 
 namespace Cecil.FlowAnalysis.CodeStructure {
-	
+
 	using System;
-	
+
 	public enum CodeElementType	{
 		MethodInvocationExpression,
 		MethodReferenceExpression,

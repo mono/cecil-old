@@ -31,78 +31,78 @@ import Boo.Lang.Compiler.IO
 import Useful.BooTemplate from Boo.Lang.Useful
 
 class Model:
-	
+
 	[getter(Module)]
 	_module as Module
-	
+
 	def constructor(module as Module):
 		_module = module
-		
+
 	def GetFields(node as TypeDefinition):
 		return array(Field, GetMembers(node, NodeType.Field))
-		
+
 	def GetVisitableFields(node as TypeDefinition):
 		for field in GetFields(node):
 			type = ResolveType(field.Type)
 			continue if type is null
 			continue if IsEnum(type)
 			yield field
-			
+
 	def GetVisitableNodes():
 		for node in _module.Members:
 			continue if node.NodeType != NodeType.ClassDefinition
 			continue if node.IsAbstract
 			continue if IsCollection(node)
 			yield node
-		
+
 	def GetClasses():
 		return array(ClassDefinition, GetMembers(_module, NodeType.ClassDefinition))
-		
+
 	def GetMembers(container as TypeDefinition, type as NodeType):
 		for member in container.Members:
 			yield member if member.NodeType == type
-		
+
 	def GetCollectionItemType(node as TypeDefinition):
 		assert IsCollection(node)
 		attribute = node.Attributes.Get("collection")[0]
 		reference as ReferenceExpression = attribute.Arguments[0]
 		return reference.Name
-		
+
 	def IsCollection(node as TypeDefinition):
 		return node.Attributes.Contains("collection")
-		
+
 	def IsEnum(node as TypeDefinition):
 		return NodeType.EnumDefinition == node.NodeType
-		
+
 	def ResolveType(typeRef as TypeReference):
 		return _module.Members[typeRef.ToString()]
 
 class CodeTemplate(AbstractTemplate):
 
 	static Keywords = { "operator" : true }
-	
+
 	[property(model)]
 	_model as Model
-	
+
 	[property(node)]
 	_node as TypeDefinition
-		
+
 	def ToCamelCase(s as string):
 		return s[:1].ToLower() + s[1:]
-		
+
 	def ToParamName(s as string):
 		cc = ToCamelCase(s)
-		cc += "_" if cc in Keywords 
+		cc += "_" if cc in Keywords
 		return cc
-		
+
 	def ToFieldName(s as string):
 		return "_${ToCamelCase(s)}"
-		
+
 	def GetFieldTypeName(field as Field):
 		type = model.ResolveType(field.Type)
 		return "I${field.Type}" if type is not null
 		return field.Type.ToString()
-	
+
 def parse(fname as string):
 	parser = BooCompiler()
 	parser.Parameters.Pipeline = Pipelines.Parse()
@@ -110,7 +110,7 @@ def parse(fname as string):
 	result = parser.Run()
 	assert 0 == len(result.Errors), result.Errors.ToString()
 	return result.CompileUnit.Modules[0]
-		
+
 def loadTemplate(model, fname as string):
 	compiler = TemplateCompiler(TemplateBaseClass: CodeTemplate)
 	result = compiler.CompileFile(Path.Combine("codegen/templates/CodeStructure", fname))
@@ -120,17 +120,17 @@ def loadTemplate(model, fname as string):
 	template as CodeTemplate = templateType()
 	template.model = model
 	return template
-	
+
 def applyTemplate(node as TypeDefinition, template as CodeTemplate, targetFile as string):
 	using writer=StreamWriter(Path.Combine("Cecil.FlowAnalysis", targetFile)):
 		template.node = node
 		template.Output = writer
 		template.Execute()
 	print targetFile
-	
+
 def applyModelTemplate(model as Model, templateName as string):
 	applyTemplate(null, loadTemplate(model, templateName), "CodeStructure/${templateName}")
-		
+
 module = parse("codegen/CodeStructureModel.boo")
 model = Model(module)
 interfaceTemplate = loadTemplate(model, "Interface.cs")

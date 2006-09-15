@@ -90,7 +90,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 
 		public override void Visit (IMethodReferenceExpression node)
 		{
-			IMethodReference method = node.Method;
+			MethodReference method = node.Method;
 			if (null == node.Target) {
 				Write (CecilFormatter.FormatTypeReference (method.DeclaringType));
 			} else {

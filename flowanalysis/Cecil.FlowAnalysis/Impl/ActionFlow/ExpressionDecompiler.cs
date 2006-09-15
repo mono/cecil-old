@@ -35,11 +35,11 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	internal class ExpressionDecompiler : AbstractInstructionVisitor {
 		private Stack _expressionStack;
 
-		private IMethodDefinition _method;
+		private MethodDefinition _method;
 
 		private TypeReference _SystemBoolean;
 
-		public ExpressionDecompiler (IMethodDefinition method)
+		public ExpressionDecompiler (MethodDefinition method)
 		{
 			_method = method;
 			_expressionStack = new Stack ();
@@ -52,32 +52,32 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		public override void OnNop (IInstruction instruction)
+		public override void OnNop (Instruction instruction)
 		{
 		}
 
-		public override void OnRet (IInstruction instruction)
+		public override void OnRet (Instruction instruction)
 		{
 		}
 
-		public override void OnBr (IInstruction instruction)
+		public override void OnBr (Instruction instruction)
 		{
 		}
 
-		public override void OnStloc_0 (IInstruction instruction)
+		public override void OnStloc_0 (Instruction instruction)
 		{
 			PushVariableReference (0);
 			Push (new AssignExpression (Pop (), Pop ()));
 		}
 
-		public override void OnCallvirt (IInstruction instruction)
+		public override void OnCallvirt (Instruction instruction)
 		{
 			OnCall (instruction);
 		}
 
-		public override void OnCall (IInstruction instruction)
+		public override void OnCall (Instruction instruction)
 		{
-			IMethodReference method = (IMethodReference)instruction.Operand;
+			MethodReference method = (MethodReference)instruction.Operand;
 
 			ExpressionCollection args = PopRange (method.Parameters.Count);
 			IExpression target = method.HasThis ? Pop () : null;
@@ -87,7 +87,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 					new MethodReferenceExpression (target, method), args));
 		}
 
-		public override void OnMul (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnMul (Mono.Cecil.Cil.Instruction instruction)
 		{
 			BinaryOperator op = BinaryOperator.Multiply;
 			PushBinaryExpression (op);
@@ -100,87 +100,87 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			Push (new BinaryExpression (op, lhs, rhs));
 		}
 
-		public override void OnLdstr (IInstruction instruction)
+		public override void OnLdstr (Instruction instruction)
 		{
 			PushLiteral (instruction.Operand);
 		}
 
-		public override void OnLdc_R4 (IInstruction instruction)
+		public override void OnLdc_R4 (Instruction instruction)
 		{
 			PushLiteral (instruction.Operand);
 		}
 
-		public override void OnLdc_R8 (IInstruction instruction)
+		public override void OnLdc_R8 (Instruction instruction)
 		{
 			PushLiteral (instruction.Operand);
 		}
 
-		public override void OnLdc_I8 (IInstruction instruction)
+		public override void OnLdc_I8 (Instruction instruction)
 		{
 			PushLiteral (instruction.Operand);
 		}
 
-		public override void OnLdc_I4 (IInstruction instruction)
+		public override void OnLdc_I4 (Instruction instruction)
 		{
 			PushLiteral (instruction.Operand);
 		}
 
-		public override void OnLdc_I4_M1 (IInstruction instruction)
+		public override void OnLdc_I4_M1 (Instruction instruction)
 		{
 			PushLiteral (-1);
 		}
 
-		public override void OnLdc_I4_0 (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnLdc_I4_0 (Mono.Cecil.Cil.Instruction instruction)
 		{
 			PushLiteral (0);
 		}
 
-		public override void OnLdc_I4_1 (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnLdc_I4_1 (Mono.Cecil.Cil.Instruction instruction)
 		{
 			PushLiteral (1);
 		}
 
-		public override void OnLdc_I4_2 (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnLdc_I4_2 (Mono.Cecil.Cil.Instruction instruction)
 		{
 			PushLiteral (2);
 		}
 
-		public override void OnLdc_I4_3 (IInstruction instruction)
+		public override void OnLdc_I4_3 (Instruction instruction)
 		{
 			PushLiteral (3);
 		}
 
-		public override void OnLdc_I4_4 (IInstruction instruction)
+		public override void OnLdc_I4_4 (Instruction instruction)
 		{
 			PushLiteral (4);
 		}
 
-		public override void OnLdc_I4_5 (IInstruction instruction)
+		public override void OnLdc_I4_5 (Instruction instruction)
 		{
 			PushLiteral (5);
 		}
 
-		public override void OnLdc_I4_6 (IInstruction instruction)
+		public override void OnLdc_I4_6 (Instruction instruction)
 		{
 			PushLiteral (6);
 		}
 
-		public override void OnLdc_I4_7 (IInstruction instruction)
+		public override void OnLdc_I4_7 (Instruction instruction)
 		{
 			PushLiteral (7);
 		}
 
-		public override void OnLdc_I4_8 (IInstruction instruction)
+		public override void OnLdc_I4_8 (Instruction instruction)
 		{
 			PushLiteral (8);
 		}
 
-		public override void OnLdloc_0 (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnLdloc_0 (Mono.Cecil.Cil.Instruction instruction)
 		{
 			PushVariableReference (0);
 		}
 
-		public override void OnCeq (IInstruction instruction)
+		public override void OnCeq (Instruction instruction)
 		{
 			// XXX: ceq might be used for reference equality as well
 
@@ -232,51 +232,51 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return false;
 		}
 
-		public override void OnClt (IInstruction instruction)
+		public override void OnClt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.LessThan);
 		}
 
-		public override void OnCgt (IInstruction instruction)
+		public override void OnCgt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.GreaterThan);
 		}
 
-		public override void OnBeq (IInstruction instruction)
+		public override void OnBeq (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.ValueEquality);
 		}
 
-		public override void OnBne_Un (IInstruction instruction)
+		public override void OnBne_Un (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.ValueInequality);
 		}
 
-		public override void OnBle (IInstruction instruction)
+		public override void OnBle (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.LessThanOrEqual);
 		}
 
-		public override void OnBgt (IInstruction instruction)
+		public override void OnBgt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.GreaterThan);
 		}
 
-		public override void OnBge (IInstruction instruction)
+		public override void OnBge (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.GreaterThanOrEqual);
 		}
 
-		public override void OnBlt (IInstruction instruction)
+		public override void OnBlt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.LessThan);
 		}
 
-		public override void OnBrtrue (IInstruction instruction)
+		public override void OnBrtrue (Instruction instruction)
 		{
 		}
 
-		public override void OnBrfalse (IInstruction instruction)
+		public override void OnBrfalse (Instruction instruction)
 		{
 			Negate ();
 		}
@@ -286,28 +286,28 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			PushVariableReference (_method.Body.Variables [index]);
 		}
 
-		private void PushVariableReference (IVariableReference variable)
+		private void PushVariableReference (VariableReference variable)
 		{
 			Push (new VariableReferenceExpression (variable));
 		}
 
-		public override void OnLdfld (IInstruction instruction)
+		public override void OnLdfld (Instruction instruction)
 		{
-			IFieldReference field = (IFieldReference)instruction.Operand;
+			FieldReference field = (FieldReference)instruction.Operand;
 			Push (new FieldReferenceExpression (Pop (), field));
 		}
 
-		public override void OnLdnull (IInstruction instruction)
+		public override void OnLdnull (Instruction instruction)
 		{
 			PushLiteral (null);
 		}
 
-		public override void OnLdarg_0 (Mono.Cecil.Cil.IInstruction instruction)
+		public override void OnLdarg_0 (Mono.Cecil.Cil.Instruction instruction)
 		{
 			PushArgumentReference (0);
 		}
 
-		public override void OnLdarg_1 (IInstruction instruction)
+		public override void OnLdarg_1 (Instruction instruction)
 		{
 			PushArgumentReference (1);
 		}

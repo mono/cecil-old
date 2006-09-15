@@ -34,15 +34,15 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow
 	internal abstract class AbstractActionBlock : IActionBlock
 	{
 		ActionBlockCollection _predecessors = new ActionBlockCollection();
-		private IInstruction _sourceInstruction;
+		private Instruction _sourceInstruction;
 
-		public AbstractActionBlock(IInstruction sourceInstruction)
+		public AbstractActionBlock(Instruction sourceInstruction)
 		{
 			if (null == sourceInstruction) throw new ArgumentNullException("sourceInstruction");
 			_sourceInstruction = sourceInstruction;
 		}
 
-		public IInstruction SourceInstruction
+		public Instruction SourceInstruction
 		{
 			get { return _sourceInstruction; }
 		}

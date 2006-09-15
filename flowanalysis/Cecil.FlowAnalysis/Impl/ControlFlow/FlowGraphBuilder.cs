@@ -34,12 +34,12 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 	/// <summary>
 	/// </summary>
 	internal class FlowGraphBuilder {
-		private IMethodBody _body;
+		private MethodBody _body;
 		private Hashtable _instructionData;
 		private Hashtable _blocks = new Hashtable();
-		private ITypeReference _SystemVoid;
+		private TypeReference _SystemVoid;
 
-		internal FlowGraphBuilder (IMethodDefinition method)
+		internal FlowGraphBuilder (MethodDefinition method)
 		{
 			if (method.Body.ExceptionHandlers.Count > 0) {
 				throw new ArgumentException ("Exception handlers are not supported.", "body");
@@ -59,15 +59,15 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 
 		private void DelimitBlocks ()
 		{
-			IInstructionCollection instructions = _body.Instructions;
+			InstructionCollection instructions = _body.Instructions;
 
 			MarkBlockStarts (instructions);
 			MarkBlockEnds (instructions);
 		}
 
-		private void MarkBlockStarts (IInstructionCollection instructions)
+		private void MarkBlockStarts (InstructionCollection instructions)
 		{
-			IInstruction instruction = instructions [0];
+			Instruction instruction = instructions [0];
 
 			// the first instruction starts a block
 			MarkBlockStart (instruction);
@@ -75,7 +75,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				instruction = instructions [i];
 				if (IsBlockDelimiter (instruction)) {
 					// the target of a branch starts a block
-					IInstruction target = GetBranchTarget (instruction);
+					Instruction target = GetBranchTarget (instruction);
 					if (null != target) MarkBlockStart (target);
 
 					// the next instruction after a branch starts a block
@@ -84,7 +84,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			}
 		}
 
-		private void MarkBlockEnds (IInstructionCollection instructions)
+		private void MarkBlockEnds (InstructionCollection instructions)
 		{
 			InstructionBlock[] blocks = this.RegisteredBlocks;
 			InstructionBlock current = blocks [0];
@@ -97,7 +97,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			current.SetLastInstruction (instructions [instructions.Count - 1]);
 		}
 
-		private bool IsBlockDelimiter (IInstruction instruction)
+		private bool IsBlockDelimiter (Instruction instruction)
 		{
 			FlowControl control = instruction.OpCode.FlowControl;
 			switch (control) {
@@ -110,7 +110,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			return false;
 		}
 
-		private void MarkBlockStart (IInstruction instruction)
+		private void MarkBlockStart (Instruction instruction)
 		{
 			InstructionBlock block = GetBlock (instruction);
 			if (null != block) return;
@@ -136,7 +136,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			if (visited.Contains (block)) return;
 			visited.Add (block, block);
 
-			foreach (IInstruction instruction in block) {
+			foreach (Instruction instruction in block) {
 				stackHeight = ComputeInstructionData (stackHeight, instruction);
 			}
 
@@ -145,7 +145,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			}
 		}
 
-		private int ComputeInstructionData (int stackHeight, IInstruction instruction)
+		private int ComputeInstructionData (int stackHeight, Instruction instruction)
 		{
 			int before = stackHeight;
 			int after = ComputeNewStackHeight (stackHeight, instruction);
@@ -153,12 +153,12 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			return after;
 		}
 
-		private int ComputeNewStackHeight (int stackHeight, IInstruction instruction)
+		private int ComputeNewStackHeight (int stackHeight, Instruction instruction)
 		{
 			return stackHeight + GetPushDelta (instruction) - GetPopDelta (stackHeight, instruction);
 		}
 
-		private int GetPushDelta (IInstruction instruction)
+		private int GetPushDelta (Instruction instruction)
 		{
 			OpCode code = instruction.OpCode;
 			switch (code.StackBehaviourPush) {
@@ -178,7 +178,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 
 			case StackBehaviour.Varpush:
 				if (code.FlowControl == FlowControl.Call) {
-					IMethodReference method = (IMethodReference)instruction.Operand;
+					MethodReference method = (MethodReference)instruction.Operand;
 					return IsVoid (method.ReturnType.ReturnType)
 						? 0
 						: 1;
@@ -188,7 +188,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			throw new ArgumentException (CecilFormatter.FormatInstruction (instruction));
 		}
 
-		private int GetPopDelta (int stackHeight, IInstruction instruction)
+		private int GetPopDelta (int stackHeight, Instruction instruction)
 		{
 			OpCode code = instruction.OpCode;
 			switch (code.StackBehaviourPop) {
@@ -222,7 +222,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 
 			case StackBehaviour.Varpop:
 				if (code.FlowControl == FlowControl.Call) {
-					IMethodReference method = (IMethodReference)instruction.Operand;
+					MethodReference method = (MethodReference)instruction.Operand;
 					int count = method.Parameters.Count;
 					if (method.HasThis && OpCodes.Newobj.Value != code.Value) {
 						++count;
@@ -241,11 +241,11 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 
 		private bool IsVoidMethod ()
 		{
-			ITypeReference type = _body.Method.ReturnType.ReturnType;
+			TypeReference type = _body.Method.ReturnType.ReturnType;
 			return IsVoid (type);
 		}
 
-		private bool IsVoid (ITypeReference type)
+		private bool IsVoid (TypeReference type)
 		{
 			return type == _SystemVoid;
 		}
@@ -275,7 +275,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				if (block.LastInstruction == null) {
 					throw new ApplicationException ("Undelimited block at offset " + block.FirstInstruction.Offset);
 				}
-				IInstruction instruction = block.LastInstruction;
+				Instruction instruction = block.LastInstruction;
 				switch (instruction.OpCode.FlowControl) {
 				case FlowControl.Branch:
 				case FlowControl.Cond_Branch:
@@ -315,14 +315,14 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			}
 		}
 
-		private IInstructionBlock GetBranchTargetBlock (IInstruction instruction)
+		private IInstructionBlock GetBranchTargetBlock (Instruction instruction)
 		{
 			return GetBlock (GetBranchTarget (instruction));
 		}
 
-		private IInstruction GetBranchTarget (IInstruction instruction)
+		private Instruction GetBranchTarget (Instruction instruction)
 		{
-			return (IInstruction)instruction.Operand;
+			return (Instruction)instruction.Operand;
 		}
 
 		private void RegisterBlock (InstructionBlock block)
@@ -330,7 +330,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			_blocks.Add (block.FirstInstruction.Offset, block);
 		}
 
-		private InstructionBlock GetBlock (IInstruction firstInstruction)
+		private InstructionBlock GetBlock (Instruction firstInstruction)
 		{
 			return (InstructionBlock)_blocks [firstInstruction.Offset];
 		}

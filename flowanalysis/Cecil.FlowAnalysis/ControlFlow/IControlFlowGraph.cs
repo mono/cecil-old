@@ -30,7 +30,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 		/// <summary>
 		/// The method body represented by this control flow graph.
 		/// </summary>
-		IMethodBody MethodBody { get; }
+		MethodBody MethodBody { get; }
 
 		/// <summary>
 		/// The blocks.
@@ -42,6 +42,6 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 		/// </summary>
 		/// <param name="instruction"></param>
 		/// <returns></returns>
-		IInstructionData GetData (IInstruction instruction);
+		IInstructionData GetData (Instruction instruction);
 	}
 }

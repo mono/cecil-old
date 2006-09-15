@@ -6,8 +6,8 @@
        extends [mscorlib]System.Object
 {
   .field private int32 _points
-  
-  .method public hidebysig specialname rtspecialname 
+
+  .method public hidebysig specialname rtspecialname
           instance void  .ctor(int32 points) cil managed
   {
     // Code size       14 (0xe)
@@ -20,7 +20,7 @@
     IL_000d:  ret
   }
 
-  .method public hidebysig specialname instance int32 
+  .method public hidebysig specialname instance int32
           get_Points() cil managed
   {
     // Code size       7 (0x7)
@@ -50,4 +50,4 @@
     IL_000a:  ret
   }
 
-} 
+}

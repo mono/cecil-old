@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class BlockStatement : IBlockStatement	{
 		IStatementCollection _statements;
 
@@ -44,7 +44,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.BlockStatement; } 
+			get { return CodeElementType.BlockStatement; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

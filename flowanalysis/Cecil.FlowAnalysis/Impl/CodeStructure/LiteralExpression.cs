@@ -28,7 +28,7 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class LiteralExpression : ILiteralExpression	{
 		object _value;
 
@@ -44,7 +44,7 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.LiteralExpression; } 
+			get { return CodeElementType.LiteralExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

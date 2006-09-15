@@ -28,23 +28,23 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
-	internal class ArgumentReferenceExpression : IArgumentReferenceExpression	{
-		IParameterReference _parameter;
 
-		public ArgumentReferenceExpression (IParameterReference parameter)
+	internal class ArgumentReferenceExpression : IArgumentReferenceExpression	{
+		ParameterReference _parameter;
+
+		public ArgumentReferenceExpression (ParameterReference parameter)
 		{
 			_parameter = parameter;
 		}
 
-		public IParameterReference Parameter
+		public ParameterReference Parameter
 		{
 			get	{ return _parameter; }
 		}
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.ArgumentReferenceExpression; } 
+			get { return CodeElementType.ArgumentReferenceExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)

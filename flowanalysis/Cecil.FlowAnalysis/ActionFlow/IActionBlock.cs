@@ -33,6 +33,6 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		IActionBlockCollection Predecessors { get; }
 
-		IInstruction SourceInstruction { get; }
+		Instruction SourceInstruction { get; }
 	}
 }

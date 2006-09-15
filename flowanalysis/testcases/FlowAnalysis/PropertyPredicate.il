@@ -33,7 +33,7 @@
        extends [mscorlib]System.Object
 {
   .field public string _name
-  
+
   .method public hidebysig specialname rtspecialname
           instance void  .ctor(string name) cil managed
   {
@@ -44,7 +44,7 @@
     IL_0008:  stfld      string Cat::_name
     IL_000d:  ret
   }
-  
+
   .method public hidebysig specialname instance string
           get_Name() cil managed
   {

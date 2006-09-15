@@ -35,7 +35,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyProduct("Cecil.FlowAnalysis")]
 [assembly: AssemblyCopyright("(C) db4objects Inc.")]
 [assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCulture("")]
 
 [assembly: AssemblyVersion("0.1.0.0")]
 

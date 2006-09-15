@@ -36,7 +36,7 @@ namespace Cecil.FlowAnalysis {
 	/// </summary>
 	public class FlowGraphFactory {
 
-		public static IControlFlowGraph CreateControlFlowGraph (IMethodDefinition method)
+		public static IControlFlowGraph CreateControlFlowGraph (MethodDefinition method)
 		{
 			if (null == method) throw new ArgumentNullException ("method");
 			return new FlowGraphBuilder (method).ControlFlowGraph;

@@ -29,9 +29,9 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
-	
+
 	public interface IMethodReferenceExpression : IExpression {
 		IExpression Target { get; }
-		IMethodReference Method { get; }
+		MethodReference Method { get; }
 	}
 }

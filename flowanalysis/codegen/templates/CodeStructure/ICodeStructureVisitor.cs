@@ -24,7 +24,7 @@
 #endregion
 
 namespace Cecil.FlowAnalysis.CodeStructure {
-	
+
 	public interface ICodeStructureVisitor	{
 <%
 	for node in model.GetVisitableNodes():

@@ -36,7 +36,7 @@ namespace Cecil.FlowAnalysis.Tests {
 	public class AbstractControlFlowTestFixture : AbstractFlowAnalysisTestFixture {
 		protected void RunTestCase (string name)
 		{
-			IMethodDefinition method = LoadTestCaseMethod (name);
+			MethodDefinition method = LoadTestCaseMethod (name);
 			IControlFlowGraph cfg = FlowGraphFactory.CreateControlFlowGraph (method);
 			Assert.AreEqual (normalize (LoadExpectedControlFlowString (name)), normalize (ToString (cfg)));
 		}
@@ -54,7 +54,7 @@ namespace Cecil.FlowAnalysis.Tests {
 			foreach (IInstructionBlock block in cfg.Blocks) {
 				writer.WriteLine ("block {0}:", id);
 				writer.WriteLine ("\tbody:");
-				foreach (IInstruction instruction in block) {
+				foreach (Instruction instruction in block) {
 					writer.Write ("\t\t");
 					CecilFormatter.WriteInstruction (writer, instruction);
 					writer.WriteLine ();

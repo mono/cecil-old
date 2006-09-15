@@ -36,7 +36,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		private IActionBlock _then;
 		private IActionBlock _else;
 
-		public ConditionalBranchActionBlock (IInstruction sourceInstruction, IExpression condition)
+		public ConditionalBranchActionBlock (Instruction sourceInstruction, IExpression condition)
 		: base(sourceInstruction)
 		{
 			if (null == condition) throw new ArgumentNullException ("condition");

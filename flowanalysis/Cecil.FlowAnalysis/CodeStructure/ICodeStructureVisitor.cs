@@ -24,7 +24,7 @@
 #endregion
 
 namespace Cecil.FlowAnalysis.CodeStructure {
-	
+
 	public interface ICodeStructureVisitor	{
 		void Visit (IMethodInvocationExpression node);
 		void Visit (IMethodReferenceExpression node);

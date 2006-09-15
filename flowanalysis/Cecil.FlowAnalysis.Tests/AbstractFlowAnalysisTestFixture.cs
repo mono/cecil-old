@@ -71,14 +71,14 @@ namespace Cecil.FlowAnalysis.Tests {
 			Assert.AreEqual (0, p.ExitCode, output + error);
 		}
 
-		protected IMethodDefinition LoadTestCaseMethod (string testCaseName)
+		protected MethodDefinition LoadTestCaseMethod (string testCaseName)
 		{
 			CompileTestCase (testCaseName);
 
-			IAssemblyDefinition assembly = AssemblyFactory.GetAssembly (TestAssemblyPath);
-			ITypeDefinition type = assembly.MainModule.Types ["TestCase"];
+			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (TestAssemblyPath);
+			TypeDefinition type = assembly.MainModule.Types ["TestCase"];
 			Assert.IsNotNull (type, "Type TestCase not found!");
-			IMethodDefinition[] found = type.Methods.GetMethod ("Main");
+			MethodDefinition[] found = type.Methods.GetMethod ("Main");
 			Assert.AreEqual (1, found.Length, "Method TestCase.Main not found!");
 			return found [0];
 		}

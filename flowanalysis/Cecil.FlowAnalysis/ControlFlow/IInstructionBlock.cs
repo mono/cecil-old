@@ -29,9 +29,9 @@ using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
 	public interface IInstructionBlock : IComparable, IEnumerable {
-		IInstruction FirstInstruction { get; }
+		Instruction FirstInstruction { get; }
 
-		IInstruction LastInstruction { get; }
+		Instruction LastInstruction { get; }
 
 		IInstructionBlock[] Successors { get; }
 	}

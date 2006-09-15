@@ -8,7 +8,7 @@
 	.method public hidebysig bool Main() cil managed
 	{
 		.locals init (bool local0)
-		
+
 		IL_0000: ldarg.0
 		IL_0001: ldfld object TestCase::_field
 		IL_0006: ldnull

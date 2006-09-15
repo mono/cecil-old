@@ -32,17 +32,17 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 	internal class InstructionBlock : IInstructionBlock {
 		public static readonly IInstructionBlock[] NoSuccessors = new IInstructionBlock[0];
 
-		private IInstruction _firstInstruction;
-		private IInstruction _lastInstruction;
+		private Instruction _firstInstruction;
+		private Instruction _lastInstruction;
 		private IInstructionBlock[] _successors = NoSuccessors;
 
-		internal InstructionBlock (IInstruction first)
+		internal InstructionBlock (Instruction first)
 		{
 			if (null == first) throw new ArgumentNullException ("first");
 			_firstInstruction = first;
 		}
 
-		internal void SetLastInstruction (IInstruction last)
+		internal void SetLastInstruction (Instruction last)
 		{
 			if (null == last) throw new ArgumentNullException ("last");
 			_lastInstruction = last;
@@ -53,13 +53,13 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			_successors = successors;
 		}
 
-		public IInstruction FirstInstruction {
+		public Instruction FirstInstruction {
 			get {
 				return _firstInstruction;
 			}
 		}
 
-		public IInstruction LastInstruction {
+		public Instruction LastInstruction {
 			get {
 				return _lastInstruction;
 			}
@@ -79,7 +79,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 		public IEnumerator GetEnumerator ()
 		{
 			ArrayList instructions = new ArrayList ();
-			IInstruction instruction = _firstInstruction;
+			Instruction instruction = _firstInstruction;
 			while (true) {
 				instructions.Add (instruction);
 				if (instruction == _lastInstruction) break;

@@ -1,3 +1,7 @@
+2006-09-15  Jb Evain  <jbevain@gmail.com>
+
+	* convert to the new Cecil API.
+
 2006-05-12  Jb Evain  <jbevain@gmail.com>
 
 	* Cecil.FlowAnalysis/AssemblyInfo.cs:
@@ -28,7 +32,7 @@ testcases/FlowAnalysis/IntPropertyEquals1.il
 	* Cecil.FlowAnalysis.Tests/AbstractFlowAnalysisTestFixture.cs:
 		take into account that the path to the temp directory might contain
 		spaces
-	
+
 2005-11-29  Rodrigo B. de Oliveira  <rodrigobamboo@gmail.com>
 
 	* Initial import

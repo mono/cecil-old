@@ -28,12 +28,12 @@ using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.CodeStructure {
-	
+
 	internal class PropertyReferenceExpression : IPropertyReferenceExpression	{
 		IExpression _target;
-		IPropertyReference _property;
+		PropertyReference _property;
 
-		public PropertyReferenceExpression (IExpression target, IPropertyReference property)
+		public PropertyReferenceExpression (IExpression target, PropertyReference property)
 		{
 			_target = target;
 			_property = property;
@@ -44,14 +44,14 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 			get	{ return _target; }
 		}
 
-		public IPropertyReference Property
+		public PropertyReference Property
 		{
 			get	{ return _property; }
 		}
 
 		public CodeElementType CodeElementType
 		{
-			get { return CodeElementType.PropertyReferenceExpression; } 
+			get { return CodeElementType.PropertyReferenceExpression; }
 		}
 
 		public void Accept (ICodeStructureVisitor visitor)
