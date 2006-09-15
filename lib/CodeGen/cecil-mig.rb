@@ -98,6 +98,7 @@ $types = [
 
 	"Instruction",
 	"ExceptionHandler",
+	"MethodBody",
 	"VariableDefinition",
 	"VariableReference"
 ]
