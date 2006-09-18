@@ -1,3 +1,13 @@
+2006-09-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Violation.cs: Added a new Assembly property deduced from the 
+	violator object.
+
+2006-09-17  Christian Birkl <christian.birkl@gmail.com>
+
+	* Runner.cs: Reset the violation list when processing a new assembly.
+	* Violations.cs: Implement IEnumerable.
+
 2006-08-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* framework.mdp: Rename the output assembly to Gendarme.Framework.dll

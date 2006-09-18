@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
+//	Christian Birkl <christian.birkl@gmail.com>
 //
 // Copyright (C) 2005 Novell, Inc (http://www.novell.com)
 //
@@ -28,11 +29,10 @@
 
 using System;
 using System.Collections;
-using System.Text;
 
 namespace Gendarme.Framework {
 
-	public class Violations {
+	public class Violations : IEnumerable {
 
 		private ArrayList list;
 
@@ -40,7 +40,7 @@ namespace Gendarme.Framework {
 		{
 		}
 
-		public IList List {
+		private IList List {
 			get {
 				if (list == null)
 					list = new ArrayList ();
@@ -48,6 +48,15 @@ namespace Gendarme.Framework {
 			}
 		}
 
+		public int Count {
+			get { return List.Count; }
+		}
+		
+		public void Reset ()
+		{
+			list = null;
+		}
+		
 		public void Add (IRule rule, object obj, IList messages)
 		{
 			if (rule == null)
@@ -61,6 +70,11 @@ namespace Gendarme.Framework {
 		public void Add (Violation v)
 		{
 			List.Add (v);
+		}
+		
+		public IEnumerator GetEnumerator ()
+		{
+			return List.GetEnumerator();
 		}
 	}
 }

@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -29,6 +29,8 @@
 using System;
 using System.Collections;
 
+using Mono.Cecil;
+
 namespace Gendarme.Framework {
 
 	public struct Violation {
@@ -41,6 +43,28 @@ namespace Gendarme.Framework {
 			Rule = rule;
 			Violator = violator;
 			Messages = messages;
+		}
+
+		public AssemblyDefinition Assembly {
+			get {
+				AssemblyDefinition ad = (Violator as AssemblyDefinition);
+				if (ad != null)
+					return ad;
+					
+				ModuleDefinition md = (Violator as ModuleDefinition);
+				if (md != null)
+					return md.Assembly;
+
+				TypeDefinition td = (Violator as TypeDefinition);
+				if (td != null)
+					return td.Module.Assembly;
+					
+				MethodDefinition nd = (Violator as MethodDefinition);
+				if (nd != null)
+					return nd.DeclaringType.Module.Assembly;
+
+				return null;
+			}
 		}
 	}
 }
