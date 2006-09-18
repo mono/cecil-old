@@ -1,3 +1,11 @@
+2006-09-19  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/OpCode.cs
+	  CodeGen/templates/OpCodes.cs:
+		Simpliest way of dealing with different opcodes.
+
 2006-09-07  Jb Evain  <jbevain@gmail.com>
 
 	* support PE32+ file format.

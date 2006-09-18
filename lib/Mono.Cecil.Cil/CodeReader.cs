@@ -112,9 +112,9 @@ namespace Mono.Cecil.Cil {
 				offset = br.BaseStream.Position - start;
 				int cursor = br.ReadByte ();
 				if (cursor == 0xfe)
-					op = OpCodes.Cache.Instance.TwoBytesOpCode [br.ReadByte ()];
+					op = OpCodes.TwoBytesOpCode [br.ReadByte ()];
 				else
-					op = OpCodes.Cache.Instance.OneByteOpCode [cursor];
+					op = OpCodes.OneByteOpCode [cursor];
 
 				Instruction instr = new Instruction ((int) offset, op);
 				switch (op.OperandType) {

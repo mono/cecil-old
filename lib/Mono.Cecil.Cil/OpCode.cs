@@ -94,6 +94,11 @@ namespace Mono.Cecil.Cil {
 			m_operandType = operandType;
 			m_stackBehaviourPop = pop;
 			m_stackBehaviourPush = push;
+
+			if (op1 == 0xff)
+				OpCodes.OneByteOpCode [op2] = this;
+			else
+				OpCodes.TwoBytesOpCode [op2] = this;
 		}
 
 		public override int GetHashCode ()
