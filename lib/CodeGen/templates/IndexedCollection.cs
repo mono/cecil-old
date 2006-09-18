@@ -55,7 +55,7 @@ namespace <%=$cur_coll.target%> {
 		IList m_items;
 		<%=$cur_coll.container_impl%> m_container;<%
 		if $cur_coll.type == "Instruction" %>
-		public readonly Instruction Outside = new Instruction (OpCodes.Nop);<% end %>
+		public readonly Instruction Outside = new Instruction (-1, OpCodes.Nop);<% end %>
 
 		public <%=$cur_coll.type%> this [int index] {
 			get { return m_items [index] as <%=$cur_coll.type%>; }
