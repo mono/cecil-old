@@ -11,10 +11,10 @@
 		<problem>The type '{0}' has a destructor and implements IDisposable. However it doesn't call System.GC.SuppressFinalize inside it's Dispose method.</problem>
 		<solution>Add a call to GC.SuppressFinalize inside your Dispose method.</solution>
 	</rule>
-	<rule	Name="UseStringEmpty" 
-		Type="Gendarme.Rules.Performance.UseStringEmpty, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+	<rule	Name="UseStringEmptyRule" 
+		Type="Gendarme.Rules.Performance.UseStringEmptyRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme" >
-		<problem>The method '{0}' use literal \"\" instead of String.Empty.</problem>
+		<problem>The method '{0}' use literal "" instead of String.Empty.</problem>
 		<solution>Change the empty string for String.Empty.</solution>
 	</rule>
 </rules>

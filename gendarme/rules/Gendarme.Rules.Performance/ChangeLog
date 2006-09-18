@@ -1,3 +1,10 @@
+2006-09-18  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Performance.xml.in: Update name and description for
+	UseStringEmptyRule.
+	* UseStringEmptyRule.cs: Update rule to provide location (which 
+	results in better reports).
+
 2006-08-21  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Performance.xml.in: Add description for new rule.

@@ -46,24 +46,26 @@ namespace Gendarme.Rules.Performance {
 
 			// *** ok, the rule applies! ***
 			
-			int empty = 0;
-
+			ArrayList results = new ArrayList ();
+			string fullname = method.DeclaringType.FullName;
+			
 			// #2 - look for string references
 			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.OperandType) {
 				case OperandType.InlineString:
 					string s = (ins.Operand as string);
-					if (s.Length == 0)
-						empty++;
+					if (s.Length == 0) {
+						Location loc = new Location (fullname, method.Name, ins.Offset);
+						Message msg = new Message ("instance of an empty string has been found.", 
+							loc, MessageType.Warning);
+						results.Add (msg);
+					}
 					break;
 				}
 			}
 			
-			if (empty == 0)
+			if (results.Count == 0)
 				return null;
-
-			ArrayList results = new ArrayList (1);
-			results.Add (String.Format ("{0} instance of an empty string has been found.", empty));
 			return results;
 		}
 	}
