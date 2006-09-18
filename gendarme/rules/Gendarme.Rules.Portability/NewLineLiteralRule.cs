@@ -39,31 +39,14 @@ namespace Gendarme.Rules.Portability {
 
 		private static char[] InvalidChar = { '\r', '\n' };
 
-		private ArrayList results;
-
-		private ArrayList Results {
-			get { return results; }
-		}
-
-		private void AddMessage (string s)
-		{
-			if (results == null)
-				results = new ArrayList ();
-
-			// make the invalid char visible on output
-			s = s.Replace ("\n", "\\n");
-			s = s.Replace ("\r", "\\r");
-			// add the "problematic" string for easier validation
-			results.Add (String.Format ("Found string: \"{0}\"", s));
-		}
-
 		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// methods can be empty (e.g. p/invoke declarations)
 			if ((method.Body == null) || (method.Body.Instructions == null))
 				return null;
 
-			results = null;
+			string fullname = method.DeclaringType.FullName;
+			ArrayList results = new ArrayList ();
 			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "ldstr":
@@ -72,15 +55,24 @@ namespace Gendarme.Rules.Portability {
 					if (s == null)
 						continue;
 
-					if (s.IndexOfAny (InvalidChar) >= 0)
-						AddMessage (s);
+					if (s.IndexOfAny (InvalidChar) >= 0) {
+						Location loc = new Location (fullname, method.Name, ins.Offset);
+						// make the invalid char visible on output
+						s = s.Replace ("\n", "\\n");
+						s = s.Replace ("\r", "\\r");
+						Message msg = new Message (String.Format ("Found string: \"{0}\"", s), 
+							loc, MessageType.Warning);
+						results.Add (msg);
+					}
 					break;
 				default:
 					break;
 				}
 			}
-			// no literal for new line has been found
-			return Results;
+
+			if (results.Count == 0)
+				return null;
+			return results;
 		}
 	}
 }
