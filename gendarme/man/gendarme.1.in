@@ -16,7 +16,7 @@
 Gendarme \- Rule-based assembly verifier
 .SH SYNOPSIS
 .PP
-.B gendarme [--config configfile] [--set ruleset] assembly
+.B gendarme [--config configfile] [--set ruleset] [--log file | --xml file | --html file] [--quiet] [--debug] assemblies ...
 .SH DESCRIPTION
 \fIgendarme\fP is a rule-based assembly verifier.
 .SH OPTIONS
@@ -27,11 +27,26 @@ Specify the configuration file. Default is 'rules.xml'.
 .I "--set ruleset"
 Specify the set of rules to verify. Default is '*'.
 .TP
+.I "--log file"
+Save the text output to the specified file.
+.TP
+.I "--xml file"
+Save the output, formatted as XML, to the specified file.
+.TP
+.I "--html file"
+Save the output, formatted as HTML, to the specified file.
+.TP
+.I "--quiet"
+Display minimal output (results) from the runner.
+.TP
 .I "--debug"
 Enable debugging output.
 .TP
-.I "assembly"
-Specify the assembly to verify.
+.I "assemblies ..."
+Specify the assemblies to verify. You can specify multiple filenames, 
+including masks (? and *). You can also provide a file that list several
+assemblies (one by line) by prefixing the filename with @ on the command 
+line.
 .SH FILES
 .TP
 .I rules.xml
