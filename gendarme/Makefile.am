@@ -1,7 +1,6 @@
 SUBDIRS = man framework console rules
 bin_SCRIPTS = gendarme
 EXTRA_DIST = gendarme.in AssemblyInfo.cs.in MIT.X11
-DISTCLEANFILES = AssemblyInfo.cs
 
 REWRITE = \
 	sed -e "s|\@prefix\@|$(prefix)|g"       \
@@ -17,6 +16,7 @@ CLEANFILES = \
 	gendarme
 
 DISTCLEANFILES = \
+	AssemblyInfo.cs \
 	configure \
 	config.guess \
 	config.sub \

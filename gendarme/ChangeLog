@@ -1,3 +1,10 @@
+2006-09-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AUTHORS: Added Christian Birkl to the list.
+	* gendarme.in: Move MONO_EXTRA_ARGS after mono (and before 
+	gendarme.exe).
+	* Makefile.am: Remove duplicate DISTCLEANFILES.
+
 2006-09-05  Jb Evain  <jbevain@gmail.com>
 
 	* Update to latest Cecil API.

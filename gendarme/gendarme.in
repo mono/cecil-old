@@ -1,2 +1,2 @@
 #!/bin/sh
-exec @MONO@ @prefix@/lib/gendarme/gendarme.exe $MONO_EXTRA_ARGS "$@"
+exec @MONO@ $MONO_EXTRA_ARGS @prefix@/lib/gendarme/gendarme.exe "$@"
