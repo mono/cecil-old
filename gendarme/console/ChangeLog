@@ -1,3 +1,21 @@
+2006-09-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* console.mdp: Update MonoDevelop project file
+	* ConsoleRunner.cs: Add new options to the console runner.
+	* HtmlResultWriter.cs: New. Output HTML reports using the XML
+	output and the new XSL transform.
+	* IResultWriter.cs: New. Interface for all reporters. Original code 
+	from Christian Birkl adapted/merged with existing code.
+	* Makefile.am: Add new files to the build.
+	* TextResultWriter.cs: New. Output text reports. Original code from 
+	Christian Birkl adapted/merged with existing code.
+	* XmlResultWriter.cs: New. Output XML reports. Original code from 
+	Christian Birkl adapted/merged with existing code.
+
+2006-09-17  Christian Birkl <christian.birkl@gmail.com>
+
+	* gendarme.xsl: New. XSLT file to transform XML output into HTML.
+
 2006-08-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConsoleRunner.cs: Fix exception when rules.xml contains XML 

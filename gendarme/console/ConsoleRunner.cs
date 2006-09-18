@@ -44,8 +44,11 @@ class ConsoleRunner : Runner {
 	private string config;
 	private string set;
 	private ArrayList assemblies;
+	private string format;
+	private string output;
 
 	private static Assembly assembly;
+	private static bool quiet;
 
 	static Assembly Assembly {
 		get {
@@ -68,6 +71,32 @@ class ConsoleRunner : Runner {
 			return defaultValue;
 		return args [index];
 	}
+	
+	// name can be
+	// - a filename (a single assembly)
+	// - a mask (*, ?) for multiple assemblies
+	// - a special file (@) containing a list of assemblies
+	void AddFiles (string name)
+	{
+		if ((name == null) || (name.Length == 0))
+			return;
+			
+		if (name.StartsWith ("@")) {
+			// note: recursive (can contains @, masks and filenames)
+			using (StreamReader sr = File.OpenText (name.Substring (1))) {
+				while (sr.Peek () >= 0) {
+					AddFiles (sr.ReadLine ());
+				}
+			}
+		} else if (name.IndexOfAny (new char[] { '*', '?' }) >= 0) {
+			string[] files = Directory.GetFiles (Path.GetDirectoryName (name), Path.GetFileName (name));
+			foreach (string file in files) {
+				assemblies.Add (file);
+			}
+		} else {
+			assemblies.Add (Path.GetFullPath (name));
+		}
+	}
 
 	bool ParseOptions (string[] args)
 	{
@@ -89,19 +118,25 @@ class ConsoleRunner : Runner {
 			case "--debug":
 				debug = true;
 				break;
+			case "--quiet":
+				quiet = true;
+				break;
 			case "--help":
 				return false;
+			case "--log":
+				format = "text";
+				output = GetNext (args, ++i, String.Empty);
+				break;
+			case "--xml":
+				format = "xml";
+				output = GetNext (args, ++i, String.Empty);
+				break;
+			case "--html":
+				format = "html";
+				output = GetNext (args, ++i, String.Empty);
+				break;
 			default:
-				string filename = args[i];
-				if (filename.IndexOfAny (new char[] { '*', '?' }) >= 0) {
-					string[] files = Directory.GetFiles (Path.GetDirectoryName (filename),
-						Path.GetFileName (filename));
-					foreach (string file in files) {
-						assemblies.Add (file);
-					}
-				} else {
-					assemblies.Add (Path.GetFullPath (filename));
-				}
+				AddFiles (args[i]);
 				break;
 			}
 		}
@@ -146,6 +181,9 @@ class ConsoleRunner : Runner {
 
 	static void Header ()
 	{
+		if (quiet)
+			return;
+
 		Assembly a = Assembly.GetExecutingAssembly();
 		Version v = a.GetName ().Version;
 		if (v.ToString () != "0.0.0.0") {
@@ -161,26 +199,50 @@ class ConsoleRunner : Runner {
 
 	static void Help ()
 	{
-		Console.WriteLine ("Usage: gendarme [--config configfile] [--set ruleset] assembly");
+		Console.WriteLine ("Usage: gendarme [--config file] [--set ruleset] [--{log|xml|html} file] assembly");
 		Console.WriteLine ("Where");
-		Console.WriteLine ("  --config configfile\tSpecify the configuration file. Default is 'rules.xml'.");
+		Console.WriteLine ("  --config file\tSpecify the configuration file. Default is 'rules.xml'.");
 		Console.WriteLine ("  --set ruleset\t\tSpecify the set of rules to verify. Default is '*'.");
+		Console.WriteLine ("  --log file\t\tSave the text output to the specified file.");
+		Console.WriteLine ("  --xml file\t\tSave the output, as XML, to the specified file.");
+		Console.WriteLine ("  --html file\t\tSave the output, as HTML, to the specified file.");
+		Console.WriteLine ("  --quiet\t\tDisplay minimal output (results) from the runner.");
 		Console.WriteLine ("  --debug\t\tEnable debugging output.");
 		Console.WriteLine ("  assembly\t\tSpecify the assembly to verify.");
 		Console.WriteLine ();
 	}
 
+	static void Write (string text)
+	{
+		if (!quiet)
+			Console.Write (text);
+	}
+
+	static void WriteLine (string text)
+	{
+		if (!quiet)
+			Console.WriteLine (text);
+	}
+	
+	static void WriteLine (string text, params object[] args)
+	{
+		if (!quiet)
+			Console.WriteLine (text, args);
+	}
+
 	static int Main (string[] args)
 	{
-		Header ();
 		ConsoleRunner runner = new ConsoleRunner ();
 
+		// runner options and configuration
+		
 		try {
 			if (!runner.ParseOptions (args)) {
 				Help ();
 				return 1;
 			}
 			if (!runner.LoadConfiguration ()) {
+				Console.WriteLine ("No assembly file were specified.");
 				return 1;
 			}
 		}
@@ -189,50 +251,56 @@ class ConsoleRunner : Runner {
 			return 1;
 		}
 
+		// processing
+		
+		Header ();
+		DateTime total = DateTime.UtcNow;
 		foreach (string assembly in runner.assemblies) {
+			DateTime start = DateTime.UtcNow;
 			AssemblyDefinition ad = null;
+			Write (assembly);
 			try {
 				ad = AssemblyFactory.GetAssembly (assembly);
-			}
-			catch (Exception e) {
-				Console.WriteLine ("Error processing assembly '{0}'{1}Details: {2}",
-					assembly, Environment.NewLine, e);
-			}
-			try {
-				runner.Process (ad);
-			}
-			catch (Exception e) {
-				Console.WriteLine ("Error executing rules on assembly '{0}'{1}Details: {2}",
-					assembly, Environment.NewLine, e);
-			}
-		}
-
-		int i = 0;
-		foreach (Violation v in runner.Violations.List) {
-			RuleInformation ri = RuleInformationManager.GetRuleInformation (v.Rule);
-			Console.WriteLine ("{0}. {1}", ++i, ri.Name);
-			Console.WriteLine ();
-			Console.WriteLine ("Problem: {0}", String.Format (ri.Problem, v.Violator));
-			Console.WriteLine ();
-			if(v.Messages != null && v.Messages.Count > 0) {
-				Console.WriteLine ("Details:");
-				foreach(object message in v.Messages) {
-					Console.WriteLine("  {0}", message);
+				try {
+					runner.Process (ad);
+					WriteLine (" - completed ({0} seconds).", (DateTime.UtcNow - start).TotalSeconds);
 				}
-				Console.WriteLine ();
+				catch (Exception e) {
+					WriteLine (" - error executing rules{0}Details: {1}", Environment.NewLine, e);
+				}
 			}
-			Console.WriteLine ("Solution: {0}", String.Format (ri.Solution, v.Violator));
-			Console.WriteLine ();
-			string url = ri.Uri;
-			if (url.Length > 0) {
-				Console.WriteLine ("More info available at: {0}", url);
-				Console.WriteLine ();
+			catch (Exception e) {
+				WriteLine (" - error processing{0}\tDetails: {1}", Environment.NewLine, e);
 			}
-			Console.WriteLine ();
+		}
+		WriteLine ("{0}{1} assemblies processed in {2} seconds).{0}",  Environment.NewLine, runner.assemblies.Count, 
+			(DateTime.UtcNow - total).TotalSeconds);
+
+		// reporting
+
+		IResultWriter writer;
+		switch (runner.format) {
+		case "xml":
+			writer = new XmlResultWriter (runner.output);
+			break;
+		case "html":
+			writer = new HtmlResultWriter (runner.output);
+			break;
+		default:
+			writer = new TextResultWriter (runner.output);
+			break;
 		}
 
-		if (i == 0) {
-			Console.WriteLine ("No rule's violation were found.");
+		writer.Start ();
+		writer.Write (runner.assemblies);
+		writer.Write (runner.Rules);
+		foreach (Violation v in runner.Violations) {
+			writer.Write (v);
+		}
+		writer.End ();
+		
+		if (runner.Violations.Count == 0) {
+			WriteLine ("No rule's violation were found.");
 			return 0;
 		}
 		return 1;
