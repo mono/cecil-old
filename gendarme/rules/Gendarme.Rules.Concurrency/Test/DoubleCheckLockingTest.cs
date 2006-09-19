@@ -104,7 +104,6 @@ namespace Test.Rules.Concurrency {
 		{
 			string get_name = "get_" + name;
 			foreach (MethodDefinition method in type.Methods) {
-			Console.WriteLine (method.Name);
 				if (method.Name == get_name)
 					return method;
 			}
