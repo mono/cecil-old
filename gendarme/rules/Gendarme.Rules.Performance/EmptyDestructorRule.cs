@@ -48,7 +48,7 @@ namespace Gendarme.Rules.Performance {
 				}
 			}
 			if (destructor == null)
-				return null;
+				return runner.RuleSuccess;
 
 			// #2 - destructor is present, look if it has any code within it
 			// i.e. look if is does anything else than calling it's base class
@@ -58,9 +58,10 @@ namespace Gendarme.Rules.Performance {
 					// it's empty if we're calling the base class destructor
 					MethodReference mr = (ins.Operand as MethodReference);
 					if ((mr == null) || (mr.Name != "Finalize"))
-						return null;
+						return runner.RuleSuccess;
 					break;
 				case "nop":
+				case "leave":
 				case "leave.s":
 				case "ldarg.0":
 				case "endfinally":
@@ -69,11 +70,11 @@ namespace Gendarme.Rules.Performance {
 					break;
 				default:
 					// destructor isn't empty (normal)
-					return null;
+					return runner.RuleSuccess;
 				}
 			}
 			// destructor is empty (bad / useless)
-			return new ArrayList();
+			return runner.RuleFailure;
 		}
 	}
 }

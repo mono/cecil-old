@@ -1,3 +1,9 @@
+2006-09-19  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UseStringEmptyRule.cs: Deal with [g]mcs generating leave instruction
+	(instead of leave.s). Updated rule to use RuleSuccess and RuleFailure
+	(easier to read).
+
 2006-09-18  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Performance.xml.in: Update name and description for
