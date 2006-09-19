@@ -1,3 +1,8 @@
+2006-09-19  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* gendarme.sln, *.csproj: New files. Added solution and project files
+	for VS.NET 2005. You can now build, test and debug under Windows too
+
 2006-09-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AUTHORS: Added Christian Birkl to the list.
