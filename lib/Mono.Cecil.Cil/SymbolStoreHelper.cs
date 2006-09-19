@@ -1,10 +1,10 @@
 //
-// Instruction.cs
+// SymbolStoreHelper.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,69 +28,55 @@
 
 namespace Mono.Cecil.Cil {
 
-	public sealed class Instruction : ICodeVisitable {
+	using System;
+	using SR = System.Reflection;
 
-		int m_offset;
-		OpCode m_opCode;
-		object m_operand;
+	class SymbolStoreHelper {
 
-		Instruction m_previous;
-		Instruction m_next;
+		static readonly string MonoSymbolSupport = "Mono.Cecil.Mdb.MdbFactory, Mono.Cecil.Mdb";
+		static readonly string DotNetSymbolSupport = "Mono.Cecil.Pdb.PdbFactory, Mono.Cecil.Pdb";
 
-		SequencePoint m_sequencePoint;
+		static ISymbolStoreFactory s_factory;
 
-		public int Offset {
-			get { return m_offset; }
-			set { m_offset = value; }
-		}
-
-		public OpCode OpCode {
-			get { return m_opCode; }
-			set { m_opCode = value; }
-		}
-
-		public object Operand {
-			get { return m_operand; }
-			set { m_operand = value; }
-		}
-
-		public Instruction Previous {
-			get { return m_previous; }
-			set { m_previous = value; }
-		}
-
-		public Instruction Next {
-			get { return m_next; }
-			set { m_next = value; }
-		}
-
-		public SequencePoint SequencePoint {
-			get { return m_sequencePoint; }
-			set { m_sequencePoint = value; }
-		}
-
-		internal Instruction (int offset, OpCode opCode, object operand) : this (offset, opCode)
-		{
-			m_operand = operand;
-		}
-
-		internal Instruction (int offset, OpCode opCode)
-		{
-			m_offset = offset;
-			m_opCode = opCode;
-		}
-
-		internal Instruction (OpCode opCode, object operand) : this (0, opCode, operand)
+		SymbolStoreHelper ()
 		{
 		}
 
-		internal Instruction (OpCode opCode) : this (0, opCode)
+		public static ISymbolReader GetReader (ModuleDefinition module)
 		{
+			InitFactory ();
+
+			return s_factory.CreateReader (module.Image.FileInformation.FullName);
 		}
 
-		public void Accept (ICodeVisitor visitor)
+		public static ISymbolWriter GetWriter (ModuleDefinition module)
 		{
-			visitor.VisitInstruction (this);
+			InitFactory ();
+
+			return s_factory.CreateWriter (FileName (module));
+		}
+
+		static string FileName (ModuleDefinition module)
+		{
+			return module.Assembly.Name.Name + "." + (module.Assembly.Kind == AssemblyKind.Dll ? "dll" : "exe");
+		}
+
+		static void InitFactory ()
+		{
+			if (s_factory != null)
+				return;
+
+			Type factoryType = Type.GetType (OnMono () ?
+				MonoSymbolSupport :
+				DotNetSymbolSupport,
+				true);
+
+			s_factory = (ISymbolStoreFactory) Activator.CreateInstance (factoryType);
+		}
+
+		static bool OnMono ()
+		{
+			return typeof (object).Assembly.GetType ("System.MonoType", false) != null;
 		}
 	}
 }

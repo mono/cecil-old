@@ -61,7 +61,7 @@ namespace Mono.Cecil.Cil {
 				methBody.CodeSize = flags >> 2;
 				methBody.MaxStack = 8;
 				ReadCilBody (methBody, br, out instrs);
-				return;
+				break;
 			case (int) MethodHeader.FatFormat :
 				br.BaseStream.Position--;
 				int fatflags = br.ReadUInt16 ();
@@ -74,8 +74,11 @@ namespace Mono.Cecil.Cil {
 				ReadCilBody (methBody, br, out instrs);
 				if ((fatflags & (int) MethodHeader.MoreSects) != 0)
 					ReadSection (methBody, br, instrs);
-				return;
+				break;
 			}
+
+			if (m_reflectReader.SymbolReader != null)
+				m_reflectReader.SymbolReader.Read (methBody);
 		}
 
 		public static uint GetRid (int token)

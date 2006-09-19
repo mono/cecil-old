@@ -31,7 +31,6 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 	using System.Globalization;
-	using System.IO;
 	using System.Text;
 
 	using Mono.Cecil.Binary;
@@ -45,6 +44,7 @@ namespace Mono.Cecil {
 		ModuleDefinition m_mod;
 		SignatureWriter m_sigWriter;
 		CodeWriter m_codeWriter;
+		ISymbolWriter m_symbolWriter;
 		MetadataWriter m_mdWriter;
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
@@ -82,6 +82,11 @@ namespace Mono.Cecil {
 
 		public CodeWriter CodeWriter {
 			get { return m_codeWriter; }
+		}
+
+		public ISymbolWriter SymbolWriter {
+			get { return m_symbolWriter; }
+			set { m_symbolWriter = value; }
 		}
 
 		public SignatureWriter SignatureWriter {

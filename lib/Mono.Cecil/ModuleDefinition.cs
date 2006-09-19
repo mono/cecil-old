@@ -34,10 +34,9 @@ namespace Mono.Cecil {
 	using SSP = System.Security.Permissions;
 	using System.Text;
 
-	using Mono.Cecil;
+	using Mono.Cecil.Cil;
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
-	using Mono.Xml;
 
 	public sealed class ModuleDefinition : ModuleReference, ICustomAttributeProvider, IMetadataScope,
 		IReflectionStructureVisitable, IReflectionVisitable {
@@ -382,6 +381,26 @@ namespace Mono.Cecil {
 				foreach (MethodDefinition ctor in type.Constructors)
 					ctor.LoadBody ();
 			}
+		}
+
+		public void LoadSymbols ()
+		{
+			m_controller.Reader.SymbolReader = SymbolStoreHelper.GetReader (this);
+		}
+
+		public void LoadSymbols (ISymbolReader reader)
+		{
+			m_controller.Reader.SymbolReader = reader;
+		}
+
+		public void SaveSymbols ()
+		{
+			m_controller.Writer.SymbolWriter = SymbolStoreHelper.GetWriter (this);
+		}
+
+		public void SaveSymbols (ISymbolWriter writer)
+		{
+			m_controller.Writer.SymbolWriter = writer;
 		}
 
 		public byte [] GetAsByteArray (CustomAttribute ca)

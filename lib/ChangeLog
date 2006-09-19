@@ -1,5 +1,23 @@
 2006-09-19  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/Document.cs
+	  Mono.Cecil.Cil/Instruction.cs
+	  Mono.Cecil.Cil/SequencePoint.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/IScopeProvider.cs
+	  Mono.Cecil.Cil/ISymbolReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/ISymbolWriter.cs
+	  Mono.Cecil.Cil/IVariableDefinitionProvider.cs
+	  Mono.Cecil.Cil/SymbolStoreHelper.cs
+	  Mono.Cecil.Cil/ISymbolStoreFactory.cs
+	  Mono.Cecil.Cil/ScopeCollection.cs
+	  Mono.Cecil.Cil/Scope.cs:
+		Work on the architecture for debugging infos.
+
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.Cil/Document.cs
 	  Mono.Cecil.Cil/IVariableDefinitionProvider.cs

@@ -73,6 +73,9 @@
     <Compile Include="Mono.Cecil.Cil\Instruction.cs" />
     <Compile Include="Mono.Cecil.Cil\InstructionCollection.cs" />
     <Compile Include="Mono.Cecil.Cil\IScopeProvider.cs" />
+    <Compile Include="Mono.Cecil.Cil\ISymbolReader.cs" />
+    <Compile Include="Mono.Cecil.Cil\ISymbolStoreFactory.cs" />
+    <Compile Include="Mono.Cecil.Cil\ISymbolWriter.cs" />
     <Compile Include="Mono.Cecil.Cil\IVariableDefinitionProvider.cs" />
     <Compile Include="Mono.Cecil.Cil\MethodBody.cs" />
     <Compile Include="Mono.Cecil.Cil\MethodDataSection.cs" />
@@ -85,6 +88,7 @@
     <Compile Include="Mono.Cecil.Cil\ScopeCollection.cs" />
     <Compile Include="Mono.Cecil.Cil\SequencePoint.cs" />
     <Compile Include="Mono.Cecil.Cil\StackBehaviour.cs" />
+    <Compile Include="Mono.Cecil.Cil\SymbolStoreHelper.cs" />
     <Compile Include="Mono.Cecil.Cil\VariableDefinition.cs" />
     <Compile Include="Mono.Cecil.Cil\VariableDefinitionCollection.cs" />
     <Compile Include="Mono.Cecil.Cil\VariableReference.cs" />

@@ -63,6 +63,7 @@ namespace Mono.Cecil {
 
 		protected SignatureReader m_sigReader;
 		protected CodeReader m_codeReader;
+		protected ISymbolReader m_symbolReader;
 
 		public ModuleDefinition Module {
 			get { return m_module; }
@@ -78,6 +79,11 @@ namespace Mono.Cecil {
 
 		public CodeReader Code {
 			get { return m_codeReader; }
+		}
+
+		public ISymbolReader SymbolReader {
+			get { return m_symbolReader; }
+			set { m_symbolReader = value; }
 		}
 
 		public MetadataRoot MetadataRoot {

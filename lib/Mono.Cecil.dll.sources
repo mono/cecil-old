@@ -228,6 +228,9 @@
 ./Mono.Cecil.Cil/Instruction.cs
 ./Mono.Cecil.Cil/InstructionCollection.cs
 ./Mono.Cecil.Cil/IScopeProvider.cs
+./Mono.Cecil.Cil/ISymbolReader.cs
+./Mono.Cecil.Cil/ISymbolStoreFactory.cs
+./Mono.Cecil.Cil/ISymbolWriter.cs
 ./Mono.Cecil.Cil/IVariableDefinitionProvider.cs
 ./Mono.Cecil.Cil/MethodBody.cs
 ./Mono.Cecil.Cil/MethodDataSection.cs
@@ -240,6 +243,7 @@
 ./Mono.Cecil.Cil/ScopeCollection.cs
 ./Mono.Cecil.Cil/SequencePoint.cs
 ./Mono.Cecil.Cil/StackBehaviour.cs
+./Mono.Cecil.Cil/SymbolStoreHelper.cs
 ./Mono.Cecil.Cil/VariableDefinition.cs
 ./Mono.Cecil.Cil/VariableDefinitionCollection.cs
 ./Mono.Cecil.Cil/VariableReference.cs
