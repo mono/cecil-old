@@ -91,12 +91,7 @@ namespace Mono.Cecil.Cil {
 		}
 
 		public ScopeCollection Scopes {
-			get {
-				if (m_scopes == null)
-					m_scopes = new ScopeCollection (this);
-
-				return m_scopes;
-			}
+			get { return m_scopes; }
 		}
 
 		public MethodBody (MethodDefinition meth)
@@ -105,6 +100,7 @@ namespace Mono.Cecil.Cil {
 			m_instructions = new InstructionCollection (this);
 			m_exceptions = new ExceptionHandlerCollection (this);
 			m_variables = new VariableDefinitionCollection (this);
+			m_scopes = new ScopeCollection (this);
 		}
 
 		internal static Instruction GetInstruction (MethodBody oldBody, MethodBody newBody, Instruction i)
