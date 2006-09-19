@@ -1,5 +1,21 @@
 2006-09-19  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.Cil/Document.cs
+	  Mono.Cecil.Cil/IVariableDefinitionProvider.cs
+	  Mono.Cecil.Cil/SequencePoint.cs
+	  Mono.Cecil.Cil/ScopeCollection.cs
+	  Mono.Cecil.Cil/BaseCodeVisitor.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/IScopeProvider.cs
+	  Mono.Cecil.Cil/MethodBody.cs
+	  Mono.Cecil.Cil/ICodeVisitor.cs
+	  Mono.Cecil.Cil/CodeWriter.cs
+	  Mono.Cecil.Cil/Scope.cs
+	  Mono.Cecil.Cil/VariableDefinitionCollection.cs
+	  CodeGen/cecil.xml:
+		First bits of the debug infos stuff.
+
 	* Mono.Cecil.Cil/InstructionCollection.cs
 	  CodeGen/templates/IndexedCollection.cs:
 		The outside instruction has an offset of -1.

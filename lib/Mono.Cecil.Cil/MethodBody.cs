@@ -30,7 +30,7 @@ namespace Mono.Cecil.Cil {
 
 	using Mono.Cecil;
 
-	public sealed class MethodBody : ICodeVisitable {
+	public sealed class MethodBody : IVariableDefinitionProvider, IScopeProvider, ICodeVisitable {
 
 		MethodDefinition m_method;
 		int m_maxStack;
@@ -41,6 +41,7 @@ namespace Mono.Cecil.Cil {
 		InstructionCollection m_instructions;
 		ExceptionHandlerCollection m_exceptions;
 		VariableDefinitionCollection m_variables;
+		ScopeCollection m_scopes;
 
 		private CilWorker m_cilWorker;
 
@@ -87,6 +88,15 @@ namespace Mono.Cecil.Cil {
 
 		public VariableDefinitionCollection Variables {
 			get { return m_variables; }
+		}
+
+		public ScopeCollection Scopes {
+			get {
+				if (m_scopes == null)
+					m_scopes = new ScopeCollection (this);
+
+				return m_scopes;
+			}
 		}
 
 		public MethodBody (MethodDefinition meth)
@@ -196,6 +206,7 @@ namespace Mono.Cecil.Cil {
 			m_variables.Accept (visitor);
 			m_instructions.Accept (visitor);
 			m_exceptions.Accept (visitor);
+			m_scopes.Accept (visitor);
 
 			visitor.TerminateMethodBody (this);
 		}

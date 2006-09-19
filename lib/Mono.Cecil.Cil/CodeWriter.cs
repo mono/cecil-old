@@ -361,7 +361,10 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
-			MethodBody body = variables.Container;
+			MethodBody body = variables.Container as MethodBody;
+			if (body == null)
+				return;
+
 			uint sig = m_reflectWriter.SignatureWriter.AddLocalVarSig (
 					GetLocalVarSig (variables));
 

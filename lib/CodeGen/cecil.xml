@@ -575,7 +575,7 @@
 		<collection type="PropertyDefinition" container="TypeDefinition" visit="IReflection" target="Mono.Cecil" indexed="true" />
 		<collection type="Instruction" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
 		<collection type="ExceptionHandler" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
-		<collection type="VariableDefinition" container="MethodBody" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
+		<collection type="VariableDefinition" container="IVariableDefinitionProvider" visit="ICode" indexed="true" target="Mono.Cecil.Cil" />
 		<collection type="ArrayDimension" container="ArrayType" target="Mono.Cecil" indexed="true" />
 		<!-- modified behaviour
 		<collection type="SecurityDeclaration" container="IHasSecurity" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
@@ -587,6 +587,7 @@
 		<collection type="GenericParameter" container="IGenericParameterProvider" usecontainerinterface="true" target="Mono.Cecil" indexed="true" visit="IReflection" />
 		<collection type="TypeReference" name="GenericArgument" container="IGenericInstance" target="Mono.Cecil" indexed="true" />
 		<collection type="TypeReference" name="Constraint" container="GenericParameter" target="Mono.Cecil" indexed="true" />
+		<collection type="Scope" container="IScopeProvider" visit="ICode" target="Mono.Cecil.Cil" indexed="true" />
 	</collections>
 
 </cecil>

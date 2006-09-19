@@ -1,10 +1,10 @@
 //
-// ICodeVisitor.cs
+// SequencePoint.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,18 +28,43 @@
 
 namespace Mono.Cecil.Cil {
 
-	public interface ICodeVisitor {
+	public class SequencePoint {
 
-		void VisitMethodBody (MethodBody body);
-		void VisitInstructionCollection (InstructionCollection instructions);
-		void VisitInstruction (Instruction instr);
-		void VisitExceptionHandlerCollection (ExceptionHandlerCollection seh);
-		void VisitExceptionHandler (ExceptionHandler eh);
-		void VisitVariableDefinitionCollection (VariableDefinitionCollection variables);
-		void VisitVariableDefinition (VariableDefinition var);
-		void VisitScopeCollection (ScopeCollection scopes);
-		void VisitScope (Scope scope);
+		Document m_document;
 
-		void TerminateMethodBody (MethodBody body);
+		int m_startLine;
+		int m_startColumn;
+		int m_endLine;
+		int m_endColumn;
+
+		public int StartLine {
+			get { return m_startLine; }
+			set { m_startLine = value; }
+		}
+
+		public int StartColumn {
+			get { return m_startColumn; }
+			set { m_startColumn = value; }
+		}
+
+		public int EndLine {
+			get { return m_endLine; }
+			set { m_endLine = value; }
+		}
+
+		public int EndColumn {
+			get { return m_endColumn; }
+			set { m_endColumn = value; }
+		}
+
+		public Document Document {
+			get { return m_document; }
+			set { m_document = value; }
+		}
+
+		public SequencePoint (Document document)
+		{
+			m_document = document;
+		}
 	}
 }

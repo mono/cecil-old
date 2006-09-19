@@ -1,10 +1,10 @@
 //
-// ICodeVisitor.cs
+// Scope.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,18 +28,52 @@
 
 namespace Mono.Cecil.Cil {
 
-	public interface ICodeVisitor {
+	public class Scope : IScopeProvider, IVariableDefinitionProvider, ICodeVisitable {
 
-		void VisitMethodBody (MethodBody body);
-		void VisitInstructionCollection (InstructionCollection instructions);
-		void VisitInstruction (Instruction instr);
-		void VisitExceptionHandlerCollection (ExceptionHandlerCollection seh);
-		void VisitExceptionHandler (ExceptionHandler eh);
-		void VisitVariableDefinitionCollection (VariableDefinitionCollection variables);
-		void VisitVariableDefinition (VariableDefinition var);
-		void VisitScopeCollection (ScopeCollection scopes);
-		void VisitScope (Scope scope);
+		Instruction m_start;
+		Instruction m_end;
 
-		void TerminateMethodBody (MethodBody body);
+		Scope m_parent;
+		ScopeCollection m_scopes;
+
+		VariableDefinitionCollection m_variables;
+
+		public Instruction Start {
+			get { return m_start; }
+			set { m_start = value; }
+		}
+
+		public Instruction End {
+			get { return m_end; }
+			set { m_end = value; }
+		}
+
+		public Scope Parent {
+			get { return m_parent; }
+			set { m_parent = value; }
+		}
+
+		public ScopeCollection Scopes {
+			get {
+				if (m_scopes == null)
+					m_scopes = new ScopeCollection (this);
+
+				return m_scopes;
+			}
+		}
+
+		public VariableDefinitionCollection Variables {
+			get {
+				if (m_variables == null)
+					m_variables = new VariableDefinitionCollection (this);
+
+				return m_variables;
+			}
+		}
+
+		public void Accept (ICodeVisitor visitor)
+		{
+			visitor.VisitScope (this);
+		}
 	}
 }

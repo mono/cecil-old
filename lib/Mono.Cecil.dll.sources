@@ -218,6 +218,7 @@
 ./Mono.Cecil.Cil/CilWorker.cs
 ./Mono.Cecil.Cil/CodeReader.cs
 ./Mono.Cecil.Cil/CodeWriter.cs
+./Mono.Cecil.Cil/Document.cs
 ./Mono.Cecil.Cil/ExceptionHandler.cs
 ./Mono.Cecil.Cil/ExceptionHandlerCollection.cs
 ./Mono.Cecil.Cil/ExceptionHandlerType.cs
@@ -226,6 +227,8 @@
 ./Mono.Cecil.Cil/ICodeVisitor.cs
 ./Mono.Cecil.Cil/Instruction.cs
 ./Mono.Cecil.Cil/InstructionCollection.cs
+./Mono.Cecil.Cil/IScopeProvider.cs
+./Mono.Cecil.Cil/IVariableDefinitionProvider.cs
 ./Mono.Cecil.Cil/MethodBody.cs
 ./Mono.Cecil.Cil/MethodDataSection.cs
 ./Mono.Cecil.Cil/MethodHeader.cs
@@ -233,6 +236,9 @@
 ./Mono.Cecil.Cil/OpCodes.cs
 ./Mono.Cecil.Cil/OpCodeType.cs
 ./Mono.Cecil.Cil/OperandType.cs
+./Mono.Cecil.Cil/Scope.cs
+./Mono.Cecil.Cil/ScopeCollection.cs
+./Mono.Cecil.Cil/SequencePoint.cs
 ./Mono.Cecil.Cil/StackBehaviour.cs
 ./Mono.Cecil.Cil/VariableDefinition.cs
 ./Mono.Cecil.Cil/VariableDefinitionCollection.cs

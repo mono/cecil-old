@@ -1,5 +1,5 @@
 //
-// VariableDefinitionCollection.cs
+// ScopeCollection.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -36,13 +36,13 @@ namespace Mono.Cecil.Cil {
 
 	using Mono.Cecil.Cil;
 
-	public sealed class VariableDefinitionCollection : IIndexedCollection, ICodeVisitable {
+	public sealed class ScopeCollection : IIndexedCollection, ICodeVisitable {
 
 		IList m_items;
-		IVariableDefinitionProvider m_container;
+		IScopeProvider m_container;
 
-		public VariableDefinition this [int index] {
-			get { return m_items [index] as VariableDefinition; }
+		public Scope this [int index] {
+			get { return m_items [index] as Scope; }
 			set { m_items [index] = value; }
 		}
 
@@ -50,7 +50,7 @@ namespace Mono.Cecil.Cil {
 			get { return m_items [index]; }
 		}
 
-		public IVariableDefinitionProvider Container {
+		public IScopeProvider Container {
 			get { return m_container; }
 		}
 
@@ -66,13 +66,13 @@ namespace Mono.Cecil.Cil {
 			get { return this; }
 		}
 
-		public VariableDefinitionCollection (IVariableDefinitionProvider container)
+		public ScopeCollection (IScopeProvider container)
 		{
 			m_container = container;
 			m_items = new ArrayList ();
 		}
 
-		public void Add (VariableDefinition value)
+		public void Add (Scope value)
 		{
 			m_items.Add (value);
 		}
@@ -82,22 +82,22 @@ namespace Mono.Cecil.Cil {
 			m_items.Clear ();
 		}
 
-		public bool Contains (VariableDefinition value)
+		public bool Contains (Scope value)
 		{
 			return m_items.Contains (value);
 		}
 
-		public int IndexOf (VariableDefinition value)
+		public int IndexOf (Scope value)
 		{
 			return m_items.IndexOf (value);
 		}
 
-		public void Insert (int index, VariableDefinition value)
+		public void Insert (int index, Scope value)
 		{
 			m_items.Insert (index, value);
 		}
 
-		public void Remove (VariableDefinition value)
+		public void Remove (Scope value)
 		{
 			m_items.Remove (value);
 		}
@@ -119,7 +119,7 @@ namespace Mono.Cecil.Cil {
 
 		public void Accept (ICodeVisitor visitor)
 		{
-			visitor.VisitVariableDefinitionCollection (this);
+			visitor.VisitScopeCollection (this);
 		}
 	}
 }

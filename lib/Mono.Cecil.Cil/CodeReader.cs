@@ -358,8 +358,8 @@ namespace Mono.Cecil.Cil {
 
 		public override void VisitVariableDefinitionCollection (VariableDefinitionCollection variables)
 		{
-			MethodBody body = variables.Container;
-			if (body.LocalVarToken == 0)
+			MethodBody body = variables.Container as MethodBody;
+			if (body == null || body.LocalVarToken == 0)
 				return;
 
 			StandAloneSigTable sasTable = m_reflectReader.TableReader.GetStandAloneSigTable ();

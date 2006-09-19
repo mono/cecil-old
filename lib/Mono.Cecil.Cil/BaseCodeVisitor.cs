@@ -58,6 +58,14 @@ namespace Mono.Cecil.Cil {
 		{
 		}
 
+		public virtual void VisitScopeCollection (ScopeCollection scopes)
+		{
+		}
+
+		public virtual void VisitScope (Scope s)
+		{
+		}
+
 		public virtual void TerminateMethodBody (MethodBody body)
 		{
 		}

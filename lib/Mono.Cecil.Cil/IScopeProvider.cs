@@ -1,10 +1,10 @@
 //
-// ICodeVisitor.cs
+// Document.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2006 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,18 +28,8 @@
 
 namespace Mono.Cecil.Cil {
 
-	public interface ICodeVisitor {
+	public interface IScopeProvider {
 
-		void VisitMethodBody (MethodBody body);
-		void VisitInstructionCollection (InstructionCollection instructions);
-		void VisitInstruction (Instruction instr);
-		void VisitExceptionHandlerCollection (ExceptionHandlerCollection seh);
-		void VisitExceptionHandler (ExceptionHandler eh);
-		void VisitVariableDefinitionCollection (VariableDefinitionCollection variables);
-		void VisitVariableDefinition (VariableDefinition var);
-		void VisitScopeCollection (ScopeCollection scopes);
-		void VisitScope (Scope scope);
-
-		void TerminateMethodBody (MethodBody body);
+		ScopeCollection Scopes { get; }
 	}
 }
