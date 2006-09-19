@@ -98,7 +98,7 @@ namespace Test.Rules.Performance {
 		public void EmptyDestructor ()
 		{
 			TypeDefinition type = GetTest ("EmptyDestructorClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
 		}
 
 		[Test]
