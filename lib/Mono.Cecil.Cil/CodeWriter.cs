@@ -411,9 +411,6 @@ namespace Mono.Cecil.Cil {
 
 			m_reflectWriter.MetadataWriter.AddData (
 				(int) (m_binaryWriter.BaseStream.Position - pos));
-
-			if (m_reflectWriter.SymbolWriter != null)
-				m_reflectWriter.SymbolWriter.Write(body);
 		}
 
 		LocalVarSig GetLocalVarSig (VariableDefinitionCollection vars)

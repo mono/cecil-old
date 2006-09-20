@@ -29,6 +29,7 @@
 namespace Mono.Cecil.Cil {
 
 	using System;
+	using System.IO;
 	using SR = System.Reflection;
 
 	class SymbolStoreHelper {
@@ -49,16 +50,11 @@ namespace Mono.Cecil.Cil {
 			return s_factory.CreateReader (module.Image.FileInformation.FullName);
 		}
 
-		public static ISymbolWriter GetWriter (ModuleDefinition module)
+		public static ISymbolWriter GetWriter (string assemblyFileName)
 		{
 			InitFactory ();
 
-			return s_factory.CreateWriter (FileName (module));
-		}
-
-		static string FileName (ModuleDefinition module)
-		{
-			return module.Assembly.Name.Name + "." + (module.Assembly.Kind == AssemblyKind.Dll ? "dll" : "exe");
+			return s_factory.CreateWriter (assemblyFileName);
 		}
 
 		static void InitFactory ()

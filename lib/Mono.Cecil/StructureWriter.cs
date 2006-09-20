@@ -93,6 +93,14 @@ namespace Mono.Cecil {
 			m_mdWriter = rw.MetadataWriter;
 			m_tableWriter = rw.MetadataTableWriter;
 			m_rowWriter = rw.MetadataRowWriter;
+
+			if (!rw.SaveSymbols)
+				return;
+
+			FileStream fs = m_binaryWriter.BaseStream as FileStream;
+			if (fs != null) {
+				rw.OutputFile = fs.Name;
+			}
 		}
 
 		public override void VisitAssemblyNameDefinition (AssemblyNameDefinition name)

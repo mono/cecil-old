@@ -28,7 +28,9 @@
 
 namespace Mono.Cecil.Cil {
 
-	public interface ISymbolWriter {
+	using System;
+
+	public interface ISymbolWriter : IDisposable {
 
 		void Write (MethodBody body);
 	}

@@ -28,7 +28,9 @@
 
 namespace Mono.Cecil.Cil {
 
-	public interface ISymbolReader {
+	using System;
+
+	public interface ISymbolReader : IDisposable {
 
 		void Read (MethodBody body);
 	}

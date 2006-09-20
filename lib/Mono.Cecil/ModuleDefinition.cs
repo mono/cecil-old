@@ -395,11 +395,24 @@ namespace Mono.Cecil {
 
 		public void SaveSymbols ()
 		{
-			m_controller.Writer.SymbolWriter = SymbolStoreHelper.GetWriter (this);
+			m_controller.Writer.SaveSymbols = true;
 		}
 
 		public void SaveSymbols (ISymbolWriter writer)
 		{
+			SaveSymbols ();
+			m_controller.Writer.SymbolWriter = writer;
+		}
+
+		public void SaveSymbols (string outputDirectory)
+		{
+			SaveSymbols ();
+			m_controller.Writer.OutputFile = outputDirectory;
+		}
+
+		public void SaveSymbols (string outputDirectory, ISymbolWriter writer)
+		{
+			SaveSymbols (outputDirectory);
 			m_controller.Writer.SymbolWriter = writer;
 		}
 

@@ -151,6 +151,10 @@ namespace Mono.Cecil {
 			} finally {
 				bw.Close ();
 			}
+
+			foreach (ModuleDefinition module in asm.Modules)
+				if (module.Controller.Writer.SaveSymbols)
+					module.Controller.Writer.WriteSymbols (module);
 		}
 
 #if !CF_1_0 && !CF_2_0

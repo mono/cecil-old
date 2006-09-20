@@ -44,10 +44,13 @@ namespace Mono.Cecil {
 		ModuleDefinition m_mod;
 		SignatureWriter m_sigWriter;
 		CodeWriter m_codeWriter;
-		ISymbolWriter m_symbolWriter;
 		MetadataWriter m_mdWriter;
 		MetadataTableWriter m_tableWriter;
 		MetadataRowWriter m_rowWriter;
+
+		bool m_saveSymbols;
+		string m_asmOutput;
+		ISymbolWriter m_symbolWriter;
 
 		IList m_typeDefStack;
 		IList m_methodStack;
@@ -82,6 +85,17 @@ namespace Mono.Cecil {
 
 		public CodeWriter CodeWriter {
 			get { return m_codeWriter; }
+		}
+
+		public bool SaveSymbols {
+			get { return m_saveSymbols; }
+			set { m_saveSymbols = value; }
+		}
+
+		public string OutputFile
+		{
+			get { return m_asmOutput; }
+			set { m_asmOutput = value; }
 		}
 
 		public ISymbolWriter SymbolWriter {
@@ -820,6 +834,9 @@ namespace Mono.Cecil {
 				}
 			}
 
+			if (m_symbolWriter != null)
+				m_symbolWriter.Dispose ();
+
 			if (m_mod.Assembly.EntryPoint != null)
 				m_mdWriter.EntryPointToken =
 					((uint) TokenType.Method) | GetRidFor (m_mod.Assembly.EntryPoint);
@@ -1390,6 +1407,35 @@ namespace Mono.Cecil {
 			}
 
 			return ms;
+		}
+
+		public void WriteSymbols (ModuleDefinition module)
+		{
+			if (!m_saveSymbols)
+				return;
+
+			if (m_asmOutput == null)
+				m_asmOutput = module.Assembly.Name.Name + "." + (module.Assembly.Kind == AssemblyKind.Dll ? "dll" : "exe");
+
+			if (m_symbolWriter == null)
+				m_symbolWriter = SymbolStoreHelper.GetWriter (m_asmOutput);
+
+			foreach (TypeDefinition type in module.Types) {
+				foreach (MethodDefinition method in type.Methods)
+					WriteSymbols (method);
+				foreach (MethodDefinition ctor in type.Constructors)
+					WriteSymbols (ctor);
+			}
+
+			m_symbolWriter.Dispose ();
+		}
+
+		void WriteSymbols (MethodDefinition meth)
+		{
+			if (!meth.HasBody)
+				return;
+
+			m_symbolWriter.Write (meth.Body);
 		}
 	}
 }
