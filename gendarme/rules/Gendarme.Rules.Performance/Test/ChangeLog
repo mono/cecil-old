@@ -1,3 +1,8 @@
+2006-09-20  Jonathan Chambers  <joncham@gmail.com>
+
+	* Test.Rules.Performance.csproj: Make reference to nunit.framework
+	not a specific version for portability.
+	
 2006-09-19  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EmptyDestructorTest.cs: Fixed test case, EmptyDestructor should not

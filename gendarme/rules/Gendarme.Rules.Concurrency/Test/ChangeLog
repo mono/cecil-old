@@ -1,3 +1,8 @@
+2006-09-20  Jonathan Chambers  <joncham@gmail.com>
+
+	* Test.Rules.Concurrency.csproj: Make reference to nunit.framework
+	not a specific version for portability.
+	
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Concurrency.mdp: New. Project file for MonoDevelop.
