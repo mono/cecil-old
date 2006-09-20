@@ -1,3 +1,9 @@
+2006-09-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Signatures/SignatureReader.cs:
+		Ensure custom attributes are read when they can be.
+		Patch by Sebastien Pouliot.
+
 2006-09-19  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ModuleDefinition.cs

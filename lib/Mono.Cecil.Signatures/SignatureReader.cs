@@ -853,6 +853,7 @@ namespace Mono.Cecil.Signatures {
 					((byte) elemType).ToString("x2"));
 			}
 
+			read = true;
 			elem.Simple = true;
 			return elem;
 		}
