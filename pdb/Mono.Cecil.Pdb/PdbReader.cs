@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
+
 namespace Mono.Cecil.Pdb {
 
 	using System.Collections;
@@ -118,6 +120,11 @@ namespace Mono.Cecil.Pdb {
 			doc = new Cil.Document (document.URL);
 			m_documents [doc.Url] = doc;
 			return doc;
+		}
+
+		public void Dispose ()
+		{
+			m_reader = null;
 		}
 	}
 }

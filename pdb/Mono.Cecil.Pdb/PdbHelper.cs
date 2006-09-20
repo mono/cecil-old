@@ -73,7 +73,29 @@ namespace Mono.Cecil.Pdb {
 
 		public static ISymbolWriter CreateWriter (string filename)
 		{
-			throw new NotImplementedException ();
+			SymWriter writer = new SymWriter (false);
+
+			object objDispenser, objImporter;
+			CoCreateInstance (ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);
+
+			IMetaDataDispenser dispenser = (IMetaDataDispenser) objDispenser;
+			dispenser.OpenScope (filename, 1, ref s_importerIID, out objImporter);
+
+			IntPtr importerPtr = Marshal.GetComInterfaceForObject (objImporter, typeof (IMetadataImport));
+			string pdb = string.Concat (filename.Substring (0, filename.LastIndexOf (".")), ".pdb");
+
+			try {
+				writer.Initialize (importerPtr, pdb, false);
+			} finally {
+				if (importerPtr != IntPtr.Zero) {
+					Marshal.Release (importerPtr);
+					Marshal.ReleaseComObject (objDispenser);
+					Marshal.ReleaseComObject (objImporter);
+					Marshal.ReleaseComObject (dispenser);
+				}
+			}
+
+			return writer;
 		}
 	}
 }

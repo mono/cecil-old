@@ -39,7 +39,7 @@ namespace Mono.Cecil.Pdb {
 
 		public ISymbolWriter CreateWriter (string assemblyFilename)
 		{
-			return new PdbWriter (assemblyFilename);
+			return new PdbWriter (PdbHelper.CreateWriter (assemblyFilename));
 		}
 	}
 }
