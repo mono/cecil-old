@@ -101,7 +101,6 @@ namespace Test.Rules.Correctness {
 		private MethodDefinition GetTest (string name)
 		{
 			foreach (MethodDefinition method in type.Methods) {
-			Console.WriteLine (method.Name);
 				if (method.Name == name)
 					return method;
 			}
