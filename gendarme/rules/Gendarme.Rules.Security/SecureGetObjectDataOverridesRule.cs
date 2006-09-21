@@ -67,12 +67,20 @@ namespace Gendarme.Rules.Security {
 				return runner.RuleSuccess;
 
 			// check for ISerializable
-			bool iserialize = true; // FIXME
+			bool iserialize = false;
 			if (type.Interfaces.Count > 0) {
 				// check if the type implements the "ISerializable" interface
+				foreach (TypeReference iface in type.Interfaces) {
+					if (iface.FullName == "System.Runtime.Serialization.ISerializable") {
+						iserialize = true;
+						break;
+					}
+				}
 			}
 			if (!iserialize) {
 				// then it's (recursively) base type may implements the "ISerializable" interface
+				// FIXME - while it's unlikely we have the right signature without ISerializable
+				// (leading to false positive) we should fix this using Cecil recent resolver
 			}
 
 			// *** ok, the rule applies! ***

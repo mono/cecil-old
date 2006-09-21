@@ -1,3 +1,7 @@
+2006-09-20  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* SecureGetObjectDataOverridesRule.cs: Update FIXME.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Security.mdp: New. Project file for MonoDevelop.
