@@ -165,43 +165,51 @@ if use_event?() %>
 			return ret.ToArray (typeof (MethodDefinition)) as MethodDefinition [];
 		}
 
+		internal MethodDefinition GetMethod (string name, IList parameters)
+		{
+			foreach (MethodDefinition meth in this) {
+				if (meth.Name != name || meth.Parameters.Count != parameters.Count)
+					continue;
+
+				bool match = true;
+				for (int i = 0; i < parameters.Count; i++) {
+					string pname;
+					object param = parameters [i];
+					if (param is Type)
+						pname = ReflectionHelper.GetTypeSignature (param as Type);
+					else if (param is TypeReference)
+						pname = (param as TypeReference).FullName;
+					else if (param is ParameterDefinition)
+						pname = (param as ParameterDefinition).ParameterType.FullName;
+					else
+						throw new NotSupportedException ();
+ 
+					if (meth.Parameters [i].ParameterType.FullName != pname) {
+						match = false;
+						break;
+					}
+				}
+
+				if (match)
+					return meth;
+			}
+
+			return null;
+		}
+
 		public MethodDefinition GetMethod (string name, Type [] parameters)
 		{
-			foreach (MethodDefinition meth in this)
-				if (meth.Name == name && meth.Parameters.Count == parameters.Length) {
-					if (parameters.Length == 0)
-						return meth;
-					for (int i = 0; i < parameters.Length; i++)
-						if (meth.Parameters [i].ParameterType.FullName == ReflectionHelper.GetTypeSignature (parameters [i]))
-							return meth;
-				}
-			return null;
+			return GetMethod (name, parameters);
 		}
 
 		public MethodDefinition GetMethod (string name, TypeReference [] parameters)
 		{
-			foreach (MethodDefinition meth in this)
-				if (meth.Name == name && meth.Parameters.Count == parameters.Length) {
-					if (parameters.Length == 0)
-						return meth;
-					for (int i = 0; i < parameters.Length; i++)
-						if (meth.Parameters [i].ParameterType.FullName == parameters [i].FullName)
-							return meth;
-				}
-			return null;
+			return GetMethod (name, parameters);
 		}
 
 		public MethodDefinition GetMethod (string name, ParameterDefinitionCollection parameters)
 		{
-			foreach (MethodDefinition meth in this)
-				if (meth.Name == name && meth.Parameters.Count == parameters.Count) {
-					if (parameters.Count == 0)
-						return meth;
-					for (int i = 0; i < parameters.Count; i++)
-						if (meth.Parameters [i].ParameterType.FullName == parameters [i].ParameterType.FullName)
-							return meth;
-				}
-			return null;
+			return GetMethod (name, parameters);
 		}
 <%
 		when "FieldDefinition"
@@ -217,43 +225,51 @@ if use_event?() %>
 <%
 		when "Constructor"
 %>
-		public MethodDefinition GetConstructor (bool isStatic, Type [] parameters)
+		internal MethodDefinition GetConstructor (bool isStatic, IList parameters)
 		{
 			foreach (MethodDefinition ctor in this) {
-				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length) {
-					if (parameters.Length == 0)
-						return ctor;
-					for (int i = 0; i < parameters.Length; i++)
-						if (ctor.Parameters [i].ParameterType.FullName ==  ReflectionHelper.GetTypeSignature (parameters [i]))
-							return ctor;
+				if (ctor.IsStatic != isStatic || ctor.Parameters.Count != parameters.Count)
+					continue;
+
+				bool match = true;
+				for (int i = 0; i < parameters.Count; i++) {
+					string pname;
+					object param = parameters [i];
+					if (param is Type)
+						pname = ReflectionHelper.GetTypeSignature (param as Type);
+					else if (param is TypeReference)
+						pname = (param as TypeReference).FullName;
+					else if (param is ParameterDefinition)
+						pname = (param as ParameterDefinition).ParameterType.FullName;
+					else
+						throw new NotSupportedException ();
+ 
+					if (ctor.Parameters [i].ParameterType.FullName != pname) {
+						match = false;
+						break;
+					}
 				}
+
+				if (match)
+					return ctor;
 			}
 
 			return null;
 		}
 
+		public MethodDefinition GetConstructor (bool isStatic, Type [] parameters)
+		{
+			return GetConstructor (isStatic, parameters);
+		}
+
 		public MethodDefinition GetConstructor (bool isStatic, TypeReference [] parameters)
 		{
-			foreach (MethodDefinition ctor in this)
-				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Length)
-					for (int i = 0; i < parameters.Length; i++)
-						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].FullName)
-							return ctor;
-
-			return null;
+			return GetConstructor (isStatic, parameters);
 		}
 
 		public MethodDefinition GetConstructor (bool isStatic, ParameterDefinitionCollection parameters)
 		{
-			foreach (MethodDefinition ctor in this)
-				if (ctor.IsStatic == isStatic && ctor.Parameters.Count == parameters.Count) {
-					if (parameters.Count == 0)
-						return ctor;
-					for (int i = 0; i < parameters.Count; i++)
-						if (ctor.Parameters [i].ParameterType.FullName == parameters [i].ParameterType.FullName)
-							return ctor;
-				}
-			return null;
+			return GetConstructor (isStatic, parameters);
 		}
 <%
 		when "EventDefinition"

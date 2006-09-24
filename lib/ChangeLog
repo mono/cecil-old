@@ -1,5 +1,13 @@
 2006-09-20  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/MethodDefinitionCollection.cs
+	  Mono.Cecil/ConstructorCollection.cs
+	  CodeGen/templates/IndexedCollection.cs:
+		Fix the GetConstructor/GetMethod methods.
+		Based on a patch by Jon Chambers.
+
+2006-09-20  Jb Evain  <jbevain@gmail.com>
+
 	* Mono.Cecil/StructureWriter.cs
 	  Mono.Cecil/ModuleDefinition.cs
 	  Mono.Cecil/ReflectionWriter.cs
