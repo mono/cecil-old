@@ -1,5 +1,5 @@
 //
-// MdbFactory.cs
+// MdbWriter.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,24 +26,31 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.Mdb {
+using System;
+using Mono.CompilerServices.SymbolWriter;
 
-	using System;
+namespace Mono.Cecil.Mdb {
 
 	using Mono.Cecil.Cil;
 
-	using Mono.CompilerServices.SymbolWriter;
+	class MdbWriter : ISymbolWriter {
 
-	public class MdbFactory : ISymbolStoreFactory {
+		MonoSymbolWriter m_symWriter;
+		Guid m_mvid;
 
-		public ISymbolReader CreateReader (ModuleDefinition module, string assembly)
+		public MdbWriter (MonoSymbolWriter writer, Guid mvid)
 		{
-			return new MdbReader (MonoSymbolFile.ReadSymbolFile (module.Assembly, assembly));
+			m_symWriter = writer;
+			m_mvid = mvid;
 		}
 
-		public ISymbolWriter CreateWriter (ModuleDefinition module, string assembly)
+		public void Write (MethodBody body)
 		{
-			return new MdbWriter (new MonoSymbolWriter (assembly), module.Mvid);
+		}
+
+		public void Dispose ()
+		{
+			m_symWriter.WriteSymbolFile (m_mvid);
 		}
 	}
 }

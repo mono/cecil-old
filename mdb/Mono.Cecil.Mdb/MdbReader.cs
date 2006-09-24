@@ -40,9 +40,9 @@ namespace Mono.Cecil.Mdb {
 		Hashtable m_documents;
 		Hashtable m_scopes;
 
-		public MdbReader (ModuleDefinition module, string assembly)
+		public MdbReader (MonoSymbolFile symFile)
 		{
-			m_symFile = MonoSymbolFile.ReadSymbolFile (module.Assembly, assembly);
+			m_symFile = symFile;
 			m_documents = new Hashtable ();
 			m_scopes = new Hashtable ();
 		}
