@@ -32,14 +32,15 @@ namespace Mono.Cecil.Pdb {
 
 	public class PdbFactory : ISymbolStoreFactory {
 
-		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFilename)
+		public ISymbolReader CreateReader (ModuleDefinition module, string assembly)
 		{
-			return new PdbReader (PdbHelper.CreateReader (assemblyFilename));
+			return new PdbReader (PdbHelper.CreateReader (assembly));
 		}
 
-		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFilename)
+		public ISymbolWriter CreateWriter (ModuleDefinition module, string assembly)
 		{
-			return new PdbWriter (PdbHelper.CreateWriter (assemblyFilename));
+			string pdb = string.Concat(assembly.Substring(0, assembly.LastIndexOf(".")), ".pdb");
+			return new PdbWriter (PdbHelper.CreateWriter (assembly, pdb), module, pdb);
 		}
 	}
 }

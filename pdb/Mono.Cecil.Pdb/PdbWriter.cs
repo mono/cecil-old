@@ -33,21 +33,26 @@ namespace Mono.Cecil.Pdb {
 	using System;
 	using System.Collections;
 	using System.Diagnostics.SymbolStore;
+	using System.IO;
 
 	public class PdbWriter : Cil.ISymbolWriter {
 
 		static readonly Guid Zero = new Guid ();
 
+		ModuleDefinition m_module;
 		ISymbolWriter m_writer;
 		Hashtable m_documents;
+		string m_pdb;
 
-		internal PdbWriter (ISymbolWriter writer)
+		internal PdbWriter (ISymbolWriter writer, ModuleDefinition module, string pdb)
 		{
 			m_writer = writer;
+			m_module = module;
 			m_documents = new Hashtable ();
+			m_pdb = pdb;
 		}
 
-		public void Write (Cil.MethodBody body)
+		public void Write (MethodBody body)
 		{
 			CreateDocuments (body);
 			m_writer.OpenMethod (new SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));
@@ -59,6 +64,8 @@ namespace Mono.Cecil.Pdb {
 		{
 			foreach (Scope s in scopes) {
 				m_writer.OpenScope (s.Start.Offset);
+				m_writer.UsingNamespace (body.Method.DeclaringType.Namespace);
+				m_writer.OpenNamespace (body.Method.DeclaringType.Namespace);
 
 				int start = body.Instructions.IndexOf (s.Start);
 				int end = s.End == body.Instructions.Outside ?
@@ -98,7 +105,13 @@ namespace Mono.Cecil.Pdb {
 				// TODO: local variables
 
 				CreateScopes (body, s.Scopes);
-				m_writer.CloseScope (s.End.Offset);
+				m_writer.CloseNamespace ();
+
+				Instruction last = body.Instructions [body.Instructions.Count - 1];
+				if (s.End == body.Instructions.Outside)
+					m_writer.CloseScope (last.Offset + 1);
+				else
+					m_writer.CloseScope (s.End.Offset);
 			}
 		}
 
@@ -126,6 +139,41 @@ namespace Mono.Cecil.Pdb {
 		public void Dispose ()
 		{
 			m_writer.Close ();
+			Patch ();
+		}
+
+		void Patch ()
+		{
+			FileStream fs = new FileStream (m_pdb, FileMode.Open, FileAccess.ReadWrite);
+			uint age = m_module.Image.DebugHeader.Age;
+			Guid g = m_module.Image.DebugHeader.Signature;
+
+			BinaryReader reader = new BinaryReader (fs);
+			reader.BaseStream.Position = 32;
+
+			uint pageSize = reader.ReadUInt32 ();
+			reader.BaseStream.Position += 4;
+
+			uint pageCount = reader.ReadUInt32 ();
+			reader.BaseStream.Position += pageSize - 44;
+
+			uint magic = 0x1312e94;
+			int page = 0;
+			for (int i = 1; i < pageCount; i++) {
+				if (magic == reader.ReadUInt32 ()) {
+					page = i;
+					break;
+				}
+				reader.BaseStream.Position += pageSize - 4;
+			}
+
+			BinaryWriter writer = new BinaryWriter (fs);
+			writer.BaseStream.Position = page * pageSize + 8;
+
+			writer.Write (age);
+			writer.Write (g.ToByteArray ());
+
+			fs.Close ();
 		}
 	}
 }

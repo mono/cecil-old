@@ -32,6 +32,7 @@ namespace Mono.Cecil.Pdb {
 
 	using System;
 	using System.Diagnostics.SymbolStore;
+	using System.IO;
 	using System.Runtime.InteropServices;
 
 	internal class PdbHelper {
@@ -71,7 +72,7 @@ namespace Mono.Cecil.Pdb {
 			return reader;
 		}
 
-		public static ISymbolWriter CreateWriter (string filename)
+		public static ISymbolWriter CreateWriter (string assembly, string pdb)
 		{
 			SymWriter writer = new SymWriter (false);
 
@@ -79,12 +80,14 @@ namespace Mono.Cecil.Pdb {
 			CoCreateInstance (ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);
 
 			IMetaDataDispenser dispenser = (IMetaDataDispenser) objDispenser;
-			dispenser.OpenScope (filename, 1, ref s_importerIID, out objImporter);
+			dispenser.OpenScope (assembly, 1, ref s_importerIID, out objImporter);
 
 			IntPtr importerPtr = Marshal.GetComInterfaceForObject (objImporter, typeof (IMetadataImport));
-			string pdb = string.Concat (filename.Substring (0, filename.LastIndexOf (".")), ".pdb");
 
 			try {
+				if (File.Exists (pdb))
+					File.Delete (pdb);
+
 				writer.Initialize (importerPtr, pdb, false);
 			} finally {
 				if (importerPtr != IntPtr.Zero) {
