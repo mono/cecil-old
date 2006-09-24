@@ -159,7 +159,7 @@ namespace Mono.Cecil {
 						pname = (param as ParameterDefinition).ParameterType.FullName;
 					else
 						throw new NotSupportedException ();
- 
+
 					if (meth.Parameters [i].ParameterType.FullName != pname) {
 						match = false;
 						break;

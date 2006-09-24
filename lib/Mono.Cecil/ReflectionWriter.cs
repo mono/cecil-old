@@ -1418,7 +1418,7 @@ namespace Mono.Cecil {
 				m_asmOutput = module.Assembly.Name.Name + "." + (module.Assembly.Kind == AssemblyKind.Dll ? "dll" : "exe");
 
 			if (m_symbolWriter == null)
-				m_symbolWriter = SymbolStoreHelper.GetWriter (m_asmOutput);
+				m_symbolWriter = SymbolStoreHelper.GetWriter (module, m_asmOutput);
 
 			foreach (TypeDefinition type in module.Types) {
 				foreach (MethodDefinition method in type.Methods)

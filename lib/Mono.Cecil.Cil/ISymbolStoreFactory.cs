@@ -30,7 +30,7 @@ namespace Mono.Cecil.Cil {
 
 	public interface ISymbolStoreFactory {
 
-		ISymbolReader CreateReader (string assemblyFileName);
-		ISymbolWriter CreateWriter (string assemblyFileName);
+		ISymbolReader CreateReader (ModuleDefinition module, string assemblyFileName);
+		ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFileName);
 	}
 }

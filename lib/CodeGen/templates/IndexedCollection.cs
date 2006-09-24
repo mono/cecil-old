@@ -183,7 +183,7 @@ if use_event?() %>
 						pname = (param as ParameterDefinition).ParameterType.FullName;
 					else
 						throw new NotSupportedException ();
- 
+
 					if (meth.Parameters [i].ParameterType.FullName != pname) {
 						match = false;
 						break;
@@ -243,7 +243,7 @@ if use_event?() %>
 						pname = (param as ParameterDefinition).ParameterType.FullName;
 					else
 						throw new NotSupportedException ();
- 
+
 					if (ctor.Parameters [i].ParameterType.FullName != pname) {
 						match = false;
 						break;

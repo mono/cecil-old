@@ -1,4 +1,10 @@
-2006-09-20  Jb Evain  <jbevain@gmail.com>
+2006-09-24  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/AssemblyFactory.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/ISymbolStoreFactory.cs
+	  Mono.Cecil.Cil/SymbolStoreHelper.cs:
+		Some more work on the debugging infos api.
 
 	* Mono.Cecil/MethodDefinitionCollection.cs
 	  Mono.Cecil/ConstructorCollection.cs

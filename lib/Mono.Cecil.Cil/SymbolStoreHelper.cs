@@ -47,14 +47,14 @@ namespace Mono.Cecil.Cil {
 		{
 			InitFactory ();
 
-			return s_factory.CreateReader (module.Image.FileInformation.FullName);
+			return s_factory.CreateReader (module, module.Image.FileInformation.FullName);
 		}
 
-		public static ISymbolWriter GetWriter (string assemblyFileName)
+		public static ISymbolWriter GetWriter (ModuleDefinition module, string assemblyFileName)
 		{
 			InitFactory ();
 
-			return s_factory.CreateWriter (assemblyFileName);
+			return s_factory.CreateWriter (module, assemblyFileName);
 		}
 
 		static void InitFactory ()

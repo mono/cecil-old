@@ -33,7 +33,6 @@ namespace Mono.Cecil {
 	using SR = System.Reflection;
 
 	using Mono.Cecil.Binary;
-	using Mono.Cecil.Metadata;
 
 	public sealed class AssemblyFactory {
 
