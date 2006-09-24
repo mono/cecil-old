@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
+
 namespace Mono.Cecil.Mdb {
 
 	using System.Collections;
@@ -38,11 +40,13 @@ namespace Mono.Cecil.Mdb {
 
 		MonoSymbolFile m_symFile;
 		Hashtable m_documents;
+		Hashtable m_scopes;
 
 		public MdbReader (ModuleDefinition module, string assembly)
 		{
 			m_symFile = MonoSymbolFile.ReadSymbolFile (module.Assembly, assembly);
 			m_documents = new Hashtable ();
+			m_scopes = new Hashtable ();
 		}
 
 		Hashtable GetInstructions (MethodBody body)
@@ -65,19 +69,40 @@ namespace Mono.Cecil.Mdb {
 
 		public void Read (MethodBody body)
 		{
-			Hashtable instructions = GetInstructions (body);
 			MethodEntry entry = m_symFile.GetMethodByToken ((int) body.Method.MetadataToken.ToUInt ());
+			if (entry == null)
+				return;
+
+			Hashtable instructions = GetInstructions(body);
 			ReadScopes (entry, body, instructions);
-			ReadLineNumbers (entry, body, instructions);
+			ReadLineNumbers (entry, instructions);
+			ReadLocalVariables (entry, body);
 		}
 
-		void ReadLineNumbers (MethodEntry entry, MethodBody body, Hashtable instructions)
+		void ReadLocalVariables (MethodEntry entry, MethodBody body)
+		{
+			foreach (LocalVariableEntry loc in entry.Locals) {
+				Scope scope = m_scopes [loc.BlockIndex] as Scope;
+				if (scope == null)
+					continue;
+
+				VariableDefinition var = body.Variables [loc.Index];
+				var.Name = loc.Name;
+				scope.Variables.Add (var);
+			}
+		}
+
+		void ReadLineNumbers (MethodEntry entry, Hashtable instructions)
 		{
 			foreach (LineNumberEntry line in entry.LineNumbers) {
-				Instruction instr = GetInstruction (body, instructions, line.Offset);
+				Instruction instr = instructions [line.Offset] as Instruction;
+				if (instr == null)
+					continue;
+
 				Document doc = GetDocument (entry.SourceFile);
 				instr.SequencePoint = new SequencePoint (doc);
 				instr.SequencePoint.StartLine = line.Row;
+				instr.SequencePoint.EndLine = line.Row;
 			}
 		}
 
@@ -98,6 +123,7 @@ namespace Mono.Cecil.Mdb {
 				Scope s = new Scope ();
 				s.Start = GetInstruction (body, instructions, scope.StartOffset);
 				s.End = GetInstruction(body, instructions, scope.EndOffset);
+				m_scopes [scope.Index] = s;
 
 				if (!AddScope (body, s))
 					body.Scopes.Add (s);
