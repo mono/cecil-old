@@ -1,3 +1,7 @@
+2006-09-24  Jb Evain  <jbevain@gmail.com>
+
+	* Handle the fact that a scope end points outside the cil stream.
+
 2006-09-20  Jb Evain  <jbevain@gmail.com>
 
 	* implement somes bits of the writing stuff.

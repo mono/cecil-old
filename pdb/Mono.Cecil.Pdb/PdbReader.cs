@@ -65,11 +65,20 @@ namespace Mono.Cecil.Pdb {
 			return instructions;
 		}
 
+		Cil.Instruction GetInstruction (Cil.MethodBody body, Hashtable instructions, int offset)
+		{
+			Cil.Instruction instr = (Cil.Instruction) instructions [offset];
+			if (instr != null)
+				return instr;
+
+			return body.Instructions.Outside;
+		}
+
 		void ReadScopeAndLocals (ISymbolScope scope, Cil.Scope parent, Cil.MethodBody body, Hashtable instructions)
 		{
 			Cil.Scope s = new Cil.Scope ();
-			s.Start = (Cil.Instruction) instructions [scope.StartOffset];
-			s.End = (Cil.Instruction) instructions [scope.EndOffset];
+			s.Start = GetInstruction (body, instructions, scope.StartOffset);
+			s.End = GetInstruction (body, instructions, scope.EndOffset);
 
 			if (parent != null)
 				parent.Scopes.Add (s);

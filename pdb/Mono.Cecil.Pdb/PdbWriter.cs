@@ -60,9 +60,16 @@ namespace Mono.Cecil.Pdb {
 			foreach (Scope s in scopes) {
 				m_writer.OpenScope (s.Start.Offset);
 
+				int start = body.Instructions.IndexOf (s.Start);
+				int end = s.End == body.Instructions.Outside ?
+					body.Instructions.Count - 1 :
+					body.Instructions.IndexOf (s.End);
+
 				ArrayList instructions = new ArrayList ();
-				for (Instruction current = s.Start; current.Offset <= s.End.Offset; current = current.Next)
-					instructions.Add (current);
+				for (int i = start; i <= end; i++)
+					instructions.Add (body.Instructions [i]);
+
+				Document doc = null;
 
 				int [] offsets = new int [instructions.Count];
 				int [] startRows = new int [instructions.Count];
@@ -73,13 +80,19 @@ namespace Mono.Cecil.Pdb {
 				for (int i = 0; i < instructions.Count; i++) {
 					Instruction instr = (Instruction) instructions [i];
 					offsets [i] = instr.Offset;
+					if (instr.SequencePoint == null)
+						continue;
+
+					if (doc == null)
+						doc = instr.SequencePoint.Document;
+
 					startRows [i] = instr.SequencePoint.StartLine;
 					startCols [i] = instr.SequencePoint.StartColumn;
 					endRows [i] = instr.SequencePoint.EndLine;
 					endCols [i] = instr.SequencePoint.EndColumn;
 				}
 
-				m_writer.DefineSequencePoints (GetDocument (s.Start.SequencePoint.Document),
+				m_writer.DefineSequencePoints (GetDocument (doc),
 					offsets, startRows, startCols, endRows, endCols);
 
 				// TODO: local variables
