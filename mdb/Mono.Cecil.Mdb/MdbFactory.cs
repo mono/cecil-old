@@ -36,7 +36,7 @@ namespace Mono.Cecil.Mdb {
 
 		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFilename)
 		{
-			throw new NotImplementedException ();
+			return new MdbReader (module, assemblyFilename);
 		}
 
 		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFilename)
