@@ -46,6 +46,10 @@
   <ItemGroup>
     <Compile Include="Mono.Cecil.Mdb\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Mdb\MdbFactory.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolWriter\MonoSymbolFile.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolWriter\MonoSymbolTable.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolWriter\MonoSymbolWriter.cs" />
+    <Compile Include="Mono.CompilerServices.SymbolWriter\SymbolWriterImpl.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -26,7 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.MdbSupport {
+namespace Mono.Cecil.Mdb {
 
 	using System;
 
@@ -34,12 +34,12 @@ namespace Mono.Cecil.MdbSupport {
 
 	public class MdbFactory : ISymbolStoreFactory {
 
-		public ISymbolReader CreateReader (string assemblyFilename)
+		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFilename)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public ISymbolWriter CreateWriter (string assemblyFilename)
+		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFilename)
 		{
 			throw new NotImplementedException ();
 		}
