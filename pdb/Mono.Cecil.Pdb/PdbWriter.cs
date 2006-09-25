@@ -72,9 +72,10 @@ namespace Mono.Cecil.Pdb {
 					body.Instructions.Count - 1 :
 					body.Instructions.IndexOf (s.End);
 
-				ArrayList instructions = new ArrayList ();
+				ArrayList instructions = new ArrayList();
 				for (int i = start; i <= end; i++)
-					instructions.Add (body.Instructions [i]);
+					if (body.Instructions [i].SequencePoint != null)
+						instructions.Add (body.Instructions [i]);
 
 				Document doc = null;
 
@@ -87,8 +88,6 @@ namespace Mono.Cecil.Pdb {
 				for (int i = 0; i < instructions.Count; i++) {
 					Instruction instr = (Instruction) instructions [i];
 					offsets [i] = instr.Offset;
-					if (instr.SequencePoint == null)
-						continue;
 
 					if (doc == null)
 						doc = instr.SequencePoint.Document;
