@@ -114,7 +114,7 @@ namespace Mono.Cecil.Pdb {
 				sp.StartLine = startRow [i];
 				sp.StartColumn = startColumn [i];
 				sp.EndLine = endRow [i];
-				sp.EndColumn = endRow [i];
+				sp.EndColumn = endColumn [i];
 
 				instr.SequencePoint = sp;
 			}
