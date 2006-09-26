@@ -56,6 +56,7 @@ namespace Mono.Cecil.Binary {
 
 			this.Magic = 0x53445352;
 			this.Age = 0;
+			this.Type = DebugStoreType.CodeView;
 			this.FileName = string.Empty;
 		}
 

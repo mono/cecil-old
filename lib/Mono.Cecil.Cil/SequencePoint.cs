@@ -66,5 +66,13 @@ namespace Mono.Cecil.Cil {
 		{
 			m_document = document;
 		}
+
+		public SequencePoint (Document doc, int startLine, int startCol, int endLine, int endCol) : this (doc)
+		{
+			m_startLine = startLine;
+			m_startColumn = startCol;
+			m_endLine = endLine;
+			m_endColumn = endCol;
+		}
 	}
 }

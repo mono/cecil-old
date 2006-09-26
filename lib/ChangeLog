@@ -1,3 +1,7 @@
+2006-09-27  Jb Evain  <jbevain@gmail.com>
+
+	* *Collection.cs: use CollectionBase when possible.
+
 2006-09-24  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyFactory.cs

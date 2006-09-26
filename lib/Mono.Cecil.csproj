@@ -247,7 +247,6 @@
     <Compile Include="Mono.Cecil\IHasConstant.cs" />
     <Compile Include="Mono.Cecil\IHasMarshalSpec.cs" />
     <Compile Include="Mono.Cecil\IHasSecurity.cs" />
-    <Compile Include="Mono.Cecil\IIndexedCollection.cs" />
     <Compile Include="Mono.Cecil\IMemberDefinition.cs" />
     <Compile Include="Mono.Cecil\IMemberReference.cs" />
     <Compile Include="Mono.Cecil\IMetadataScope.cs" />

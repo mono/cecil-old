@@ -49,17 +49,13 @@ namespace <%=$cur_coll.target%> {
 	using Hcp = Mono.Cecil.HashCodeProvider;
 	using Cmp = System.Collections.Comparer;
 
-	public sealed class <%=$cur_coll.name%> : NameObjectCollectionBase, IIndexedCollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %>  {
+	public sealed class <%=$cur_coll.name%> : NameObjectCollectionBase<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %>  {
 
 		<%=$cur_coll.container%> m_container;
 
 		public <%=$cur_coll.type%> this [int index] {
 			get { return this.BaseGet (index) as <%=$cur_coll.type%>; }
 			set { this.BaseSet (index, value); }
-		}
-
-		object IIndexedCollection.this [int index] {
-			get { return this.BaseGet (index); }
 		}
 
 		public <%=$cur_coll.type%> this [string fullName] {

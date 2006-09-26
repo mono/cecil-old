@@ -50,70 +50,52 @@ namespace <%=$cur_coll.target%> {
 
 	using Mono.Cecil.Cil;
 
-	public sealed class <%=$cur_coll.name%> : IIndexedCollection<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
+	public sealed class <%=$cur_coll.name%> : CollectionBase<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %> {
 
-		IList m_items;
 		<%=$cur_coll.container_impl%> m_container;<%
 		if $cur_coll.type == "Instruction" %>
 		public readonly Instruction Outside = new Instruction (-1, OpCodes.Nop);<% end %>
 
 		public <%=$cur_coll.type%> this [int index] {
-			get { return m_items [index] as <%=$cur_coll.type%>; }
-			set { m_items [index] = value; }
-		}
-
-		object IIndexedCollection.this [int index] {
-			get { return m_items [index]; }
+			get { return List [index] as <%=$cur_coll.type%>; }
+			set { List [index] = value; }
 		}
 
 		public <%=$cur_coll.container%> Container {
 			get { return m_container; }
 		}
 
-		public int Count {
-			get { return m_items.Count; }
-		}
-
-		public bool IsSynchronized {
-			get { return false; }
-		}
-
-		public object SyncRoot {
-			get { return this; }
-		}
-
 		public <%=$cur_coll.name%> (<%=$cur_coll.container_impl%> container)
 		{
 			m_container = container;
-			m_items = new ArrayList ();
 		}
 
 		<%= member_visibility() %> void Add (<%=$cur_coll.type%> value)
 		{<%
 if use_event?() %>
-			if (!this.Contains (value))
+			if (!Contains (value))
 				Attach (value);
 <% end %>
-			m_items.Add (value);
+			List.Add (value);
 		}
 
-		public void Clear ()
+		public new void Clear ()
 		{<%
 if use_event?() %>
 			foreach (<%=$cur_coll.type%> item in this)
 				Detach (item);
 <% end %>
-			m_items.Clear ();
+			base.Clear ();
 		}
 
 		public bool Contains (<%=$cur_coll.type%> value)
 		{
-			return m_items.Contains (value);
+			return List.Contains (value);
 		}
 
 		public int IndexOf (<%=$cur_coll.type%> value)
 		{
-			return m_items.IndexOf (value);
+			return List.IndexOf (value);
 		}
 
 		<%= member_visibility() %> void Insert (int index, <%=$cur_coll.type%> value)
@@ -122,7 +104,7 @@ if use_event?() %>
 			if (!this.Contains (value))
 				Attach (value);
 <% end %>
-			m_items.Insert (index, value);
+			List.Insert (index, value);
 		}
 
 		<%= member_visibility() %> void Remove (<%=$cur_coll.type%> value)
@@ -131,25 +113,21 @@ if use_event?() %>
 			if (this.Contains (value))
 				Detach (value);
 <% end %>
-			m_items.Remove (value);
+			List.Remove (value);
 		}
 
-		<%= member_visibility() %> void RemoveAt (int index)
+		<%= member_visibility() %> new void RemoveAt (int index)
 		{<%
 if use_event?() %>
 			Detach (this [index]);
 <% end %>
-			m_items.RemoveAt (index);
+			List.RemoveAt (index);
 		}
 
-		public void CopyTo (Array array, int index)
+		protected override void OnValidate (object o)
 		{
-			m_items.CopyTo (array, index);
-		}
-
-		public IEnumerator GetEnumerator ()
-		{
-			return m_items.GetEnumerator ();
+			if (! (o is <%=$cur_coll.type%>))
+				throw new ArgumentException ("Must be of type " + typeof (<%=$cur_coll.type%>).FullName);
 		}
 <%
 	case $cur_coll.item_name

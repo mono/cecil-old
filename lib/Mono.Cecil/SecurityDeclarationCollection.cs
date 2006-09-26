@@ -31,32 +31,10 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 
-	using Mono.Cecil.Cil;
-
-	public class SecurityDeclarationEventArgs : EventArgs {
-
-		private SecurityDeclaration m_item;
-
-		public SecurityDeclaration SecurityDeclaration {
-			get { return m_item; }
-		}
-
-		public SecurityDeclarationEventArgs (SecurityDeclaration item)
-		{
-			m_item = item;
-		}
-	}
-
-	public delegate void SecurityDeclarationEventHandler (
-		object sender, SecurityDeclarationEventArgs ea);
-
-	public sealed class SecurityDeclarationCollection : IIndexedCollection, IReflectionVisitable {
+	public sealed class SecurityDeclarationCollection : IReflectionVisitable {
 
 		IDictionary m_items;
 		IHasSecurity m_container;
-
-		public event SecurityDeclarationEventHandler OnSecurityDeclarationAdded;
-		public event SecurityDeclarationEventHandler OnSecurityDeclarationRemoved;
 
 		public SecurityDeclaration this [int index] {
 			get { return m_items [index] as SecurityDeclaration; }
@@ -66,10 +44,6 @@ namespace Mono.Cecil {
 		public SecurityDeclaration this [SecurityAction action] {
 			get { return m_items [action] as SecurityDeclaration; }
 			set { m_items [action] = value; }
-		}
-
-		object IIndexedCollection.this [int index] {
-			get { return m_items [index]; }
 		}
 
 		public IHasSecurity Container {
@@ -99,9 +73,6 @@ namespace Mono.Cecil {
 			if (value == null)
 				throw new ArgumentNullException ("value");
 
-			if (OnSecurityDeclarationAdded != null && !this.Contains (value))
-				OnSecurityDeclarationAdded (this, new SecurityDeclarationEventArgs (value));
-
 			// Each action can only be added once so...
 			SecurityDeclaration current = (SecurityDeclaration) m_items[value.Action];
 			if (current != null) {
@@ -117,9 +88,6 @@ namespace Mono.Cecil {
 
 		public void Clear ()
 		{
-			if (OnSecurityDeclarationRemoved != null)
-				foreach (SecurityDeclaration item in this)
-					OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
 			m_items.Clear ();
 			SetHasSecurity (false);
 		}
@@ -149,8 +117,6 @@ namespace Mono.Cecil {
 		public void Remove (SecurityAction action)
 		{
 			SecurityDeclaration item = (SecurityDeclaration) m_items[action];
-			if (OnSecurityDeclarationRemoved != null && (item != null))
-				OnSecurityDeclarationRemoved (this, new SecurityDeclarationEventArgs (item));
 			m_items.Remove (action);
 			SetHasSecurity (this.Count > 0);
 		}
