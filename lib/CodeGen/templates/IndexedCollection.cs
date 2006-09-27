@@ -78,16 +78,17 @@ if use_event?() %>
 <% end %>
 			List.Add (value);
 		}
+<%
+if use_event?() %>
 
 		public new void Clear ()
-		{<%
-if use_event?() %>
+		{
 			foreach (<%=$cur_coll.type%> item in this)
 				Detach (item);
-<% end %>
+
 			base.Clear ();
 		}
-
+<% end %>
 		public bool Contains (<%=$cur_coll.type%> value)
 		{
 			return List.Contains (value);
@@ -115,15 +116,16 @@ if use_event?() %>
 <% end %>
 			List.Remove (value);
 		}
+<%
+if use_event?() %>
 
 		<%= member_visibility() %> new void RemoveAt (int index)
-		{<%
-if use_event?() %>
+		{
 			Detach (this [index]);
-<% end %>
+
 			List.RemoveAt (index);
 		}
-
+<% end %>
 		protected override void OnValidate (object o)
 		{
 			if (! (o is <%=$cur_coll.type%>))
