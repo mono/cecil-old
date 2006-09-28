@@ -54,7 +54,7 @@ namespace <%=$cur_coll.target%> {
 
 		<%=$cur_coll.container_impl%> m_container;<%
 		if $cur_coll.type == "Instruction" %>
-		public readonly Instruction Outside = new Instruction (-1, OpCodes.Nop);<% end %>
+		public readonly Instruction Outside = new Instruction (int.MaxValue, OpCodes.Nop);<% end %>
 
 		public <%=$cur_coll.type%> this [int index] {
 			get { return List [index] as <%=$cur_coll.type%>; }
@@ -145,7 +145,7 @@ if use_event?() %>
 			return ret.ToArray (typeof (MethodDefinition)) as MethodDefinition [];
 		}
 
-		internal MethodDefinition GetMethod (string name, IList parameters)
+		internal MethodDefinition GetMethodInternal (string name, IList parameters)
 		{
 			foreach (MethodDefinition meth in this) {
 				if (meth.Name != name || meth.Parameters.Count != parameters.Count)
@@ -179,17 +179,17 @@ if use_event?() %>
 
 		public MethodDefinition GetMethod (string name, Type [] parameters)
 		{
-			return GetMethod (name, parameters);
+			return GetMethodInternal (name, parameters);
 		}
 
 		public MethodDefinition GetMethod (string name, TypeReference [] parameters)
 		{
-			return GetMethod (name, parameters);
+			return GetMethodInternal (name, parameters);
 		}
 
 		public MethodDefinition GetMethod (string name, ParameterDefinitionCollection parameters)
 		{
-			return GetMethod (name, parameters);
+			return GetMethodInternal (name, parameters);
 		}
 <%
 		when "FieldDefinition"
@@ -205,7 +205,7 @@ if use_event?() %>
 <%
 		when "Constructor"
 %>
-		internal MethodDefinition GetConstructor (bool isStatic, IList parameters)
+		internal MethodDefinition GetConstructorInternal (bool isStatic, IList parameters)
 		{
 			foreach (MethodDefinition ctor in this) {
 				if (ctor.IsStatic != isStatic || ctor.Parameters.Count != parameters.Count)
@@ -239,17 +239,17 @@ if use_event?() %>
 
 		public MethodDefinition GetConstructor (bool isStatic, Type [] parameters)
 		{
-			return GetConstructor (isStatic, parameters);
+			return GetConstructorInternal (isStatic, parameters);
 		}
 
 		public MethodDefinition GetConstructor (bool isStatic, TypeReference [] parameters)
 		{
-			return GetConstructor (isStatic, parameters);
+			return GetConstructorInternal (isStatic, parameters);
 		}
 
 		public MethodDefinition GetConstructor (bool isStatic, ParameterDefinitionCollection parameters)
 		{
-			return GetConstructor (isStatic, parameters);
+			return GetConstructorInternal (isStatic, parameters);
 		}
 <%
 		when "EventDefinition"

@@ -1,3 +1,11 @@
+2006-09-28  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/MethodDefinitionCollection.cs
+	  Mono.Cecil/ConstructorCollection.cs
+	  Mono.Cecil.Cil/InstructionCollection.cs
+	  CodeGen/templates/IndexedCollection.cs
+		Fix StackOverlow.
+
 2006-09-27  Jb Evain  <jbevain@gmail.com>
 
 	* *Collection.cs: use CollectionBase when possible.
