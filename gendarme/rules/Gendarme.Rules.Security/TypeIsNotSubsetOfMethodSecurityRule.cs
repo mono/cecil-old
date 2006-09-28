@@ -38,7 +38,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeIsNotSubsetOfMethodSecurityRule : ITypeRule {
 
-		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - this rules apply if type as security permissions
 			if (type.SecurityDeclarations.Count == 0)

@@ -1,3 +1,17 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Security.csproj: Included ChangeLog
+	* SealedTypeWithInheritanceDemandRule.cs, 
+	SecureGetObjectDataOverridesRule.cs, TypeExposeFieldsRule.cs, 
+	TypeIsNotSubsetOfMethodSecurityRule.cs, TypeLinkDemandRule.cs, 
+	MethodCallWithSubsetLinkDemandRule.cs, 
+	NonVirtualMethodWithInheritanceDemandRule.cs: Migrated untyped IList
+	messages collection to typed MessageCollection class.
+	
 2006-09-20  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* SecureGetObjectDataOverridesRule.cs: Update FIXME.

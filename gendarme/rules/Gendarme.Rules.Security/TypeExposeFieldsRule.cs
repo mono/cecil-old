@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeExposeFieldsRule : ITypeRule {
 
-		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - rule apply to types (and nested types) that are publicly visible
 			switch (type.Attributes & TypeAttributes.VisibilityMask) {

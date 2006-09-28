@@ -52,7 +52,7 @@ namespace Gendarme.Rules.Security {
 			}
 		}
 
-		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// check that the method is called "GetObjectData"
 			if (method.Name != "GetObjectData")

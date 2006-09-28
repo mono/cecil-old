@@ -36,7 +36,7 @@ namespace Gendarme.Rules.Security {
 
 	public class NonVirtualMethodWithInheritanceDemandRule : IMethodRule {
 
-		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// #1 - this rule apply only to methods with an inheritance demand
 			if (method.SecurityDeclarations.Count == 0)

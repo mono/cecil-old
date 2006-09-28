@@ -36,7 +36,7 @@ namespace Gendarme.Rules.Security {
 
 	public class SealedTypeWithInheritanceDemandRule : ITypeRule {
 
-		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// 1 - this applies only to sealed types
 			if (!type.IsSealed)
