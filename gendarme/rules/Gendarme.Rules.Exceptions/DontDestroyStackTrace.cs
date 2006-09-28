@@ -16,7 +16,7 @@ namespace Gendarme.Rules.Exceptions {
 		{
 		}
 
-		public IList CheckMethod (AssemblyDefinition assembly,
+		public MessageCollection CheckMethod (AssemblyDefinition assembly,
 					  ModuleDefinition module, 
 					  TypeDefinition type,
 					  MethodDefinition method, 
@@ -41,7 +41,7 @@ namespace Gendarme.Rules.Exceptions {
 				}
 			}
 			
-			ArrayList violations = new ArrayList ();
+			MessageCollection violations = new MessageCollection ();
 			warned_offsets_in_method = new ArrayList ();
 
 			// Look for paths that 'throw ex;' instead of 'throw'
@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Exceptions {
 
 		private void ProcessCatchPath (ExecutionPath catchPath, 
 					       MethodDefinition method, 
-					       ArrayList violations)
+					       MessageCollection violations)
 		{
 			// Track original exception (top of stack at start) through to the final
 			// return (be it throw, rethrow, leave, or leave.s)

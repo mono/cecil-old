@@ -2,7 +2,8 @@ SUBDIRS=Test
 
 security_rulesdir=$(pkglibdir)
 security_rules_SCRIPTS = Gendarme.Rules.Exceptions.dll
-EXTRA_DIST = $(exceptions_rules_sources) $(exceptions_rules_sources_in) Gendarme.Rules.Exceptions.xml
+EXTRA_DIST = $(exceptions_rules_sources) $(exceptions_rules_sources_in) Gendarme.Rules.Exceptions.xml \
+	Gendarme.Rules.Exceptions.mdp Gendarme.Rules.Exceptions.csproj
 CLEANFILES = Gendarme.Rules.Exceptions.dll Test.Rules.Exceptions.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Exceptions.xml TestResult.xml
 

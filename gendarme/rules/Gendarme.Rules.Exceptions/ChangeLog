@@ -1,3 +1,13 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Exceptions.csproj: Included ChangeLog
+	* DontDestroyStackTrace.cs: Migrated untyped IList messages collection
+	to typed MessageCollection class.
+	
 2006-08-15  Russell Morris  <russell@russellsprojects.com>
 
 	* DontDestroyStackTrace.cs: Fix possible NRE when processing invalid 
