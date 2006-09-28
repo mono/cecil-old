@@ -21,7 +21,7 @@ namespace Gendarme.Rules.Correctness {
 
 public class NullDerefRule : IMethodRule {
 
-    public IList CheckMethod(AssemblyDefinition assembly,
+    public MessageCollection CheckMethod(AssemblyDefinition assembly,
             ModuleDefinition module, TypeDefinition type,
             MethodDefinition method, Runner runner)
     {
@@ -34,7 +34,7 @@ public class NullDerefRule : IMethodRule {
             cfg.PrintDot();
         }
 
-        IList messages = new ArrayList();
+        MessageCollection messages = new MessageCollection();
         NonNullAttributeCollector nnaCollector =
             new NonNullAttributeCollector();
         IDataflowAnalysis analysis = new NullDerefAnalysis(method, messages,

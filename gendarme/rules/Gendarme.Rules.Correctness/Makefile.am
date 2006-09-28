@@ -2,7 +2,8 @@ SUBDIRS=Test
 
 correctness_rulesdir=$(pkglibdir)
 correctness_rules_SCRIPTS = Gendarme.Rules.Correctness.dll
-EXTRA_DIST = $(correctness_rules_sources) $(correctness_rules_sources_in) Gendarme.Rules.Correctness.xml
+EXTRA_DIST = $(correctness_rules_sources) $(correctness_rules_sources_in) Gendarme.Rules.Correctness.xml \
+	 Gendarme.Rules.Correctness.mdp  Gendarme.Rules.Correctness.csproj
 CLEANFILES = Gendarme.Rules.Correctness.dll Test.Rules.Correctness.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Correctness.xml TestResult.xml
 

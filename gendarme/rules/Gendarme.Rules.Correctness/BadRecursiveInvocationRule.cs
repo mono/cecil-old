@@ -22,7 +22,7 @@ namespace Gendarme.Rules.Correctness {
 
 public class BadRecursiveInvocationRule : IMethodRule {
 
-    public IList CheckMethod (AssemblyDefinition assembly,
+    public MessageCollection CheckMethod (AssemblyDefinition assembly,
             ModuleDefinition module, TypeDefinition type,
             MethodDefinition method, Runner runner)
     {
@@ -60,7 +60,7 @@ public class BadRecursiveInvocationRule : IMethodRule {
                 }
                 if(rName.Equals(mName) && rDecl.Equals(mDecl) && argsEqual) {
                     if(LoadsVerbatimArgs(method, i)) {
-                        IList messages = new ArrayList();
+                        MessageCollection messages = new MessageCollection();
                         string etype = method.DeclaringType.FullName;
                         Location loc = new Location(etype, method.Name,
                                 insn.Offset);

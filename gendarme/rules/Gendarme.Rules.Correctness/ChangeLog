@@ -1,3 +1,14 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Correctness.csproj: Included ChangeLog
+	* BadRecursiveInvocationRule.cs, NullDerefRule.cs, 
+	NullDerefAnalysis.cs: Migrated untyped IList messages collection to 
+	typed MessageCollection	class.
+	  
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Correctness.mdp: New. Project file for MonoDevelop.

@@ -27,11 +27,11 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
     int args;
     [NonNull] private MethodDefinition method;
     [NonNull] private NonNullAttributeCollector nnaCollector;
-    [NonNull] private IList messages;
+    [NonNull] private MessageCollection messages;
     [NonNull] private Runner runner;
 
     public NullDerefAnalysis([NonNull] MethodDefinition method,
-            [NonNull] IList messages,
+            [NonNull] MessageCollection messages,
             [NonNull] NonNullAttributeCollector nnaCollector,
             [NonNull] Runner runner)
     {
