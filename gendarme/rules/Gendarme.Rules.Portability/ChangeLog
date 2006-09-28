@@ -1,3 +1,13 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Portability.csproj: Included ChangeLog
+	* NewLineLiteralRule.cs: Migrated untyped IList messages collection
+	to typed MessageCollection class.
+	
 2006-09-18  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* NewLineLiteralRule.cs: Update rule to provide location (which 

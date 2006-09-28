@@ -2,7 +2,8 @@ SUBDIRS=Test
 
 portability_rulesdir=$(pkglibdir)
 portability_rules_SCRIPTS = Gendarme.Rules.Portability.dll
-EXTRA_DIST = $(portability_rules_sources) $(portability_rules_sources_in) Gendarme.Rules.Portability.xml
+EXTRA_DIST = $(portability_rules_sources) $(portability_rules_sources_in) Gendarme.Rules.Portability.xml \
+	Gendarme.Rules.Portability.mdp Gendarme.Rules.Portability.csproj
 CLEANFILES = Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Portability.xml TestResult.xml
 

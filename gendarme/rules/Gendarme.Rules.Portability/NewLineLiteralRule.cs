@@ -39,14 +39,14 @@ namespace Gendarme.Rules.Portability {
 
 		private static char[] InvalidChar = { '\r', '\n' };
 
-		public IList CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// methods can be empty (e.g. p/invoke declarations)
 			if ((method.Body == null) || (method.Body.Instructions == null))
 				return null;
 
 			string fullname = method.DeclaringType.FullName;
-			ArrayList results = new ArrayList ();
+			MessageCollection results = new MessageCollection ();
 			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "ldstr":
