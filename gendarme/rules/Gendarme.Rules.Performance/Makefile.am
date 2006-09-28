@@ -2,7 +2,8 @@ SUBDIRS=Test
 
 performance_rulesdir=$(pkglibdir)
 performance_rules_SCRIPTS = Gendarme.Rules.Performance.dll
-EXTRA_DIST = $(performance_rules_sources) $(performance_rules_sources_in) Gendarme.Rules.Performance.xml
+EXTRA_DIST = $(performance_rules_sources) $(performance_rules_sources_in) Gendarme.Rules.Performance.xml \
+	Gendarme.Rules.Performance.mdp Gendarme.Rules.Performance.csproj
 CLEANFILES = Gendarme.Rules.Performance.dll Test.Rules.Performance.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Performance.xml TestResult.xml
 

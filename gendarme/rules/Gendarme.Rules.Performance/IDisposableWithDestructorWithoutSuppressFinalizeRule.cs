@@ -46,7 +46,7 @@ namespace Gendarme.Rules.Performance {
 			return (md.ReturnType.ReturnType.ToString () == "System.Void");
 		}
 
-		private IList Recurse (MethodDefinition method, int level, Runner runner)
+		private MessageCollection Recurse (MethodDefinition method, int level, Runner runner)
 		{
 			// some methods have no body (e.g. p/invokes, icalls)
 			if (method.Body == null) {
@@ -73,7 +73,7 @@ namespace Gendarme.Rules.Performance {
 			return runner.RuleFailure;
 		}
 
-		public IList CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
 		{
 			// #1 - does the type implements System.IDisposable ?
 			bool idisposable = false;

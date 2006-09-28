@@ -1,3 +1,15 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Performance.csproj: Included ChangeLog
+	* EmptyDestructorRule.cs, 
+	IDisposableWithDestructorWithoutSuppressFinalizeRule.cs,
+	UseStringEmptyRule.cs: Migrated untyped IList messages collection
+	to typed MessageCollection class.
+	
 2006-09-19  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UseStringEmptyRule.cs: Deal with [g]mcs generating leave instruction
