@@ -36,9 +36,9 @@ namespace Gendarme.Framework {
 	public struct Violation {
 		public IRule Rule;
 		public object Violator;
-		public IList Messages;
+		public MessageCollection Messages;
 
-		public Violation (IRule rule, object violator, IList messages)
+		public Violation (IRule rule, object violator, MessageCollection messages)
 		{
 			Rule = rule;
 			Violator = violator;

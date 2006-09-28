@@ -38,6 +38,7 @@
     <Compile Include="IRule.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="MessageCollection.cs" />
     <Compile Include="MinimalRunner.cs" />
     <Compile Include="RuleCollection.cs" />
     <Compile Include="RuleInformation.cs" />
@@ -52,6 +53,9 @@
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ChangeLog" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

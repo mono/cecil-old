@@ -39,7 +39,7 @@ namespace Gendarme.Framework {
 
 		private Rules rules;
 		private Violations violations;
-		private static IList failure = new ArrayList();
+		private static MessageCollection failure = new MessageCollection();
 		protected bool debug = false;
 
 		public Rules Rules {
@@ -64,13 +64,13 @@ namespace Gendarme.Framework {
 			}
 		}
 
-		public IList RuleSuccess {
+		public MessageCollection RuleSuccess {
 			get {
 				return null;
 			}
 		}
 
-		public IList RuleFailure {
+		public MessageCollection RuleFailure {
 			get {
 				return failure;
 			}
@@ -118,7 +118,7 @@ namespace Gendarme.Framework {
 		{
 			Violations.Reset();
 			
-			IList messages;
+			MessageCollection messages;
 			foreach (IAssemblyRule rule in Rules.Assembly) {
 				messages = rule.CheckAssembly(assembly, this);
 				if (messages != RuleSuccess)

@@ -1,3 +1,17 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+	Add new MessageCollection class to the build.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Framework.csproj: Included ChangeLog
+	* MessageCollection.cs, Gendarme.Framework.csproj, framework.mdp:
+	Added new class to replace the untyped IList interface for 
+	holding Message objects.
+	* IRule.cs: Changed all interfaces to return the new
+	typed MessageCollection class instead of IList.
+
 2006-09-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Violation.cs: Added a new Assembly property deduced from the 

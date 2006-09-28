@@ -1,6 +1,6 @@
 frameworkdir=$(pkglibdir)
 framework_SCRIPTS = Gendarme.Framework.dll
-EXTRA_DIST = $(framework_sources) $(framework_sources_in)
+EXTRA_DIST = $(framework_sources) $(framework_sources_in) framework.mdp Gendarme.Framework.csproj
 CLEANFILES = Gendarme.Framework.dll
 DISTCLEANFILES = ../AssemblyInfo.cs Makefile.in
 
@@ -9,7 +9,8 @@ framework_generated_sources = $(framework_sources_in:.in=)
 framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 		    RuleInformation.cs  RuleInformationManager.cs \
 		    Rules.cs Runner.cs Violation.cs Violations.cs \
-		    Message.cs Location.cs MinimalRunner.cs
+		    Message.cs Location.cs MinimalRunner.cs \
+		    MessageCollection.cs
 
 framework_build_sources = $(addprefix $(srcdir)/, $(framework_sources))
 framework_build_sources += $(framework_generated_sources)

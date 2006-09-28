@@ -57,7 +57,7 @@ namespace Gendarme.Framework {
 			list = null;
 		}
 		
-		public void Add (IRule rule, object obj, IList messages)
+		public void Add (IRule rule, object obj, MessageCollection messages)
 		{
 			if (rule == null)
 				throw new ArgumentNullException ("rule");
