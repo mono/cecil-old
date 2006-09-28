@@ -1,6 +1,6 @@
 SUBDIRS = man framework console rules
 bin_SCRIPTS = gendarme
-EXTRA_DIST = gendarme.in AssemblyInfo.cs.in MIT.X11
+EXTRA_DIST = gendarme.in AssemblyInfo.cs.in MIT.X11 gendarme.mds gendarme.sln
 
 REWRITE = \
 	sed -e "s|\@prefix\@|$(prefix)|g"       \
