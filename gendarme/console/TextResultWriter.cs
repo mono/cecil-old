@@ -78,7 +78,7 @@ public class TextResultWriter : IResultWriter {
 		writer.WriteLine ();
 		if(v.Messages != null && v.Messages.Count > 0) {
 			writer.WriteLine ("Details:");
-			foreach (object message in v.Messages) {
+			foreach (Message message in v.Messages) {
 				writer.WriteLine("  {0}", message);
 			}
 			writer.WriteLine ();

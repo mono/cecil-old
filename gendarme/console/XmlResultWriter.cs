@@ -104,18 +104,12 @@ public class XmlResultWriter : IResultWriter {
 		
 		if ((v.Messages != null) && (v.Messages.Count > 0)) {
 			writer.WriteStartElement ("messages");
-			foreach (object o in v.Messages) {
+			foreach (Message message in v.Messages) {
 				writer.WriteStartElement ("message");
-				// FIXME: review existing rules
-				Message message = (o as Message);
-				if (message != null) {
-					if (message.Location != null)
-						writer.WriteAttributeString ("Location", message.Location.ToString());
-					writer.WriteAttributeString ("Type", message.Type.ToString());
-					writer.WriteString (message.Text);
-				} else {
-					writer.WriteString (o.ToString ());
-				}
+				if (message.Location != null)
+					writer.WriteAttributeString ("Location", message.Location.ToString());
+				writer.WriteAttributeString ("Type", message.Type.ToString());
+				writer.WriteString (message.Text);				
 				writer.WriteEndElement ();
 			}
 			writer.WriteEndElement ();
