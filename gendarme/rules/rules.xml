@@ -1,7 +1,6 @@
 <gendarme>
 	<ruleset name="default">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
-		<rules include="*" from="Gendarme.Rules.Correctness.dll" />
 		<rules include="*" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
 		<rules include="*" from="Gendarme.Rules.Portability.dll" />

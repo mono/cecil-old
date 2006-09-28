@@ -2,7 +2,7 @@ SUBDIRS= Gendarme.Rules.Performance Gendarme.Rules.Security \
 	 Gendarme.Rules.Correctness Gendarme.Rules.Concurrency \
 	 Gendarme.Rules.Portability Gendarme.Rules.Exceptions
 
-EXTRA_DIST = rules.xml
+EXTRA_DIST = rules.xml rules.mds tests.mds
 DISTCLEANFILES = Makefile.in
 
 install-data-hook:
