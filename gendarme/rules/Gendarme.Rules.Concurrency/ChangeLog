@@ -1,3 +1,13 @@
+2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
+
+2006-09-28  Christian Birkl  <christian.birkl@gmail.com>
+
+	* Gendarme.Rules.Concurrency.csproj: Included ChangeLog
+	* DoubleCheckLockingRule.cs: Migrated untyped IList messages 
+	  collection to typed MessageCollection class.
+
 2006-07-31  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Concurrency.mdp: New. Project file for MonoDevelop.

@@ -21,7 +21,7 @@ namespace Gendarme.Rules.Concurrency {
 
 public class DoubleCheckLockingRule : IMethodRule {
 
-    public IList CheckMethod (AssemblyDefinition assembly,
+    public MessageCollection CheckMethod (AssemblyDefinition assembly,
             ModuleDefinition module,
             TypeDefinition type, MethodDefinition method,
             Runner runner)
@@ -54,7 +54,7 @@ public class DoubleCheckLockingRule : IMethodRule {
                             continue;
                         if(insn.Offset >= (int)monitorOffsetList[mcount - 1])
                             continue;
-                        IList messages = new ArrayList();
+                        MessageCollection messages = new MessageCollection();
                         string etype = method.DeclaringType.FullName;
                         Location loc = new Location(etype, method.Name,
                                 insn.Offset);

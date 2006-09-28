@@ -2,7 +2,8 @@ SUBDIRS=Test
 
 concurrency_rulesdir=$(pkglibdir)
 concurrency_rules_SCRIPTS = Gendarme.Rules.Concurrency.dll
-EXTRA_DIST = $(concurrency_rules_sources) $(concurrency_rules_sources_in) Gendarme.Rules.Concurrency.xml
+EXTRA_DIST = $(concurrency_rules_sources) $(concurrency_rules_sources_in) Gendarme.Rules.Concurrency.xml \
+	Gendarme.Rules.Concurrency.mdp Gendarme.Rules.Concurrency.csproj
 CLEANFILES = Gendarme.Rules.Concurrency.dll Test.Rules.Concurrency.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Concurrency.xml TestResult.xml
 
