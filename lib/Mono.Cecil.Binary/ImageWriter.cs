@@ -44,6 +44,8 @@ namespace Mono.Cecil.Binary {
 		MemoryBinaryWriter m_textWriter;
 		Section m_relocSect;
 		MemoryBinaryWriter m_relocWriter;
+		Section m_rsrcSect;
+		MemoryBinaryWriter m_rsrcWriter;
 
 		public ImageWriter (MetadataWriter writer, AssemblyKind kind, BinaryWriter bw)
 		{
@@ -75,13 +77,23 @@ namespace Mono.Cecil.Binary {
 		public void Initialize ()
 		{
 			Image img = m_img;
+			ResourceWriter resWriter = null;
+
 			uint sectAlign = img.PEOptionalHeader.NTSpecificFields.SectionAlignment;
 			uint fileAlign = img.PEOptionalHeader.NTSpecificFields.FileAlignment;
 
 			m_textSect = img.TextSection;
-			foreach (Section s in img.Sections)
+			foreach (Section s in img.Sections) {
 				if (s.Name == Section.Relocs)
 					m_relocSect = s;
+				else if (s.Name == Section.Resources) {
+					m_rsrcSect = s;
+					m_rsrcWriter = new MemoryBinaryWriter ();
+
+					resWriter = new ResourceWriter (img, m_rsrcSect, m_rsrcWriter);
+					resWriter.Write ();
+				}
+			}
 
 			// size computations, fields setting, etc.
 			uint nbSects = (uint) img.Sections.Count;
@@ -96,6 +108,8 @@ namespace Mono.Cecil.Binary {
 
 			m_textSect.VirtualSize = (uint) m_textWriter.BaseStream.Length;
 			m_relocSect.VirtualSize = (uint) m_relocWriter.BaseStream.Length;
+			if (m_rsrcSect != null)
+				m_rsrcSect.VirtualSize = (uint) m_rsrcWriter.BaseStream.Length;
 
 			// start counting before sections headers
 			// section start + section header sixe * number of sections
@@ -120,9 +134,14 @@ namespace Mono.Cecil.Binary {
 			if (m_textSect.VirtualAddress.Value != 0x2000)
 				throw new ImageFormatException ("Wrong RVA for .text section");
 
+			if (resWriter != null)
+				resWriter.Patch ();
+
 			img.PEOptionalHeader.StandardFields.CodeSize = GetAligned (
 				m_textSect.SizeOfRawData, fileAlign);
-			img.PEOptionalHeader.StandardFields.InitializedDataSize = 0x200; // + rsrc.SizeOfRawData ?
+			img.PEOptionalHeader.StandardFields.InitializedDataSize = m_textSect.SizeOfRawData;
+			if (m_rsrcSect != null)
+				img.PEOptionalHeader.StandardFields.InitializedDataSize += m_rsrcSect.SizeOfRawData;
 			img.PEOptionalHeader.StandardFields.BaseOfCode = m_textSect.VirtualAddress;
 			img.PEOptionalHeader.StandardFields.BaseOfData = m_relocSect.VirtualAddress;
 
@@ -131,6 +150,9 @@ namespace Mono.Cecil.Binary {
 
 			img.PEOptionalHeader.DataDirectories.BaseRelocationTable = new DataDirectory (
 				m_relocSect.VirtualAddress, m_relocSect.VirtualSize);
+			if (m_rsrcSect != null)
+				img.PEOptionalHeader.DataDirectories.ResourceTable = new DataDirectory (
+					m_rsrcSect.VirtualAddress, (uint) m_rsrcWriter.BaseStream.Length);
 
 			if (m_kind == AssemblyKind.Dll) {
 				img.PEFileHeader.Characteristics = ImageCharacteristics.CILOnlyDll;
@@ -389,13 +411,17 @@ namespace Mono.Cecil.Binary {
 		{
 			m_binaryWriter.BaseStream.Position = 0x200;
 
-			m_textWriter.MemoryStream.WriteTo (m_binaryWriter.BaseStream);
-			m_binaryWriter.Write (new byte [
-				m_textSect.SizeOfRawData - m_textWriter.BaseStream.Length]);
+			WriteSection (m_textSect, m_textWriter);
+			WriteSection (m_relocSect, m_relocWriter);
+			if (m_textSect != null)
+				WriteSection (m_rsrcSect, m_rsrcWriter);
+		}
 
-			m_relocWriter.MemoryStream.WriteTo (m_binaryWriter.BaseStream);
+		void WriteSection (Section sect, MemoryBinaryWriter sectWriter)
+		{
+			sectWriter.MemoryStream.WriteTo (m_binaryWriter.BaseStream);
 			m_binaryWriter.Write (new byte [
-				m_relocSect.SizeOfRawData - m_relocWriter.BaseStream.Length]);
+			                      	sect.SizeOfRawData - sectWriter.BaseStream.Length]);
 		}
 	}
 }

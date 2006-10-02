@@ -50,17 +50,7 @@ namespace Mono.Cecil {
 		void ResetImage (ModuleDefinition mod)
 		{
 			Image ni = Image.CreateImage ();
-			if (mod.Image.DebugHeader != null) {
-				ni.AddDebugHeader ();
-				DebugHeader old = mod.Image.DebugHeader;
-				ni.DebugHeader.Age = old.Age;
-				ni.DebugHeader.Characteristics = old.Characteristics;
-				ni.DebugHeader.FileName = old.FileName;
-				ni.DebugHeader.Signature = old.Signature;
-				ni.DebugHeader.TimeDateStamp = ImageInitializer.TimeDateStampFromEpoch ();
-				ni.DebugHeader.Type = old.Type;
-			}
-
+			ni.Accept (new CopyImageVisitor (mod.Image));
 			mod.Image = ni;
 		}
 

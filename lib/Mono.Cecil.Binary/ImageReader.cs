@@ -413,6 +413,13 @@ namespace Mono.Cecil.Binary {
 		public override void TerminateImage (Image img)
 		{
 			m_binaryReader.Close ();
+
+			try {
+				ResourceReader resReader = new ResourceReader (img);
+				img.ResourceDirectoryRoot = resReader.Read ();
+			} catch {
+				img.ResourceDirectoryRoot = null;
+			}
 		}
 	}
 }

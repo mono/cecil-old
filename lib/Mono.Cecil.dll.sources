@@ -122,6 +122,7 @@
 ./Mono.Cecil/VariantType.cs
 ./Mono.Cecil.Binary/BaseImageVisitor.cs
 ./Mono.Cecil.Binary/CLIHeader.cs
+./Mono.Cecil.Binary/CopyImageVisitor.cs
 ./Mono.Cecil.Binary/DataDirectory.cs
 ./Mono.Cecil.Binary/DebugHeader.cs
 ./Mono.Cecil.Binary/DebugStoreType.cs
@@ -139,6 +140,13 @@
 ./Mono.Cecil.Binary/MemoryBinaryWriter.cs
 ./Mono.Cecil.Binary/PEFileHeader.cs
 ./Mono.Cecil.Binary/PEOptionalHeader.cs
+./Mono.Cecil.Binary/ResourceDataEntry.cs
+./Mono.Cecil.Binary/ResourceDirectoryEntry.cs
+./Mono.Cecil.Binary/ResourceDirectoryString.cs
+./Mono.Cecil.Binary/ResourceDirectoryTable.cs
+./Mono.Cecil.Binary/ResourceNode.cs
+./Mono.Cecil.Binary/ResourceReader.cs
+./Mono.Cecil.Binary/ResourceWriter.cs
 ./Mono.Cecil.Binary/RuntimeImage.cs
 ./Mono.Cecil.Binary/RVA.cs
 ./Mono.Cecil.Binary/Section.cs

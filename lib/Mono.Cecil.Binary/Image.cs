@@ -51,6 +51,8 @@ namespace Mono.Cecil.Binary {
 		DebugHeader m_debugHeader;
 		MetadataRoot m_mdRoot;
 
+		ResourceDirectoryTable m_rsrcRoot;
+
 		FileInfo m_img;
 
 		public DOSHeader DOSHeader {
@@ -101,6 +103,11 @@ namespace Mono.Cecil.Binary {
 
 		public HintNameTable HintNameTable {
 			get { return m_hintNameTable; }
+		}
+
+		internal ResourceDirectoryTable ResourceDirectoryRoot {
+			get { return m_rsrcRoot; }
+			set { m_rsrcRoot = value; }
 		}
 
 		public FileInfo FileInformation {

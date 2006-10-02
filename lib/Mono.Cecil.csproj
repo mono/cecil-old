@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Mono.Cecil.Binary\BaseImageVisitor.cs" />
     <Compile Include="Mono.Cecil.Binary\CLIHeader.cs" />
+    <Compile Include="Mono.Cecil.Binary\CopyImageVisitor.cs" />
     <Compile Include="Mono.Cecil.Binary\DataDirectory.cs" />
     <Compile Include="Mono.Cecil.Binary\DebugHeader.cs" />
     <Compile Include="Mono.Cecil.Binary\DebugStoreType.cs" />
@@ -53,6 +54,13 @@
     <Compile Include="Mono.Cecil.Binary\MemoryBinaryWriter.cs" />
     <Compile Include="Mono.Cecil.Binary\PEFileHeader.cs" />
     <Compile Include="Mono.Cecil.Binary\PEOptionalHeader.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceDataEntry.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceDirectoryEntry.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceDirectoryString.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceDirectoryTable.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceNode.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceReader.cs" />
+    <Compile Include="Mono.Cecil.Binary\ResourceWriter.cs" />
     <Compile Include="Mono.Cecil.Binary\RuntimeImage.cs" />
     <Compile Include="Mono.Cecil.Binary\RVA.cs" />
     <Compile Include="Mono.Cecil.Binary\Section.cs" />
