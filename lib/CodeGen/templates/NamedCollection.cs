@@ -49,7 +49,7 @@ namespace <%=$cur_coll.target%> {
 	using Hcp = Mono.Cecil.HashCodeProvider;
 	using Cmp = System.Collections.Comparer;
 
-	public sealed class <%=$cur_coll.name%> : NameObjectCollectionBase<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %>  {
+	public sealed class <%=$cur_coll.name%> : NameObjectCollectionBase, IList<% if (!$cur_coll.visitable.nil?) then %>, <%=$cur_coll.visitable%><% end %>  {
 
 		<%=$cur_coll.container%> m_container;
 
@@ -73,6 +73,22 @@ namespace <%=$cur_coll.target%> {
 
 		public object SyncRoot {
 			get { return this; }
+		}
+
+		bool IList.IsReadOnly {
+			get { return false; }
+		}
+
+		bool IList.IsFixedSize {
+			get { return false; }
+		}
+
+		object IList.this [int index] {
+			get { return BaseGet (index); }
+			set {
+				Check (value);
+				BaseSet (index, value);
+			}
 		}
 
 		public <%=$cur_coll.name%> (<%=$cur_coll.container%> container) :
@@ -161,6 +177,41 @@ namespace <%=$cur_coll.target%> {
 			return values;
 		}
 #endif
+
+		void Check (object value)
+		{
+			if (!(value is <%=$cur_coll.type%>))
+				throw new ArgumentException ();
+		}
+
+		int IList.Add (object value)
+		{
+			Check (value);
+			Add (value as <%=$cur_coll.type%>);
+			return 0;
+		}
+
+		bool IList.Contains (object value)
+		{
+			Check (value);
+			return Contains (value as <%=$cur_coll.type%>);
+		}
+
+		int IList.IndexOf (object value)
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.Insert (int index, object value)
+		{
+			throw new NotSupportedException ();
+		}
+
+		void IList.Remove (object value)
+		{
+			Check (value);
+			Remove (value as <%=$cur_coll.type%>);
+		}
 <%
 	if use_event?()
 %>
