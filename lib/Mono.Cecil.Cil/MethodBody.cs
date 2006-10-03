@@ -108,7 +108,8 @@ namespace Mono.Cecil.Cil {
 			int pos = oldBody.Instructions.IndexOf (i);
 			if (pos > -1 && pos < newBody.Instructions.Count)
 				return newBody.Instructions [pos];
-			return null;
+
+			return newBody.Instructions.Outside;
 		}
 
 		internal static MethodBody Clone (MethodBody body, MethodDefinition parent, ImportContext context)
