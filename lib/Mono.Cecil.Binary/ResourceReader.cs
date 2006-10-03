@@ -114,8 +114,10 @@ namespace Mono.Cecil.Binary {
 			long pos = m_reader.BaseStream.Position;
 			m_reader.BaseStream.Position = offset;
 
+			byte [] str = m_reader.ReadBytes (m_reader.ReadUInt16 ());
+
 			ResourceDirectoryString rds = new ResourceDirectoryString (
-				Encoding.Unicode.GetString (m_reader.ReadBytes (m_reader.ReadUInt16 ())),
+				Encoding.Unicode.GetString (str, 0, str.Length),
 				GetOffset ());
 
 			m_reader.BaseStream.Position = pos;
@@ -131,8 +133,9 @@ namespace Mono.Cecil.Binary {
 			rde.Codepage = m_reader.ReadUInt32 ();
 			rde.Reserved = m_reader.ReadUInt32 ();
 
-			using (BinaryReader dataReader = m_img.GetReaderAtVirtualAddress (rde.Data))
-				rde.ResourceData = dataReader.ReadBytes ((int) rde.Size);
+			BinaryReader dataReader = m_img.GetReaderAtVirtualAddress (rde.Data);
+			rde.ResourceData = dataReader.ReadBytes ((int) rde.Size);
+			dataReader.Close ();
 
 			return rde;
 		}

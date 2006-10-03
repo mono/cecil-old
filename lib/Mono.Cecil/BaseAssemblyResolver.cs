@@ -53,14 +53,17 @@ namespace Mono.Cecil {
 				}
 			}
 
+#if !CF_1_0 && !CF_2_0
 			if (name.Name == "mscorlib")
 				return GetCorlib (name);
 			else if (IsInGac (name))
 				return AssemblyFactory.GetAssembly (GetFromGac (name));
+#endif
 
 			throw new FileNotFoundException ("Could not resolve: " + name);
 		}
 
+#if !CF_1_0 && !CF_2_0
 		AssemblyDefinition GetCorlib (AssemblyNameReference reference)
 		{
 			SR.AssemblyName corlib = typeof (object).Assembly.GetName ();
@@ -129,5 +132,6 @@ namespace Mono.Cecil {
 					).FullName
 				).FullName;
 		}
+#endif
 	}
 }

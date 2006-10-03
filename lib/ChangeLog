@@ -1,3 +1,9 @@
+2006-10-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/BaseAssemblyResolver.cs
+	  Mono.Cecil.Binary/ResourceReader.cs:
+		CompactFramework fix.
+
 2006-10-02  Jb Evain  <jbevain@gmail.com>
 
 	* implement IList on the named collections.
