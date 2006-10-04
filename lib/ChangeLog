@@ -1,3 +1,11 @@
+2006-10-04  Eyal Alaluf  <eyala@mainsoft.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		Visit the module we load when a DLL has more then 1 module.
+			Visit the module we load when a DLL has more then 1 module.
+	  Mono.Cecil/AssemblyNameReference.cs:
+	  	Allow "PublicToken=null" when parsing an assembly full name.
+
 2006-10-03  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/BaseAssemblyResolver.cs
