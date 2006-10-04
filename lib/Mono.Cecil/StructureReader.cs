@@ -232,6 +232,7 @@ namespace Mono.Cecil {
 							modext.Mvid = module.Image.MetadataRoot.Streams.GuidHeap [mr.Mvid];
 
 							modules.Add (modext);
+							modext.Accept (this);
 						} catch (ReflectionException) {
 							throw;
 						} catch (Exception e) {

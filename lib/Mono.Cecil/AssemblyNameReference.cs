@@ -159,6 +159,9 @@ namespace Mono.Cecil {
 					break;
 				case "PublicKeyToken":
 					string pkToken = parts [1];
+					if (pkToken == "null")
+						break;
+
 					name.PublicKeyToken = new byte [pkToken.Length / 2];
 					for (int j = 0; j < name.PublicKeyToken.Length; j++) {
 						name.PublicKeyToken [j] = Byte.Parse (pkToken.Substring (j * 2, 2), NumberStyles.HexNumber);
