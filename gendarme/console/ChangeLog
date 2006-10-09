@@ -1,3 +1,19 @@
+2006-10-09  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConsoleRunner.cs: Provide more information with assemblies. Fix some
+	typos.
+	* gendarme.xsl: Add links to mono-project.com for rules. Fix defects 
+	count on assemblies. Add defects count on rules. Ensure all defects 
+	are reported (even if the location is unknown). Display more details 
+	on where the defect are found (assembly, location).
+	* HtmlResultWriter.cs: Update signature for assemblies.
+	* IResultWriter.cs: Update signature for assemblies.
+	* Makefile.am: Rebuild gendarme.exe if the XSLT file changes.
+	* TextResultWriter.cs: Update signature for assemblies.
+	* XmlResultWriter.cs: Add fully-qualified assembly names when 
+	outputing aasemblies. Add short-name and Uri when outputing rules.
+	Both enables more useful HTML reports.
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.

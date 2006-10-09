@@ -35,6 +35,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 using Gendarme.Framework;
+using Mono.Cecil;
 
 public class XmlResultWriter : IResultWriter {
 
@@ -64,10 +65,13 @@ public class XmlResultWriter : IResultWriter {
 		writer = null;
 	}
 
-	public void Write (ICollection assemblies)
+	public void Write (IDictionary assemblies)
 	{
-		foreach (string assembly in assemblies) {
-			writer.WriteElementString("input", assembly);
+		foreach (DictionaryEntry de in assemblies) {
+			writer.WriteStartElement ("input");
+			writer.WriteAttributeString ("Name", (de.Value as AssemblyDefinition).Name.ToString ());
+			writer.WriteString ((string) de.Key);
+			writer.WriteEndElement ();
 		}
 	}
 
@@ -84,8 +88,11 @@ public class XmlResultWriter : IResultWriter {
 	private void Rules (string type, RuleCollection rules)
 	{
 		foreach (IRule rule in rules) {
-			writer.WriteStartElement ("rule");			
+			RuleInformation info = RuleInformationManager.GetRuleInformation (rule);
+			writer.WriteStartElement ("rule");
+			writer.WriteAttributeString ("Name", info.Name);
 			writer.WriteAttributeString ("Type", type);
+			writer.WriteAttributeString ("Uri", info.Uri);
 			writer.WriteString (rule.GetType ().FullName);
 			writer.WriteEndElement ();
 		}

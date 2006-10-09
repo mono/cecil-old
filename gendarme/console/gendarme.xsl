@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output method="html" encoding="iso-8859-1" /> 
+	<xsl:template name="print-defect-rules">
+		<xsl:param name="name" />
+		: <xsl:value-of select="count(//violation[@Name = $name])" /> defects
+	</xsl:template>
 	<xsl:template name="print-rules">
 		<xsl:param name="type" />
 			<p>
@@ -14,7 +18,14 @@
 					<xsl:otherwise>						
 						<ul>
 							<xsl:for-each select="rules/rule[@Type = $type]">
-								<li><xsl:value-of select="text()" /></li>
+								<li>
+									<a href="{@Uri}" target="_blank"><xsl:value-of select="text()" /></a>
+									<xsl:call-template name="print-defect-rules">
+										<xsl:with-param name="name">
+											<xsl:value-of select="@Name" />
+										</xsl:with-param>
+									</xsl:call-template>
+								</li>
 							</xsl:for-each>
 						</ul>						
 					</xsl:otherwise>
@@ -40,11 +51,14 @@
 						font-family: Verdana;
 						font-size: 11pt;
 					}			
-					p.problem, p.solution {
+					p.where, p.problem, p.found, p.solution {
 						background-color: #F6F6F6;
 						border: 1px solid #DDDDDD;
 						padding: 10px;
-					}	
+					}
+					span.found {
+						padding: 10px;
+					}
 					div.toc {
 						background-color: #F6F6F6;
 						border: 1px solid #DDDDDD;
@@ -61,6 +75,7 @@
 				<body>
 					
 					<h1>Gendarme Report</h1>
+					<p>Produced on <xsl:value-of select="@date" /> UTC.</p>
 					
 					<div class="toc">
 						<div align="center">
@@ -76,12 +91,12 @@
 					<h1><a name="s1">Summary</a></h1>
 					
 					<p>
-						<h2>List of assemblies searched</h2>
+						<h2>List of assemblies analyzed</h2>
 						<ul>
 							<xsl:for-each select="input">
-								<xsl:variable name="assembly"><xsl:value-of select="text()" /></xsl:variable>
+								<xsl:variable name="assembly"><xsl:value-of select="@Name" /></xsl:variable>
 								
-								<li><xsl:value-of select="text()" />: <xsl:value-of select="count(//violation[@Assembly = $assembly]/messages/message)" /> defects</li>
+								<li><xsl:value-of select="text()" />: <xsl:value-of select="count(//violation[@Assembly = $assembly])" /> defects</li>
 							</xsl:for-each>
 						</ul>
 					</p>
@@ -103,28 +118,46 @@
 						
 						<xsl:call-template name="print-rules">
 							<xsl:with-param name="type">Method</xsl:with-param>
-						</xsl:call-template>																		
-						
+						</xsl:call-template>
 					</p>
 					
 					<h1><a name="s2">Reported Defects</a></h1>
 					
 					<p>
-					
-						<xsl:for-each select="violation/messages/message">
-							<h3><xsl:value-of select="position()" />&#160;<xsl:value-of select="../../@Name" /> hit in <xsl:value-of select="@Location" /></h3>
-							
+						<xsl:for-each select="violation">
+							<h3><xsl:value-of select="position()" />&#160;
+								<a href="{@Uri}" target="_blank">
+									<xsl:value-of select="@Name" />
+								</a>
+							</h3>
+
 							<b>Problem:</b>
 							<p class="problem">
-								<xsl:value-of select="../../problem" />
+								<xsl:value-of select="problem" />
 							</p>
-							
+
+							<b>Found in:</b>
+							<p class="found">
+							Assembly Qualified Name: <i><xsl:value-of select="@Assembly" /></i><br/>
+							<xsl:if test="count(messages/message) != 0">
+								<xsl:for-each select="messages/message">
+									<br/>
+<!-- FIXME: use different color/style for warnings versus errors -->
+									<b>Location:</b>&#160;<xsl:value-of select="@Location" />
+									<br/>
+									<span class="found">
+										<xsl:value-of select="../message" />
+									</span>
+									<br/>
+								</xsl:for-each>
+							</xsl:if>
+							</p>
+
 							<b>Solution:</b>
 							<p class="solution">
-								<xsl:value-of select="../../solution" />
+								<xsl:value-of select="solution" />
 							</p>							
 						</xsl:for-each>
-					
 					</p>
 				</body>
 			</html>

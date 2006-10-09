@@ -70,7 +70,7 @@ public class HtmlResultWriter : IResultWriter {
 		}
 	}
 
-	public void Write (ICollection assemblies)
+	public void Write (IDictionary assemblies)
 	{
 		writer.Write (assemblies);
 	}

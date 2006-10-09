@@ -12,7 +12,7 @@ gendarme_resources = gendarme.xsl
 gendarme_build_sources = $(addprefix $(srcdir)/, $(gendarme_sources))
 gendarme_build_sources += $(gendarme_generated_sources)
 
-gendarme.exe: $(gendarme_build_sources)
+gendarme.exe: $(gendarme_build_sources) $(gendarme_resources)
 	$(MCS) -pkg:mono-cecil -r:../framework/Gendarme.Framework.dll -r:System.Xml.dll -out:$@ $(gendarme_build_sources) \
 		-resource:gendarme.xsl
 

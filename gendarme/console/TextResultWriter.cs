@@ -61,7 +61,7 @@ public class TextResultWriter : IResultWriter {
 			writer.Close ();
 	}
 
-	public void Write (ICollection assemblies)
+	public void Write (IDictionary assemblies)
 	{
 	}
 	

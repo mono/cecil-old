@@ -43,7 +43,7 @@ class ConsoleRunner : Runner {
 
 	private string config;
 	private string set;
-	private ArrayList assemblies;
+	private Hashtable assemblies;
 	private string format;
 	private string output;
 
@@ -91,10 +91,10 @@ class ConsoleRunner : Runner {
 		} else if (name.IndexOfAny (new char[] { '*', '?' }) >= 0) {
 			string[] files = Directory.GetFiles (Path.GetDirectoryName (name), Path.GetFileName (name));
 			foreach (string file in files) {
-				assemblies.Add (file);
+				assemblies.Add (file, null);
 			}
 		} else {
-			assemblies.Add (Path.GetFullPath (name));
+			assemblies.Add (Path.GetFullPath (name), null);
 		}
 	}
 
@@ -103,7 +103,7 @@ class ConsoleRunner : Runner {
 		// defaults
 		config = GetFullPath (defaultConfiguration);
 		set = defaultRuleSet;
-		assemblies = new ArrayList ();
+		assemblies = new Hashtable ();
 
 		// TODO - we probably want (i.e. later) the possibility to 
 		// include/exclude certain rules from executing
@@ -201,7 +201,7 @@ class ConsoleRunner : Runner {
 	{
 		Console.WriteLine ("Usage: gendarme [--config file] [--set ruleset] [--{log|xml|html} file] assembly");
 		Console.WriteLine ("Where");
-		Console.WriteLine ("  --config file\tSpecify the configuration file. Default is 'rules.xml'.");
+		Console.WriteLine ("  --config file\t\tSpecify the configuration file. Default is 'rules.xml'.");
 		Console.WriteLine ("  --set ruleset\t\tSpecify the set of rules to verify. Default is '*'.");
 		Console.WriteLine ("  --log file\t\tSave the text output to the specified file.");
 		Console.WriteLine ("  --xml file\t\tSave the output, as XML, to the specified file.");
@@ -254,15 +254,17 @@ class ConsoleRunner : Runner {
 		// processing
 		
 		Header ();
+		string[] assemblies = new string [runner.assemblies.Count];
+		runner.assemblies.Keys.CopyTo (assemblies, 0);
 		DateTime total = DateTime.UtcNow;
-		foreach (string assembly in runner.assemblies) {
+		foreach (string assembly in assemblies) {
 			DateTime start = DateTime.UtcNow;
-			AssemblyDefinition ad = null;
 			Write (assembly);
 			try {
-				ad = AssemblyFactory.GetAssembly (assembly);
+				AssemblyDefinition ad = AssemblyFactory.GetAssembly (assembly);
 				try {
 					runner.Process (ad);
+					runner.assemblies [assembly] = ad;
 					WriteLine (" - completed ({0} seconds).", (DateTime.UtcNow - start).TotalSeconds);
 				}
 				catch (Exception e) {
@@ -273,7 +275,7 @@ class ConsoleRunner : Runner {
 				WriteLine (" - error processing{0}\tDetails: {1}", Environment.NewLine, e);
 			}
 		}
-		WriteLine ("{0}{1} assemblies processed in {2} seconds).{0}",  Environment.NewLine, runner.assemblies.Count, 
+		WriteLine ("{0}{1} assemblies processed in {2} seconds.{0}",  Environment.NewLine, runner.assemblies.Count, 
 			(DateTime.UtcNow - total).TotalSeconds);
 
 		// reporting

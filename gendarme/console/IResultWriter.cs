@@ -38,7 +38,7 @@ public interface IResultWriter {
 	void Start ();
 	void End ();
 
-	void Write (ICollection assemblies);
+	void Write (IDictionary assemblies);
 	void Write (Rules rules);
 	void Write (Violation v);
 }
