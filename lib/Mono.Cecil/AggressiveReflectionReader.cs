@@ -302,7 +302,7 @@ namespace Mono.Cecil {
 				CustomAttribute cattr;
 				if (!ca.Read) {
 					cattr = new CustomAttribute (ctor);
-					cattr.IsReadable = false;
+					cattr.Resolved = false;
 					cattr.Blob = m_root.Streams.BlobHeap.Read (caRow.Value);
 				} else
 					cattr = BuildCustomAttribute (ctor, ca);

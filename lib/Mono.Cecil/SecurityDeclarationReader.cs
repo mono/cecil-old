@@ -83,7 +83,7 @@ namespace Mono.Cecil {
 					pos = start;
 					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start);
 					if (sa == null) {
-						dec.IsReadable = false;
+						dec.Resolved = false;
 						dec.Blob = declaration;
 						return dec;
 					}
@@ -97,7 +97,7 @@ namespace Mono.Cecil {
 					dec.PermissionSet.FromXml (Parser.ToXml ());
 					dec.PermissionSet.ToXml ();
 				} catch {
-					dec.IsReadable = false;
+					dec.Resolved = false;
 					dec.Blob = declaration;
 				}
 			}

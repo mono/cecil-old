@@ -30,9 +30,8 @@ namespace Mono.Cecil {
 
 	using System;
 	using System.Security;
-	using System.Text;
 
-	public sealed class SecurityDeclaration : IReflectionVisitable {
+	public sealed class SecurityDeclaration : IRequireResolving, IReflectionVisitable {
 
 		SecurityAction m_action;
 
@@ -40,7 +39,7 @@ namespace Mono.Cecil {
 		PermissionSet m_permSet;
 #endif
 
-		bool m_readable;
+		bool m_resolved;
 		byte [] m_blob;
 
 		public SecurityAction Action {
@@ -55,9 +54,9 @@ namespace Mono.Cecil {
 		}
 #endif
 
-		public bool IsReadable {
-			get { return m_readable; }
-			set { m_readable = value; }
+		public bool Resolved {
+			get { return m_resolved; }
+			set { m_resolved = value; }
 		}
 
 		public byte [] Blob {
@@ -68,7 +67,7 @@ namespace Mono.Cecil {
 		public SecurityDeclaration (SecurityAction action)
 		{
 			m_action = action;
-			m_readable = true;
+			m_resolved = true;
 		}
 
 		public SecurityDeclaration Clone ()
@@ -79,8 +78,8 @@ namespace Mono.Cecil {
 		internal static SecurityDeclaration Clone (SecurityDeclaration sec)
 		{
 			SecurityDeclaration sd = new SecurityDeclaration (sec.Action);
-			if (!sec.IsReadable) {
-				sd.IsReadable = false;
+			if (!sec.Resolved) {
+				sd.Resolved = false;
 				sd.Blob = sec.Blob;
 				return sd;
 			}
@@ -89,6 +88,11 @@ namespace Mono.Cecil {
             sd.PermissionSet = sec.PermissionSet.Copy ();
 #endif
 			return sd;
+		}
+
+		public bool Resolve ()
+		{
+			throw new NotImplementedException ();
 		}
 
 		public void Accept (IReflectionVisitor visitor)

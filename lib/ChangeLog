@@ -1,5 +1,16 @@
 2006-10-09  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/IRequireResolving.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/SecurityDeclarationReader.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Introduce the interface IRequireResolving implemented
+		by CustomAttribute and SecurityDeclaration for when they can't
+		be read without loading another assembly.
+
 	* Mono.Cecil/SecurityDeclarationReader.cs:
 		Prevent Cecil to crash when it can not get the type
 		of the declaration.

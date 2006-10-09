@@ -594,7 +594,7 @@ namespace Mono.Cecil {
 				DeclSecurityRow dsRow = m_rowWriter.CreateDeclSecurityRow (
 					secDec.Action,
 					secDecls.Container.MetadataToken,
-					m_mdWriter.AddBlob (secDec.IsReadable ?
+					m_mdWriter.AddBlob (secDec.Resolved ?
 						m_mod.GetAsByteArray (secDec) : secDec.Blob));
 
 				dsTable.Rows.Add (dsRow);
@@ -618,7 +618,7 @@ namespace Mono.Cecil {
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
 
-				uint value = ca.IsReadable ?
+				uint value = ca.Resolved ?
 					m_sigWriter.AddCustomAttribute (GetCustomAttributeSig (ca), ca.Constructor) :
 					m_mdWriter.AddBlob (m_mod.GetAsByteArray (ca));
 				CustomAttributeRow caRow = m_rowWriter.CreateCustomAttributeRow (

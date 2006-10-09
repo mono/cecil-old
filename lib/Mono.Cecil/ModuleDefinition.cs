@@ -419,7 +419,7 @@ namespace Mono.Cecil {
 		public byte [] GetAsByteArray (CustomAttribute ca)
 		{
 			CustomAttribute customAttr = ca;
-			if (!ca.IsReadable)
+			if (!ca.Resolved)
 				if (customAttr.Blob != null)
 					return customAttr.Blob;
 				else
@@ -433,7 +433,7 @@ namespace Mono.Cecil {
 		{
 			// TODO - add support for 2.0 format
 			// note: the 1.x format is still supported in 2.0 so this isn't an immediate problem
-			if (!dec.IsReadable)
+			if (!dec.Resolved)
 				return dec.Blob;
 
 #if !CF_1_0 && !CF_2_0

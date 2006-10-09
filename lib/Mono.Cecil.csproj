@@ -266,6 +266,7 @@
     <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs" />
     <Compile Include="Mono.Cecil\IReflectionVisitable.cs" />
     <Compile Include="Mono.Cecil\IReflectionVisitor.cs" />
+    <Compile Include="Mono.Cecil\IRequireResolving.cs" />
     <Compile Include="Mono.Cecil\LinkedResource.cs" />
     <Compile Include="Mono.Cecil\ManifestResourceAttributes.cs" />
     <Compile Include="Mono.Cecil\MarshalSpec.cs" />

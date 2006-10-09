@@ -31,7 +31,7 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 
-	public sealed class CustomAttribute : IReflectionVisitable {
+	public sealed class CustomAttribute : IRequireResolving, IReflectionVisitable {
 
 		MethodReference m_ctor;
 		IList m_parameters;
@@ -40,7 +40,7 @@ namespace Mono.Cecil {
 		IDictionary m_fieldTypes;
 		IDictionary m_propTypes;
 
-		bool m_readable;
+		bool m_resolved;
 		byte [] m_blob;
 
 		public MethodReference Constructor {
@@ -92,9 +92,9 @@ namespace Mono.Cecil {
 			}
 		}
 
-		public bool IsReadable {
-			get { return m_readable; }
-			set { m_readable = value; }
+		public bool Resolved {
+			get { return m_resolved; }
+			set { m_resolved = value; }
 		}
 
 		public byte [] Blob {
@@ -105,7 +105,7 @@ namespace Mono.Cecil {
 		public CustomAttribute (MethodReference ctor)
 		{
 			m_ctor = ctor;
-			m_readable = true;
+			m_resolved = true;
 		}
 
 		public TypeReference GetFieldType (string fieldName)
@@ -142,8 +142,8 @@ namespace Mono.Cecil {
 		internal static CustomAttribute Clone (CustomAttribute custattr, ImportContext context)
 		{
 			CustomAttribute ca = new CustomAttribute (context.Import (custattr.Constructor));
-			if (!custattr.IsReadable) {
-				ca.IsReadable = false;
+			if (!custattr.Resolved) {
+				ca.Resolved = false;
 				ca.Blob = custattr.Blob;
 				return ca;
 			}
@@ -155,6 +155,11 @@ namespace Mono.Cecil {
 			Clone (custattr.Properties, ca.Properties);
 			Clone (custattr.PropertyTypes, ca.PropertyTypes);
 			return ca;
+		}
+
+		public bool Resolve ()
+		{
+			throw new NotImplementedException ();
 		}
 
 		public void Accept (IReflectionVisitor visitor)

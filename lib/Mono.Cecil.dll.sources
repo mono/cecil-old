@@ -63,6 +63,7 @@
 ./Mono.Cecil/IReflectionStructureVisitor.cs
 ./Mono.Cecil/IReflectionVisitable.cs
 ./Mono.Cecil/IReflectionVisitor.cs
+./Mono.Cecil/IRequireResolving.cs
 ./Mono.Cecil/LinkedResource.cs
 ./Mono.Cecil/ManifestResourceAttributes.cs
 ./Mono.Cecil/MarshalSpec.cs
