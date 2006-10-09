@@ -116,8 +116,6 @@ namespace Gendarme.Framework {
 
 		public void Process (AssemblyDefinition assembly)
 		{
-			Violations.Reset();
-			
 			MessageCollection messages;
 			foreach (IAssemblyRule rule in Rules.Assembly) {
 				messages = rule.CheckAssembly(assembly, this);

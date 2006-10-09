@@ -1,3 +1,9 @@
+2006-10-09  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Runner.cs: Remove Violations.Reset(); from Process as it's reset the 
+	list and breaks the console runner when processing more than one
+	assembly (e.g. *.dll).
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
