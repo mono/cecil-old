@@ -109,11 +109,12 @@ namespace Mono.Cecil {
 		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
-			Type secattr = Type.GetType (cname);
+			Type secattr = null;
 
 			// note: the SecurityAction parameter isn't important to generate the XML
 			SSP.SecurityAttribute sa = null;
 			try {
+				 secattr = Type.GetType (cname);
 				 sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
 			} catch {}
 

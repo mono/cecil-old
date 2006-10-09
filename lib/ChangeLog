@@ -1,3 +1,9 @@
+2006-10-09  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Prevent Cecil to crash when it can not get the type
+		of the declaration.
+
 2006-10-04  Eyal Alaluf  <eyala@mainsoft.com>
 
 	* Mono.Cecil/StructureReader.cs:
