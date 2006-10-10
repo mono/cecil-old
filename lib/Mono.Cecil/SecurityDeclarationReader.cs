@@ -63,6 +63,11 @@ namespace Mono.Cecil {
 
 		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration)
 		{
+			return FromByteArray (action, declaration, false);
+		}
+
+		public SecurityDeclaration FromByteArray (SecurityAction action, byte [] declaration, bool resolve)
+		{
 			SecurityDeclaration dec = new SecurityDeclaration (action);
 #if !CF_1_0 && !CF_2_0
 			dec.PermissionSet = new PermissionSet (SSP.PermissionState.None);
@@ -81,7 +86,7 @@ namespace Mono.Cecil {
 				BinaryReader br = new BinaryReader (new MemoryStream (declaration));
 				for (int i = 0; i < numattr; i++) {
 					pos = start;
-					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start);
+					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start, resolve);
 					if (sa == null) {
 						dec.Resolved = false;
 						dec.Blob = declaration;
@@ -106,7 +111,7 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start)
+		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start, bool resolve)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
 			Type secattr = null;
@@ -130,7 +135,7 @@ namespace Mono.Cecil {
 			br.BaseStream.Position = start;
 			for (int j = 0; j < numparams; j++) {
 				bool read = false;
-				CustomAttrib.NamedArg na = sr.ReadNamedArg (permset, br, ref read);
+				CustomAttrib.NamedArg na = sr.ReadNamedArg (permset, br, ref read, resolve);
 				if (!read)
 					return null;
 

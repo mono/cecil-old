@@ -110,22 +110,22 @@ namespace Mono.Cecil {
 
 		public TypeReference GetFieldType (string fieldName)
 		{
-			return (TypeReference) this.FieldTypes [fieldName];
+			return (TypeReference) FieldTypes [fieldName];
 		}
 
 		public TypeReference GetPropertyType (string propertyName)
 		{
-			return (TypeReference) this.PropertyTypes [propertyName];
+			return (TypeReference) PropertyTypes [propertyName];
 		}
 
 		public void SetFieldType (string fieldName, TypeReference type)
 		{
-			this.FieldTypes [fieldName] = type;
+			FieldTypes [fieldName] = type;
 		}
 
 		public void SetPropertyType (string propertyName, TypeReference type)
 		{
-			this.PropertyTypes [propertyName] = type;
+			PropertyTypes [propertyName] = type;
 		}
 
 		public CustomAttribute Clone ()
@@ -135,6 +135,7 @@ namespace Mono.Cecil {
 
 		static void Clone (IDictionary original, IDictionary target)
 		{
+			target.Clear ();
 			foreach (DictionaryEntry entry in original)
 				target.Add (entry.Key, entry.Value);
 		}
@@ -142,24 +143,38 @@ namespace Mono.Cecil {
 		internal static CustomAttribute Clone (CustomAttribute custattr, ImportContext context)
 		{
 			CustomAttribute ca = new CustomAttribute (context.Import (custattr.Constructor));
-			if (!custattr.Resolved) {
-				ca.Resolved = false;
-				ca.Blob = custattr.Blob;
-				return ca;
+			custattr.CopyTo (ca);
+			return ca;
+		}
+
+		void CopyTo (CustomAttribute target)
+		{
+			target.Resolved = Resolved;
+			if (!Resolved) {
+				target.Blob = Blob;
+				return;
 			}
 
-			foreach (object o in custattr.ConstructorParameters)
-				ca.ConstructorParameters.Add (o);
-			Clone (custattr.Fields, ca.Fields);
-			Clone (custattr.FieldTypes, ca.FieldTypes);
-			Clone (custattr.Properties, ca.Properties);
-			Clone (custattr.PropertyTypes, ca.PropertyTypes);
-			return ca;
+			foreach (object o in ConstructorParameters)
+				target.ConstructorParameters.Add (o);
+			Clone (Fields, target.Fields);
+			Clone (FieldTypes, target.FieldTypes);
+			Clone (Properties, target.Properties);
+			Clone (PropertyTypes, target.PropertyTypes);
 		}
 
 		public bool Resolve ()
 		{
-			throw new NotImplementedException ();
+			if (Resolved)
+				return true;
+
+			ReflectionReader r = m_ctor.DeclaringType.Module.Controller.Reader;
+			CustomAttribute newCa = r.GetCustomAttribute (m_ctor, Blob, true);
+			if (!newCa.Resolved)
+				return false;
+
+			newCa.CopyTo (this);
+			return true;
 		}
 
 		public void Accept (IReflectionVisitor visitor)

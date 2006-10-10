@@ -44,6 +44,10 @@ namespace Mono.Cecil.Signatures {
 
 		IDictionary m_signatures;
 
+		IAssemblyResolver AssemblyResolver {
+			get { return m_reflectReader.Module.Assembly.Resolver; }
+		}
+
 		public SignatureReader (MetadataRoot root, ReflectionReader reflectReader)
 		{
 			m_root = root;
@@ -135,13 +139,23 @@ namespace Mono.Cecil.Signatures {
 
 		public CustomAttrib GetCustomAttrib (uint index, MethodReference ctor)
 		{
-			return ReadCustomAttrib ((int) index, ctor);
+			return GetCustomAttrib (index, ctor, false);
+		}
+
+		public CustomAttrib GetCustomAttrib (uint index, MethodReference ctor, bool resolve)
+		{
+			return ReadCustomAttrib ((int) index, ctor, resolve);
 		}
 
 		public CustomAttrib GetCustomAttrib (byte [] data, MethodReference ctor)
 		{
+			return GetCustomAttrib (data, ctor, false);
+		}
+
+		public CustomAttrib GetCustomAttrib (byte [] data, MethodReference ctor, bool resolve)
+		{
 			BinaryReader br = new BinaryReader (new MemoryStream (data));
-			return ReadCustomAttrib (br, data, ctor);
+			return ReadCustomAttrib (br, data, ctor, resolve);
 		}
 
 		public Signature GetMemberRefSig (TokenType tt, uint index)
@@ -210,8 +224,8 @@ namespace Mono.Cecil.Signatures {
 			Utilities.ReadCompressedInteger (m_blobData, (int) field.BlobIndex, out start);
 			field.CallingConvention = m_blobData [start];
 			field.Field = (field.CallingConvention & 0x6) != 0;
-			field.CustomMods = this.ReadCustomMods (m_blobData, start + 1, out start);
-			field.Type = this.ReadType (m_blobData, start, out start);
+			field.CustomMods = ReadCustomMods (m_blobData, start + 1, out start);
+			field.Type = ReadType (m_blobData, start, out start);
 		}
 
 		public override void VisitPropertySig (PropertySig property)
@@ -221,8 +235,8 @@ namespace Mono.Cecil.Signatures {
 			property.CallingConvention = m_blobData [start];
 			property.Property = (property.CallingConvention & 0x8) != 0;
 			property.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
-			property.Type = this.ReadType (m_blobData, start, out start);
-			property.Parameters = this.ReadParameters (property.ParamCount, m_blobData, start);
+			property.Type = ReadType (m_blobData, start, out start);
+			property.Parameters = ReadParameters (property.ParamCount, m_blobData, start);
 		}
 
 		public override void VisitLocalVarSig (LocalVarSig localvar)
@@ -232,7 +246,7 @@ namespace Mono.Cecil.Signatures {
 			localvar.CallingConvention = m_blobData [start];
 			localvar.Local = (localvar.CallingConvention & 0x7) != 0;
 			localvar.Count = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
-			localvar.LocalVariables = this.ReadLocalVariables (localvar.Count, m_blobData, start);
+			localvar.LocalVariables = ReadLocalVariables (localvar.Count, m_blobData, start);
 		}
 
 		void ReadMethodDefSig (MethodDefSig methodDef, byte [] data, int pos, out int start)
@@ -250,8 +264,8 @@ namespace Mono.Cecil.Signatures {
 				methodDef.MethCallConv |= MethodCallingConvention.Default;
 
 			methodDef.ParamCount = Utilities.ReadCompressedInteger (data, start, out start);
-			methodDef.RetType = this.ReadRetType (data, start, out start);
-			methodDef.Parameters = this.ReadParameters (methodDef.ParamCount, data, start);
+			methodDef.RetType = ReadRetType (data, start, out start);
+			methodDef.Parameters = ReadParameters (methodDef.ParamCount, data, start);
 		}
 
 		void ReadMethodRefSig (MethodRefSig methodRef, byte [] data, int pos, out int start)
@@ -273,9 +287,9 @@ namespace Mono.Cecil.Signatures {
 			else
 				methodRef.MethCallConv |= MethodCallingConvention.Default;
 			methodRef.ParamCount = Utilities.ReadCompressedInteger (data, start, out start);
-			methodRef.RetType = this.ReadRetType (data, start, out start);
+			methodRef.RetType = ReadRetType (data, start, out start);
 			int sentpos;
-			methodRef.Parameters = this.ReadParameters (methodRef.ParamCount, data, start, out sentpos);
+			methodRef.Parameters = ReadParameters (methodRef.ParamCount, data, start, out sentpos);
 			methodRef.Sentinel = sentpos;
 		}
 
@@ -284,7 +298,7 @@ namespace Mono.Cecil.Signatures {
 			int start = pos;
 			LocalVarSig.LocalVariable [] types = new LocalVarSig.LocalVariable [length];
 			for (int i = 0; i < length; i++)
-				types [i] = this.ReadLocalVariable (data, start, out start);
+				types [i] = ReadLocalVariable (data, start, out start);
 			return types;
 		}
 
@@ -303,7 +317,7 @@ namespace Mono.Cecil.Signatures {
 				else if (current == (int) ElementType.ByRef)
 					lv.ByRef = true;
 				else {
-					lv.Type = this.ReadType (data, cursor, out start);
+					lv.Type = ReadType (data, cursor, out start);
 					break;
 				}
 			}
@@ -314,7 +328,7 @@ namespace Mono.Cecil.Signatures {
 		{
 			int start = pos;
 			Utilities.ReadCompressedInteger (data, start, out start);
-			SigType t = this.ReadType (data, start, out start);
+			SigType t = ReadType (data, start, out start);
 			return new TypeSpec (t);
 		}
 
@@ -333,7 +347,7 @@ namespace Mono.Cecil.Signatures {
 		{
 			RetType rt = new RetType ();
 			start = pos;
-			rt.CustomMods = this.ReadCustomMods (data, start, out start);
+			rt.CustomMods = ReadCustomMods (data, start, out start);
 			int curs = start;
 			ElementType flag = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
 			switch (flag) {
@@ -348,11 +362,11 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.ByRef :
 				rt.TypedByRef = rt.Void = false;
 				rt.ByRef = true;
-				rt.Type = this.ReadType (data, start, out start);
+				rt.Type = ReadType (data, start, out start);
 				break;
 			default :
 				rt.TypedByRef = rt.Void = rt.ByRef = false;
-				rt.Type = this.ReadType (data, curs, out start);
+				rt.Type = ReadType (data, curs, out start);
 				break;
 			}
 			return rt;
@@ -363,7 +377,7 @@ namespace Mono.Cecil.Signatures {
 			Param [] ret = new Param [length];
 			int start = pos;
 			for (int i = 0; i < length; i++)
-				ret [i] = this.ReadParameter (data, start, out start);
+				ret [i] = ReadParameter (data, start, out start);
 			return ret;
 		}
 
@@ -380,7 +394,7 @@ namespace Mono.Cecil.Signatures {
 				if ((flag & (int) ElementType.Sentinel) != 0)
 					sentinelpos = i;
 
-				ret [i] = this.ReadParameter (data, curs, out start);
+				ret [i] = ReadParameter (data, curs, out start);
 			}
 
 			return ret;
@@ -391,7 +405,7 @@ namespace Mono.Cecil.Signatures {
 			Param p = new Param ();
 			start = pos;
 
-			p.CustomMods = this.ReadCustomMods (data, start, out start);
+			p.CustomMods = ReadCustomMods (data, start, out start);
 			int curs = start;
 			ElementType flag = (ElementType) Utilities.ReadCompressedInteger (data, start, out start);
 			switch (flag) {
@@ -402,12 +416,12 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.ByRef :
 				p.TypedByRef = false;
 				p.ByRef = true;
-				p.Type = this.ReadType (data, start, out start);
+				p.Type = ReadType (data, start, out start);
 				break;
 			default :
 				p.TypedByRef = false;
 				p.ByRef = false;
-				p.Type = this.ReadType (data, curs, out start);
+				p.Type = ReadType (data, curs, out start);
 				break;
 			}
 			return p;
@@ -436,8 +450,8 @@ namespace Mono.Cecil.Signatures {
 				if (p.Void)
 					return p;
 				start = buf;
-				p.CustomMods = this.ReadCustomMods (data, start, out start);
-				p.PtrType = this.ReadType (data, start, out start);
+				p.CustomMods = ReadCustomMods (data, start, out start);
+				p.PtrType = ReadType (data, start, out start);
 				return p;
 			case ElementType.FnPtr :
 				FNPTR fp = new FNPTR ();
@@ -454,7 +468,7 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.Array :
 				ARRAY ary = new ARRAY ();
 				ArrayShape shape = new ArrayShape ();
-				ary.Type = this.ReadType (data, start, out start);
+				ary.Type = ReadType (data, start, out start);
 				shape.Rank = Utilities.ReadCompressedInteger (data, start, out start);
 				shape.NumSizes = Utilities.ReadCompressedInteger (data, start, out start);
 				shape.Sizes = new int [shape.NumSizes];
@@ -468,7 +482,7 @@ namespace Mono.Cecil.Signatures {
 				return ary;
 			case ElementType.SzArray :
 				SZARRAY sa = new SZARRAY ();
-				sa.Type = this.ReadType (data, start, out start);
+				sa.Type = ReadType (data, start, out start);
 				return sa;
 			case ElementType.Var:
 				return new VAR (Utilities.ReadCompressedInteger (data, start, out start));
@@ -498,7 +512,7 @@ namespace Mono.Cecil.Signatures {
 			gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
 			gis.Types = new SigType [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = this.ReadType (data, start, out start);
+				gis.Types [i] = ReadType (data, start, out start);
 
 			return gis;
 		}
@@ -513,7 +527,7 @@ namespace Mono.Cecil.Signatures {
 				start = buf;
 				if (!((flag == ElementType.CModOpt) || (flag == ElementType.CModReqD)))
 					break;
-				cmods.Add (this.ReadCustomMod (data, start, out start));
+				cmods.Add (ReadCustomMod (data, start, out start));
 			}
 			return cmods.ToArray (typeof (CustomMod)) as CustomMod [];
 		}
@@ -534,14 +548,14 @@ namespace Mono.Cecil.Signatures {
 			return cm;
 		}
 
-		CustomAttrib ReadCustomAttrib (int pos, MethodReference ctor)
+		CustomAttrib ReadCustomAttrib (int pos, MethodReference ctor, bool resolve)
 		{
 			int start, length = Utilities.ReadCompressedInteger (m_blobData, pos, out start);
 			byte [] data = new byte [length];
 			Buffer.BlockCopy (m_blobData, start, data, 0, length);
 			try {
 				return ReadCustomAttrib (new BinaryReader (
-					new MemoryStream (data)), data, ctor);
+					new MemoryStream (data)), data, ctor, resolve);
 			} catch {
 				CustomAttrib ca = new CustomAttrib (ctor);
 				ca.Read = false;
@@ -549,7 +563,7 @@ namespace Mono.Cecil.Signatures {
 			}
 		}
 
-		CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, MethodReference ctor)
+		CustomAttrib ReadCustomAttrib (BinaryReader br, byte [] data, MethodReference ctor, bool resolve)
 		{
 			CustomAttrib ca = new CustomAttrib (ctor);
 			if (data.Length == 0) {
@@ -566,8 +580,8 @@ namespace Mono.Cecil.Signatures {
 
 			ca.FixedArgs = new CustomAttrib.FixedArg [ctor.Parameters.Count];
 			for (int i = 0; i < ca.FixedArgs.Length && read; i++)
-				ca.FixedArgs [i] = ReadFixedArg (data, br, ctor.Parameters [i].ParameterType is ArrayType,
-					ctor.Parameters [i].ParameterType, ref read);
+				ca.FixedArgs [i] = ReadFixedArg (data, br,
+					ctor.Parameters [i].ParameterType, ref read, resolve);
 
 			if (br.BaseStream.Position == br.BaseStream.Length)
 				read = false;
@@ -580,38 +594,136 @@ namespace Mono.Cecil.Signatures {
 			ca.NumNamed = br.ReadUInt16 ();
 			ca.NamedArgs = new CustomAttrib.NamedArg [ca.NumNamed];
 			for (int i = 0; i < ca.NumNamed && read; i++)
-				ca.NamedArgs [i] = ReadNamedArg (data, br, ref read);
+				ca.NamedArgs [i] = ReadNamedArg (data, br, ref read, resolve);
 
 			ca.Read = read;
 			return ca;
 		}
 
 		CustomAttrib.FixedArg ReadFixedArg (byte [] data, BinaryReader br,
-			bool array, object param, ref bool read)
+			TypeReference param, ref bool read, bool resolve)
 		{
 			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
-			if (array) {
+			if (param is ArrayType) {
+				param = ((ArrayType) param).ElementType;
 				fa.SzArray = true;
 				fa.NumElem = br.ReadUInt32 ();
 
 				if (fa.NumElem == 0 || fa.NumElem == 0xffffffff) {
 					fa.Elems = new CustomAttrib.Elem [0];
+					fa.NumElem = 0;
 					return fa;
 				}
 
-				if (param is ArrayType)
-					param = ((ArrayType) param).ElementType;
-
 				fa.Elems = new CustomAttrib.Elem [fa.NumElem];
 				for (int i = 0; i < fa.NumElem; i++)
-					fa.Elems [i] = ReadElem (data, br, param, ref read);
+					fa.Elems [i] = ReadElem (data, br, param, ref read, resolve);
 			} else
-				fa.Elems = new CustomAttrib.Elem [] { ReadElem (data, br, param, ref read) };
+				fa.Elems = new CustomAttrib.Elem [] { ReadElem (data, br, param, ref read, resolve) };
 
 			return fa;
 		}
 
-		internal CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read)
+		TypeReference CreateEnumTypeReference (string enumName)
+		{
+			string asmName = null;
+			int asmStart = enumName.IndexOf (',');
+			if (asmStart != -1) {
+				asmName = enumName.Substring (asmStart + 1);
+				enumName = enumName.Substring (0, asmStart);
+			}
+			// Inner class style is reflection style.
+			enumName = enumName.Replace ('+', '/');
+			AssemblyNameReference asm;
+			if (asmName == null) {
+				// If no assembly is given then the ECMA standard says the
+				// assembly is either the current one or mscorlib.
+				if (m_reflectReader.Module.Types.Contains (enumName))
+					return m_reflectReader.Module.Types [enumName];
+
+				asm = m_reflectReader.Corlib;
+			} else
+				asm = AssemblyNameReference.Parse (asmName);
+
+			string [] outers = enumName.Split ('/');
+			string outerfullname = outers [0];
+			string ns = null;
+			int nsIndex = outerfullname.LastIndexOf ('.');
+			if (nsIndex != -1)
+				ns = outerfullname.Substring (0, nsIndex);
+			string name = outerfullname.Substring (nsIndex + 1);
+			TypeReference decType = new TypeReference (name, ns, asm);
+			for (int i = 1; i < outers.Length; i++) {
+				TypeReference t = new TypeReference (outers [i], null, asm);
+				t.DeclaringType = decType;
+				decType = t;
+			}
+			decType.IsValueType = true;
+
+			return decType;
+		}
+
+		TypeReference ReadTypeReference (byte [] data, BinaryReader br, out ElementType elemType)
+		{
+			bool array = false;
+			elemType = (ElementType) br.ReadByte ();
+			if (elemType == ElementType.SzArray) {
+				elemType = (ElementType) br.ReadByte ();
+				array = true;
+			}
+
+			TypeReference res;
+			if (elemType == ElementType.Enum)
+				res = CreateEnumTypeReference (ReadUTF8String (data, br));
+			else
+				res = TypeReferenceFromElemType (elemType);
+
+			if (array)
+				res = new ArrayType (res);
+
+			return res;
+		}
+
+		TypeReference TypeReferenceFromElemType (ElementType elemType)
+		{
+			switch (elemType) {
+			case ElementType.Boxed :
+				return m_reflectReader.SearchCoreType (Constants.Object);
+			case ElementType.String :
+				return m_reflectReader.SearchCoreType (Constants.String);
+			case ElementType.Type :
+				return m_reflectReader.SearchCoreType (Constants.Type);
+			case ElementType.Boolean :
+				return m_reflectReader.SearchCoreType (Constants.Boolean);
+			case ElementType.Char :
+				return m_reflectReader.SearchCoreType (Constants.Char);
+			case ElementType.R4 :
+				return m_reflectReader.SearchCoreType (Constants.Single);
+			case ElementType.R8 :
+				return m_reflectReader.SearchCoreType (Constants.Double);
+			case ElementType.I1 :
+				return m_reflectReader.SearchCoreType (Constants.SByte);
+			case ElementType.I2 :
+				return m_reflectReader.SearchCoreType (Constants.Int16);
+			case ElementType.I4 :
+				return m_reflectReader.SearchCoreType (Constants.Int32);
+			case ElementType.I8 :
+				return m_reflectReader.SearchCoreType (Constants.Int64);
+			case ElementType.U1 :
+				return m_reflectReader.SearchCoreType (Constants.Byte);
+			case ElementType.U2 :
+				return m_reflectReader.SearchCoreType (Constants.UInt16);
+			case ElementType.U4 :
+				return m_reflectReader.SearchCoreType (Constants.UInt32);
+			case ElementType.U8 :
+				return m_reflectReader.SearchCoreType (Constants.UInt64);
+			default :
+				throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}",
+					((byte) elemType).ToString("x2"));
+			}
+		}
+
+		internal CustomAttrib.NamedArg ReadNamedArg (byte [] data, BinaryReader br, ref bool read, bool resolve)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
 			byte kind = br.ReadByte ();
@@ -624,55 +736,31 @@ namespace Mono.Cecil.Signatures {
 			} else
 				throw new MetadataFormatException ("Wrong kind of namedarg found: 0x" + kind.ToString("x2"));
 
-			bool array = false;
-			na.FieldOrPropType = (ElementType) br.ReadByte ();
-			if (na.FieldOrPropType == ElementType.SzArray) {
-				na.FieldOrPropType = (ElementType) br.ReadByte ();
-				array = true;
-			}
-
-			int next, length;
-
-			if (na.FieldOrPropType == ElementType.Enum) {
-				read = false;
-				return na;
-			}
-
-			length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
-			br.BaseStream.Position = next;
-
-			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
-			byte [] bytes = br.ReadBytes (length);
-			na.FieldOrPropName = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
-
-			na.FixedArg = ReadFixedArg (data, br, array, na.FieldOrPropType, ref read);
+			TypeReference elemType = ReadTypeReference (data, br, out na.FieldOrPropType);
+			na.FieldOrPropName = ReadUTF8String (data, br);
+			na.FixedArg = ReadFixedArg (data, br, elemType, ref read, resolve);
 
 			return na;
 		}
 
-		// i hate this construction, should find something better
-		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, object param, ref bool read)
-		{
-			if (param is TypeReference)
-				return ReadElem (data, br, param as TypeReference, ref read);
-			else if (param is ElementType)
-				return ReadElem (data, br, (ElementType) param, ref read);
-			else
-				throw new MetadataFormatException ("Wrong parameter for ReadElem: " + param.GetType ().FullName);
-		}
-
-		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, TypeReference elemType, ref bool read)
+		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, TypeReference elemType, ref bool read, bool resolve)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 
 			string elemName = elemType.FullName;
 
 			if (elemName == Constants.Object) {
-				ElementType elementType = (ElementType) br.ReadByte ();
-				elem = ReadElem (data, br, elementType, ref read);
+				elemType = ReadTypeReference (data, br, out elem.FieldOrPropType);
+				if (elemType is ArrayType) {
+					read = false; // Don't know how to represent arrays as an object value.
+					return elem;
+				} else if (elemType.FullName == Constants.Object)
+					throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem after boxed prefix: 0x{0}",
+						((byte) elem.FieldOrPropType).ToString("x2"));
+
+				elem = ReadElem (data, br, elemType, ref read, resolve);
 				elem.String = elem.Simple = elem.Type = false;
 				elem.BoxedValueType = true;
-				elem.FieldOrPropType = elementType;
 				return elem;
 			}
 
@@ -694,19 +782,42 @@ namespace Mono.Cecil.Signatures {
 					elem.Value = null;
 					br.BaseStream.Position++;
 				} else {
-					int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
-					br.BaseStream.Position = next;
-					// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
-					byte [] bytes = br.ReadBytes (length);
-					elem.Value = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
+					elem.Value = ReadUTF8String (data, br);
 				}
-
 				return elem;
 			}
 
 			elem.String = elem.Type = elem.BoxedValueType = false;
+			if (!ReadSimpleValue (br, ref elem, elem.ElemType)) {
+				TypeReference typeRef = GetEnumUnderlyingType (elem.ElemType, resolve);
+				if (typeRef == null || !ReadSimpleValue (br, ref elem, typeRef))
+					read = false;
+			}
 
-			switch (elemName) {
+			return elem;
+		}
+
+		TypeReference GetEnumUnderlyingType (TypeReference enumType, bool resolve)
+		{
+			TypeDefinition type = enumType as TypeDefinition;
+			if (type == null && resolve && AssemblyResolver != null) {
+				if (enumType.Scope is ModuleDefinition)
+					throw new NotSupportedException ();
+
+				AssemblyDefinition asm = AssemblyResolver.Resolve (
+					((AssemblyNameReference) enumType.Scope).FullName);
+				type = asm.MainModule.Types [enumType.FullName];
+			}
+
+			if (type != null && type.IsEnum)
+				return type.Fields.GetField ("value__").FieldType;
+
+			return null;
+		}
+
+		bool ReadSimpleValue (BinaryReader br, ref CustomAttrib.Elem elem, TypeReference type)
+		{
+			switch (type.FullName) {
 			case Constants.Boolean :
 				elem.Value = br.ReadByte () == 1;
 				break;
@@ -744,118 +855,10 @@ namespace Mono.Cecil.Signatures {
 				elem.Value = br.ReadUInt64 ();
 				break;
 			default : // enum
-				read = false;
-				return elem;
+				return false;
 			}
-
 			elem.Simple = true;
-			return elem;
-		}
-
-		// elem in named args, only have an ElementType
-		CustomAttrib.Elem ReadElem (byte [] data, BinaryReader br, ElementType elemType, ref bool read)
-		{
-			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
-
-			if (elemType == ElementType.Boxed) {
-				ElementType elementType = (ElementType) br.ReadByte ();
-				elem = ReadElem (data, br, elementType, ref read);
-				elem.String = elem.Simple = elem.Type = false;
-				elem.BoxedValueType = true;
-				elem.FieldOrPropType = elementType;
-				return elem;
-			}
-
-			if (elemType == ElementType.Type || elemType == ElementType.String) { // type or string
-				switch (elemType) {
-				case ElementType.String :
-					elem.String = true;
-					elem.BoxedValueType = elem.Simple = elem.Type = false;
-					elem.ElemType = m_reflectReader.SearchCoreType (Constants.String);
-					break;
-				case ElementType.Type :
-					elem.Type = true;
-					elem.BoxedValueType = elem.Simple = elem.String = false;
-					elem.ElemType = m_reflectReader.SearchCoreType (Constants.Type);
-					break;
-				}
-
-				if (data [br.BaseStream.Position] == 0xff) { // null
-					elem.Value = null;
-					br.BaseStream.Position++;
-				} else {
-					int next, length = Utilities.ReadCompressedInteger (data, (int) br.BaseStream.Position, out next);
-					br.BaseStream.Position = next;
-					// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
-					byte [] bytes = br.ReadBytes (length);
-					elem.Value = Encoding.UTF8.GetString (bytes, 0, bytes.Length);
-				}
-
-				return elem;
-			}
-
-			elem.String = elem.Type = elem.BoxedValueType = false;
-
-			switch (elemType) {
-			case ElementType.Boolean :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Boolean);
-				elem.Value = br.ReadByte () == 1;
-				break;
-			case ElementType.Char :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Char);
-				elem.Value = (char) br.ReadUInt16 ();
-				break;
-			case ElementType.R4 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Single);
-				elem.Value = br.ReadSingle ();
-				break;
-			case ElementType.R8 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Double);
-				elem.Value = br.ReadDouble ();
-				break;
-			case ElementType.I1 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.SByte);
-				elem.Value = br.ReadSByte ();
-				break;
-			case ElementType.I2 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int16);
-				elem.Value = br.ReadInt16 ();
-				break;
-			case ElementType.I4 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int32);
-				elem.Value = br.ReadInt32 ();
-				break;
-			case ElementType.I8 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Int64);
-				elem.Value = br.ReadInt64 ();
-				break;
-			case ElementType.U1 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.Byte);
-				elem.Value = br.ReadByte ();
-				break;
-			case ElementType.U2 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt16);
-				elem.Value = br.ReadUInt16 ();
-				break;
-			case ElementType.U4 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt32);
-				elem.Value = br.ReadUInt32 ();
-				break;
-			case ElementType.U8 :
-				elem.ElemType = m_reflectReader.SearchCoreType (Constants.UInt64);
-				elem.Value = br.ReadUInt64 ();
-				break;
-			case ElementType.Enum :
-				read = false;
-				return elem;
-			default :
-				throw new MetadataFormatException ("Non valid type in CustomAttrib.Elem: 0x{0}",
-					((byte) elemType).ToString("x2"));
-			}
-
-			read = true;
-			elem.Simple = true;
-			return elem;
+			return true;
 		}
 
 		MarshalSig ReadMarshalSig (byte [] data)
@@ -905,14 +908,21 @@ namespace Mono.Cecil.Signatures {
 			return ms;
 		}
 
+		static internal string ReadUTF8String (byte [] data, BinaryReader br)
+		{
+			int start = (int)br.BaseStream.Position;
+			string val = ReadUTF8String (data, start, out start);
+			br.BaseStream.Position = start;
+			return val;
+		}
+
 		static internal string ReadUTF8String (byte [] data, int pos, out int start)
 		{
 			int length = Utilities.ReadCompressedInteger (data, pos, out start);
-			byte [] str = new byte [length];
-			Buffer.BlockCopy (data, start, str, 0, length);
+			pos = start;
 			start += length;
-			// COMPACT FRAMEWORK NOTE: Encoding.GetString(byte[]) is not supported.
-			return Encoding.UTF8.GetString (str, 0, str.Length);
+			// COMPACT FRAMEWORK NOTE: Encoding.GetString (byte[]) is not supported.
+			return Encoding.UTF8.GetString (data, pos, length);
 		}
 	}
 }

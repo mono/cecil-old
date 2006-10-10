@@ -65,6 +65,22 @@ namespace Mono.Cecil {
 		protected CodeReader m_codeReader;
 		protected ISymbolReader m_symbolReader;
 
+		internal AssemblyNameReference Corlib {
+			get {
+				if (m_corlib != null)
+					return m_corlib;
+
+				foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
+					if (ar.Name == Constants.Corlib) {
+						m_corlib = ar;
+						return m_corlib;
+					}
+				}
+
+				return null;
+			}
+		}
+
 		public ModuleDefinition Module {
 			get { return m_module; }
 		}
@@ -295,19 +311,11 @@ namespace Mono.Cecil {
 
 			TypeReference coreType =  m_module.TypeReferences [fullName];
 			if (coreType == null) {
-				if (m_corlib == null) {
-					foreach (AssemblyNameReference ar in m_module.AssemblyReferences) {
-						if (ar.Name == Constants.Corlib) {
-							m_corlib = ar;
-							break;
-						}
-					}
-				}
 
 				string [] parts = fullName.Split ('.');
 				if (parts.Length != 2)
 					throw new ReflectionException ("Unvalid core type name");
-				coreType = new TypeReference (parts [1], parts [0], m_corlib);
+				coreType = new TypeReference (parts [1], parts [0], Corlib);
 				m_module.TypeReferences.Add (coreType);
 			}
 			if (!coreType.IsValueType) {
@@ -355,10 +363,15 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public CustomAttribute GetCustomAttribute (MethodReference ctor, byte [] data, bool resolve)
+		{
+			CustomAttrib sig = m_sigReader.GetCustomAttrib (data, ctor, resolve);
+			return BuildCustomAttribute (ctor, sig);
+		}
+
 		public CustomAttribute GetCustomAttribute (MethodReference ctor, byte [] data)
 		{
-			CustomAttrib sig = m_sigReader.GetCustomAttrib (data, ctor);
-			return BuildCustomAttribute (ctor, sig);
+			return GetCustomAttribute (ctor, data, false);
 		}
 
 		public override void VisitModuleDefinition (ModuleDefinition mod)
@@ -807,10 +820,11 @@ namespace Mono.Cecil {
 			return BuildSecurityDeclaration (dsRow.Action, m_root.Streams.BlobHeap.Read (dsRow.PermissionSet));
 		}
 
-		public SecurityDeclaration BuildSecurityDeclaration (Mono.Cecil.SecurityAction action, byte [] permset)
+		public SecurityDeclaration BuildSecurityDeclaration (SecurityAction action, byte [] permset)
 		{
 			if (m_secReader == null)
 				m_secReader = new SecurityDeclarationReader (m_root, this);
+
 			return m_secReader.FromByteArray (action, permset);
 		}
 
