@@ -119,7 +119,10 @@ namespace Mono.Cecil {
 			// note: the SecurityAction parameter isn't important to generate the XML
 			SSP.SecurityAttribute sa = null;
 			try {
-				 secattr = Type.GetType (cname);
+				secattr = Type.GetType (cname, false);
+				if (secattr == null)
+					return null;
+
 				 sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
 			} catch {}
 

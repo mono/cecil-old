@@ -32,7 +32,6 @@ namespace Mono.Cecil.Metadata {
 	using System.IO;
 	using System.Text;
 
-	using Mono.Cecil;
 	using Mono.Cecil.Binary;
 
 	class MetadataReader : BaseMetadataVisitor {
@@ -154,12 +153,12 @@ namespace Mono.Cecil.Metadata {
 
 		public override void VisitGuidHeap (GuidHeap heap)
 		{
-			this.VisitHeap (heap);
+			VisitHeap (heap);
 		}
 
 		public override void VisitStringsHeap (StringsHeap heap)
 		{
-			this.VisitHeap (heap);
+			VisitHeap (heap);
 
 			if (heap.Data.Length < 1 && heap.Data [0] != 0)
 				throw new MetadataFormatException ("Malformed #Strings heap");
@@ -169,7 +168,7 @@ namespace Mono.Cecil.Metadata {
 
 		public override void VisitTablesHeap (TablesHeap heap)
 		{
-			this.VisitHeap (heap);
+			VisitHeap (heap);
 			heap.Tables = new TableCollection (heap);
 
 			BinaryReader br = new BinaryReader (
@@ -190,12 +189,12 @@ namespace Mono.Cecil.Metadata {
 
 		public override void VisitBlobHeap (BlobHeap heap)
 		{
-			this.VisitHeap (heap);
+			VisitHeap (heap);
 		}
 
 		public override void VisitUserStringsHeap (UserStringsHeap heap)
 		{
-			this.VisitHeap (heap);
+			VisitHeap (heap);
 		}
 
 		void VisitHeap (MetadataHeap heap)

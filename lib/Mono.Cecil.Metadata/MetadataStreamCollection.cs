@@ -105,15 +105,13 @@ namespace Mono.Cecil.Metadata {
 
 		private MetadataHeap GetHeap (string name)
 		{
-			MetadataHeap heap = null;
 			for (int i = 0; i < m_items.Count; i++) {
 				MetadataStream stream = m_items [i] as MetadataStream;
-				if (stream.Heap.Name == name) {
-					heap = stream.Heap;
-					break;
-				}
+				if (stream.Heap.Name == name)
+					return stream.Heap;
 			}
-			return heap;
+
+			return null;
 		}
 
 		internal void Add (MetadataStream value)
@@ -121,34 +119,9 @@ namespace Mono.Cecil.Metadata {
 			m_items.Add (value);
 		}
 
-		internal void Clear ()
-		{
-			m_items.Clear ();
-		}
-
-		public bool Contains (MetadataStream value)
-		{
-			return m_items.Contains (value);
-		}
-
-		public int IndexOf (MetadataStream value)
-		{
-			return m_items.IndexOf (value);
-		}
-
-		internal void Insert (int index, MetadataStream value)
-		{
-			m_items.Insert (index, value);
-		}
-
 		internal void Remove (MetadataStream value)
 		{
 			m_items.Remove (value);
-		}
-
-		internal void RemoveAt (int index)
-		{
-			m_items.Remove (index);
 		}
 
 		public void CopyTo (Array ary, int index)
