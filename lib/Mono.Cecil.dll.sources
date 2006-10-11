@@ -227,10 +227,15 @@
 ./Mono.Cecil.Cil/CodeReader.cs
 ./Mono.Cecil.Cil/CodeWriter.cs
 ./Mono.Cecil.Cil/Document.cs
+./Mono.Cecil.Cil/DocumentHashAlgorithm.cs
+./Mono.Cecil.Cil/DocumentLanguage.cs
+./Mono.Cecil.Cil/DocumentLanguageVendor.cs
+./Mono.Cecil.Cil/DocumentType.cs
 ./Mono.Cecil.Cil/ExceptionHandler.cs
 ./Mono.Cecil.Cil/ExceptionHandlerCollection.cs
 ./Mono.Cecil.Cil/ExceptionHandlerType.cs
 ./Mono.Cecil.Cil/FlowControl.cs
+./Mono.Cecil.Cil/GuidAttribute.cs
 ./Mono.Cecil.Cil/ICodeVisitable.cs
 ./Mono.Cecil.Cil/ICodeVisitor.cs
 ./Mono.Cecil.Cil/Instruction.cs

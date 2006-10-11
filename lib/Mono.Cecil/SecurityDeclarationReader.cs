@@ -107,7 +107,7 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		private SSP.SecurityAttribute CreateSecurityAttribute (SecurityAction action, BinaryReader br, byte[] permset, int pos, out int start, bool resolve)
+		private SSP.SecurityAttribute CreateSecurityAttribute (SecurityAction action, BinaryReader br, byte [] permset, int pos, out int start, bool resolve)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
 			Type secattr = null;

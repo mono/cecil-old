@@ -71,11 +71,16 @@
     <Compile Include="Mono.Cecil.Cil\CilWorker.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeReader.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeWriter.cs" />
+    <Compile Include="Mono.Cecil.Cil\DocumentType.cs" />
     <Compile Include="Mono.Cecil.Cil\Document.cs" />
+    <Compile Include="Mono.Cecil.Cil\DocumentHashAlgorithm.cs" />
+    <Compile Include="Mono.Cecil.Cil\DocumentLanguage.cs" />
+    <Compile Include="Mono.Cecil.Cil\DocumentLanguageVendor.cs" />
     <Compile Include="Mono.Cecil.Cil\ExceptionHandler.cs" />
     <Compile Include="Mono.Cecil.Cil\ExceptionHandlerCollection.cs" />
     <Compile Include="Mono.Cecil.Cil\ExceptionHandlerType.cs" />
     <Compile Include="Mono.Cecil.Cil\FlowControl.cs" />
+    <Compile Include="Mono.Cecil.Cil\GuidAttribute.cs" />
     <Compile Include="Mono.Cecil.Cil\ICodeVisitable.cs" />
     <Compile Include="Mono.Cecil.Cil\ICodeVisitor.cs" />
     <Compile Include="Mono.Cecil.Cil\Instruction.cs" />

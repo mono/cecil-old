@@ -1,5 +1,5 @@
 //
-// Document.cs
+// DocumentType.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -28,51 +28,8 @@
 
 namespace Mono.Cecil.Cil {
 
-	public class Document {
-
-		string m_url;
-
-		DocumentType m_type;
-		DocumentHashAlgorithm m_hashAlgorithm;
-		DocumentLanguage m_language;
-		DocumentLanguageVendor m_languageVendor;
-
-		byte [] m_hash;
-
-		public string Url {
-			get { return m_url; }
-			set { m_url = value; }
-		}
-
-		public DocumentType Type {
-			get { return m_type; }
-			set { m_type = value; }
-		}
-
-		public DocumentHashAlgorithm HashAlgorithm {
-			get { return m_hashAlgorithm; }
-			set { m_hashAlgorithm = value; }
-		}
-
-		public DocumentLanguage Language {
-			get { return m_language; }
-			set { m_language = value; }
-		}
-
-		public DocumentLanguageVendor LanguageVendor {
-			get { return m_languageVendor; }
-			set { m_languageVendor = value; }
-		}
-
-		public byte [] Hash {
-			get { return m_hash; }
-			set { m_hash = value; }
-		}
-
-		public Document (string url)
-		{
-			m_url = url;
-			m_hash = new byte [0];
-		}
+	public enum DocumentType {
+		[Guid (0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)] Other,
+		[Guid (0x5a869d0b, 0x6611, 0x11d3, 0xbd, 0x2a, 0x00, 0x00, 0xf8, 0x08, 0x49, 0xbd)] Text
 	}
 }
