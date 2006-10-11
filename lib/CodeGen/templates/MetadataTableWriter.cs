@@ -66,23 +66,33 @@ namespace Mono.Cecil.Metadata {
 			return m_binaryWriter;
 		}
 
+		void InitializeTable (IMetadataTable table)
+		{
+			table.Rows = new RowCollection ();
+			m_heap.Valid |= 1L << table.Id;
+			m_heap.Tables.Add (table);
+		}
+
+		void WriteCount (int rid)
+		{
+			if (m_heap.HasTable (rid))
+				m_binaryWriter.Write (m_heap [rid].Rows.Count);
+		}
+
 <% $tables.each { |table| %>		public <%=table.table_name%> Get<%=table.table_name%> ()
 		{
-			int rid = <%=table.table_name%>.RId;
-			if (m_heap.HasTable (rid))
-				return m_heap [rid] as <%=table.table_name%>;
+			<%=table.table_name%> table = m_heap [<%=table.table_name%>.RId] as <%=table.table_name%>;
+			if (table != null)
+				return table;
 
-			<%=table.table_name%> table = new <%=table.table_name%> ();
-			table.Rows = new RowCollection ();
-			m_heap.Valid |= 1L << rid;
-			m_heap.Tables.Add (table);
+			table = new <%=table.table_name%> ();
+			InitializeTable (table);
 			return table;
 		}
 
 <% } %>		public override void VisitTableCollection (TableCollection coll)
 		{
-<% $stables.each { |table|  %>			if (m_heap.HasTable (<%=table.table_name%>.RId))
-				m_binaryWriter.Write (m_heap [<%=table.table_name%>.RId].Rows.Count);
+<% $stables.each { |table|  %>			WriteCount (<%=table.table_name%>.RId);
 <% } %>		}
 	}
 }
