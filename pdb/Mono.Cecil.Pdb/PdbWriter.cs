@@ -37,8 +37,6 @@ namespace Mono.Cecil.Pdb {
 
 	public class PdbWriter : Cil.ISymbolWriter {
 
-		static readonly Guid Zero = new Guid ();
-
 		ModuleDefinition m_module;
 		ISymbolWriter m_writer;
 		Hashtable m_documents;
@@ -63,7 +61,12 @@ namespace Mono.Cecil.Pdb {
 		void CreateScopes (MethodBody body, ScopeCollection scopes)
 		{
 			foreach (Scope s in scopes) {
-				m_writer.OpenScope (s.Start.Offset);
+				int startOffset = s.Start.Offset;
+				int endOffset = s.End == body.Instructions.Outside ?
+					body.Instructions[body.Instructions.Count - 1].Offset + 1 :
+					s.End.Offset;
+
+				m_writer.OpenScope (startOffset);
 				m_writer.UsingNamespace (body.Method.DeclaringType.Namespace);
 				m_writer.OpenNamespace (body.Method.DeclaringType.Namespace);
 
@@ -101,16 +104,29 @@ namespace Mono.Cecil.Pdb {
 				m_writer.DefineSequencePoints (GetDocument (doc),
 					offsets, startRows, startCols, endRows, endCols);
 
-				// TODO: local variables
+				//CreateLocalVariable (s, startOffset, endOffset);
 
 				CreateScopes (body, s.Scopes);
 				m_writer.CloseNamespace ();
 
-				Instruction last = body.Instructions [body.Instructions.Count - 1];
-				if (s.End == body.Instructions.Outside)
-					m_writer.CloseScope (last.Offset + 1);
-				else
-					m_writer.CloseScope (s.End.Offset);
+				m_writer.CloseScope (endOffset);
+			}
+		}
+
+		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset)
+		{
+			for (int i = 0; i < provider.Variables.Count; i++) {
+				VariableDefinition var = provider.Variables [i];
+				m_writer.DefineLocalVariable (
+					var.Name,
+					(System.Reflection.FieldAttributes) FieldAttributes.Private,
+					new byte [0], // need a way to get the a field signature
+					SymAddressKind.ILOffset,
+					i,
+					0,
+					0,
+					startOffset,
+					endOffset);
 			}
 		}
 
@@ -130,7 +146,12 @@ namespace Mono.Cecil.Pdb {
 			if (docWriter != null)
 				return docWriter;
 
-			docWriter = m_writer.DefineDocument (document.Url, Zero, Zero, Zero);
+			docWriter = m_writer.DefineDocument (
+				document.Url,
+				GuidAttribute.GetGuidFromValue ((int) document.Language, typeof (DocumentLanguage)),
+				GuidAttribute.GetGuidFromValue ((int) document.LanguageVendor, typeof (DocumentLanguageVendor)),
+				GuidAttribute.GetGuidFromValue ((int) document.Type, typeof (DocumentType)));
+
 			m_documents [document.Url] = docWriter;
 			return docWriter;
 		}
