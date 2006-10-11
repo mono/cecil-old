@@ -41,10 +41,6 @@ namespace Mono.Cecil {
 
 	internal class SecurityDeclarationReader {
 
-#if !CF_1_0
-		static object [] action = new object [1] { (SSP.SecurityAction) 0 };
-#endif
-
 		private SecurityParser m_parser;
 		private SignatureReader sr;
 
@@ -78,7 +74,7 @@ namespace Mono.Cecil {
 			if (declaration[0] == 0x2e) {
 				// new binary format introduced in 2.0
 				int pos = 1;
-				int start = 0;
+				int start;
 				int numattr = Utilities.ReadCompressedInteger (declaration, pos, out start);
 				if (numattr == 0)
 					return dec;
@@ -86,7 +82,7 @@ namespace Mono.Cecil {
 				BinaryReader br = new BinaryReader (new MemoryStream (declaration));
 				for (int i = 0; i < numattr; i++) {
 					pos = start;
-					SSP.SecurityAttribute sa = CreateSecurityAttribute (br, declaration, pos, out start, resolve);
+					SSP.SecurityAttribute sa = CreateSecurityAttribute (action, br, declaration, pos, out start, resolve);
 					if (sa == null) {
 						dec.Resolved = false;
 						dec.Blob = declaration;
@@ -111,7 +107,7 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		private SSP.SecurityAttribute CreateSecurityAttribute (BinaryReader br, byte[] permset, int pos, out int start, bool resolve)
+		private SSP.SecurityAttribute CreateSecurityAttribute (SecurityAction action, BinaryReader br, byte[] permset, int pos, out int start, bool resolve)
 		{
 			string cname = SignatureReader.ReadUTF8String (permset, pos, out start);
 			Type secattr = null;
@@ -123,7 +119,7 @@ namespace Mono.Cecil {
 				if (secattr == null)
 					return null;
 
-				 sa = (Activator.CreateInstance (secattr, action) as SSP.SecurityAttribute);
+				sa = Activator.CreateInstance (secattr, new object [] {(SSP.SecurityAction) action}) as SSP.SecurityAttribute;
 			} catch {}
 
 			if (sa == null)

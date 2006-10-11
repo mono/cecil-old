@@ -1,3 +1,9 @@
+2006-10-11  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/SecurityDeclarationReader.cs:
+		Get rid of a lot of exceptions when creating the security
+		attribute.
+
 2006-10-10  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs:
