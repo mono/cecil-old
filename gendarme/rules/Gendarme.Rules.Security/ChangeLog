@@ -1,3 +1,8 @@
+2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Security.xml.in: Update Uri for rules (to generate
+	more useful reports).	
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
