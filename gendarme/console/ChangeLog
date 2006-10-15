@@ -1,3 +1,7 @@
+2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* gendarme.xsl: Create only one new browser-window per rule.
+
 2006-10-09  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConsoleRunner.cs: Provide more information with assemblies. Fix some

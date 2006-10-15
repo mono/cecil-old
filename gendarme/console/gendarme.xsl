@@ -19,7 +19,7 @@
 						<ul>
 							<xsl:for-each select="rules/rule[@Type = $type]">
 								<li>
-									<a href="{@Uri}" target="_blank"><xsl:value-of select="text()" /></a>
+									<a href="{@Uri}" target="{@Name}"><xsl:value-of select="text()" /></a>
 									<xsl:call-template name="print-defect-rules">
 										<xsl:with-param name="name">
 											<xsl:value-of select="@Name" />
@@ -126,7 +126,7 @@
 					<p>
 						<xsl:for-each select="violation">
 							<h3><xsl:value-of select="position()" />&#160;
-								<a href="{@Uri}" target="_blank">
+								<a href="{@Uri}" target="{@Name}">
 									<xsl:value-of select="@Name" />
 								</a>
 							</h3>
