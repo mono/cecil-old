@@ -1,5 +1,8 @@
-2006-10-16  Sebastien Pouliot  <sebastien@ximian.com>
+2006-10-16  Sebastien Pouliot  <sebastien@ximian.com> 
 
+	* configure.ac: Bump for 0.0.3 release.
+	* NEWS: Update for 0.0.3 release.
+	* README: Update for 0.0.3 release.
 	* TODO: New. Merge my own TODO file with Christian ideas.
 
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>

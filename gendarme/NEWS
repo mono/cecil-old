@@ -1,10 +1,17 @@
-2006-06-19  Version 0.2
+2006-10-16  Version 0.0.3
+
+	* New rule for String.Empty [Sebastien Pouliot]
+	* New XML and HTML (via XSL transform) output [Christian Birkl, 
+	Sebastien Pouliot]
+	* Updated to latest Cecil API [JBEvain]
+
+2006-06-19  Version 0.0.2
 
 	* Aaron Tomb added new rules for Concurrency and Correctness (based 
 	on his works in Google's Summer of Code 2005) and updated the 
 	framework;
 	* Russell Morris added new rules for exceptions management.
 
-2005-11-03  Version 0.1
+2005-11-03  Version 0.0.1
 
-	* Initial version. Expect everything to change before 0.2 ;-)
+	* Initial version. Expect everything to change before 0.0.2 ;-)
