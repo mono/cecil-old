@@ -69,9 +69,9 @@ namespace Test.Rules.Correctness {
 			}
 			
 			/* not fine, missing 'base.' */
-			public override bool Equals (object o)
+			public override bool Equals (object obzekt)
 			{
-				return Equals (o);
+				return Equals (obzekt);
 			}
 			
 			public static int Fibonacci (int n)
@@ -141,7 +141,7 @@ namespace Test.Rules.Correctness {
 			MethodDefinition method = GetTest ("Equals"); 
 			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
 		}
-		
+
 		[Test]
 		public void Fibonacci ()
 		{
