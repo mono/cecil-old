@@ -1,3 +1,7 @@
+2006-10-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TODO: New. Merge my own TODO file with Christian ideas.
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
