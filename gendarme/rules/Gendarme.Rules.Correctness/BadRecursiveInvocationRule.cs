@@ -42,23 +42,16 @@ public class BadRecursiveInvocationRule : IMethodRule {
                 string mDecl = method.DeclaringType.Name;
                 bool argsEqual = 
                     (mref.Parameters.Count == method.Parameters.Count);
-                if(argsEqual) {
-                    for(int j = 0; j < mref.Parameters.Count; j++) {
-                        ParameterDefinition p1 =
-                            (ParameterDefinition)mref.Parameters[j];
-                        ParameterDefinition p2 =
-                            (ParameterDefinition)method.Parameters[j];
-
-                        if(!p1.Name.Equals(p2.Name))
-                            argsEqual = false;
-
-                        string tn1 = p1.ParameterType.FullName;
-                        string tn2 = p2.ParameterType.FullName;
-                        if(!tn1.Equals(tn2))
-                            argsEqual = false;
-                    }
+                bool namesEqual = rName.Equals(mName);
+                // Don't need to compare declaring types if this is a
+                // virtual call and the recieving object is the same
+                bool typesEqual =
+                    insn.OpCode.Value == OpCodeConstants.Callvirt ||
+                    rDecl.Equals(mDecl);
+                if (argsEqual) {
+			argsEqual = CheckParameters (method, mref);
                 }
-                if(rName.Equals(mName) && rDecl.Equals(mDecl) && argsEqual) {
+                if(namesEqual && typesEqual && argsEqual) {
                     if(LoadsVerbatimArgs(method, i)) {
                         MessageCollection messages = new MessageCollection();
                         string etype = method.DeclaringType.FullName;
@@ -74,6 +67,21 @@ public class BadRecursiveInvocationRule : IMethodRule {
         }
         return runner.RuleSuccess;
     }
+
+	// note: parameter names do not have to match because we can be 
+	// calling a base class virtual method
+	private bool CheckParameters (MethodReference caller, MethodReference callee)
+	{
+		for (int j = 0; j < callee.Parameters.Count; j++) {
+			ParameterDefinition p1 = (ParameterDefinition) callee.Parameters[j];
+			ParameterDefinition p2 = (ParameterDefinition) caller.Parameters[j];
+
+			if (p1.ParameterType.FullName != p2.ParameterType.FullName)
+				return false;
+		}
+		// complete match (of types)
+		return true;
+	}
 
     private bool LoadsVerbatimArgs([NonNull] MethodDefinition method,
             int callIndex)

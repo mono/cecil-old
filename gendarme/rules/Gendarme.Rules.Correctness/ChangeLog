@@ -1,3 +1,9 @@
+2006-10-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* BadRecursiveInvocationRule.cs: Fix case where the compiler (CSC)
+	selects the base class to call (fix by Aaron Tomb). Also remove the
+	check for parameter names which may not match in the base class.
+
 2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Concurrency.xml.in: Update Uri for rules (to generate
