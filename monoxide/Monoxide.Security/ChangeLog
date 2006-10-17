@@ -1,0 +1,8 @@
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: New. Assembly/plugin information.
+	* CallerAnalysisView.cs: New. Display a graphical view of the all the 
+	public callers leading to the selected entry point (method).
+	* CallerPlugIn.cs: New. Plugin registration (of it's view).
+	* Monoxide.Security.mdp: MonoDevelop project file for the security 
+	plugin.

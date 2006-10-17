@@ -1,0 +1,33 @@
+<Combine name="Monoxide" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="Monoxide.Security" configuration="Debug" />
+      <Entry build="True" name="Monoxide.Plugins" configuration="Debug" />
+      <Entry build="True" name="Monoxide.Ilasm" configuration="Debug" />
+      <Entry build="True" name="Monoxide.Metadata" configuration="Debug" />
+      <Entry build="True" name="Monoxide" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="Monoxide.Security" configuration="Release" />
+      <Entry build="True" name="Monoxide.Plugins" configuration="Release" />
+      <Entry build="True" name="Monoxide.Ilasm" configuration="Release" />
+      <Entry build="True" name="Monoxide.Metadata" configuration="Release" />
+      <Entry build="True" name="Monoxide" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <DeployTargets />
+  <StartMode startupentry="Monoxide" single="True">
+    <Execute type="None" entry="Monoxide.Security" />
+    <Execute type="None" entry="Monoxide.Plugins" />
+    <Execute type="None" entry="Monoxide.Ilasm" />
+    <Execute type="None" entry="Monoxide.Metadata" />
+    <Execute type="None" entry="Monoxide" />
+  </StartMode>
+  <Entries>
+    <Entry filename="./Monoxide.Security/Monoxide.Security.mdp" />
+    <Entry filename="./Monoxide.Plugins/Monoxide.Plugins.mdp" />
+    <Entry filename="./Monoxide.Ilasm/Monoxide.Ilasm.mdp" />
+    <Entry filename="./Monoxide.Metadata/Monoxide.Metadata.mdp" />
+    <Entry filename="./Monoxide/Monoxide.mdp" />
+  </Entries>
+</Combine>

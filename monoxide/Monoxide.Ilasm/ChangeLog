@@ -1,0 +1,7 @@
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: New. Assembly/plugin information.
+	* IlasmGraphView.cs: New. Display a graphical view to IL (digraph).
+	* IlasmPlugIn.cs: New. Plugin registration (of it's views).
+	* IlasmSourceView.cs: New. Display a textual view of IL source code.
+	* Monoxide.Ilasm.mdp: MonoDevelop project file for the IL plugin.

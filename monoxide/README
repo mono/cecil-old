@@ -1,0 +1,47 @@
+monoXide: View globally, fix locally
+Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+
+
+What is it ?
+
+monoXide is an extensible assembly viewer written using Cecil and Gtk#. 
+It's main purpose, just like it's cousin Gendarme, is to help find 
+defects in compiled software. However monoXide strategy is different.
+Gendarme provides rules that can be used/automated without much human
+involvement, while monoXide is an interactive tool to find problem for 
+which no rules exists. If, after a while, some defect pattern emerge 
+then it's time to turn this new knowledge into a Gendarme rule.
+
+Contributors are welcome.
+
+
+History (pre-SVN)
+
+monoXide evolved from a few graphs I produced in early 2005 by playing with
+Cecil and dot (graphviz). Soon after starting monoXide it became apparent 
+that a rule-based tool would be more useful to the Mono community. So was
+born Gendarme. In late 2005 my laptop hard drive died with the most up to 
+date (i.e. cleaned up) monoXide source code. Eventually I got over that 
+and started, from an older backup, cleaning the source again in the summer
+of 2006.
+
+* http://pages.infinit.net/ctech/20050327-0940.html
+* http://pages.infinit.net/ctech/20050418-1109.html
+* http://pages.infinit.net/ctech/20050425-0635.html
+
+
+Warning
+
+Carefully review any license agreements before using monoXide on any
+assembly that you have not written yourself. In many cases using monoXide
+could be interpreted as some kind of reverse engineering.
+
+
+Requirements
+
+* Mono
+  URL	http://www.mono-project.com/
+* Cecil
+  URL	http://www.mono-project.com/Cecil
+* graphviz (dot)
+  URL	http://www.graphviz.org/

@@ -1,0 +1,10 @@
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: New. Assembly information.
+	* Config.cs: New. Configuration handler.
+	* Monoxide.cs: New. Main UI and (too much) general logic.
+	* monoxide.glade: New. Glade file for UI,
+	* monoxide.gladep: New. Glade project file.
+	* Monoxide.mdp: New. MonoDevelop project file for the GUI.
+	* WorkingSet.cs: New. Class to handle a group of related assemblies 
+	and plugins.

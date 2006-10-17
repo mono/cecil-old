@@ -1,0 +1,5 @@
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: New. Assembly information.
+	* Monoxide.Plugins.mdp: : MonoDevelop project file for plugin helper 
+	assembly.

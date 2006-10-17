@@ -1,0 +1,3 @@
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* IPlugIn.cs: New. Interfaces for the plugins.
