@@ -203,7 +203,8 @@ namespace Mono.Cecil {
 							methref.GenericParameters.Add (new GenericParameter (i, methref));
 					}
 
-					nc.Method = methref;
+					if (methref.GenericParameters.Count > 0)
+						nc.Method = methref;
 
 					methref.ReturnType = GetMethodReturnType (ms, nc);
 
@@ -216,7 +217,6 @@ namespace Mono.Cecil {
 						methref.Parameters.Add (pdef);
 					}
 					member = methref;
-					nc.Method = methref;
 				}
 				break;
 			case TokenType.Method :
