@@ -87,26 +87,30 @@ namespace Mono.Linker {
 					}
 				}
 
-				string param = (string) q.Dequeue ();
 				switch (token [1]) {
 				case 'o':
-					context.OutputDirectory = param;
+					context.OutputDirectory = GetParam (q);
 					break;
-				case 'p':
-					context.PreserveCoreLibraries = bool.Parse (param);
+				case 'c':
+					context.CopyCoreLibraries = bool.Parse (GetParam (q));
+					break;
+				case 's':
+					context.SkipCoreLibraries = bool.Parse (GetParam (q));
 					break;
 				case 'x':
 					if (resolver)
 						Usage ();
 
-					p.PrependStep (new ResolveFromXmlStep (new XPathDocument (param)));
+					p.PrependStep (new ResolveFromXmlStep (new XPathDocument (GetParam (q))));
 					resolver = true;
 					break;
 				case 'a':
 					if (resolver)
 						Usage ();
 
-					p.PrependStep (new ResolveFromAssemblyStep (param));
+					while (q.Count > 0)
+						p.PrependStep (new ResolveFromAssemblyStep (GetParam (q)));
+
 					resolver = true;
 					break;
 				default:
@@ -116,7 +120,7 @@ namespace Mono.Linker {
 			}
 
 			/*
-			if (!context.PreserveCoreLibraries) {
+			if (!context.CopyCoreLibraries) {
 				p.AddStepBefore (typeof (MarkStep),
 					new ResolveFromXmlStep (
 						GetCorlibDescriptor ()));
@@ -127,6 +131,11 @@ namespace Mono.Linker {
 				Usage ();
 
 			p.Process(context);
+		}
+
+		static string GetParam (Queue q)
+		{
+			return (string) q.Dequeue ();
 		}
 
 		static XPathDocument GetCorlibDescriptor()
@@ -154,7 +163,7 @@ namespace Mono.Linker {
 		static LinkContext GetDefaultContext ()
 		{
 			LinkContext context = new LinkContext ();
-			context.PreserveCoreLibraries = true;
+			context.CopyCoreLibraries = true;
 			context.OutputDirectory = ".";
 			return context;
 		}
@@ -162,14 +171,16 @@ namespace Mono.Linker {
 		static void Usage ()
 		{
 			Console.WriteLine (_linker);
-			Console.WriteLine ("linker [options] -x|-a file");
+			Console.WriteLine ("linker [options] -x|-a file [files...]");
 
 			Console.WriteLine ("   --about     About the {0}", _linker);
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
 			Console.WriteLine ("   -out        Specify the output directory, default to .");
-			Console.WriteLine ("   -p          Preserve the core libraries, true or false, default to true");
+			Console.WriteLine ("   -c          Copy the core libraries, true or false, default to true");
+			Console.WriteLine ("   -s          Skip the core libraries, true or false, default to false,");
+			Console.WriteLine ("               overrides -c settings");
 			Console.WriteLine ("   -x          Link from an XML descriptor");
-			Console.WriteLine ("   -a          Link from an assembly");
+			Console.WriteLine ("   -a          Link from a list of assemblies");
 			Console.WriteLine ("");
 			Console.WriteLine ("   you have to choose one from -x and -a but not both");
 

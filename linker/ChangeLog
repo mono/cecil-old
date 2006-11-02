@@ -1,3 +1,8 @@
+2006-11-02  Jb Evain  <jbevain@gmail.com>
+
+	* check-in patches adapted from contributions by:
+		Alex Prudkiy <prudkiy@mail.ru>
+
 2006-08-21  Jb Evain  <jbevain@gmail.com>
 
 	* mark types used within the runtime

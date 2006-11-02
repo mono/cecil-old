@@ -45,10 +45,14 @@ namespace Mono.Linker {
 
 		void OutputAssembly(AssemblyMarker am, string directory)
 		{
-			if (am.Action == AssemblyAction.Link)
-				AssemblyFactory.SaveAssembly(am.Assembly, GetAssemblyFile (am.Assembly, directory));
-			else
+			switch (am.Action) {
+			case AssemblyAction.Link:
+				AssemblyFactory.SaveAssembly (am.Assembly, GetAssemblyFile (am.Assembly, directory));
+				break;
+			case AssemblyAction.Copy:
 				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
+				break;
+			}
 		}
 
 		void CopyAssembly (FileInfo fi, string directory)

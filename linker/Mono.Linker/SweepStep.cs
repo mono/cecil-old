@@ -37,10 +37,10 @@ namespace Mono.Linker {
 		public void Process (LinkContext context)
 		{
 			foreach (AssemblyMarker am in context.GetAssemblies ())
-				SweepAssembly (am);
+				SweepAssembly (am, context);
 		}
 
-		void SweepAssembly(AssemblyMarker am)
+		void SweepAssembly(AssemblyMarker am, LinkContext context)
 		{
 			Hashtable typesUsed = new Hashtable ();
 			foreach (TypeMarker tm in am.GetTypes ()) {
@@ -49,8 +49,14 @@ namespace Mono.Linker {
 			}
 
 			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types))
-				if (!typesUsed.Contains (type.ToString ()))
+				if (!typesUsed.Contains (type.ToString ())) {
 					am.Assembly.MainModule.Types.Remove (type);
+					foreach (AssemblyMarker marker in context.GetAssemblies ()) {
+						ModuleDefinition module = marker.Assembly.MainModule;
+						if (module.TypeReferences.Contains (type))
+							module.TypeReferences.Remove (type);
+					}
+				}
 		}
 
 		void SweepType (TypeMarker tm)

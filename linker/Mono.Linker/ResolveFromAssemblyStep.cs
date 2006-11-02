@@ -42,7 +42,7 @@ namespace Mono.Linker {
 		public override void Process (LinkContext context)
 		{
 			AssemblyDefinition asm = AssemblyFactory.GetAssembly (_assembly);
-			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Preserve, asm);
+			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Copy, asm);
 			foreach (TypeDefinition type in asm.MainModule.Types) {
 				TypeMarker tm = marker.Mark (type);
 

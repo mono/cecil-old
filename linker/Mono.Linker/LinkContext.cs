@@ -36,7 +36,8 @@ namespace Mono.Linker {
 
 		Hashtable _asmCtx;
 		string _outputDirectory;
-		bool _preserveCoreLibraries;
+		bool _copyCoreLibraries;
+		bool _skipCoreLibraries;
 
 		IAssemblyResolver _resolver;
 
@@ -45,9 +46,14 @@ namespace Mono.Linker {
 			set { _outputDirectory = value; }
 		}
 
-		public bool PreserveCoreLibraries {
-			get { return _preserveCoreLibraries; }
-			set { _preserveCoreLibraries = value; }
+		public bool CopyCoreLibraries {
+			get { return _copyCoreLibraries; }
+			set { _copyCoreLibraries = value; }
+		}
+
+		public bool SkipCoreLibraries {
+			get { return _skipCoreLibraries; }
+			set { _skipCoreLibraries = value; }
 		}
 
 		public bool OnMono {
@@ -76,12 +82,20 @@ namespace Mono.Linker {
 			if (_asmCtx.Contains (reference.FullName))
 				return (AssemblyMarker) _asmCtx [reference.FullName];
 
+			AssemblyAction action = AssemblyAction.Link;
+			if (IsCore (reference)) {
+				if (_copyCoreLibraries)
+					action = AssemblyAction.Copy;
+				else if (_skipCoreLibraries)
+					action = AssemblyAction.Skip;
+			}
+
 			AssemblyMarker marker = new AssemblyMarker (
-				_preserveCoreLibraries && IsCore (reference) ? AssemblyAction.Preserve : AssemblyAction.Link,
+				action,
 				_resolver.Resolve (reference));
 
 			if (marker.Assembly.Name.Name == "mscorlib")
-				marker.Action = AssemblyAction.Preserve;
+				marker.Action = AssemblyAction.Skip;
 
 			_asmCtx.Add (reference.FullName, marker);
 			return marker;
@@ -89,7 +103,10 @@ namespace Mono.Linker {
 
 		bool IsCore (AssemblyNameReference name)
 		{
-			return name.Name == "mscorlib" || name.Name.StartsWith ("System");
+			return name.Name == "mscorlib"
+				|| name.Name == "Accessibility"
+				|| name.Name.StartsWith ("System")
+				|| name.Name.StartsWith ("Microsoft");
 		}
 
 		public void AddMarker (AssemblyMarker marker)

@@ -90,7 +90,7 @@ namespace Mono.Linker.Tests {
 		void Compare ()
 		{
 			foreach (AssemblyMarker am in Context.GetAssemblies ()) {
-				if (am.Action == AssemblyAction.Preserve)
+				if (am.Action != AssemblyAction.Link)
 					continue;
 
 				string fileName = GetAssemblyFileName (am.Assembly);
