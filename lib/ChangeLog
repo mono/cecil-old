@@ -1,3 +1,9 @@
+2006-11-03  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/PropertyDefinition.cs:
+		Fix property cloning.
+		Patch by Alex Prudkiy <prudkiy@mail.ru>
+
 2006-10-26  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs:

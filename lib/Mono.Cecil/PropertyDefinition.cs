@@ -167,9 +167,9 @@ namespace Mono.Cecil {
 			if (context != null && context.GenericContext.Type is TypeDefinition) {
 				TypeDefinition type = context.GenericContext.Type as TypeDefinition;
 				if (prop.SetMethod != null)
-					np.SetMethod = type.Methods.GetMethod (prop.SetMethod.Name) [0];
+					np.SetMethod = type.Methods.GetMethod (prop.SetMethod.Name, prop.SetMethod.Parameters);
 				if (prop.GetMethod != null)
-					np.GetMethod = type.Methods.GetMethod (prop.GetMethod.Name) [0];
+					np.GetMethod = type.Methods.GetMethod (prop.GetMethod.Name, prop.GetMethod.Parameters);
 			}
 
 			foreach (CustomAttribute ca in prop.CustomAttributes)
