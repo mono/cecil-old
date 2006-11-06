@@ -97,7 +97,7 @@ namespace Mono.Merge {
 		{
 			if (!MemberReferencesContains (Target.MainModule.MemberReferences, member)) {
 				TypeReference tr = GetTypeReference (member.DeclaringType);
-				if (tr.Scope != (IMetadataScope) Target) {
+				if (tr.Scope != Target.MainModule) {
 					member.DeclaringType = tr;
 					Target.MainModule.MemberReferences.Add (member);
 				}
