@@ -96,11 +96,8 @@ namespace Mono.Merge {
 		public override void VisitMemberReference (MemberReference member)
 		{
 			if (!MemberReferencesContains (Target.MainModule.MemberReferences, member)) {
-				TypeReference tr = GetTypeReference (member.DeclaringType);
-				if (tr.Scope != Target.MainModule) {
-					member.DeclaringType = tr;
-					Target.MainModule.MemberReferences.Add (member);
-				}
+				member.DeclaringType = GetTypeReference (member.DeclaringType);
+				Target.MainModule.MemberReferences.Add (member);
 			}
 		}
 
