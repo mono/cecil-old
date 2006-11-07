@@ -7,6 +7,7 @@
       <Entry build="True" name="Gendarme.Rules.Exceptions" configuration="Debug" />
       <Entry build="True" name="Gendarme.Rules.Correctness" configuration="Debug" />
       <Entry build="True" name="Gendarme.Rules.Concurrency" configuration="Debug" />
+      <Entry build="True" name="Gendarme.Rules.Ui" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Gendarme.Rules.Security" configuration="Release" />
@@ -15,6 +16,7 @@
       <Entry build="True" name="Gendarme.Rules.Exceptions" configuration="Release" />
       <Entry build="True" name="Gendarme.Rules.Correctness" configuration="Release" />
       <Entry build="True" name="Gendarme.Rules.Concurrency" configuration="Release" />
+      <Entry build="True" name="Gendarme.Rules.Ui" configuration="Release" />
     </Configuration>
   </Configurations>
   <DeployTargets />
@@ -25,6 +27,7 @@
     <Execute type="None" entry="Gendarme.Rules.Exceptions" />
     <Execute type="None" entry="Gendarme.Rules.Correctness" />
     <Execute type="None" entry="Gendarme.Rules.Concurrency" />
+    <Execute type="None" entry="Gendarme.Rules.Ui" />
   </StartMode>
   <Entries>
     <Entry filename="./Gendarme.Rules.Security/Gendarme.Rules.Security.mdp" />
@@ -33,5 +36,6 @@
     <Entry filename="./Gendarme.Rules.Exceptions/Gendarme.Rules.Exceptions.mdp" />
     <Entry filename="./Gendarme.Rules.Correctness/Gendarme.Rules.Correctness.mdp" />
     <Entry filename="./Gendarme.Rules.Concurrency/Gendarme.Rules.Concurrency.mdp" />
+    <Entry filename="./Gendarme.Rules.Ui/Gendarme.Rules.Ui.mdp" />
   </Entries>
 </Combine>

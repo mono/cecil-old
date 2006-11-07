@@ -1,3 +1,10 @@
+2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Add Gendarme.Rules.Ui to the build.
+	* rules.xml: Add UI rules to "all" and a new "ui" ruleset.
+	* rules.mds: Add UI rules project to the solution.
+	* tests.mds: Add UI unit tests project to the solution.
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.

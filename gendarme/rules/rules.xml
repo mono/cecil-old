@@ -5,6 +5,7 @@
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
 		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
+		<rules include="*" from="Gendarme.Rules.Ui.dll" />
 	</ruleset>
 	<ruleset name="concurrency">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
@@ -23,5 +24,8 @@
 	</ruleset>
 	<ruleset name="exceptions">
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
+	</ruleset>
+	<ruleset name="ui">
+		<rules include="*" from="Gendarme.Rules.Ui.dll" />
 	</ruleset>
 </gendarme>
