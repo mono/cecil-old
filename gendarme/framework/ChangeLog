@@ -1,10 +1,13 @@
-2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
+2006-11-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* framework.mdp: Update to add new file.
+	* Gendarme.Framework.csproj: Update to add new file.
 	* Makefile.am: Update to add new file.
 	* Message.cs: Reformat source to follow Mono source style. Ensure that
 	ToString works if a Location is null (e.g. rules on assemblies and 
 	modules may not have a location).
+	* MessageCollection.cs: Add new ctor that accept a Message. Easier to
+	use when returning a collection with a single message.
 	* MessageType.cs: New file. Moved enum from Message.cs.
 
 2006-10-09  Sebastien Pouliot  <sebastien@ximian.com>

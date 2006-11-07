@@ -36,6 +36,17 @@ namespace Gendarme.Framework {
 
 		private ArrayList innerList = new ArrayList ();
 
+
+		public MessageCollection ()
+		{
+		}
+
+		public MessageCollection (Message msg)
+			: this ()
+		{
+			Add (msg);
+		}
+
 		/// <summary>
 		/// Adds the given message to this collection
 		/// </summary>

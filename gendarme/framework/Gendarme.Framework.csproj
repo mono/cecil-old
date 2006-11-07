@@ -39,6 +39,7 @@
     <Compile Include="Location.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageCollection.cs" />
+    <Compile Include="MessageType.cs" />
     <Compile Include="MinimalRunner.cs" />
     <Compile Include="RuleCollection.cs" />
     <Compile Include="RuleInformation.cs" />
