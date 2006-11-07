@@ -1,6 +1,6 @@
 AC_INIT(README)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(gendarme, 0.0.3.0)
+AM_INIT_AUTOMAKE(gendarme, 0.0.3.1)
 AM_MAINTAINER_MODE
 
 AC_PROG_INSTALL
@@ -73,4 +73,7 @@ rules/Gendarme.Rules.Portability/Test/Makefile
 rules/Gendarme.Rules.Exceptions/Makefile
 rules/Gendarme.Rules.Exceptions/Gendarme.Rules.Exceptions.xml
 rules/Gendarme.Rules.Exceptions/Test/Makefile
+rules/Gendarme.Rules.Ui/Makefile
+rules/Gendarme.Rules.Ui/Gendarme.Rules.Ui.xml
+rules/Gendarme.Rules.Ui/Test/Makefile
 ])

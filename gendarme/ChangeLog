@@ -1,3 +1,8 @@
+2006-11-06  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* configure.ac: Add Gendarme.Rules.Ui to the build and bump version
+	number to 0.0.3.1 (just to avoid confusion with released 0.0.3).
+
 2006-10-16  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* configure.ac: Bump for 0.0.3 release.
