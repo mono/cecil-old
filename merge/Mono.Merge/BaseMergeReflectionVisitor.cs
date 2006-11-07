@@ -139,15 +139,13 @@ namespace Mono.Merge {
 					Generics [res.FullName] = res;
 				}
 				return res;
-			} else if (type is ArrayType) {
-				(type as ArrayType).ElementType = GetTypeReference ((type as ArrayType).ElementType);
-				return type;
-			} else if (type is ReferenceType) {
-				(type as ReferenceType).ElementType = GetTypeReference ((type as ReferenceType).ElementType);
-				return type;
 			} else if (type is GenericParameter)
 				return type; //TODO: needed to be checked
-			else if (type == null && !throwError)
+			else if (type is TypeSpecification) {
+				TypeSpecification spec = type as TypeSpecification;
+				spec.ElementType = GetTypeReference (spec.ElementType);
+				return type;
+			} else if (type == null && !throwError)
 				return null;
 			else if (type.DeclaringType != null) {
 				TypeReference result = GetTypeDefinition (target.MainModule.Types, type);
