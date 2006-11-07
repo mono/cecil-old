@@ -10,7 +10,7 @@ framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 		    RuleInformation.cs  RuleInformationManager.cs \
 		    Rules.cs Runner.cs Violation.cs Violations.cs \
 		    Message.cs Location.cs MinimalRunner.cs \
-		    MessageCollection.cs
+		    MessageCollection.cs MessageType.cs
 
 framework_build_sources = $(addprefix $(srcdir)/, $(framework_sources))
 framework_build_sources += $(framework_generated_sources)

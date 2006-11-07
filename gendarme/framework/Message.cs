@@ -12,41 +12,39 @@
  * See the included LICENSE.MIT file for details.
  **********************************************************************/
 
-namespace Gendarme.Framework{
+namespace Gendarme.Framework {
 
-public class Message {
-    private string text;
-    private Location location;
-    private MessageType type;
+	public class Message {
+	
+		private string text;
+		private Location location;
+		private MessageType type;
 
-    public Message(string text, Location location, MessageType type)
-    {
-        this.text = text;
-        this.location = location;
-        this.type = type;
-    }
+		public Message (string text, Location location, MessageType type)
+		{
+			this.text = text;
+			this.location = location;
+			this.type = type;
+		}
 
-    public string Text {
-        get { return text; }
-    }
+		public string Text {
+			get { return text; }
+		}
 
-    public Location Location {
-        get { return location; }
-    }
+		public Location Location {
+			get { return location; }
+		}
 
-    public MessageType Type {
-        get { return type; }
-    }
+		public MessageType Type {
+			get { return type; }
+		}
 
-    public override string ToString()
-    {
-        return location.ToString() + ": " + text;
-    }
-}
-
-public enum MessageType {
-    Error,
-    Warning
-}
-
+		public override string ToString ()
+		{
+			if (location != null)
+				return location.ToString () + ": " + text;
+			else
+				return text;
+		}
+	}
 }
