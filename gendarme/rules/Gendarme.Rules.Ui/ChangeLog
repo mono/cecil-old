@@ -1,0 +1,10 @@
+2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ChangeLog: New. Track changes to UI rules.
+	* ExecutableTargetRule.cs: New. Abstract rule to detect /target:winexe
+	in GUI applications.
+	* Gendarme.Rules.Ui.mdp: New. MonoDevelop project file for rules.
+	* Gendarme.Rules.Ui.xml.in: New. XML description of the rules.
+	* GtkSharpExecutableTargetRule.cs: New. Rule for Gtk#.
+	* Makefile.am: New. Build file.
+	* SystemWindowsFormsExecutableTargetRule.cs: New. Rule for SWF.

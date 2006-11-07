@@ -1,0 +1,8 @@
+2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ChangeLog: New. Track changes to UI rules.
+	* ExecutableTargetTest.cs: New. Data (assemblies) for tests.
+	* GtkSharpExecutableTargetTest.cs: New. Tests for Gtk# apps.
+	* Makefile.am: New. Build file.
+	* SystemWindowsFormsExecutableTargetTest.cs: New. Tests for SWF apps.
+	* Test.Rules.Ui.mdp: New. MonoDevelop project file for unit tests.
