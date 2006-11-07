@@ -91,6 +91,9 @@ namespace Gendarme.Framework {
 			int total = 0;
 			Assembly a = Assembly.LoadFile (Path.GetFullPath (assembly));
 			foreach (Type t in a.GetTypes ()) {
+				if (t.IsAbstract)
+					continue;
+
 				bool added = false;
 				if (t.GetInterface ("Gendarme.Framework.IAssemblyRule") != null) {
 					Rules.Assembly.Add (CreateRuleFromType (t));
