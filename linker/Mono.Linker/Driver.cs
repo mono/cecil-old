@@ -93,9 +93,11 @@ namespace Mono.Linker {
 					break;
 				case 'c':
 					context.CopyCoreLibraries = bool.Parse (GetParam (q));
+					context.SkipCoreLibraries = !context.CopyCoreLibraries;
 					break;
 				case 's':
 					context.SkipCoreLibraries = bool.Parse (GetParam (q));
+					context.CopyCoreLibraries = !context.SkipCoreLibraries;
 					break;
 				case 'x':
 					if (resolver)

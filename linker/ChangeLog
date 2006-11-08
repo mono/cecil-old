@@ -1,3 +1,10 @@
+2006-11-08  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Linker/AssemblyMarker.cs:
+		Fix a bug in method resolution.
+	* Mono.Linker/Driver.cs:
+		Fix a bug in assembly action processing.
+
 2006-11-02  Jb Evain  <jbevain@gmail.com>
 
 	* check-in patches adapted from contributions by:

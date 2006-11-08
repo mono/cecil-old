@@ -148,7 +148,7 @@ namespace Mono.Linker {
 
 		bool AreSame(TypeReference a, TypeReference b)
 		{
-			if (a is TypeSpecification || b is TypeSpecification) {
+			while (a is TypeSpecification || b is TypeSpecification) {
 				if (a.GetType () != b.GetType ())
 					return false;
 
