@@ -93,11 +93,9 @@ namespace Mono.Linker {
 					break;
 				case 'c':
 					context.CopyCoreLibraries = bool.Parse (GetParam (q));
-					context.SkipCoreLibraries = !context.CopyCoreLibraries;
 					break;
 				case 's':
 					context.SkipCoreLibraries = bool.Parse (GetParam (q));
-					context.CopyCoreLibraries = !context.SkipCoreLibraries;
 					break;
 				case 'x':
 					if (resolver)
@@ -121,6 +119,9 @@ namespace Mono.Linker {
 				}
 			}
 
+			if (context.SkipCoreLibraries)
+				context.CopyCoreLibraries = false;
+
 			/*
 			if (!context.CopyCoreLibraries) {
 				p.AddStepBefore (typeof (MarkStep),
@@ -132,7 +133,7 @@ namespace Mono.Linker {
 			if (!resolver)
 				Usage ();
 
-			p.Process(context);
+			p.Process (context);
 		}
 
 		static string GetParam (Queue q)
