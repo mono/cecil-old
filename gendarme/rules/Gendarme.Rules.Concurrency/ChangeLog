@@ -1,3 +1,12 @@
+2006-11-11  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Concurrency.mdp: Add new rule to MonoDevelop project.
+	* Gendarme.Rules.Concurrency.xml.in: Add description and information
+	about the new WriteStaticFieldFromInstanceMethodRule rule.
+	* Makefile.am: Add WriteStaticFieldFromInstanceMethodRule rule and 
+	tests to the build.
+	* WriteStaticFieldFromInstanceMethodRule.cs: New rule.
+
 2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Concurrency.xml.in: Update Uri for rules (to generate
