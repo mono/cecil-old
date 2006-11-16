@@ -1,3 +1,9 @@
+2006-11-06  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		If an assembly has no managed assembly defined,
+		consider it as a dll.
+
 2006-11-08  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/BaseAssemblyResolver.cs:

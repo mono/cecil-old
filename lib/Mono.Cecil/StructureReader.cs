@@ -104,7 +104,7 @@ namespace Mono.Cecil {
 				break;
 			}
 
-			if (m_img.HintNameTable.RuntimeMain == HintNameTable.RuntimeMainDll)
+			if (m_img.HintNameTable.RuntimeMain == HintNameTable.RuntimeMainDll || m_img.CLIHeader.EntryPointToken == 0)
 				asm.Kind = AssemblyKind.Dll;
 			else if (m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsGui ||
 				m_img.PEOptionalHeader.NTSpecificFields.SubSystem == SubSystem.WindowsCeGui)
