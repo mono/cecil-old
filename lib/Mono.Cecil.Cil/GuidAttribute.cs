@@ -58,7 +58,7 @@ namespace Mono.Cecil.Cil {
 			byte j,
 			byte k)
 		{
-			m_guid = new Guid (a, b, c, d, e, f, g, h, i, j, k);
+			m_guid = new Guid ((int) a, (short) b, (short) c, d, e, f, g, h, i, j, k);
 		}
 
 		public static int GetValueFromGuid (Guid id, Type enumeration)
