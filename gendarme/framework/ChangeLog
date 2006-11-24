@@ -1,3 +1,8 @@
+2006-11-23  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Runner.cs: I forgot that constructors were kept apart from methods.
+	Rules will now be executed against all type's constructors as well.
+
 2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* framework.mdp: Update to add new file.

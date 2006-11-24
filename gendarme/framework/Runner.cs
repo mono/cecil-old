@@ -142,6 +142,15 @@ namespace Gendarme.Framework {
 							Violations.Add (rule, type, messages);
 					}
 
+					foreach (MethodDefinition method in type.Constructors) {
+
+						foreach (IMethodRule rule in Rules.Method) {
+							messages = rule.CheckMethod (assembly, module, type, method, this);
+							if (messages != RuleSuccess)
+								Violations.Add (rule, method, messages);
+						}
+					}
+
 					foreach (MethodDefinition method in type.Methods) {
 
 						foreach (IMethodRule rule in Rules.Method) {
