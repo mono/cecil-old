@@ -54,6 +54,11 @@ namespace Mono.Cecil.Metadata {
 			return new MetadataToken (table, (uint) rowIndex + 1);
 		}
 
+		public static MetadataToken FromToken (int token)
+		{
+			return new MetadataToken ((TokenType) (token & 0xff000000), (uint) token & 0x00ffffff);
+		}
+
 		public uint ToUInt ()
 		{
 			return (uint) m_type | m_rid;
