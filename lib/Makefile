@@ -4,11 +4,13 @@ MCS = mcs
 KEY_FILE = ../../mcs/class/mono.snk
 MCS_FLAGS = -keyfile:$(KEY_FILE)
 
-all:
+all: Mono.Cecil.dll mono-cecil.pc
+
+Mono.Cecil.dll: Mono.Cecil.dll.sources */*.cs
 	$(MCS) $(MCS_FLAGS) @Mono.Cecil.dll.sources /target:library /out:Mono.Cecil.dll
 
 clean:
-	rm -f *.dll
+	rm -f Mono.Cecil.dll
 	rm -f mono-cecil.pc
 
 mono-cecil.pc: mono-cecil.pc.in
