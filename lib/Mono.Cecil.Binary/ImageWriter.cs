@@ -413,7 +413,7 @@ namespace Mono.Cecil.Binary {
 
 			WriteSection (m_textSect, m_textWriter);
 			WriteSection (m_relocSect, m_relocWriter);
-			if (m_textSect != null)
+			if (m_rsrcSect != null)
 				WriteSection (m_rsrcSect, m_rsrcWriter);
 		}
 
