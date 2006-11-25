@@ -86,11 +86,6 @@ namespace Mono.Cecil.Cil {
 			return (uint) token & 0x00ffffff;
 		}
 
-		public static bool IsToken (int token, TokenType t)
-		{
-			return token >> 24 == (int) t >> 24;
-		}
-
 		ParameterDefinition GetParameter (MethodBody body, int index)
 		{
 			if (body.Method.HasThis) {
@@ -178,54 +173,77 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = m_root.Streams.UserStringsHeap [GetRid (br.ReadInt32 ())];
 					break;
 				case OperandType.InlineField :
-					int field = br.ReadInt32 ();
-					if (IsToken (field, TokenType.Field))
-						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (field));
-					else if (IsToken (field, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (field), context);
-					else
-						throw new ReflectionException ("Wrong token for InlineField Operand: {0}", field.ToString ("x8"));
+					MetadataToken field = new MetadataToken (br.ReadInt32 ());
+					switch (field.TokenType) {
+					case TokenType.Field:
+						instr.Operand = m_reflectReader.GetFieldDefAt (field.RID);
+						break;
+					case TokenType.MemberRef:
+						instr.Operand = m_reflectReader.GetMemberRefAt (field.RID, context);
+						break;
+					default:
+						throw new ReflectionException ("Wrong token for InlineField Operand: " + field);
+					}
 					break;
 				case OperandType.InlineMethod :
-					int meth = br.ReadInt32 ();
-					if (IsToken (meth, TokenType.Method))
-						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (meth));
-					else if (IsToken (meth, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (meth), context);
-					else if (IsToken (meth, TokenType.MethodSpec))
-						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (meth), context);
-					else
-						throw new ReflectionException ("Wrong token for InlineMethod Operand: {0}", meth.ToString ("x8"));
+					MetadataToken meth = new MetadataToken (br.ReadInt32 ());
+					switch (meth.TokenType) {
+					case TokenType.Method:
+						instr.Operand = m_reflectReader.GetMethodDefAt (meth.RID);
+						break;
+					case TokenType.MemberRef:
+						instr.Operand = m_reflectReader.GetMemberRefAt (meth.RID, context);
+						break;
+					case TokenType.MethodSpec:
+						instr.Operand = m_reflectReader.GetMethodSpecAt (meth.RID, context);
+						break;
+					default:
+						throw new ReflectionException ("Wrong token for InlineMethod Operand: " + meth);
+					}
 					break;
 				case OperandType.InlineType :
-					int type = br.ReadInt32 ();
-					if (IsToken (type, TokenType.TypeDef))
-						instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (type));
-					else if (IsToken (type, TokenType.TypeRef))
-						instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (type));
-					else if (IsToken (type, TokenType.TypeSpec))
-						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (type), context);
-					else
-						throw new ReflectionException ("Wrong token for InlineType Operand: {0}", type.ToString ("x8"));
+					MetadataToken type = new MetadataToken (br.ReadInt32 ());
+					switch (type.TokenType) {
+					case TokenType.TypeDef:
+						instr.Operand = m_reflectReader.GetTypeDefAt (type.RID);
+						break;
+					case TokenType.TypeRef:
+						instr.Operand = m_reflectReader.GetTypeRefAt (type.RID);
+						break;
+					case TokenType.TypeSpec:
+						instr.Operand = m_reflectReader.GetTypeSpecAt (type.RID, context);
+						break;
+					default:
+						throw new ReflectionException ("Wrong token for InlineType Operand: " + type);
+					}
 					break;
 				case OperandType.InlineTok :
-					int token = br.ReadInt32 ();
-					if (IsToken (token, TokenType.TypeDef))
-						instr.Operand = m_reflectReader.GetTypeDefAt (GetRid (token));
-					else if (IsToken (token, TokenType.TypeRef))
-						instr.Operand = m_reflectReader.GetTypeRefAt (GetRid (token));
-					else if (IsToken (token, TokenType.TypeSpec))
-						instr.Operand = m_reflectReader.GetTypeSpecAt (GetRid (token), context);
-					else if (IsToken (token, TokenType.Field))
-						instr.Operand = m_reflectReader.GetFieldDefAt (GetRid (token));
-					else if (IsToken (token, TokenType.Method))
-						instr.Operand = m_reflectReader.GetMethodDefAt (GetRid (token));
-					else if (IsToken (token, TokenType.MethodSpec))
-						instr.Operand = m_reflectReader.GetMethodSpecAt (GetRid (token), context);
-					else if (IsToken (token, TokenType.MemberRef))
-						instr.Operand = m_reflectReader.GetMemberRefAt (GetRid (token), context);
-					else
-						throw new ReflectionException ("Wrong token following ldtoken: {0}", token.ToString ("x8"));
+					MetadataToken token = new MetadataToken (br.ReadInt32 ());
+					switch (token.TokenType) {
+					case TokenType.TypeDef:
+						instr.Operand = m_reflectReader.GetTypeDefAt (token.RID);
+						break;
+					case TokenType.TypeRef:
+						instr.Operand = m_reflectReader.GetTypeRefAt (token.RID);
+						break;
+					case TokenType.TypeSpec:
+						instr.Operand = m_reflectReader.GetTypeSpecAt (token.RID, context);
+						break;
+					case TokenType.Field:
+						instr.Operand = m_reflectReader.GetFieldDefAt (token.RID);
+						break;
+					case TokenType.Method:
+						instr.Operand = m_reflectReader.GetMethodDefAt (token.RID);
+						break;
+					case TokenType.MethodSpec:
+						instr.Operand = m_reflectReader.GetMethodSpecAt (token.RID, context);
+						break;
+					case TokenType.MemberRef:
+						instr.Operand = m_reflectReader.GetMemberRefAt (token.RID, context);
+						break;
+					default:
+						throw new ReflectionException ("Wrong token following ldtoken: " + token);
+					}
 					break;
 				}
 
@@ -285,22 +303,7 @@ namespace Mono.Cecil.Cil {
 					eh.TryEnd = GetInstruction (body, instructions, eh.TryStart.Offset + Convert.ToInt32 (br.ReadByte ()));
 					eh.HandlerStart = GetInstruction (body, instructions, Convert.ToInt32 (br.ReadInt16 ()));
 					eh.HandlerEnd = GetInstruction (body, instructions, eh.HandlerStart.Offset + Convert.ToInt32 (br.ReadByte ()));
-					switch (eh.Type) {
-					case ExceptionHandlerType.Catch :
-						int token = br.ReadInt32 ();
-						if (IsToken (token, TokenType.TypeDef))
-							eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
-						else
-							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
-						break;
-					case ExceptionHandlerType.Filter :
-						eh.FilterStart = GetInstruction (body, instructions, br.ReadInt32 ());
-						eh.FilterEnd = GetInstruction (body, instructions, eh.HandlerStart.Previous.Offset);
-						break;
-					default :
-						br.ReadInt32 ();
-						break;
-					}
+					ReadExceptionHandlerEnd (eh, br, body, instructions);
 					body.ExceptionHandlers.Add (eh);
 				}
 			} else {
@@ -315,28 +318,37 @@ namespace Mono.Cecil.Cil {
 					eh.TryEnd = GetInstruction (body, instructions, eh.TryStart.Offset + br.ReadInt32 ());
 					eh.HandlerStart = GetInstruction (body, instructions, br.ReadInt32 ());
 					eh.HandlerEnd = GetInstruction (body, instructions, eh.HandlerStart.Offset + br.ReadInt32 ());
-					switch (eh.Type) {
-					case ExceptionHandlerType.Catch :
-						int token = br.ReadInt32 ();
-						if (IsToken (token, TokenType.TypeDef))
-							eh.CatchType = m_reflectReader.GetTypeDefAt (GetRid (token));
-						else
-							eh.CatchType = m_reflectReader.GetTypeRefAt (GetRid (token));
-						break;
-					case ExceptionHandlerType.Filter :
-						eh.FilterStart = GetInstruction (body, instructions, br.ReadInt32 ());
-						eh.FilterEnd = GetInstruction (body, instructions, eh.HandlerStart.Previous.Offset);
-						break;
-					default :
-						br.ReadInt32 ();
-						break;
-					}
+					ReadExceptionHandlerEnd(eh, br, body, instructions);
 					body.ExceptionHandlers.Add (eh);
 				}
 			}
 
 			if ((flags & (byte) MethodDataSection.MoreSects) != 0)
 				ReadSection (body, br, instructions);
+		}
+
+		void ReadExceptionHandlerEnd (ExceptionHandler eh, BinaryReader br, MethodBody body, IDictionary instructions)
+		{
+			switch (eh.Type) {
+			case ExceptionHandlerType.Catch :
+				MetadataToken token = new MetadataToken (br.ReadInt32 ());
+				switch (token.TokenType) {
+				case TokenType.TypeDef:
+					eh.CatchType = m_reflectReader.GetTypeDefAt (token.RID);
+					break;
+				default:
+					eh.CatchType = m_reflectReader.GetTypeRefAt (token.RID);
+					break;
+				}
+				break;
+			case ExceptionHandlerType.Filter :
+				eh.FilterStart = GetInstruction (body, instructions, br.ReadInt32 ());
+				eh.FilterEnd = GetInstruction (body, instructions, eh.HandlerStart.Previous.Offset);
+				break;
+			default :
+				br.ReadInt32 ();
+				break;
+			}
 		}
 
 		CallSite GetCallSiteAt (int token, GenericContext context)
@@ -346,7 +358,7 @@ namespace Mono.Cecil.Cil {
 				sasTable [(int) GetRid (token) - 1].Signature);
 			CallSite cs = new CallSite (ms.HasThis, ms.ExplicitThis,
 				ms.MethCallConv, m_reflectReader.GetMethodReturnType (ms, context));
-			cs.MetadataToken = new MetadataToken (TokenType.Signature, GetRid (token));
+			cs.MetadataToken = new MetadataToken (token);
 
 			for (int i = 0; i < ms.ParamCount; i++) {
 				Param p = ms.Parameters [i];

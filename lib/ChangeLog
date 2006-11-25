@@ -1,7 +1,10 @@
-2006-11-24  Jb Evain  <jbevain@gmail.com>
+2006-11-25  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Cil/CodeReader.cs:
+		Do some refactoring.
 
 	* Mono.Cecil.Metadata/MetadataToken.cs:
-		Add a FromToken factory method to get a MetadataToken
+		Add a ctor to get a MetadataToken
 		from an integer token.
 
 2006-11-22  Jb Evain  <jbevain@gmail.com>
