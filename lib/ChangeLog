@@ -1,5 +1,14 @@
 2006-11-25  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/GenericArg.cs
+	  Mono.Cecil.Signatures/GenericInstSignature.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		Deal with modifiers for generic arguments.
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>.
+
 	* Mono.Cecil.Binary/ImageWriter.cs:
 		Fix a bug in writing rsrc sections.
 

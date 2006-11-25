@@ -1,10 +1,10 @@
 //
-// GenericInstSignature.cs
+// GenericArg.cs
 //
 // Author:
-//	Martin Baulig  <martin@ximian.com>
+//   Jb Evain (jbevain@gmail.com)
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// (C) 2006 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,13 +28,14 @@
 
 namespace Mono.Cecil.Signatures {
 
-	internal sealed class GenericInstSignature {
+	class GenericArg {
 
-		public int Arity;
-		public GenericArg [] Types;
+		public CustomMod [] CustomMods;
+		public SigType Type;
 
-		public GenericInstSignature ()
+		public GenericArg (SigType type)
 		{
+			Type = type;
 		}
 	}
 }

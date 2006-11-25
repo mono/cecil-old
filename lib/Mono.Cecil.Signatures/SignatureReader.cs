@@ -510,11 +510,20 @@ namespace Mono.Cecil.Signatures {
 			start = pos;
 			GenericInstSignature gis = new GenericInstSignature ();
 			gis.Arity = Utilities.ReadCompressedInteger (data, start, out start);
-			gis.Types = new SigType [gis.Arity];
+			gis.Types = new GenericArg [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = ReadType (data, start, out start);
+				gis.Types [i] = ReadGenericArg (data, start, out start);
 
 			return gis;
+		}
+
+		GenericArg ReadGenericArg (byte[] data, int pos, out int start)
+		{
+			start = pos;
+			CustomMod [] mods = ReadCustomMods (data, start, out start);
+			GenericArg arg = new GenericArg (ReadType (data, start, out start));
+			arg.CustomMods = mods;
+			return arg;
 		}
 
 		CustomMod [] ReadCustomMods (byte [] data, int pos, out int start)

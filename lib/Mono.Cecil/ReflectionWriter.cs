@@ -1001,9 +1001,9 @@ namespace Mono.Cecil {
 				gi.Type = GetTypeDefOrRefToken (git.ElementType);
 				gi.Signature = new GenericInstSignature ();
 				gi.Signature.Arity = git.GenericArguments.Count;
-				gi.Signature.Types = new SigType [gi.Signature.Arity];
+				gi.Signature.Types = new GenericArg [gi.Signature.Arity];
 				for (int i = 0; i < git.GenericArguments.Count; i++)
-					gi.Signature.Types [i] = GetSigType (git.GenericArguments [i]);
+					gi.Signature.Types [i] = GetGenericArgSig (git.GenericArguments [i]);
 
 				return gi;
 			} else if (type is ArrayType) {
@@ -1062,6 +1062,13 @@ namespace Mono.Cecil {
 				c.Type = GetTypeDefOrRefToken (type);
 				return c;
 			}
+		}
+
+		public GenericArg GetGenericArgSig (TypeReference type)
+		{
+			GenericArg arg = new GenericArg (GetSigType (type));
+			arg.CustomMods = GetCustomMods (type);
+			return arg;
 		}
 
 		public CustomMod [] GetCustomMods (TypeReference type)
@@ -1250,9 +1257,9 @@ namespace Mono.Cecil {
 		{
 			GenericInstSignature gis = new GenericInstSignature ();
 			gis.Arity = gim.GenericArguments.Count;
-			gis.Types = new SigType [gis.Arity];
+			gis.Types = new GenericArg [gis.Arity];
 			for (int i = 0; i < gis.Arity; i++)
-				gis.Types [i] = GetSigType (gim.GenericArguments [i]);
+				gis.Types [i] = GetGenericArgSig (gim.GenericArguments [i]);
 
 			return new MethodSpec (gis);
 		}

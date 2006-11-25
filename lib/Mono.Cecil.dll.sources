@@ -269,6 +269,7 @@
 ./Mono.Cecil.Signatures/CustomMod.cs
 ./Mono.Cecil.Signatures/FieldSig.cs
 ./Mono.Cecil.Signatures/FnPtr.cs
+./Mono.Cecil.Signatures/GenericArg.cs
 ./Mono.Cecil.Signatures/GenericInst.cs
 ./Mono.Cecil.Signatures/GenericInstSignature.cs
 ./Mono.Cecil.Signatures/InputOutputItem.cs

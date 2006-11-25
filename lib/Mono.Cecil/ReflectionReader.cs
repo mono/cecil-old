@@ -279,8 +279,8 @@ namespace Mono.Cecil {
 				throw new ReflectionException ("Unknown method type for method spec");
 
 			gim = new GenericInstanceMethod (meth);
-			foreach (SigType st in sig.Signature.Types)
-				gim.GenericArguments.Add (GetTypeRefFromSig (st, context));
+			foreach (GenericArg arg in sig.Signature.Types)
+				gim.GenericArguments.Add (GetGenericArg (arg, context));
 
 			m_methodSpecs [index] = gim;
 
@@ -996,7 +996,7 @@ namespace Mono.Cecil {
 				instance.IsValueType = ginst.ValueType;
 
 				for (int i = 0; i < ginst.Signature.Arity; i++)
-					instance.GenericArguments.Add (GetTypeRefFromSig (
+					instance.GenericArguments.Add (GetGenericArg (
 						ginst.Signature.Types [i], context));
 
 				return instance;
@@ -1004,6 +1004,14 @@ namespace Mono.Cecil {
 				break;
 			}
 			return null;
+		}
+
+		TypeReference GetGenericArg (GenericArg arg, GenericContext context)
+		{
+			TypeReference type = GetTypeRefFromSig (arg.Type, context);
+			if (arg.CustomMods != null && arg.CustomMods.Length > 0)
+				type = GetModifierType (arg.CustomMods, type);
+			return type;
 		}
 
 		void CheckGenericParameters (GenericContext context, VAR v)

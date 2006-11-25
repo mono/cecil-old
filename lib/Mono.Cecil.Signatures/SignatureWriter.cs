@@ -282,6 +282,12 @@ namespace Mono.Cecil.Signatures {
 				Write (gis.Types [i]);
 		}
 
+		void Write (GenericArg arg)
+		{
+			Write (arg.CustomMods);
+			Write (arg.Type);
+		}
+
 		void Write (Param p)
 		{
 			Write (p.CustomMods);

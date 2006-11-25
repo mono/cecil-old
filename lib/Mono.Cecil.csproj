@@ -182,6 +182,7 @@
     <Compile Include="Mono.Cecil.Signatures\CustomMod.cs" />
     <Compile Include="Mono.Cecil.Signatures\FieldSig.cs" />
     <Compile Include="Mono.Cecil.Signatures\FnPtr.cs" />
+    <Compile Include="Mono.Cecil.Signatures\GenericArg.cs" />
     <Compile Include="Mono.Cecil.Signatures\GenericInst.cs" />
     <Compile Include="Mono.Cecil.Signatures\GenericInstSignature.cs" />
     <Compile Include="Mono.Cecil.Signatures\InputOutputItem.cs" />
