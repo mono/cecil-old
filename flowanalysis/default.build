@@ -3,11 +3,15 @@
 
 	<include buildfile="nunit.inc" />
 
+	<!-- allow properties to be customized in external file" -->
+	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
+
 	<property name="Mono.Cecil.dll" value="../lib/bin/Mono.Cecil.dll" />
 	<property name="build.dir" value="bin" />
 	<property name="booi" value="booi" />
 	<property name="optimize" value="false" />
 	<property name="debug" value="true" />
+	<property name="keyfile" value="../../mcs/class/mono.snk" />
 
 	<target name="test" depends="build">
 		<nunit2>
@@ -33,7 +37,8 @@
 			target="library"
 			output="${build.dir}/Cecil.FlowAnalysis.dll"
 			debug="${debug}"
-			optimize="${optimize}">
+			optimize="${optimize}"
+			keyfile="${keyfile}">
 			<sources basedir="Cecil.FlowAnalysis">
 				<include name="**/*.cs" />
 			</sources>
@@ -86,6 +91,36 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" if="${directory::exists(build.dir)}" />
+	</target>
+
+	<target name="compactframework" depends="init" description="compiles cecil to run on the CompactFramework 1.0">
+		<property name="compactframework.defines" value="CF_1_0" />
+		<property name="compactframework.dir" value="${compactframework.v1.dir}" />
+		<call target="compactframework-compilation" />
+	</target>
+
+	<target name="compactframework2" depends="init" description="compiles cecil to run on the CompactFramework 2.0">
+		<property name="compactframework.defines" value="CF_2_0" />
+		<property name="compactframework.dir" value="${compactframework.v2.dir}" />
+		<call target="compactframework-compilation" />
+	</target>
+
+	<target name="compactframework-compilation">
+		<csc output="${build.dir}/Cecil.FlowAnalysis.dll"
+			target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
+			noconfig="true" nostdlib="true" keyfile="${keyfile}"
+			define="${compactframework.defines}">
+			/>
+			<sources basedir="Cecil.FlowAnalysis">
+				<include name="**/*.cs" />
+			</sources>
+
+			<references>
+				<include name="${compactframework.dir}/mscorlib.dll" />
+				<include name="${compactframework.dir}/System.dll" />
+				<include name="${build.dir}/Mono.Cecil.dll" />
+			</references>
+		</csc>
 	</target>
 
 </project>
