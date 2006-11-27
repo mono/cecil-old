@@ -1,5 +1,10 @@
 2006-11-27  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/TypeDefinitionCollection.cs
+	  CodeGen/templates/NamedCollection.cs:
+		Allow multiple typedefs with the same namespace+name
+		to be able to read unvalid assemblies.
+
 	* Mono.Cecil/ReflectionReader.cs
 	  Mono.Cecil/ReflectionWriter.cs
 	  Mono.Cecil.Signatures/PropertySig.cs

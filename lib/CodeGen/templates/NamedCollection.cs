@@ -101,10 +101,7 @@ namespace <%=$cur_coll.target%> {
 		{
 			if (value == null)
 				throw new ArgumentNullException ("value");
-<% if ($cur_coll.name == "TypeDefinitionCollection") %>
-			if (this.Contains (value))
-				throw new ArgumentException ("Duplicated value");
-<% end %>
+
 			<% if use_event?() %>Attach (value);<% end %>
 
 			this.BaseAdd (value.FullName, value);
