@@ -1,3 +1,18 @@
+2006-11-27  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Signatures/PropertySig.cs
+	  Mono.Cecil.Signatures/SignatureReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		- Deal with modifiers on properties.
+		- Deal with non standard signatures when the byref
+		flag is placed after the custom modifiers.
+	  Mono.Cecil/StructureReader.cs:
+		- Properly detect wether an assembli is a dll or not.
+
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>.
+
 2006-11-25  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionReader.cs

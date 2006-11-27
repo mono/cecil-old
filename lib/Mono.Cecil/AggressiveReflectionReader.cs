@@ -150,6 +150,9 @@ namespace Mono.Cecil {
 					prow.Flags);
 					pdef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Property, j - 1);
 
+					if (psig.CustomMods != null && psig.CustomMods.Length > 0)
+						pdef.PropertyType = GetModifierType (psig.CustomMods, pdef.PropertyType);
+
 					owner.Properties.Add (pdef);
 					m_properties [j - 1] = pdef;
 				}

@@ -152,6 +152,7 @@ namespace Mono.Cecil.Signatures {
 		{
 			m_sigWriter.Write (property.CallingConvention);
 			Write (property.ParamCount);
+			Write (property.CustomMods);
 			Write (property.Type);
 			Write (property.Parameters);
 		}

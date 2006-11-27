@@ -235,6 +235,7 @@ namespace Mono.Cecil.Signatures {
 			property.CallingConvention = m_blobData [start];
 			property.Property = (property.CallingConvention & 0x8) != 0;
 			property.ParamCount = Utilities.ReadCompressedInteger (m_blobData, start + 1, out start);
+			property.CustomMods = ReadCustomMods (m_blobData, start, out start);
 			property.Type = ReadType (m_blobData, start, out start);
 			property.Parameters = ReadParameters (property.ParamCount, m_blobData, start);
 		}
@@ -314,9 +315,12 @@ namespace Mono.Cecil.Signatures {
 				int current = Utilities.ReadCompressedInteger (data, start, out start);
 				if (current == (int) ElementType.Pinned) // the only possible constraint
 					lv.Constraint |= Constraint.Pinned;
-				else if (current == (int) ElementType.ByRef)
+				else if (current == (int) ElementType.ByRef) {
 					lv.ByRef = true;
-				else {
+
+					if (lv.CustomMods == null || lv.CustomMods.Length == 0)
+						lv.CustomMods = ReadCustomMods (data, start, out start);
+				} else {
 					lv.Type = ReadType (data, cursor, out start);
 					break;
 				}
@@ -362,6 +366,10 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.ByRef :
 				rt.TypedByRef = rt.Void = false;
 				rt.ByRef = true;
+
+				if (rt.CustomMods == null || rt.CustomMods.Length == 0)
+					rt.CustomMods = ReadCustomMods (data, start, out start);
+
 				rt.Type = ReadType (data, start, out start);
 				break;
 			default :
@@ -416,6 +424,10 @@ namespace Mono.Cecil.Signatures {
 			case ElementType.ByRef :
 				p.TypedByRef = false;
 				p.ByRef = true;
+
+				if (p.CustomMods == null || p.CustomMods.Length == 0)
+					p.CustomMods = ReadCustomMods (data, start, out start);
+
 				p.Type = ReadType (data, start, out start);
 				break;
 			default :

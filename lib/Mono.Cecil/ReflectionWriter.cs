@@ -1124,10 +1124,9 @@ namespace Mono.Cecil {
 				p.CustomMods = GetCustomMods (pDef.ParameterType);
 				if (pDef.ParameterType.FullName == Constants.TypedReference)
 					p.TypedByRef = true;
-				else if (pDef.ParameterType is ReferenceType) {
+				else if (IsByReferenceType (pDef.ParameterType)) {
 					p.ByRef = true;
-					p.Type = GetSigType (
-						(pDef.ParameterType as ReferenceType).ElementType);
+					p.Type = GetSigType (pDef.ParameterType);
 				} else
 					p.Type = GetSigType (pDef.ParameterType);
 				ret [i] = p;
@@ -1157,14 +1156,24 @@ namespace Mono.Cecil {
 				rtSig.Void = true;
 			else if (meth.ReturnType.ReturnType.FullName == Constants.TypedReference)
 				rtSig.TypedByRef = true;
-			else if (meth.ReturnType.ReturnType is ReferenceType) {
+			else if (IsByReferenceType (meth.ReturnType.ReturnType)) {
 				rtSig.ByRef = true;
-				rtSig.Type = GetSigType (
-					(meth.ReturnType.ReturnType as ReferenceType).ElementType);
+				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 			} else
 				rtSig.Type = GetSigType (meth.ReturnType.ReturnType);
 
 			sig.RetType = rtSig;
+		}
+
+		static bool IsByReferenceType (TypeReference type)
+		{
+			TypeSpecification ts = type as TypeSpecification;
+			while (ts != null) {
+				if (ts is ReferenceType)
+					return true;
+				ts = ts.ElementType as TypeSpecification;
+			}
+			return false;
 		}
 
 		public MethodRefSig GetMethodRefSig (MethodReference meth)
@@ -1241,7 +1250,7 @@ namespace Mono.Cecil {
 
 			ps.ParamCount = paramCount;
 			ps.Parameters = GetParametersSig (parameters);
-
+			ps.CustomMods = GetCustomMods (prop.PropertyType);
 			ps.Type = GetSigType (prop.PropertyType);
 
 			return ps;

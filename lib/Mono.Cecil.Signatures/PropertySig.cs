@@ -32,6 +32,7 @@ namespace Mono.Cecil.Signatures {
 
 		public bool Property;
 		public int ParamCount;
+		public CustomMod [] CustomMods;
 		public SigType Type;
 		public Param [] Parameters;
 
