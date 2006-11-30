@@ -45,13 +45,15 @@ namespace Mono.Merge {
 
 		public override void VisitTypeDefinition (TypeDefinition type)
 		{
-			if (!Target.MainModule.Types.Contains (type) && type.DeclaringType == null) {
-				//not nested
-				TypeDefinition td = type.Clone ();
-				Target.MainModule.Types.Add (td);
-				foreach (TypeDefinition nested in td.NestedTypes)
-					Target.MainModule.Types.Add (nested);
-			}
+			if (!Target.MainModule.Types.Contains (type) && type.DeclaringType == null)
+				AddTypeDefinition (type.Clone ());
+		}
+
+		void AddTypeDefinition (TypeDefinition type)
+		{
+			Target.MainModule.Types.Add (type);
+			foreach (TypeDefinition nested in type.NestedTypes)
+				AddTypeDefinition (nested);
 		}
 
 		public override void VisitTypeReferenceCollection (TypeReferenceCollection refs)
