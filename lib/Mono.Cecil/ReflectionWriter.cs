@@ -653,6 +653,9 @@ namespace Mono.Cecil {
 			} else
 				et = GetCorrespondingType (type.FullName);
 
+			if (et == ElementType.Object && hc.Constant != null)
+				et = GetCorrespondingType (hc.Constant.GetType ().FullName);
+
 			ConstantRow cRow = m_rowWriter.CreateConstantRow (
 				et,
 				hc.MetadataToken,
