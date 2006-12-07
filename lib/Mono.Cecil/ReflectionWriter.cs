@@ -69,17 +69,9 @@ namespace Mono.Cecil {
 		public StructureWriter StructureWriter {
 			get { return m_structureWriter; }
 			set {
-				m_structureWriter = value;
-				m_mdWriter = new MetadataWriter (
-					m_mod.Assembly,
-					m_mod.Image.MetadataRoot,
-					m_structureWriter.Assembly.Kind,
-					m_mod.Assembly.Runtime,
-					m_structureWriter.GetWriter ());
-				m_tableWriter = m_mdWriter.GetTableVisitor ();
-				m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
-				m_sigWriter = new SignatureWriter (m_mdWriter);
-				m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
+				 m_structureWriter = value;
+
+				Initialize ();
 			}
 		}
 
@@ -122,6 +114,20 @@ namespace Mono.Cecil {
 		public ReflectionWriter (ModuleDefinition mod)
 		{
 			m_mod = mod;
+		}
+
+		void Initialize ()
+		{
+			m_mdWriter = new MetadataWriter (
+				m_mod.Assembly,
+				m_mod.Image.MetadataRoot,
+				m_structureWriter.Assembly.Kind,
+				m_mod.Assembly.Runtime,
+				m_structureWriter.GetWriter ());
+			m_tableWriter = m_mdWriter.GetTableVisitor ();
+			m_rowWriter = m_tableWriter.GetRowVisitor () as MetadataRowWriter;
+			m_sigWriter = new SignatureWriter (m_mdWriter);
+			m_codeWriter = new CodeWriter (this, m_mdWriter.CilWriter);
 
 			m_typeDefStack = new ArrayList ();
 			m_methodStack = new ArrayList ();
