@@ -1,3 +1,10 @@
+2006-12-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil/StructureReader.cs:
+		Prevent a NRE if we're reading a multi module
+		assembly through a stream if a module is not find.
+		Fix #80273.
+
 2006-12-07  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/ReflectionWriter.cs:
