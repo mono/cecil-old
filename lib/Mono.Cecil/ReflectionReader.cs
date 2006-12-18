@@ -222,10 +222,15 @@ namespace Mono.Cecil {
 			case TokenType.Method :
 				// really not sure about this
 				MethodDefinition methdef = GetMethodDefAt (mrefRow.Class.RID);
-				member = new MethodReference (
+				MethodReference methRef = new MethodReference (
 					methdef.Name, methdef.HasThis,
 					methdef.ExplicitThis, methdef.CallingConvention);
-				member.DeclaringType = methdef.DeclaringType;
+
+				methRef.DeclaringType = methdef.DeclaringType;
+				methRef.ReturnType = methdef.ReturnType;
+				foreach (ParameterDefinition param in methdef.Parameters)
+					methRef.Parameters.Add (param);
+				member = methRef;
 				break;
 			case TokenType.ModuleRef :
 				break; // TODO, implement that, or not
