@@ -100,22 +100,20 @@ namespace Mono.Cecil.Metadata {
 			m_imgWriter = new ImageWriter (this, kind, writer);
 			m_binaryWriter = m_imgWriter.GetTextWriter ();
 
-			byte zero = 0;
-
 			m_stringCache = new Hashtable ();
 			m_stringWriter = new MemoryBinaryWriter (Encoding.UTF8);
-			m_stringWriter.Write (zero);
+			m_stringWriter.Write ((byte) 0);
 
 			m_guidCache = new Hashtable ();
 			m_guidWriter = new MemoryBinaryWriter ();
 
 			m_usCache = new Hashtable ();
 			m_usWriter = new MemoryBinaryWriter (Encoding.Unicode);
-			m_usWriter.Write (zero);
+			m_usWriter.Write ((byte) 0);
 
 			m_blobCache = new Hashtable ();
 			m_blobWriter = new MemoryBinaryWriter ();
-			m_blobWriter.Write (zero);
+			m_blobWriter.Write ((byte) 0);
 
 			m_tWriter = new MemoryBinaryWriter ();
 			m_tableWriter = new MetadataTableWriter (this, m_tWriter);
