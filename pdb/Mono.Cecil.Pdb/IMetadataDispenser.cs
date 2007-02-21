@@ -45,5 +45,12 @@ namespace Mono.Cecil.Pdb {
 			[In] int dwOpenFlags,
 			[In] ref Guid riid,
 			[Out, MarshalAs (UnmanagedType.IUnknown)] out object punk);
+
+		void OpenScopeOnMemory (
+			[In] IntPtr pData,
+			[In] uint cbData,
+			[In] uint dwOpenFlags,
+			[In] ref Guid riid,
+			[Out, MarshalAs (UnmanagedType.Interface)] out object punk);
 	}
 }

@@ -51,15 +51,41 @@ namespace Mono.Cecil.Pdb {
 
 		public static ISymbolReader CreateReader (string filename)
 		{
-			SymBinder binder = new SymBinder ();
-			object objDispenser, objImporter;
-			CoCreateInstance (ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);
+			SymBinder binder;
+			object objImporter;
 
-			IMetaDataDispenser dispenser = (IMetaDataDispenser) objDispenser;
+			IMetaDataDispenser dispenser = InstantiateDispenser (out binder);
 			dispenser.OpenScope (filename, 0, ref s_importerIID, out objImporter);
 
+			return InstantiateReader (binder, filename, objImporter);
+		}
+
+		public static ISymbolReader CreateReader (string filename, byte [] binaryFile)
+		{
+			SymBinder binder;
+			object objImporter;
+
+			IntPtr filePtr = Marshal.AllocHGlobal (binaryFile.Length);
+			Marshal.Copy (binaryFile, 0, filePtr, binaryFile.Length);
+
+			IMetaDataDispenser dispenser = InstantiateDispenser (out binder);
+			dispenser.OpenScopeOnMemory (filePtr, (uint) binaryFile.Length, 0, ref s_importerIID, out objImporter);
+
+			return InstantiateReader (binder, filename, objImporter);
+		}
+
+		static IMetaDataDispenser InstantiateDispenser (out SymBinder binder)
+		{
+			binder = new SymBinder ();
+			object dispenser;
+			CoCreateInstance (ref s_dispenserClassID, null, 1, ref s_dispenserIID, out dispenser);
+			return (IMetaDataDispenser) dispenser;
+		}
+
+		static ISymbolReader InstantiateReader (SymBinder binder, string filename, object objImporter)
+		{
 			IntPtr importerPtr = IntPtr.Zero;
-            ISymbolReader reader;
+			ISymbolReader reader;
 			try {
 				importerPtr = Marshal.GetComInterfaceForObject (objImporter, typeof (IMetadataImport));
 

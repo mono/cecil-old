@@ -1,3 +1,14 @@
+2007-02-21  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Pdb/PdbReader.cs
+	  Mono.Cecil.Pdb/PdbHelper.cs
+	  Mono.Cecil.Pdb/IMetaDataDispenser.cs:
+		Refactor patches from:
+		Sverre Boschman <s.r.boschman@iego-development.nl>
+
+		- Force the release of the lock on the pdb on reading
+		- Implement the ability to read a pdb in memory
+
 2006-09-24  Jb Evain  <jbevain@gmail.com>
 
 	* Handle the fact that a scope end points outside the cil stream.

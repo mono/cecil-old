@@ -28,8 +28,10 @@
 
 namespace Mono.Cecil.Pdb {
 
+	using System;
 	using System.Collections;
 	using System.Diagnostics.SymbolStore;
+	using System.Runtime.InteropServices;
 
 	public class PdbReader : Cil.ISymbolReader {
 
@@ -51,10 +53,10 @@ namespace Mono.Cecil.Pdb {
 
 				ReadSequencePoints (method, instructions);
 				ReadScopeAndLocals (method.RootScope, null, body, instructions);
-			} catch {}
+			} catch (COMException) {}
 		}
 
-		Hashtable GetInstructions (Cil.MethodBody body)
+		static Hashtable GetInstructions (Cil.MethodBody body)
 		{
 			Hashtable instructions = new Hashtable (body.Instructions.Count);
 			foreach (Cil.Instruction i in body.Instructions)
@@ -63,7 +65,7 @@ namespace Mono.Cecil.Pdb {
 			return instructions;
 		}
 
-		Cil.Instruction GetInstruction (Cil.MethodBody body, Hashtable instructions, int offset)
+		static Cil.Instruction GetInstruction (Cil.MethodBody body, Hashtable instructions, int offset)
 		{
 			Cil.Instruction instr = (Cil.Instruction) instructions [offset];
 			if (instr != null)
@@ -72,7 +74,7 @@ namespace Mono.Cecil.Pdb {
 			return body.Instructions.Outside;
 		}
 
-		void ReadScopeAndLocals (ISymbolScope scope, Cil.Scope parent, Cil.MethodBody body, Hashtable instructions)
+		static void ReadScopeAndLocals (ISymbolScope scope, Cil.Scope parent, Cil.MethodBody body, Hashtable instructions)
 		{
 			Cil.Scope s = new Cil.Scope ();
 			s.Start = GetInstruction (body, instructions, scope.StartOffset);
@@ -139,6 +141,8 @@ namespace Mono.Cecil.Pdb {
 		public void Dispose ()
 		{
 			m_reader = null;
+			// force the release of the pdb lock
+			GC.Collect ();
 		}
 	}
 }
