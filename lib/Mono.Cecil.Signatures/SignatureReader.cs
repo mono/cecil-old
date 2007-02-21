@@ -812,6 +812,10 @@ namespace Mono.Cecil.Signatures {
 
 			elem.String = elem.Type = elem.BoxedValueType = false;
 			if (!ReadSimpleValue (br, ref elem, elem.ElemType)) {
+				if (!resolve) { // until enums writing is implemented
+					read = false;
+					return elem;
+				}
 				TypeReference typeRef = GetEnumUnderlyingType (elem.ElemType, resolve);
 				if (typeRef == null || !ReadSimpleValue (br, ref elem, typeRef))
 					read = false;
