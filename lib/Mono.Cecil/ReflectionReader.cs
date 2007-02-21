@@ -1069,7 +1069,8 @@ namespace Mono.Cecil {
 		protected void SetInitialValue (FieldDefinition field)
 		{
 			int size = 0;
-			switch (field.FieldType.FullName) {
+			TypeReference fieldType = field.FieldType;
+			switch (fieldType.FullName) {
 			case Constants.Byte:
 			case Constants.SByte:
 				size = 1;
@@ -1090,9 +1091,13 @@ namespace Mono.Cecil {
 				size = 8;
 				break;
 			default:
-				TypeDefinition fieldType = field.FieldType as TypeDefinition;
-				if (fieldType != null)
-					size = (int) fieldType.ClassSize;
+				while (fieldType is TypeSpecification)
+					fieldType = ((TypeSpecification) fieldType).ElementType;
+
+				TypeDefinition fieldTypeDef = fieldType as TypeDefinition;
+
+				if (fieldTypeDef != null)
+					size = (int) fieldTypeDef.ClassSize;
 				break;
 			}
 
