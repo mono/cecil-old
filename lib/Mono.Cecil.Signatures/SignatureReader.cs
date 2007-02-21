@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -479,6 +479,7 @@ namespace Mono.Cecil.Signatures {
 				return fp;
 			case ElementType.Array :
 				ARRAY ary = new ARRAY ();
+				ary.CustomMods = ReadCustomMods (data, start, out start);
 				ArrayShape shape = new ArrayShape ();
 				ary.Type = ReadType (data, start, out start);
 				shape.Rank = Utilities.ReadCompressedInteger (data, start, out start);
@@ -494,6 +495,7 @@ namespace Mono.Cecil.Signatures {
 				return ary;
 			case ElementType.SzArray :
 				SZARRAY sa = new SZARRAY ();
+				sa.CustomMods = ReadCustomMods (data, start, out start);
 				sa.Type = ReadType (data, start, out start);
 				return sa;
 			case ElementType.Var:
