@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -979,6 +979,11 @@ namespace Mono.Cecil {
 							i, (ParameterAttributes) 0,
 							p, context));
 				}
+
+				MethodRefSig refSig = funcptr.Method as MethodRefSig;
+				if (refSig != null && refSig.Sentinel >= 0)
+					CreateSentinel (fnptr, refSig.Sentinel);
+
 				return fnptr;
 			case ElementType.Var:
 				VAR var = t as VAR;
@@ -1009,6 +1014,15 @@ namespace Mono.Cecil {
 				break;
 			}
 			return null;
+		}
+
+		public static void CreateSentinel (IMethodSignature meth, int sentinel)
+		{
+			if (sentinel < 0 || sentinel >= meth.Parameters.Count)
+				throw new ArgumentException ("Invalid sentinel");
+
+			ParameterDefinition param = meth.Parameters [sentinel];
+			param.ParameterType = new SentinelType (param.ParameterType);
 		}
 
 		TypeReference GetGenericArg (GenericArg arg, GenericContext context)

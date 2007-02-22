@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -43,6 +43,7 @@ namespace Mono.Cecil.Cil {
 		MemoryBinaryWriter m_codeWriter;
 
 		IDictionary m_localSigCache;
+		IDictionary m_standaloneSigCache;
 
 		public CodeWriter (ReflectionWriter reflectWriter, MemoryBinaryWriter writer)
 		{
@@ -51,6 +52,7 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter = new MemoryBinaryWriter ();
 
 			m_localSigCache = new Hashtable ();
+			m_standaloneSigCache = new Hashtable ();
 		}
 
 		public RVA WriteMethodBody (MethodDefinition meth)
@@ -76,7 +78,7 @@ namespace Mono.Cecil.Cil {
 				m_codeWriter.Write (token.ToUInt ());
 		}
 
-		int GetParameterIndex (MethodBody body, ParameterDefinition p)
+		static int GetParameterIndex (MethodBody body, ParameterDefinition p)
 		{
 			int idx = body.Method.Parameters.IndexOf (p);
 			if (idx == -1 && p == body.Method.This)
@@ -113,7 +115,7 @@ namespace Mono.Cecil.Cil {
 				case OperandType.InlineNone :
 					break;
 				case OperandType.InlineSwitch :
-					Instruction [] targets = instr.Operand as Instruction [];
+					Instruction [] targets = (Instruction []) instr.Operand;
 					for (int i = 0; i < targets.Length + 1; i++)
 						m_codeWriter.Write ((uint) 0);
 					break;
@@ -137,7 +139,8 @@ namespace Mono.Cecil.Cil {
 					m_codeWriter.Write ((byte) GetParameterIndex (body, (ParameterDefinition) instr.Operand));
 					break;
 				case OperandType.InlineSig :
-					throw new NotImplementedException ();
+					WriteToken (GetCallSiteToken ((CallSite) instr.Operand));
+					break;
 				case OperandType.InlineI :
 					m_codeWriter.Write ((int) instr.Operand);
 					break;
@@ -198,7 +201,7 @@ namespace Mono.Cecil.Cil {
 					else
 						throw new ReflectionException (
 							string.Format ("Wrong operand for {0} OpCode: {1}",
-								instr.OpCode.OperandType.ToString (),
+								instr.OpCode.OperandType,
 								instr.Operand.GetType ().FullName));
 					break;
 				}
@@ -211,7 +214,7 @@ namespace Mono.Cecil.Cil {
 				switch (instr.OpCode.OperandType) {
 				case OperandType.InlineSwitch :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
-					Instruction [] targets = instr.Operand as Instruction [];
+					Instruction [] targets = (Instruction []) instr.Operand;
 					m_codeWriter.Write ((uint) targets.Length);
 					foreach (Instruction tgt in targets)
 						m_codeWriter.Write ((tgt.Offset - (instr.Offset +
@@ -219,12 +222,12 @@ namespace Mono.Cecil.Cil {
 					break;
 				case OperandType.ShortInlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
-					m_codeWriter.Write ((byte) ((instr.Operand as Instruction).Offset -
+					m_codeWriter.Write ((byte) (((Instruction) instr.Operand).Offset -
 						(instr.Offset + instr.OpCode.Size + 1)));
 					break;
 				case OperandType.InlineBrTarget :
 					m_codeWriter.BaseStream.Position = instr.Offset + instr.OpCode.Size;
-					m_codeWriter.Write ((instr.Operand as Instruction).Offset -
+					m_codeWriter.Write(((Instruction) instr.Operand).Offset -
 						(instr.Offset + instr.OpCode.Size + 4));
 					break;
 				}
@@ -233,13 +236,39 @@ namespace Mono.Cecil.Cil {
 			m_codeWriter.BaseStream.Position = pos;
 		}
 
-		int GetLength (Instruction start, Instruction end, InstructionCollection instructions)
+		MetadataToken GetCallSiteToken (CallSite cs)
+		{
+			uint sig;
+			int sentinel = cs.GetSentinel ();
+			if (sentinel > 0)
+				sig = m_reflectWriter.SignatureWriter.AddMethodDefSig (
+					m_reflectWriter.GetMethodDefSig (cs));
+			else {
+				MethodRefSig refSig = m_reflectWriter.GetMethodRefSig (cs);
+				refSig.Sentinel = sentinel;
+				sig = m_reflectWriter.SignatureWriter.AddMethodRefSig (refSig);
+			}
+
+			if (m_standaloneSigCache.Contains (sig))
+				return (MetadataToken) m_standaloneSigCache [sig];
+
+			StandAloneSigTable sasTable = m_reflectWriter.MetadataTableWriter.GetStandAloneSigTable ();
+			StandAloneSigRow sasRow = m_reflectWriter.MetadataRowWriter.CreateStandAloneSigRow (sig);
+
+			sasTable.Rows.Add(sasRow);
+
+			MetadataToken token = new MetadataToken (TokenType.Signature, (uint) sasTable.Rows.Count);
+			m_standaloneSigCache [sig] = token;
+			return token;
+		}
+
+		static int GetLength (Instruction start, Instruction end, InstructionCollection instructions)
 		{
 			Instruction last = instructions [instructions.Count - 1];
 			return (end == instructions.Outside ? last.Offset + GetSize (last) : end.Offset) - start.Offset;
 		}
 
-		int GetSize (Instruction i)
+		static int GetSize (Instruction i)
 		{
 			int size = i.OpCode.Size;
 
@@ -276,13 +305,13 @@ namespace Mono.Cecil.Cil {
 			return size;
 		}
 
-		bool IsRangeFat (Instruction start, Instruction end, InstructionCollection instructions)
+		static bool IsRangeFat (Instruction start, Instruction end, InstructionCollection instructions)
 		{
 			return GetLength (start, end, instructions) >= 256 ||
 				start.Offset >= 65536;
 		}
 
-		bool IsFat (ExceptionHandlerCollection seh)
+		static bool IsFat (ExceptionHandlerCollection seh)
 		{
 			for (int i = 0; i < seh.Count; i++) {
 				ExceptionHandler eh = seh [i];
@@ -442,7 +471,7 @@ namespace Mono.Cecil.Cil {
 			return lvs;
 		}
 
-		void ComputeMaxStack (InstructionCollection instructions)
+		static void ComputeMaxStack (InstructionCollection instructions)
 		{
 			InstructionCollection ehs = new InstructionCollection (null);
 			foreach (ExceptionHandler eh in instructions.Container.ExceptionHandlers)

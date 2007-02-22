@@ -1063,7 +1063,19 @@ namespace Mono.Cecil {
 				}
 				return p;
 			} else if (type is FunctionPointerType) {
-				throw new NotImplementedException ("Function pointer are not implemented"); // TODO
+				FNPTR fp = new FNPTR ();
+				FunctionPointerType fptr = type as FunctionPointerType;
+
+				int sentinel = fptr.GetSentinel ();
+				if (sentinel < 0)
+					fp.Method = GetMethodDefSig (fptr); // todo
+				else {
+					MethodRefSig refSig = GetMethodRefSig (fptr); // todo
+					refSig.Sentinel = sentinel;
+					fp.Method = refSig;
+				}
+
+				return fp;
 			} else if (type is TypeSpecification) {
 				return GetSigType ((type as TypeSpecification).ElementType);
 			} else if (type.IsValueType) {
@@ -1147,7 +1159,7 @@ namespace Mono.Cecil {
 			return ret;
 		}
 
-		void CompleteMethodSig (MethodReference meth, MethodSig sig)
+		void CompleteMethodSig (IMethodSignature meth, MethodSig sig)
 		{
 			sig.HasThis = meth.HasThis;
 			sig.ExplicitThis = meth.ExplicitThis;
@@ -1189,9 +1201,10 @@ namespace Mono.Cecil {
 			return false;
 		}
 
-		public MethodRefSig GetMethodRefSig (MethodReference meth)
+		public MethodRefSig GetMethodRefSig (IMethodSignature meth)
 		{
-			if (meth.GenericParameters.Count > 0)
+			MethodReference methodRef = meth as MethodReference;
+			if (methodRef != null && methodRef.GenericParameters.Count > 0)
 				return GetMethodDefSig (meth);
 
 			MethodRefSig methSig = new MethodRefSig ();
@@ -1210,15 +1223,16 @@ namespace Mono.Cecil {
 			return methSig;
 		}
 
-		public MethodDefSig GetMethodDefSig (MethodReference meth)
+		public MethodDefSig GetMethodDefSig (IMethodSignature meth)
 		{
 			MethodDefSig sig = new MethodDefSig ();
 
 			CompleteMethodSig (meth, sig);
 
-			if (meth.GenericParameters.Count > 0) {
+			MethodReference methodRef = meth as MethodReference;
+			if (methodRef != null && methodRef.GenericParameters.Count > 0) {
 				sig.CallingConvention |= 0x10;
-				sig.GenericParameterCount = meth.GenericParameters.Count;
+				sig.GenericParameterCount = methodRef.GenericParameters.Count;
 			}
 
 			return sig;

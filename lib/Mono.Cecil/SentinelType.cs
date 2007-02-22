@@ -1,10 +1,10 @@
 //
-// IMethodSignature.cs
+// SentinelType.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 - 2007 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,15 +28,10 @@
 
 namespace Mono.Cecil {
 
-	public interface IMethodSignature {
+	public sealed class SentinelType : TypeSpecification {
 
-		bool HasThis { get; set; }
-		bool ExplicitThis { get; set; }
-		MethodCallingConvention CallingConvention { get; set; }
-
-		ParameterDefinitionCollection Parameters { get; }
-		MethodReturnType ReturnType { get; }
-
-		int GetSentinel ();
+		public SentinelType (TypeReference type) : base (type)
+		{
+		}
 	}
 }

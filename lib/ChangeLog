@@ -1,5 +1,19 @@
 2007-02-22  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  Mono.Cecil/CallSite.cs
+	  Mono.Cecil/IMethodSignature.cs
+	  Mono.Cecil/SentinelType.cs
+	  Mono.Cecil/FunctionPointerType.cs
+	  Mono.Cecil/MethodReference.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/CodeWriter.cs:
+		Implement support for writing function pointers.
+		Based on a patch by Argiris Kirtzidis <akyrtzi@gmail.com>
+
 	* Mono.Cecil/Constants.cs:
 		Make it public due to some demands.
 

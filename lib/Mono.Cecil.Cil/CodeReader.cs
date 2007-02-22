@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -86,7 +86,7 @@ namespace Mono.Cecil.Cil {
 			return (uint) token & 0x00ffffff;
 		}
 
-		ParameterDefinition GetParameter (MethodBody body, int index)
+		static ParameterDefinition GetParameter (MethodBody body, int index)
 		{
 			if (body.Method.HasThis) {
 				if (index == 0)
@@ -99,7 +99,7 @@ namespace Mono.Cecil.Cil {
 
 		void ReadCilBody (MethodBody body, BinaryReader br, out IDictionary instructions)
 		{
-			long start = br.BaseStream.Position, offset;
+			long start = br.BaseStream.Position;
 			Instruction last = null;
 			InstructionCollection code = body.Instructions;
 			instructions = new Hashtable ();
@@ -107,7 +107,7 @@ namespace Mono.Cecil.Cil {
 
 			while (br.BaseStream.Position < start + body.CodeSize) {
 				OpCode op;
-				offset = br.BaseStream.Position - start;
+				long offset = br.BaseStream.Position - start;
 				int cursor = br.ReadByte ();
 				if (cursor == 0xfe)
 					op = OpCodes.TwoBytesOpCode [br.ReadByte ()];
@@ -367,6 +367,10 @@ namespace Mono.Cecil.Cil {
 						i, (ParameterAttributes) 0,
 						p, context));
 			}
+
+			MethodRefSig refSig = ms as MethodRefSig;
+			if (refSig != null && refSig.Sentinel >= 0)
+				ReflectionReader.CreateSentinel (cs, refSig.Sentinel);
 
 			return cs;
 		}

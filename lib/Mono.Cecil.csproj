@@ -319,6 +319,7 @@
     <Compile Include="Mono.Cecil\SecurityDeclaration.cs" />
     <Compile Include="Mono.Cecil\SecurityDeclarationCollection.cs" />
     <Compile Include="Mono.Cecil\SecurityDeclarationReader.cs" />
+    <Compile Include="Mono.Cecil\SentinelType.cs" />
     <Compile Include="Mono.Cecil\StructureReader.cs" />
     <Compile Include="Mono.Cecil\StructureWriter.cs" />
     <Compile Include="Mono.Cecil\TableComparers.cs" />
