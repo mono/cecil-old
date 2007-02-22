@@ -2,6 +2,23 @@
 
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.csproj
+	  CodeGen/cecil.xml
+	  Mono.Cecil.Metadata/ParamPtr.cs
+	  Mono.Cecil.Metadata/MethodSpec.cs
+	  Mono.Cecil.Metadata/BaseMetadataVisitor.cs
+	  Mono.Cecil.Metadata/EventPtr.cs
+	  Mono.Cecil.Metadata/MetadataTableReader.cs
+	  Mono.Cecil.Metadata/MetadataTableWriter.cs
+	  Mono.Cecil.Metadata/MetadataRowReader.cs
+	  Mono.Cecil.Metadata/MetadataRowWriter.cs
+	  Mono.Cecil.Metadata/PropertyPtr.cs
+	  Mono.Cecil.Metadata/FieldPtr.cs
+	  Mono.Cecil.Metadata/MethodPtr.cs
+	  Mono.Cecil.Metadata/IMetadataVisitor.cs:
+		Add *Ptr table definitions.
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
 	  Mono.Cecil/CallSite.cs
 	  Mono.Cecil/IMethodSignature.cs
 	  Mono.Cecil/SentinelType.cs

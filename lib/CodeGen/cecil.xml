@@ -114,6 +114,9 @@
 				<column name="Name" type="uint" target="StringsHeap" />
 				<column name="EventType" type="Mono.Cecil.Metadata.MetadataToken" target="TypeDefOrRef" />
 			</table>
+			<table name="EventPtr" rid="0x13">
+				<column name="Event" type="uint" target="Event" />
+			</table>
 			<table name="ExportedType" rid="0x27">
 				<column name="Flags" type="Mono.Cecil.TypeAttributes" />
 				<column name="TypeDefId" type="uint" />
@@ -133,6 +136,9 @@
 			<table name="FieldMarshal" rid="0x0d">
 				<column name="Parent" type="Mono.Cecil.Metadata.MetadataToken" target="HasFieldMarshal" />
 				<column name="NativeType" type="uint" target="BlobHeap" />
+			</table>
+			<table name="FieldPtr" rid="0x03">
+				<column name="Field" type="uint" target="Field" />
 			</table>
 			<table name="FieldRVA" rid="0x1d">
 				<column name="RVA" type="Mono.Cecil.Binary.RVA" />
@@ -187,6 +193,9 @@
 				<column name="MethodBody" type="Mono.Cecil.Metadata.MetadataToken" target="MethodDefOrRef" />
 				<column name="MethodDeclaration" type="Mono.Cecil.Metadata.MetadataToken" target="MethodDefOrRef" />
 			</table>
+			<table name="MethodPtr" rid="0x05">
+				<column name="Method" type="uint" target="Method" />
+			</table>
 			<table name="MethodSemantics" rid="0x18">
 				<column name="Semantics" type="Mono.Cecil.MethodSemanticsAttributes" />
 				<column name="Method" type="uint" target="Method" />
@@ -215,6 +224,9 @@
 				<column name="Sequence" type="ushort" />
 				<column name="Name" type="uint" target="StringsHeap" />
 			</table>
+			<table name="ParamPtr" rid="0x07">
+				<column name="Param" type="uint" target="Param" />
+			</table>
 			<table name="Property" rid="0x17">
 				<column name="Flags" type="Mono.Cecil.PropertyAttributes" />
 				<column name="Name" type="uint" target="StringsHeap" />
@@ -223,6 +235,9 @@
 			<table name="PropertyMap" rid="0x15">
 				<column name="Parent" type="uint" target="TypeDef" />
 				<column name="PropertyList" type="uint" target="Property" />
+			</table>
+			<table name="PropertyPtr" rid="0x16">
+				<column name="Property" type="uint" target="Property" />
 			</table>
 			<table name="StandAloneSig" rid="0x11">
 				<column name="Signature" type="uint" target="BlobHeap" />
