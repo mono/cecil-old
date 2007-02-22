@@ -1,5 +1,10 @@
 2007-02-22  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil/ReflectionWriter.cs:
+		Deal with sentinels on simple methodrefs.
+
+2007-02-22  Jb Evain  <jbevain@gmail.com>
+
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.csproj
 	  CodeGen/cecil.xml

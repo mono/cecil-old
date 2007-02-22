@@ -347,8 +347,15 @@ namespace Mono.Cecil {
 				uint sig = 0;
 				if (member is FieldReference)
 					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
-				else if (member is MethodReference)
-					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig (member as MethodReference));
+				else if (member is MethodReference) {
+					MethodReference methodRef = (MethodReference) member;
+					MethodRefSig refSig = GetMethodRefSig (methodRef);
+					int sentinel = methodRef.GetSentinel ();
+					if (sentinel >= 0)
+						refSig.Sentinel = sentinel;
+
+					sig = m_sigWriter.AddMethodRefSig (refSig);
+				}
 				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
 					GetTypeDefOrRefToken (member.DeclaringType),
 					m_mdWriter.AddString (member.Name),
