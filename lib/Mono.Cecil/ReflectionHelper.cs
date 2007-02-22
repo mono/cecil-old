@@ -6,6 +6,7 @@
 //
 // (C) 2005 Jb Evain
 // (C) 2006 Evaluant RC S.A.
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -443,14 +444,14 @@ namespace Mono.Cecil {
 						genElemType.GenericArguments.Add (ImportTypeReference (arg, context));
 
 					elementType = genElemType;
-				}else
+				} else
 					throw new ReflectionException ("Unknown element type: {0}", t.GetType ().Name);
 			}
 
 			return elementType;
 		}
 
-		GenericParameter GetGenericParameter (GenericParameter gp, ImportContext context)
+		static GenericParameter GetGenericParameter (GenericParameter gp, ImportContext context)
 		{
 			GenericParameter p;
 			if (gp.Owner is TypeReference)

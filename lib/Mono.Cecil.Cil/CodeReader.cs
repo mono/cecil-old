@@ -277,7 +277,7 @@ namespace Mono.Cecil.Cil {
 			}
 		}
 
-		Instruction GetInstruction (MethodBody body, IDictionary instructions, int offset)
+		static Instruction GetInstruction (MethodBody body, IDictionary instructions, int offset)
 		{
 			Instruction instruction = instructions [offset] as Instruction;
 			if (instruction != null)

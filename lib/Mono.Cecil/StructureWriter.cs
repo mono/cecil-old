@@ -47,7 +47,7 @@ namespace Mono.Cecil {
 			get { return m_asm; }
 		}
 
-		void ResetImage (ModuleDefinition mod)
+		static void ResetImage (ModuleDefinition mod)
 		{
 			Image ni = Image.CreateImage ();
 			ni.Accept (new CopyImageVisitor (mod.Image));
@@ -206,8 +206,8 @@ namespace Mono.Cecil {
 					0,
 					m_mdWriter.AddString (module.Name),
 					m_mdWriter.AddGuid (module.Mvid),
-					(uint) 0,
-					(uint) 0);
+					0,
+					0);
 
 				modTable.Rows.Add (modRow);
 			} else {

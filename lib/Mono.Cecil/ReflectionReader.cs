@@ -191,7 +191,7 @@ namespace Mono.Cecil {
 						GetTypeRefFromSig (fs.Type, nc));
 				} else {
 					string name = m_root.Streams.StringsHeap [mrefRow.Name];
-					MethodSig ms = sig as MethodSig;
+					MethodSig ms = (MethodSig) sig;
 
 					MethodReference methref = new MethodReference (
 						name, ms.HasThis, ms.ExplicitThis, ms.MethCallConv);
@@ -755,7 +755,7 @@ namespace Mono.Cecil {
 			}
 		}
 
-		object GetFixedArgValue (CustomAttrib.FixedArg fa)
+		static object GetFixedArgValue (CustomAttrib.FixedArg fa)
 		{
 			if (fa.SzArray) {
 				object [] vals = new object [fa.NumElem];
@@ -1033,7 +1033,7 @@ namespace Mono.Cecil {
 			return type;
 		}
 
-		void CheckGenericParameters (GenericContext context, VAR v)
+		static void CheckGenericParameters (GenericContext context, VAR v)
 		{
 			for (int i = context.Type.GenericParameters.Count; i <= v.Index; i++)
 				context.Type.GenericParameters.Add (new GenericParameter (i, context.Type));

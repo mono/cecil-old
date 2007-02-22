@@ -52,10 +52,10 @@ namespace Mono.Cecil {
 		string m_asmOutput;
 		ISymbolWriter m_symbolWriter;
 
-		IList m_typeDefStack;
-		IList m_methodStack;
-		IList m_fieldStack;
-		IList m_genericParamStack;
+		ArrayList m_typeDefStack;
+		ArrayList m_methodStack;
+		ArrayList m_fieldStack;
+		ArrayList m_genericParamStack;
 		IDictionary m_typeSpecCache;
 
 		uint m_methodIndex;
@@ -149,7 +149,7 @@ namespace Mono.Cecil {
 			return m_mod.Controller.Reader.SearchCoreType (name);
 		}
 
-		public uint GetRidFor (IMetadataTokenProvider tp)
+		public static uint GetRidFor (IMetadataTokenProvider tp)
 		{
 			return tp.MetadataToken.RID;
 		}
@@ -169,7 +169,7 @@ namespace Mono.Cecil {
 			return (uint) m_mod.ModuleReferences.IndexOf (modRef) + 1;
 		}
 
-		bool IsTypeSpec (TypeReference type)
+		static bool IsTypeSpec (TypeReference type)
 		{
 			return type is TypeSpecification || type is GenericParameter;
 		}
@@ -179,7 +179,7 @@ namespace Mono.Cecil {
 			if (IsTypeSpec (type)) {
 				uint sig = m_sigWriter.AddTypeSpec (GetTypeSpecSig (type));
 				if (m_typeSpecCache.Contains (sig))
-					return (m_typeSpecCache [sig] as TypeReference).MetadataToken;
+					return ((TypeReference) m_typeSpecCache [sig]).MetadataToken;
 
 				TypeSpecTable tsTable = m_tableWriter.GetTypeSpecTable ();
 				TypeSpecRow tsRow = m_rowWriter.CreateTypeSpecRow (sig);
@@ -228,7 +228,7 @@ namespace Mono.Cecil {
 			foreach (TypeDefinition t in types)
 				m_typeDefStack.Add (t);
 
-			(m_typeDefStack as ArrayList).Sort (TableComparers.TypeDef.Instance);
+			m_typeDefStack.Sort (TableComparers.TypeDef.Instance);
 
 			for (int i = 0; i < m_typeDefStack.Count; i++) {
 				TypeDefinition t = (TypeDefinition) m_typeDefStack [i];
@@ -456,7 +456,7 @@ namespace Mono.Cecil {
 			m_paramIndex++;
 		}
 
-		bool RequiresParameterRow (MethodReturnType mrt)
+		static bool RequiresParameterRow (MethodReturnType mrt)
 		{
 			return mrt.HasConstant || mrt.MarshalSpec != null ||
 				mrt.CustomAttributes.Count > 0 || mrt.Parameter.Attributes != (ParameterAttributes) 0;
@@ -781,7 +781,7 @@ namespace Mono.Cecil {
 			GenericParamTable gpTable = m_tableWriter.GetGenericParamTable ();
 			GenericParamConstraintTable gpcTable = m_tableWriter.GetGenericParamConstraintTable ();
 
-			(m_genericParamStack as ArrayList).Sort (TableComparers.GenericParam.Instance);
+			m_genericParamStack.Sort (TableComparers.GenericParam.Instance);
 
 			foreach (GenericParameter gp in m_genericParamStack) {
 				GenericParamRow gpRow = m_rowWriter.CreateGenericParamRow (
@@ -856,7 +856,7 @@ namespace Mono.Cecil {
 			m_mod.Image.MetadataRoot.Accept (m_mdWriter);
 		}
 
-		public ElementType GetCorrespondingType (string fullName)
+		public static ElementType GetCorrespondingType (string fullName)
 		{
 			switch (fullName) {
 			case Constants.Boolean :
@@ -1302,13 +1302,13 @@ namespace Mono.Cecil {
 			return new MethodSpec (gis);
 		}
 
-		string GetObjectTypeName (object o)
+		static string GetObjectTypeName (object o)
 		{
 			Type t = o.GetType ();
 			return string.Concat (t.Namespace, ".", t.Name);
 		}
 
-		CustomAttrib.Elem CreateElem (TypeReference type, object value)
+		static CustomAttrib.Elem CreateElem (TypeReference type, object value)
 		{
 			CustomAttrib.Elem elem = new CustomAttrib.Elem ();
 			elem.Value = value;
@@ -1352,7 +1352,7 @@ namespace Mono.Cecil {
 			return elem;
 		}
 
-		CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
+		static CustomAttrib.FixedArg CreateFixedArg (TypeReference type, object value)
 		{
 			CustomAttrib.FixedArg fa = new CustomAttrib.FixedArg ();
 			if (value is object []) {
@@ -1371,7 +1371,7 @@ namespace Mono.Cecil {
 			return fa;
 		}
 
-		CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
+		static CustomAttrib.NamedArg CreateNamedArg (TypeReference type, string name,
 			object value, bool field)
 		{
 			CustomAttrib.NamedArg na = new CustomAttrib.NamedArg ();
@@ -1418,7 +1418,7 @@ namespace Mono.Cecil {
 			return cas;
 		}
 
-		public MarshalSig GetMarshalSig (MarshalSpec mSpec)
+		static MarshalSig GetMarshalSig (MarshalSpec mSpec)
 		{
 			MarshalSig ms = new MarshalSig (mSpec.NativeIntrinsic);
 
