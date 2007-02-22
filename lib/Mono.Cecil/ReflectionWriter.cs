@@ -347,15 +347,9 @@ namespace Mono.Cecil {
 				uint sig = 0;
 				if (member is FieldReference)
 					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
-				else if (member is MethodReference) {
-					MethodReference methodRef = (MethodReference) member;
-					MethodRefSig refSig = GetMethodRefSig (methodRef);
-					int sentinel = methodRef.GetSentinel ();
-					if (sentinel >= 0)
-						refSig.Sentinel = sentinel;
+				else if (member is MethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig ((MethodReference) member));
 
-					sig = m_sigWriter.AddMethodRefSig (refSig);
-				}
 				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
 					GetTypeDefOrRefToken (member.DeclaringType),
 					m_mdWriter.AddString (member.Name),
@@ -1075,12 +1069,9 @@ namespace Mono.Cecil {
 
 				int sentinel = fptr.GetSentinel ();
 				if (sentinel < 0)
-					fp.Method = GetMethodDefSig (fptr); // todo
-				else {
-					MethodRefSig refSig = GetMethodRefSig (fptr); // todo
-					refSig.Sentinel = sentinel;
-					fp.Method = refSig;
-				}
+					fp.Method = GetMethodDefSig (fptr);
+				else
+					fp.Method = GetMethodRefSig (fptr);
 
 				return fp;
 			} else if (type is TypeSpecification) {
@@ -1217,6 +1208,10 @@ namespace Mono.Cecil {
 			MethodRefSig methSig = new MethodRefSig ();
 
 			CompleteMethodSig (meth, methSig);
+
+			int sentinel = meth.GetSentinel ();
+			if (sentinel >= 0)
+				methSig.Sentinel = sentinel;
 
 			if ((meth.CallingConvention & MethodCallingConvention.C) != 0)
 				methSig.CallingConvention |= 0x1;

@@ -243,11 +243,9 @@ namespace Mono.Cecil.Cil {
 			if (sentinel > 0)
 				sig = m_reflectWriter.SignatureWriter.AddMethodDefSig (
 					m_reflectWriter.GetMethodDefSig (cs));
-			else {
-				MethodRefSig refSig = m_reflectWriter.GetMethodRefSig (cs);
-				refSig.Sentinel = sentinel;
-				sig = m_reflectWriter.SignatureWriter.AddMethodRefSig (refSig);
-			}
+			else
+				sig = m_reflectWriter.SignatureWriter.AddMethodRefSig (
+					m_reflectWriter.GetMethodRefSig (cs));
 
 			if (m_standaloneSigCache.Contains (sig))
 				return (MetadataToken) m_standaloneSigCache [sig];
