@@ -46,6 +46,7 @@
     <Compile Include="graph\IGraph.cs" />
     <Compile Include="graph\INode.cs" />
     <Compile Include="graph\Node.cs" />
+    <Compile Include="MethodCanBeMadeStatic.cs" />
     <Compile Include="NonNullAttribute.cs" />
     <Compile Include="NonNullAttributeCollector.cs" />
     <Compile Include="NullDerefAnalysis.cs" />
