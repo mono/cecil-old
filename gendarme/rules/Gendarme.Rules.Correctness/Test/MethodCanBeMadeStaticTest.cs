@@ -64,13 +64,13 @@ namespace Test.Rules.Correctness {
 		private ModuleDefinition module;
 
 		[TestFixtureSetUp]
-		public void FixtureSetUp()
+		public void FixtureSetUp ()
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
 			module = assembly.MainModule;
 			type = module.Types ["Test.Rules.Correctness.MethodCanBeMadeStaticTest/Item"];
-			rule = new MethodCanBeMadeStatic ();
+			rule = new MethodCanBeMadeStaticRule ();
 		}
 
 		MethodDefinition GetTest (string name)

@@ -1,5 +1,5 @@
 //
-// Gendarme.Rules.Correctness.MethodCanBeMadeStatic
+// Gendarme.Rules.Correctness.MethodCanBeMadeStaticRule
 //
 // Authors:
 //	Jb Evain <jbevain@gmail.com>
@@ -33,8 +33,8 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Correctness {
 
-	public class MethodCanBeMadeStatic : IMethodRule
-	{
+	public class MethodCanBeMadeStaticRule : IMethodRule {
+
 		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
 		{
 			// we only check non static methods

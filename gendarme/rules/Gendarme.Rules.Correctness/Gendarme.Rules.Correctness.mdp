@@ -16,7 +16,7 @@
   <DeployTargets />
   <Contents>
     <File name="./BadRecursiveInvocationRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./MethodCanBeMadeStatic.cs" subtype="Code" buildaction="Compile" />
+    <File name="./MethodCanBeMadeStaticRule.cs" subtype="Code" buildaction="Compile" />
     <File name="./NonNullAttribute.cs" subtype="Code" buildaction="Compile" />
     <File name="./NonNullAttributeCollector.cs" subtype="Code" buildaction="Compile" />
     <File name="./NullDerefAnalysis.cs" subtype="Code" buildaction="Compile" />
