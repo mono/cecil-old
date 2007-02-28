@@ -56,6 +56,10 @@ namespace Test.Rules.Correctness {
 			{
 				return 42;
 			}
+
+			public virtual void Gazonk ()
+			{
+			}
 		}
 
 		private IMethodRule rule;
@@ -100,6 +104,8 @@ namespace Test.Rules.Correctness {
 			MethodDefinition method = GetTest ("Bar");
 			Assert.IsNull (CheckMethod (method));
 			method = GetTest ("Baz");
+			Assert.IsNull (CheckMethod (method));
+			method = GetTest ("Gazonk");
 			Assert.IsNull (CheckMethod (method));
 		}
 	}
