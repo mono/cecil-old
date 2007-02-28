@@ -10,6 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Correctness.xml TestResult.xml
 correctness_rules_sources_in = ../../AssemblyInfo.cs.in
 correctness_rules_generated_sources = $(correctness_rules_sources_in:.in=)
 correctness_rules_sources = BadRecursiveInvocationRule.cs OpCodeConstants.cs \
+			    MethodCanBeMadeStaticRule.cs \
 			    NonNullAttribute.cs NonNullAttributeCollector.cs \
 			    NullDerefAnalysis.cs NullDerefRule.cs \
 			    NullDerefFrame.cs Nullity.cs \
@@ -41,7 +42,10 @@ uninstall-hook:
 		rm -f $(DESTDIR)$(pkglibdir)/`basename $$ASM`; \
 	done;
 
-correctness_test_sources = BadRecursiveInvocationTest.cs
+correctness_test_sources = BadRecursiveInvocationTest.cs \
+			    MethodCanBeMadeStaticTest.cs
+
+
 correctness_test_build_sources = $(addprefix $(srcdir)/Test/, $(correctness_test_sources))
 
 Test.Rules.Correctness.dll: $(correctness_rules_build_sources)

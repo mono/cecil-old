@@ -5,6 +5,12 @@
 		<problem>Method or property '{0}' invokes itself recursively in a suspcious way.</problem>
 		<solution>Ensure that the parameters to the vary in such a way that the recursion will terminate.</solution>
 	</rule>
+	<rule	Name="MethodCanBeMadeStaticRule" 
+		Type="Gendarme.Rules.Correctness.MethodCanBeMadeStaticRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#MethodCanBeMadeStaticRule" >
+		<problem>Method '{0}' can be made static.</problem>
+		<solution>Make the method static.</solution>
+	</rule>
 	<rule	Name="NullDerefRule"
 		Type="Gendarme.Rules.Correctness.NullDerefRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#NullDerefRule" >
