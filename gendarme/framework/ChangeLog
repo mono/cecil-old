@@ -1,3 +1,7 @@
+2007-03-01  Jb Evain  <jbevain@gmail.com>
+
+	* Runner.cs: Do some refactoring.
+
 2006-11-23  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Runner.cs: I forgot that constructors were kept apart from methods.

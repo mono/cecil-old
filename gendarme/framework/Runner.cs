@@ -91,76 +91,79 @@ namespace Gendarme.Framework {
 			int total = 0;
 			Assembly a = Assembly.LoadFile (Path.GetFullPath (assembly));
 			foreach (Type t in a.GetTypes ()) {
-				if (t.IsAbstract)
+				if (t.IsAbstract || t.IsInterface)
 					continue;
 
-				bool added = false;
-				if (t.GetInterface ("Gendarme.Framework.IAssemblyRule") != null) {
-					Rules.Assembly.Add (CreateRuleFromType (t));
-					added = true;
-				}
-				if (t.GetInterface ("Gendarme.Framework.IModuleRule") != null) {
-					Rules.Module.Add (CreateRuleFromType (t));
-					added = true;
-				}
-				if (t.GetInterface ("Gendarme.Framework.ITypeRule") != null) {
-					Rules.Type.Add (CreateRuleFromType (t));
-					added = true;
-				}
-				if (t.GetInterface ("Gendarme.Framework.IMethodRule") != null) {
-					Rules.Method.Add (CreateRuleFromType (t));
-					added = true;
-				}
-				if (added)
-					total++;
+				LoadRules (typeof (IAssemblyRule), t, Rules.Assembly, ref total);
+				LoadRules (typeof (IModuleRule), t, Rules.Module, ref total);
+				LoadRules (typeof (ITypeRule), t, Rules.Type, ref total);
+				LoadRules (typeof (IMethodRule), t, Rules.Method, ref total);
 			}
 			return total;
 		}
 
+		void LoadRules (Type rule, Type type, RuleCollection rules, ref int count)
+		{
+			if (!rule.IsAssignableFrom (type))
+				return;
+
+			rules.Add (CreateRuleFromType (type));
+			count++;
+		}
+
 		public void Process (AssemblyDefinition assembly)
 		{
-			MessageCollection messages;
-			foreach (IAssemblyRule rule in Rules.Assembly) {
-				messages = rule.CheckAssembly(assembly, this);
-				if (messages != RuleSuccess)
-					Violations.Add (rule, assembly, messages);
-			}
+			CheckAssembly (assembly);
 
 			foreach (ModuleDefinition module in assembly.Modules) {
+				CheckModule (module);
 
-				foreach (IModuleRule rule in Rules.Module) {
-					messages = rule.CheckModule(assembly, module, this);
-					if (messages != RuleSuccess)
-						Violations.Add (rule, module, messages);
-				}
-
-				foreach (TypeDefinition type in module.Types) {
-
-					foreach (ITypeRule rule in Rules.Type) {
-						messages = rule.CheckType(assembly, module, type, this);
-						if (messages != RuleSuccess)
-							Violations.Add (rule, type, messages);
-					}
-
-					foreach (MethodDefinition method in type.Constructors) {
-
-						foreach (IMethodRule rule in Rules.Method) {
-							messages = rule.CheckMethod (assembly, module, type, method, this);
-							if (messages != RuleSuccess)
-								Violations.Add (rule, method, messages);
-						}
-					}
-
-					foreach (MethodDefinition method in type.Methods) {
-
-						foreach (IMethodRule rule in Rules.Method) {
-							messages = rule.CheckMethod(assembly, module, type, method, this);
-							if (messages != RuleSuccess)
-								Violations.Add (rule, method, messages);
-						}
-					}
-				}
+				foreach (TypeDefinition type in module.Types)
+					CheckType (type);
 			}
+		}
+
+		void CheckAssembly (AssemblyDefinition assembly)
+		{
+			foreach (IAssemblyRule rule in Rules.Assembly)
+				ProcessMessages (rule.CheckAssembly (assembly, this), rule, assembly);
+		}
+
+		void CheckModule (ModuleDefinition module)
+		{
+			foreach (IModuleRule rule in Rules.Module)
+				ProcessMessages (rule.CheckModule (module.Assembly, module, this), rule, module);
+		}
+
+		void CheckType (TypeDefinition type)
+		{
+			foreach (ITypeRule rule in Rules.Type)
+				ProcessMessages (
+					rule.CheckType (type.Module.Assembly, type.Module, type, this), rule, type);
+
+			CheckMethods (type);
+		}
+
+		void CheckMethods (TypeDefinition type)
+		{
+			CheckMethods (type, type.Constructors);
+			CheckMethods (type, type.Methods);
+		}
+
+		void CheckMethods (TypeDefinition type, ICollection methods)
+		{
+			foreach (MethodDefinition method in methods)
+				foreach (IMethodRule rule in Rules.Method)
+					ProcessMessages (rule.CheckMethod (
+						type.Module.Assembly, type.Module, type, method, this), rule, method);
+		}
+
+		void ProcessMessages (MessageCollection messages, IRule rule, object target)
+		{
+			if (messages == RuleSuccess)
+				return;
+
+			Violations.Add (rule, target, messages);
 		}
 	}
 }
