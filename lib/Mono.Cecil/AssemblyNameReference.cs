@@ -54,11 +54,7 @@ namespace Mono.Cecil {
 
 		public string Culture {
 			get { return m_culture; }
-			set {
-				if (!CultureUtils.IsValid (value))
-					throw new ArgumentException ("Culture is not valid");
-				m_culture = value;
-			}
+			set { m_culture = value; }
 		}
 
 		public Version Version {
@@ -197,8 +193,8 @@ namespace Mono.Cecil {
 		{
 			if (name == null)
 				throw new ArgumentNullException ("name");
-			if (culture == null || !CultureUtils.IsValid (culture))
-				throw new ArgumentException ("culture is either null or non valid");
+			if (culture == null)
+				throw new ArgumentNullException ("culture");
 			m_name = name;
 			m_culture = culture;
 			m_version = version;
