@@ -32,8 +32,66 @@ using System.IO;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
+using Mono.Cecil;
+
 namespace Mono.Merge {
 	public class NativeLibraryHandler {
+		
+		static bool CompareMethodSignatures (MethodReference mr, MethodDefinition md) {
+			if (mr.ReturnType.ReturnType.FullName != md.ReturnType.ReturnType.FullName) {
+				return false;
+			} else if (mr.Parameters.Count != md.Parameters.Count) {
+				return false;
+			} else {
+				for (int i = 0; i < mr.Parameters.Count; i++) {
+					if (mr.Parameters [i].ParameterType.FullName != md.Parameters [i].ParameterType.FullName) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		
+		Dictionary<string,List<MethodDefinition>> externalMethods = new Dictionary<string,List<MethodDefinition>> ();
+		Dictionary<string,ModuleReference> referredLibraries = new Dictionary<string,ModuleReference> ();
+		
+		MethodDefinition CreateExternalMethod (MethodReference mr, string library, ModuleReference referredLibrary) {
+			MethodDefinition md = new MethodDefinition(mr.Name,
+					MethodAttributes.PInvokeImpl |  MethodAttributes.HideBySig | MethodAttributes.Private |
+					MethodAttributes.Static, mr.ReturnType.ReturnType);
+			foreach (ParameterDefinition pd in mr.Parameters) {
+				md.Parameters.Add (pd);
+			}
+			md.PInvokeInfo = new PInvokeInfo(md,
+           			PInvokeAttributes.CharSetAnsi | PInvokeAttributes.CallConvCdecl, md.Name, referredLibrary);
+           	return md;
+			
+		}
+		public MethodDefinition GetExternalMethod (MethodReference mr) {
+			string library = GetSymbolLibrary (mr.Name);
+			
+			if (library != null) {
+				List<MethodDefinition> methods = externalMethods [mr.Name];
+				if (methods != null) {
+					foreach (MethodDefinition method in methods) {
+						if (CompareMethodSignatures (mr, method)) {
+							return method;
+						}
+					}
+				} else {
+					methods = new List<MethodDefinition> ();
+					externalMethods [mr.Name] = methods;
+				}
+				if (referredLibraries [library] == null) {
+					referredLibraries [library] = new ModuleReference (library);
+				}
+				MethodDefinition md = CreateExternalMethod (mr, library, referredLibraries [library]);
+				methods.Add (md);
+				return md;
+			} else {
+				return null;
+			}
+		}
 		
 		List<string> libraries = new List<string> ();
 		List<string> librariesSearchPaths = new List<string> ();

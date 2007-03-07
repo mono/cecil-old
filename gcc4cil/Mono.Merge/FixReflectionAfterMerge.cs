@@ -383,7 +383,7 @@ namespace Mono.Merge {
 		{
 			EventReference res = null;
 			if (type is TypeDefinition) {
-				EventDefinition md = eventa as EventDefinition;
+				//EventDefinition md = eventa as EventDefinition;
 				TypeDefinition td = type as TypeDefinition;
 				res = td.Events.GetEvent (eventa.Name);
 			}

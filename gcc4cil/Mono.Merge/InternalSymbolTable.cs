@@ -35,6 +35,12 @@ namespace Mono.Merge {
 	
 	public class InternalSymbolTable {
 		
+		MethodDefinition entryPoint = null;
+		public MethodDefinition EntryPoint {
+			get { return entryPoint; }
+		}
+		
+		
 		Dictionary<string,MethodDefinition> methods = new Dictionary<string,MethodDefinition> ();
 		public MethodDefinition InsertMethod (MethodDefinition method, bool clone) {
 			if (methods.ContainsKey (method.Name)) {
@@ -45,6 +51,12 @@ namespace Mono.Merge {
 					method = method.Clone ();
 				}
 				methods [method.Name] = method;
+				
+				if (method.Name == ".start") {
+					//TODO More sanity checks here...
+					entryPoint = method;
+				}
+				
 				return method;
 			}
 		}

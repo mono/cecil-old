@@ -41,7 +41,7 @@ namespace Mono.Merge {
 		
 		string mainModuleName = "<Module>";
 		string mainTypeName = "<Module>";
-		string externalAssemblyName = "ExternalAssembly";
+		string externalAssemblyName = "ExternalAssemblyXXX";
 		
 		List<string> assemblies = new List<string> ();
 		List<AssemblyDefinition> merged_assemblies = new List<AssemblyDefinition> ();
@@ -130,6 +130,7 @@ namespace Mono.Merge {
 
 			if (OutputIsExecutable) {
 				outputAssembly.Kind = AssemblyKind.Console;
+				outputAssembly.EntryPoint = InternalSymbols.EntryPoint;
 			} else {
 				outputAssembly.Kind = AssemblyKind.Dll;
 			}

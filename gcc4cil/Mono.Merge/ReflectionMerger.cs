@@ -48,6 +48,8 @@ namespace Mono.Merge {
 			if (type.Name == Context.MainTypeName) {
 				bool clone = (type != Context.MainType);
 				
+				Console.WriteLine ("Found main type in assembly {0}. clone is {1}", type.Module.Assembly.Name.Name, clone);
+				
 				foreach (MethodDefinition method in type.Methods) {
 					MethodDefinition md = Context.InternalSymbols.InsertMethod (method, clone);
 					if (md != null) {
@@ -59,7 +61,7 @@ namespace Mono.Merge {
 					}
 				}
 				
-				foreach (FieldDefinition field in type.Methods) {
+				foreach (FieldDefinition field in type.Fields) {
 					FieldDefinition fd = Context.InternalSymbols.InsertField (field, clone);
 					if (fd != null) {
 						if (clone) {

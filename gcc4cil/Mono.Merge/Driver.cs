@@ -45,7 +45,7 @@ namespace Mono.Merge {
 
 		public static int Main (string [] args)
 		{
-			if (true) {
+			if (false) {
 				NativeLibraryHandler nh = new NativeLibraryHandler ();
 				nh.Libraries.Add ("c");
 				nh.LibrariesSearchPaths.Add ("/lib");
@@ -100,6 +100,14 @@ namespace Mono.Merge {
 
 					if (token == "o" || token == "out")
 						context.OutputPath = (string) q.Dequeue ();
+					else if (token == "e" || token == "exe")
+						context.OutputIsExecutable = true;
+					else if (token == "d" || token == "dll")
+						context.OutputIsExecutable = false;
+					else if (token == "L")
+						context.NativeLibraries.LibrariesSearchPaths.Add ((string) q.Dequeue ());
+					else if (token == "l")
+						context.NativeLibraries.Libraries.Add ((string) q.Dequeue ());
 					else
 						Usage ();
 				} else {
