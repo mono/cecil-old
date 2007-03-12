@@ -116,7 +116,6 @@ namespace Mono.Cecil {
 
 		public void Remove (SecurityAction action)
 		{
-			SecurityDeclaration item = (SecurityDeclaration) m_items[action];
 			m_items.Remove (action);
 			SetHasSecurity (this.Count > 0);
 		}
