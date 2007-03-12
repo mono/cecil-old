@@ -39,11 +39,13 @@ namespace Mono.Cecil.Metadata {
 		public string this [uint offset] {
 			get {
 				string us = m_strings [offset] as string;
-				if (us == null) {
-					us = ReadStringAt ((int) offset);
-					if (us != null && us.Length != 0)
-						m_strings [offset] = us;
-				}
+				if (us != null)
+					return us;
+
+				us = ReadStringAt ((int) offset);
+				if (us != null && us.Length != 0)
+					m_strings [offset] = us;
+
 				return us;
 			}
 			set { m_strings [offset] = value; }
@@ -60,7 +62,7 @@ namespace Mono.Cecil.Metadata {
 			if (length == 0)
 				return string.Empty;
 
-			return Encoding.Unicode.GetString (this.Data, offset, length);
+			return Encoding.Unicode.GetString (this.Data, offset, length - 1);
 		}
 
 		public override void Accept (IMetadataVisitor visitor)
