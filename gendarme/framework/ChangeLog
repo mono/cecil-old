@@ -1,3 +1,7 @@
+2007-03-12  Jb Evain  <jbevain@gmail.com>
+
+	* IRule.cs, Runner.cs: Simplify the rules interface.
+
 2007-03-01  Jb Evain  <jbevain@gmail.com>
 
 	* Runner.cs: Do some refactoring.

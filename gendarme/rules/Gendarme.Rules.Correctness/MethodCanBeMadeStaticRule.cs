@@ -35,7 +35,7 @@ namespace Gendarme.Rules.Correctness {
 
 	public class MethodCanBeMadeStaticRule : IMethodRule {
 
-		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// we only check non static and non virtual methods
 			if (method.IsStatic || method.IsVirtual)

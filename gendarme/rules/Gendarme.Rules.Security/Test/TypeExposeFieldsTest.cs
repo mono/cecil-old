@@ -123,42 +123,42 @@ namespace Test.Rules.Security {
 		public void NonPublic ()
 		{
 			TypeDefinition type = GetTest ("NonPublicClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void NoSecurity ()
 		{
 			TypeDefinition type = GetTest ("NoSecurityClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void NoDemand ()
 		{
 			TypeDefinition type = GetTest ("NoDemandClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void NoPublicField ()
 		{
 			TypeDefinition type = GetTest ("NoPublicFieldClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void LinkDemandWithField ()
 		{
 			TypeDefinition type = GetTest ("LinkDemandWithFieldClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void DemandWithField ()
 		{
 			TypeDefinition type = GetTest ("DemandWithFieldClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

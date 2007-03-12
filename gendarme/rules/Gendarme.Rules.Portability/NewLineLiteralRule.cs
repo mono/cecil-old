@@ -39,7 +39,7 @@ namespace Gendarme.Rules.Portability {
 
 		private static char[] InvalidChar = { '\r', '\n' };
 
-		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// methods can be empty (e.g. p/invoke declarations)
 			if ((method.Body == null) || (method.Body.Instructions == null))

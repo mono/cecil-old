@@ -88,7 +88,7 @@ namespace Test.Rules.Correctness {
 
 		MessageCollection CheckMethod (MethodDefinition method)
 		{
-			return rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			return rule.CheckMethod (method, new MinimalRunner ());
 		}
 
 		[Test]

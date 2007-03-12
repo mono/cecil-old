@@ -62,7 +62,7 @@ namespace Gendarme.Rules.Security {
 			return calleeLinkDemand.IsSubsetOf (GetLinkDemand (caller));
 		}
 
-		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply to methods are publicly accessible
 			//	note that the type doesn't have to be public (indirect access)

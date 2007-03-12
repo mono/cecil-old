@@ -1,3 +1,7 @@
+2007-03-12  Jb Evain  <jbevain@gmail.com>
+
+	* Update to match the new rules interfaces.
+
 2006-11-06  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Add Gendarme.Rules.Ui to the build.

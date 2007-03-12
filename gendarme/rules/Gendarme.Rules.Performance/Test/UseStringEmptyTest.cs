@@ -119,21 +119,21 @@ namespace Test.Rules.Performance {
 		public void GetConstField ()
 		{
 			MethodDefinition method = GetTest ("GetConstField");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Append ()
 		{
 			MethodDefinition method = GetTest ("Append");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Enclose ()
 		{
 			MethodDefinition method = GetTest ("Enclose");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -141,7 +141,7 @@ namespace Test.Rules.Performance {
 		{
 			// the "public_field" field is set to "" in the (hidden) ctor
 			MethodDefinition method = GetTest (".ctor");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
@@ -149,35 +149,35 @@ namespace Test.Rules.Performance {
 		{
 			// the "private_static_field" field is set to "" in the (hidden) class ctor
 			MethodDefinition method = GetTest (".cctor");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void GetField ()
 		{
 			MethodDefinition method = GetTest ("GetField");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void GetStaticField ()
 		{
 			MethodDefinition method = GetTest ("GetStaticField");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Prepend ()
 		{
 			MethodDefinition method = GetTest ("Prepend");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 		
 		[Test]
 		public void NoHarm ()
 		{
 			MethodDefinition method = GetTest ("NoStringWereHarmedInThisTestCase");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 	}
 }

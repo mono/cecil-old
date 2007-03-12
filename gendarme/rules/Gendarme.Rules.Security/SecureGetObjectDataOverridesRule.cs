@@ -52,7 +52,7 @@ namespace Gendarme.Rules.Security {
 			}
 		}
 
-		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// check that the method is called "GetObjectData"
 			if (method.Name != "GetObjectData")
@@ -68,6 +68,7 @@ namespace Gendarme.Rules.Security {
 
 			// check for ISerializable
 			bool iserialize = false;
+			TypeDefinition type = (TypeDefinition) method.DeclaringType;
 			if (type.Interfaces.Count > 0) {
 				// check if the type implements the "ISerializable" interface
 				foreach (TypeReference iface in type.Interfaces) {

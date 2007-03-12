@@ -16,14 +16,11 @@ namespace Gendarme.Rules.Exceptions {
 		{
 		}
 
-		public MessageCollection CheckMethod (AssemblyDefinition assembly,
-					  ModuleDefinition module, 
-					  TypeDefinition type,
-					  MethodDefinition method, 
-					  Runner runner) 
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner) 
 		{
+			ModuleDefinition module = method.DeclaringType.Module;
 			if (void_reference == null)
-				void_reference = module.Import (typeof(void));
+				void_reference = module.Import (typeof (void));
 
 			ArrayList executionPaths = new ArrayList ();
 			ExecutionPathFactory epf = new ExecutionPathFactory (method);

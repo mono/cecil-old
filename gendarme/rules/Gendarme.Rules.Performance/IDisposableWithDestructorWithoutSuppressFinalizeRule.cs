@@ -73,7 +73,7 @@ namespace Gendarme.Rules.Performance {
 			return runner.RuleFailure;
 		}
 
-		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// #1 - does the type implements System.IDisposable ?
 			bool idisposable = false;

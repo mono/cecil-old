@@ -38,7 +38,7 @@ namespace Gendarme.Rules.Performance {
 
 	public class UseStringEmptyRule : IMethodRule {
 	
-		public MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			if (method.Body == null)

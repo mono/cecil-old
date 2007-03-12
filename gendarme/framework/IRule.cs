@@ -40,14 +40,14 @@ namespace Gendarme.Framework {
 	}
 
 	public interface IModuleRule : IRule {
-		MessageCollection CheckModule (AssemblyDefinition assembly, ModuleDefinition module, Runner runner);
+		MessageCollection CheckModule (ModuleDefinition module, Runner runner);
 	}
 
 	public interface ITypeRule : IRule {
-		MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner);
+		MessageCollection CheckType (TypeDefinition type, Runner runner);
 	}
 
 	public interface IMethodRule : IRule {
-		MessageCollection CheckMethod (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, MethodDefinition method, Runner runner);
+		MessageCollection CheckMethod (MethodDefinition method, Runner runner);
 	}
 }

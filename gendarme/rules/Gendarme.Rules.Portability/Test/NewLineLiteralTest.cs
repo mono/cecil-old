@@ -97,42 +97,42 @@ namespace Test.Rules.Interop {
 		public void HasNewLineLiteral_13 ()
 		{
 			MethodDefinition method = GetTest ("GetNewLineLiteral_13");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLineLiteral_10 ()
 		{
 			MethodDefinition method = GetTest ("GetNewLineLiteral_10");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLineLiteral ()
 		{
 			MethodDefinition method = GetTest ("GetNewLineLiteral");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNewLine ()
 		{
 			MethodDefinition method = GetTest ("GetNewLine");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasNull ()
 		{
 			MethodDefinition method = GetTest ("GetNull");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void HasEmpty ()
 		{
 			MethodDefinition method = GetTest ("GetEmpty");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner ()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
 }

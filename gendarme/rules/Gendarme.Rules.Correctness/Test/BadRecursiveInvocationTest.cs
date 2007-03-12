@@ -111,42 +111,42 @@ namespace Test.Rules.Correctness {
 		public void RecursiveProperty ()
 		{
 			MethodDefinition method = GetTest ("get_Foo"); 
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 		
 		[Test]
 		public void Property ()
 		{
 			MethodDefinition method = GetTest ("get_Bar"); 
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test, Ignore ("uncatched by rule")]
 		public void IndirectRecursiveProperty ()
 		{
 			MethodDefinition method = GetTest ("get_FooBar"); 
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void OverriddenMethod ()
 		{
 			MethodDefinition method = GetTest ("GetHashCode"); 
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 		
 		[Test]
 		public void BadRecursiveMethod ()
 		{
 			MethodDefinition method = GetTest ("Equals"); 
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void Fibonacci ()
 		{
 			MethodDefinition method = GetTest ("Fibonacci"); 
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
 }

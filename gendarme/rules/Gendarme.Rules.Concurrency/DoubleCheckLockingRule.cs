@@ -21,10 +21,7 @@ namespace Gendarme.Rules.Concurrency {
 
 public class DoubleCheckLockingRule : IMethodRule {
 
-    public MessageCollection CheckMethod (AssemblyDefinition assembly,
-            ModuleDefinition module,
-            TypeDefinition type, MethodDefinition method,
-            Runner runner)
+    public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
     {
         Hashtable comparisons = new Hashtable();
 

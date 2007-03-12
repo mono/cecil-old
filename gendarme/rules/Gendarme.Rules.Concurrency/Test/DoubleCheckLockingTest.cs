@@ -114,21 +114,21 @@ namespace Test.Rules.Concurrency {
 		public void SingleCheckBefore ()
 		{
 			MethodDefinition method = GetTest ("SingleCheckBefore"); 
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void SingleCheckAfter ()
 		{
 			MethodDefinition method = GetTest ("SingleCheckAfter"); 
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void DoubleCheck ()
 		{
 			MethodDefinition method = GetTest ("DoubleCheck"); 
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
 }

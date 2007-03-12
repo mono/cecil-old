@@ -91,21 +91,21 @@ namespace Test.Rules.Performance {
 		public void NoDestructor ()
 		{
 			TypeDefinition type = GetTest ("NoDestructorClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void EmptyDestructor ()
 		{
 			TypeDefinition type = GetTest ("EmptyDestructorClass");
-			Assert.IsNotNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 
 		[Test]
 		public void Destructor ()
 		{
 			TypeDefinition type = GetTest ("DestructorClass");
-			Assert.IsNull (rule.CheckType (assembly, module, type, new MinimalRunner ()));
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

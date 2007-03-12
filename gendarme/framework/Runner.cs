@@ -132,14 +132,13 @@ namespace Gendarme.Framework {
 		void CheckModule (ModuleDefinition module)
 		{
 			foreach (IModuleRule rule in Rules.Module)
-				ProcessMessages (rule.CheckModule (module.Assembly, module, this), rule, module);
+				ProcessMessages (rule.CheckModule (module, this), rule, module);
 		}
 
 		void CheckType (TypeDefinition type)
 		{
 			foreach (ITypeRule rule in Rules.Type)
-				ProcessMessages (
-					rule.CheckType (type.Module.Assembly, type.Module, type, this), rule, type);
+				ProcessMessages (rule.CheckType (type, this), rule, type);
 
 			CheckMethods (type);
 		}
@@ -154,8 +153,7 @@ namespace Gendarme.Framework {
 		{
 			foreach (MethodDefinition method in methods)
 				foreach (IMethodRule rule in Rules.Method)
-					ProcessMessages (rule.CheckMethod (
-						type.Module.Assembly, type.Module, type, method, this), rule, method);
+					ProcessMessages (rule.CheckMethod (method, this), rule, method);
 		}
 
 		void ProcessMessages (MessageCollection messages, IRule rule, object target)

@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Performance {
 
 	public class EmptyDestructorRule : ITypeRule {
 
-		public MessageCollection CheckType (AssemblyDefinition assembly, ModuleDefinition module, TypeDefinition type, Runner runner)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MethodDefinition destructor = null;
 			// #1 - look for a destructor

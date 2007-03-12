@@ -42,7 +42,7 @@ namespace Test.Rules.Exceptions {
 			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in 1 warning message
-			MessageCollection list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection list = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsTrue (list != null, "Warnings were not generated for the test named " + testName);
 			Assert.AreEqual (list.Count, 1, "One warning should have been generated for the test named " + testName);
 		}
@@ -54,7 +54,7 @@ namespace Test.Rules.Exceptions {
 			MethodDefinition method = GetMethodToTest (testName);
 			
 			// Should result in 1 warning message
-			MessageCollection list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection list = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsTrue (list != null, "Warnings were not generated for the test named " + testName);
 			Assert.AreEqual (list.Count, 1, "One warning should have been generated for the test named " + testName);
 		}
@@ -66,7 +66,7 @@ namespace Test.Rules.Exceptions {
 			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in 0 warning messages
-			MessageCollection list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection list = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsTrue (list == null, "Warnings were generated for the test named " + testName);
 		}
 
@@ -77,7 +77,7 @@ namespace Test.Rules.Exceptions {
 			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in one warning message
-			MessageCollection list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection list = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsTrue (list != null, "Warnings were not generated for the test named " + testName);
 			Assert.AreEqual (list.Count, 1, "One warning should have been generated for the test named " + testName);
 		}
@@ -89,7 +89,7 @@ namespace Test.Rules.Exceptions {
 			MethodDefinition method = GetMethodToTest (testName);
 
 			// Should result in one warning message
-			MessageCollection list = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection list = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsTrue (list != null, "Warnings were not generated for the test named " + testName);
 			Assert.AreEqual (list.Count, 1, "One warning should have been generated for the test named " + testName);
 		}

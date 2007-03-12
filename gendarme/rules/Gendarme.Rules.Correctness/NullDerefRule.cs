@@ -21,9 +21,7 @@ namespace Gendarme.Rules.Correctness {
 
 public class NullDerefRule : IMethodRule {
 
-    public MessageCollection CheckMethod(AssemblyDefinition assembly,
-            ModuleDefinition module, TypeDefinition type,
-            MethodDefinition method, Runner runner)
+    public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
     {
         if(method.Body == null)
             return runner.RuleSuccess;
