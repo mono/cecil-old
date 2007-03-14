@@ -156,7 +156,19 @@ namespace Mono.Merge {
 		{
 			VisitCollection (methods);
 		}
-
+		#if false
+		public override void VisitMethodDefinition (MethodDefinition method)
+		{
+			if (method.Name == ".start") {
+				//TODO More sanity checks here...
+				Console.WriteLine ("### Method '.start' found!");
+				//entryPoint = method;
+			} else {
+				Console.WriteLine ("### Method {0} is not named '.start'", method.Name);
+			}
+		}
+		#endif
+		
 		public override void VisitConstructorCollection (ConstructorCollection ctors)
 		{
 			VisitCollection (ctors);

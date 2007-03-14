@@ -41,7 +41,7 @@ namespace Mono.Merge {
 		
 		string mainModuleName = "<Module>";
 		string mainTypeName = "<Module>";
-		string externalAssemblyName = "ExternalAssemblyXXX";
+		string externalAssemblyName = "ExternalAssembly";
 		
 		List<string> assemblies = new List<string> ();
 		List<AssemblyDefinition> merged_assemblies = new List<AssemblyDefinition> ();
@@ -119,6 +119,7 @@ namespace Mono.Merge {
 				Console.Error.WriteLine ("Main module does not contain type \"" + MainTypeName + "\" in assembly " + outputAssembly.Name.FullName);
 				Environment.Exit (1);
 			}
+			outputAssembly.Accept (new StructureMerger (this, outputAssembly, outputAssembly));
 			
 			for (int i = 1; i < Assemblies.Count; i++) {
 				AssemblyDefinition asm = AssemblyFactory.GetAssembly (Assemblies [i]);

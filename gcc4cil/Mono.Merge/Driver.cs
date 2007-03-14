@@ -125,6 +125,7 @@ namespace Mono.Merge {
 
 			context.NativeLibraries.Libraries.Add ("c");
 			context.NativeLibraries.LibrariesSearchPaths.Add ("/lib");
+			context.NativeLibraries.Initialize ();
 			
 			context.Link ();
 		}

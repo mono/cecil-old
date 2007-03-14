@@ -71,8 +71,9 @@ namespace Mono.Merge {
 			string library = GetSymbolLibrary (mr.Name);
 			
 			if (library != null) {
-				List<MethodDefinition> methods = externalMethods [mr.Name];
-				if (methods != null) {
+				List<MethodDefinition> methods = null;
+				if (externalMethods.ContainsKey (mr.Name)) {
+					methods = externalMethods [mr.Name];
 					foreach (MethodDefinition method in methods) {
 						if (CompareMethodSignatures (mr, method)) {
 							return method;
@@ -82,7 +83,7 @@ namespace Mono.Merge {
 					methods = new List<MethodDefinition> ();
 					externalMethods [mr.Name] = methods;
 				}
-				if (referredLibraries [library] == null) {
+				if (! referredLibraries.ContainsKey (library)) {
 					referredLibraries [library] = new ModuleReference (library);
 				}
 				MethodDefinition md = CreateExternalMethod (mr, library, referredLibraries [library]);
@@ -110,7 +111,11 @@ namespace Mono.Merge {
 		}
 		
 		public string GetSymbolLibrary (string name) {
-			return (string) SymbolTable [name];
+			if (SymbolTable.ContainsKey (name)) {
+				return (string) SymbolTable [name];
+			} else {
+				return null;
+			}
 		}
 		
 		public void Initialize () {
@@ -132,34 +137,34 @@ namespace Mono.Merge {
 							}
 							//Console.WriteLine ("Choose library {0} in directory {1}", libraryFullName, directory);
 							
-				            Process p = new Process ();
-				            p.StartInfo.UseShellExecute = false;
-				            p.StartInfo.RedirectStandardOutput = true;
-
-				            p.StartInfo.FileName = "/usr/bin/nm";
-				            p.StartInfo.Arguments = "-D " + libraryFile;
-
-				            p.Start();
-				            // Do not wait for the child process to exit before
-				            // reading to the end of its redirected stream.
-				            // p.WaitForExit ();
-				            // Read the output stream first and then wait.
-				            string output = p.StandardOutput.ReadToEnd ();
-				            p.WaitForExit ();
-				            string[] outputLines = output.Split ('\n');
-				            
-		                    Regex r = new Regex ("[a-fA-F0-9]+\\s[a-zA-Z]\\s(.*)$");
-		                    foreach (string outputLine in outputLines) {
-		                    	Match m = r.Match (outputLine);
-		                    	if (m.Success) {
-		                    		//String symbol = m.Groups [0].Captures [0].Value;
-		                    		String symbol = m.Groups [1].Value;
-		                    		AddSymbol (symbol, libraryFullName);
-		                    		//Console.WriteLine ("Added symbol {0} in library {1}", symbol, libraryFullName);
-		                    	} //else {
-		                    		//Console.Error.WriteLine ("Unrecognized nm output: {0}", outputLine);
-		                    	//}
-		                    }
+							Process p = new Process ();
+							p.StartInfo.UseShellExecute = false;
+							p.StartInfo.RedirectStandardOutput = true;
+							
+							p.StartInfo.FileName = "/usr/bin/nm";
+							p.StartInfo.Arguments = "-D " + libraryFile;
+							
+							p.Start();
+							// Do not wait for the child process to exit before
+							// reading to the end of its redirected stream.
+							// p.WaitForExit ();
+							// Read the output stream first and then wait.
+							string output = p.StandardOutput.ReadToEnd ();
+							p.WaitForExit ();
+							string[] outputLines = output.Split ('\n');
+							
+							Regex r = new Regex ("[a-fA-F0-9]+\\s[a-zA-Z]\\s(.*)$");
+							foreach (string outputLine in outputLines) {
+								Match m = r.Match (outputLine);
+								if (m.Success) {
+									//String symbol = m.Groups [0].Captures [0].Value;
+									String symbol = m.Groups [1].Value;
+									AddSymbol (symbol, libraryFullName);
+									//Console.WriteLine ("+++ Added symbol {0} in library {1}", symbol, libraryFullName);
+								} //else {
+									//Console.Error.WriteLine ("--- Unrecognized nm output: {0}", outputLine);
+								//}
+							}
 						}
 					} catch (Exception e) {
 						Console.Error.WriteLine ("Exception: {0}", e.Message);

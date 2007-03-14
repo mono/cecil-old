@@ -54,14 +54,21 @@ namespace Mono.Merge {
 				
 				if (method.Name == ".start") {
 					//TODO More sanity checks here...
+					Console.WriteLine ("*** Method '.start' found!");
 					entryPoint = method;
+				} else {
+					Console.WriteLine ("*** Method {0} is not named '.start'", method.Name);
 				}
 				
 				return method;
 			}
 		}
 		public MethodDefinition GetMethod (string name) {
-			return methods [name];
+			if (methods.ContainsKey (name)) {
+				return methods [name];
+			} else {
+				return null;
+			}
 		}
 		
 		Dictionary<string,FieldDefinition> fields = new Dictionary<string,FieldDefinition> ();
@@ -78,7 +85,11 @@ namespace Mono.Merge {
 			}
 		}
 		public FieldDefinition GetField (string name) {
-			return fields [name];
+			if (fields.ContainsKey (name)) {
+				return fields [name];
+			} else {
+				return null;
+			}
 		}
 	}
 }

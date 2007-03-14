@@ -176,6 +176,8 @@ namespace Mono.Merge {
 
 		public override void VisitMethodDefinition (MethodDefinition method)
 		{
+			//Console.WriteLine ("!!! Am visiting method [{0}]{1} here!", method.DeclaringType.Module.Assembly.Name.Name, method.Name);
+			
 			if (method.Body != null)
 				method.Body.Accept (this);
 
@@ -311,7 +313,19 @@ namespace Mono.Merge {
 					res = td.Constructors.GetConstructor (!method.HasThis, method.Parameters);
 				else
 					res = td.Methods.GetMethod (method.Name, method.Parameters);
+			} else if (type.Name == context.ExternalAssemblyName) {
+				//Console.WriteLine ("### Should link method {0} here!", method.Name);
+				res = context.InternalSymbols.GetMethod (method.Name);
+				if (res == null) {
+					res = context.NativeLibraries.GetExternalMethod (method);
+				}
+				if (res == null) {
+					Console.Error.WriteLine ("Unresolved method {0}", method.Name);
+					context.LinkFailed = true;
+					res = (MethodReference) GetMemberReference (Target.MainModule.MemberReferences, method);
+				}
 			} else {
+				//Console.WriteLine ("--- Am linking method [{0}]:{1}:{2} here!", type.Module.Assembly.Name.Name, type.Name, method.Name);
 				res = (MethodReference) GetMemberReference (Target.MainModule.MemberReferences, method);
 			}
 

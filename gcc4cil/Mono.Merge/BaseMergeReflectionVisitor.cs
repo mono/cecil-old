@@ -37,7 +37,7 @@ namespace Mono.Merge {
 	/// </summary>
 	public class BaseMergeReflectionVisitor : BaseReflectionVisitor {
 
-		MergeContext context;
+		protected MergeContext context;
 		AssemblyDefinition target;
 		AssemblyDefinition source;
 		ModuleDefinition module;
