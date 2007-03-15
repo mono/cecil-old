@@ -128,6 +128,8 @@ namespace Mono.Merge {
 
 			FixReflectionAfterMerge fix = new FixReflectionAfterMerge (this, outputAssembly, outputAssembly);
 			fix.Process ();
+			
+			nativeLibraries.AddExternalMethods (this);
 
 			if (OutputIsExecutable) {
 				outputAssembly.Kind = AssemblyKind.Console;

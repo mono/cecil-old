@@ -36,7 +36,6 @@ using Mono.Cecil;
 
 namespace Mono.Merge {
 	public class NativeLibraryHandler {
-		
 		static bool CompareMethodSignatures (MethodReference mr, MethodDefinition md) {
 			if (mr.ReturnType.ReturnType.FullName != md.ReturnType.ReturnType.FullName) {
 				return false;
@@ -63,8 +62,8 @@ namespace Mono.Merge {
 				md.Parameters.Add (pd);
 			}
 			md.PInvokeInfo = new PInvokeInfo(md,
-           			PInvokeAttributes.CharSetAnsi | PInvokeAttributes.CallConvCdecl, md.Name, referredLibrary);
-           	return md;
+					PInvokeAttributes.CharSetAnsi | PInvokeAttributes.CallConvCdecl, md.Name, referredLibrary);
+			return md;
 			
 		}
 		public MethodDefinition GetExternalMethod (MethodReference mr) {
@@ -91,6 +90,17 @@ namespace Mono.Merge {
 				return md;
 			} else {
 				return null;
+			}
+		}
+		
+		public void AddExternalMethods (MergeContext context) {
+			foreach (List<MethodDefinition> methods in externalMethods.Values) {
+				foreach (MethodDefinition method in methods) {
+					context.MainType.Methods.Add (method);
+				}
+			}
+			foreach (ModuleReference library in referredLibraries.Values) {
+				context.OutputAssembly.MainModule.ModuleReferences.Add(library);
 			}
 		}
 		
