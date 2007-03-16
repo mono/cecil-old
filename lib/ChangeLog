@@ -1,3 +1,16 @@
+2007-03-16  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  Mono.Cecil.Cil/OpCode.cs
+	  Mono.Cecil.Cil/OpCodes.cs
+	  Mono.Cecil.Cil/Code.cs
+	  CodeGen/cecil-gen.rb
+	  CodeGen/templates/OpCodes.cs
+	  CodeGen/templates/Code.cs:
+		Add a Code enumeration to simplify working with
+		OpCodes.
+
 2007-03-12  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Metadata/UserStringsHeap.cs:

@@ -35,6 +35,7 @@ namespace Mono.Cecil.Cil {
 		byte m_op2;
 		int m_size;
 
+		Code m_code;
 		FlowControl m_flowControl;
 		OpCodeType m_opCodeType;
 		OperandType m_operandType;
@@ -61,6 +62,10 @@ namespace Mono.Cecil.Cil {
 			get { return m_size == 1 ? m_op2 : (short) ((m_op1 << 8) | m_op2); }
 		}
 
+		public Code Code {
+			get { return m_code; }
+		}
+
 		public FlowControl FlowControl {
 			get { return m_flowControl; }
 		}
@@ -81,7 +86,8 @@ namespace Mono.Cecil.Cil {
 			get { return m_stackBehaviourPush; }
 		}
 
-		internal OpCode (string name, byte op1, byte op2, int size, FlowControl flowControl,
+		internal OpCode (string name, byte op1, byte op2, int size,
+			Code code, FlowControl flowControl,
 			OpCodeType opCodeType, OperandType operandType,
 			StackBehaviour pop, StackBehaviour push)
 		{
@@ -89,6 +95,7 @@ namespace Mono.Cecil.Cil {
 			m_op1 = op1;
 			m_op2 = op2;
 			m_size = size;
+			m_code = code;
 			m_flowControl = flowControl;
 			m_opCodeType = opCodeType;
 			m_operandType = operandType;

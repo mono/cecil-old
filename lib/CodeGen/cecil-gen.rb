@@ -147,6 +147,7 @@ $cur_table = nil
 cecil_compile("../Mono.Cecil.Metadata/IMetadataVisitor.cs", "./templates/IMetadataVisitor.cs")
 
 cecil_compile("../Mono.Cecil.Cil/OpCodes.cs", "./templates/OpCodes.cs")
+cecil_compile("../Mono.Cecil.Cil/Code.cs", "./templates/Code.cs")
 
 $colls.each { |coll|
 	$cur_coll = coll
