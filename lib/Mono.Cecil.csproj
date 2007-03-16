@@ -69,7 +69,7 @@
     <Compile Include="Mono.Cecil.Binary\SubSystem.cs" />
     <Compile Include="Mono.Cecil.Cil\BaseCodeVisitor.cs" />
     <Compile Include="Mono.Cecil.Cil\CilWorker.cs" />
-	<Compile Include="Mono.Cecil.Cil\Code.cs" />
+    <Compile Include="Mono.Cecil.Cil\Code.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeReader.cs" />
     <Compile Include="Mono.Cecil.Cil\CodeWriter.cs" />
     <Compile Include="Mono.Cecil.Cil\DocumentType.cs" />
