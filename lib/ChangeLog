@@ -1,5 +1,10 @@
 2007-03-16  Jb Evain  <jbevain@gmail.com>
 
+	* Mono.Cecil.Cil/CodeReader.cs
+	  Mono.Cecil.Cil/MethodBody.cs:
+		Add a MethodBody.Simplify method to expand
+		macros.
+
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.csproj
 	  Mono.Cecil.Cil/OpCode.cs

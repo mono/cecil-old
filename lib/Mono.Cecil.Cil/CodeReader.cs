@@ -86,7 +86,7 @@ namespace Mono.Cecil.Cil {
 			return (uint) token & 0x00ffffff;
 		}
 
-		static ParameterDefinition GetParameter (MethodBody body, int index)
+		public static ParameterDefinition GetParameter (MethodBody body, int index)
 		{
 			if (body.Method.HasThis) {
 				if (index == 0)
@@ -95,6 +95,11 @@ namespace Mono.Cecil.Cil {
 			}
 
 			return body.Method.Parameters [index];
+		}
+
+		public static VariableDefinition GetVariable (MethodBody body, int index)
+		{
+			return body.Variables [index];
 		}
 
 		void ReadCilBody (MethodBody body, BinaryReader br, out IDictionary instructions)
@@ -143,7 +148,7 @@ namespace Mono.Cecil.Cil {
 						instr.Operand = br.ReadByte ();
 					break;
 				case OperandType.ShortInlineVar :
-					instr.Operand = body.Variables [br.ReadByte ()];
+					instr.Operand = GetVariable (body, br.ReadByte ());
 					break;
 				case OperandType.ShortInlineParam :
 					instr.Operand = GetParameter (body, br.ReadByte ());
@@ -155,7 +160,7 @@ namespace Mono.Cecil.Cil {
 					instr.Operand = br.ReadInt32 ();
 					break;
 				case OperandType.InlineVar :
-					instr.Operand = body.Variables [br.ReadInt16 ()];
+					instr.Operand = GetVariable (body, br.ReadInt16 ());
 					break;
 				case OperandType.InlineParam :
 					instr.Operand = GetParameter (body, br.ReadInt16 ());
