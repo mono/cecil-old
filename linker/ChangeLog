@@ -1,3 +1,7 @@
+2007-03-16  Jb Evain  <jbevain@gmail.com>
+
+	* rename linker.exe to monolinker.exe
+
 2006-11-08  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Linker/AssemblyMarker.cs:

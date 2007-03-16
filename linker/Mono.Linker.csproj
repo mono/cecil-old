@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Mono.Linker</RootNamespace>
-    <AssemblyName>linker</AssemblyName>
+    <AssemblyName>monolinker</AssemblyName>
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
