@@ -177,7 +177,7 @@ namespace Mono.Merge {
 		public override void VisitMethodDefinition (MethodDefinition method)
 		{
 			//Console.WriteLine ("!!! Am visiting method [{0}]{1} here!", method.DeclaringType.Module.Assembly.Name.Name, method.Name);
-			
+
 			if (method.Body != null)
 				method.Body.Accept (this);
 
@@ -361,7 +361,7 @@ namespace Mono.Merge {
 			Instruction instruction = instr;
 			if (instruction.Operand is FieldReference) {
 				FieldReference fr = (FieldReference) instruction.Operand;
-				
+
 				if (fr.DeclaringType.Module.Assembly.Name.Name == Context.ExternalAssemblyName) {
 					FieldDefinition fd = Context.InternalSymbols.GetField (fr.Name);
 					if (fd != null) {
@@ -377,7 +377,7 @@ namespace Mono.Merge {
 					else
 						instruction.Operand = GetMemberReference (Target.MainModule.MemberReferences, fr);
 				}
-				
+
 
 				fr = (FieldReference) instruction.Operand;
 				fr.FieldType = GetTypeReference (fr.FieldType);

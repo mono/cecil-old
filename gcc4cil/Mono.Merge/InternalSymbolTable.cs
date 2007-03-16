@@ -31,16 +31,16 @@ using System.Collections.Generic;
 using Mono.Cecil;
 
 namespace Mono.Merge {
-	
-	
+
+
 	public class InternalSymbolTable {
-		
+
 		MethodDefinition entryPoint = null;
 		public MethodDefinition EntryPoint {
 			get { return entryPoint; }
 		}
-		
-		
+
+
 		Dictionary<string,MethodDefinition> methods = new Dictionary<string,MethodDefinition> ();
 		public MethodDefinition InsertMethod (MethodDefinition method, bool clone) {
 			if (methods.ContainsKey (method.Name)) {
@@ -51,7 +51,7 @@ namespace Mono.Merge {
 					method = method.Clone ();
 				}
 				methods [method.Name] = method;
-				
+
 				if (method.Name == ".start") {
 					//TODO More sanity checks here...
 					Console.WriteLine ("*** Method '.start' found!");
@@ -59,7 +59,7 @@ namespace Mono.Merge {
 				} else {
 					Console.WriteLine ("*** Method {0} is not named '.start'", method.Name);
 				}
-				
+
 				return method;
 			}
 		}
@@ -70,7 +70,7 @@ namespace Mono.Merge {
 				return null;
 			}
 		}
-		
+
 		Dictionary<string,FieldDefinition> fields = new Dictionary<string,FieldDefinition> ();
 		public FieldDefinition InsertField (FieldDefinition field, bool clone) {
 			if (fields.ContainsKey (field.Name)) {

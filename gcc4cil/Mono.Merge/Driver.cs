@@ -54,8 +54,8 @@ namespace Mono.Merge {
 				Console.WriteLine ("Library for xxxprintf is {0}", nh.GetSymbolLibrary ("xxxprintf"));
 				return 0;
 			}
-			
-			
+
+
 			if (args.Length == 0)
 				Usage ();
 
@@ -126,7 +126,7 @@ namespace Mono.Merge {
 			context.NativeLibraries.Libraries.Add ("c");
 			context.NativeLibraries.LibrariesSearchPaths.Add ("/lib");
 			context.NativeLibraries.Initialize ();
-			
+
 			context.Link ();
 		}
 

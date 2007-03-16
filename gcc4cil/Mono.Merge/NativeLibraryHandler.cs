@@ -50,10 +50,10 @@ namespace Mono.Merge {
 				return true;
 			}
 		}
-		
+
 		Dictionary<string,List<MethodDefinition>> externalMethods = new Dictionary<string,List<MethodDefinition>> ();
 		Dictionary<string,ModuleReference> referredLibraries = new Dictionary<string,ModuleReference> ();
-		
+
 		MethodDefinition CreateExternalMethod (MethodReference mr, string library, ModuleReference referredLibrary) {
 			MethodDefinition md = new MethodDefinition(mr.Name,
 					MethodAttributes.PInvokeImpl |  MethodAttributes.HideBySig | MethodAttributes.Private |
@@ -64,11 +64,11 @@ namespace Mono.Merge {
 			md.PInvokeInfo = new PInvokeInfo(md,
 					PInvokeAttributes.CharSetAnsi | PInvokeAttributes.CallConvCdecl, md.Name, referredLibrary);
 			return md;
-			
+
 		}
 		public MethodDefinition GetExternalMethod (MethodReference mr) {
 			string library = GetSymbolLibrary (mr.Name);
-			
+
 			if (library != null) {
 				List<MethodDefinition> methods = null;
 				if (externalMethods.ContainsKey (mr.Name)) {
@@ -92,7 +92,7 @@ namespace Mono.Merge {
 				return null;
 			}
 		}
-		
+
 		public void AddExternalMethods (MergeContext context) {
 			foreach (List<MethodDefinition> methods in externalMethods.Values) {
 				foreach (MethodDefinition method in methods) {
@@ -103,23 +103,23 @@ namespace Mono.Merge {
 				context.OutputAssembly.MainModule.ModuleReferences.Add(library);
 			}
 		}
-		
+
 		List<string> libraries = new List<string> ();
 		List<string> librariesSearchPaths = new List<string> ();
-		
+
 		public List<string> Libraries {
 			get { return libraries; }
 		}
 		public List<string> LibrariesSearchPaths {
 			get { return librariesSearchPaths; }
 		}
-		
+
 		Hashtable SymbolTable = new Hashtable ();
-		
+
 		void AddSymbol (string name, string library) {
 			SymbolTable [name] = library;
 		}
-		
+
 		public string GetSymbolLibrary (string name) {
 			if (SymbolTable.ContainsKey (name)) {
 				return (string) SymbolTable [name];
@@ -127,7 +127,7 @@ namespace Mono.Merge {
 				return null;
 			}
 		}
-		
+
 		public void Initialize () {
 			foreach (string libraryName in Libraries) {
 				foreach (string directory in LibrariesSearchPaths) {
@@ -146,14 +146,14 @@ namespace Mono.Merge {
 								}
 							}
 							//Console.WriteLine ("Choose library {0} in directory {1}", libraryFullName, directory);
-							
+
 							Process p = new Process ();
 							p.StartInfo.UseShellExecute = false;
 							p.StartInfo.RedirectStandardOutput = true;
-							
+
 							p.StartInfo.FileName = "/usr/bin/nm";
 							p.StartInfo.Arguments = "-D " + libraryFile;
-							
+
 							p.Start();
 							// Do not wait for the child process to exit before
 							// reading to the end of its redirected stream.
@@ -162,7 +162,7 @@ namespace Mono.Merge {
 							string output = p.StandardOutput.ReadToEnd ();
 							p.WaitForExit ();
 							string[] outputLines = output.Split ('\n');
-							
+
 							Regex r = new Regex ("[a-fA-F0-9]+\\s[a-zA-Z]\\s(.*)$");
 							foreach (string outputLine in outputLines) {
 								Match m = r.Match (outputLine);
@@ -179,7 +179,7 @@ namespace Mono.Merge {
 					} catch (Exception e) {
 						Console.Error.WriteLine ("Exception: {0}", e.Message);
 					}
-					
+
 				}
 			}
 		}

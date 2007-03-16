@@ -38,22 +38,22 @@ namespace Mono.Merge {
 		string outputPath = "a.exe";
 		bool outputIsExecutable = true;
 		AssemblyDefinition outputAssembly;
-		
+
 		string mainModuleName = "<Module>";
 		string mainTypeName = "<Module>";
 		string externalAssemblyName = "ExternalAssembly";
-		
+
 		List<string> assemblies = new List<string> ();
 		List<AssemblyDefinition> merged_assemblies = new List<AssemblyDefinition> ();
-		
+
 		NativeLibraryHandler nativeLibraries = new NativeLibraryHandler ();
 		InternalSymbolTable internalSymbolTable = new InternalSymbolTable ();
-		
+
 		ModuleDefinition mainModule;
 		TypeDefinition mainType;
-		
+
 		bool linkFailed = false;
-		
+
 		public string OutputPath {
 			get { return outputPath; }
 			set { outputPath = value; }
@@ -65,7 +65,7 @@ namespace Mono.Merge {
 		public AssemblyDefinition OutputAssembly {
 			get { return outputAssembly; }
 		}
-		
+
 		public string MainModuleName {
 			get { return mainModuleName; }
 			set { mainModuleName = value; }
@@ -86,26 +86,26 @@ namespace Mono.Merge {
 		public List<AssemblyDefinition> MergedAssemblies {
 			get { return merged_assemblies; }
 		}
-		
+
 		public NativeLibraryHandler NativeLibraries {
 			get { return nativeLibraries; }
 		}
 		public InternalSymbolTable InternalSymbols {
 			get { return internalSymbolTable; }
 		}
-		
+
 		public ModuleDefinition MainModule {
 			get { return mainModule; }
 		}
 		public TypeDefinition MainType {
 			get { return mainType; }
 		}
-		
+
 		public bool LinkFailed {
 			get { return linkFailed; }
 			set { linkFailed = value; }
 		}
-		
+
 		public void Link ()
 		{
 			outputAssembly = AssemblyFactory.GetAssembly (Assemblies [0]);
@@ -120,7 +120,7 @@ namespace Mono.Merge {
 				Environment.Exit (1);
 			}
 			outputAssembly.Accept (new StructureMerger (this, outputAssembly, outputAssembly));
-			
+
 			for (int i = 1; i < Assemblies.Count; i++) {
 				AssemblyDefinition asm = AssemblyFactory.GetAssembly (Assemblies [i]);
 				asm.Accept (new StructureMerger (this, outputAssembly, asm));
@@ -128,7 +128,7 @@ namespace Mono.Merge {
 
 			FixReflectionAfterMerge fix = new FixReflectionAfterMerge (this, outputAssembly, outputAssembly);
 			fix.Process ();
-			
+
 			nativeLibraries.AddExternalMethods (this);
 
 			if (OutputIsExecutable) {
