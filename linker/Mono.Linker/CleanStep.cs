@@ -37,7 +37,8 @@ namespace Mono.Linker {
 		public void Process (LinkContext context)
 		{
 			foreach (AssemblyMarker am in context.GetAssemblies())
-				CleanAssembly (am.Assembly);
+				if (am.Action != AssemblyAction.Skip)
+					CleanAssembly (am.Assembly);
 		}
 
 		static void CleanAssembly (AssemblyDefinition asm)

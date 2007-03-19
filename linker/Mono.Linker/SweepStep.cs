@@ -40,32 +40,50 @@ namespace Mono.Linker {
 				SweepAssembly (am, context);
 		}
 
-		void SweepAssembly(AssemblyMarker am, LinkContext context)
+		static void SweepAssembly (AssemblyMarker am, LinkContext context)
 		{
+			if (am.Action == AssemblyAction.Skip)
+				return;
+
 			Hashtable typesUsed = new Hashtable ();
 			foreach (TypeMarker tm in am.GetTypes ()) {
 				SweepType (tm);
 				typesUsed.Add (tm.Type.ToString (), tm.Type);
 			}
 
-			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types))
-				if (!typesUsed.Contains (type.ToString ())) {
-					am.Assembly.MainModule.Types.Remove (type);
-					foreach (AssemblyMarker marker in context.GetAssemblies ()) {
-						ModuleDefinition module = marker.Assembly.MainModule;
-						if (module.TypeReferences.Contains (type))
-							module.TypeReferences.Remove (type);
-					}
+			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types)) {
+				if (typesUsed.Contains (type.ToString ()))
+					continue;
+
+				am.Assembly.MainModule.Types.Remove (type);
+				foreach (AssemblyMarker marker in context.GetAssemblies ()) {
+					ModuleDefinition module = marker.Assembly.MainModule;
+					if (!module.TypeReferences.Contains (type))
+						continue;
+
+					TypeReference typeRef = module.TypeReferences [type.FullName];
+					if (AssemblyMatch (am.Assembly, typeRef))
+						module.TypeReferences.Remove (typeRef);
 				}
+			}
 		}
 
-		void SweepType (TypeMarker tm)
+		static bool AssemblyMatch (AssemblyDefinition assembly, TypeReference type)
+		{
+			AssemblyNameReference reference = type.Scope as AssemblyNameReference;
+			if (reference == null)
+				return false;
+
+			return assembly.Name.FullName == reference.FullName;
+		}
+
+		static void SweepType (TypeMarker tm)
 		{
 			SweepMethods (tm);
 			SweepFields (tm);
 		}
 
-		void SweepFields (TypeMarker tm)
+		static void SweepFields (TypeMarker tm)
 		{
 			Hashtable fieldsUsed = new Hashtable ();
 			foreach (FieldMarker fm in tm.GetFields())
@@ -76,7 +94,7 @@ namespace Mono.Linker {
 					tm.Type.Fields.Remove (field);
 		}
 
-		void SweepMethods (TypeMarker tm)
+		static void SweepMethods (TypeMarker tm)
 		{
 			Hashtable methodsUsed = new Hashtable ();
 			foreach (MethodMarker mm in tm.GetMethods ())

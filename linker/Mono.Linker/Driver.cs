@@ -45,7 +45,7 @@ namespace Mono.Linker {
 
 			try {
 
-				Run(new Queue(args));
+				Run (new Queue (args));
 
 			} catch (Exception e) {
 				Console.WriteLine ("Fatal error in {0}", _linker);

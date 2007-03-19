@@ -97,8 +97,11 @@ namespace Mono.Linker {
 				am.Processed = true;
 
 			MarkCustomAttributes (am.Assembly);
-			foreach (ModuleDefinition module in am.Assembly.Modules)
+
+			foreach (ModuleDefinition module in am.Assembly.Modules) {
+				MarkCustomAttributes (module);
 				MarkModule (module);
+			}
 		}
 
 		void MarkModule (ModuleDefinition module)

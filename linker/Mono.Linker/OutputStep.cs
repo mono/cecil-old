@@ -43,7 +43,7 @@ namespace Mono.Linker {
 				OutputAssembly (am, context.OutputDirectory);
 		}
 
-		void OutputAssembly(AssemblyMarker am, string directory)
+		static void OutputAssembly (AssemblyMarker am, string directory)
 		{
 			switch (am.Action) {
 			case AssemblyAction.Link:
@@ -55,12 +55,12 @@ namespace Mono.Linker {
 			}
 		}
 
-		void CopyAssembly (FileInfo fi, string directory)
+		static void CopyAssembly (FileInfo fi, string directory)
 		{
 			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
 		}
 
-		string GetAssemblyFile (AssemblyDefinition assembly, string directory)
+		static string GetAssemblyFile (AssemblyDefinition assembly, string directory)
 		{
 			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
 			return Path.Combine (directory, file);

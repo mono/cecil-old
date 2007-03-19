@@ -105,7 +105,7 @@ namespace Mono.Linker {
 				return GetMethod (type.Methods, method);
 		}
 
-		TypeReference GetDeclaringType (TypeReference type)
+		static TypeReference GetDeclaringType (TypeReference type)
 		{
 			TypeReference t = type;
 			while (t is TypeSpecification)
@@ -113,7 +113,7 @@ namespace Mono.Linker {
 			return t;
 		}
 
-		MethodDefinition GetMethod (ICollection collection, MethodReference reference)
+		static MethodDefinition GetMethod (ICollection collection, MethodReference reference)
 		{
 			foreach (MethodDefinition meth in collection) {
 				if (meth.Name != reference.Name)
@@ -131,7 +131,7 @@ namespace Mono.Linker {
 			return null;
 		}
 
-		bool AreSame (ParameterDefinitionCollection a, ParameterDefinitionCollection b)
+		static bool AreSame (ParameterDefinitionCollection a, ParameterDefinitionCollection b)
 		{
 			if (a.Count != b.Count)
 				return false;
@@ -146,7 +146,7 @@ namespace Mono.Linker {
 			return true;
 		}
 
-		bool AreSame(TypeReference a, TypeReference b)
+		static bool AreSame(TypeReference a, TypeReference b)
 		{
 			while (a is TypeSpecification || b is TypeSpecification) {
 				if (a.GetType () != b.GetType ())

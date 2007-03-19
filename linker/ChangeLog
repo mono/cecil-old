@@ -1,3 +1,9 @@
+2007-03-19  Jb Evain  <jbevain@gmail.com>
+
+	* Fix a bug when an assembly references two
+	versions of an assembly with the same name.
+	* do some refactorings
+
 2007-03-16  Jb Evain  <jbevain@gmail.com>
 
 	* rename linker.exe to monolinker.exe

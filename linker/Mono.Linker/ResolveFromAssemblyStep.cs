@@ -47,12 +47,17 @@ namespace Mono.Linker {
 				TypeMarker tm = marker.Mark (type);
 
 				foreach (MethodDefinition meth in type.Methods)
-					tm.Mark (meth, MethodAction.ForceParse);
+					MarkMethod (tm, meth);
 				foreach (MethodDefinition ctor in type.Constructors)
-					tm.Mark (ctor, MethodAction.ForceParse);
+					MarkMethod (tm, ctor);
 			}
 
 			context.AddMarker (marker);
+		}
+
+		static void MarkMethod (TypeMarker marker, MethodDefinition method)
+		{
+			marker.Mark (method, MethodAction.ForceParse);
 		}
 	}
 }
