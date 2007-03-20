@@ -1,0 +1,26 @@
+<Type Name="IVariableDefinitionProvider" FullName="Mono.Cecil.Cil.IVariableDefinitionProvider">
+  <TypeSignature Language="C#" Value="public interface IVariableDefinitionProvider" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Interfaces />
+  <Members>
+    <Member MemberName="Variables">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.Cil.VariableDefinitionCollection Variables { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.Cil.VariableDefinitionCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

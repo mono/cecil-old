@@ -1,0 +1,17 @@
+<Type Name="IMemberDefinition" FullName="Mono.Cecil.IMemberDefinition">
+  <TypeSignature Language="C#" Value="public interface IMemberDefinition : Mono.Cecil.IMemberReference" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IMemberReference</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

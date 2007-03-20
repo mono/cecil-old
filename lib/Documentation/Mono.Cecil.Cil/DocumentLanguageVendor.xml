@@ -1,0 +1,46 @@
+<Type Name="DocumentLanguageVendor" FullName="Mono.Cecil.Cil.DocumentLanguageVendor">
+  <TypeSignature Language="C#" Value="public enum DocumentLanguageVendor" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Members>
+    <Member MemberName="Microsoft">
+      <MemberSignature Language="C#" Value="Microsoft" />
+      <MemberType>Field</MemberType>
+      <Attributes>
+        <Attribute>
+          <AttributeName>Mono.Cecil.Cil.Guid(2571847108, 59113, 4562, 144, 63, 0, 192, 79, 163, 2, 161)</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.Cil.DocumentLanguageVendor</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="Other">
+      <MemberSignature Language="C#" Value="Other" />
+      <MemberType>Field</MemberType>
+      <Attributes>
+        <Attribute>
+          <AttributeName>Mono.Cecil.Cil.Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)</AttributeName>
+        </Attribute>
+      </Attributes>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.Cil.DocumentLanguageVendor</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

@@ -1,0 +1,33 @@
+<Type Name="ISymbolReader" FullName="Mono.Cecil.Cil.ISymbolReader">
+  <TypeSignature Language="C#" Value="public interface ISymbolReader : IDisposable" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName="Read">
+      <MemberSignature Language="C#" Value="public void Read (Mono.Cecil.Cil.MethodBody body);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="body" Type="Mono.Cecil.Cil.MethodBody" />
+      </Parameters>
+      <Docs>
+        <param name="body">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

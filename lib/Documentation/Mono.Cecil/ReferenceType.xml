@@ -1,0 +1,29 @@
+<Type Name="ReferenceType" FullName="Mono.Cecil.ReferenceType">
+  <TypeSignature Language="C#" Value="public sealed class ReferenceType : Mono.Cecil.TypeSpecification" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.TypeSpecification</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ReferenceType (Mono.Cecil.TypeReference type);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="type" Type="Mono.Cecil.TypeReference" />
+      </Parameters>
+      <Docs>
+        <param name="type">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

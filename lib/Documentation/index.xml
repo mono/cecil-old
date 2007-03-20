@@ -1,0 +1,337 @@
+<Overview>
+  <Assemblies>
+    <Assembly Name="Mono.Cecil" Version="0.4.3.1">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Runtime.InteropServices.ComVisible(false)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.CLSCompliant(false)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCopyright("(C) 2005, Jb Evain")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyProduct("Mono.Cecil")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyConfiguration("")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyDescription("Library for reading and writing CIL images")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTitle("Mono.Cecil")</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+  </Assemblies>
+  <Remarks>To be added.</Remarks>
+  <Copyright>To be added.</Copyright>
+  <Types>
+    <Namespace Name="Mono.Cecil">
+      <Type Name="IAssemblyResolver" />
+      <Type Name="ICustomAttributeProvider" />
+      <Type Name="IGenericInstance" />
+      <Type Name="IMetadataTokenProvider" />
+      <Type Name="IGenericParameterProvider" />
+      <Type Name="IHasConstant" />
+      <Type Name="IHasMarshalSpec" />
+      <Type Name="IHasSecurity" />
+      <Type Name="IMemberDefinition" />
+      <Type Name="IMemberReference" />
+      <Type Name="IReflectionVisitable" />
+      <Type Name="IMetadataScope" />
+      <Type Name="IMethodSignature" />
+      <Type Name="IReflectionStructureVisitable" />
+      <Type Name="IReflectionStructureVisitor" />
+      <Type Name="IReflectionVisitor" />
+      <Type Name="IRequireResolving" />
+      <Type Name="BaseReflectionVisitor" />
+      <Type Name="ArrayDimension" />
+      <Type Name="ArrayDimensionCollection" />
+      <Type Name="ArrayType" />
+      <Type Name="TypeSpecification" />
+      <Type Name="TypeReference" />
+      <Type Name="MemberReference" />
+      <Type Name="AssemblyDefinition" />
+      <Type Name="AssemblyFactory" />
+      <Type Name="AssemblyLinkedResource" />
+      <Type Name="Resource" />
+      <Type Name="AssemblyNameDefinition" />
+      <Type Name="AssemblyNameReference" />
+      <Type Name="AssemblyNameReferenceCollection" />
+      <Type Name="BaseAssemblyResolver" />
+      <Type Name="BaseStructureVisitor" />
+      <Type Name="CallSite" />
+      <Type Name="Constants" />
+      <Type Name="ConstraintCollection" />
+      <Type Name="ConstructorCollection" />
+      <Type Name="CustomAttribute" />
+      <Type Name="CustomAttributeCollection" />
+      <Type Name="DefaultAssemblyResolver" />
+      <Type Name="EmbeddedResource" />
+      <Type Name="EventDefinition" />
+      <Type Name="EventReference" />
+      <Type Name="EventDefinitionCollection" />
+      <Type Name="ExternTypeCollection" />
+      <Type Name="FieldDefinition" />
+      <Type Name="FieldReference" />
+      <Type Name="FieldDefinitionCollection" />
+      <Type Name="FunctionPointerType" />
+      <Type Name="GenericArgumentCollection" />
+      <Type Name="GenericInstanceMethod" />
+      <Type Name="MethodSpecification" />
+      <Type Name="MethodReference" />
+      <Type Name="GenericInstanceType" />
+      <Type Name="GenericParameter" />
+      <Type Name="GenericParameterCollection" />
+      <Type Name="InterfaceCollection" />
+      <Type Name="LinkedResource" />
+      <Type Name="MarshalSpec" />
+      <Type Name="ArrayMarshalSpec" />
+      <Type Name="CustomMarshalerSpec" />
+      <Type Name="SafeArraySpec" />
+      <Type Name="FixedArraySpec" />
+      <Type Name="FixedSysStringSpec" />
+      <Type Name="MemberReferenceCollection" />
+      <Type Name="MethodDefinition" />
+      <Type Name="MethodDefinitionCollection" />
+      <Type Name="MethodReturnType" />
+      <Type Name="ModType" />
+      <Type Name="ModifierOptional" />
+      <Type Name="ModifierRequired" />
+      <Type Name="ModuleDefinition" />
+      <Type Name="ModuleReference" />
+      <Type Name="ModuleDefinitionCollection" />
+      <Type Name="ModuleReferenceCollection" />
+      <Type Name="NestedTypeCollection" />
+      <Type Name="OverrideCollection" />
+      <Type Name="ParameterDefinition" />
+      <Type Name="ParameterReference" />
+      <Type Name="ParameterDefinitionCollection" />
+      <Type Name="PinnedType" />
+      <Type Name="PInvokeInfo" />
+      <Type Name="PointerType" />
+      <Type Name="PropertyDefinition" />
+      <Type Name="PropertyReference" />
+      <Type Name="PropertyDefinitionCollection" />
+      <Type Name="ReferenceType" />
+      <Type Name="ReflectionException" />
+      <Type Name="ResourceCollection" />
+      <Type Name="SecurityDeclaration" />
+      <Type Name="SecurityDeclarationCollection" />
+      <Type Name="SentinelType" />
+      <Type Name="TypeDefinition" />
+      <Type Name="TypeDefinitionCollection" />
+      <Type Name="TypeReferenceCollection" />
+      <Type Name="AssemblyFlags" />
+      <Type Name="AssemblyHashAlgorithm" />
+      <Type Name="AssemblyKind" />
+      <Type Name="EventAttributes" />
+      <Type Name="FieldAttributes" />
+      <Type Name="FileAttributes" />
+      <Type Name="GenericParameterAttributes" />
+      <Type Name="ManifestResourceAttributes" />
+      <Type Name="MethodAttributes" />
+      <Type Name="MethodCallingConvention" />
+      <Type Name="MethodImplAttributes" />
+      <Type Name="MethodSemanticsAttributes" />
+      <Type Name="NativeType" />
+      <Type Name="ParameterAttributes" />
+      <Type Name="PInvokeAttributes" />
+      <Type Name="PropertyAttributes" />
+      <Type Name="SecurityAction" />
+      <Type Name="TargetRuntime" />
+      <Type Name="TypeAttributes" />
+      <Type Name="VariantType" />
+    </Namespace>
+    <Namespace Name="Mono.Cecil.Binary">
+      <Type Name="IBinaryVisitable" />
+      <Type Name="IBinaryVisitor" />
+      <Type Name="ImageFormatException" />
+      <Type Name="BaseImageVisitor" />
+      <Type Name="CLIHeader" />
+      <Type Name="DataDirectory" />
+      <Type Name="DebugHeader" />
+      <Type Name="DOSHeader" />
+      <Type Name="Image" />
+      <Type Name="ImportAddressTable" />
+      <Type Name="ImportTable" />
+      <Type Name="ImportLookupTable" />
+      <Type Name="HintNameTable" />
+      <Type Name="PEFileHeader" />
+      <Type Name="PEOptionalHeader" />
+      <Type Name="PEOptionalHeader+StandardFieldsHeader" />
+      <Type Name="PEOptionalHeader+NTSpecificFieldsHeader" />
+      <Type Name="PEOptionalHeader+DataDirectoriesHeader" />
+      <Type Name="ResourceDataEntry" />
+      <Type Name="ResourceNode" />
+      <Type Name="ResourceDirectoryEntry" />
+      <Type Name="ResourceDirectoryString" />
+      <Type Name="ResourceDirectoryTable" />
+      <Type Name="RVA" />
+      <Type Name="Section" />
+      <Type Name="SectionCollection" />
+      <Type Name="DebugStoreType" />
+      <Type Name="ImageCharacteristics" />
+      <Type Name="RuntimeImage" />
+      <Type Name="SectionCharacteristics" />
+      <Type Name="SubSystem" />
+    </Namespace>
+    <Namespace Name="Mono.Cecil.Metadata">
+      <Type Name="IMetadataRow" />
+      <Type Name="IMetadataRowVisitable" />
+      <Type Name="IMetadataTable" />
+      <Type Name="IMetadataTableVisitable" />
+      <Type Name="IMetadataVisitable" />
+      <Type Name="IMetadataVisitor" />
+      <Type Name="IMetadataTableVisitor" />
+      <Type Name="IMetadataRowVisitor" />
+      <Type Name="MetadataFormatException" />
+      <Type Name="AssemblyTable" />
+      <Type Name="AssemblyRow" />
+      <Type Name="AssemblyOSTable" />
+      <Type Name="AssemblyOSRow" />
+      <Type Name="AssemblyProcessorTable" />
+      <Type Name="AssemblyProcessorRow" />
+      <Type Name="AssemblyRefTable" />
+      <Type Name="AssemblyRefRow" />
+      <Type Name="AssemblyRefOSTable" />
+      <Type Name="AssemblyRefOSRow" />
+      <Type Name="AssemblyRefProcessorTable" />
+      <Type Name="AssemblyRefProcessorRow" />
+      <Type Name="BaseMetadataVisitor" />
+      <Type Name="BaseMetadataTableVisitor" />
+      <Type Name="BaseMetadataRowVisitor" />
+      <Type Name="BlobHeap" />
+      <Type Name="MetadataHeap" />
+      <Type Name="ClassLayoutTable" />
+      <Type Name="ClassLayoutRow" />
+      <Type Name="ConstantTable" />
+      <Type Name="ConstantRow" />
+      <Type Name="CustomAttributeTable" />
+      <Type Name="CustomAttributeRow" />
+      <Type Name="DeclSecurityTable" />
+      <Type Name="DeclSecurityRow" />
+      <Type Name="EventTable" />
+      <Type Name="EventRow" />
+      <Type Name="EventMapTable" />
+      <Type Name="EventMapRow" />
+      <Type Name="EventPtrTable" />
+      <Type Name="EventPtrRow" />
+      <Type Name="ExportedTypeTable" />
+      <Type Name="ExportedTypeRow" />
+      <Type Name="FieldTable" />
+      <Type Name="FieldRow" />
+      <Type Name="FieldLayoutTable" />
+      <Type Name="FieldLayoutRow" />
+      <Type Name="FieldMarshalTable" />
+      <Type Name="FieldMarshalRow" />
+      <Type Name="FieldPtrTable" />
+      <Type Name="FieldPtrRow" />
+      <Type Name="FieldRVATable" />
+      <Type Name="FieldRVARow" />
+      <Type Name="FileTable" />
+      <Type Name="FileRow" />
+      <Type Name="GenericParamTable" />
+      <Type Name="GenericParamRow" />
+      <Type Name="GenericParamConstraintTable" />
+      <Type Name="GenericParamConstraintRow" />
+      <Type Name="GuidHeap" />
+      <Type Name="ImplMapTable" />
+      <Type Name="ImplMapRow" />
+      <Type Name="InterfaceImplTable" />
+      <Type Name="InterfaceImplRow" />
+      <Type Name="ManifestResourceTable" />
+      <Type Name="ManifestResourceRow" />
+      <Type Name="MemberRefTable" />
+      <Type Name="MemberRefRow" />
+      <Type Name="MetadataRoot" />
+      <Type Name="MetadataRoot+MetadataRootHeader" />
+      <Type Name="MetadataStream" />
+      <Type Name="MetadataStream+MetadataStreamHeader" />
+      <Type Name="MetadataStreamCollection" />
+      <Type Name="MetadataToken" />
+      <Type Name="MethodTable" />
+      <Type Name="MethodRow" />
+      <Type Name="MethodImplTable" />
+      <Type Name="MethodImplRow" />
+      <Type Name="MethodPtrTable" />
+      <Type Name="MethodPtrRow" />
+      <Type Name="MethodSemanticsTable" />
+      <Type Name="MethodSemanticsRow" />
+      <Type Name="MethodSpecTable" />
+      <Type Name="MethodSpecRow" />
+      <Type Name="ModuleTable" />
+      <Type Name="ModuleRow" />
+      <Type Name="ModuleRefTable" />
+      <Type Name="ModuleRefRow" />
+      <Type Name="NestedClassTable" />
+      <Type Name="NestedClassRow" />
+      <Type Name="ParamTable" />
+      <Type Name="ParamRow" />
+      <Type Name="ParamPtrTable" />
+      <Type Name="ParamPtrRow" />
+      <Type Name="PropertyTable" />
+      <Type Name="PropertyRow" />
+      <Type Name="PropertyMapTable" />
+      <Type Name="PropertyMapRow" />
+      <Type Name="PropertyPtrTable" />
+      <Type Name="PropertyPtrRow" />
+      <Type Name="RowCollection" />
+      <Type Name="StandAloneSigTable" />
+      <Type Name="StandAloneSigRow" />
+      <Type Name="StringsHeap" />
+      <Type Name="TableCollection" />
+      <Type Name="TablesHeap" />
+      <Type Name="TypeDefTable" />
+      <Type Name="TypeDefRow" />
+      <Type Name="TypeRefTable" />
+      <Type Name="TypeRefRow" />
+      <Type Name="TypeSpecTable" />
+      <Type Name="TypeSpecRow" />
+      <Type Name="UserStringsHeap" />
+      <Type Name="CodedIndex" />
+      <Type Name="ElementType" />
+      <Type Name="TokenType" />
+    </Namespace>
+    <Namespace Name="Mono.Cecil.Cil">
+      <Type Name="ICodeVisitable" />
+      <Type Name="ICodeVisitor" />
+      <Type Name="IScopeProvider" />
+      <Type Name="ISymbolReader" />
+      <Type Name="ISymbolStoreFactory" />
+      <Type Name="ISymbolWriter" />
+      <Type Name="IVariableDefinitionProvider" />
+      <Type Name="BaseCodeVisitor" />
+      <Type Name="CilWorker" />
+      <Type Name="Document" />
+      <Type Name="ExceptionHandler" />
+      <Type Name="ExceptionHandlerCollection" />
+      <Type Name="GuidAttribute" />
+      <Type Name="Instruction" />
+      <Type Name="InstructionCollection" />
+      <Type Name="MethodBody" />
+      <Type Name="OpCode" />
+      <Type Name="OpCodes" />
+      <Type Name="Scope" />
+      <Type Name="ScopeCollection" />
+      <Type Name="SequencePoint" />
+      <Type Name="VariableDefinition" />
+      <Type Name="VariableReference" />
+      <Type Name="VariableDefinitionCollection" />
+      <Type Name="Code" />
+      <Type Name="DocumentHashAlgorithm" />
+      <Type Name="DocumentLanguage" />
+      <Type Name="DocumentLanguageVendor" />
+      <Type Name="DocumentType" />
+      <Type Name="ExceptionHandlerType" />
+      <Type Name="FlowControl" />
+      <Type Name="OpCodeType" />
+      <Type Name="OperandType" />
+      <Type Name="StackBehaviour" />
+    </Namespace>
+  </Types>
+  <Title>Mono.Cecil</Title>
+</Overview>

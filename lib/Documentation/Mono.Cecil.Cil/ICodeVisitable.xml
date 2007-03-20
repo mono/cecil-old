@@ -1,0 +1,29 @@
+<Type Name="ICodeVisitable" FullName="Mono.Cecil.Cil.ICodeVisitable">
+  <TypeSignature Language="C#" Value="public interface ICodeVisitable" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Interfaces />
+  <Members>
+    <Member MemberName="Accept">
+      <MemberSignature Language="C#" Value="public void Accept (Mono.Cecil.Cil.ICodeVisitor visitor);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="visitor" Type="Mono.Cecil.Cil.ICodeVisitor" />
+      </Parameters>
+      <Docs>
+        <param name="visitor">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

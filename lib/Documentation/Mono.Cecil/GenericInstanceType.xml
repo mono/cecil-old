@@ -1,0 +1,45 @@
+<Type Name="GenericInstanceType" FullName="Mono.Cecil.GenericInstanceType">
+  <TypeSignature Language="C#" Value="public sealed class GenericInstanceType : Mono.Cecil.TypeSpecification, Mono.Cecil.IGenericInstance" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.TypeSpecification</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IGenericInstance</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public GenericInstanceType (Mono.Cecil.TypeReference elementType);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="elementType" Type="Mono.Cecil.TypeReference" />
+      </Parameters>
+      <Docs>
+        <param name="elementType">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="GenericArguments">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.GenericArgumentCollection GenericArguments { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.GenericArgumentCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

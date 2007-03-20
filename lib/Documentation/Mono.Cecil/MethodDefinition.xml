@@ -1,0 +1,366 @@
+<Type Name="MethodDefinition" FullName="Mono.Cecil.MethodDefinition">
+  <TypeSignature Language="C#" Value="public sealed class MethodDefinition : Mono.Cecil.MethodReference, Mono.Cecil.ICustomAttributeProvider, Mono.Cecil.IHasSecurity, Mono.Cecil.IMemberDefinition" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.MethodReference</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Mono.Cecil.ICustomAttributeProvider</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IHasSecurity</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IMemberDefinition</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MethodDefinition (string name, Mono.Cecil.Binary.RVA rva, Mono.Cecil.MethodAttributes attrs, Mono.Cecil.MethodImplAttributes implAttrs, bool hasThis, bool explicitThis, Mono.Cecil.MethodCallingConvention callConv);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+        <Parameter Name="rva" Type="Mono.Cecil.Binary.RVA" />
+        <Parameter Name="attrs" Type="Mono.Cecil.MethodAttributes" />
+        <Parameter Name="implAttrs" Type="Mono.Cecil.MethodImplAttributes" />
+        <Parameter Name="hasThis" Type="System.Boolean" />
+        <Parameter Name="explicitThis" Type="System.Boolean" />
+        <Parameter Name="callConv" Type="Mono.Cecil.MethodCallingConvention" />
+      </Parameters>
+      <Docs>
+        <param name="name">To be added.</param>
+        <param name="rva">To be added.</param>
+        <param name="attrs">To be added.</param>
+        <param name="implAttrs">To be added.</param>
+        <param name="hasThis">To be added.</param>
+        <param name="explicitThis">To be added.</param>
+        <param name="callConv">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public MethodDefinition (string name, Mono.Cecil.MethodAttributes attrs, Mono.Cecil.TypeReference returnType);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+        <Parameter Name="attrs" Type="Mono.Cecil.MethodAttributes" />
+        <Parameter Name="returnType" Type="Mono.Cecil.TypeReference" />
+      </Parameters>
+      <Docs>
+        <param name="name">To be added.</param>
+        <param name="attrs">To be added.</param>
+        <param name="returnType">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Attributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodAttributes Attributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodAttributes</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Body">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.Cil.MethodBody Body { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.Cil.MethodBody</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Cctor">
+      <MemberSignature Language="C#" Value="public const string Cctor;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodDefinition Clone ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Ctor">
+      <MemberSignature Language="C#" Value="public const string Ctor;" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CustomAttributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.CustomAttributeCollection CustomAttributes { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.CustomAttributeCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="HasBody">
+      <MemberSignature Language="C#" Value="public bool HasBody { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="ImplAttributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodImplAttributes ImplAttributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodImplAttributes</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsAbstract">
+      <MemberSignature Language="C#" Value="public bool IsAbstract { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsConstructor">
+      <MemberSignature Language="C#" Value="public bool IsConstructor { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsFinal">
+      <MemberSignature Language="C#" Value="public bool IsFinal { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsHideBySignature">
+      <MemberSignature Language="C#" Value="public bool IsHideBySignature { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsInternalCall">
+      <MemberSignature Language="C#" Value="public bool IsInternalCall { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsNewSlot">
+      <MemberSignature Language="C#" Value="public bool IsNewSlot { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsRuntime">
+      <MemberSignature Language="C#" Value="public bool IsRuntime { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsRuntimeSpecialName">
+      <MemberSignature Language="C#" Value="public bool IsRuntimeSpecialName { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsSpecialName">
+      <MemberSignature Language="C#" Value="public bool IsSpecialName { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsStatic">
+      <MemberSignature Language="C#" Value="public bool IsStatic { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsVirtual">
+      <MemberSignature Language="C#" Value="public bool IsVirtual { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Overrides">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.OverrideCollection Overrides { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.OverrideCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="PInvokeInfo">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.PInvokeInfo PInvokeInfo { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.PInvokeInfo</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RVA">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.Binary.RVA RVA { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.Binary.RVA</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SecurityDeclarations">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.SecurityDeclarationCollection SecurityDeclarations { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.SecurityDeclarationCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SemanticsAttributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodSemanticsAttributes SemanticsAttributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodSemanticsAttributes</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="This">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.ParameterDefinition This { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.ParameterDefinition</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

@@ -1,0 +1,62 @@
+<Type Name="GuidHeap" FullName="Mono.Cecil.Metadata.GuidHeap">
+  <TypeSignature Language="C#" Value="public class GuidHeap : Mono.Cecil.Metadata.MetadataHeap" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.Metadata.MetadataHeap</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember("Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public GuidHeap (Mono.Cecil.Metadata.MetadataStream stream);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="stream" Type="Mono.Cecil.Metadata.MetadataStream" />
+      </Parameters>
+      <Docs>
+        <param name="stream">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Guids">
+      <MemberSignature Language="C#" Value="public System.Collections.IDictionary Guids { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Collections.IDictionary</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public Guid this[uint index] { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Guid</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.UInt32" />
+      </Parameters>
+      <Docs>
+        <param name="index">To be added.</param>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

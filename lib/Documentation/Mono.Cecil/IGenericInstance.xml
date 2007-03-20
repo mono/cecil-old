@@ -1,0 +1,30 @@
+<Type Name="IGenericInstance" FullName="Mono.Cecil.IGenericInstance">
+  <TypeSignature Language="C#" Value="public interface IGenericInstance : Mono.Cecil.IMetadataTokenProvider" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IMetadataTokenProvider</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName="GenericArguments">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.GenericArgumentCollection GenericArguments { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.GenericArgumentCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

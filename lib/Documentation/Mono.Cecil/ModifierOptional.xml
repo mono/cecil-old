@@ -1,0 +1,31 @@
+<Type Name="ModifierOptional" FullName="Mono.Cecil.ModifierOptional">
+  <TypeSignature Language="C#" Value="public sealed class ModifierOptional : Mono.Cecil.ModType" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.ModType</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ModifierOptional (Mono.Cecil.TypeReference elemType, Mono.Cecil.TypeReference modType);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="elemType" Type="Mono.Cecil.TypeReference" />
+        <Parameter Name="modType" Type="Mono.Cecil.TypeReference" />
+      </Parameters>
+      <Docs>
+        <param name="elemType">To be added.</param>
+        <param name="modType">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

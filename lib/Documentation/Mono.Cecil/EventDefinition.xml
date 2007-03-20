@@ -1,0 +1,185 @@
+<Type Name="EventDefinition" FullName="Mono.Cecil.EventDefinition">
+  <TypeSignature Language="C#" Value="public sealed class EventDefinition : Mono.Cecil.EventReference, Mono.Cecil.ICustomAttributeProvider, Mono.Cecil.IMemberDefinition" />
+  <AssemblyInfo>
+    <AssemblyName>Mono.Cecil</AssemblyName>
+    <AssemblyVersion>0.4.3.1</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Mono.Cecil.EventReference</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>Mono.Cecil.ICustomAttributeProvider</InterfaceName>
+    </Interface>
+    <Interface>
+      <InterfaceName>Mono.Cecil.IMemberDefinition</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public EventDefinition (string name, Mono.Cecil.TypeReference eventType, Mono.Cecil.EventAttributes attrs);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+        <Parameter Name="eventType" Type="Mono.Cecil.TypeReference" />
+        <Parameter Name="attrs" Type="Mono.Cecil.EventAttributes" />
+      </Parameters>
+      <Docs>
+        <param name="name">To be added.</param>
+        <param name="eventType">To be added.</param>
+        <param name="attrs">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AddMethod">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodDefinition AddMethod { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Attributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.EventAttributes Attributes { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.EventAttributes</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.EventDefinition Clone ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.EventDefinition</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateAddMethod">
+      <MemberSignature Language="C#" Value="public static Mono.Cecil.MethodDefinition CreateAddMethod (Mono.Cecil.EventDefinition evt);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="evt" Type="Mono.Cecil.EventDefinition" />
+      </Parameters>
+      <Docs>
+        <param name="evt">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateInvokeMethod">
+      <MemberSignature Language="C#" Value="public static Mono.Cecil.MethodDefinition CreateInvokeMethod (Mono.Cecil.EventDefinition evt);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="evt" Type="Mono.Cecil.EventDefinition" />
+      </Parameters>
+      <Docs>
+        <param name="evt">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateRemoveMethod">
+      <MemberSignature Language="C#" Value="public static Mono.Cecil.MethodDefinition CreateRemoveMethod (Mono.Cecil.EventDefinition evt);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="evt" Type="Mono.Cecil.EventDefinition" />
+      </Parameters>
+      <Docs>
+        <param name="evt">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CustomAttributes">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.CustomAttributeCollection CustomAttributes { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.CustomAttributeCollection</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InvokeMethod">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodDefinition InvokeMethod { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsRuntimeSpecialName">
+      <MemberSignature Language="C#" Value="public bool IsRuntimeSpecialName { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IsSpecialName">
+      <MemberSignature Language="C#" Value="public bool IsSpecialName { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveMethod">
+      <MemberSignature Language="C#" Value="public Mono.Cecil.MethodDefinition RemoveMethod { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>Mono.Cecil.MethodDefinition</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>
