@@ -1,3 +1,8 @@
+2007-03-20  Jb Evain  <jbevain@gmail.com>
+
+	* Mono.Cecil.Metadata/MetadataWriter.cs:
+		Correct epilog for unicode user strings heap.
+
 2007-03-16  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil.Cil/CodeReader.cs
