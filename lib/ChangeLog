@@ -1,6 +1,6 @@
 2007-03-22  Jb Evain  <jbevain@gmail.com>
 
-	* Mono.Cecil/StructureReader.cs:
+	* Mono.Cecil/StructureWriter.cs:
 		Throw a NotSupportedException instead of a NIE
 		for mixed mode assemblies.
 
