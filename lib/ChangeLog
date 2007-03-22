@@ -2,6 +2,7 @@
 
 	* Mono.Cecil/AssemblyInfo.cs:
 		Bump to 0.5.0.0 for the sake of our packagers friends.
+		Re-Bump to 0.5.0.1.
 
 	* Mono.Cecil/StructureWriter.cs:
 		Throw a NotSupportedException instead of a NIE
