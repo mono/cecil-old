@@ -1,7 +1,0 @@
-2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
-
-	* ChangeLog: New. Track changes to project.
-	* MIT.X11: New. Licence.
-	* Monoxide.mds: New. Solution file for MonoDevelop.
-	* README: New. Important information about monoXide.
-	* TODO: New. Long list...

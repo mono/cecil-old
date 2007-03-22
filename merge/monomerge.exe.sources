@@ -1,7 +1,0 @@
-./Mono.Merge/AssemblyInfo.cs
-./Mono.Merge/BaseMergeReflectionVisitor.cs
-./Mono.Merge/Driver.cs
-./Mono.Merge/FixReflectionAfterMerge.cs
-./Mono.Merge/MergeContext.cs
-./Mono.Merge/ReflectionMerger.cs
-./Mono.Merge/StructureMerger.cs

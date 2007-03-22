@@ -1,8 +1,0 @@
-<rules>
-	<rule	Name="NewLineLiteralRule" 
-		Type="Gendarme.Rules.Portability.NewLineLiteralRule, Gendarme.Rules.Portability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="http://www.mono-project.com/Gendarme#NewLineLiteralRule" >
-		<problem>The method '{0}' use some literal values for new lines (e.g. \r\n) which aren't portable across operating systems.</problem>
-		<solution>Replace literals with Environment.NewLine.</solution>
-	</rule>
-</rules>

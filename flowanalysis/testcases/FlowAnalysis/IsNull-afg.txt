@@ -1,3 +1,0 @@
-local0 = (this._field == null)
-goto block3
-block3: return local0

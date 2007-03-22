@@ -1,1 +1,0 @@
-return (s && (s.get_Length() >= 3))

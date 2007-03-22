@@ -1,3 +1,0 @@
-if (x <= y) goto block3
-System.Console.WriteLine("x > y")
-block3: return

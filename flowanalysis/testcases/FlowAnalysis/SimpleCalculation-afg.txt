@@ -1,3 +1,0 @@
-local0 = (x * 2)
-System.Console.WriteLine(local0)
-return

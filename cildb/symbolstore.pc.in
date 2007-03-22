@@ -1,8 +1,0 @@
-prefix=@prefix@
-assemblies_dir=${prefix}/lib/Mono.CompilerServices.SymbolStore
-Libraries=${assemblies_dir}/Mono.CompilerServices.SymbolStore.dll
-
-Name: Mono.CompilerServices.SymbolStore
-Description: Mono.CompilerServices.SymbolStore Library
-Version: 0.1
-Libs: -r:${Libraries}

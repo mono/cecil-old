@@ -1,8 +1,0 @@
-2006-07-25  Ankit Jain  <jankit@novell.com>
-
-	* CodeDisassembler.cs (VisitVariableDefinition): Update for API change.
-	* ReflectionDisassembler.cs (WriteTypeBody): Likewise.
-	* Driver.cs (Parse): Fix handling of assembly name param.
-	(m_output): Make Output.Console mode default for output.
-
-
