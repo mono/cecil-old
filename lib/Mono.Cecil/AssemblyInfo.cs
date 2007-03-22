@@ -37,12 +37,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("Library for reading and writing CIL images")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyProduct ("Mono.Cecil")]
-[assembly: AssemblyCopyright ("(C) 2005, Jb Evain")]
+[assembly: AssemblyCopyright ("(C) 2005 - 2007, Jb Evain")]
 [assembly: AssemblyCulture ("")]
 
 [assembly: CLSCompliant (false)]
 [assembly: ComVisible (false)]
 
-[assembly: AssemblyVersion ("0.4.3.1")]
+[assembly: AssemblyVersion ("0.5.0.0")]
 
 #endif
