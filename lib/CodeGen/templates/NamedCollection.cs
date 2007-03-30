@@ -133,21 +133,19 @@ namespace <%=$cur_coll.target%> {
 		}
 
 		public void Remove (<%=$cur_coll.type%> value)
-		{<%
- if use_event?() %>
-			if (this.Contains (value))
-				Detach (value);
-<% end %>
+		{
 			this.BaseRemove (value.FullName);
-		}
+<% if use_event?() %>
+			Detach (value);
+<% end %>		}
 
 		public void RemoveAt (int index)
-		{<%
- if use_event?() %>
-			Detach (this [index]);
-<% end %>
-			this.BaseRemoveAt (index);
-		}
+		{
+			<%=$cur_coll.type%> item = this [index];
+			Remove (item);
+<% if use_event?() %>
+			Detach (item);
+<% end %>		}
 
 		public void CopyTo (Array ary, int index)
 		{

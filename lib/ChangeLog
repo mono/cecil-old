@@ -1,5 +1,9 @@
 2007-03-30  Jb Evain  <jb@nurv.fr>
 
+	* Collections:
+		Remove uneeded tests as an optimizations.
+		Based on a suggestion by Carlo Kok <ck@remobjects.com>.
+
 	* Mono.Cecil.Metadata/StringsHeap.cs:
 		Optimize GetStringAt, patch by:
 		Carlo Kok <ck@remobjects.com>

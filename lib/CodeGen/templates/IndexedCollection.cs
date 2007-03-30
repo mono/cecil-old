@@ -73,8 +73,7 @@ namespace <%=$cur_coll.target%> {
 		<%= member_visibility() %> void Add (<%=$cur_coll.type%> value)
 		{<%
 if use_event?() %>
-			if (!Contains (value))
-				Attach (value);
+			Attach (value);
 <% end %>
 			List.Add (value);
 		}
@@ -102,28 +101,24 @@ if use_event?() %>
 		<%= member_visibility() %> void Insert (int index, <%=$cur_coll.type%> value)
 		{<%
 if use_event?() %>
-			if (!this.Contains (value))
-				Attach (value);
+			Attach (value);
 <% end %>
 			List.Insert (index, value);
 		}
 
 		<%= member_visibility() %> void Remove (<%=$cur_coll.type%> value)
-		{<%
-if use_event?() %>
-			if (this.Contains (value))
-				Detach (value);
-<% end %>
+		{
 			List.Remove (value);
-		}
+<% if use_event?() %>
+			Detach (value);
+<% end %>		}
 <%
 if use_event?() %>
 
 		<%= member_visibility() %> new void RemoveAt (int index)
 		{
-			Detach (this [index]);
-
-			List.RemoveAt (index);
+			<%=$cur_coll.type%> item = this [index];
+			Remove (item);
 		}
 <% end %>
 		protected override void OnValidate (object o)
