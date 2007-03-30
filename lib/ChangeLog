@@ -1,3 +1,9 @@
+2007-03-30  Jb Evain  <jb@nurv.fr>
+
+	* Mono.Cecil.Metadata/StringsHeap.cs:
+		Optimize GetStringAt, patch by:
+		Carlo Kok <ck@remobjects.com>
+
 2007-03-22  Jb Evain  <jbevain@gmail.com>
 
 	* Mono.Cecil/AssemblyInfo.cs:

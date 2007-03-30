@@ -55,25 +55,15 @@ namespace Mono.Cecil.Metadata {
 
 		string ReadStringAt (uint index)
 		{
-			StringBuilder sb = new StringBuilder ();
-			BinaryReader br = new BinaryReader (
-				new MemoryStream (this.Data), Encoding.UTF8);
+			int length = 0;
+			for (int i = (int) index; i < Data.Length; i++) {
+				if (Data [i] == 0)
+					break;
 
-			try {
-				br.BaseStream.Position = index;
-
-				while (br.BaseStream.Position < br.BaseStream.Length) {
-					char c = br.ReadChar ();
-					if (c == '\0')
-						break;
-					else
-						sb.Append (c);
-				}
-			} finally {
-				br.Close ();
+				length++;
 			}
 
-			return sb.ToString ();
+			return Encoding.UTF8.GetString (Data, (int) index, length);
 		}
 
 		public override void Accept (IMetadataVisitor visitor)
