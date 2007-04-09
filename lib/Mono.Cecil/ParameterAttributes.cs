@@ -32,6 +32,7 @@ namespace Mono.Cecil {
 
 	[Flags]
 	public enum ParameterAttributes : ushort {
+		None				= 0x0000,
 		In					= 0x0001,	// Param is [In]
 		Out					= 0x0002,	// Param is [Out]
 		Optional			= 0x0010,	// Param is optional
