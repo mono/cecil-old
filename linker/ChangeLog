@@ -1,3 +1,8 @@
+2007-04-23  Jb Evain  <jb@nurv.fr>
+
+	* Mono.Linker/CleanStep.cs:
+		Clean some special cases of MemberRef.
+
 2007-03-19  Jb Evain  <jbevain@gmail.com>
 
 	* Fix a bug when an assembly references two

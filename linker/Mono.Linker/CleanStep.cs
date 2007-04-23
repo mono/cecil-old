@@ -43,8 +43,35 @@ namespace Mono.Linker {
 
 		static void CleanAssembly (AssemblyDefinition asm)
 		{
+			CleanMemberReferences (asm.MainModule);
 			foreach (TypeDefinition type in asm.MainModule.Types)
 				CleanType (type);
+		}
+
+		static void CleanMemberReferences (ModuleDefinition module)
+		{
+			foreach (MemberReference reference in new ArrayList (module.MemberReferences)) {
+				GenericInstanceType git = reference.DeclaringType as GenericInstanceType;
+				if (git == null)
+					continue;
+
+				foreach (TypeReference arg in git.GenericArguments)
+					if (!CheckType (module, arg))
+						module.MemberReferences.Remove (reference);
+			}
+		}
+
+		static bool CheckType (ModuleDefinition module, TypeReference reference)
+		{
+			TypeSpecification spec = reference as TypeSpecification;
+			if (spec != null)
+				return CheckType (module, spec.ElementType);
+
+			TypeDefinition type = reference as TypeDefinition;
+			if (type == null)
+				return true;
+
+			return module.Types.Contains (type);
 		}
 
 		static void CleanType (TypeDefinition type)
