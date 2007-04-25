@@ -1,8 +1,16 @@
+2007-04-25  Jb Evain  <jb@nurv.fr>
+
+	* Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/ReflectionWriter.cs
+	  Mono.Cecil.Cil/ISymbolWriter.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs
+		Start working on local var debug infos emitting.
+
 2007-04-08  Jb Evain  <jb@nurv.fr>
 
 	* Mono.Cecil/ParameterAttributes.cs:
 		ParameterAttributes.None
-	
+
 2007-03-30  Jb Evain  <jb@nurv.fr>
 
 	* Collections:

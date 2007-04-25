@@ -106,7 +106,6 @@ namespace Mono.Cecil.Signatures {
 
 		public uint AddCustomAttribute (CustomAttrib ca, MethodReference ctor)
 		{
-			m_sigWriter.Empty ();
 			CompressCustomAttribute (ca, ctor, m_sigWriter);
 			return GetPointer ();
 		}
@@ -118,8 +117,16 @@ namespace Mono.Cecil.Signatures {
 			return writer.ToArray ();
 		}
 
+		public byte [] CompressFieldSig (FieldSig field)
+		{
+			m_sigWriter.Empty ();
+			VisitFieldSig (field);
+			return m_sigWriter.ToArray ();
+		}
+
 		void CompressCustomAttribute (CustomAttrib ca, MethodReference ctor, MemoryBinaryWriter writer)
 		{
+			m_sigWriter.Empty ();
 			Write (ca, ctor, writer);
 		}
 

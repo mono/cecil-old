@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2006 Jb Evain
+// (C) 2006 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,6 +32,6 @@ namespace Mono.Cecil.Cil {
 
 	public interface ISymbolWriter : IDisposable {
 
-		void Write (MethodBody body);
+		void Write (MethodBody body, byte [][] variables);
 	}
 }

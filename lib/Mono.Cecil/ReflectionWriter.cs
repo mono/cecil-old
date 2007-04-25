@@ -1385,7 +1385,7 @@ namespace Mono.Cecil {
 			return na;
 		}
 
-		public CustomAttrib GetCustomAttributeSig (CustomAttribute ca)
+		public static CustomAttrib GetCustomAttributeSig (CustomAttribute ca)
 		{
 			CustomAttrib cas = new CustomAttrib (ca.Constructor);
 			cas.Prolog = CustomAttrib.StdProlog;
@@ -1483,7 +1483,26 @@ namespace Mono.Cecil {
 			if (!meth.HasBody)
 				return;
 
-			m_symbolWriter.Write (meth.Body);
+			m_symbolWriter.Write (meth.Body, GetVariablesSig (meth));
+		}
+
+		byte [][] GetVariablesSig (MethodDefinition meth)
+		{
+			VariableDefinitionCollection variables = meth.Body.Variables;
+			byte [][] signatures = new byte [variables.Count][];
+			for (int i = 0; i < variables.Count; i++) {
+				signatures [i] = GetVariableSig (variables [i]);
+			}
+			return signatures;
+		}
+
+		byte [] GetVariableSig (VariableDefinition definition)
+		{
+			byte [] fieldSig = m_sigWriter.CompressFieldSig (
+				GetFieldSig (new FieldReference (string.Empty, definition.VariableType)));
+			byte [] varSig = new byte [fieldSig.Length - 1];
+			Buffer.BlockCopy (fieldSig, 1, varSig, 0, fieldSig.Length - 1);
+			return varSig;
 		}
 	}
 }

@@ -426,7 +426,7 @@ namespace Mono.Cecil {
 					return new byte [0];
 
 			return m_controller.Writer.SignatureWriter.CompressCustomAttribute (
-				m_controller.Writer.GetCustomAttributeSig (ca), ca.Constructor);
+				ReflectionWriter.GetCustomAttributeSig (ca), ca.Constructor);
 		}
 
 		public byte [] GetAsByteArray (SecurityDeclaration dec)
