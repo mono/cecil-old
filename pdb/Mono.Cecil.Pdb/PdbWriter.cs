@@ -50,15 +50,15 @@ namespace Mono.Cecil.Pdb {
 			m_pdb = pdb;
 		}
 
-		public void Write (MethodBody body)
+		public void Write (MethodBody body, byte [][] variables)
 		{
 			CreateDocuments (body);
 			m_writer.OpenMethod (new SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));
-			CreateScopes (body, body.Scopes);
+			CreateScopes (body, body.Scopes, variables);
 			m_writer.CloseMethod ();
 		}
 
-		void CreateScopes (MethodBody body, ScopeCollection scopes)
+		void CreateScopes (MethodBody body, ScopeCollection scopes, byte [][] variables)
 		{
 			foreach (Scope s in scopes) {
 				int startOffset = s.Start.Offset;
@@ -104,23 +104,23 @@ namespace Mono.Cecil.Pdb {
 				m_writer.DefineSequencePoints (GetDocument (doc),
 					offsets, startRows, startCols, endRows, endCols);
 
-				//CreateLocalVariable (s, startOffset, endOffset);
+				CreateLocalVariable (s, startOffset, endOffset, variables);
 
-				CreateScopes (body, s.Scopes);
+				CreateScopes (body, s.Scopes, variables);
 				m_writer.CloseNamespace ();
 
 				m_writer.CloseScope (endOffset);
 			}
 		}
 
-		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset)
+		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset, byte [][] variables)
 		{
 			for (int i = 0; i < provider.Variables.Count; i++) {
 				VariableDefinition var = provider.Variables [i];
 				m_writer.DefineLocalVariable (
 					var.Name,
-					(System.Reflection.FieldAttributes) FieldAttributes.Private,
-					new byte [0], // need a way to get the a field signature
+					0,
+					variables [i],
 					SymAddressKind.ILOffset,
 					i,
 					0,
@@ -142,6 +142,9 @@ namespace Mono.Cecil.Pdb {
 
 		ISymbolDocumentWriter GetDocument (Document document)
 		{
+			if (document == null)
+				return null;
+
 			ISymbolDocumentWriter docWriter = m_documents [document.Url] as ISymbolDocumentWriter;
 			if (docWriter != null)
 				return docWriter;
