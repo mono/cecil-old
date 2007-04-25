@@ -111,6 +111,7 @@ namespace Mono.Cecil.Mdb {
 				return doc;
 
 			doc = new Document (file.FileName);
+
 			m_documents [file.FileName] = doc;
 			return doc;
 		}

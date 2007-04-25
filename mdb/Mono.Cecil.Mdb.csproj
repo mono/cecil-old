@@ -11,6 +11,8 @@
     <AssemblyName>Mono.Cecil.Mdb</AssemblyName>
     <StartupObject>
     </StartupObject>
+	<SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\mcs\class\mono.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
