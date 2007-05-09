@@ -18,16 +18,20 @@ SHARED_SOURCES = \
 
 REFERENCES=-r:Mono.Cecil.dll
 CSC=gmcs -debug
+REF=Mono.Cecil.dll
 
 all: CorCompare.exe mono-api-diff.exe mono-api-info.exe
 
-CorCompare.exe: CorCompare.cs $(SHARED_SOURCES)
+Mono.Cecil.dll: ../lib/Mono.Cecil.dll
+	cp ../lib/Mono.Cecil.dll .
+
+CorCompare.exe: CorCompare.cs $(SHARED_SOURCES) $(REF)
 	$(CSC) -out:CorCompare.exe CorCompare.cs $(REFERENCES) $(SHARED_SOURCES)
 
-mono-api-info.exe: mono-api-info.cs $(SHARED_SOURCES)
+mono-api-info.exe: mono-api-info.cs $(SHARED_SOURCES) $(REF)
 	$(CSC) -out:mono-api-info.exe mono-api-info.cs $(REFERENCES) $(SHARED_SOURCES)
 
-mono-api-diff.exe: mono-api-diff.cs $(SHARED_SOURCES)
+mono-api-diff.exe: mono-api-diff.cs $(SHARED_SOURCES) $(REF)
 	$(CSC) -out:mono-api-diff.exe mono-api-diff.cs $(REFERENCES) $(SHARED_SOURCES)
 
 clean: 
