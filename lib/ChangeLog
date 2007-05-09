@@ -1,5 +1,8 @@
 2007-05-09  Jb Evain  <jb@nurv.fr>
 
+	* Mono.Cecil.Binary/Image.cs:
+		Throw when rva cannot be resolved.
+
 	* Mono.Cecil.csproj
 	  Mono.Cecil.Binary/ExportTable.cs
 	  Mono.Cecil.Binary/BaseImageVisitor.cs

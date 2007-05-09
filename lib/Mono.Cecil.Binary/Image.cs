@@ -147,7 +147,8 @@ namespace Mono.Cecil.Binary {
 
 					return rva + sect.PointerToRawData - sect.VirtualAddress;
 			}
-			return 0;
+
+			throw new ArgumentOutOfRangeException ("Cannot map the rva to any section");
 		}
 
 		public BinaryReader GetReaderAtVirtualAddress (RVA rva)
