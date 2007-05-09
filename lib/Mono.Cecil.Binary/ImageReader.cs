@@ -371,7 +371,7 @@ namespace Mono.Cecil.Binary {
 				byte chr = m_binaryReader.ReadByte ();
 				if (chr == 0)
 					break;
-				sb.Append(chr);
+				sb.Append((char) chr);
 			}
 			return sb.ToString ();
 		}
