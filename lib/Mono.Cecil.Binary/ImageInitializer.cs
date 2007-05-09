@@ -48,6 +48,7 @@ namespace Mono.Cecil.Binary {
 		public ImageInitializer (Image image)
 		{
 			m_image = image;
+			m_image.CLIHeader = new CLIHeader ();
 			m_mdinit = new MetadataInitializer (this);
 		}
 

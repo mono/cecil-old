@@ -1,10 +1,10 @@
 //
-// IBinaryVisitor.cs
+// ExportTable.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 - 2007 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,24 +28,32 @@
 
 namespace Mono.Cecil.Binary {
 
-	public interface IBinaryVisitor {
-		void VisitImage (Image img);
-		void VisitDOSHeader (DOSHeader header);
-		void VisitPEFileHeader (PEFileHeader header);
-		void VisitPEOptionalHeader (PEOptionalHeader header);
-		void VisitStandardFieldsHeader (PEOptionalHeader.StandardFieldsHeader header);
-		void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header);
-		void VisitDataDirectoriesHeader (PEOptionalHeader.DataDirectoriesHeader header);
-		void VisitSectionCollection (SectionCollection coll);
-		void VisitSection (Section section);
-		void VisitImportAddressTable (ImportAddressTable iat);
-		void VisitDebugHeader (DebugHeader dh);
-		void VisitCLIHeader (CLIHeader header);
-		void VisitImportTable (ImportTable it);
-		void VisitImportLookupTable (ImportLookupTable ilt);
-		void VisitHintNameTable (HintNameTable hnt);
-		void VisitExportTable (ExportTable et);
+	public sealed class ExportTable : IBinaryVisitable {
 
-		void TerminateImage (Image img);
+		public uint Characteristics;
+		public uint TimeDateStamp;
+		public ushort MajorVersion;
+		public ushort MinorVersion;
+		public string Name;
+		public uint Base;
+		public uint NumberOfFunctions;
+		public uint NumberOfNames;
+		public RVA AddressOfFunctions;
+		public RVA AddressOfNames;
+		public RVA AddressOfNameOrdinals;
+
+		public RVA [] AddressesOfFunctions;
+		public RVA [] AddressesOfNames;
+		public ushort [] NameOrdinals;
+		public string [] Names;
+
+		internal ExportTable ()
+		{
+		}
+
+		public void Accept (IBinaryVisitor visitor)
+		{
+			visitor.VisitExportTable (this);
+		}
 	}
 }

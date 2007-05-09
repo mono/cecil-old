@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -47,6 +47,7 @@ namespace Mono.Cecil.Binary {
 		ImportTable m_importTable;
 		ImportLookupTable m_importLookupTable;
 		HintNameTable m_hintNameTable;
+		ExportTable m_exportTable;
 
 		DebugHeader m_debugHeader;
 		MetadataRoot m_mdRoot;
@@ -82,6 +83,7 @@ namespace Mono.Cecil.Binary {
 
 		public CLIHeader CLIHeader {
 			get { return m_cliHeader; }
+			set { m_cliHeader = value; }
 		}
 
 		public DebugHeader DebugHeader {
@@ -105,6 +107,11 @@ namespace Mono.Cecil.Binary {
 			get { return m_hintNameTable; }
 		}
 
+		public ExportTable ExportTable {
+			get { return m_exportTable; }
+			set { m_exportTable = value; }
+		}
+
 		internal ResourceDirectoryTable ResourceDirectoryRoot {
 			get { return m_rsrcRoot; }
 			set { m_rsrcRoot = value; }
@@ -121,7 +128,6 @@ namespace Mono.Cecil.Binary {
 			m_peOptionalHeader = new PEOptionalHeader ();
 			m_sections = new SectionCollection ();
 			m_importAddressTable = new ImportAddressTable ();
-			m_cliHeader = new CLIHeader ();
 			m_importTable = new ImportTable ();
 			m_importLookupTable = new ImportLookupTable ();
 			m_hintNameTable = new HintNameTable ();
@@ -176,16 +182,24 @@ namespace Mono.Cecil.Binary {
 			m_sections.Accept (visitor);
 
 			m_importAddressTable.Accept (visitor);
-			m_cliHeader.Accept (visitor);
 
-			if (m_debugHeader != null)
-				m_debugHeader.Accept (visitor);
+			AcceptIfNotNull (m_cliHeader, visitor);
+			AcceptIfNotNull (m_debugHeader, visitor);
 
 			m_importTable.Accept (visitor);
 			m_importLookupTable.Accept (visitor);
 			m_hintNameTable.Accept (visitor);
+			AcceptIfNotNull (m_exportTable, visitor);
 
 			visitor.TerminateImage (this);
+		}
+
+		static void AcceptIfNotNull (IBinaryVisitable visitable, IBinaryVisitor visitor)
+		{
+			if (visitable == null)
+				return;
+
+			visitable.Accept (visitor);
 		}
 
 		public static Image CreateImage ()

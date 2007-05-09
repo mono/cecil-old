@@ -1498,11 +1498,8 @@ namespace Mono.Cecil {
 
 		byte [] GetVariableSig (VariableDefinition definition)
 		{
-			byte [] fieldSig = m_sigWriter.CompressFieldSig (
+			return m_sigWriter.CompressFieldSig (
 				GetFieldSig (new FieldReference (string.Empty, definition.VariableType)));
-			byte [] varSig = new byte [fieldSig.Length - 1];
-			Buffer.BlockCopy (fieldSig, 1, varSig, 0, fieldSig.Length - 1);
-			return varSig;
 		}
 	}
 }

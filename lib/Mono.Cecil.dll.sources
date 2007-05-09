@@ -129,6 +129,7 @@
 ./Mono.Cecil.Binary/DebugHeader.cs
 ./Mono.Cecil.Binary/DebugStoreType.cs
 ./Mono.Cecil.Binary/DOSHeader.cs
+./Mono.Cecil.Binary/ExportTable.cs
 ./Mono.Cecil.Binary/IBinaryVisitable.cs
 ./Mono.Cecil.Binary/IBinaryVisitor.cs
 ./Mono.Cecil.Binary/IHeader.cs

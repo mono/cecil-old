@@ -4,7 +4,7 @@
 // Author:
 //   Jb Evain (jbevain@gmail.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2005 - 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -109,6 +109,11 @@ namespace Mono.Cecil.Binary {
 		public override void VisitImage (Image img)
 		{
 			m_mdReader = new MetadataReader (this);
+		}
+
+		void SetPositionToAddress (RVA address)
+		{
+			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (address);
 		}
 
 		public override void VisitDOSHeader (DOSHeader header)
@@ -232,6 +237,11 @@ namespace Mono.Cecil.Binary {
 			header.Reserved = new DataDirectory (
 				new RVA (m_binaryReader.ReadUInt32 ()),
 				m_binaryReader.ReadUInt32 ());
+
+			if (header.CLIHeader != DataDirectory.Zero)
+				m_image.CLIHeader = new CLIHeader ();
+			if (header.ExportTable != DataDirectory.Zero)
+				m_image.ExportTable = new ExportTable ();
 		}
 
 		public override void VisitSectionCollection (SectionCollection coll)
@@ -242,20 +252,20 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitSection (Section sect)
 		{
-			char [] name, buffer = new char [8];
+			char [] buffer = new char [8];
 			int read = 0;
 			while (read < 8) {
 				char cur = (char) m_binaryReader.ReadSByte ();
-				if (cur == '\0')
+				if (cur == '\0') {
+					m_binaryReader.BaseStream.Position += 8 - read - 1;
 					break;
+				}
 				buffer [read++] = cur;
 			}
-			name = new char [read];
-			Array.Copy (buffer, 0, name, 0, read);
-			sect.Name = read == 0 ? string.Empty : new string (name);
+			sect.Name = read == 0 ? string.Empty : new string (buffer, 0, read);
 			if (sect.Name == Section.Text)
 				m_image.TextSection = sect;
-			m_binaryReader.BaseStream.Position += 8 - read - 1;
+
 			sect.VirtualSize = m_binaryReader.ReadUInt32 ();
 			sect.VirtualAddress = new RVA (m_binaryReader.ReadUInt32 ());
 			sect.SizeOfRawData = m_binaryReader.ReadUInt32 ();
@@ -274,24 +284,20 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
+			SetPositionToAddress(m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
 
 			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
 		public override void VisitCLIHeader (CLIHeader header)
 		{
-			if (m_image.PEOptionalHeader.DataDirectories.CLIHeader == DataDirectory.Zero)
-				throw new ImageFormatException ("Non CLI Image");
-
 			if (m_image.PEOptionalHeader.DataDirectories.Debug != DataDirectory.Zero) {
 				m_image.DebugHeader = new DebugHeader ();
 				VisitDebugHeader (m_image.DebugHeader);
 			}
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
+
+			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
 			header.Cb = m_binaryReader.ReadUInt32 ();
 			header.MajorRuntimeVersion = m_binaryReader.ReadUInt16 ();
 			header.MinorRuntimeVersion = m_binaryReader.ReadUInt16 ();
@@ -320,14 +326,14 @@ namespace Mono.Cecil.Binary {
 				m_binaryReader.ReadUInt32 ());
 
 			if (header.StrongNameSignature != DataDirectory.Zero) {
-				m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-					header.StrongNameSignature.VirtualAddress);
+
+				SetPositionToAddress (header.StrongNameSignature.VirtualAddress);
 				header.ImageHash = m_binaryReader.ReadBytes ((int) header.StrongNameSignature.Size);
 			} else {
 				header.ImageHash = new byte [0];
 			}
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.CLIHeader.Metadata.VirtualAddress);
+
+			SetPositionToAddress (m_image.CLIHeader.Metadata.VirtualAddress);
 			m_image.MetadataRoot.Accept (m_mdReader);
 		}
 
@@ -338,8 +344,7 @@ namespace Mono.Cecil.Binary {
 
 			long pos = m_binaryReader.BaseStream.Position;
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.PEOptionalHeader.DataDirectories.Debug.VirtualAddress);
+			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.Debug.VirtualAddress);
 			header.Characteristics = m_binaryReader.ReadUInt32 ();
 			header.TimeDateStamp = m_binaryReader.ReadUInt32 ();
 			header.MajorVersion = m_binaryReader.ReadUInt16 ();
@@ -349,29 +354,31 @@ namespace Mono.Cecil.Binary {
 			header.AddressOfRawData = new RVA (m_binaryReader.ReadUInt32 ());
 			header.PointerToRawData = m_binaryReader.ReadUInt32 ();
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.DebugHeader.AddressOfRawData);
+			SetPositionToAddress (m_image.DebugHeader.AddressOfRawData);
 
 			header.Magic = m_binaryReader.ReadUInt32 ();
 			header.Signature = new Guid (m_binaryReader.ReadBytes (16));
 			header.Age = m_binaryReader.ReadUInt32 ();
-
-			StringBuilder buffer = new StringBuilder ();
-			while (true) {
-				byte cur =  m_binaryReader.ReadByte ();
-				if (cur == 0)
-					break;
-				buffer.Append ((char) cur);
-			}
-			header.FileName = buffer.ToString ();
+			header.FileName = ReadZeroTerminatedString ();
 
 			m_binaryReader.BaseStream.Position = pos;
 		}
 
+		string ReadZeroTerminatedString ()
+		{
+			StringBuilder sb = new StringBuilder ();
+			while (true) {
+				byte chr = m_binaryReader.ReadByte ();
+				if (chr == 0)
+					break;
+				sb.Append(chr);
+			}
+			return sb.ToString ();
+		}
+
 		public override void VisitImportTable (ImportTable it)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
+			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
 
 			it.ImportLookupTable = new RVA (m_binaryReader.ReadUInt32 ());
 			it.DateTimeStamp = m_binaryReader.ReadUInt32 ();
@@ -382,35 +389,96 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportLookupTable (ImportLookupTable ilt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.ImportTable.ImportLookupTable.Value);
+			SetPositionToAddress (m_image.ImportTable.ImportLookupTable.Value);
 
 			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
 		public override void VisitHintNameTable (HintNameTable hnt)
 		{
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.ImportAddressTable.HintNameTableRVA);
+			SetPositionToAddress (m_image.ImportAddressTable.HintNameTableRVA);
 
 			hnt.Hint = m_binaryReader.ReadUInt16 ();
 
 			byte [] bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeMain = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.ImportTable.Name);
+			SetPositionToAddress (m_image.ImportTable.Name);
 
 			bytes = m_binaryReader.ReadBytes (11);
 			hnt.RuntimeLibrary = Encoding.ASCII.GetString (bytes, 0, bytes.Length);
 
-			m_binaryReader.BaseStream.Position = m_image.ResolveVirtualAddress (
-				m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
+			SetPositionToAddress (m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
 			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
 			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
 		}
 
-		public override void TerminateImage (Image img)
+		public override void VisitExportTable (ExportTable et)
+		{
+			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.ExportTable.VirtualAddress);
+
+			et.Characteristics = m_binaryReader.ReadUInt32 ();
+			et.TimeDateStamp = m_binaryReader.ReadUInt32 ();
+			et.MajorVersion = m_binaryReader.ReadUInt16 ();
+			et.MinorVersion = m_binaryReader.ReadUInt16 ();
+
+			//et.Name =
+			m_binaryReader.ReadUInt32 ();
+
+			et.Base = m_binaryReader.ReadUInt32 ();
+			et.NumberOfFunctions = m_binaryReader.ReadUInt32 ();
+			et.NumberOfNames = m_binaryReader.ReadUInt32 ();
+			et.AddressOfFunctions = m_binaryReader.ReadUInt32 ();
+			et.AddressOfNames = m_binaryReader.ReadUInt32 ();
+			et.AddressOfNameOrdinals = m_binaryReader.ReadUInt32 ();
+
+			et.AddressesOfFunctions = ReadArrayOfRVA (et.AddressOfFunctions, et.NumberOfFunctions);
+			et.AddressesOfNames = ReadArrayOfRVA (et.AddressOfNames, et.NumberOfNames);
+			et.NameOrdinals = ReadArrayOfUInt16 (et.AddressOfNameOrdinals, et.NumberOfNames);
+			et.Names = new string [et.NumberOfFunctions];
+
+			for (int i = 0; i < et.NumberOfFunctions; i++) {
+				if (et.AddressesOfFunctions [i] == 0)
+					continue;
+
+				et.Names [i] = ReadFunctionName (et, i);
+			}
+		}
+
+		string ReadFunctionName (ExportTable et, int index)
+		{
+			for (int i = 0; i < et.NumberOfNames; i++) {
+				if (et.NameOrdinals [i] != index)
+					continue;
+
+				SetPositionToAddress (et.AddressesOfNames [i]);
+				return ReadZeroTerminatedString ();
+			}
+
+			return string.Empty;
+		}
+
+		ushort [] ReadArrayOfUInt16 (RVA position, uint length)
+		{
+			SetPositionToAddress (position);
+			ushort [] array = new ushort [length];
+			for (int i = 0; i < length; i++)
+				array [i] = m_binaryReader.ReadUInt16 ();
+
+			return array;
+		}
+
+		RVA [] ReadArrayOfRVA (RVA position, uint length)
+		{
+			SetPositionToAddress (position);
+			RVA [] addresses = new RVA [length];
+			for (int i = 0; i < length; i++)
+				addresses [i] = m_binaryReader.ReadUInt32 ();
+
+			return addresses;
+		}
+
+		public override void TerminateImage(Image img)
 		{
 			m_binaryReader.Close ();
 

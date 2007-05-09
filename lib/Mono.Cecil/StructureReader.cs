@@ -59,6 +59,9 @@ namespace Mono.Cecil {
 
 		public StructureReader (ImageReader ir)
 		{
+			if (ir.Image.CLIHeader == null)
+				throw new ImageFormatException ("The image is not a managed assembly");
+
 			m_ir = ir;
 			m_img = ir.Image;
 			m_streams = m_img.MetadataRoot.Streams;

@@ -1,3 +1,22 @@
+2007-05-09  Jb Evain  <jb@nurv.fr>
+
+	* Mono.Cecil.csproj
+	  Mono.Cecil.Binary/ExportTable.cs
+	  Mono.Cecil.Binary/BaseImageVisitor.cs
+	  Mono.Cecil.Binary/ImageReader.cs
+	  Mono.Cecil.Binary/IBinaryVisitor.cs
+	  Mono.Cecil.Binary/Image.cs
+	  Mono.Cecil.Binary/ImageInitializer.cs
+	  Mono.Cecil/StructureReader.cs
+	  Mono.Cecil/ReflectionWriter.cs:
+		When present, read the export table, so that people
+		reading non managed assemblies can use the Mono.Cecil.Binary
+		stuff.
+
+		Fix the bug when section name is 8 char long.
+
+		Based on a patch by Pavel Savara <pavel.savara@gmail.com>.
+
 2007-04-27  Jb Evain  <jb@nurv.fr>
 
 	* Mono.Cecil/AssemblyNameReference.cs:

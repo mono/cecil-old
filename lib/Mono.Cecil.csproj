@@ -41,6 +41,7 @@
     <Compile Include="Mono.Cecil.Binary\DebugHeader.cs" />
     <Compile Include="Mono.Cecil.Binary\DebugStoreType.cs" />
     <Compile Include="Mono.Cecil.Binary\DOSHeader.cs" />
+    <Compile Include="Mono.Cecil.Binary\ExportTable.cs" />
     <Compile Include="Mono.Cecil.Binary\IBinaryVisitable.cs" />
     <Compile Include="Mono.Cecil.Binary\IBinaryVisitor.cs" />
     <Compile Include="Mono.Cecil.Binary\IHeader.cs" />
