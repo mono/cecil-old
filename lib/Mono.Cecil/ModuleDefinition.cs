@@ -194,7 +194,7 @@ namespace Mono.Cecil {
 			if (context.Module != this)
 				throw new ArgumentException ("The context parameter does not belongs to this module");
 			if (context.GenericParameters.Count == 0)
-				throw new ArithmeticException ("The context parameter is not a generic type");
+				throw new ArgumentException ("The context parameter is not a generic type");
 		}
 
 		ImportContext GetContext ()

@@ -31,7 +31,6 @@
 
 namespace Mono.Cecil.Metadata {
 
-	using System;
 	using System.Collections;
 	using System.IO;
 

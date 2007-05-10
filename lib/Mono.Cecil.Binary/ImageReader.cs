@@ -148,12 +148,12 @@ namespace Mono.Cecil.Binary {
 				m_binaryReader.ReadUInt32 ();
 		}
 
-		private RVA ReadRVA ()
+		RVA ReadRVA ()
 		{
 			return m_binaryReader.ReadUInt32 ();
 		}
 
-		private DataDirectory ReadDataDirectory ()
+		DataDirectory ReadDataDirectory ()
 		{
 			return new DataDirectory (ReadRVA (), m_binaryReader.ReadUInt32 ());
 		}
