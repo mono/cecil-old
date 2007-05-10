@@ -138,7 +138,7 @@ namespace Mono.Cecil.Binary {
 			header.PointerToSymbolTable = m_binaryReader.ReadUInt32 ();
 			header.NumberOfSymbols = m_binaryReader.ReadUInt32 ();
 			header.OptionalHeaderSize = m_binaryReader.ReadUInt16 ();
-			header.Characteristics = (Mono.Cecil.Binary.ImageCharacteristics) m_binaryReader.ReadUInt16 ();
+			header.Characteristics = (ImageCharacteristics) m_binaryReader.ReadUInt16 ();
 		}
 
 		ulong ReadIntOrLong ()
@@ -146,6 +146,16 @@ namespace Mono.Cecil.Binary {
 			return m_image.PEOptionalHeader.StandardFields.IsPE64 ?
 				m_binaryReader.ReadUInt64 () :
 				m_binaryReader.ReadUInt32 ();
+		}
+
+		private RVA ReadRVA ()
+		{
+			return m_binaryReader.ReadUInt32 ();
+		}
+
+		private DataDirectory ReadDataDirectory ()
+		{
+			return new DataDirectory (ReadRVA (), m_binaryReader.ReadUInt32 ());
 		}
 
 		public override void VisitNTSpecificFieldsHeader (PEOptionalHeader.NTSpecificFieldsHeader header)
@@ -163,7 +173,7 @@ namespace Mono.Cecil.Binary {
 			header.ImageSize = m_binaryReader.ReadUInt32 ();
 			header.HeaderSize = m_binaryReader.ReadUInt32 ();
 			header.FileChecksum = m_binaryReader.ReadUInt32 ();
-			header.SubSystem = (Mono.Cecil.Binary.SubSystem) m_binaryReader.ReadUInt16 ();
+			header.SubSystem = (SubSystem) m_binaryReader.ReadUInt16 ();
 			header.DLLFlags = m_binaryReader.ReadUInt16 ();
 			header.StackReserveSize = ReadIntOrLong ();
 			header.StackCommitSize = ReadIntOrLong ();
@@ -181,62 +191,30 @@ namespace Mono.Cecil.Binary {
 			header.CodeSize = m_binaryReader.ReadUInt32 ();
 			header.InitializedDataSize = m_binaryReader.ReadUInt32 ();
 			header.UninitializedDataSize = m_binaryReader.ReadUInt32 ();
-			header.EntryPointRVA = new RVA (m_binaryReader.ReadUInt32 ());
-			header.BaseOfCode = new RVA (m_binaryReader.ReadUInt32 ());
+			header.EntryPointRVA = ReadRVA ();
+			header.BaseOfCode = ReadRVA ();
 			if (!header.IsPE64)
-				header.BaseOfData = new RVA (m_binaryReader.ReadUInt32 ());
+				header.BaseOfData = ReadRVA ();
 		}
 
 		public override void VisitDataDirectoriesHeader (PEOptionalHeader.DataDirectoriesHeader header)
 		{
-			header.ExportTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.ImportTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.ResourceTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.ExceptionTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.CertificateTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.BaseRelocationTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.Debug = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.Copyright = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.GlobalPtr = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.TLSTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.LoadConfigTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.BoundImport = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.IAT = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.DelayImportDescriptor = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.CLIHeader = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.Reserved = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
+			header.ExportTable = ReadDataDirectory ();
+			header.ImportTable = ReadDataDirectory ();
+			header.ResourceTable = ReadDataDirectory ();
+			header.ExceptionTable = ReadDataDirectory ();
+			header.CertificateTable = ReadDataDirectory ();
+			header.BaseRelocationTable = ReadDataDirectory ();
+			header.Debug = ReadDataDirectory ();
+			header.Copyright = ReadDataDirectory ();
+			header.GlobalPtr = ReadDataDirectory ();
+			header.TLSTable = ReadDataDirectory ();
+			header.LoadConfigTable = ReadDataDirectory ();
+			header.BoundImport = ReadDataDirectory ();
+			header.IAT = ReadDataDirectory ();
+			header.DelayImportDescriptor = ReadDataDirectory ();
+			header.CLIHeader = ReadDataDirectory ();
+			header.Reserved = ReadDataDirectory ();
 
 			if (header.CLIHeader != DataDirectory.Zero)
 				m_image.CLIHeader = new CLIHeader ();
@@ -267,14 +245,14 @@ namespace Mono.Cecil.Binary {
 				m_image.TextSection = sect;
 
 			sect.VirtualSize = m_binaryReader.ReadUInt32 ();
-			sect.VirtualAddress = new RVA (m_binaryReader.ReadUInt32 ());
+			sect.VirtualAddress = ReadRVA ();
 			sect.SizeOfRawData = m_binaryReader.ReadUInt32 ();
-			sect.PointerToRawData = new RVA (m_binaryReader.ReadUInt32 ());
-			sect.PointerToRelocations = new RVA (m_binaryReader.ReadUInt32 ());
-			sect.PointerToLineNumbers = new RVA (m_binaryReader.ReadUInt32 ());
+			sect.PointerToRawData = ReadRVA ();
+			sect.PointerToRelocations = ReadRVA ();
+			sect.PointerToLineNumbers = ReadRVA ();
 			sect.NumberOfRelocations = m_binaryReader.ReadUInt16 ();
 			sect.NumberOfLineNumbers = m_binaryReader.ReadUInt16 ();
-			sect.Characteristics = (Mono.Cecil.Binary.SectionCharacteristics) m_binaryReader.ReadUInt32 ();
+			sect.Characteristics = (SectionCharacteristics) m_binaryReader.ReadUInt32 ();
 
 			long pos = m_binaryReader.BaseStream.Position;
 			m_binaryReader.BaseStream.Position = sect.PointerToRawData;
@@ -284,9 +262,9 @@ namespace Mono.Cecil.Binary {
 
 		public override void VisitImportAddressTable (ImportAddressTable iat)
 		{
-			SetPositionToAddress(m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
+			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.IAT.VirtualAddress);
 
-			iat.HintNameTableRVA = new RVA (m_binaryReader.ReadUInt32 ());
+			iat.HintNameTableRVA = ReadRVA ();
 		}
 
 		public override void VisitCLIHeader (CLIHeader header)
@@ -296,42 +274,25 @@ namespace Mono.Cecil.Binary {
 				VisitDebugHeader (m_image.DebugHeader);
 			}
 
-
 			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.CLIHeader.VirtualAddress);
 			header.Cb = m_binaryReader.ReadUInt32 ();
 			header.MajorRuntimeVersion = m_binaryReader.ReadUInt16 ();
 			header.MinorRuntimeVersion = m_binaryReader.ReadUInt16 ();
-			header.Metadata = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.Flags = (Mono.Cecil.Binary.RuntimeImage) m_binaryReader.ReadUInt32 ();
+			header.Metadata = ReadDataDirectory ();
+			header.Flags = (RuntimeImage) m_binaryReader.ReadUInt32 ();
 			header.EntryPointToken = m_binaryReader.ReadUInt32 ();
-			header.Resources = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.StrongNameSignature = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.CodeManagerTable = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.VTableFixups = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.ExportAddressTableJumps = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
-			header.ManagedNativeHeader = new DataDirectory (
-				new RVA (m_binaryReader.ReadUInt32 ()),
-				m_binaryReader.ReadUInt32 ());
+			header.Resources = ReadDataDirectory ();
+			header.StrongNameSignature = ReadDataDirectory ();
+			header.CodeManagerTable = ReadDataDirectory ();
+			header.VTableFixups = ReadDataDirectory ();
+			header.ExportAddressTableJumps = ReadDataDirectory ();
+			header.ManagedNativeHeader = ReadDataDirectory ();
 
 			if (header.StrongNameSignature != DataDirectory.Zero) {
-
 				SetPositionToAddress (header.StrongNameSignature.VirtualAddress);
 				header.ImageHash = m_binaryReader.ReadBytes ((int) header.StrongNameSignature.Size);
-			} else {
+			} else
 				header.ImageHash = new byte [0];
-			}
 
 			SetPositionToAddress (m_image.CLIHeader.Metadata.VirtualAddress);
 			m_image.MetadataRoot.Accept (m_mdReader);
@@ -349,9 +310,9 @@ namespace Mono.Cecil.Binary {
 			header.TimeDateStamp = m_binaryReader.ReadUInt32 ();
 			header.MajorVersion = m_binaryReader.ReadUInt16 ();
 			header.MinorVersion = m_binaryReader.ReadUInt16 ();
-			header.Type = (Mono.Cecil.Binary.DebugStoreType) m_binaryReader.ReadUInt32 ();
+			header.Type = (DebugStoreType) m_binaryReader.ReadUInt32 ();
 			header.SizeOfData = m_binaryReader.ReadUInt32 ();
-			header.AddressOfRawData = new RVA (m_binaryReader.ReadUInt32 ());
+			header.AddressOfRawData = ReadRVA ();
 			header.PointerToRawData = m_binaryReader.ReadUInt32 ();
 
 			SetPositionToAddress (m_image.DebugHeader.AddressOfRawData);
@@ -371,7 +332,7 @@ namespace Mono.Cecil.Binary {
 				byte chr = m_binaryReader.ReadByte ();
 				if (chr == 0)
 					break;
-				sb.Append((char) chr);
+				sb.Append ((char) chr);
 			}
 			return sb.ToString ();
 		}
@@ -380,18 +341,18 @@ namespace Mono.Cecil.Binary {
 		{
 			SetPositionToAddress (m_image.PEOptionalHeader.DataDirectories.ImportTable.VirtualAddress);
 
-			it.ImportLookupTable = new RVA (m_binaryReader.ReadUInt32 ());
+			it.ImportLookupTable = ReadRVA ();
 			it.DateTimeStamp = m_binaryReader.ReadUInt32 ();
 			it.ForwardChain = m_binaryReader.ReadUInt32 ();
-			it.Name = new RVA (m_binaryReader.ReadUInt32 ());
-			it.ImportAddressTable = new RVA (m_binaryReader.ReadUInt32 ());
+			it.Name = ReadRVA ();
+			it.ImportAddressTable = ReadRVA ();
 		}
 
 		public override void VisitImportLookupTable (ImportLookupTable ilt)
 		{
 			SetPositionToAddress (m_image.ImportTable.ImportLookupTable.Value);
 
-			ilt.HintNameRVA = new RVA (m_binaryReader.ReadUInt32 ());
+			ilt.HintNameRVA = ReadRVA ();
 		}
 
 		public override void VisitHintNameTable (HintNameTable hnt)
@@ -410,7 +371,7 @@ namespace Mono.Cecil.Binary {
 
 			SetPositionToAddress (m_image.PEOptionalHeader.StandardFields.EntryPointRVA);
 			hnt.EntryPoint = m_binaryReader.ReadUInt16 ();
-			hnt.RVA = new RVA (m_binaryReader.ReadUInt32 ());
+			hnt.RVA = ReadRVA ();
 		}
 
 		public override void VisitExportTable (ExportTable et)

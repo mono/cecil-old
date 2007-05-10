@@ -171,8 +171,7 @@ namespace Mono.Cecil.Metadata {
 			VisitHeap (heap);
 			heap.Tables = new TableCollection (heap);
 
-			BinaryReader br = new BinaryReader (
-					   new MemoryStream (heap.Data));
+			BinaryReader br = new BinaryReader (new MemoryStream (heap.Data));
 			try {
 				heap.Reserved = br.ReadUInt32 ();
 				heap.MajorVersion = br.ReadByte ();
@@ -183,7 +182,7 @@ namespace Mono.Cecil.Metadata {
 				heap.Sorted = br.ReadInt64 ();
 			} finally {
 				// COMPACT FRAMEWORK NOTE: BinaryReader is not IDisposable
-				br.Close();
+				br.Close ();
 			}
 		}
 
