@@ -54,6 +54,7 @@
     <Compile Include="Mono.Bat\PrepareScript.cs" />
     <Compile Include="Mono.Bat\InstantiateScript.cs" />
     <Compile Include="Mono.Bat\ScriptCompiler.cs" />
+    <Compile Include="Mono.Bat\WriteAssemblyScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\Mono.Cecil.csproj">

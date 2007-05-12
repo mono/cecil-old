@@ -30,6 +30,7 @@ using System.IO;
 using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
+using NUnit.Framework;
 
 namespace Mono.Bat {
 
@@ -47,8 +48,14 @@ namespace Mono.Bat {
 
 		public TScript Compile ()
 		{
-			_compiler.Run ();
+			CompilerContext result = _compiler.Run ();
+			AssertCompilerResult (result);
 			return _instantiater.Script;
+		}
+
+		static void AssertCompilerResult (CompilerContext result)
+		{
+			Assert.AreEqual (0, result.Errors.Count, result.Errors.ToString (true));
 		}
 
 		void SetupCompiler (CompilerPipeline pipeline)

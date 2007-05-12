@@ -39,27 +39,39 @@ namespace Mono.Bat {
 
 		protected void RunReadAssemblyTestCase (string file)
 		{
-			string boo = GetTestCasePath (file + ".boo");
-			ScriptCompiler<ReadAssemblyScript> sc = new ScriptCompiler<ReadAssemblyScript> (boo);
-			ReadAssemblyScript ras = sc.Compile ();
+			string boo = GetBooFile (file);
+			ReadAssemblyScript ras = CompileBooFile<ReadAssemblyScript> (boo);
 			ras.ASM = FindCandidateAssembly (file);
-			RunAndAssertOutput (boo, ras);
+			RunAndAssertOutput (boo, delegate { ras.Run (); });
+		}
+
+		string GetBooFile (string file)
+		{
+			return GetTestCasePath (file + ".boo");
 		}
 
 		protected AssemblyDefinition RunWriteAssemblyTestCase (string file)
 		{
-			return null;
+			string boo = GetBooFile (file);
+			string asm = Path.GetTempFileName ();
+			WriteAssemblyScript was = CompileBooFile<WriteAssemblyScript> (boo);
+			was.DefineAssembly (file);
+			was.Run ();
+			AssemblyFactory.SaveAssembly (was.ASM, asm);
+			RunAndAssertOutput(boo, delegate { AppDomain.CurrentDomain.ExecuteAssembly (asm); });
+			return was.ASM;
 		}
 
-		protected AssemblyDefinition RunReadWriteAssemblyTestCase (string file)
+		static TScript CompileBooFile<TScript> (string file) where TScript : IScript
 		{
-			return null;
+			ScriptCompiler<TScript> compiler = new ScriptCompiler<TScript> (file);
+			return compiler.Compile ();
 		}
 
-		static void RunAndAssertOutput (string file, IScript script)
+		static void RunAndAssertOutput (string file, Action a)
 		{
 			StringWriter sw = new StringWriter ();
-			ChangeStandardOutput (sw, delegate { script.Run (); });
+			ChangeStandardOutput (sw, a);
 			AssertScriptOutput (file, sw.ToString ());
 		}
 

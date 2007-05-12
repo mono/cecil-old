@@ -1,5 +1,5 @@
 //
-// ReadAssembly.cs
+// ReadAssemblyScript.cs
 //
 // Author:
 //   Jb Evain (jb@nurv.fr)
