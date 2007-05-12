@@ -26,7 +26,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System.IO;
 using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
@@ -37,12 +36,14 @@ namespace Mono.Bat {
 	public class ScriptCompiler<TScript> where TScript : IScript {
 
 		string _file;
+		string _outfile;
 		BooCompiler _compiler;
 		InstantiateScript<TScript> _instantiater;
 
-		public ScriptCompiler (string file)
+		public ScriptCompiler (string file, string outfile)
 		{
 			_file = file;
+			_outfile = outfile;
 			SetupCompiler (new CompileToFile ());
 		}
 
@@ -63,7 +64,7 @@ namespace Mono.Bat {
 			_compiler = new BooCompiler ();
 			_compiler.Parameters.Input.Add (new FileInput (_file));
 			_compiler.Parameters.OutputType = CompilerOutputType.Library;
-			_compiler.Parameters.OutputAssembly = Path.GetTempFileName ();
+			_compiler.Parameters.OutputAssembly = _outfile;
 			_compiler.Parameters.References.Add (typeof (ScriptCompiler<>).Assembly);
 			_compiler.Parameters.References.Add (typeof (Mono.Cecil.AssemblyFactory).Assembly);
 			_compiler.Parameters.References.Add (typeof (NUnit.Framework.Assert).Assembly);

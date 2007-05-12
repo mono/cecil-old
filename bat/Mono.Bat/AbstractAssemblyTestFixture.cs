@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Boo.Lang.Parser;
 using Mono.Cecil;
@@ -37,12 +38,52 @@ namespace Mono.Bat {
 	[TestFixture]
 	public abstract class AbstractAssemblyTestFixture {
 
+		IList<string> _tempFiles = new List<string> ();
+
+		[SetUp]
+		public virtual void SetUp ()
+		{
+			_tempFiles.Clear ();
+		}
+
+		[TearDown]
+		public virtual void TearDown ()
+		{
+			foreach (string file in _tempFiles) {
+				try {
+					File.Delete (file);
+				} catch {}
+			}
+		}
+
+		protected string GetTempFileName ()
+		{
+			string file = Path.GetTempFileName ();
+			_tempFiles.Add (file);
+			return file;
+		}
+
 		protected void RunReadAssemblyTestCase (string file)
 		{
 			string boo = GetBooFile (file);
 			ReadAssemblyScript ras = CompileBooFile<ReadAssemblyScript> (boo);
 			ras.ASM = FindCandidateAssembly (file);
 			RunAndAssertOutput (boo, delegate { ras.Run (); });
+		}
+
+		protected void RunCSharpRoundTripTestCase (string file)
+		{
+			string boo = GetBooFile (file);
+			CSharpScript cs = CompileBooFile<CSharpScript> (boo);
+			string asm = GetTempFileName ();
+			cs.Run ();
+			cs.CompileTo (asm);
+
+			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (asm);
+			string roundtrip = GetTempFileName ();
+			AssemblyFactory.SaveAssembly (assembly, roundtrip);
+
+			RunAndAssertOutput(boo, delegate { AppDomain.CurrentDomain.ExecuteAssembly (roundtrip); });
 		}
 
 		string GetBooFile (string file)
@@ -53,7 +94,7 @@ namespace Mono.Bat {
 		protected AssemblyDefinition RunWriteAssemblyTestCase (string file)
 		{
 			string boo = GetBooFile (file);
-			string asm = Path.GetTempFileName ();
+			string asm = GetTempFileName ();
 			WriteAssemblyScript was = CompileBooFile<WriteAssemblyScript> (boo);
 			was.DefineAssembly (file);
 			was.Run ();
@@ -62,9 +103,9 @@ namespace Mono.Bat {
 			return was.ASM;
 		}
 
-		static TScript CompileBooFile<TScript> (string file) where TScript : IScript
+		TScript CompileBooFile<TScript> (string file) where TScript : IScript
 		{
-			ScriptCompiler<TScript> compiler = new ScriptCompiler<TScript> (file);
+			ScriptCompiler<TScript> compiler = new ScriptCompiler<TScript> (file, GetTempFileName ());
 			return compiler.Compile ();
 		}
 
