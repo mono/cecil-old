@@ -86,7 +86,7 @@ namespace Mono.Bat {
 			RunAndAssertOutput(boo, delegate { AppDomain.CurrentDomain.ExecuteAssembly (roundtrip); });
 		}
 
-		string GetBooFile (string file)
+		protected string GetBooFile (string file)
 		{
 			return GetTestCasePath (file + ".boo");
 		}
@@ -103,20 +103,20 @@ namespace Mono.Bat {
 			return was.ASM;
 		}
 
-		TScript CompileBooFile<TScript> (string file) where TScript : IScript
+		protected TScript CompileBooFile<TScript> (string file) where TScript : IScript
 		{
 			ScriptCompiler<TScript> compiler = new ScriptCompiler<TScript> (file, GetTempFileName ());
 			return compiler.Compile ();
 		}
 
-		static void RunAndAssertOutput (string file, Action a)
+		protected static void RunAndAssertOutput (string file, Action a)
 		{
 			StringWriter sw = new StringWriter ();
 			ChangeStandardOutput (sw, a);
 			AssertScriptOutput (file, sw.ToString ());
 		}
 
-		delegate void Action ();
+		protected delegate void Action ();
 
 		static void ChangeStandardOutput (TextWriter writer, Action a)
 		{
