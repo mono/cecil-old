@@ -33,17 +33,17 @@ using NUnit.Framework;
 namespace Mono.Cecil.Tests {
 
 	[TestFixture]
-	public class AssemblyCreationTestFixture : AbstractAssemblyTestFixture {
+	public class RoundTripTestFixture : AbstractAssemblyTestFixture {
 
 		[Test]
-		public void CreateHelloWorld ()
+		public void GenericIterator ()
 		{
-			RunWriteAssemblyTestCase ("HelloWorld");
+			RunCSharpRoundTripTestCase ("GenericIterator");
 		}
 
 		protected override string GetTestCasePath (string file)
 		{
-			return base.GetTestCasePath (Path.Combine ("Creation", file));
+			return base.GetTestCasePath (Path.Combine ("RoundTrip", file));
 		}
 	}
 }
