@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Mono.Cecil.Tests\AssemblyCreationTestFixture.cs" />
     <Compile Include="Mono.Cecil.Tests\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Tests\RegressionTestFixture.cs" />
   </ItemGroup>
@@ -42,6 +43,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestCases\Creation\HelloWorld.boo" />
     <None Include="TestCases\Regression\SimpleAssembly.boo" />
   </ItemGroup>
   <ItemGroup>
