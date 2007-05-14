@@ -123,42 +123,42 @@ namespace Test.Rules.Correctness {
 		public void GetConstField ()
 		{
 			MethodDefinition method = GetTest ("GetConstField");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void GetStaticField ()
 		{
 			MethodDefinition method = GetTest ("GetStaticField");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void SetStaticField ()
 		{
 			MethodDefinition method = GetTest ("SetStaticField");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Append ()
 		{
 			MethodDefinition method = GetTest ("Append");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void AppendChange ()
 		{
 			MethodDefinition method = GetTest ("AppendChange");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void MultipleChanges ()
 		{
 			MethodDefinition method = GetTest ("MultipleChanges");
-			MessageCollection mc = rule.CheckMethod (assembly, module, type, method, new MinimalRunner ());
+			MessageCollection mc = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.AreEqual (2, mc.Count, "Count");
 		}
 
@@ -166,14 +166,14 @@ namespace Test.Rules.Correctness {
 		public void StaticConstructor ()
 		{
 			MethodDefinition method = GetTest (".cctor");
-			Assert.IsNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 
 		[Test]
 		public void Constructor ()
 		{
 			MethodDefinition method = GetTest (".ctor");
-			Assert.IsNotNull (rule.CheckMethod (assembly, module, type, method, new MinimalRunner()));
+			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner()));
 		}
 	}
 }

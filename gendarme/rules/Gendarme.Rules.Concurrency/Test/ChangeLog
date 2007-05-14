@@ -1,3 +1,7 @@
+2007-06-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* WriteStaticFieldFromInstanceMethodTest.cs: Update API to fix build.
+
 2006-11-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Concurrency.mdp: Add new tests to MonoDevelop project.
