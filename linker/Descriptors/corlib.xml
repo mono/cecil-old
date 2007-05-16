@@ -60,6 +60,7 @@
 		<type fullname="System.IO.IOException" />
 		<type fullname="System.IO.MonoIO" />
 		<type fullname="System.IO.Path" />
+    <type fullname="System.IO.StreamReader" />
 		<type fullname="System.IndexOutOfRangeException" />
 		<type fullname="System.Int16" />
 		<type fullname="System.Int32" />

@@ -91,10 +91,7 @@ namespace Mono.Linker {
 					context.OutputDirectory = GetParam (q);
 					break;
 				case 'c':
-					context.CopyCoreLibraries = bool.Parse (GetParam (q));
-					break;
-				case 's':
-					context.SkipCoreLibraries = bool.Parse (GetParam (q));
+					context.Action = ParseCoreAction (GetParam (q));
 					break;
 				case 'x':
 					if (resolver)
@@ -118,13 +115,15 @@ namespace Mono.Linker {
 				}
 			}
 
-			if (context.SkipCoreLibraries)
-				context.CopyCoreLibraries = false;
-
 			if (!resolver)
 				Usage ();
 
 			p.Process (context);
+		}
+
+		static CoreAction ParseCoreAction (string s)
+		{
+			return (CoreAction) Enum.Parse (typeof (CoreAction), s, true);
 		}
 
 		static string GetParam (Queue q)
@@ -135,7 +134,7 @@ namespace Mono.Linker {
 		static LinkContext GetDefaultContext (Pipeline pipeline)
 		{
 			LinkContext context = new LinkContext (pipeline);
-			context.CopyCoreLibraries = true;
+			context.Action = CoreAction.Skip;
 			context.OutputDirectory = "output";
 			return context;
 		}
@@ -148,9 +147,7 @@ namespace Mono.Linker {
 			Console.WriteLine ("   --about     About the {0}", _linker);
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
 			Console.WriteLine ("   -out        Specify the output directory, default to `output'");
-			Console.WriteLine ("   -c          Copy the core libraries, true or false, default to true");
-			Console.WriteLine ("   -s          Skip the core libraries, true or false, default to false,");
-			Console.WriteLine ("               overrides -c settings");
+			Console.WriteLine ("   -c          Action on the core assemblies, skip, copy or link, default to skip");
 			Console.WriteLine ("   -x          Link from an XML descriptor");
 			Console.WriteLine ("   -a          Link from a list of assemblies");
 			Console.WriteLine ("");

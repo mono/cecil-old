@@ -83,7 +83,7 @@ namespace Mono.Linker.Tests {
 		{
 			LinkContext context = new LinkContext (GetPipeline ());
 			context.OutputDirectory = GetOutputPath ();
-			context.CopyCoreLibraries = true;
+			context.Action = CoreAction.Copy;
 			return context;
 		}
 

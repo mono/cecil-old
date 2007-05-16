@@ -2,6 +2,13 @@
 
 	* Tests/Mono.Linker.Tests/AbstractTestFixture.cs
 	  Mono.Linker.csproj
+	  Mono.Linker/CoreAction.cs
+	  Mono.Linker/Driver.cs
+	  Mono.Linker/LinkContext.cs:
+		Simplify the command line options.
+
+	* Tests/Mono.Linker.Tests/AbstractTestFixture.cs
+	  Mono.Linker.csproj
 	  Mono.Linker/CleanStep.cs
 	  Mono.Linker/ResolveFromXmlStep.cs
 	  Mono.Linker/Driver.cs

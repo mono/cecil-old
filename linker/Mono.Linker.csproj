@@ -47,6 +47,7 @@
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
     <Compile Include="Mono.Linker\BlacklistStep.cs" />
     <Compile Include="Mono.Linker\CleanStep.cs" />
+    <Compile Include="Mono.Linker\CoreAction.cs" />
     <Compile Include="Mono.Linker\ResolveFromAssemblyStep.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />
     <Compile Include="Mono.Linker\FieldMarker.cs" />

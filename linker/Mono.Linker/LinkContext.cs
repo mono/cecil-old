@@ -36,9 +36,8 @@ namespace Mono.Linker {
 
 		Pipeline _pipeline;
 		Hashtable _asmCtx;
+		CoreAction _action;
 		string _outputDirectory;
-		bool _copyCoreLibraries;
-		bool _skipCoreLibraries;
 
 		IAssemblyResolver _resolver;
 
@@ -51,14 +50,9 @@ namespace Mono.Linker {
 			set { _outputDirectory = value; }
 		}
 
-		public bool CopyCoreLibraries {
-			get { return _copyCoreLibraries; }
-			set { _copyCoreLibraries = value; }
-		}
-
-		public bool SkipCoreLibraries {
-			get { return _skipCoreLibraries; }
-			set { _skipCoreLibraries = value; }
+		public CoreAction Action {
+			get { return _action; }
+			set { _action = value; }
 		}
 
 		public bool OnMono {
@@ -90,9 +84,9 @@ namespace Mono.Linker {
 
 			AssemblyAction action = AssemblyAction.Link;
 			if (IsCore (reference)) {
-				if (_copyCoreLibraries)
+				if (_action == CoreAction.Copy)
 					action = AssemblyAction.Copy;
-				else if (_skipCoreLibraries)
+				else if (_action == CoreAction.Skip)
 					action = AssemblyAction.Skip;
 			}
 
