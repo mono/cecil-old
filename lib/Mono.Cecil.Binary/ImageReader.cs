@@ -315,7 +315,7 @@ namespace Mono.Cecil.Binary {
 			header.AddressOfRawData = ReadRVA ();
 			header.PointerToRawData = m_binaryReader.ReadUInt32 ();
 
-			SetPositionToAddress (m_image.DebugHeader.AddressOfRawData);
+			m_binaryReader.BaseStream.Position = header.PointerToRawData;
 
 			header.Magic = m_binaryReader.ReadUInt32 ();
 			header.Signature = new Guid (m_binaryReader.ReadBytes (16));

@@ -1,5 +1,9 @@
 2007-05-16  Jb Evain  <jb@nurv.fr>
 
+	* Mono.Cecil.Binary/ImageReader.cs:
+		Fix reading of the debug header for
+		headers half way emitted by .net SRE.
+
 	* Mono.Cecil/BaseAssemblyResolver:
 		try to resolve unversionned assemblies.
 
