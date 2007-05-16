@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <linker>
 	<assembly fullname="mscorlib">
-		<type fullname="System.Activator">
+		<type fullname="Mono.Interop.ComInteropProxy" />
+		<type fullname="Mono.Interop.IDispatch" />
+		<type fullname="Mono.Interop.IUnknown" />
+		<type fullname="System.Activator" />
 		<type fullname="System.AppDomain" />
 		<type fullname="System.AppDomainSetup" />
 		<type fullname="System.AppDomainUnloadedException" />
@@ -24,9 +27,9 @@
 		<type fullname="System.Collections.Generic.ICollection`1" />
 		<type fullname="System.Collections.Generic.IEnumerable`1" />
 		<type fullname="System.Collections.Generic.IList`1" />
-		<type fullname="System.Configuration.DefaultConfig" />
 		<type fullname="System.Console" />
 		<type fullname="System.ConsoleDriver" />
+		<type fullname="System.ContextBoundObject" />
 		<type fullname="System.Convert" />
 		<type fullname="System.CurrentSystemTimeZone" />
 		<type fullname="System.DateTime" />
@@ -137,6 +140,10 @@
 		<type fullname="System.Reflection.ReflectionTypeLoadException" />
 		<type fullname="System.Reflection.TargetException" />
 		<type fullname="System.Reflection.TargetParameterCountException" />
+		<type fullname="System.Runtime.CompilerServices.CallConvCdecl" />
+		<type fullname="System.Runtime.CompilerServices.CallConvStdcall" />
+		<type fullname="System.Runtime.CompilerServices.CallConvFastcall" />
+		<type fullname="System.Runtime.CompilerServices.CallConvThiscall" />
 		<type fullname="System.Runtime.CompilerServices.InternalsVisibleToAttribute" />
 		<type fullname="System.Runtime.CompilerServices.RuntimeHelpers" />
 		<type fullname="System.Runtime.InteropServices.DllImportAttribute" />
