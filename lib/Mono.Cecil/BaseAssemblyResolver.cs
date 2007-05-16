@@ -29,6 +29,7 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 	using SR = System.Reflection;
 	using System.Text;
@@ -43,7 +44,12 @@ namespace Mono.Cecil {
 		public virtual AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
 			string [] exts = new string [] { ".dll", ".exe" };
-			string [] dirs = new string [] { ".", "bin" };
+			IList dirs = new ArrayList ();
+			dirs.Add (".");
+			dirs.Add ("bin");
+
+			if (IsZero (name.Version))
+				dirs.Add (Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName));
 
 			foreach (string dir in dirs) {
 				foreach (string ext in exts) {
@@ -66,10 +72,10 @@ namespace Mono.Cecil {
 		}
 
 #if !CF_1_0 && !CF_2_0
-		AssemblyDefinition GetCorlib (AssemblyNameReference reference)
+		static AssemblyDefinition GetCorlib (AssemblyNameReference reference)
 		{
 			SR.AssemblyName corlib = typeof (object).Assembly.GetName ();
-			if (corlib.Version == reference.Version)
+			if (corlib.Version == reference.Version || IsZero (reference.Version))
 				return AssemblyFactory.GetAssembly (typeof (object).Module.FullyQualifiedName);
 
 			string path = Directory.GetParent (
@@ -96,6 +102,11 @@ namespace Mono.Cecil {
 			}
 
 			return AssemblyFactory.GetAssembly (Path.Combine (path, "mscorlib.dll"));
+		}
+
+		static bool IsZero (Version version)
+		{
+			return version.Major == 0 && version.Minor == 0 && version.MajorRevision == 0 && version.Minor == 0;
 		}
 
 		public static bool OnMono ()

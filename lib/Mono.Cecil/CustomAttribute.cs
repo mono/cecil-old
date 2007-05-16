@@ -28,7 +28,6 @@
 
 namespace Mono.Cecil {
 
-	using System;
 	using System.Collections;
 
 	public sealed class CustomAttribute : IRequireResolving, IReflectionVisitable {
