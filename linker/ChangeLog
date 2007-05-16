@@ -1,3 +1,10 @@
+2007-05-16  Jb Evain  <jb@nurv.fr>
+
+	* Descriptors/corlib.xml
+	  Descriptors/system.xml
+	  Descriptors/system.web.xml:
+		First audit of the core.
+
 2007-04-23  Jb Evain  <jb@nurv.fr>
 
 	* Mono.Linker/CleanStep.cs:

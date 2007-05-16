@@ -150,8 +150,7 @@ namespace Mono.Linker {
 				corlibName = "mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
 
 			StreamReader sr = new StreamReader (
-				SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream (
-					"Mono.Linker.Descriptors.corlib.xml"));
+				SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("corlib.xml"));
 
 			string xml = sr.ReadToEnd ();
 			int start = xml.IndexOf ("mscorlib");

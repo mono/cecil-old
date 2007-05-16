@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+	<assembly fullname="System">
+		<type fullname="System.Configuration.DefaultConfig" />
+		<type fullname="System.Diagnostics.DefaultTraceListener" />
+		<type fullname="System.Diagnostics.FileVersionInfo" />
+		<type fullname="System.Diagnostics.Process" />
+		<type fullname="System.IO.FAMWatcher" />
+		<type fullname="System.IO.FileSystemWatcher" />
+		<type fullname="System.IO.InotifyWatcher" />
+		<type fullname="System.Net.Dns" />
+		<type fullname="System.Net.Socket" />
+		<type fullname="System.Net.SocketAddress" />
+		<type fullname="System.Net.SocketException" />
+	</assembly>
+</linker>
