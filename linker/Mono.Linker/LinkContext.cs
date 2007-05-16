@@ -26,20 +26,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Collections;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using System.Collections;
-
-	using Mono.Cecil;
 
 	public class LinkContext {
 
+		Pipeline _pipeline;
 		Hashtable _asmCtx;
 		string _outputDirectory;
 		bool _copyCoreLibraries;
 		bool _skipCoreLibraries;
 
 		IAssemblyResolver _resolver;
+
+		public Pipeline Pipeline {
+			get { return _pipeline; }
+		}
 
 		public string OutputDirectory {
 			get { return _outputDirectory; }
@@ -60,8 +65,9 @@ namespace Mono.Linker {
 			get { return BaseAssemblyResolver.OnMono (); }
 		}
 
-		public LinkContext ()
+		public LinkContext (Pipeline pipeline)
 		{
+			_pipeline = pipeline;
 			_asmCtx = new Hashtable ();
 			_resolver = new DefaultAssemblyResolver ();
 		}
@@ -90,18 +96,17 @@ namespace Mono.Linker {
 					action = AssemblyAction.Skip;
 			}
 
+			AssemblyDefinition assembly = _resolver.Resolve (reference);
+
 			AssemblyMarker marker = new AssemblyMarker (
 				action,
-				_resolver.Resolve (reference));
+				assembly);
 
-			if (marker.Assembly.Name.Name == "mscorlib")
-				marker.Action = AssemblyAction.Skip;
-
-			_asmCtx.Add (reference.FullName, marker);
+			_asmCtx.Add (assembly.Name.FullName, marker);
 			return marker;
 		}
 
-		bool IsCore (AssemblyNameReference name)
+		static bool IsCore (AssemblyNameReference name)
 		{
 			return name.Name == "mscorlib"
 				|| name.Name == "Accessibility"

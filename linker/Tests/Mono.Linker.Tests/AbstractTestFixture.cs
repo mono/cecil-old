@@ -81,7 +81,7 @@ namespace Mono.Linker.Tests {
 
 		protected virtual LinkContext GetContext ()
 		{
-			LinkContext context = new LinkContext ();
+			LinkContext context = new LinkContext (GetPipeline ());
 			context.OutputDirectory = GetOutputPath ();
 			context.CopyCoreLibraries = true;
 			return context;

@@ -75,7 +75,8 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
-			foreach (IStep step in _steps) {
+			for (int i = 0; i < _steps.Count; i++) {
+				IStep step = (IStep) _steps [i];
 				step.Process (context);
 			}
 		}

@@ -1,5 +1,17 @@
 2007-05-16  Jb Evain  <jb@nurv.fr>
 
+	* Tests/Mono.Linker.Tests/AbstractTestFixture.cs
+	  Mono.Linker.csproj
+	  Mono.Linker/CleanStep.cs
+	  Mono.Linker/ResolveFromXmlStep.cs
+	  Mono.Linker/Driver.cs
+	  Mono.Linker/OutputStep.cs
+	  Mono.Linker/ResolveFromAssemblyStep.cs
+	  Mono.Linker/LinkContext.cs
+	  Mono.Linker/BlacklistStep.cs
+	  Mono.Linker/Pipeline.cs:
+		Working on black list support.
+
 	* Descriptors/corlib.xml
 	  Descriptors/system.xml
 	  Descriptors/system.web.xml:

@@ -30,7 +30,6 @@ namespace Mono.Linker {
 
 	using System;
 	using System.Collections;
-	using System.IO;
 	using SR = System.Reflection;
 	using System.Xml.XPath;
 
@@ -57,8 +56,8 @@ namespace Mono.Linker {
 
 		static void Run (Queue q)
 		{
-			LinkContext context = GetDefaultContext ();
 			Pipeline p = GetStandardPipeline ();
+			LinkContext context = GetDefaultContext (p);
 
 			bool resolver = false;
 			while (q.Count > 0) {
@@ -122,14 +121,6 @@ namespace Mono.Linker {
 			if (context.SkipCoreLibraries)
 				context.CopyCoreLibraries = false;
 
-			/*
-			if (!context.CopyCoreLibraries) {
-				p.AddStepBefore (typeof (MarkStep),
-					new ResolveFromXmlStep (
-						GetCorlibDescriptor ()));
-			}
-			*/
-
 			if (!resolver)
 				Usage ();
 
@@ -141,32 +132,11 @@ namespace Mono.Linker {
 			return (string) q.Dequeue ();
 		}
 
-		static XPathDocument GetCorlibDescriptor()
+		static LinkContext GetDefaultContext (Pipeline pipeline)
 		{
-			string corlibName;
-			if (typeof(object).Assembly.GetName().Version.Major == 2)
-				corlibName = "mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-			else
-				corlibName = "mscorlib, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
-
-			StreamReader sr = new StreamReader (
-				SR.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("corlib.xml"));
-
-			string xml = sr.ReadToEnd ();
-			int start = xml.IndexOf ("mscorlib");
-			int end = xml.IndexOf ("\"", start);
-			if (start == -1 || end == -1)
-				throw new FormatException ("Bad xml descriptor");
-
-			string res = xml.Substring (0, start) + corlibName + xml.Substring (end, xml.Length - end);
-			return new XPathDocument (new StringReader (res));
-		}
-
-		static LinkContext GetDefaultContext ()
-		{
-			LinkContext context = new LinkContext ();
+			LinkContext context = new LinkContext (pipeline);
 			context.CopyCoreLibraries = true;
-			context.OutputDirectory = ".";
+			context.OutputDirectory = "output";
 			return context;
 		}
 
@@ -177,7 +147,7 @@ namespace Mono.Linker {
 
 			Console.WriteLine ("   --about     About the {0}", _linker);
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
-			Console.WriteLine ("   -out        Specify the output directory, default to .");
+			Console.WriteLine ("   -out        Specify the output directory, default to `output'");
 			Console.WriteLine ("   -c          Copy the core libraries, true or false, default to true");
 			Console.WriteLine ("   -s          Skip the core libraries, true or false, default to false,");
 			Console.WriteLine ("               overrides -c settings");
@@ -209,6 +179,7 @@ namespace Mono.Linker {
 		static Pipeline GetStandardPipeline ()
 		{
 			Pipeline p = new Pipeline ();
+			p.AppendStep (new BlacklistStep ());
 			p.AppendStep (new MarkStep ());
 			p.AppendStep (new SweepStep ());
 			p.AppendStep (new CleanStep ());

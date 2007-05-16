@@ -45,6 +45,7 @@
     <Compile Include="Mono.Linker\AssemblyAction.cs" />
     <Compile Include="Mono.Linker\AssemblyMarker.cs" />
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
+    <Compile Include="Mono.Linker\BlacklistStep.cs" />
     <Compile Include="Mono.Linker\CleanStep.cs" />
     <Compile Include="Mono.Linker\ResolveFromAssemblyStep.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />
@@ -71,7 +72,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Descriptors\corlib.xml" />
+    <EmbeddedResource Include="Descriptors\corlib.xml">
+      <LogicalName>corlib.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Descriptors\system.web.xml">
+      <LogicalName>system.web.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Descriptors\system.xml">
+      <LogicalName>system.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

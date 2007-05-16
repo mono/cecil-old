@@ -26,9 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+using System;
+using Mono.Cecil;
 
-	using Mono.Cecil;
+namespace Mono.Linker {
 
 	public class ResolveFromAssemblyStep : ResolveStep {
 
@@ -43,6 +44,7 @@ namespace Mono.Linker {
 		{
 			AssemblyDefinition asm = AssemblyFactory.GetAssembly (_assembly);
 			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Copy, asm);
+			ProcessReferences (asm, context);
 			foreach (TypeDefinition type in asm.MainModule.Types) {
 				TypeMarker tm = marker.Mark (type);
 
@@ -53,6 +55,13 @@ namespace Mono.Linker {
 			}
 
 			context.AddMarker (marker);
+		}
+
+		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
+		{
+			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences) {
+				context.Resolve (name);
+			}
 		}
 
 		static void MarkMethod (TypeMarker marker, MethodDefinition method)

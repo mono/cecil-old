@@ -1,6 +1,7 @@
 ./Mono.Linker/AssemblyAction.cs
 ./Mono.Linker/AssemblyInfo.cs
 ./Mono.Linker/AssemblyMarker.cs
+./Mono.Linker/BlacklistStep.cs
 ./Mono.Linker/CleanStep.cs
 ./Mono.Linker/Driver.cs
 ./Mono.Linker/FieldMarker.cs

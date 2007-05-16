@@ -26,13 +26,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using SR = System.Reflection;
+using System.Text;
+using System.Xml.XPath;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using SR = System.Reflection;
-	using System.Text;
-	using System.Xml.XPath;
-
-	using Mono.Cecil;
 
 	public class ResolveFromXmlStep : ResolveStep {
 
@@ -81,7 +81,7 @@ namespace Mono.Linker {
 			}
 		}
 
-		void MarkEntireType (TypeMarker tm)
+		static void MarkEntireType (TypeMarker tm)
 		{
 			foreach (FieldDefinition field in tm.Type.Fields)
 				tm.Mark (field);
@@ -103,7 +103,7 @@ namespace Mono.Linker {
 			}
 		}
 
-		FieldDefinition GetField (TypeDefinition type, string signature)
+		static FieldDefinition GetField (TypeDefinition type, string signature)
 		{
 			foreach (FieldDefinition field in type.Fields)
 				if (signature == GetFieldSignature (field))
@@ -112,7 +112,7 @@ namespace Mono.Linker {
 			return null;
 		}
 
-		string GetFieldSignature (FieldDefinition field)
+		static string GetFieldSignature (FieldDefinition field)
 		{
 			return field.FieldType.FullName + " " + field.Name;
 		}
@@ -129,7 +129,7 @@ namespace Mono.Linker {
 			}
 		}
 
-		MethodDefinition GetMethod (TypeDefinition type, string signature)
+		static MethodDefinition GetMethod (TypeDefinition type, string signature)
 		{
 			foreach (MethodDefinition meth in type.Methods)
 				if (signature == GetMethodSignature (meth))
@@ -142,7 +142,7 @@ namespace Mono.Linker {
 			return null;
 		}
 
-		string GetMethodSignature (MethodDefinition meth)
+		static string GetMethodSignature (MethodDefinition meth)
 		{
 			StringBuilder sb = new StringBuilder ();
 			sb.Append (meth.ReturnType.ReturnType.FullName);
@@ -159,9 +159,21 @@ namespace Mono.Linker {
 			return sb.ToString ();
 		}
 
-		AssemblyMarker GetAssemblyMarker(LinkContext context, string assemblyName)
+		static AssemblyMarker GetAssemblyMarker (LinkContext context, string assemblyName)
 		{
-			return context.Resolve (AssemblyNameReference.Parse (assemblyName));
+			AssemblyNameReference reference = AssemblyNameReference.Parse (assemblyName);
+			if (IsSimpleName (assemblyName)) {
+				foreach (AssemblyMarker marker in context.GetAssemblies ()) {
+					if (marker.Assembly.Name.Name == assemblyName)
+						return marker;
+				}
+			}
+			return context.Resolve (reference);
+		}
+
+		static bool IsSimpleName (string assemblyName)
+		{
+			return assemblyName.IndexOf (",") == -1;
 		}
 
 		static string GetSignature(XPathNavigator nav)

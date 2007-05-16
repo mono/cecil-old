@@ -26,11 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.IO;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using System.IO;
-
-	using Mono.Cecil;
 
 	public class OutputStep : IStep {
 
