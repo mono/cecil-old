@@ -1,3 +1,14 @@
+2007-05-17  Jb Evain  <jb@nurv.fr>
+
+	* Tests/Mono.Linker.Tests/XmlLinkingTestFixture.cs
+	  Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
+	  Tests/TestCases/Linker/PreserveFieldsRequired
+	  Tests/TestCases/Linker/PreserveFieldsRequired/Library.cs
+	  Tests/TestCases/Linker/PreserveFieldsRequired/desc.xml
+	  Tests/TestCases/Linker/PreserveFieldsRequired/Makefile
+	  Tests/TestCases/Linker/PreserveFieldsRequired/Library.dll:
+		Add a new (failing for now) test case for preserve and required.
+
 2007-05-16  Jb Evain  <jb@nurv.fr>
 
 	* Tests/Mono.Linker.Tests/AbstractTestFixture.cs

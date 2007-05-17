@@ -26,13 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.IO;
+using Mono.Cecil;
+using NUnit.Framework;
+
 namespace Mono.Linker.Tests {
-
-	using System.IO;
-
-	using Mono.Cecil;
-
-	using NUnit.Framework;
 
 	[TestFixture]
 	public abstract class AbstractLinkingTestFixture : AbstractTestFixture {
@@ -103,12 +101,12 @@ namespace Mono.Linker.Tests {
 			}
 		}
 
-		void CompareAssemblies (AssemblyDefinition original, AssemblyDefinition linked)
+		static void CompareAssemblies (AssemblyDefinition original, AssemblyDefinition linked)
 		{
 			foreach (TypeDefinition originalType in original.MainModule.Types) {
 				TypeDefinition linkedType = linked.MainModule.Types [originalType.FullName];
 				if (NotLinked (originalType)) {
-					Assert.IsNull (linkedType);
+					Assert.IsNull (linkedType, string.Format ("Type `{0}' should not have been linked", originalType));
 					continue;
 				}
 
@@ -116,40 +114,40 @@ namespace Mono.Linker.Tests {
 			}
 		}
 
-		void CompareTypes (TypeDefinition type, TypeDefinition linkedType)
+		static void CompareTypes (TypeDefinition type, TypeDefinition linkedType)
 		{
 			foreach (FieldDefinition originalField in type.Fields) {
 				FieldDefinition linkedField = linkedType.Fields.GetField (originalField.Name);// TODO: also get with the type!
 				if (NotLinked (originalField)) {
-					Assert.IsNull (linkedField);
+					Assert.IsNull (linkedField, string.Format ("Field `{0}' should not have been linked", originalField));
 					continue;
 				}
 
-				Assert.IsNotNull (linkedField);
+				Assert.IsNotNull (linkedField, string.Format ("Field `{0}' should have been linked", linkedField));
 			}
 
 			foreach (MethodDefinition originalCtor in type.Constructors) {
 				MethodDefinition linkedCtor = linkedType.Constructors.GetConstructor (originalCtor.IsStatic, originalCtor.Parameters);
 				if (NotLinked (originalCtor)) {
-					Assert.IsNull (linkedCtor);
+					Assert.IsNull (linkedCtor, string.Format ("Constructor `{0}' should not have been linked", originalCtor));
 					continue;
 				}
 
-				Assert.IsNotNull (linkedCtor);
+				Assert.IsNotNull (linkedCtor, string.Format ("Constructor `{0}' should have been linked", linkedCtor));
 			}
 
 			foreach (MethodDefinition originalMethod in type.Methods) {
 				MethodDefinition linkedMethod = linkedType.Methods.GetMethod (originalMethod.Name, originalMethod.Parameters);
 				if (NotLinked (originalMethod)) {
-					Assert.IsNull (linkedMethod);
+					Assert.IsNull (linkedMethod, string.Format ("Method `{0}' should not have been linked", originalMethod));
 					continue;
 				}
 
-				Assert.IsNotNull (linkedMethod);
+				Assert.IsNotNull (linkedMethod, string.Format ("Method `{0}' should have been linked", linkedMethod));
 			}
 		}
 
-		bool NotLinked(ICustomAttributeProvider provider)
+		static bool NotLinked(ICustomAttributeProvider provider)
 		{
 			foreach (CustomAttribute ca in provider.CustomAttributes)
 				if (ca.Constructor.DeclaringType.Name == "NotLinkedAttribute")

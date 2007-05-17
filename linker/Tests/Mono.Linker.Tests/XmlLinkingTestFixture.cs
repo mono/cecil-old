@@ -66,6 +66,12 @@ namespace Mono.Linker.Tests {
 			Test ("NestedNested");
 		}
 
+		[Test]
+		public void TestPreserveFieldsRequired ()
+		{
+			Test ("PreserveFieldsRequired");
+		}
+
 		protected override void Test (string testCase)
 		{
 			base.Test (testCase);
