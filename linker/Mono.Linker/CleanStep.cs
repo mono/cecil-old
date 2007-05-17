@@ -119,7 +119,7 @@ namespace Mono.Linker {
 				prop.GetMethod = CheckMethod (type, prop.GetMethod);
 				prop.SetMethod = CheckMethod (type, prop.SetMethod);
 
-				if (IsPropertyUsed (prop))
+				if (!IsPropertyUsed (prop))
 					type.Properties.Remove (prop);
 			}
 		}
