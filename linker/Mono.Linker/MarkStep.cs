@@ -180,6 +180,42 @@ namespace Mono.Linker {
 					MarkMethod (meth);
 
 			am.Mark (td);
+
+			ApplyPreserveInfo (am, tm);
+		}
+
+		void ApplyPreserveInfo (AssemblyMarker am, TypeMarker tm)
+		{
+			if (!am.HasPreserveInfo (tm))
+				return;
+
+			TypePreserve preserve = am.GetPreserveInfo (tm);
+			switch (preserve) {
+			case TypePreserve.Fields:
+				MarkFields (tm);
+				break;
+			case TypePreserve.Methods:
+				MarkMethods (tm);
+				break;
+			}
+		}
+
+		void MarkFields (TypeMarker tm)
+		{
+			foreach (FieldDefinition field in tm.Type.Fields)
+				MarkField (field);
+		}
+
+		void MarkMethods(TypeMarker tm)
+		{
+			MarkMethodCollection (tm.Type.Methods);
+			MarkMethodCollection (tm.Type.Constructors);
+		}
+
+		void MarkMethodCollection (IEnumerable methods)
+		{
+			foreach (MethodDefinition method in methods)
+				MarkMethod (method);
 		}
 
 		void MarkMethod (MethodReference method)

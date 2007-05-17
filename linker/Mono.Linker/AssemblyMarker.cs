@@ -26,11 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Collections;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using System.Collections;
-
-	using Mono.Cecil;
 
 	public class AssemblyMarker : Marker {
 
@@ -38,6 +38,7 @@ namespace Mono.Linker {
 		AssemblyDefinition _assembly;
 
 		IDictionary _typeMarkers;
+		IDictionary _typePreserveInfos;
 
 		public AssemblyDefinition Assembly {
 			get { return _assembly;  }
@@ -54,6 +55,7 @@ namespace Mono.Linker {
 			_assembly = assembly;
 
 			_typeMarkers = new Hashtable ();
+			_typePreserveInfos = new Hashtable ();
 		}
 
 		public TypeMarker Mark (TypeDefinition type)
@@ -81,7 +83,7 @@ namespace Mono.Linker {
 			return GetField (type.Fields, field);
 		}
 
-		FieldDefinition GetField (ICollection collection, FieldReference reference)
+		static FieldDefinition GetField (ICollection collection, FieldReference reference)
 		{
 			foreach (FieldDefinition field in collection) {
 				if (field.Name != reference.Name)
@@ -146,7 +148,7 @@ namespace Mono.Linker {
 			return true;
 		}
 
-		static bool AreSame(TypeReference a, TypeReference b)
+		static bool AreSame (TypeReference a, TypeReference b)
 		{
 			while (a is TypeSpecification || b is TypeSpecification) {
 				if (a.GetType () != b.GetType ())
@@ -179,6 +181,21 @@ namespace Mono.Linker {
 		public override string ToString ()
 		{
 			return "Assembly(" + _assembly.Name.FullName + ")";
+		}
+
+		public void AddTypePreserveInfo (string fullname, TypePreserve preserve)
+		{
+			_typePreserveInfos.Add (fullname, preserve);
+		}
+
+		public bool HasPreserveInfo (TypeMarker marker)
+		{
+			return _typePreserveInfos.Contains (marker.Type.FullName);
+		}
+
+		public TypePreserve GetPreserveInfo (TypeMarker marker)
+		{
+			return (TypePreserve) _typePreserveInfos [marker.Type.FullName];
 		}
 	}
 }

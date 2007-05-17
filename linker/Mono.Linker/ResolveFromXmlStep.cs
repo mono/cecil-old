@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using SR = System.Reflection;
 using System.Text;
 using System.Xml.XPath;
@@ -36,9 +37,11 @@ namespace Mono.Linker {
 
 	public class ResolveFromXmlStep : ResolveStep {
 
-		const string _signature = "signature";
-		const string _fullname = "fullname";
-		const string _ns = "";
+		static readonly string _signature = "signature";
+		static readonly string _fullname = "fullname";
+		static readonly string _required = "required";
+		static readonly string _preserve = "preserve";
+		static readonly string _ns = "";
 
 		XPathDocument _document;
 
@@ -65,30 +68,92 @@ namespace Mono.Linker {
 		void ProcessTypes (AssemblyMarker am, XPathNodeIterator iterator)
 		{
 			while (iterator.MoveNext ()) {
-				TypeDefinition type = am.Assembly.MainModule.Types [GetFullName (iterator.Current)];
-				if (type != null) {
-					TypeMarker tm = am.Mark (type);
+				XPathNavigator nav = iterator.Current;
+				string fullname = GetFullName (nav);
+				TypeDefinition type = am.Assembly.MainModule.Types [fullname];
+				if (type == null)
+					continue;
 
-					XPathNodeIterator fieldsIterator = iterator.Current.SelectChildren ("field", _ns);
-					XPathNodeIterator methodsIterator = iterator.Current.SelectChildren ("method", _ns);
+				TypePreserve preserve = GetTypePreserve (nav);
 
-					if (fieldsIterator.Count != 0 || methodsIterator.Count != 0) {
-						ProcessFields (tm, fieldsIterator);
-						ProcessMethods (tm, methodsIterator);
+				if (!IsRequired (nav)) {
+					AddPreserveInfo (am, fullname, preserve);
+					continue;
+				}
+
+				TypeMarker tm = am.Mark (type);
+
+				switch (preserve) {
+				case TypePreserve.All:
+					MarkEntireType (tm);
+					break;
+				case TypePreserve.Fields:
+					MarkAllFields (tm);
+					break;
+				case TypePreserve.Methods:
+					MarkAllMethods (tm);
+					break;
+				case TypePreserve.Nothing:
+					if (nav.HasChildren) {
+						MarkSelectedFields (nav, tm);
+						MarkSelectedMethods (nav, tm);
 					} else
 						MarkEntireType (tm);
+					break;
 				}
+			}
+		}
+
+		static void AddPreserveInfo (AssemblyMarker assembly, string fullname, TypePreserve preserve)
+		{
+			assembly.AddTypePreserveInfo (fullname, preserve);
+		}
+
+		void MarkSelectedFields (XPathNavigator nav, TypeMarker tm)
+		{
+			XPathNodeIterator fields = nav.SelectChildren ("field", _ns);
+			if (fields.Count == 0)
+				return;
+
+			ProcessFields (tm, fields);
+		}
+
+		void MarkSelectedMethods (XPathNavigator nav, TypeMarker tm)
+		{
+			XPathNodeIterator methods = nav.SelectChildren ("method", _ns);
+			if (methods.Count == 0)
+				return;
+
+			ProcessMethods (tm, methods);
+		}
+
+		static TypePreserve GetTypePreserve (XPathNavigator nav)
+		{
+			try {
+				return (TypePreserve) Enum.Parse (typeof (TypePreserve), GetAttribute (nav, _preserve), true);
+			} catch {
+				return TypePreserve.Nothing;
 			}
 		}
 
 		static void MarkEntireType (TypeMarker tm)
 		{
-			foreach (FieldDefinition field in tm.Type.Fields)
-				tm.Mark (field);
+			MarkAllFields (tm);
+			MarkAllMethods (tm);
+		}
+
+		static void MarkAllMethods (TypeMarker tm)
+		{
 			foreach (MethodDefinition meth in tm.Type.Methods)
 				tm.Mark (meth);
 			foreach (MethodDefinition ctor in tm.Type.Constructors)
 				tm.Mark(ctor);
+		}
+
+		static void MarkAllFields (TypeMarker tm)
+		{
+			foreach (FieldDefinition field in tm.Type.Fields)
+				tm.Mark (field);
 		}
 
 		void ProcessFields (TypeMarker tm, XPathNodeIterator iterator)
@@ -168,7 +233,16 @@ namespace Mono.Linker {
 						return marker;
 				}
 			}
-			return context.Resolve (reference);
+			AssemblyMarker res = context.Resolve (reference);
+			ProcessReferences (res.Assembly, context);
+			return res;
+		}
+
+		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
+		{
+			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences) {
+				context.Resolve (name);
+			}
 		}
 
 		static bool IsSimpleName (string assemblyName)
@@ -176,14 +250,37 @@ namespace Mono.Linker {
 			return assemblyName.IndexOf (",") == -1;
 		}
 
-		static string GetSignature(XPathNavigator nav)
+		static bool IsRequired (XPathNavigator nav)
 		{
-			return nav.GetAttribute (_signature, _ns);
+			string attribute = GetAttribute (nav, _required);
+			if (attribute == null || attribute.Length == 0)
+				return true;
+
+			return TryParseBool (attribute);
+		}
+
+		static bool TryParseBool (string s)
+		{
+			try {
+				return bool.Parse (s);
+			} catch {
+				return false;
+			}
+		}
+
+		static string GetSignature (XPathNavigator nav)
+		{
+			return GetAttribute (nav, _signature);
 		}
 
 		static string GetFullName (XPathNavigator nav)
 		{
-			return nav.GetAttribute (_fullname, _ns);
+			return GetAttribute (nav, _fullname);
+		}
+
+		static string GetAttribute (XPathNavigator nav, string attribute)
+		{
+			return nav.GetAttribute (attribute, _ns);
 		}
 	}
 }

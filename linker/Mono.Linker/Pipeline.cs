@@ -75,10 +75,22 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
+			while (_steps.Count > 0) {
+				IStep step = (IStep) _steps [0];
+				step.Process (context);
+				_steps.Remove (step);
+			}
+		}
+
+		public IStep GetStep (Type type)
+		{
 			for (int i = 0; i < _steps.Count; i++) {
 				IStep step = (IStep) _steps [i];
-				step.Process (context);
+				if (type.IsAssignableFrom (step.GetType ()))
+					return step;
 			}
+
+			return null;
 		}
 	}
 }

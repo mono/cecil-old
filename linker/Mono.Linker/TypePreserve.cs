@@ -1,10 +1,10 @@
 //
-// Marker.cs
+// TypePreserve.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jb@nurv.fr)
 //
-// (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,18 +28,10 @@
 
 namespace Mono.Linker {
 
-	public abstract class Marker {
-
-		bool _processed;
-
-		internal Marker ()
-		{
-		}
-
-		public bool Processed
-		{
-			get { return _processed; }
-			set { _processed = value; }
-		}
+	public enum TypePreserve {
+		Nothing,
+		All,
+		Fields,
+		Methods,
 	}
 }

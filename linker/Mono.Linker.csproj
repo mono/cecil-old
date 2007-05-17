@@ -65,6 +65,7 @@
     <Compile Include="Mono.Linker\ResolveStep.cs" />
     <Compile Include="Mono.Linker\SweepStep.cs" />
     <Compile Include="Mono.Linker\TypeMarker.cs" />
+    <Compile Include="Mono.Linker\TypePreserve.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib\Mono.Cecil.csproj">

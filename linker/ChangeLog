@@ -1,5 +1,16 @@
 2007-05-17  Jb Evain  <jb@nurv.fr>
 
+	* Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
+	  Tests/Mono.Linker.Tests/AbstractTestFixture.cs
+	  Mono.Linker.csproj
+	  Mono.Linker/ResolveFromXmlStep.cs
+	  Mono.Linker/AssemblyMarker.cs
+	  Mono.Linker/Marker.cs
+	  Mono.Linker/MarkStep.cs
+	  Mono.Linker/TypePreserve.cs
+	  Mono.Linker/Pipeline.cs:
+		Deal with preserve and required infos, make last test pass.
+
 	* Tests/Mono.Linker.Tests/XmlLinkingTestFixture.cs
 	  Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
 	  Tests/TestCases/Linker/PreserveFieldsRequired
