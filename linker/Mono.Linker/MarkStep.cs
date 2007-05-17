@@ -273,6 +273,9 @@ namespace Mono.Linker {
 				MarkCustomAttributes (pd);
 			}
 
+			foreach (MethodReference ov in md.Overrides)
+				MarkMethod (ov);
+
 			MarkType (md.ReturnType.ReturnType);
 			MarkCustomAttributes (md.ReturnType);
 
