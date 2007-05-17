@@ -88,34 +88,45 @@ namespace Mono.Linker {
 					type.NestedTypes.Remove (nested);
 		}
 
+		static MethodDefinition CheckMethod (TypeDefinition type, MethodDefinition method)
+		{
+			if (method == null)
+				return null;
+
+			return type.Methods.Contains (method) ? method : null;
+		}
+
 		static void CleanEvents (TypeDefinition type)
 		{
-			ArrayList events = new ArrayList (type.Events);
-			foreach (EventDefinition evt in events) {
-				if (evt.AddMethod != null && !type.Methods.Contains (evt.AddMethod))
-					evt.AddMethod = null;
-				if (evt.InvokeMethod != null && !type.Methods.Contains (evt.InvokeMethod))
-					evt.InvokeMethod = null;
-				if (evt.RemoveMethod != null && !type.Methods.Contains (evt.RemoveMethod))
-					evt.RemoveMethod = null;
+			foreach (EventDefinition evt in new ArrayList (type.Events)) {
+				evt.AddMethod = CheckMethod (type, evt.AddMethod);
+				evt.InvokeMethod = CheckMethod (type, evt.InvokeMethod);
+				evt.RemoveMethod = CheckMethod (type, evt.RemoveMethod);
 
-				if (evt.AddMethod == null && evt.InvokeMethod == null && evt.RemoveMethod == null)
+				if (!IsEventUsed (evt))
 					type.Events.Remove (evt);
 			}
 		}
 
+		static bool IsEventUsed (EventDefinition evt)
+		{
+			return evt.AddMethod != null || evt.InvokeMethod != null || evt.RemoveMethod != null;
+		}
+
 		static void CleanProperties (TypeDefinition type)
 		{
-			ArrayList properties = new ArrayList (type.Properties);
-			foreach (PropertyDefinition prop in properties) {
-				if (prop.GetMethod != null && !type.Methods.Contains (prop.GetMethod))
-					prop.GetMethod = null;
-				if (prop.SetMethod != null && !type.Methods.Contains (prop.SetMethod))
-					prop.SetMethod = null;
+			foreach (PropertyDefinition prop in new ArrayList (type.Properties)) {
+				prop.GetMethod = CheckMethod (type, prop.GetMethod);
+				prop.SetMethod = CheckMethod (type, prop.SetMethod);
 
-				if (prop.GetMethod == null && prop.SetMethod == null)
+				if (IsPropertyUsed (prop))
 					type.Properties.Remove (prop);
 			}
+		}
+
+		static bool IsPropertyUsed (PropertyDefinition prop)
+		{
+			return prop.GetMethod != null || prop.SetMethod != null;
 		}
 	}
 }

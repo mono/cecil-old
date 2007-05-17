@@ -26,11 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Collections;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using System.Collections;
-
-	using Mono.Cecil;
 
 	public class TypeMarker : Marker {
 
@@ -53,7 +53,7 @@ namespace Mono.Linker {
 			_methods = new Hashtable ();
 		}
 
-		string Sig (MemberReference member)
+		static string Sig (MemberReference member)
 		{
 			return member.ToString ();
 		}
@@ -87,14 +87,14 @@ namespace Mono.Linker {
 
 		public FieldMarker [] GetFields ()
 		{
-			FieldMarker [] markers = new FieldMarker[_fields.Count];
+			FieldMarker [] markers = new FieldMarker [_fields.Count];
 			_fields.Values.CopyTo (markers, 0);
 			return markers;
 		}
 
 		public MethodMarker [] GetMethods ()
 		{
-			MethodMarker [] markers = new MethodMarker[_methods.Count];
+			MethodMarker [] markers = new MethodMarker [_methods.Count];
 			_methods.Values.CopyTo (markers, 0);
 			return markers;
 		}

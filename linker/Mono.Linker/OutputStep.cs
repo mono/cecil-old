@@ -36,18 +36,25 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
-			if (!Directory.Exists(context.OutputDirectory))
-				Directory.CreateDirectory (context.OutputDirectory);
+			CheckOutputDirectory (context);
 
 			foreach (AssemblyMarker am in context.GetAssemblies())
 				OutputAssembly (am, context.OutputDirectory);
+		}
+
+		static void CheckOutputDirectory (LinkContext context)
+		{
+			if (Directory.Exists (context.OutputDirectory))
+				return;
+
+			Directory.CreateDirectory (context.OutputDirectory);
 		}
 
 		static void OutputAssembly (AssemblyMarker am, string directory)
 		{
 			switch (am.Action) {
 			case AssemblyAction.Link:
-				AssemblyFactory.SaveAssembly (am.Assembly, GetAssemblyFile (am.Assembly, directory));
+				AssemblyFactory.SaveAssembly (am.Assembly, GetAssemblyFileName (am.Assembly, directory));
 				break;
 			case AssemblyAction.Copy:
 				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
@@ -60,7 +67,7 @@ namespace Mono.Linker {
 			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
 		}
 
-		static string GetAssemblyFile (AssemblyDefinition assembly, string directory)
+		static string GetAssemblyFileName (AssemblyDefinition assembly, string directory)
 		{
 			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
 			return Path.Combine (directory, file);

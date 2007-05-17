@@ -46,9 +46,14 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
+			if (context.CoreAction != AssemblyAction.Link)
+				return;
+
 			foreach (DictionaryEntry entry in blacklists) {
-				if (IsReferenced ((string) entry.Key, context))
-					context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep ((string) entry.Value));
+				if (!IsReferenced ((string) entry.Key, context))
+					continue;
+
+				context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep ((string) entry.Value));
 			}
 		}
 

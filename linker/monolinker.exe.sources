@@ -7,7 +7,6 @@
 ./Mono.Linker/FieldMarker.cs
 ./Mono.Linker/IStep.cs
 ./Mono.Linker/LinkContext.cs
-./Mono.Linker/LinkException.cs
 ./Mono.Linker/MarkStep.cs
 ./Mono.Linker/Marker.cs
 ./Mono.Linker/MethodAction.cs

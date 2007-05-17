@@ -26,9 +26,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+using Mono.Cecil;
 
-	using Mono.Cecil;
+namespace Mono.Linker {
 
 	public class MethodMarker : Marker {
 

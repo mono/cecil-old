@@ -26,10 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+using System;
+using System.Collections;
 
-	using System;
-	using System.Collections;
+namespace Mono.Linker {
 
 	public class Pipeline {
 
@@ -84,11 +84,9 @@ namespace Mono.Linker {
 
 		public IStep GetStep (Type type)
 		{
-			for (int i = 0; i < _steps.Count; i++) {
-				IStep step = (IStep) _steps [i];
+			foreach (IStep step in _steps)
 				if (type.IsAssignableFrom (step.GetType ()))
 					return step;
-			}
 
 			return null;
 		}

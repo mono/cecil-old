@@ -52,7 +52,6 @@
     <Compile Include="Mono.Linker\FieldMarker.cs" />
     <Compile Include="Mono.Linker\IStep.cs" />
     <Compile Include="Mono.Linker\LinkContext.cs" />
-    <Compile Include="Mono.Linker\LinkException.cs" />
     <Compile Include="Mono.Linker\MarkStep.cs" />
     <Compile Include="Mono.Linker\Marker.cs" />
     <Compile Include="Mono.Linker\MethodAction.cs" />

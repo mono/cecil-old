@@ -26,12 +26,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
+using System.Collections;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace Mono.Linker {
-
-	using System.Collections;
-
-	using Mono.Cecil;
-	using Mono.Cecil.Cil;
 
 	public class MarkStep : IStep {
 
@@ -62,7 +62,7 @@ namespace Mono.Linker {
 		void Process ()
 		{
 			if (_queue.Count == 0)
-				throw new LinkException ("No entry methods");
+				throw new InvalidOperationException ("No entry methods");
 
 			while (_queue.Count > 0) {
 				MethodMarker method = (MethodMarker) _queue.Dequeue ();
@@ -93,8 +93,8 @@ namespace Mono.Linker {
 		{
 			if (am.Processed)
 				return;
-			else
-				am.Processed = true;
+
+			am.Processed = true;
 
 			MarkCustomAttributes (am.Assembly);
 
@@ -124,8 +124,8 @@ namespace Mono.Linker {
 			FieldMarker fm = tm.Mark (fd);
 			if (fm.Processed)
 				return;
-			else
-				fm.Processed = true;
+
+			fm.Processed = true;
 
 			MarkType (fd.DeclaringType);
 			MarkType (fd.FieldType);
@@ -155,8 +155,8 @@ namespace Mono.Linker {
 			TypeMarker tm = am.Mark (td);
 			if (tm.Processed)
 				return;
-			else
-				tm.Processed = true;
+
+			tm.Processed = true;
 
 			MarkType (td.BaseType);
 			if (td.DeclaringType != null)
@@ -254,8 +254,8 @@ namespace Mono.Linker {
 
 			if (mm.Processed)
 				return;
-			else
-				mm.Processed = true;
+
+			mm.Processed = true;
 
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
@@ -276,11 +276,14 @@ namespace Mono.Linker {
 			MarkType (md.ReturnType.ReturnType);
 			MarkCustomAttributes (md.ReturnType);
 
-			if (md.HasBody && (mm.Action == MethodAction.ForceParse ||
-				(am.Action == AssemblyAction.Link && mm.Action == MethodAction.Parse))) {
-
+			if (md.HasBody && ShouldParseMethodBody (am, mm))
 				MarkMethodBody (md.Body);
-			}
+		}
+
+		static bool ShouldParseMethodBody (AssemblyMarker am, MethodMarker mm)
+		{
+			return (mm.Action == MethodAction.ForceParse ||
+			        (am.Action == AssemblyAction.Link && mm.Action == MethodAction.Parse));
 		}
 
 		static bool IsPropertyMethod (MethodDefinition md)
@@ -324,12 +327,17 @@ namespace Mono.Linker {
 		void MarkEvent (EventDefinition evt)
 		{
 			MarkCustomAttributes (evt);
-			if (evt.AddMethod != null)
-				MarkMethod (evt.AddMethod);
-			if (evt.InvokeMethod != null)
-				MarkMethod (evt.InvokeMethod);
-			if (evt.RemoveMethod != null)
-				MarkMethod (evt.RemoveMethod);
+			MarkMethodIfNotNull (evt.AddMethod);
+			MarkMethodIfNotNull (evt.InvokeMethod);
+			MarkMethodIfNotNull (evt.RemoveMethod);
+		}
+
+		void MarkMethodIfNotNull (MethodReference method)
+		{
+			if (method == null)
+				return;
+
+			MarkMethod (method);
 		}
 
 		void MarkInstruction (Instruction instruction)

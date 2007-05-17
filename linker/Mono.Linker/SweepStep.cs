@@ -26,11 +26,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Collections;
+
+using Mono.Cecil;
+
 namespace Mono.Linker {
-
-	using System.Collections;
-
-	using Mono.Cecil;
 
 	public class SweepStep : IStep {
 

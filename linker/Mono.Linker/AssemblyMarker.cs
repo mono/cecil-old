@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections;
 
 using Mono.Cecil;
@@ -61,7 +62,7 @@ namespace Mono.Linker {
 		public TypeMarker Mark (TypeDefinition type)
 		{
 			if (type.Module != _assembly.MainModule)
-				throw new LinkException ("Could not get a marker for a different assembly");
+				throw new ArgumentException ("Could not get a marker for a different assembly");
 
 			TypeMarker marker = (TypeMarker) _typeMarkers [type.FullName];
 			if (marker == null) {
