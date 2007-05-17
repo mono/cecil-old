@@ -106,7 +106,7 @@ namespace Mono.Cecil {
 
 		static bool IsZero (Version version)
 		{
-			return version.Major == 0 && version.Minor == 0 && version.MajorRevision == 0 && version.Minor == 0;
+			return version.Major == 0 && version.Minor == 0 && version.Build == 0 && version.Revision == 0;
 		}
 
 		public static bool OnMono ()
