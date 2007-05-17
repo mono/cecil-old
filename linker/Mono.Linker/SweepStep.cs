@@ -42,7 +42,7 @@ namespace Mono.Linker {
 
 		static void SweepAssembly (AssemblyMarker am, LinkContext context)
 		{
-			if (am.Action == AssemblyAction.Skip)
+			if (am.Action != AssemblyAction.Link)
 				return;
 
 			Hashtable typesUsed = new Hashtable ();

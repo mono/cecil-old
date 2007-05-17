@@ -1,5 +1,10 @@
 2007-05-17  Jb Evain  <jb@nurv.fr>
 
+	* Mono.Linker/CleanStep.cs
+	  Mono.Linker/SweepStep.cs
+	  Mono.Linker/MarkStep.cs:
+		Link only when necessary.
+
 	* Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
 	  Tests/Mono.Linker.Tests/AbstractTestFixture.cs
 	  Mono.Linker.csproj

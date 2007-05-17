@@ -113,6 +113,9 @@ namespace Mono.Linker {
 		{
 			AssemblyMarker am = _context.Resolve (field.DeclaringType.Scope);
 			MarkAssembly (am);
+			if (am.Action != AssemblyAction.Link)
+				return;
+
 			FieldDefinition fd = field as FieldDefinition;
 			if (fd == null)
 				fd = am.Resolve (field);
@@ -142,6 +145,9 @@ namespace Mono.Linker {
 
 			AssemblyMarker am = _context.Resolve (type.Scope);
 			MarkAssembly (am);
+			if (am.Action != AssemblyAction.Link)
+				return;
+
 			TypeDefinition td = type as TypeDefinition;
 			if (td == null)
 				td = am.Resolve (type);
@@ -228,6 +234,9 @@ namespace Mono.Linker {
 
 			AssemblyMarker am = _context.Resolve (method.DeclaringType.Scope);
 			MarkAssembly (am);
+			if (am.Action != AssemblyAction.Link)
+				return;
+
 			MethodDefinition md = method as MethodDefinition;
 			if (md == null)
 				md = am.Resolve (method);
