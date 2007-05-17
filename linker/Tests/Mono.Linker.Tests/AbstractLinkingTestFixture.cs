@@ -123,7 +123,7 @@ namespace Mono.Linker.Tests {
 					continue;
 				}
 
-				Assert.IsNotNull (linkedField, string.Format ("Field `{0}' should have been linked", linkedField));
+				Assert.IsNotNull (linkedField, string.Format ("Field `{0}' should have been linked", originalField));
 			}
 
 			foreach (MethodDefinition originalCtor in type.Constructors) {
@@ -133,7 +133,7 @@ namespace Mono.Linker.Tests {
 					continue;
 				}
 
-				Assert.IsNotNull (linkedCtor, string.Format ("Constructor `{0}' should have been linked", linkedCtor));
+				Assert.IsNotNull (linkedCtor, string.Format ("Constructor `{0}' should have been linked", originalCtor));
 			}
 
 			foreach (MethodDefinition originalMethod in type.Methods) {
@@ -143,7 +143,7 @@ namespace Mono.Linker.Tests {
 					continue;
 				}
 
-				Assert.IsNotNull (linkedMethod, string.Format ("Method `{0}' should have been linked", linkedMethod));
+				Assert.IsNotNull (linkedMethod, string.Format ("Method `{0}' should have been linked", originalMethod));
 			}
 		}
 
