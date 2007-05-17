@@ -36,7 +36,7 @@ namespace Mono.Linker {
 
 		Pipeline _pipeline;
 		Hashtable _asmCtx;
-		CoreAction _action;
+		AssemblyAction _coreAction;
 		string _outputDirectory;
 
 		IAssemblyResolver _resolver;
@@ -50,9 +50,9 @@ namespace Mono.Linker {
 			set { _outputDirectory = value; }
 		}
 
-		public CoreAction Action {
-			get { return _action; }
-			set { _action = value; }
+		public AssemblyAction CoreAction {
+			get { return _coreAction; }
+			set { _coreAction = value; }
 		}
 
 		public bool OnMono {
@@ -83,12 +83,8 @@ namespace Mono.Linker {
 				return (AssemblyMarker) _asmCtx [reference.FullName];
 
 			AssemblyAction action = AssemblyAction.Link;
-			if (IsCore (reference)) {
-				if (_action == CoreAction.Copy)
-					action = AssemblyAction.Copy;
-				else if (_action == CoreAction.Skip)
-					action = AssemblyAction.Skip;
-			}
+			if (IsCore (reference))
+				action = _coreAction;
 
 			AssemblyDefinition assembly = _resolver.Resolve (reference);
 

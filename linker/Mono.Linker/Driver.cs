@@ -91,7 +91,7 @@ namespace Mono.Linker {
 					context.OutputDirectory = GetParam (q);
 					break;
 				case 'c':
-					context.Action = ParseCoreAction (GetParam (q));
+					context.CoreAction = ParseCoreAction (GetParam (q));
 					break;
 				case 'x':
 					if (resolver)
@@ -121,9 +121,9 @@ namespace Mono.Linker {
 			p.Process (context);
 		}
 
-		static CoreAction ParseCoreAction (string s)
+		static AssemblyAction ParseCoreAction (string s)
 		{
-			return (CoreAction) Enum.Parse (typeof (CoreAction), s, true);
+			return (AssemblyAction) Enum.Parse (typeof (AssemblyAction), s, true);
 		}
 
 		static string GetParam (Queue q)
@@ -134,7 +134,7 @@ namespace Mono.Linker {
 		static LinkContext GetDefaultContext (Pipeline pipeline)
 		{
 			LinkContext context = new LinkContext (pipeline);
-			context.Action = CoreAction.Skip;
+			context.CoreAction = AssemblyAction.Skip;
 			context.OutputDirectory = "output";
 			return context;
 		}
