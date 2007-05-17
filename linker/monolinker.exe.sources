@@ -21,3 +21,4 @@
 ./Mono.Linker/ResolveStep.cs
 ./Mono.Linker/SweepStep.cs
 ./Mono.Linker/TypeMarker.cs
+./Mono.Linker/TypePreserve.cs
