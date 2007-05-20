@@ -53,10 +53,17 @@ namespace Mono.Linker {
 
 		void InitializeQueue ()
 		{
-			foreach (AssemblyMarker ac in _context.GetAssemblies ())
-				foreach (TypeMarker type in ac.GetTypes ())
+			foreach (AssemblyMarker ac in _context.GetAssemblies()) {
+				foreach (TypeMarker type in ac.GetTypes ()) {
+					MarkType (type.Type);
+
+					foreach (FieldMarker field in type.GetFields ())
+						MarkField (field.Field);
+
 					foreach (MethodMarker meth in type.GetMethods ())
 						_queue.Enqueue (meth);
+				}
+			}
 		}
 
 		void Process ()
@@ -195,8 +202,11 @@ namespace Mono.Linker {
 			if (!am.HasPreserveInfo (tm))
 				return;
 
-			TypePreserve preserve = am.GetPreserveInfo (tm);
-			switch (preserve) {
+			switch (am.GetPreserveInfo (tm)) {
+			case TypePreserve.All:
+				MarkFields (tm);
+				MarkMethods (tm);
+				break;
 			case TypePreserve.Fields:
 				MarkFields (tm);
 				break;

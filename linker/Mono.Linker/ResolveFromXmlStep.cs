@@ -77,36 +77,25 @@ namespace Mono.Linker {
 				TypePreserve preserve = GetTypePreserve (nav);
 
 				if (!IsRequired (nav)) {
-					AddPreserveInfo (am, fullname, preserve);
+					am.AddTypePreserveInfo (fullname, preserve);
 					continue;
 				}
 
 				TypeMarker tm = am.Mark (type);
 
 				switch (preserve) {
-				case TypePreserve.All:
-					MarkEntireType (tm);
-					break;
-				case TypePreserve.Fields:
-					MarkAllFields (tm);
-					break;
-				case TypePreserve.Methods:
-					MarkAllMethods (tm);
-					break;
 				case TypePreserve.Nothing:
 					if (nav.HasChildren) {
 						MarkSelectedFields (nav, tm);
 						MarkSelectedMethods (nav, tm);
 					} else
-						MarkEntireType (tm);
+						am.AddTypePreserveInfo (tm, TypePreserve.All);
+					break;
+				default:
+					am.AddTypePreserveInfo (tm, preserve);
 					break;
 				}
 			}
-		}
-
-		static void AddPreserveInfo (AssemblyMarker assembly, string fullname, TypePreserve preserve)
-		{
-			assembly.AddTypePreserveInfo (fullname, preserve);
 		}
 
 		void MarkSelectedFields (XPathNavigator nav, TypeMarker tm)
@@ -134,26 +123,6 @@ namespace Mono.Linker {
 			} catch {
 				return TypePreserve.Nothing;
 			}
-		}
-
-		static void MarkEntireType (TypeMarker tm)
-		{
-			MarkAllFields (tm);
-			MarkAllMethods (tm);
-		}
-
-		static void MarkAllMethods (TypeMarker tm)
-		{
-			foreach (MethodDefinition meth in tm.Type.Methods)
-				tm.Mark (meth);
-			foreach (MethodDefinition ctor in tm.Type.Constructors)
-				tm.Mark(ctor);
-		}
-
-		static void MarkAllFields (TypeMarker tm)
-		{
-			foreach (FieldDefinition field in tm.Type.Fields)
-				tm.Mark (field);
 		}
 
 		void ProcessFields (TypeMarker tm, XPathNodeIterator iterator)

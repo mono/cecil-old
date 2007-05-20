@@ -1,3 +1,11 @@
+2007-05-19  Jb Evain  <jb@nurv.fr>
+
+	* Mono.Linker/ResolveFromXmlStep.cs
+	  Mono.Linker/AssemblyMarker.cs
+	  Mono.Linker/MarkStep.cs
+	  Mono.Linker/ResolveFromAssemblyStep.cs:
+		Process correctly the marker selected in the resolve phases.
+
 2007-05-17  Jb Evain  <jb@nurv.fr>
 
 	* Mono.Linker/CleanStep.cs

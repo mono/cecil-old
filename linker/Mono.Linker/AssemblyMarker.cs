@@ -186,7 +186,17 @@ namespace Mono.Linker {
 
 		public void AddTypePreserveInfo (string fullname, TypePreserve preserve)
 		{
+			if (_typePreserveInfos.Contains (fullname)) {
+				_typePreserveInfos [fullname] = preserve;
+				return;
+			}
+
 			_typePreserveInfos.Add (fullname, preserve);
+		}
+
+		public void AddTypePreserveInfo (TypeMarker tm, TypePreserve preserve)
+		{
+			AddTypePreserveInfo (tm.Type.FullName, preserve);
 		}
 
 		public bool HasPreserveInfo (TypeMarker marker)
