@@ -86,7 +86,6 @@
 		<type fullname="System.NullReferenceException" />
 		<type fullname="System.Nullable`1" />
 		<type fullname="System.Object" />
-		<type fullname="System.Object" />
 		<type fullname="System.OutOfMemoryException" />
 		<type fullname="System.Reflection.Assembly" />
 		<type fullname="System.Reflection.AssemblyName" />
