@@ -201,7 +201,7 @@ namespace Mono.Cecil {
 				return GetMemberRefToken (((MethodSpecification) member).ElementMethod);
 			if (member is IMemberDefinition)
 				return member.MetadataToken;
-			if (m_memberRefCache.Contains(member))
+			if (m_memberRefCache.Contains (member))
 				return member.MetadataToken;
 
 			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
@@ -639,7 +639,7 @@ namespace Mono.Cecil {
 				else if (customAttrs.Container is ModuleDefinition)
 					parent = new MetadataToken (TokenType.Module, 1);
 				else if (customAttrs.Container is IMetadataTokenProvider)
-					parent = (customAttrs.Container as IMetadataTokenProvider).MetadataToken;
+					parent = ((IMetadataTokenProvider) customAttrs.Container).MetadataToken;
 				else
 					throw new ReflectionException ("Unknown Custom Attribute parent");
 
@@ -922,6 +922,9 @@ namespace Mono.Cecil {
 			IConvertible ic = value as IConvertible;
 			IFormatProvider fp = CultureInfo.CurrentCulture.NumberFormat;
 
+			if (ic == null)
+				throw new ArgumentException ("Non valid element for a constant");
+
 			switch (et) {
 			case ElementType.Boolean :
 				m_constWriter.Write ((byte) (ic.ToBoolean (fp) ? 1 : 0));
@@ -966,7 +969,7 @@ namespace Mono.Cecil {
 				m_constWriter.Write (new byte [4]);
 				break;
 			default :
-				throw new ReflectionException ("Non valid element for a constant");
+				throw new ArgumentException ("Non valid element for a constant");
 			}
 
 			return m_constWriter.ToArray ();
