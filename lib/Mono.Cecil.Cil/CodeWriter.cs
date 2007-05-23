@@ -166,20 +166,13 @@ namespace Mono.Cecil.Cil {
 							m_reflectWriter.MetadataWriter.AddUserString (instr.Operand as string)));
 					break;
 				case OperandType.InlineField :
-					if (instr.Operand is FieldReference)
-						WriteToken ((instr.Operand as FieldReference).MetadataToken);
-					else
-						throw new ReflectionException ("Wrong operand for InlineField: {0}",
-							instr.Operand.GetType ().FullName);
+					WriteToken (m_reflectWriter.GetMemberRefToken ((FieldReference) instr.Operand));
 					break;
 				case OperandType.InlineMethod :
 					if (instr.Operand is GenericInstanceMethod)
 						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
-					else if (instr.Operand is MethodReference)
-						WriteToken ((instr.Operand as MethodReference).MetadataToken);
 					else
-						throw new ReflectionException ("Wrong operand for InlineMethod: {0}",
-							instr.Operand.GetType ().FullName);
+						WriteToken (m_reflectWriter.GetMemberRefToken ((MethodReference) instr.Operand));
 					break;
 				case OperandType.InlineType :
 					if (instr.Operand is TypeReference)
@@ -196,6 +189,8 @@ namespace Mono.Cecil.Cil {
 								instr.Operand as TypeReference));
 					else if (instr.Operand is GenericInstanceMethod)
 						WriteToken (m_reflectWriter.GetMethodSpecToken (instr.Operand as GenericInstanceMethod));
+					else if ((instr.Operand is FieldReference) || (instr.Operand is MethodReference))
+						WriteToken (m_reflectWriter.GetMemberRefToken ((MemberReference) instr.Operand));
 					else if (instr.Operand is IMetadataTokenProvider)
 						WriteToken ((instr.Operand as IMetadataTokenProvider).MetadataToken);
 					else
