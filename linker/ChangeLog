@@ -1,3 +1,9 @@
+2007-05-23  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Limker/CleanStep.cs:
+		Stop doing hackish stupid things because
+		Cecil suddenly handles MemberRef much better.
+
 2007-05-19  Jb Evain  <jb@nurv.fr>
 
 	* Mono.Linker/ResolveFromXmlStep.cs
