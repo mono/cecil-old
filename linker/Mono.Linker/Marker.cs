@@ -30,6 +30,8 @@ namespace Mono.Linker {
 
 	public abstract class Marker {
 
+		public static readonly object MarkerKey = new object ();
+
 		bool _processed;
 
 		internal Marker ()

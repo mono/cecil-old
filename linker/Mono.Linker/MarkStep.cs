@@ -137,6 +137,8 @@ namespace Mono.Linker {
 			MarkType (fd.DeclaringType);
 			MarkType (fd.FieldType);
 			MarkCustomAttributes (fd);
+
+			AnnotateMarker (fd, fm);
 		}
 
 		void MarkType (TypeReference type)
@@ -195,6 +197,13 @@ namespace Mono.Linker {
 			am.Mark (td);
 
 			ApplyPreserveInfo (am, tm);
+
+			AnnotateMarker (td, tm);
+		}
+
+		static void AnnotateMarker (IAnnotationProvider provider, Marker marker)
+		{
+			provider.Annotations [Marker.MarkerKey] = marker;
 		}
 
 		void ApplyPreserveInfo (AssemblyMarker am, TypeMarker tm)
@@ -291,6 +300,8 @@ namespace Mono.Linker {
 
 			if (md.HasBody && ShouldParseMethodBody (am, mm))
 				MarkMethodBody (md.Body);
+
+			AnnotateMarker (md, mm);
 		}
 
 		static bool ShouldParseMethodBody (AssemblyMarker am, MethodMarker mm)

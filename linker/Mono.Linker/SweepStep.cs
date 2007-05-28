@@ -45,26 +45,33 @@ namespace Mono.Linker {
 			if (am.Action != AssemblyAction.Link)
 				return;
 
-			Hashtable typesUsed = new Hashtable ();
-			foreach (TypeMarker tm in am.GetTypes ()) {
+			foreach (TypeMarker tm in am.GetTypes ())
 				SweepType (tm);
-				typesUsed.Add (tm.Type.ToString (), tm.Type);
-			}
 
-			foreach (TypeDefinition type in new ArrayList (am.Assembly.MainModule.Types)) {
-				if (typesUsed.Contains (type.ToString ()))
+			foreach (TypeDefinition type in Clone (am.Assembly.MainModule.Types)) {
+				if (IsMarked (type))
 					continue;
 
 				am.Assembly.MainModule.Types.Remove (type);
-				foreach (AssemblyMarker marker in context.GetAssemblies ()) {
-					ModuleDefinition module = marker.Assembly.MainModule;
-					if (!module.TypeReferences.Contains (type))
-						continue;
+				SweepTypeReferences (am, type, context);
+			}
+		}
 
-					TypeReference typeRef = module.TypeReferences [type.FullName];
-					if (AssemblyMatch (am.Assembly, typeRef))
-						module.TypeReferences.Remove (typeRef);
-				}
+		static ICollection Clone (ICollection collection)
+		{
+			return new ArrayList (collection);
+		}
+
+		static void SweepTypeReferences (AssemblyMarker am, TypeDefinition type, LinkContext context)
+		{
+			foreach (AssemblyMarker marker in context.GetAssemblies ()) {
+				ModuleDefinition module = marker.Assembly.MainModule;
+				if (!module.TypeReferences.Contains (type))
+					continue;
+
+				TypeReference typeRef = module.TypeReferences [type.FullName];
+				if (AssemblyMatch (am.Assembly, typeRef))
+					module.TypeReferences.Remove (typeRef);
 			}
 		}
 
@@ -85,28 +92,27 @@ namespace Mono.Linker {
 
 		static void SweepFields (TypeMarker tm)
 		{
-			Hashtable fieldsUsed = new Hashtable ();
-			foreach (FieldMarker fm in tm.GetFields())
-				fieldsUsed.Add (fm.Field.ToString (), fm.Field);
+			TypeDefinition type = tm.Type;
+			foreach (FieldDefinition field in Clone (type.Fields))
+				if (!IsMarked (field))
+					type.Fields.Remove (field);
+		}
 
-			foreach (FieldDefinition field in new ArrayList (tm.Type.Fields))
-				if (!fieldsUsed.Contains (field.ToString ()))
-					tm.Type.Fields.Remove (field);
+		static bool IsMarked (IAnnotationProvider provider)
+		{
+			return provider.Annotations.Contains (Marker.MarkerKey);
 		}
 
 		static void SweepMethods (TypeMarker tm)
 		{
-			Hashtable methodsUsed = new Hashtable ();
-			foreach (MethodMarker mm in tm.GetMethods ())
-				methodsUsed.Add (mm.Method.ToString (), mm.Method);
+			TypeDefinition type = tm.Type;
+			foreach (MethodDefinition meth in Clone (type.Methods))
+				if (!IsMarked (meth))
+					type.Methods.Remove (meth);
 
-			foreach (MethodDefinition meth in new ArrayList (tm.Type.Methods))
-				if (!methodsUsed.Contains (meth.ToString ()))
-					tm.Type.Methods.Remove (meth);
-
-			foreach (MethodDefinition ctor in new ArrayList (tm.Type.Constructors))
-				if (!methodsUsed.Contains (ctor.ToString ()))
-					tm.Type.Constructors.Remove (ctor);
+			foreach (MethodDefinition ctor in Clone (type.Constructors))
+				if (!IsMarked (ctor))
+					type.Constructors.Remove (ctor);
 		}
 	}
 }

@@ -1,3 +1,11 @@
+2007-05-28  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Linker/Marker.cs
+	  Mono.Linker/MarkStep.cs
+	  Mono.Linker/SweepStep.cs:
+		Use annotations to mark wether or not we should
+		sweep an item.
+
 2007-05-23  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Limker/CleanStep.cs:

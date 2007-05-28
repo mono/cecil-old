@@ -111,6 +111,7 @@ namespace Mono.Linker.Tests {
 					continue;
 				}
 
+				Assert.IsNotNull (linkedType, string.Format ("Type `{0}' should have been linked", originalType));
 				CompareTypes (originalType, linkedType);
 			}
 		}
