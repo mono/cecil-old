@@ -1,5 +1,5 @@
 //
-// ResolveFromAssemblyStep.cs
+// OutputStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,45 +26,51 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.IO;
+
 using Mono.Cecil;
 
-namespace Mono.Linker {
+namespace Mono.Linker.Steps {
 
-	public class ResolveFromAssemblyStep : ResolveStep {
+	public class OutputStep : IStep {
 
-		string _assembly;
-
-		public ResolveFromAssemblyStep (string assembly)
+		public void Process (LinkContext context)
 		{
-			_assembly = assembly;
+			CheckOutputDirectory (context);
+
+			foreach (AssemblyDefinition assembly in context.GetAssemblies())
+				OutputAssembly (assembly, context.OutputDirectory);
 		}
 
-		public override void Process (LinkContext context)
+		static void CheckOutputDirectory (LinkContext context)
 		{
-			AssemblyDefinition asm = context.Resolve (_assembly);
-			Annotations.SetAction (asm, AssemblyAction.Copy);
+			if (Directory.Exists (context.OutputDirectory))
+				return;
 
-			ProcessReferences (asm, context);
-			foreach (TypeDefinition type in asm.MainModule.Types) {
-				Annotations.Mark (type);
+			Directory.CreateDirectory (context.OutputDirectory);
+		}
 
-				foreach (MethodDefinition meth in type.Methods)
-					MarkMethod (meth);
-				foreach (MethodDefinition ctor in type.Constructors)
-					MarkMethod (ctor);
+		static void OutputAssembly (AssemblyDefinition assembly, string directory)
+		{
+			switch (Annotations.GetAction (assembly)) {
+			case AssemblyAction.Link:
+				AssemblyFactory.SaveAssembly (assembly, GetAssemblyFileName (assembly, directory));
+				break;
+			case AssemblyAction.Copy:
+				CopyAssembly (assembly.MainModule.Image.FileInformation, directory);
+				break;
 			}
 		}
 
-		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
+		static void CopyAssembly (FileInfo fi, string directory)
 		{
-			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences)
-				context.Resolve (name);
+			File.Copy (fi.FullName, Path.Combine (directory, fi.Name), true);
 		}
 
-		static void MarkMethod (MethodDefinition method)
+		static string GetAssemblyFileName (AssemblyDefinition assembly, string directory)
 		{
-			Annotations.Mark (method);
-			Annotations.SetAction (method, MethodAction.ForceParse);
+			string file = assembly.Name.Name + (assembly.Kind == AssemblyKind.Dll ? ".dll" : ".exe");
+			return Path.Combine (directory, file);
 		}
 	}
 }

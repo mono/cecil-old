@@ -31,7 +31,7 @@ using System.Collections;
 
 using Mono.Cecil;
 
-namespace Mono.Linker {
+namespace Mono.Linker.Steps {
 
 	public class SweepStep : IStep {
 

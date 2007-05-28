@@ -1,5 +1,5 @@
 //
-// XmlLinkingTestFixture.cs
+// ResolveStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,62 +26,34 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System.IO;
-using System.Xml.XPath;
+namespace Mono.Linker.Steps {
 
-using Mono.Linker.Steps;
-using NUnit.Framework;
+	using System.Collections;
 
+	public abstract class ResolveStep : IStep {
 
-namespace Mono.Linker.Tests {
+		ArrayList _unResolved;
 
-	[TestFixture]
-	public class XmlLinkingTestFixture : AbstractLinkingTestFixture {
-
-		[Test]
-		public void TestSimpleXml ()
+		internal ResolveStep ()
 		{
-			Test ("SimpleXml");
+			_unResolved = new ArrayList ();
 		}
 
-		[Test]
-		public void TestInterface ()
+		public bool AllMarkerResolved
 		{
-			Test ("Interface");
+			get { return _unResolved.Count == 0; }
 		}
 
-		[Test]
-		public void TestReferenceInVirtualMethod ()
+		public string [] GetUnresolvedMarkers ()
 		{
-			Test ("ReferenceInVirtualMethod");
+			return _unResolved.ToArray (typeof (string)) as string [];
 		}
 
-		[Test]
-		public void TestGenerics ()
+		protected void AddUnresolveMarker (string signature)
 		{
-			Test ("Generics");
+			_unResolved.Add (signature);
 		}
 
-		[Test]
-		public void TestNestedNested ()
-		{
-			Test ("NestedNested");
-		}
-
-		[Test]
-		public void TestPreserveFieldsRequired ()
-		{
-			Test ("PreserveFieldsRequired");
-		}
-
-		protected override void Test (string testCase)
-		{
-			base.Test (testCase);
-			Pipeline.PrependStep (
-				new ResolveFromXmlStep (
-					new XPathDocument (Path.Combine (GetTestCasePath (), "desc.xml"))));
-
-			Run ();
-		}
+		public abstract void Process (LinkContext context);
 	}
 }

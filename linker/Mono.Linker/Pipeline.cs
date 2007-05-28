@@ -29,6 +29,8 @@
 using System;
 using System.Collections;
 
+using Mono.Linker.Steps;
+
 namespace Mono.Linker {
 
 	public class Pipeline {

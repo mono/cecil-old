@@ -42,23 +42,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mono.Linker.Steps\BlacklistStep.cs" />
+    <Compile Include="Mono.Linker.Steps\CleanStep.cs" />
+    <Compile Include="Mono.Linker.Steps\IStep.cs" />
+    <Compile Include="Mono.Linker.Steps\MarkStep.cs" />
+    <Compile Include="Mono.Linker.Steps\OutputStep.cs" />
+    <Compile Include="Mono.Linker.Steps\ResolveFromAssemblyStep.cs" />
+    <Compile Include="Mono.Linker.Steps\ResolveFromXmlStep.cs" />
+    <Compile Include="Mono.Linker.Steps\ResolveStep.cs" />
+    <Compile Include="Mono.Linker.Steps\SweepStep.cs" />
     <Compile Include="Mono.Linker\Annotations.cs" />
     <Compile Include="Mono.Linker\AssemblyAction.cs" />
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
-    <Compile Include="Mono.Linker\BlacklistStep.cs" />
-    <Compile Include="Mono.Linker\CleanStep.cs" />
     <Compile Include="Mono.Linker\CustomResolver.cs" />
-    <Compile Include="Mono.Linker\ResolveFromAssemblyStep.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />
-    <Compile Include="Mono.Linker\IStep.cs" />
     <Compile Include="Mono.Linker\LinkContext.cs" />
-    <Compile Include="Mono.Linker\MarkStep.cs" />
     <Compile Include="Mono.Linker\MethodAction.cs" />
-    <Compile Include="Mono.Linker\OutputStep.cs" />
     <Compile Include="Mono.Linker\Pipeline.cs" />
-    <Compile Include="Mono.Linker\ResolveFromXmlStep.cs" />
-    <Compile Include="Mono.Linker\ResolveStep.cs" />
-    <Compile Include="Mono.Linker\SweepStep.cs" />
     <Compile Include="Mono.Linker\TypePreserve.cs" />
   </ItemGroup>
   <ItemGroup>

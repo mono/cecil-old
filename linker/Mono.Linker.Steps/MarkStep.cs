@@ -32,7 +32,7 @@ using System.Collections;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Mono.Linker {
+namespace Mono.Linker.Steps {
 
 	public class MarkStep : IStep {
 

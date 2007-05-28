@@ -26,12 +26,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+using System;
+using System.Collections;
+using SR = System.Reflection;
+using System.Xml.XPath;
 
-	using System;
-	using System.Collections;
-	using SR = System.Reflection;
-	using System.Xml.XPath;
+using Mono.Linker.Steps;
+
+namespace Mono.Linker {
 
 	public class Driver {
 

@@ -28,6 +28,7 @@
 
 using System.IO;
 using Mono.Cecil;
+using Mono.Linker.Steps;
 using NUnit.Framework;
 
 namespace Mono.Linker.Tests {

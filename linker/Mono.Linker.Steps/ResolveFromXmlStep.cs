@@ -34,7 +34,7 @@ using System.Xml.XPath;
 
 using Mono.Cecil;
 
-namespace Mono.Linker {
+namespace Mono.Linker.Steps {
 
 	public class ResolveFromXmlStep : ResolveStep {
 

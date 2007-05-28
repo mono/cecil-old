@@ -26,11 +26,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.IO;
+
+using Mono.Linker.Steps;
+using NUnit.Framework;
+
 namespace Mono.Linker.Tests {
-
-	using System.IO;
-
-	using NUnit.Framework;
 
 	[TestFixture]
 	public class AssemblyLinkingTestFixture : AbstractLinkingTestFixture {

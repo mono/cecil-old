@@ -1,5 +1,5 @@
 //
-// IStep.cs
+// ResolveFromAssemblyStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,9 +26,45 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+using Mono.Cecil;
 
-	public interface IStep {
-		void Process (LinkContext context);
+namespace Mono.Linker.Steps {
+
+	public class ResolveFromAssemblyStep : ResolveStep {
+
+		string _assembly;
+
+		public ResolveFromAssemblyStep (string assembly)
+		{
+			_assembly = assembly;
+		}
+
+		public override void Process (LinkContext context)
+		{
+			AssemblyDefinition asm = context.Resolve (_assembly);
+			Annotations.SetAction (asm, AssemblyAction.Copy);
+
+			ProcessReferences (asm, context);
+			foreach (TypeDefinition type in asm.MainModule.Types) {
+				Annotations.Mark (type);
+
+				foreach (MethodDefinition meth in type.Methods)
+					MarkMethod (meth);
+				foreach (MethodDefinition ctor in type.Constructors)
+					MarkMethod (ctor);
+			}
+		}
+
+		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
+		{
+			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences)
+				context.Resolve (name);
+		}
+
+		static void MarkMethod (MethodDefinition method)
+		{
+			Annotations.Mark (method);
+			Annotations.SetAction (method, MethodAction.ForceParse);
+		}
 	}
 }

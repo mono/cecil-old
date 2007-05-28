@@ -1,5 +1,5 @@
 //
-// ResolveStep.cs
+// IStep.cs
 //
 // Author:
 //   Jb Evain (jbevain@gmail.com)
@@ -26,34 +26,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Linker {
+namespace Mono.Linker.Steps {
 
-	using System.Collections;
-
-	public abstract class ResolveStep : IStep {
-
-		ArrayList _unResolved;
-
-		internal ResolveStep ()
-		{
-			_unResolved = new ArrayList ();
-		}
-
-		public bool AllMarkerResolved
-		{
-			get { return _unResolved.Count == 0; }
-		}
-
-		public string [] GetUnresolvedMarkers ()
-		{
-			return _unResolved.ToArray (typeof (string)) as string [];
-		}
-
-		protected void AddUnresolveMarker (string signature)
-		{
-			_unResolved.Add (signature);
-		}
-
-		public abstract void Process (LinkContext context);
+	public interface IStep {
+		void Process (LinkContext context);
 	}
 }
