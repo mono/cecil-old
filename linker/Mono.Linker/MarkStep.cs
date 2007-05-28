@@ -48,32 +48,43 @@ namespace Mono.Linker {
 		{
 			_context = context;
 
-			InitializeQueue ();
+			Initialize ();
 			Process ();
 		}
 
-		void InitializeQueue ()
+		void Initialize ()
 		{
-			foreach (AssemblyDefinition assembly in _context.GetAssemblies ()) {
-				foreach (TypeDefinition type in assembly.MainModule.Types) {
-					if (!Annotations.IsMarked (type))
-						continue;
+			foreach (AssemblyDefinition assembly in _context.GetAssemblies ())
+				InitializeAssembly (assembly);
+		}
 
-					MarkType (type);
+		void InitializeAssembly (AssemblyDefinition assembly)
+		{
+			foreach (TypeDefinition type in assembly.MainModule.Types) {
+				if (!Annotations.IsMarked (type))
+					continue;
 
-					foreach (FieldDefinition field in type.Fields)
-						if (Annotations.IsMarked (field))
-							MarkField (field);
-
-					foreach (MethodDefinition meth in type.Methods)
-						if (Annotations.IsMarked (meth))
-							_queue.Enqueue (meth);
-					foreach (MethodDefinition ctor in type.Constructors) {
-						if (Annotations.IsMarked (ctor))
-							_queue.Enqueue (ctor);
-					}
-				}
+				InitializeType (type);
 			}
+		}
+
+		void InitializeType (TypeDefinition type)
+		{
+			MarkType (type);
+
+			foreach (FieldDefinition field in type.Fields)
+				if (Annotations.IsMarked (field))
+					MarkField (field);
+
+			InitializeMethods (type.Methods);
+			InitializeMethods (type.Constructors);
+		}
+
+		void InitializeMethods (ICollection methods)
+		{
+			foreach (MethodDefinition method in methods)
+				if (Annotations.IsMarked (method))
+					_queue.Enqueue (method);
 		}
 
 		void Process ()
@@ -115,15 +126,8 @@ namespace Mono.Linker {
 
 			MarkCustomAttributes (assembly);
 
-			foreach (ModuleDefinition module in assembly.Modules) {
+			foreach (ModuleDefinition module in assembly.Modules)
 				MarkCustomAttributes (module);
-				MarkModule (module);
-			}
-		}
-
-		void MarkModule (ModuleDefinition module)
-		{
-			MarkCustomAttributes (module);
 		}
 
 		void MarkField (FieldReference field)
@@ -151,14 +155,11 @@ namespace Mono.Linker {
 
 		void MarkType (TypeReference type)
 		{
-			if (type == null)
+			if (type == null || type is GenericParameter)
 				return;
 
 			while (type is TypeSpecification)
 				type = ((TypeSpecification) type).ElementType;
-
-			if (type is GenericParameter)
-				return;
 
 			AssemblyDefinition assembly = _context.Resolve (type.Scope);
 			MarkAssembly (assembly);
@@ -183,12 +184,10 @@ namespace Mono.Linker {
 				foreach (MethodDefinition ctor in td.Constructors)
 					MarkMethod (ctor);
 
-			foreach (GenericParameter p in td.GenericParameters)
-				MarkCustomAttributes (p);
+			MarkGenericParameters (td);
 
 			if (td.IsValueType)
-				foreach (FieldDefinition field in td.Fields)
-					MarkField (field);
+				MarkFields (td);
 
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
@@ -231,7 +230,7 @@ namespace Mono.Linker {
 				MarkField (field);
 		}
 
-		void MarkMethods(TypeDefinition type)
+		void MarkMethods (TypeDefinition type)
 		{
 			MarkMethodCollection (type.Methods);
 			MarkMethodCollection (type.Constructors);
@@ -277,8 +276,7 @@ namespace Mono.Linker {
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
 
-			foreach (GenericParameter p in md.GenericParameters)
-				MarkCustomAttributes (p);
+			MarkGenericParameters (md);
 
 			if (IsPropertyMethod (md))
 				MarkProperty (GetProperty (md));
@@ -300,6 +298,12 @@ namespace Mono.Linker {
 				MarkMethodBody (md.Body);
 
 			Annotations.Mark (md);
+		}
+
+		void MarkGenericParameters (IGenericParameterProvider provider)
+		{
+			foreach (GenericParameter p in provider.GenericParameters)
+				MarkCustomAttributes (p);
 		}
 
 		static bool ShouldParseMethodBody (AssemblyDefinition assembly, MethodDefinition method)

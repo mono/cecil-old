@@ -81,14 +81,5 @@ namespace Mono.Linker {
 				_steps.Remove (step);
 			}
 		}
-
-		public IStep GetStep (Type type)
-		{
-			foreach (IStep step in _steps)
-				if (type.IsAssignableFrom (step.GetType ()))
-					return step;
-
-			return null;
-		}
 	}
 }
