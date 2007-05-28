@@ -260,6 +260,7 @@
     <Compile Include="Mono.Cecil\GenericParameterAttributes.cs" />
     <Compile Include="Mono.Cecil\GenericParameterCollection.cs" />
     <Compile Include="Mono.Cecil\HashCodeProvider.cs" />
+    <Compile Include="Mono.Cecil\IAnnotationProvider.cs" />
     <Compile Include="Mono.Cecil\IAssemblyResolver.cs" />
     <Compile Include="Mono.Cecil\ICustomAttributeProvider.cs" />
     <Compile Include="Mono.Cecil\IDetailReader.cs" />

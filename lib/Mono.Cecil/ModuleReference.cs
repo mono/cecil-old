@@ -28,13 +28,16 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
+
 	using Mono.Cecil;
 	using Mono.Cecil.Metadata;
 
-	public class ModuleReference : IMetadataScope, IReflectionStructureVisitable {
+	public class ModuleReference : IMetadataScope, IAnnotationProvider, IReflectionStructureVisitable {
 
 		string m_name;
 		MetadataToken m_token;
+		IDictionary m_annotations;
 
 		public string Name {
 			get { return m_name; }
@@ -44,6 +47,14 @@ namespace Mono.Cecil {
 		public MetadataToken MetadataToken {
 			get { return m_token; }
 			set { m_token = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public ModuleReference (string name)

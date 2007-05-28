@@ -29,11 +29,13 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Collections;
 	using System.Security;
 
-	public sealed class SecurityDeclaration : IRequireResolving, IReflectionVisitable {
+	public sealed class SecurityDeclaration : IRequireResolving, IAnnotationProvider, IReflectionVisitable {
 
 		SecurityAction m_action;
+		IDictionary m_annotations;
 
 #if !CF_1_0 && !CF_2_0
 		PermissionSet m_permSet;
@@ -62,6 +64,14 @@ namespace Mono.Cecil {
 		public byte [] Blob {
 			get { return m_blob; }
 			set { m_blob = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public SecurityDeclaration (SecurityAction action)

@@ -28,6 +28,8 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
+
 	using Mono.Cecil.Metadata;
 
 	public abstract class MemberReference : IMemberReference {
@@ -35,6 +37,7 @@ namespace Mono.Cecil {
 		string m_name;
 		TypeReference m_decType;
 		MetadataToken m_token;
+		IDictionary m_annotations;
 
 		public virtual string Name {
 			get { return m_name; }
@@ -49,6 +52,14 @@ namespace Mono.Cecil {
 		public MetadataToken MetadataToken {
 			get { return m_token; }
 			set { m_token = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public MemberReference (string name)

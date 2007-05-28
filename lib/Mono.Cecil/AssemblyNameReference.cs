@@ -29,13 +29,14 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Collections;
 	using System.Globalization;
 	using System.Security.Cryptography;
 	using System.Text;
 
 	using Mono.Cecil.Metadata;
 
-	public class AssemblyNameReference : IMetadataScope, IReflectionStructureVisitable {
+	public class AssemblyNameReference : IMetadataScope, IAnnotationProvider, IReflectionStructureVisitable {
 
 		string m_name;
 		string m_culture;
@@ -46,6 +47,7 @@ namespace Mono.Cecil {
 		AssemblyHashAlgorithm m_hashAlgo;
 		byte [] m_hash;
 		MetadataToken m_token;
+		IDictionary m_annotations;
 
 		public string Name {
 			get { return m_name; }
@@ -183,6 +185,14 @@ namespace Mono.Cecil {
 		public MetadataToken MetadataToken {
 			get { return m_token; }
 			set { m_token = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public AssemblyNameReference () : this (string.Empty, string.Empty, new Version (0, 0, 0, 0))

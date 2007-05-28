@@ -28,10 +28,13 @@
 
 namespace Mono.Cecil {
 
-	public abstract class Resource : IReflectionStructureVisitable {
+	using System.Collections;
+
+	public abstract class Resource : IAnnotationProvider, IReflectionStructureVisitable {
 
 		string m_name;
 		ManifestResourceAttributes m_flags;
+		IDictionary m_annotations;
 
 		public string Name {
 			get { return m_name; }
@@ -41,6 +44,14 @@ namespace Mono.Cecil {
 		public ManifestResourceAttributes Flags {
 			get { return m_flags; }
 			set { m_flags = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		internal Resource (string name, ManifestResourceAttributes flags)

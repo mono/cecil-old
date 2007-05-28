@@ -1,10 +1,10 @@
 //
-// IMemberReference.cs
+// AssemblyDefinition.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,9 +28,10 @@
 
 namespace Mono.Cecil {
 
-	public interface IMemberReference : IMetadataTokenProvider, IAnnotationProvider, IReflectionVisitable {
+	using System.Collections;
 
-		string Name { get; set; }
-		TypeReference DeclaringType { get; }
+	public interface IAnnotationProvider {
+
+		IDictionary Annotations { get; }
 	}
 }

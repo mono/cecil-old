@@ -29,11 +29,12 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Collections;
 
 	using Mono.Cecil.Metadata;
 
 	public class AssemblyDefinition : ICustomAttributeProvider,
-		IHasSecurity, IReflectionStructureVisitable {
+		IHasSecurity, IAnnotationProvider, IReflectionStructureVisitable {
 
 		MetadataToken m_token;
 		AssemblyNameDefinition m_asmName;
@@ -48,6 +49,7 @@ namespace Mono.Cecil {
 		StructureReader m_reader;
 
 		IAssemblyResolver m_resolver;
+		IDictionary m_annotations;
 
 		public MetadataToken MetadataToken {
 			get { return m_token; }
@@ -82,7 +84,7 @@ namespace Mono.Cecil {
 
 		public MethodDefinition EntryPoint {
 			get { return m_ep; }
-			set { m_ep = value as MethodDefinition; }
+			set { m_ep = value; }
 		}
 
 		public TargetRuntime Runtime {
@@ -113,6 +115,14 @@ namespace Mono.Cecil {
 		public IAssemblyResolver Resolver {
 			get { return m_resolver; }
 			set { m_resolver = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		internal AssemblyDefinition (AssemblyNameDefinition name)

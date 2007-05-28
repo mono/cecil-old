@@ -30,7 +30,7 @@ namespace Mono.Cecil {
 
 	using System.Collections;
 
-	public sealed class CustomAttribute : IRequireResolving, IReflectionVisitable {
+	public sealed class CustomAttribute : IRequireResolving, IAnnotationProvider, IReflectionVisitable {
 
 		MethodReference m_ctor;
 		IList m_parameters;
@@ -38,6 +38,7 @@ namespace Mono.Cecil {
 		IDictionary m_properties;
 		IDictionary m_fieldTypes;
 		IDictionary m_propTypes;
+		IDictionary m_annotations;
 
 		bool m_resolved;
 		byte [] m_blob;
@@ -99,6 +100,14 @@ namespace Mono.Cecil {
 		public byte [] Blob {
 			get { return m_blob; }
 			set { m_blob = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public CustomAttribute (MethodReference ctor)

@@ -44,6 +44,7 @@
 ./Mono.Cecil/GenericParameterAttributes.cs
 ./Mono.Cecil/GenericParameterCollection.cs
 ./Mono.Cecil/HashCodeProvider.cs
+./Mono.Cecil/IAnnotationProvider.cs
 ./Mono.Cecil/IAssemblyResolver.cs
 ./Mono.Cecil/ICustomAttributeProvider.cs
 ./Mono.Cecil/IDetailReader.cs

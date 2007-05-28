@@ -1,3 +1,8 @@
+2007-05-28  Jb Evain  <jbevain@novell.com>
+
+	* Borrow annotations concept from boo ast node.
+	  Should be useful for the linker.
+
 2007-05-23  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil/StructureWriter.cs

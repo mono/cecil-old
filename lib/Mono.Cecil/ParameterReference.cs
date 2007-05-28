@@ -28,14 +28,17 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
+
 	using Mono.Cecil.Metadata;
 
-	public abstract class ParameterReference : IMetadataTokenProvider, IReflectionVisitable {
+	public abstract class ParameterReference : IMetadataTokenProvider, IAnnotationProvider, IReflectionVisitable {
 
 		string m_name;
 		int m_sequence;
 		TypeReference m_paramType;
 		MetadataToken m_token;
+		IDictionary m_annotations;
 
 		public string Name {
 			get { return m_name; }
@@ -55,6 +58,14 @@ namespace Mono.Cecil {
 		public MetadataToken MetadataToken {
 			get { return m_token; }
 			set { m_token = value; }
+		}
+
+		public IDictionary Annotations {
+			get {
+				if (m_annotations == null)
+					m_annotations = new Hashtable ();
+				return m_annotations;
+			}
 		}
 
 		public ParameterReference (string name, int sequence, TypeReference parameterType)

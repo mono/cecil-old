@@ -28,8 +28,6 @@
 
 namespace Mono.Cecil {
 
-	using System;
-
 	public sealed class EventDefinition : EventReference, IMemberDefinition, ICustomAttributeProvider {
 
 		EventAttributes m_attributes;
@@ -131,7 +129,7 @@ namespace Mono.Cecil {
 				context.Import (evt.EventType),
 				evt.Attributes);
 
-			if (context != null && context.GenericContext.Type is TypeDefinition) {
+			if (context.GenericContext.Type is TypeDefinition) {
 				TypeDefinition type = context.GenericContext.Type as TypeDefinition;
 				if (evt.AddMethod != null)
 					ne.AddMethod = type.Methods.GetMethod (evt.AddMethod.Name) [0];

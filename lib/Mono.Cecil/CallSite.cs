@@ -28,11 +28,12 @@
 
 namespace Mono.Cecil {
 
+	using System.Collections;
 	using System.Text;
 
 	using Mono.Cecil.Metadata;
 
-	public sealed class CallSite : IMethodSignature, IMetadataTokenProvider {
+	public sealed class CallSite : IMethodSignature, IAnnotationProvider, IMetadataTokenProvider {
 
 		MethodReference m_function;
 
@@ -63,6 +64,10 @@ namespace Mono.Cecil {
 		public MetadataToken MetadataToken {
 			get { return m_function.MetadataToken; }
 			set { m_function.MetadataToken = value; }
+		}
+
+		public IDictionary Annotations {
+			get { return m_function.Annotations; }
 		}
 
 		public CallSite (bool hasThis, bool explicitThis, MethodCallingConvention callConv, MethodReturnType retType)
