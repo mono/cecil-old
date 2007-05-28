@@ -44,9 +44,6 @@ namespace Mono.Linker {
 
 		public static MethodAction GetAction (MethodDefinition method)
 		{
-			if (!method.Annotations.Contains (_actionKey)) {
-				int a = 2;
-			}
 			return (MethodAction) method.Annotations [_actionKey];
 		}
 
