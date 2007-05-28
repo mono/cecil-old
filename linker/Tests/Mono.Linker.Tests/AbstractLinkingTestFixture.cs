@@ -88,11 +88,11 @@ namespace Mono.Linker.Tests {
 
 		void Compare ()
 		{
-			foreach (AssemblyMarker am in Context.GetAssemblies ()) {
-				if (am.Action != AssemblyAction.Link)
+			foreach (AssemblyDefinition assembly in Context.GetAssemblies ()) {
+				if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 					continue;
 
-				string fileName = GetAssemblyFileName (am.Assembly);
+				string fileName = GetAssemblyFileName (assembly);
 
 				CompareAssemblies (
 					AssemblyFactory.GetAssembly (

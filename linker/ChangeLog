@@ -1,5 +1,8 @@
 2007-05-28  Jb Evain  <jbevain@novell.com>
 
+	* Big refactoring. Get rid of the markers, use the annotations
+		of Cecil instead.
+
 	* Mono.Linker/Marker.cs
 	  Mono.Linker/MarkStep.cs
 	  Mono.Linker/SweepStep.cs:

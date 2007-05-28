@@ -5,6 +5,7 @@
 //   Jb Evain (jbevain@gmail.com)
 //
 // (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -60,60 +61,60 @@ namespace Mono.Linker {
 		void ProcessAssemblies (LinkContext context, XPathNodeIterator iterator)
 		{
 			while (iterator.MoveNext ()) {
-				AssemblyMarker am = GetAssemblyMarker (context, GetFullName (iterator.Current));
-				ProcessTypes (am, iterator.Current.SelectChildren ("type", _ns));
+				AssemblyDefinition assembly = GetAssembly (context, GetFullName (iterator.Current));
+				ProcessTypes (assembly, iterator.Current.SelectChildren ("type", _ns));
 			}
 		}
 
-		void ProcessTypes (AssemblyMarker am, XPathNodeIterator iterator)
+		void ProcessTypes (AssemblyDefinition assembly, XPathNodeIterator iterator)
 		{
 			while (iterator.MoveNext ()) {
 				XPathNavigator nav = iterator.Current;
 				string fullname = GetFullName (nav);
-				TypeDefinition type = am.Assembly.MainModule.Types [fullname];
+				TypeDefinition type = assembly.MainModule.Types [fullname];
 				if (type == null)
 					continue;
 
 				TypePreserve preserve = GetTypePreserve (nav);
 
 				if (!IsRequired (nav)) {
-					am.AddTypePreserveInfo (fullname, preserve);
+					Annotations.SetPreserve (type, preserve);
 					continue;
 				}
 
-				TypeMarker tm = am.Mark (type);
+				Annotations.Mark (type);
 
 				switch (preserve) {
 				case TypePreserve.Nothing:
 					if (nav.HasChildren) {
-						MarkSelectedFields (nav, tm);
-						MarkSelectedMethods (nav, tm);
+						MarkSelectedFields (nav, type);
+						MarkSelectedMethods (nav, type);
 					} else
-						am.AddTypePreserveInfo (tm, TypePreserve.All);
+						Annotations.SetPreserve (type, TypePreserve.All);
 					break;
 				default:
-					am.AddTypePreserveInfo (tm, preserve);
+					Annotations.SetPreserve (type, preserve);
 					break;
 				}
 			}
 		}
 
-		void MarkSelectedFields (XPathNavigator nav, TypeMarker tm)
+		void MarkSelectedFields (XPathNavigator nav, TypeDefinition type)
 		{
 			XPathNodeIterator fields = nav.SelectChildren ("field", _ns);
 			if (fields.Count == 0)
 				return;
 
-			ProcessFields (tm, fields);
+			ProcessFields (type, fields);
 		}
 
-		void MarkSelectedMethods (XPathNavigator nav, TypeMarker tm)
+		void MarkSelectedMethods (XPathNavigator nav, TypeDefinition type)
 		{
 			XPathNodeIterator methods = nav.SelectChildren ("method", _ns);
 			if (methods.Count == 0)
 				return;
 
-			ProcessMethods (tm, methods);
+			ProcessMethods (type, methods);
 		}
 
 		static TypePreserve GetTypePreserve (XPathNavigator nav)
@@ -125,15 +126,15 @@ namespace Mono.Linker {
 			}
 		}
 
-		void ProcessFields (TypeMarker tm, XPathNodeIterator iterator)
+		void ProcessFields (TypeDefinition type, XPathNodeIterator iterator)
 		{
 			while (iterator.MoveNext ()) {
 				string signature = GetSignature (iterator.Current);
-				FieldDefinition field = GetField (tm.Type, signature);
+				FieldDefinition field = GetField (type, signature);
 				if (field != null)
-					tm.Mark (field);
+					Annotations.Mark (field);
 				else
-					AddUnresolveMarker (string.Format ("T: {0}; F: {1}", tm.Type, signature));
+					AddUnresolveMarker (string.Format ("T: {0}; F: {1}", type, signature));
 			}
 		}
 
@@ -151,15 +152,16 @@ namespace Mono.Linker {
 			return field.FieldType.FullName + " " + field.Name;
 		}
 
-		void ProcessMethods (TypeMarker tm, XPathNodeIterator iterator)
+		void ProcessMethods (TypeDefinition type, XPathNodeIterator iterator)
 		{
 			while (iterator.MoveNext()) {
 				string signature = GetSignature (iterator.Current);
-				MethodDefinition meth = GetMethod (tm.Type, signature);
-				if (meth != null)
-					tm.Mark (meth);
-				else
-					AddUnresolveMarker (string.Format ("T: {0}; M: {1}", tm.Type, signature));
+				MethodDefinition meth = GetMethod (type, signature);
+				if (meth != null) {
+					Annotations.Mark (meth);
+					Annotations.SetAction (meth, MethodAction.Parse);
+				} else
+					AddUnresolveMarker (string.Format ("T: {0}; M: {1}", type, signature));
 			}
 		}
 
@@ -193,25 +195,25 @@ namespace Mono.Linker {
 			return sb.ToString ();
 		}
 
-		static AssemblyMarker GetAssemblyMarker (LinkContext context, string assemblyName)
+		static AssemblyDefinition GetAssembly (LinkContext context, string assemblyName)
 		{
 			AssemblyNameReference reference = AssemblyNameReference.Parse (assemblyName);
 			if (IsSimpleName (assemblyName)) {
-				foreach (AssemblyMarker marker in context.GetAssemblies ()) {
-					if (marker.Assembly.Name.Name == assemblyName)
-						return marker;
+				foreach (AssemblyDefinition assembly in context.GetAssemblies ()) {
+					if (assembly.Name.Name == assemblyName)
+						return assembly;
 				}
 			}
-			AssemblyMarker res = context.Resolve (reference);
-			ProcessReferences (res.Assembly, context);
+
+			AssemblyDefinition res = context.Resolve (reference);
+			ProcessReferences (res, context);
 			return res;
 		}
 
 		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
 		{
-			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences) {
+			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences)
 				context.Resolve (name);
-			}
 		}
 
 		static bool IsSimpleName (string assemblyName)

@@ -38,8 +38,8 @@ namespace Mono.Linker {
 		{
 			CheckOutputDirectory (context);
 
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				OutputAssembly (am, context.OutputDirectory);
+			foreach (AssemblyDefinition assembly in context.GetAssemblies())
+				OutputAssembly (assembly, context.OutputDirectory);
 		}
 
 		static void CheckOutputDirectory (LinkContext context)
@@ -50,14 +50,14 @@ namespace Mono.Linker {
 			Directory.CreateDirectory (context.OutputDirectory);
 		}
 
-		static void OutputAssembly (AssemblyMarker am, string directory)
+		static void OutputAssembly (AssemblyDefinition assembly, string directory)
 		{
-			switch (am.Action) {
+			switch (Annotations.GetAction (assembly)) {
 			case AssemblyAction.Link:
-				AssemblyFactory.SaveAssembly (am.Assembly, GetAssemblyFileName (am.Assembly, directory));
+				AssemblyFactory.SaveAssembly (assembly, GetAssemblyFileName (assembly, directory));
 				break;
 			case AssemblyAction.Copy:
-				CopyAssembly (am.Assembly.MainModule.Image.FileInformation, directory);
+				CopyAssembly (assembly.MainModule.Image.FileInformation, directory);
 				break;
 			}
 		}

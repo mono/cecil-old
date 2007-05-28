@@ -5,6 +5,7 @@
 //   Jb Evain (jbevain@gmail.com)
 //
 // (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -53,15 +54,24 @@ namespace Mono.Linker {
 
 		void InitializeQueue ()
 		{
-			foreach (AssemblyMarker ac in _context.GetAssemblies()) {
-				foreach (TypeMarker type in ac.GetTypes ()) {
-					MarkType (type.Type);
+			foreach (AssemblyDefinition assembly in _context.GetAssemblies ()) {
+				foreach (TypeDefinition type in assembly.MainModule.Types) {
+					if (!Annotations.IsMarked (type))
+						continue;
 
-					foreach (FieldMarker field in type.GetFields ())
-						MarkField (field.Field);
+					MarkType (type);
 
-					foreach (MethodMarker meth in type.GetMethods ())
-						_queue.Enqueue (meth);
+					foreach (FieldDefinition field in type.Fields)
+						if (Annotations.IsMarked (field))
+							MarkField (field);
+
+					foreach (MethodDefinition meth in type.Methods)
+						if (Annotations.IsMarked (meth))
+							_queue.Enqueue (meth);
+					foreach (MethodDefinition ctor in type.Constructors) {
+						if (Annotations.IsMarked (ctor))
+							_queue.Enqueue (ctor);
+					}
 				}
 			}
 		}
@@ -72,7 +82,7 @@ namespace Mono.Linker {
 				throw new InvalidOperationException ("No entry methods");
 
 			while (_queue.Count > 0) {
-				MethodMarker method = (MethodMarker) _queue.Dequeue ();
+				MethodDefinition method = (MethodDefinition) _queue.Dequeue ();
 				ProcessMethod (method);
 			}
 		}
@@ -96,16 +106,16 @@ namespace Mono.Linker {
 				MarkMethod (ca.Constructor);
 		}
 
-		void MarkAssembly (AssemblyMarker am)
+		void MarkAssembly (AssemblyDefinition assembly)
 		{
-			if (am.Processed)
+			if (Annotations.IsProcessed (assembly))
 				return;
 
-			am.Processed = true;
+			Annotations.Processed (assembly);
 
-			MarkCustomAttributes (am.Assembly);
+			MarkCustomAttributes (assembly);
 
-			foreach (ModuleDefinition module in am.Assembly.Modules) {
+			foreach (ModuleDefinition module in assembly.Modules) {
 				MarkCustomAttributes (module);
 				MarkModule (module);
 			}
@@ -118,27 +128,25 @@ namespace Mono.Linker {
 
 		void MarkField (FieldReference field)
 		{
-			AssemblyMarker am = _context.Resolve (field.DeclaringType.Scope);
-			MarkAssembly (am);
-			if (am.Action != AssemblyAction.Link)
+			AssemblyDefinition assembly = _context.Resolve (field.DeclaringType.Scope);
+			MarkAssembly (assembly);
+			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 				return;
 
 			FieldDefinition fd = field as FieldDefinition;
 			if (fd == null)
-				fd = am.Resolve (field);
+				fd = _context.Resolver.Resolve (field);
 
-			TypeMarker tm = am.Mark ((TypeDefinition) fd.DeclaringType);
-			FieldMarker fm = tm.Mark (fd);
-			if (fm.Processed)
+			if (Annotations.IsProcessed (fd))
 				return;
 
-			fm.Processed = true;
+			Annotations.Processed (fd);
 
 			MarkType (fd.DeclaringType);
 			MarkType (fd.FieldType);
 			MarkCustomAttributes (fd);
 
-			AnnotateMarker (fd, fm);
+			Annotations.Mark (fd);
 		}
 
 		void MarkType (TypeReference type)
@@ -152,20 +160,19 @@ namespace Mono.Linker {
 			if (type is GenericParameter)
 				return;
 
-			AssemblyMarker am = _context.Resolve (type.Scope);
-			MarkAssembly (am);
-			if (am.Action != AssemblyAction.Link)
+			AssemblyDefinition assembly = _context.Resolve (type.Scope);
+			MarkAssembly (assembly);
+			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 				return;
 
 			TypeDefinition td = type as TypeDefinition;
 			if (td == null)
-				td = am.Resolve (type);
+				td = _context.Resolver.Resolve (type);
 
-			TypeMarker tm = am.Mark (td);
-			if (tm.Processed)
+			if (Annotations.IsProcessed (td))
 				return;
 
-			tm.Processed = true;
+			Annotations.Processed (td);
 
 			MarkType (td.BaseType);
 			if (td.DeclaringType != null)
@@ -194,47 +201,40 @@ namespace Mono.Linker {
 				if (meth.IsVirtual)
 					MarkMethod (meth);
 
-			am.Mark (td);
+			Annotations.Mark (td);
 
-			ApplyPreserveInfo (am, tm);
-
-			AnnotateMarker (td, tm);
+			ApplyPreserveInfo (td);
 		}
 
-		static void AnnotateMarker (IAnnotationProvider provider, Marker marker)
+		void ApplyPreserveInfo (TypeDefinition type)
 		{
-			provider.Annotations [Marker.MarkerKey] = marker;
-		}
-
-		void ApplyPreserveInfo (AssemblyMarker am, TypeMarker tm)
-		{
-			if (!am.HasPreserveInfo (tm))
+			if (!Annotations.IsPreserved (type))
 				return;
 
-			switch (am.GetPreserveInfo (tm)) {
+			switch (Annotations.GetPreserve (type)) {
 			case TypePreserve.All:
-				MarkFields (tm);
-				MarkMethods (tm);
+				MarkFields (type);
+				MarkMethods (type);
 				break;
 			case TypePreserve.Fields:
-				MarkFields (tm);
+				MarkFields (type);
 				break;
 			case TypePreserve.Methods:
-				MarkMethods (tm);
+				MarkMethods (type);
 				break;
 			}
 		}
 
-		void MarkFields (TypeMarker tm)
+		void MarkFields (TypeDefinition type)
 		{
-			foreach (FieldDefinition field in tm.Type.Fields)
+			foreach (FieldDefinition field in type.Fields)
 				MarkField (field);
 		}
 
-		void MarkMethods(TypeMarker tm)
+		void MarkMethods(TypeDefinition type)
 		{
-			MarkMethodCollection (tm.Type.Methods);
-			MarkMethodCollection (tm.Type.Constructors);
+			MarkMethodCollection (type.Methods);
+			MarkMethodCollection (type.Constructors);
 		}
 
 		void MarkMethodCollection (IEnumerable methods)
@@ -251,30 +251,28 @@ namespace Mono.Linker {
 			if (method.DeclaringType is ArrayType)
 				return;
 
-			AssemblyMarker am = _context.Resolve (method.DeclaringType.Scope);
-			MarkAssembly (am);
-			if (am.Action != AssemblyAction.Link)
+			AssemblyDefinition assembly = _context.Resolve (method.DeclaringType.Scope);
+			MarkAssembly (assembly);
+			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 				return;
 
 			MethodDefinition md = method as MethodDefinition;
 			if (md == null)
-				md = am.Resolve (method);
+				md = _context.Resolver.Resolve (method);
 
-			TypeMarker tm = am.Mark ((TypeDefinition) md.DeclaringType);
-			MethodMarker mm = tm.Mark (md);
+			Annotations.SetAction (md, MethodAction.Parse);
 
-			_queue.Enqueue (mm);
+			_queue.Enqueue (md);
 		}
 
-		void ProcessMethod (MethodMarker mm)
+		void ProcessMethod (MethodDefinition md)
 		{
-			MethodDefinition md = mm.Method;
-			AssemblyMarker am = _context.Resolve (md.DeclaringType.Scope);
+			AssemblyDefinition assembly = _context.Resolve (md.DeclaringType.Scope);
 
-			if (mm.Processed)
+			if (Annotations.IsProcessed (md))
 				return;
 
-			mm.Processed = true;
+			Annotations.Processed (md);
 
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
@@ -298,16 +296,16 @@ namespace Mono.Linker {
 			MarkType (md.ReturnType.ReturnType);
 			MarkCustomAttributes (md.ReturnType);
 
-			if (md.HasBody && ShouldParseMethodBody (am, mm))
+			if (md.HasBody && ShouldParseMethodBody (assembly, md))
 				MarkMethodBody (md.Body);
 
-			AnnotateMarker (md, mm);
+			Annotations.Mark (md);
 		}
 
-		static bool ShouldParseMethodBody (AssemblyMarker am, MethodMarker mm)
+		static bool ShouldParseMethodBody (AssemblyDefinition assembly, MethodDefinition method)
 		{
-			return (mm.Action == MethodAction.ForceParse ||
-			        (am.Action == AssemblyAction.Link && mm.Action == MethodAction.Parse));
+			return (Annotations.GetAction (method) == MethodAction.ForceParse ||
+				(Annotations.GetAction (assembly) == AssemblyAction.Link && Annotations.GetAction (method) == MethodAction.Parse));
 		}
 
 		static bool IsPropertyMethod (MethodDefinition md)

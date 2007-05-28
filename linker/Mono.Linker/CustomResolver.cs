@@ -1,10 +1,10 @@
 //
-// AssemblyMarker.cs
+// CustomResolver.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,49 +33,20 @@ using Mono.Cecil;
 
 namespace Mono.Linker {
 
-	public class AssemblyMarker : Marker {
-
-		AssemblyAction _action;
-		AssemblyDefinition _assembly;
-
-		IDictionary _typeMarkers;
-		IDictionary _typePreserveInfos;
-
-		public AssemblyDefinition Assembly {
-			get { return _assembly;  }
-		}
-
-		public AssemblyAction Action {
-			get { return _action; }
-			set { _action = value; }
-		}
-
-		public AssemblyMarker (AssemblyAction action, AssemblyDefinition assembly)
-		{
-			_action = action;
-			_assembly = assembly;
-
-			_typeMarkers = new Hashtable ();
-			_typePreserveInfos = new Hashtable ();
-		}
-
-		public TypeMarker Mark (TypeDefinition type)
-		{
-			if (type.Module != _assembly.MainModule)
-				throw new ArgumentException ("Could not get a marker for a different assembly");
-
-			TypeMarker marker = (TypeMarker) _typeMarkers [type.FullName];
-			if (marker == null) {
-				marker = new TypeMarker (type);
-				_typeMarkers.Add (type.FullName, marker);
-			}
-
-			return marker;
-		}
+	public class CustomResolver : DefaultAssemblyResolver {
 
 		public TypeDefinition Resolve (TypeReference type)
 		{
-			return _assembly.MainModule.Types [type.FullName];
+			if (type is TypeDefinition)
+				return (TypeDefinition) type;
+
+			AssemblyNameReference reference = type.Scope as AssemblyNameReference;
+			if (reference != null) {
+				AssemblyDefinition assembly = Resolve (reference);
+				return assembly.MainModule.Types [type.FullName];
+			}
+
+			throw new NotImplementedException ();
 		}
 
 		public FieldDefinition Resolve (FieldReference field)
@@ -170,43 +141,6 @@ namespace Mono.Linker {
 			}
 
 			return a.FullName == b.FullName;
-		}
-
-		public TypeMarker [] GetTypes ()
-		{
-			TypeMarker [] markers = new TypeMarker [_typeMarkers.Count];
-			_typeMarkers.Values.CopyTo (markers, 0);
-			return markers;
-		}
-
-		public override string ToString ()
-		{
-			return "Assembly(" + _assembly.Name.FullName + ")";
-		}
-
-		public void AddTypePreserveInfo (string fullname, TypePreserve preserve)
-		{
-			if (_typePreserveInfos.Contains (fullname)) {
-				_typePreserveInfos [fullname] = preserve;
-				return;
-			}
-
-			_typePreserveInfos.Add (fullname, preserve);
-		}
-
-		public void AddTypePreserveInfo (TypeMarker tm, TypePreserve preserve)
-		{
-			AddTypePreserveInfo (tm.Type.FullName, preserve);
-		}
-
-		public bool HasPreserveInfo (TypeMarker marker)
-		{
-			return _typePreserveInfos.Contains (marker.Type.FullName);
-		}
-
-		public TypePreserve GetPreserveInfo (TypeMarker marker)
-		{
-			return (TypePreserve) _typePreserveInfos [marker.Type.FullName];
 		}
 	}
 }

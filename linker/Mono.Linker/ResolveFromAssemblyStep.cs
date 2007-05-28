@@ -41,31 +41,30 @@ namespace Mono.Linker {
 
 		public override void Process (LinkContext context)
 		{
-			AssemblyDefinition asm = AssemblyFactory.GetAssembly (_assembly);
-			AssemblyMarker marker = new AssemblyMarker (AssemblyAction.Copy, asm);
+			AssemblyDefinition asm = context.Resolve (_assembly);
+			Annotations.SetAction (asm, AssemblyAction.Copy);
+
 			ProcessReferences (asm, context);
 			foreach (TypeDefinition type in asm.MainModule.Types) {
-				TypeMarker tm = marker.Mark (type);
+				Annotations.Mark (type);
 
 				foreach (MethodDefinition meth in type.Methods)
-					MarkMethod (tm, meth);
+					MarkMethod (meth);
 				foreach (MethodDefinition ctor in type.Constructors)
-					MarkMethod (tm, ctor);
+					MarkMethod (ctor);
 			}
-
-			context.AddMarker (marker);
 		}
 
 		static void ProcessReferences (AssemblyDefinition assembly, LinkContext context)
 		{
-			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences) {
+			foreach (AssemblyNameReference name in assembly.MainModule.AssemblyReferences)
 				context.Resolve (name);
-			}
 		}
 
-		static void MarkMethod (TypeMarker marker, MethodDefinition method)
+		static void MarkMethod (MethodDefinition method)
 		{
-			marker.Mark (method, MethodAction.ForceParse);
+			Annotations.Mark (method);
+			Annotations.SetAction (method, MethodAction.ForceParse);
 		}
 	}
 }

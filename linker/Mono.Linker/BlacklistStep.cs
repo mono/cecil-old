@@ -31,6 +31,8 @@ using System.IO;
 using System.Reflection;
 using System.Xml.XPath;
 
+using Mono.Cecil;
+
 namespace Mono.Linker {
 
 	public class BlacklistStep : IStep {
@@ -59,8 +61,8 @@ namespace Mono.Linker {
 
 		static bool IsReferenced (string name, LinkContext context)
 		{
-			foreach (AssemblyMarker marker in context.GetAssemblies ())
-				if (marker.Assembly.Name.Name == name)
+			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
+				if (assembly.Name.Name == name)
 					return true;
 
 			return false;

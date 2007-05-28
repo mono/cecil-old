@@ -35,11 +35,11 @@ namespace Mono.Linker {
 	public class LinkContext {
 
 		Pipeline _pipeline;
-		Hashtable _asmCtx;
 		AssemblyAction _coreAction;
 		string _outputDirectory;
+		Hashtable _assemblies;
 
-		IAssemblyResolver _resolver;
+		CustomResolver _resolver;
 
 		public Pipeline Pipeline {
 			get { return _pipeline; }
@@ -55,45 +55,53 @@ namespace Mono.Linker {
 			set { _coreAction = value; }
 		}
 
-		public bool OnMono {
-			get { return BaseAssemblyResolver.OnMono (); }
+		public CustomResolver Resolver {
+			get { return _resolver; }
 		}
 
 		public LinkContext (Pipeline pipeline)
 		{
 			_pipeline = pipeline;
-			_asmCtx = new Hashtable ();
-			_resolver = new DefaultAssemblyResolver ();
+			_resolver = new CustomResolver ();
+			_assemblies = new Hashtable ();
 		}
 
-		public AssemblyMarker Resolve (IMetadataScope scope)
+		public AssemblyDefinition Resolve (string filename)
+		{
+			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (filename);
+			AddAssembly (assembly);
+			return assembly;
+
+		}
+
+		public AssemblyDefinition Resolve (IMetadataScope scope)
 		{
 			AssemblyNameReference reference;
 			if (scope is ModuleDefinition) {
 				AssemblyDefinition asm = ((ModuleDefinition) scope).Assembly;
-				foreach (AssemblyMarker am in _asmCtx.Values)
-					if (am.Assembly == asm)
-						return am;
-
 				reference = asm.Name;
 			} else
 				reference = (AssemblyNameReference) scope;
 
-			if (_asmCtx.Contains (reference.FullName))
-				return (AssemblyMarker) _asmCtx [reference.FullName];
+			AssemblyDefinition assembly = _assemblies [reference.FullName] as AssemblyDefinition;
+			if (assembly != null)
+				return assembly;
+
+			assembly = _resolver.Resolve (reference);
 
 			AssemblyAction action = AssemblyAction.Link;
 			if (IsCore (reference))
 				action = _coreAction;
 
-			AssemblyDefinition assembly = _resolver.Resolve (reference);
+			Annotations.SetAction (assembly, action);
 
-			AssemblyMarker marker = new AssemblyMarker (
-				action,
-				assembly);
+			AddAssembly (assembly);
+			return assembly;
+		}
 
-			_asmCtx.Add (assembly.Name.FullName, marker);
-			return marker;
+		void AddAssembly (AssemblyDefinition assembly)
+		{
+			_assemblies.Add (assembly.Name.FullName, assembly);
 		}
 
 		static bool IsCore (AssemblyNameReference name)
@@ -104,16 +112,11 @@ namespace Mono.Linker {
 				|| name.Name.StartsWith ("Microsoft");
 		}
 
-		public void AddMarker (AssemblyMarker marker)
+		public AssemblyDefinition [] GetAssemblies ()
 		{
-			_asmCtx [marker.Assembly.Name.FullName] = marker;
-		}
-
-		public AssemblyMarker [] GetAssemblies ()
-		{
-			AssemblyMarker [] markers = new AssemblyMarker [_asmCtx.Count];
-			_asmCtx.Values.CopyTo (markers, 0);
-			return markers;
+			AssemblyDefinition [] asms = new AssemblyDefinition [_assemblies.Count];
+			_assemblies.Values.CopyTo (asms, 0);
+			return asms;
 		}
 	}
 }

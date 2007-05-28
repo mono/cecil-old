@@ -36,28 +36,15 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
-			foreach (AssemblyMarker am in context.GetAssemblies())
-				if (am.Action == AssemblyAction.Link)
-					CleanAssembly (am.Assembly);
+			foreach (AssemblyDefinition assembly in context.GetAssemblies())
+				if (Annotations.GetAction (assembly) == AssemblyAction.Link)
+					CleanAssembly (assembly);
 		}
 
 		static void CleanAssembly (AssemblyDefinition asm)
 		{
 			foreach (TypeDefinition type in asm.MainModule.Types)
 				CleanType (type);
-		}
-
-		static bool CheckType (ModuleDefinition module, TypeReference reference)
-		{
-			TypeSpecification spec = reference as TypeSpecification;
-			if (spec != null)
-				return CheckType (module, spec.ElementType);
-
-			TypeDefinition type = reference as TypeDefinition;
-			if (type == null)
-				return true;
-
-			return module.Types.Contains (type);
 		}
 
 		static void CleanType (TypeDefinition type)

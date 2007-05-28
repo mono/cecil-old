@@ -5,6 +5,7 @@
 //   Jb Evain (jbevain@gmail.com)
 //
 // (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -36,24 +37,23 @@ namespace Mono.Linker {
 
 		public void Process (LinkContext context)
 		{
-			foreach (AssemblyMarker am in context.GetAssemblies ())
-				SweepAssembly (am, context);
+			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
+				SweepAssembly (assembly, context);
 		}
 
-		static void SweepAssembly (AssemblyMarker am, LinkContext context)
+		static void SweepAssembly (AssemblyDefinition assembly, LinkContext context)
 		{
-			if (am.Action != AssemblyAction.Link)
+			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 				return;
 
-			foreach (TypeMarker tm in am.GetTypes ())
-				SweepType (tm);
-
-			foreach (TypeDefinition type in Clone (am.Assembly.MainModule.Types)) {
-				if (IsMarked (type))
+			foreach (TypeDefinition type in Clone (assembly.MainModule.Types)) {
+				if (Annotations.IsMarked (type)) {
+					SweepType (type);
 					continue;
+				}
 
-				am.Assembly.MainModule.Types.Remove (type);
-				SweepTypeReferences (am, type, context);
+				assembly.MainModule.Types.Remove (type);
+				SweepTypeReferences (assembly, type, context);
 			}
 		}
 
@@ -62,15 +62,15 @@ namespace Mono.Linker {
 			return new ArrayList (collection);
 		}
 
-		static void SweepTypeReferences (AssemblyMarker am, TypeDefinition type, LinkContext context)
+		static void SweepTypeReferences (AssemblyDefinition assembly, TypeDefinition type, LinkContext context)
 		{
-			foreach (AssemblyMarker marker in context.GetAssemblies ()) {
-				ModuleDefinition module = marker.Assembly.MainModule;
+			foreach (AssemblyDefinition asm in context.GetAssemblies ()) {
+				ModuleDefinition module = asm.MainModule;
 				if (!module.TypeReferences.Contains (type))
 					continue;
 
 				TypeReference typeRef = module.TypeReferences [type.FullName];
-				if (AssemblyMatch (am.Assembly, typeRef))
+				if (AssemblyMatch (assembly, typeRef))
 					module.TypeReferences.Remove (typeRef);
 			}
 		}
@@ -84,34 +84,27 @@ namespace Mono.Linker {
 			return assembly.Name.FullName == reference.FullName;
 		}
 
-		static void SweepType (TypeMarker tm)
+		static void SweepType (TypeDefinition type)
 		{
-			SweepMethods (tm);
-			SweepFields (tm);
+			SweepMethods (type);
+			SweepFields (type);
 		}
 
-		static void SweepFields (TypeMarker tm)
+		static void SweepFields (TypeDefinition type)
 		{
-			TypeDefinition type = tm.Type;
 			foreach (FieldDefinition field in Clone (type.Fields))
-				if (!IsMarked (field))
+				if (!Annotations.IsMarked (field))
 					type.Fields.Remove (field);
 		}
 
-		static bool IsMarked (IAnnotationProvider provider)
+		static void SweepMethods (TypeDefinition type)
 		{
-			return provider.Annotations.Contains (Marker.MarkerKey);
-		}
-
-		static void SweepMethods (TypeMarker tm)
-		{
-			TypeDefinition type = tm.Type;
 			foreach (MethodDefinition meth in Clone (type.Methods))
-				if (!IsMarked (meth))
+				if (!Annotations.IsMarked (meth))
 					type.Methods.Remove (meth);
 
 			foreach (MethodDefinition ctor in Clone (type.Constructors))
-				if (!IsMarked (ctor))
+				if (!Annotations.IsMarked (ctor))
 					type.Constructors.Remove (ctor);
 		}
 	}
