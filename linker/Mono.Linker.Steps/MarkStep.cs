@@ -72,12 +72,17 @@ namespace Mono.Linker.Steps {
 		{
 			MarkType (type);
 
-			foreach (FieldDefinition field in type.Fields)
-				if (Annotations.IsMarked (field))
-					MarkField (field);
+			InitializeFields (type);
 
 			InitializeMethods (type.Methods);
 			InitializeMethods (type.Constructors);
+		}
+
+		void InitializeFields (TypeDefinition type)
+		{
+			foreach (FieldDefinition field in type.Fields)
+				if (Annotations.IsMarked (field))
+					MarkField (field);
 		}
 
 		void InitializeMethods (ICollection methods)
@@ -132,14 +137,10 @@ namespace Mono.Linker.Steps {
 
 		void MarkField (FieldReference field)
 		{
-			AssemblyDefinition assembly = _context.Resolve (field.DeclaringType.Scope);
-			MarkAssembly (assembly);
-			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
+			if (IgnoreScope (field.DeclaringType.Scope))
 				return;
 
-			FieldDefinition fd = field as FieldDefinition;
-			if (fd == null)
-				fd = _context.Resolver.Resolve (field);
+			FieldDefinition fd = ResolveFieldDefinition (field);
 
 			if (Annotations.IsProcessed (fd))
 				return;
@@ -153,22 +154,31 @@ namespace Mono.Linker.Steps {
 			Annotations.Mark (fd);
 		}
 
+		bool IgnoreScope (IMetadataScope scope)
+		{
+			AssemblyDefinition assembly = ResolveAssembly (scope);
+			return Annotations.GetAction (assembly) != AssemblyAction.Link;
+		}
+
+		FieldDefinition ResolveFieldDefinition (FieldReference field)
+		{
+			FieldDefinition fd = field as FieldDefinition;
+			if (fd == null)
+				fd = _context.Resolver.Resolve (field);
+			return fd;
+		}
+
 		void MarkType (TypeReference type)
 		{
 			if (type == null || type is GenericParameter)
 				return;
 
-			while (type is TypeSpecification)
-				type = ((TypeSpecification) type).ElementType;
+			type = GetOriginalType (type);
 
-			AssemblyDefinition assembly = _context.Resolve (type.Scope);
-			MarkAssembly (assembly);
-			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
+			if (IgnoreScope (type.Scope))
 				return;
 
-			TypeDefinition td = type as TypeDefinition;
-			if (td == null)
-				td = _context.Resolver.Resolve (type);
+			TypeDefinition td = ResolveTypeDefinition (type);
 
 			if (Annotations.IsProcessed (td))
 				return;
@@ -180,9 +190,8 @@ namespace Mono.Linker.Steps {
 				MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
 
-			if (td.BaseType != null && td.BaseType.FullName == "System.MulticastDelegate")
-				foreach (MethodDefinition ctor in td.Constructors)
-					MarkMethod (ctor);
+			if (IsMulticastDelegate (td))
+				MarkMethodCollection (td.Constructors);
 
 			MarkGenericParameters (td);
 
@@ -203,6 +212,26 @@ namespace Mono.Linker.Steps {
 			Annotations.Mark (td);
 
 			ApplyPreserveInfo (td);
+		}
+
+		static bool IsMulticastDelegate (TypeDefinition td)
+		{
+			return td.BaseType != null && td.BaseType.FullName == "System.MulticastDelegate";
+		}
+
+		TypeDefinition ResolveTypeDefinition (TypeReference type)
+		{
+			TypeDefinition td = type as TypeDefinition;
+			if (td == null)
+				td = _context.Resolver.Resolve (type);
+			return td;
+		}
+
+		static TypeReference GetOriginalType (TypeReference type)
+		{
+			while (type is TypeSpecification)
+				type = ((TypeSpecification) type).ElementType;
+			return type;
 		}
 
 		void ApplyPreserveInfo (TypeDefinition type)
@@ -244,30 +273,45 @@ namespace Mono.Linker.Steps {
 
 		void MarkMethod (MethodReference method)
 		{
-			while (method is MethodSpecification)
-				method = ((MethodSpecification) method).ElementMethod;
+			method = GetOriginalMethod (method);
 
 			if (method.DeclaringType is ArrayType)
 				return;
 
-			AssemblyDefinition assembly = _context.Resolve (method.DeclaringType.Scope);
-			MarkAssembly (assembly);
-			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
+			if (IgnoreScope (method.DeclaringType.Scope))
 				return;
 
-			MethodDefinition md = method as MethodDefinition;
-			if (md == null)
-				md = _context.Resolver.Resolve (method);
+			MethodDefinition md = ResolveMethodDefinition (method);
 
 			Annotations.SetAction (md, MethodAction.Parse);
 
 			_queue.Enqueue (md);
 		}
 
+		AssemblyDefinition ResolveAssembly (IMetadataScope scope)
+		{
+			AssemblyDefinition assembly = _context.Resolve (scope);
+			MarkAssembly (assembly);
+			return assembly;
+		}
+
+		static MethodReference GetOriginalMethod (MethodReference method)
+		{
+			while (method is MethodSpecification)
+				method = ((MethodSpecification) method).ElementMethod;
+			return method;
+		}
+
+		MethodDefinition ResolveMethodDefinition (MethodReference method)
+		{
+			MethodDefinition md = method as MethodDefinition;
+			if (md == null)
+				md = _context.Resolver.Resolve (method);
+			return md;
+		}
+
 		void ProcessMethod (MethodDefinition md)
 		{
-			AssemblyDefinition assembly = _context.Resolve (md.DeclaringType.Scope);
-
 			if (Annotations.IsProcessed (md))
 				return;
 
@@ -294,7 +338,7 @@ namespace Mono.Linker.Steps {
 			MarkType (md.ReturnType.ReturnType);
 			MarkCustomAttributes (md.ReturnType);
 
-			if (md.HasBody && ShouldParseMethodBody (assembly, md))
+			if (ShouldParseMethodBody (md))
 				MarkMethodBody (md.Body);
 
 			Annotations.Mark (md);
@@ -306,8 +350,12 @@ namespace Mono.Linker.Steps {
 				MarkCustomAttributes (p);
 		}
 
-		static bool ShouldParseMethodBody (AssemblyDefinition assembly, MethodDefinition method)
+		bool ShouldParseMethodBody (MethodDefinition method)
 		{
+			if (!method.HasBody)
+				return false;
+
+			AssemblyDefinition assembly = ResolveAssembly (method.DeclaringType.Scope);
 			return (Annotations.GetAction (method) == MethodAction.ForceParse ||
 				(Annotations.GetAction (assembly) == AssemblyAction.Link && Annotations.GetAction (method) == MethodAction.Parse));
 		}
