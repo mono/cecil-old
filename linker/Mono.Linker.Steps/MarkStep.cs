@@ -122,12 +122,19 @@ namespace Mono.Linker.Steps {
 				MarkMethod (ca.Constructor);
 		}
 
+		static bool CheckProcessed (IAnnotationProvider provider)
+		{
+			if (Annotations.IsProcessed (provider))
+				return true;
+
+			Annotations.Processed (provider);
+			return false;
+		}
+
 		void MarkAssembly (AssemblyDefinition assembly)
 		{
-			if (Annotations.IsProcessed (assembly))
+			if (CheckProcessed (assembly))
 				return;
-
-			Annotations.Processed (assembly);
 
 			MarkCustomAttributes (assembly);
 
@@ -142,10 +149,8 @@ namespace Mono.Linker.Steps {
 
 			FieldDefinition fd = ResolveFieldDefinition (field);
 
-			if (Annotations.IsProcessed (fd))
+			if (CheckProcessed (fd))
 				return;
-
-			Annotations.Processed (fd);
 
 			MarkType (fd.DeclaringType);
 			MarkType (fd.FieldType);
@@ -165,6 +170,7 @@ namespace Mono.Linker.Steps {
 			FieldDefinition fd = field as FieldDefinition;
 			if (fd == null)
 				fd = _context.Resolver.Resolve (field);
+
 			return fd;
 		}
 
@@ -180,14 +186,11 @@ namespace Mono.Linker.Steps {
 
 			TypeDefinition td = ResolveTypeDefinition (type);
 
-			if (Annotations.IsProcessed (td))
+			if (CheckProcessed (td))
 				return;
 
-			Annotations.Processed (td);
-
 			MarkType (td.BaseType);
-			if (td.DeclaringType != null)
-				MarkType (td.DeclaringType);
+			MarkType (td.DeclaringType);
 			MarkCustomAttributes(td);
 
 			if (IsMulticastDelegate (td))
@@ -224,6 +227,7 @@ namespace Mono.Linker.Steps {
 			TypeDefinition td = type as TypeDefinition;
 			if (td == null)
 				td = _context.Resolver.Resolve (type);
+
 			return td;
 		}
 
@@ -231,6 +235,7 @@ namespace Mono.Linker.Steps {
 		{
 			while (type is TypeSpecification)
 				type = ((TypeSpecification) type).ElementType;
+
 			return type;
 		}
 
@@ -299,6 +304,7 @@ namespace Mono.Linker.Steps {
 		{
 			while (method is MethodSpecification)
 				method = ((MethodSpecification) method).ElementMethod;
+
 			return method;
 		}
 
@@ -307,15 +313,14 @@ namespace Mono.Linker.Steps {
 			MethodDefinition md = method as MethodDefinition;
 			if (md == null)
 				md = _context.Resolver.Resolve (method);
+
 			return md;
 		}
 
 		void ProcessMethod (MethodDefinition md)
 		{
-			if (Annotations.IsProcessed (md))
+			if (CheckProcessed (md))
 				return;
-
-			Annotations.Processed (md);
 
 			MarkType (md.DeclaringType);
 			MarkCustomAttributes (md);
