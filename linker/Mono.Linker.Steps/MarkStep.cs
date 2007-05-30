@@ -176,10 +176,13 @@ namespace Mono.Linker.Steps {
 
 		void MarkType (TypeReference type)
 		{
-			if (type == null || type is GenericParameter)
+			if (type == null)
 				return;
 
 			type = GetOriginalType (type);
+
+			if (type is GenericParameter)
+				return;
 
 			if (IgnoreScope (type.Scope))
 				return;

@@ -1,3 +1,9 @@
+2007-05-30  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Linker/MarkStep.cs:
+		Fix regression: do not mark GenericParameters that are
+		part of a typespec, like T[] or T*.
+
 2007-05-28  Jb Evain  <jbevain@novell.com>
 
 	* Big refactoring. Get rid of the markers, use the annotations
