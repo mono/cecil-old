@@ -75,10 +75,6 @@ namespace Mono.Linker {
 
 		public AssemblyDefinition Resolve (IMetadataScope scope)
 		{
-			if (scope == null)
-			{
-				int a = 2;
-			}
 			AssemblyNameReference reference;
 			if (scope is ModuleDefinition) {
 				AssemblyDefinition asm = ((ModuleDefinition) scope).Assembly;
