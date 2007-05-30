@@ -37,17 +37,17 @@ namespace Mono.Cecil {
 			_module = module;
 		}
 
-		public TypeReference ImportTypeReference (TypeReference type, ImportContext context)
+		public virtual TypeReference ImportTypeReference (TypeReference type, ImportContext context)
 		{
 			return _module.Controller.Helper.ImportTypeReference (type, context);
 		}
 
-		public FieldReference ImportFieldReference (FieldReference field, ImportContext context)
+		public virtual FieldReference ImportFieldReference (FieldReference field, ImportContext context)
 		{
 			return _module.Controller.Helper.ImportFieldReference (field, context);
 		}
 
-		public MethodReference ImportMethodReference (MethodReference method, ImportContext context)
+		public virtual MethodReference ImportMethodReference (MethodReference method, ImportContext context)
 		{
 			return _module.Controller.Helper.ImportMethodReference (method, context);
 		}

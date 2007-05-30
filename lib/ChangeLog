@@ -1,5 +1,8 @@
 2007-05-30  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil/DefaultReferenceImporter.cs:
+		Make methods virtual.
+
 	* Mono.Cecil.dll.sources
 	  Mono.Cecil.csproj
 	  Mono.Cecil/ReflectionHelper.cs
