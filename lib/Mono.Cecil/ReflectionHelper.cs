@@ -577,20 +577,5 @@ namespace Mono.Cecil {
 			m_memberRefCache [field.ToString ()] = f;
 			return f;
 		}
-
-		public FieldDefinition ImportFieldDefinition (FieldDefinition field, ImportContext context)
-		{
-			return FieldDefinition.Clone (field, context);
-		}
-
-		public MethodDefinition ImportMethodDefinition (MethodDefinition meth, ImportContext context)
-		{
-			return MethodDefinition.Clone (meth, context);
-		}
-
-		public TypeDefinition ImportTypeDefinition (TypeDefinition type, ImportContext context)
-		{
-			return TypeDefinition.Clone (type, context);
-		}
 	}
 }

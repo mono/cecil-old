@@ -1,3 +1,23 @@
+2007-05-30  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil.dll.sources
+	  Mono.Cecil.csproj
+	  Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/IReferenceImporter.cs
+	  Mono.Cecil/FieldDefinition.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/ImportContext.cs
+	  Mono.Cecil/NullReferenceImporter.cs
+	  Mono.Cecil/MethodDefinition.cs
+	  Mono.Cecil/EventDefinition.cs
+	  Mono.Cecil/ReflectionController.cs
+	  Mono.Cecil/ModuleDefinition.cs
+	  Mono.Cecil/GenericContext.cs
+	  Mono.Cecil/DefaultReferenceImporter.cs
+	  Mono.Cecil/PropertyDefinition.cs:
+		Provide a IReferenceImporter to customize how
+		types are injected from an assembly to another.
+
 2007-05-28  Jb Evain  <jbevain@novell.com>
 
 	* Borrow annotations concept from boo ast node.

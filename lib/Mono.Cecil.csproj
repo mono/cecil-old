@@ -240,6 +240,7 @@
     <Compile Include="Mono.Cecil\CustomAttribute.cs" />
     <Compile Include="Mono.Cecil\CustomAttributeCollection.cs" />
     <Compile Include="Mono.Cecil\DefaultAssemblyResolver.cs" />
+    <Compile Include="Mono.Cecil\DefaultReferenceImporter.cs" />
     <Compile Include="Mono.Cecil\EmbeddedResource.cs" />
     <Compile Include="Mono.Cecil\EventAttributes.cs" />
     <Compile Include="Mono.Cecil\EventDefinition.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Mono.Cecil\IMethodSignature.cs" />
     <Compile Include="Mono.Cecil\ImportContext.cs" />
     <Compile Include="Mono.Cecil\InterfaceCollection.cs" />
+    <Compile Include="Mono.Cecil\IReferenceImporter.cs" />
     <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs" />
     <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs" />
     <Compile Include="Mono.Cecil\IReflectionVisitable.cs" />
@@ -302,6 +304,7 @@
     <Compile Include="Mono.Cecil\ModuleReferenceCollection.cs" />
     <Compile Include="Mono.Cecil\NativeType.cs" />
     <Compile Include="Mono.Cecil\NestedTypeCollection.cs" />
+    <Compile Include="Mono.Cecil\NullReferenceImporter.cs" />
     <Compile Include="Mono.Cecil\OverrideCollection.cs" />
     <Compile Include="Mono.Cecil\ParameterAttributes.cs" />
     <Compile Include="Mono.Cecil\ParameterDefinition.cs" />

@@ -162,7 +162,7 @@ namespace Mono.Cecil {
 
 		public FieldDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (this.DeclaringType));
+			return Clone (this, new ImportContext (NullReferenceImporter.Instance, this.DeclaringType));
 		}
 
 		internal static FieldDefinition Clone (FieldDefinition field, ImportContext context)

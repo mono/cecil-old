@@ -24,6 +24,7 @@
 ./Mono.Cecil/CustomAttribute.cs
 ./Mono.Cecil/CustomAttributeCollection.cs
 ./Mono.Cecil/DefaultAssemblyResolver.cs
+./Mono.Cecil/DefaultReferenceImporter.cs
 ./Mono.Cecil/EmbeddedResource.cs
 ./Mono.Cecil/EventAttributes.cs
 ./Mono.Cecil/EventDefinition.cs
@@ -60,6 +61,7 @@
 ./Mono.Cecil/IMethodSignature.cs
 ./Mono.Cecil/ImportContext.cs
 ./Mono.Cecil/InterfaceCollection.cs
+./Mono.Cecil/IReferenceImporter.cs
 ./Mono.Cecil/IReflectionStructureVisitable.cs
 ./Mono.Cecil/IReflectionStructureVisitor.cs
 ./Mono.Cecil/IReflectionVisitable.cs
@@ -86,6 +88,7 @@
 ./Mono.Cecil/ModuleReferenceCollection.cs
 ./Mono.Cecil/NativeType.cs
 ./Mono.Cecil/NestedTypeCollection.cs
+./Mono.Cecil/NullReferenceImporter.cs
 ./Mono.Cecil/OverrideCollection.cs
 ./Mono.Cecil/ParameterAttributes.cs
 ./Mono.Cecil/ParameterDefinition.cs

@@ -1,10 +1,10 @@
 //
-// GenericContext.cs
+// NullReferenceImporter.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,58 +28,23 @@
 
 namespace Mono.Cecil {
 
-	public class GenericContext {
+	class NullReferenceImporter : IReferenceImporter {
 
-		TypeReference m_type;
-		MethodReference m_method;
-		bool m_allowCreation;
+		public static readonly NullReferenceImporter Instance = new NullReferenceImporter ();
 
-		public TypeReference Type {
-			get { return m_type; }
-			set { m_type = value; }
-		}
-
-		public MethodReference Method {
-			get { return m_method; }
-			set { m_method = value; }
-		}
-
-		public bool AllowCreation {
-			get { return m_allowCreation; }
-			set { m_allowCreation = value; }
-		}
-
-		public bool Null {
-			get { return m_type == null && m_method == null; }
-		}
-
-		public GenericContext ()
+		public TypeReference ImportTypeReference (TypeReference type, ImportContext context)
 		{
+			return type;
 		}
 
-		public GenericContext (TypeReference type, MethodReference meth)
+		public FieldReference ImportFieldReference (FieldReference field, ImportContext context)
 		{
-			m_type = type;
-			m_method = meth;
+			return field;
 		}
 
-		public GenericContext (IGenericParameterProvider provider)
+		public MethodReference ImportMethodReference (MethodReference method, ImportContext context)
 		{
-			if (provider is TypeReference)
-				m_type = provider as TypeReference;
-			else if (provider is MethodReference) {
-				MethodReference meth = provider as MethodReference;
-				m_method = meth;
-				m_type = meth.DeclaringType;
-			}
-		}
-
-		public GenericContext Clone ()
-		{
-			GenericContext ctx = new GenericContext ();
-			ctx.Type = m_type;
-			ctx.Method = m_method;
-			return ctx;
+			return method;
 		}
 	}
 }

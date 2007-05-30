@@ -138,7 +138,7 @@ namespace Mono.Cecil {
 
 		public CustomAttribute Clone ()
 		{
-			return Clone (this, new ImportContext ());
+			return Clone (this, new ImportContext (NullReferenceImporter.Instance));
 		}
 
 		static void Clone (IDictionary original, IDictionary target)

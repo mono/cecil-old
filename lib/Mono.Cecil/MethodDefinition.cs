@@ -28,11 +28,8 @@
 
 namespace Mono.Cecil {
 
-	using System;
-
 	using Mono.Cecil.Binary;
 	using Mono.Cecil.Cil;
-	using Mono.Cecil.Signatures;
 
 	public sealed class MethodDefinition : MethodReference, IMemberDefinition,
 		IHasSecurity, ICustomAttributeProvider {
@@ -286,7 +283,7 @@ namespace Mono.Cecil {
 
 		public MethodDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (this));
+			return Clone (this, new ImportContext (NullReferenceImporter.Instance, this));
 		}
 
 		internal static MethodDefinition Clone (MethodDefinition meth, ImportContext context)

@@ -1,10 +1,10 @@
 //
-// GenericContext.cs
+// DefaultReferenceImporter.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,58 +28,28 @@
 
 namespace Mono.Cecil {
 
-	public class GenericContext {
+	public class DefaultReferenceImporter : IReferenceImporter {
 
-		TypeReference m_type;
-		MethodReference m_method;
-		bool m_allowCreation;
+		ModuleDefinition _module;
 
-		public TypeReference Type {
-			get { return m_type; }
-			set { m_type = value; }
-		}
-
-		public MethodReference Method {
-			get { return m_method; }
-			set { m_method = value; }
-		}
-
-		public bool AllowCreation {
-			get { return m_allowCreation; }
-			set { m_allowCreation = value; }
-		}
-
-		public bool Null {
-			get { return m_type == null && m_method == null; }
-		}
-
-		public GenericContext ()
+		public DefaultReferenceImporter (ModuleDefinition module)
 		{
+			_module = module;
 		}
 
-		public GenericContext (TypeReference type, MethodReference meth)
+		public TypeReference ImportTypeReference (TypeReference type, ImportContext context)
 		{
-			m_type = type;
-			m_method = meth;
+			return _module.Controller.Helper.ImportTypeReference (type, context);
 		}
 
-		public GenericContext (IGenericParameterProvider provider)
+		public FieldReference ImportFieldReference (FieldReference field, ImportContext context)
 		{
-			if (provider is TypeReference)
-				m_type = provider as TypeReference;
-			else if (provider is MethodReference) {
-				MethodReference meth = provider as MethodReference;
-				m_method = meth;
-				m_type = meth.DeclaringType;
-			}
+			return _module.Controller.Helper.ImportFieldReference (field, context);
 		}
 
-		public GenericContext Clone ()
+		public MethodReference ImportMethodReference (MethodReference method, ImportContext context)
 		{
-			GenericContext ctx = new GenericContext ();
-			ctx.Type = m_type;
-			ctx.Method = m_method;
-			return ctx;
+			return _module.Controller.Helper.ImportMethodReference (method, context);
 		}
 	}
 }

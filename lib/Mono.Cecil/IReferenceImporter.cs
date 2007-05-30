@@ -1,10 +1,10 @@
 //
-// ReflectionController.cs
+// IReferenceImporter.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2005 Jb Evain
+// (C) 2007 Jb Evain
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,35 +28,10 @@
 
 namespace Mono.Cecil {
 
-	internal sealed class ReflectionController {
+	public interface IReferenceImporter {
 
-		ReflectionReader m_reader;
-		ReflectionWriter m_writer;
-		ReflectionHelper m_helper;
-		DefaultReferenceImporter m_importer;
-
-		public ReflectionReader Reader {
-			get { return m_reader; }
-		}
-
-		public ReflectionWriter Writer {
-			get { return m_writer; }
-		}
-
-		public ReflectionHelper Helper {
-			get { return m_helper; }
-		}
-
-		public IReferenceImporter Importer {
-			get { return m_importer; }
-		}
-
-		public ReflectionController (ModuleDefinition module)
-		{
-			m_reader = new AggressiveReflectionReader (module);
-			m_writer = new ReflectionWriter (module);
-			m_helper = new ReflectionHelper (module);
-			m_importer = new DefaultReferenceImporter (module);
-		}
+		TypeReference ImportTypeReference (TypeReference type, ImportContext context);
+		FieldReference ImportFieldReference (FieldReference field, ImportContext context);
+		MethodReference ImportMethodReference (MethodReference method, ImportContext context);
 	}
 }

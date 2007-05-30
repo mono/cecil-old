@@ -199,12 +199,22 @@ namespace Mono.Cecil {
 
 		ImportContext GetContext ()
 		{
-			return new ImportContext (m_controller.Helper);
+			return new ImportContext (m_controller.Importer);
+		}
+
+		static ImportContext GetContext (IReferenceImporter importer)
+		{
+			return new ImportContext (importer);
 		}
 
 		ImportContext GetContext (TypeDefinition context)
 		{
-			return new ImportContext (m_controller.Helper, context);
+			return new ImportContext (m_controller.Importer, context);
+		}
+
+		static ImportContext GetContext (IReferenceImporter importer, TypeDefinition context)
+		{
+			return new ImportContext (importer, context);
 		}
 
 		public TypeReference Import (Type type)
@@ -319,55 +329,112 @@ namespace Mono.Cecil {
 			return m_controller.Helper.ImportFieldReference (field, GetContext (context));
 		}
 
+		static FieldDefinition ImportFieldDefinition (FieldDefinition field, ImportContext context)
+		{
+			return FieldDefinition.Clone (field, context);
+		}
+
+		static MethodDefinition ImportMethodDefinition (MethodDefinition meth, ImportContext context)
+		{
+			return MethodDefinition.Clone (meth, context);
+		}
+
+		static TypeDefinition ImportTypeDefinition (TypeDefinition type, ImportContext context)
+		{
+			return TypeDefinition.Clone (type, context);
+		}
+
 		public TypeDefinition Inject (TypeDefinition type)
+		{
+			return Inject (type, m_controller.Importer);
+		}
+
+		public TypeDefinition Inject (TypeDefinition type, IReferenceImporter importer)
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 
-			return m_controller.Helper.ImportTypeDefinition (type, GetContext (type));
+			return ImportTypeDefinition (type, GetContext (importer));
 		}
 
 		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context)
 		{
+			return Inject (type, context, m_controller.Importer);
+		}
+
+		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context, IReferenceImporter importer)
+		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportTypeDefinition (type, GetContext (context));
+			return ImportTypeDefinition (type, GetContext (importer, context));
 		}
 
 		public MethodDefinition Inject (MethodDefinition meth)
 		{
+			return Inject (meth, m_controller.Importer);
+		}
+
+		public MethodDefinition Inject (MethodDefinition meth, IReferenceImporter importer)
+		{
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 
-			return m_controller.Helper.ImportMethodDefinition (meth, GetContext ());
+			return ImportMethodDefinition (meth, GetContext (importer));
 		}
 
 		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context)
 		{
+			return Inject (meth, context, m_controller.Importer);
+		}
+
+		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context, IReferenceImporter importer)
+		{
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportMethodDefinition (meth, GetContext (context));
+			return ImportMethodDefinition (meth, GetContext (importer, context));
 		}
 
 		public FieldDefinition Inject (FieldDefinition field)
 		{
+			return Inject (field, m_controller.Importer);
+		}
+
+		public FieldDefinition Inject (FieldDefinition field, IReferenceImporter importer)
+		{
 			if (field == null)
 				throw new ArgumentNullException ("field");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 
-			return m_controller.Helper.ImportFieldDefinition (field, GetContext ());
+			return ImportFieldDefinition (field, GetContext (importer));
 		}
 
 		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context)
 		{
+			return Inject (field, context, m_controller.Importer);
+		}
+
+		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context, IReferenceImporter importer)
+		{
 			if (field == null)
 				throw new ArgumentNullException ("field");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportFieldDefinition (field, GetContext (context));
+			return ImportFieldDefinition (field, GetContext (importer, context));
 		}
 
 		public void FullLoad ()
@@ -476,7 +543,7 @@ namespace Mono.Cecil {
 		public override string ToString ()
 		{
 			string s = (m_main ? "(main), Mvid=" : "Mvid=");
-			return s + m_mvid.ToString ();
+			return s + m_mvid;
 		}
 	}
 }

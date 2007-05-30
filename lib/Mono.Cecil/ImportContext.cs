@@ -28,49 +28,40 @@
 
 namespace Mono.Cecil {
 
-	internal class ImportContext {
+	public class ImportContext {
 
 		GenericContext m_genContext;
-		ReflectionHelper m_helper;
+		IReferenceImporter m_importer;
 
 		public GenericContext GenericContext {
 			get { return m_genContext; }
 		}
 
-		public ImportContext ()
+		public ImportContext (IReferenceImporter importer)
 		{
 			m_genContext = new GenericContext ();
+			m_importer = importer;
 		}
 
-		public ImportContext (ReflectionHelper helper) : this ()
+		public ImportContext (IReferenceImporter importer, IGenericParameterProvider provider)
 		{
-			m_helper = helper;
-		}
-
-		public ImportContext (IGenericParameterProvider provider)
-		{
-			m_genContext = new GenericContext (provider);
-		}
-
-		public ImportContext (ReflectionHelper helper, IGenericParameterProvider provider)
-		{
-			m_helper = helper;
+			m_importer = importer;
 			m_genContext = new GenericContext (provider);
 		}
 
 		public TypeReference Import (TypeReference type)
 		{
-			return m_helper == null ? type : m_helper.ImportTypeReference (type, this);
+			return m_importer.ImportTypeReference (type, this);
 		}
 
 		public MethodReference Import (MethodReference meth)
 		{
-			return m_helper == null ? meth : m_helper.ImportMethodReference (meth, this);
+			return m_importer.ImportMethodReference (meth, this);
 		}
 
 		public FieldReference Import (FieldReference field)
 		{
-			return m_helper == null ? field : m_helper.ImportFieldReference (field, this);
+			return m_importer.ImportFieldReference (field, this);
 		}
 	}
 }
