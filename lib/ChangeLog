@@ -1,5 +1,9 @@
 2007-05-30  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil/DefaultAssemblyResolver.cs:
+		Add a RegisterAssembly method to register an
+		assembly to the cache without having to resolve it.
+
 	* Mono.Cecil/DefaultReferenceImporter.cs:
 		Make methods virtual.
 

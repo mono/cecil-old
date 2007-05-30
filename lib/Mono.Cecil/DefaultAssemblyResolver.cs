@@ -49,5 +49,14 @@ namespace Mono.Cecil {
 
 			return asm;
 		}
+
+		protected void RegisterAssembly (AssemblyDefinition assembly)
+		{
+			string key = assembly.Name.FullName;
+			if (m_cache.Contains (key))
+				return;
+
+			m_cache [key] = assembly;
+		}
 	}
 }
