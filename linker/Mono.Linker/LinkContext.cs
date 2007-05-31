@@ -69,6 +69,7 @@ namespace Mono.Linker {
 		public AssemblyDefinition Resolve (string filename)
 		{
 			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (filename);
+			_resolver.CacheAssembly (assembly);
 			AddAssembly (assembly);
 			return assembly;
 		}

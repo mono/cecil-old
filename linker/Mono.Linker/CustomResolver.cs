@@ -35,6 +35,11 @@ namespace Mono.Linker {
 
 	public class CustomResolver : DefaultAssemblyResolver {
 
+		public void CacheAssembly (AssemblyDefinition assembly)
+		{
+			RegisterAssembly (assembly);
+		}
+
 		public TypeDefinition Resolve (TypeReference type)
 		{
 			if (type is TypeDefinition)
