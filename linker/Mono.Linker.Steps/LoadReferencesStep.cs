@@ -26,16 +26,30 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System.Collections;
+
 using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
 	public class LoadReferencesStep : BaseStep {
 
+		IDictionary _references = new Hashtable ();
+
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
+			ProcessReferences (assembly);
+		}
+
+		void ProcessReferences (AssemblyDefinition assembly)
+		{
+			if (_references.Contains (assembly.Name.FullName))
+				return;
+
+			_references.Add (assembly.Name.FullName, assembly);
+
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences)
-				ProcessAssembly (Context.Resolve (reference));
+				ProcessReferences (Context.Resolve (reference));
 		}
 	}
 }
