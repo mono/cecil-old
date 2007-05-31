@@ -70,7 +70,7 @@ namespace Mono.Linker {
 		{
 			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (filename);
 			_resolver.CacheAssembly (assembly);
-			AddAssembly (assembly);
+			AddAssembly (assembly.Name, assembly);
 			return assembly;
 		}
 
@@ -86,7 +86,7 @@ namespace Mono.Linker {
 
 			SetAction (assembly);
 
-			AddAssembly (assembly);
+			AddAssembly (reference, assembly);
 			return assembly;
 		}
 
@@ -111,9 +111,9 @@ namespace Mono.Linker {
 			Annotations.SetAction (assembly, action);
 		}
 
-		void AddAssembly (AssemblyDefinition assembly)
+		void AddAssembly (AssemblyNameReference reference, AssemblyDefinition assembly)
 		{
-			_assemblies.Add (assembly.Name.FullName, assembly);
+			_assemblies.Add (reference.FullName, assembly);
 		}
 
 		static bool IsCore (AssemblyNameReference name)

@@ -1,5 +1,9 @@
 2007-05-31  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker/LinkContext.cs:
+		A resolved assembly is not always the one requested,
+		cache the good name.
+
 	* Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
 	  Mono.Linker.Steps/OutputStep.cs
 	  Mono.Linker.Steps/LoadReferencesStep.cs
