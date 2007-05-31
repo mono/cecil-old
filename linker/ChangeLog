@@ -1,5 +1,9 @@
 2007-05-31  Jb Evain  <jbevain@novell.com>
 
+	* README: added
+	  monolinker.exe.sources: moved to mink.exe.sources
+	  Makefile, Mono.Linker.csproj: emit a mink.exe
+
 	* Mono.Linker/LinkContext.cs:
 		A resolved assembly is not always the one requested,
 		cache the good name.
