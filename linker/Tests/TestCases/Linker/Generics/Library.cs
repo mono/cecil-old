@@ -14,6 +14,7 @@ public class Foo {
 		Baz<string> bs = new Baz<string> (s);
 		bs.Gazonk ();
 		bs.Bat<int>(s, i);
+		bs.BiroBiro ();
 	}
 }
 
@@ -34,5 +35,10 @@ public class Baz<T> {
 	public void Bat<M> (T t, M m)
 	{
 		Console.WriteLine ("{0}{1}", t, m);
+	}
+
+	public T [] BiroBiro ()
+	{
+		return new T [0];
 	}
 }
