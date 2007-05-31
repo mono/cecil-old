@@ -28,8 +28,6 @@
 
 namespace Mono.Cecil {
 
-	using System;
-
 	public sealed class TypeDefinition : TypeReference, IMemberDefinition, IHasSecurity {
 
 		TypeAttributes m_attributes;

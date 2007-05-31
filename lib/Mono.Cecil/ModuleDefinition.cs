@@ -356,7 +356,9 @@ namespace Mono.Cecil {
 			if (importer == null)
 				throw new ArgumentNullException ("importer");
 
-			return ImportTypeDefinition (type, GetContext (importer));
+			TypeDefinition definition = ImportTypeDefinition (type, GetContext (importer));
+			this.Types.Add (definition);
+			return definition;
 		}
 
 		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context)
@@ -366,28 +368,11 @@ namespace Mono.Cecil {
 
 		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context, IReferenceImporter importer)
 		{
-			if (type == null)
-				throw new ArgumentNullException ("type");
-			if (importer == null)
-				throw new ArgumentNullException ("importer");
-			CheckContext (context);
+			Check (type, context, importer);
 
-			return ImportTypeDefinition (type, GetContext (importer, context));
-		}
-
-		public MethodDefinition Inject (MethodDefinition meth)
-		{
-			return Inject (meth, m_controller.Importer);
-		}
-
-		public MethodDefinition Inject (MethodDefinition meth, IReferenceImporter importer)
-		{
-			if (meth == null)
-				throw new ArgumentNullException ("meth");
-			if (importer == null)
-				throw new ArgumentNullException ("importer");
-
-			return ImportMethodDefinition (meth, GetContext (importer));
+			TypeDefinition definition = ImportTypeDefinition (type, GetContext (importer, context));
+			context.NestedTypes.Add (definition);
+			return definition;
 		}
 
 		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context)
@@ -395,46 +380,34 @@ namespace Mono.Cecil {
 			return Inject (meth, context, m_controller.Importer);
 		}
 
+		void Check (IMemberDefinition definition, TypeDefinition context, IReferenceImporter importer)
+		{
+			if (definition == null)
+				throw new ArgumentNullException ("definition");
+			if (context == null)
+				throw new ArgumentNullException ("context");
+			if (importer == null)
+				throw new ArgumentNullException ("importer");
+			if (context.Module != this)
+				throw new ArgumentException ("The context parameter does not belongs to this module");
+		}
+
 		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context, IReferenceImporter importer)
 		{
-			if (meth == null)
-				throw new ArgumentNullException ("meth");
-			if (importer == null)
-				throw new ArgumentNullException ("importer");
-			CheckContext (context);
+			Check (meth, context, importer);
 
-			return ImportMethodDefinition (meth, GetContext (importer, context));
-		}
-
-		public FieldDefinition Inject (FieldDefinition field)
-		{
-			return Inject (field, m_controller.Importer);
-		}
-
-		public FieldDefinition Inject (FieldDefinition field, IReferenceImporter importer)
-		{
-			if (field == null)
-				throw new ArgumentNullException ("field");
-			if (importer == null)
-				throw new ArgumentNullException ("importer");
-
-			return ImportFieldDefinition (field, GetContext (importer));
-		}
-
-		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context)
-		{
-			return Inject (field, context, m_controller.Importer);
+			MethodDefinition definition = ImportMethodDefinition (meth, GetContext (importer, context));
+			context.Methods.Add (definition);
+			return definition;
 		}
 
 		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context, IReferenceImporter importer)
 		{
-			if (field == null)
-				throw new ArgumentNullException ("field");
-			if (importer == null)
-				throw new ArgumentNullException ("importer");
-			CheckContext (context);
+			Check (field, context, importer);
 
-			return ImportFieldDefinition (field, GetContext (importer, context));
+			FieldDefinition definition = ImportFieldDefinition (field, GetContext (importer, context));
+			context.Fields.Add (definition);
+			return definition;
 		}
 
 		public void FullLoad ()

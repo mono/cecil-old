@@ -1,5 +1,9 @@
 2007-05-31  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil/ModuleDefinition.cs:
+		Add types to the module and members to the context
+		on inject.
+
 	* Mono.Cecil/BaseAssemblyResolver.cs:
 		Improve resolve, works for people requiring
 		.net 1.0 assemblies when they only have 1.1.
