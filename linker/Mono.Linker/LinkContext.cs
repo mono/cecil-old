@@ -76,12 +76,7 @@ namespace Mono.Linker {
 
 		public AssemblyDefinition Resolve (IMetadataScope scope)
 		{
-			AssemblyNameReference reference;
-			if (scope is ModuleDefinition) {
-				AssemblyDefinition asm = ((ModuleDefinition) scope).Assembly;
-				reference = asm.Name;
-			} else
-				reference = (AssemblyNameReference) scope;
+			AssemblyNameReference reference = GetReference (scope);
 
 			AssemblyDefinition assembly = _assemblies [reference.FullName] as AssemblyDefinition;
 			if (assembly != null)
@@ -89,14 +84,31 @@ namespace Mono.Linker {
 
 			assembly = _resolver.Resolve (reference);
 
-			AssemblyAction action = AssemblyAction.Link;
-			if (IsCore (reference))
-				action = _coreAction;
-
-			Annotations.SetAction (assembly, action);
+			SetAction (assembly);
 
 			AddAssembly (assembly);
 			return assembly;
+		}
+
+		static AssemblyNameReference GetReference (IMetadataScope scope)
+		{
+			AssemblyNameReference reference;
+			if (scope is ModuleDefinition) {
+				AssemblyDefinition asm = ((ModuleDefinition) scope).Assembly;
+				reference = asm.Name;
+			} else
+				reference = (AssemblyNameReference) scope;
+
+			return reference;
+		}
+
+		void SetAction (AssemblyDefinition assembly)
+		{
+			AssemblyAction action = AssemblyAction.Link;
+			if (IsCore (assembly.Name))
+				action = _coreAction;
+
+			Annotations.SetAction (assembly, action);
 		}
 
 		void AddAssembly (AssemblyDefinition assembly)
