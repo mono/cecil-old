@@ -29,7 +29,6 @@
 namespace Mono.Cecil {
 
 	using System;
-	using System.Collections;
 	using System.IO;
 	using SR = System.Reflection;
 	using System.Text;
@@ -43,32 +42,51 @@ namespace Mono.Cecil {
 
 		public virtual AssemblyDefinition Resolve (AssemblyNameReference name)
 		{
-			string [] exts = new string [] { ".dll", ".exe" };
-			IList dirs = new ArrayList ();
-			dirs.Add (".");
-			dirs.Add ("bin");
+			AssemblyDefinition assembly;
+			string frameworkdir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
 
-			if (IsZero (name.Version))
-				dirs.Add (Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName));
+			if (IsZero (name.Version)) {
+				assembly = SearchDirectory (name, frameworkdir);
+				if (assembly != null)
+					return assembly;
+			}
 
-			foreach (string dir in dirs) {
-				foreach (string ext in exts) {
+			assembly = SearchDirectory (name, ".", ".bin");
+			if (assembly != null)
+				return assembly;
+
+#if !CF_1_0 && !CF_2_0
+			if (name.Name == "mscorlib") {
+				assembly = GetCorlib (name);
+				if (assembly != null)
+					return assembly;
+			}
+
+			assembly = GetAssemblyInGac (name);
+			if (assembly != null)
+				return assembly;
+#endif
+
+			assembly = SearchDirectory (name, frameworkdir);
+			if (assembly != null)
+				return assembly;
+
+			throw new FileNotFoundException ("Could not resolve: " + name);
+		}
+
+		static readonly string [] _extentions = new string [] { ".dll", ".exe" };
+
+		static AssemblyDefinition SearchDirectory (AssemblyNameReference name, params string [] directories)
+		{
+			foreach (string dir in directories) {
+				foreach (string ext in _extentions) {
 					string file = Path.Combine (dir, name.Name + ext);
 					if (File.Exists (file))
 						return AssemblyFactory.GetAssembly (file);
 				}
 			}
 
-#if !CF_1_0 && !CF_2_0
-			if (name.Name == "mscorlib")
-				return GetCorlib (name);
-
-			AssemblyDefinition asm = GetAssemblyInGac (name);
-			if (asm != null)
-				return asm;
-#endif
-
-			throw new FileNotFoundException ("Could not resolve: " + name);
+			return null;
 		}
 
 #if !CF_1_0 && !CF_2_0
@@ -101,7 +119,10 @@ namespace Mono.Cecil {
 					throw new NotSupportedException ("Version not supported: " + reference.Version);
 			}
 
-			return AssemblyFactory.GetAssembly (Path.Combine (path, "mscorlib.dll"));
+			if (File.Exists (Path.Combine (path, "mscorlib.dll")))
+				return AssemblyFactory.GetAssembly (Path.Combine (path, "mscorlib.dll"));
+
+			return null;
 		}
 
 		static bool IsZero (Version version)
