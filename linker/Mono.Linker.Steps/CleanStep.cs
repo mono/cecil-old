@@ -32,13 +32,12 @@ using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class CleanStep : IStep {
+	public class CleanStep : BaseStep {
 
-		public void Process (LinkContext context)
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
-				if (Annotations.GetAction (assembly) == AssemblyAction.Link)
-					CleanAssembly (assembly);
+			if (Annotations.GetAction (assembly) == AssemblyAction.Link)
+				CleanAssembly (assembly);
 		}
 
 		static void CleanAssembly (AssemblyDefinition asm)

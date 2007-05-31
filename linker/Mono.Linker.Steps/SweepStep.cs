@@ -33,15 +33,14 @@ using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class SweepStep : IStep {
+	public class SweepStep : BaseStep {
 
-		public void Process (LinkContext context)
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
-				SweepAssembly (assembly, context);
+			SweepAssembly (assembly);
 		}
 
-		static void SweepAssembly (AssemblyDefinition assembly, LinkContext context)
+		void SweepAssembly (AssemblyDefinition assembly)
 		{
 			if (Annotations.GetAction (assembly) != AssemblyAction.Link)
 				return;
@@ -53,7 +52,7 @@ namespace Mono.Linker.Steps {
 				}
 
 				assembly.MainModule.Types.Remove (type);
-				SweepTypeReferences (assembly, type, context);
+				SweepTypeReferences (assembly, type);
 			}
 		}
 
@@ -62,9 +61,9 @@ namespace Mono.Linker.Steps {
 			return new ArrayList (collection);
 		}
 
-		static void SweepTypeReferences (AssemblyDefinition assembly, TypeDefinition type, LinkContext context)
+		void SweepTypeReferences (AssemblyDefinition assembly, TypeDefinition type)
 		{
-			foreach (AssemblyDefinition asm in context.GetAssemblies ()) {
+			foreach (AssemblyDefinition asm in Context.GetAssemblies ()) {
 				ModuleDefinition module = asm.MainModule;
 				if (!module.TypeReferences.Contains (type))
 					continue;
@@ -86,26 +85,16 @@ namespace Mono.Linker.Steps {
 
 		static void SweepType (TypeDefinition type)
 		{
-			SweepMethods (type);
-			SweepFields (type);
+			SweepCollection (type.Fields);
+			SweepCollection (type.Constructors);
+			SweepCollection (type.Methods);
 		}
 
-		static void SweepFields (TypeDefinition type)
+		static void SweepCollection (IList list)
 		{
-			foreach (FieldDefinition field in Clone (type.Fields))
-				if (!Annotations.IsMarked (field))
-					type.Fields.Remove (field);
-		}
-
-		static void SweepMethods (TypeDefinition type)
-		{
-			foreach (MethodDefinition meth in Clone (type.Methods))
-				if (!Annotations.IsMarked (meth))
-					type.Methods.Remove (meth);
-
-			foreach (MethodDefinition ctor in Clone (type.Constructors))
-				if (!Annotations.IsMarked (ctor))
-					type.Constructors.Remove (ctor);
+			foreach (IAnnotationProvider provider in Clone (list))
+				if (!Annotations.IsMarked (provider))
+					list.Remove (provider);
 		}
 	}
 }

@@ -35,7 +35,7 @@ using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class BlacklistStep : IStep {
+	public class BlacklistStep : BaseStep {
 
 		static readonly IDictionary blacklists = new Hashtable ();
 
@@ -46,22 +46,24 @@ namespace Mono.Linker.Steps {
 			blacklists.Add ("System.Web", "system.web.xml");
 		}
 
-		public void Process (LinkContext context)
+		protected override bool ConditionToProcess()
 		{
-			if (context.CoreAction != AssemblyAction.Link)
-				return;
+			return Context.CoreAction != AssemblyAction.Link;
+		}
 
+		protected override void Process ()
+		{
 			foreach (DictionaryEntry entry in blacklists) {
-				if (!IsReferenced ((string) entry.Key, context))
+				if (!IsReferenced ((string) entry.Key))
 					continue;
 
-				context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep ((string) entry.Value));
+				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep ((string) entry.Value));
 			}
 		}
 
-		static bool IsReferenced (string name, LinkContext context)
+		bool IsReferenced (string name)
 		{
-			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
+			foreach (AssemblyDefinition assembly in Context.GetAssemblies ())
 				if (assembly.Name.Name == name)
 					return true;
 

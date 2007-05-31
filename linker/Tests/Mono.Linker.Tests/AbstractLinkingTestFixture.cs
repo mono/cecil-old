@@ -57,6 +57,7 @@ namespace Mono.Linker.Tests {
 		protected override Pipeline GetPipeline ()
 		{
 			Pipeline p = new Pipeline ();
+			p.AppendStep (new LoadReferencesStep ());
 			p.AppendStep (new BlacklistStep ());
 			p.AppendStep (new MarkStep ());
 			p.AppendStep (new SweepStep ());

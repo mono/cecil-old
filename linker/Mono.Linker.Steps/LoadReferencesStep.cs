@@ -1,10 +1,10 @@
 //
-// ResolveFromAssemblyStep.cs
+// LoadReferencesStep.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
-// (C) 2006 Jb Evain
+// (C) 2007 Novell, Inc.
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,43 +26,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System.Collections;
 using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class ResolveFromAssemblyStep : ResolveStep {
+	public class LoadReferencesStep : BaseStep {
 
-		string _assembly;
-
-		public ResolveFromAssemblyStep (string assembly)
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
-			_assembly = assembly;
-		}
-
-		public override void Process (LinkContext context)
-		{
-			AssemblyDefinition asm = context.Resolve (_assembly);
-			Annotations.SetAction (asm, AssemblyAction.Copy);
-
-			foreach (TypeDefinition type in asm.MainModule.Types) {
-				Annotations.Mark (type);
-
-				MarkMethods (type.Methods);
-				MarkMethods (type.Constructors);
-			}
-		}
-
-		static void MarkMethods (ICollection methods)
-		{
-			foreach (MethodDefinition method in methods)
-				MarkMethod (method);
-		}
-
-		static void MarkMethod (MethodDefinition method)
-		{
-			Annotations.Mark (method);
-			Annotations.SetAction (method, MethodAction.ForceParse);
+			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences)
+				ProcessAssembly (Context.Resolve (reference));
 		}
 	}
 }

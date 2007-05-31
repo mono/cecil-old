@@ -32,26 +32,29 @@ using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class OutputStep : IStep {
+	public class OutputStep : BaseStep {
 
-		public void Process (LinkContext context)
+		protected override void Process ()
 		{
-			CheckOutputDirectory (context);
-
-			foreach (AssemblyDefinition assembly in context.GetAssemblies())
-				OutputAssembly (assembly, context.OutputDirectory);
+			CheckOutputDirectory ();
 		}
 
-		static void CheckOutputDirectory (LinkContext context)
+		void CheckOutputDirectory ()
 		{
-			if (Directory.Exists (context.OutputDirectory))
+			if (Directory.Exists (Context.OutputDirectory))
 				return;
 
-			Directory.CreateDirectory (context.OutputDirectory);
+			Directory.CreateDirectory (Context.OutputDirectory);
 		}
 
-		static void OutputAssembly (AssemblyDefinition assembly, string directory)
+		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
+			OutputAssembly (assembly);
+		}
+
+		void OutputAssembly (AssemblyDefinition assembly)
+		{
+			string directory = Context.OutputDirectory;
 			switch (Annotations.GetAction (assembly)) {
 			case AssemblyAction.Link:
 				AssemblyFactory.SaveAssembly (assembly, GetAssemblyFileName (assembly, directory));

@@ -94,13 +94,18 @@ namespace Mono.Linker.Steps {
 
 		void Process ()
 		{
-			if (_queue.Count == 0)
+			if (QueueIsEmpty ())
 				throw new InvalidOperationException ("No entry methods");
 
-			while (_queue.Count > 0) {
+			while (!QueueIsEmpty ()) {
 				MethodDefinition method = (MethodDefinition) _queue.Dequeue ();
 				ProcessMethod (method);
 			}
+		}
+
+		bool QueueIsEmpty ()
+		{
+			return _queue.Count == 0;
 		}
 
 		void MarkMethodBody (MethodBody body)

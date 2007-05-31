@@ -1,5 +1,21 @@
 2007-05-31  Jb Evain  <jbevain@novell.com>
 
+	* Tests/Mono.Linker.Tests/AbstractLinkingTestFixture.cs
+	  Mono.Linker.Steps/OutputStep.cs
+	  Mono.Linker.Steps/LoadReferencesStep.cs
+	  Mono.Linker.Steps/CleanStep.cs
+	  Mono.Linker.Steps/ResolveFromAssemblyStep.cs
+	  Mono.Linker.Steps/SweepStep.cs
+	  Mono.Linker.Steps/BlacklistStep.cs
+	  Mono.Linker.Steps/MarkStep.cs
+	  Mono.Linker.Steps/BaseStep.cs
+	  Mono.Linker.csproj
+	  Mono.Linker/Driver.cs:
+		Add a new abstract BaseStep to be extends by most
+		of the steps.
+		Add a new LoadReferences step to force all referenced
+		assemblies to be resolved before the mark step.
+
 	* Mono.Linker/CustomResolver.cs
 	  Mono.Linker/LinkContext.cs:
 		Register entry assembly.
