@@ -144,7 +144,7 @@ namespace Mono.Linker {
 		static void Usage ()
 		{
 			Console.WriteLine (_linker);
-			Console.WriteLine ("monolinker [options] -x|-a file [files...]");
+			Console.WriteLine ("mink [options] -x|-a file [files...]");
 
 			Console.WriteLine ("   --about     About the {0}", _linker);
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
