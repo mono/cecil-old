@@ -30,6 +30,7 @@ install: all
 	mkdir -p $(prefix)/lib/mink
 	cp $(LINKER) $(MONO.CECIL.DLL) $(prefix)/lib/mink
 	cp mink $(prefix)/bin
+	cp man/mink.1 $(prefix)/share/man/man1
 
 config.make:
 	echo You must run configure first
