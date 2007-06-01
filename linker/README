@@ -191,5 +191,19 @@ to the assembly. If the assembly is marked as skip, it won't do anything,
 if it's marked as copy, it will copy the assembly to the output directory,
 and if it's link, it will save the modified assembly to the output directory.
 
+* Reporting a bug
+
+If you face a bug in the linker, please report it to:
+
+http://bugzilla.ximian.com
+
+Product: Mono tools, Component: linker.
+
+* Mailing lists
+
+You can ask questions about the linker of the cecil Google Group:
+
+http://groups.google.com/group/mono-cecil
+
 --
 Jb Evain <jbevain@novell.com>
