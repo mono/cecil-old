@@ -1,0 +1,47 @@
+.\" 
+.\" Mink manual page.
+.\"
+.\" Author:
+.\"	Jb Evain  <jbevain@novell.com>
+.\"
+.\" Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+.\"
+
+.de Sp
+.if t .sp .5v
+.if n .sp
+..
+.TH CIL Linker "mink"
+.SH NAME
+Mono CIL Linker
+.SH SYNOPSIS
+.PP
+.B mink [-o output_directory] [-c skip | copy | link] -x descriptor | -a assemblies ...
+.SH DESCRIPTION
+\fImink\fP is a CIL Linker.
+
+The linker is a tool one can use to only ship the minimal possible set of
+functions that a set of programs might require to run as opposed to the full
+libraries.
+.SH OPTIONS
+.TP
+.I "-o output_directory"
+Specify the output directory, default is 'output'.
+.TP
+.I "-c action"
+Specify the action to apply to the core assemblies.
+.TP
+.I "-x descriptor"
+Use an XML descriptor as a source for the linker.
+.TP
+.I "-a assemblies"
+use an assembly as a source for the linker.
+.SH COPYRIGHT
+Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+.SH MAILING LISTS
+Mailing lists are listed at the
+http://www.mono-project.com/Mailing_Lists
+.SH WEB SITE
+http://www.mono-project.com/Linker
+.SH SEE ALSO
+.BR mono(1)
