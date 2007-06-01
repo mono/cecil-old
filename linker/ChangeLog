@@ -1,5 +1,7 @@
 2007-06-01  Jb Evain  <jbevain@novell.com>
 
+	* configure, config.make, mink.in: added
+
 	* AUTHORS, MIT.X11, man/mink.1: added
 
 2007-05-31  Jb Evain  <jbevain@novell.com>

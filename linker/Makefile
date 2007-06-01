@@ -2,13 +2,37 @@
 MCS = mcs
 KEY_FILE = ../../mcs/class/mono.snk
 MONO.CECIL.DLL = Mono.Cecil.dll
-MCS_FLAGS = -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -resource:Descriptors/corlib.xml -resource:Descriptors/system.xml -resource:Descriptors/system.web.xml
+MCS_FLAGS = -debug -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -resource:Descriptors/corlib.xml -resource:Descriptors/system.xml -resource:Descriptors/system.web.xml
 LINKER = mink.exe
 
-all:
-	cp ../lib/$(MONO.CECIL.DLL) .
+all: config.make mink.exe mink
+
+mink: mink.in Makefile
+	sed "s,@prefix@,$(prefix)," < mink.in > mink
+	chmod +x mink
+
+mink.exe: Mono.Cecil.dll
 	$(MCS) $(MCS_FLAGS) @$(LINKER).sources /out:$(LINKER)
 
+Mono.Cecil.dll:
+	if pkg-config --atleast-version=0.5 mono-cecil; then \
+		cp `pkg-config --variable=Libraries mono-cecil` .; \
+	else \
+		echo You must install Mono.Cecil first; \
+		exit 1; \
+	fi
+
 clean:
-	rm -f $(LINKER)
-	rm -f $(MONO.CECIL.DLL)
+	rm -f $(LINKER) $(MONO.CECIL.DLL) mink
+
+install: all
+	mkdir -p $(prefix)/bin
+	mkdir -p $(prefix)/lib/mink
+	cp $(LINKER) $(MONO.CECIL.DLL) $(prefix)/lib/mink
+	cp mink $(prefix)/bin
+
+config.make:
+	echo You must run configure first
+	exit 1
+
+include config.make
