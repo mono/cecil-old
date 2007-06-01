@@ -81,7 +81,7 @@ Here is an example that shows all the possibilities of this format:
 </linker>
 ---
 
-In this example, the linker will link the types Foo, Bar, Baz and Gazonk. 
+In this example, the linker will link the types Foo, Bar, Baz and Gazonk.
 
 The preserve attribute ensures that all the fields of the type Baz will be
 always be linked, not matter if they are used or not, but that neither the
