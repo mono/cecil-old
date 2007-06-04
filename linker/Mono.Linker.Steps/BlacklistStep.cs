@@ -48,7 +48,7 @@ namespace Mono.Linker.Steps {
 
 		protected override bool ConditionToProcess()
 		{
-			return Context.CoreAction != AssemblyAction.Link;
+			return Context.CoreAction == AssemblyAction.Link;
 		}
 
 		protected override void Process ()
