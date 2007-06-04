@@ -42,7 +42,7 @@ namespace Mono.Linker.Steps {
 		static readonly string _fullname = "fullname";
 		static readonly string _required = "required";
 		static readonly string _preserve = "preserve";
-		static readonly string _ns = "";
+		static readonly string _ns = string.Empty;
 
 		XPathDocument _document;
 
@@ -63,7 +63,29 @@ namespace Mono.Linker.Steps {
 			while (iterator.MoveNext ()) {
 				AssemblyDefinition assembly = GetAssembly (context, GetFullName (iterator.Current));
 				ProcessTypes (assembly, iterator.Current.SelectChildren ("type", _ns));
+				ProcessNamespaces (assembly, iterator.Current.SelectChildren ("namespace", _ns));
 			}
+		}
+
+		void ProcessNamespaces (AssemblyDefinition assembly, XPathNodeIterator iterator)
+		{
+			while (iterator.MoveNext ()) {
+				string fullname = GetFullName (iterator.Current);
+				foreach (TypeDefinition type in assembly.MainModule.Types) {
+					if (type.Namespace != fullname)
+						continue;
+
+					MarkAndPreserveAll (type);
+				}
+			}
+		}
+
+		static void MarkAndPreserveAll (TypeDefinition type)
+		{
+			Annotations.Mark (type);
+			Annotations.SetPreserve (type, TypePreserve.All);
+			foreach (TypeDefinition nested in type.NestedTypes)
+				MarkAndPreserveAll (nested);
 		}
 
 		void ProcessTypes (AssemblyDefinition assembly, XPathNodeIterator iterator)

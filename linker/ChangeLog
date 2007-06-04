@@ -1,5 +1,9 @@
 2007-06-04  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/ResolveFromXmlStep.cs
+	  Descriptors/corlib.xml:
+		Preserve the whole S.S.Crypto namespace.
+
 	* rename back from mink to monolinker.
 
 2007-06-01  Jb Evain  <jbevain@novell.com>
