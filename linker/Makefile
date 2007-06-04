@@ -3,15 +3,15 @@ MCS = mcs
 KEY_FILE = ../../mcs/class/mono.snk
 MONO.CECIL.DLL = Mono.Cecil.dll
 MCS_FLAGS = -debug -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -resource:Descriptors/corlib.xml -resource:Descriptors/system.xml -resource:Descriptors/system.web.xml
-LINKER = mink.exe
+LINKER = monolinker.exe
 
-all: config.make mink.exe mink
+all: config.make monolinker.exe monolinker
 
-mink: mink.in Makefile
-	sed "s,@prefix@,$(prefix)," < mink.in > mink
-	chmod +x mink
+monolinker: monolinker.in Makefile
+	sed "s,@prefix@,$(prefix)," < monolinker.in > monolinker
+	chmod +x monolinker
 
-mink.exe: Mono.Cecil.dll
+monolinker.exe: Mono.Cecil.dll
 	$(MCS) $(MCS_FLAGS) @$(LINKER).sources /out:$(LINKER)
 
 Mono.Cecil.dll:
@@ -23,17 +23,18 @@ Mono.Cecil.dll:
 	fi
 
 clean:
-	rm -f $(LINKER) $(MONO.CECIL.DLL) mink
+	rm -f $(LINKER) $(MONO.CECIL.DLL) monolinker
 
 install: all
 	mkdir -p $(prefix)/bin
-	mkdir -p $(prefix)/lib/mink
-	cp $(LINKER) $(MONO.CECIL.DLL) $(prefix)/lib/mink
-	cp mink $(prefix)/bin
-	cp man/mink.1 $(prefix)/share/man/man1
+	mkdir -p $(prefix)/lib/monolinker
+	cp $(LINKER) $(MONO.CECIL.DLL) $(prefix)/lib/monolinker
+	cp monolinker $(prefix)/bin
+	cp man/monolinker.1 $(prefix)/share/man/man1
 
 config.make:
 	echo You must run configure first
 	exit 1
 
 include config.make
+

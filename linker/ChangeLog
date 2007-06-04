@@ -1,3 +1,7 @@
+2007-06-04  Jb Evain  <jbevain@novell.com>
+
+	* rename back from mink to monolinker.
+
 2007-06-01  Jb Evain  <jbevain@novell.com>
 
 	* configure, config.make, mink.in: added
