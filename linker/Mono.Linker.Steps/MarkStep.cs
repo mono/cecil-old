@@ -60,6 +60,7 @@ namespace Mono.Linker.Steps {
 
 		void InitializeAssembly (AssemblyDefinition assembly)
 		{
+			MarkAssembly (assembly);
 			foreach (TypeDefinition type in assembly.MainModule.Types) {
 				if (!Annotations.IsMarked (type))
 					continue;
