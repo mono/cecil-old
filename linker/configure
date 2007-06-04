@@ -20,4 +20,4 @@ echo "RUNTIME=mono" >> config.make
 echo "ASSEMBLY_VERSION=$VERSION.0.0" >> config.make
 echo "VERSION=$VERSION" >> config.make
 
-echo "Mink has been configure to be installed in $prefix"
+echo "monolinker has been configure to be installed in $prefix"
