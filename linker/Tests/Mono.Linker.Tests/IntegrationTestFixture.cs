@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
 using System.Diagnostics;
 using System.IO;
 using Mono.Linker.Steps;
@@ -77,6 +78,9 @@ namespace Mono.Linker.Tests {
 
 		protected override void RunTest (string testCase)
 		{
+			if (!OnMono ())
+				Assert.Ignore ("Integration tests are only runnable on Mono");
+
 			base.RunTest (testCase);
 			string test = Path.Combine (GetTestCasePath (), "Test.exe");
 
@@ -91,6 +95,11 @@ namespace Mono.Linker.Tests {
 			string linked = Execute (Context.OutputDirectory, "Test.exe");
 
 			Assert.AreEqual (original, linked);
+		}
+
+		static bool OnMono ()
+		{
+			return Type.GetType ("System.MonoType") != null;
 		}
 
 		static string Execute (string directory, string file)
