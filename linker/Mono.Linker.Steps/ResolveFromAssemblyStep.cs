@@ -42,15 +42,33 @@ namespace Mono.Linker.Steps {
 
 		public override void Process (LinkContext context)
 		{
-			AssemblyDefinition asm = context.Resolve (_assembly);
-			Annotations.SetAction (asm, AssemblyAction.Copy);
+			AssemblyDefinition assembly = context.Resolve (_assembly);
 
-			foreach (TypeDefinition type in asm.MainModule.Types) {
-				Annotations.Mark (type);
+			if (IsLinkable (assembly)) {
+				LinkEntryPoint (assembly);
+			} else {
+				Annotations.SetAction (assembly, AssemblyAction.Copy);
 
-				MarkMethods (type.Methods);
-				MarkMethods (type.Constructors);
+				foreach (TypeDefinition type in assembly.MainModule.Types) {
+					Annotations.Mark (type);
+
+					MarkMethods (type.Methods);
+					MarkMethods (type.Constructors);
+				}
 			}
+		}
+
+		static void LinkEntryPoint (AssemblyDefinition assembly)
+		{
+			Annotations.SetAction (assembly, AssemblyAction.Link);
+			Annotations.Mark (assembly.EntryPoint);
+			Annotations.SetAction (assembly.EntryPoint, MethodAction.Parse);
+			Annotations.Mark (assembly.EntryPoint.DeclaringType);
+		}
+
+		static bool IsLinkable (AssemblyDefinition assembly)
+		{
+			return assembly.Kind != AssemblyKind.Dll && assembly.EntryPoint != null;
 		}
 
 		static void MarkMethods (ICollection methods)
