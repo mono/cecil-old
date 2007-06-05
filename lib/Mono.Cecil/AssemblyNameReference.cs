@@ -49,19 +49,31 @@ namespace Mono.Cecil {
 		MetadataToken m_token;
 		IDictionary m_annotations;
 
+		bool m_fullNameDiscarded = true;
+		string m_fullName;
+
 		public string Name {
 			get { return m_name; }
-			set { m_name = value; }
+			set {
+				m_name = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public string Culture {
 			get { return m_culture; }
-			set { m_culture = value; }
+			set {
+				m_culture = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public Version Version {
 			get { return m_version; }
-			set { m_version = value; }
+			set {
+				 m_version = value;
+				 m_fullNameDiscarded = true;
+			}
 		}
 
 		public AssemblyFlags Flags {
@@ -74,6 +86,7 @@ namespace Mono.Cecil {
 			set {
 				m_publicKey = value;
 				m_publicKeyToken = null;
+				m_fullNameDiscarded = true;
 			}
 		}
 
@@ -81,7 +94,7 @@ namespace Mono.Cecil {
 			get {
 #if !CF_1_0
 				if ((m_publicKeyToken == null || m_publicKeyToken.Length == 0) && (m_publicKey != null && m_publicKey.Length > 0)) {
-					HashAlgorithm ha = null;
+					HashAlgorithm ha;
 					switch (m_hashAlgo) {
 					case AssemblyHashAlgorithm.Reserved:
 						ha = MD5.Create (); break;
@@ -89,7 +102,7 @@ namespace Mono.Cecil {
 						// None default to SHA1
 						ha = SHA1.Create (); break;
 					}
-					byte[] hash = ha.ComputeHash (m_publicKey);
+					byte [] hash = ha.ComputeHash (m_publicKey);
 					// we need the last 8 bytes in reverse order
 					m_publicKeyToken = new byte [8];
 					Array.Copy (hash, (hash.Length - 8), m_publicKeyToken, 0, 8);
@@ -98,11 +111,17 @@ namespace Mono.Cecil {
 #endif
 				return m_publicKeyToken;
 			}
-			set { m_publicKeyToken = value; }
+			set {
+				m_publicKeyToken = value;
+				m_fullNameDiscarded = true;
+			}
 		}
 
 		public string FullName {
 			get {
+				if (m_fullName != null && !m_fullNameDiscarded)
+					return m_fullName;
+
 				StringBuilder sb = new StringBuilder ();
 				string sep = ", ";
 				sb.Append (m_name);
@@ -123,7 +142,9 @@ namespace Mono.Cecil {
 				} else {
 					sb.Append ("null");
 				}
-				return sb.ToString ();
+				m_fullName = sb.ToString ();
+				m_fullNameDiscarded = false;
+				return m_fullName;
 			}
 		}
 
