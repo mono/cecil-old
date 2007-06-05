@@ -39,24 +39,24 @@ namespace Mono.Linker.Tests {
 		[Test]
 		public void TestSimple ()
 		{
-			Test ("Simple");
+			RunTest ("Simple");
 		}
 
 		[Test]
 		public void TestVirtualCall ()
 		{
-			Test ("VirtualCall");
+			RunTest ("VirtualCall");
 		}
 
 		[Test]
 		public void TestMultipleReferences ()
 		{
-			Test ("MultipleReferences");
+			RunTest ("MultipleReferences");
 		}
 
-		protected override void Test (string testCase)
+		protected override void RunTest (string testCase)
 		{
-			base.Test (testCase);
+			base.RunTest (testCase);
 			Pipeline.PrependStep (
 				new ResolveFromAssemblyStep (
 					Path.Combine (GetTestCasePath (), "Program.exe")));

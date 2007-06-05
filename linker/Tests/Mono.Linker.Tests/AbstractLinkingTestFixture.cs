@@ -66,9 +66,9 @@ namespace Mono.Linker.Tests {
 			return p;
 		}
 
-		protected override void Test (string testCase)
+		protected override void RunTest (string testCase)
 		{
-			base.Test (testCase);
+			base.RunTest (testCase);
 
 			Prepare ();
 		}

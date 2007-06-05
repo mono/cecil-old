@@ -41,42 +41,42 @@ namespace Mono.Linker.Tests {
 		[Test]
 		public void TestSimpleXml ()
 		{
-			Test ("SimpleXml");
+			RunTest ("SimpleXml");
 		}
 
 		[Test]
 		public void TestInterface ()
 		{
-			Test ("Interface");
+			RunTest ("Interface");
 		}
 
 		[Test]
 		public void TestReferenceInVirtualMethod ()
 		{
-			Test ("ReferenceInVirtualMethod");
+			RunTest ("ReferenceInVirtualMethod");
 		}
 
 		[Test]
 		public void TestGenerics ()
 		{
-			Test ("Generics");
+			RunTest ("Generics");
 		}
 
 		[Test]
 		public void TestNestedNested ()
 		{
-			Test ("NestedNested");
+			RunTest ("NestedNested");
 		}
 
 		[Test]
 		public void TestPreserveFieldsRequired ()
 		{
-			Test ("PreserveFieldsRequired");
+			RunTest ("PreserveFieldsRequired");
 		}
 
-		protected override void Test (string testCase)
+		protected override void RunTest (string testCase)
 		{
-			base.Test (testCase);
+			base.RunTest (testCase);
 			Pipeline.PrependStep (
 				new ResolveFromXmlStep (
 					new XPathDocument (Path.Combine (GetTestCasePath (), "desc.xml"))));

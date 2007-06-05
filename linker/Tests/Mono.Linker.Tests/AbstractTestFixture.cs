@@ -110,7 +110,7 @@ namespace Mono.Linker.Tests {
 					_testCase));
 		}
 
-		protected virtual void Test (string testCase)
+		protected virtual void RunTest (string testCase)
 		{
 			_testCase = testCase;
 			_context = GetContext ();
