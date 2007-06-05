@@ -6,7 +6,7 @@
 		<type fullname="Mono.Interop.IDispatch" />
 		<type fullname="Mono.Interop.IUnknown" />
 		<type fullname="System.Activator" />
-		<type fullname="System.AppDomain" />
+		<type fullname="System.AppDomain" preserve="fields" />
 		<type fullname="System.AppDomainSetup" />
 		<type fullname="System.AppDomainUnloadedException" />
 		<type fullname="System.ApplicationException" />
@@ -37,7 +37,7 @@
 		<type fullname="System.DateTime" />
 		<type fullname="System.DBNull" />
 		<type fullname="System.Decimal" />
-		<type fullname="System.Delegate" />
+		<type fullname="System.Delegate" preserve="fields" />
 		<type fullname="System.Diagnostics.StackFrame" />
 		<type fullname="System.Diagnostics.StackTrace" />
 		<type fullname="System.DivideByZeroException" />
@@ -49,18 +49,18 @@
 		<type fullname="System.FieldAccessException" />
 		<type fullname="System.FormatException" />
 		<type fullname="System.GC" />
-		<type fullname="System.Globalization.DateTimeFormatInfo" />
-		<type fullname="System.Globalization.CompareInfo" />
-		<type fullname="System.Globalization.CultureInfo" />
-		<type fullname="System.Globalization.NumberFormatInfo" />
-		<type fullname="System.Globalization.RegionInfo" />
-		<type fullname="System.Globalization.SortKey" />
+		<type fullname="System.Globalization.DateTimeFormatInfo" preserve="fields" />
+		<type fullname="System.Globalization.CompareInfo" preserve="fields" />
+		<type fullname="System.Globalization.CultureInfo" preserve="fields" />
+		<type fullname="System.Globalization.NumberFormatInfo" preserve="fields" />
+		<type fullname="System.Globalization.RegionInfo" preserve="fields" />
+		<type fullname="System.Globalization.SortKey" preserve="fields" />
 		<type fullname="System.IO.FileMode" />
 		<type fullname="System.IO.FileNotFoundException" />
 		<type fullname="System.IO.FileLoadException" />
 		<type fullname="System.IO.FileStreamAsyncResult" />
 		<type fullname="System.IO.IOException" />
-		<type fullname="System.IO.MonoIO" />
+		<type fullname="System.IO.MonoIO" preserve="fields" />
 		<type fullname="System.IO.Path" />
 		<type fullname="System.IO.StreamReader" />
 		<type fullname="System.IndexOutOfRangeException" />
@@ -76,69 +76,69 @@
 		<type fullname="System.MethodAccessException" />
 		<type fullname="System.MissingFieldException" />
 		<type fullname="System.MissingMethodException" />
-		<type fullname="System.MonoAsyncCall" />
-		<type fullname="System.MonoCustomAttrs"/>
-		<type fullname="System.MonoCustomAttrs/AttributeInfo"/>
-		<type fullname="System.MonoEnumInfo" />
-		<type fullname="System.MonoListItem" />
-		<type fullname="System.MonoType" />
-		<type fullname="System.MulticastDelegate" />
+		<type fullname="System.MonoAsyncCall" preserve="fields" />
+		<type fullname="System.MonoCustomAttrs" preserve="fields" />
+		<type fullname="System.MonoCustomAttrs/AttributeInfo" preserve="fields" />
+		<type fullname="System.MonoEnumInfo" preserve="fields" />
+		<type fullname="System.MonoListItem" preserve="fields" />
+		<type fullname="System.MonoType" preserve="fields" />
+		<type fullname="System.MulticastDelegate" preserve="fields" />
 		<type fullname="System.NotImplementedException" />
 		<type fullname="System.NotSupportedException" />
 		<type fullname="System.NullReferenceException" />
 		<type fullname="System.Nullable`1" />
-		<type fullname="System.Object" />
+		<type fullname="System.Object" preserve="fields" />
 		<type fullname="System.OutOfMemoryException" />
-		<type fullname="System.Reflection.Assembly" />
-		<type fullname="System.Reflection.AssemblyName" />
-		<type fullname="System.Reflection.ConstructorInfo" />
-		<type fullname="System.Reflection.CustomAttributeData" />
+		<type fullname="System.Reflection.Assembly" preserve="fields" />
+		<type fullname="System.Reflection.AssemblyName" preserve="fields" />
+		<type fullname="System.Reflection.ConstructorInfo" preserve="fields" />
+		<type fullname="System.Reflection.CustomAttributeData" preserve="fields" />
 		<type fullname="System.Reflection.CustomAttributeNamedArgument" />
 		<type fullname="System.Reflection.CustomAttributeTypedArgument" />
-		<type fullname="System.Reflection.Emit.AssemblyBuilder" />
-		<type fullname="System.Reflection.Emit.ConstructorBuilder" />
-		<type fullname="System.Reflection.Emit.CustomAttributeBuilder" />
-		<type fullname="System.Reflection.Emit.DynamicMethod" />
-		<type fullname="System.Reflection.Emit.EnumBuilder" />
-		<type fullname="System.Reflection.Emit.EventBuilder" />
-		<type fullname="System.Reflection.Emit.FieldBuilder" />
-		<type fullname="System.Reflection.Emit.GenericTypeParameterBuilder" />
-		<type fullname="System.Reflection.Emit.ILExceptionBlock" />
-		<type fullname="System.Reflection.Emit.ILExceptionInfo" />
-		<type fullname="System.Reflection.Emit.ILGenerator" />
-		<type fullname="System.Reflection.Emit.LocalBuilder" />
-		<type fullname="System.Reflection.Emit.MethodBuilder" />
-		<type fullname="System.Reflection.Emit.ModuleBuilder" />
-		<type fullname="System.Reflection.Emit.MonoResource" />
-		<type fullname="System.Reflection.Emit.MonoWin32Resource" />
-		<type fullname="System.Reflection.Emit.ParameterBuilder" />
-		<type fullname="System.Reflection.Emit.PropertyBuilder" />
-		<type fullname="System.Reflection.Emit.SignatureHelper" />
-		<type fullname="System.Reflection.Emit.TypeBuilder" />
-		<type fullname="System.Reflection.Emit.UnmanagedMarshal" />
-		<type fullname="System.Reflection.EventInfo" />
-		<type fullname="System.Reflection.ExceptionHandlingClause" />
-		<type fullname="System.Reflection.FieldInfo" />
-		<type fullname="System.Reflection.LocalVariableInfo" />
-		<type fullname="System.Reflection.ManifestResourceInfo" />
-		<type fullname="System.Reflection.MethodBase" />
-		<type fullname="System.Reflection.MethodBody" />
-		<type fullname="System.Reflection.MethodInfo" />
-		<type fullname="System.Reflection.Module" />
-		<type fullname="System.Reflection.MonoArrayMethod" />
-		<type fullname="System.Reflection.MonoCMethod" />
-		<type fullname="System.Reflection.MonoEvent" />
-		<type fullname="System.Reflection.MonoEventInfo" />
-		<type fullname="System.Reflection.MonoField" />
-		<type fullname="System.Reflection.MonoGenericClass" />
-		<type fullname="System.Reflection.MonoGenericMethod" />
-		<type fullname="System.Reflection.MonoGenericCMethod" />
-		<type fullname="System.Reflection.MonoMethod" />
-		<type fullname="System.Reflection.MonoMethodInfo" />
-		<type fullname="System.Reflection.MonoPropertyInfo" />
-		<type fullname="System.Reflection.MonoProperty" />
-		<type fullname="System.Reflection.ParameterInfo" />
-		<type fullname="System.Reflection.PropertyInfo" />
+		<type fullname="System.Reflection.Emit.AssemblyBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ConstructorBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.CustomAttributeBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.DynamicMethod" preserve="fields" />
+		<type fullname="System.Reflection.Emit.EnumBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.EventBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.FieldBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.GenericTypeParameterBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ILExceptionBlock" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ILExceptionInfo" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ILGenerator" preserve="fields" />
+		<type fullname="System.Reflection.Emit.LocalBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.MethodBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ModuleBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.MonoResource" preserve="fields" />
+		<type fullname="System.Reflection.Emit.MonoWin32Resource" preserve="fields" />
+		<type fullname="System.Reflection.Emit.ParameterBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.PropertyBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.SignatureHelper" preserve="fields" />
+		<type fullname="System.Reflection.Emit.TypeBuilder" preserve="fields" />
+		<type fullname="System.Reflection.Emit.UnmanagedMarshal" preserve="fields" />
+		<type fullname="System.Reflection.EventInfo" preserve="fields" />
+		<type fullname="System.Reflection.ExceptionHandlingClause" preserve="fields" />
+		<type fullname="System.Reflection.FieldInfo" preserve="fields" />
+		<type fullname="System.Reflection.LocalVariableInfo" preserve="fields" />
+		<type fullname="System.Reflection.ManifestResourceInfo" preserve="fields" />
+		<type fullname="System.Reflection.MethodBase" preserve="fields" />
+		<type fullname="System.Reflection.MethodBody" preserve="fields" />
+		<type fullname="System.Reflection.MethodInfo" preserve="fields" />
+		<type fullname="System.Reflection.Module" preserve="fields" />
+		<type fullname="System.Reflection.MonoArrayMethod" preserve="fields" />
+		<type fullname="System.Reflection.MonoCMethod" preserve="fields" />
+		<type fullname="System.Reflection.MonoEvent" preserve="fields" />
+		<type fullname="System.Reflection.MonoEventInfo" preserve="fields" />
+		<type fullname="System.Reflection.MonoField" preserve="fields" />
+		<type fullname="System.Reflection.MonoGenericClass" preserve="fields" />
+		<type fullname="System.Reflection.MonoGenericMethod" preserve="fields" />
+		<type fullname="System.Reflection.MonoGenericCMethod" preserve="fields" />
+		<type fullname="System.Reflection.MonoMethod" preserve="fields" />
+		<type fullname="System.Reflection.MonoMethodInfo" preserve="fields" />
+		<type fullname="System.Reflection.MonoPropertyInfo" preserve="fields" />
+		<type fullname="System.Reflection.MonoProperty" preserve="fields" />
+		<type fullname="System.Reflection.ParameterInfo" preserve="fields" />
+		<type fullname="System.Reflection.PropertyInfo" preserve="fields" />
 		<type fullname="System.Reflection.ReflectionTypeLoadException" />
 		<type fullname="System.Reflection.TargetException" />
 		<type fullname="System.Reflection.TargetParameterCountException" />
