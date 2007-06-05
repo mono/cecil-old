@@ -44,31 +44,14 @@ namespace Mono.Linker.Steps {
 		{
 			AssemblyDefinition assembly = context.Resolve (_assembly);
 
-			if (IsLinkable (assembly)) {
-				LinkEntryPoint (assembly);
-			} else {
-				Annotations.SetAction (assembly, AssemblyAction.Copy);
+			Annotations.SetAction (assembly, AssemblyAction.Copy);
 
-				foreach (TypeDefinition type in assembly.MainModule.Types) {
-					Annotations.Mark (type);
+			foreach (TypeDefinition type in assembly.MainModule.Types) {
+				Annotations.Mark (type);
 
-					MarkMethods (type.Methods);
-					MarkMethods (type.Constructors);
-				}
+				MarkMethods (type.Methods);
+				MarkMethods (type.Constructors);
 			}
-		}
-
-		static void LinkEntryPoint (AssemblyDefinition assembly)
-		{
-			Annotations.SetAction (assembly, AssemblyAction.Link);
-			Annotations.Mark (assembly.EntryPoint);
-			Annotations.SetAction (assembly.EntryPoint, MethodAction.Parse);
-			Annotations.Mark (assembly.EntryPoint.DeclaringType);
-		}
-
-		static bool IsLinkable (AssemblyDefinition assembly)
-		{
-			return assembly.Kind != AssemblyKind.Dll && assembly.EntryPoint != null;
 		}
 
 		static void MarkMethods (ICollection methods)

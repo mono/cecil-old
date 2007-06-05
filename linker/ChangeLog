@@ -1,8 +1,5 @@
 2007-06-05  Jb Evain  <jbevain@novell.com>
 
-	* Mono.Linker.Steps/ResolveFromAssemblyStep.cs:
-		Link .exe when possible.
-
 	* Tests/Mono.Linker.Tests/IntegrationTestFixture.cs:
 	  Tests/TestCases/Integration/*
 	  Tests/Makefile:
