@@ -38,3 +38,7 @@ config.make:
 
 include config.make
 
+run-test: all
+	cd ./Tests; \
+	make clean run-test; \
+	cd ..;
