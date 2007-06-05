@@ -1,3 +1,10 @@
+2007-06-05  Jb Evain  <jbevain@novell.com>
+
+	* Tests/Mono.Linker.Tests/IntegrationTestFixture.cs:
+	  Tests/TestCases/Integration/*
+	  Tests/Makefile:
+		Start the integration tests.
+
 2007-06-04  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker.Steps/MarkStep.cs

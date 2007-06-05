@@ -60,6 +60,7 @@
     <Compile Include="Mono.Linker.Tests\AbstractTestFixture.cs" />
     <Compile Include="Mono.Linker.Tests\AssemblyLinkingTestFixture.cs" />
     <Compile Include="Mono.Linker.Tests\AssemblyInfo.cs" />
+    <Compile Include="Mono.Linker.Tests\IntegrationTestFixture.cs" />
     <Compile Include="Mono.Linker.Tests\XmlLinkingTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
