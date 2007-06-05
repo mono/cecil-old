@@ -99,7 +99,8 @@ namespace Mono.Linker.Tests {
 			p.StartInfo.EnvironmentVariables ["MONO_PATH"] = directory;
 			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.WorkingDirectory = directory;
-			p.StartInfo.FileName = Path.Combine (directory, file);
+			p.StartInfo.FileName = "mono";
+			p.StartInfo.Arguments = file;
 			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.UseShellExecute = false;
 
