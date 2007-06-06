@@ -141,8 +141,12 @@ namespace Mono.Linker.Steps {
 
 		static TypePreserve GetTypePreserve (XPathNavigator nav)
 		{
+			string attribute = GetAttribute (nav, _preserve);
+			if (attribute == null || attribute.Length == 0)
+				return TypePreserve.Nothing;
+
 			try {
-				return (TypePreserve) Enum.Parse (typeof (TypePreserve), GetAttribute (nav, _preserve), true);
+				return (TypePreserve) Enum.Parse (typeof (TypePreserve), attribute, true);
 			} catch {
 				return TypePreserve.Nothing;
 			}

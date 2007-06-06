@@ -78,7 +78,7 @@ namespace Mono.Linker {
 		{
 			AssemblyNameReference reference = GetReference (scope);
 
-			AssemblyDefinition assembly = _assemblies [reference.FullName] as AssemblyDefinition;
+			AssemblyDefinition assembly = _assemblies [reference.Name] as AssemblyDefinition;
 			if (assembly != null)
 				return assembly;
 
@@ -113,7 +113,7 @@ namespace Mono.Linker {
 
 		void AddAssembly (AssemblyNameReference reference, AssemblyDefinition assembly)
 		{
-			_assemblies.Add (reference.FullName, assembly);
+			_assemblies.Add (reference.Name, assembly);
 		}
 
 		static bool IsCore (AssemblyNameReference name)

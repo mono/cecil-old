@@ -1,5 +1,10 @@
 2007-06-06  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker/LinkContext.cs:
+	  Mono.Linker.Steps/LoadReferences.cs:
+		Use the name of the assembly as a key
+		instead of the fullname.
+
 	* Mono.Linker/CustomResolver.cs:
 		When a method is not found, go down
 		the class hierarchy to find it.

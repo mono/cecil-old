@@ -43,10 +43,10 @@ namespace Mono.Linker.Steps {
 
 		void ProcessReferences (AssemblyDefinition assembly)
 		{
-			if (_references.Contains (assembly.Name.FullName))
+			if (_references.Contains (assembly.Name))
 				return;
 
-			_references.Add (assembly.Name.FullName, assembly);
+			_references.Add (assembly.Name, assembly);
 
 			foreach (AssemblyNameReference reference in assembly.MainModule.AssemblyReferences)
 				ProcessReferences (Context.Resolve (reference));
