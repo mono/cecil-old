@@ -37,14 +37,12 @@ namespace Mono.Linker.Steps {
 
 	public class BlacklistStep : BaseStep {
 
-		static readonly IDictionary blacklists = new Hashtable ();
-
-		static BlacklistStep ()
-		{
-			blacklists.Add ("mscorlib", "corlib.xml");
-			blacklists.Add ("System", "system.xml");
-			blacklists.Add ("System.Web", "system.web.xml");
-		}
+		static readonly string [] blacklists = new string [] {
+			"mscorlib",
+			"System",
+			"System.Web",
+			"Mono.Unix"
+		};
 
 		protected override bool ConditionToProcess()
 		{
@@ -53,11 +51,11 @@ namespace Mono.Linker.Steps {
 
 		protected override void Process ()
 		{
-			foreach (DictionaryEntry entry in blacklists) {
-				if (!IsReferenced ((string) entry.Key))
+			foreach (string name in blacklists) {
+				if (!IsReferenced (name)
 					continue;
 
-				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep ((string) entry.Value));
+				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep (name);
 			}
 		}
 
@@ -84,7 +82,7 @@ namespace Mono.Linker.Steps {
 
 		static Stream GetResource (string descriptor)
 		{
-			return Assembly.GetExecutingAssembly ().GetManifestResourceStream (descriptor);
+			return Assembly.GetExecutingAssembly ().GetManifestResourceStream (descriptor + ".xml");
 		}
 	}
 }

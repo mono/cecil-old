@@ -70,14 +70,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Descriptors\corlib.xml">
-      <LogicalName>corlib.xml</LogicalName>
+    <EmbeddedResource Include="Descriptors\mscorlib.xml">
+      <LogicalName>mscorlib.xml</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Descriptors\system.web.xml">
-      <LogicalName>system.web.xml</LogicalName>
+    <EmbeddedResource Include="Descriptors\System.Web.xml">
+      <LogicalName>System.web.xml</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Descriptors\system.xml">
-      <LogicalName>system.xml</LogicalName>
+    <EmbeddedResource Include="Descriptors\System.xml">
+      <LogicalName>System.xml</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Descriptors\Mono.Unix.xml">
+      <LogicalName>Mono.Unix.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
