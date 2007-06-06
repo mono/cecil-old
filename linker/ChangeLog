@@ -2,6 +2,7 @@
 
 	* Mono.Linker.Steps/MarkStep.cs:
 		Mark default constructor for serializable types.
+		Mark the special serialization constructor as well.
 
 	* Mono.Linker/LinkContext.cs:
 	  Mono.Linker.Steps/LoadReferences.cs:

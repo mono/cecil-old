@@ -205,8 +205,10 @@ namespace Mono.Linker.Steps {
 			if (IsMulticastDelegate (td))
 				MarkMethodCollection (td.Constructors);
 
-			if (IsSerializable (td))
+			if (IsSerializable(td)) {
 				MarkMethodsIf (td.Constructors, new MethodPredicate (IsDefaultConstructor));
+				MarkMethodsIf (td.Constructors, new MethodPredicate (IsSpecialSerializationConstructor));
+			}
 
 			MarkGenericParameters (td);
 
@@ -225,6 +227,19 @@ namespace Mono.Linker.Steps {
 			ApplyPreserveInfo (td);
 		}
 
+		static bool IsSpecialSerializationConstructor (MethodDefinition method)
+		{
+			if (!IsConstructor (method))
+				return false;
+
+			ParameterDefinitionCollection parameters = method.Parameters;
+			if (parameters.Count != 2)
+				return false;
+
+			return parameters [0].ParameterType.Name == "SerializationInfo" &&
+				parameters [1].ParameterType.Name == "StreamingContext";
+		}
+
 		delegate bool MethodPredicate (MethodDefinition method);
 
 		void MarkMethodsIf (ICollection methods, MethodPredicate predicate)
@@ -236,8 +251,13 @@ namespace Mono.Linker.Steps {
 
 		static bool IsDefaultConstructor (MethodDefinition method)
 		{
+			return IsConstructor (method) && method.Parameters.Count == 0;
+		}
+
+		static bool IsConstructor (MethodDefinition method)
+		{
 			return method.Name == MethodDefinition.Ctor && method.IsSpecialName &&
-				method.IsRuntimeSpecialName && method.Parameters.Count == 0;
+				method.IsRuntimeSpecialName;
 		}
 
 		static bool IsVirtual (MethodDefinition method)
