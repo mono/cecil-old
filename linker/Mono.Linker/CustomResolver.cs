@@ -81,7 +81,7 @@ namespace Mono.Linker {
 			if (method.Name == MethodDefinition.Cctor || method.Name == MethodDefinition.Ctor)
 				return GetMethod (type.Constructors, method);
 			else
-				return GetMethod (type.Methods, method);
+				return GetMethod (type, method);
 		}
 
 		static TypeReference GetDeclaringType (TypeReference type)
@@ -90,6 +90,19 @@ namespace Mono.Linker {
 			while (t is TypeSpecification)
 				t = ((TypeSpecification) t).ElementType;
 			return t;
+		}
+
+		MethodDefinition GetMethod (TypeDefinition type, MethodReference reference)
+		{
+			while (type != null) {
+				MethodDefinition method = GetMethod (type.Methods, reference);
+				if (method == null)
+					type = Resolve (GetDeclaringType (type.BaseType));
+				else
+					return method;
+			}
+
+			return null;
 		}
 
 		static MethodDefinition GetMethod (ICollection collection, MethodReference reference)
