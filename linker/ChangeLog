@@ -1,5 +1,8 @@
 2007-06-06  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/MarkStep.cs:
+		Mark default constructor for serializable types.
+
 	* Mono.Linker/LinkContext.cs:
 	  Mono.Linker.Steps/LoadReferences.cs:
 		Use the name of the assembly as a key

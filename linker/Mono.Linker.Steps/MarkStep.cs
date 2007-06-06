@@ -205,6 +205,9 @@ namespace Mono.Linker.Steps {
 			if (IsMulticastDelegate (td))
 				MarkMethodCollection (td.Constructors);
 
+			if (IsSerializable (td))
+				MarkMethodsIf (td.Constructors, new MethodPredicate (IsDefaultConstructor));
+
 			MarkGenericParameters (td);
 
 			if (td.IsValueType)
@@ -213,17 +216,44 @@ namespace Mono.Linker.Steps {
 			foreach (TypeReference iface in td.Interfaces)
 				MarkType (iface);
 
-			foreach (MethodDefinition ctor in td.Constructors)
-				if (ctor.Name == MethodDefinition.Cctor)
-					MarkMethod (ctor);
+			MarkMethodsIf (td.Constructors, new MethodPredicate (IsStaticConstructor));
 
-			foreach (MethodDefinition meth in td.Methods)
-				if (meth.IsVirtual)
-					MarkMethod (meth);
+			MarkMethodsIf (td.Methods, new MethodPredicate (IsVirtual));
 
 			Annotations.Mark (td);
 
 			ApplyPreserveInfo (td);
+		}
+
+		delegate bool MethodPredicate (MethodDefinition method);
+
+		void MarkMethodsIf (ICollection methods, MethodPredicate predicate)
+		{
+			foreach (MethodDefinition method in methods)
+				if (predicate (method))
+					MarkMethod (method);
+		}
+
+		static bool IsDefaultConstructor (MethodDefinition method)
+		{
+			return method.Name == MethodDefinition.Ctor && method.IsSpecialName &&
+				method.IsRuntimeSpecialName && method.Parameters.Count == 0;
+		}
+
+		static bool IsVirtual (MethodDefinition method)
+		{
+			return method.IsVirtual;
+		}
+
+		static bool IsStaticConstructor (MethodDefinition method)
+		{
+			return method.Name == MethodDefinition.Cctor && method.IsSpecialName &&
+				method.IsRuntimeSpecialName;
+		}
+
+		static bool IsSerializable (TypeDefinition td)
+		{
+			return (td.Attributes & TypeAttributes.Serializable) != 0;
 		}
 
 		static bool IsMulticastDelegate (TypeDefinition td)
