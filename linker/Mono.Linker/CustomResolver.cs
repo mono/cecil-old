@@ -40,6 +40,18 @@ namespace Mono.Linker {
 			RegisterAssembly (assembly);
 		}
 
+		public TypeDefinition GetType (AssemblyDefinition assembly, string type)
+		{
+			int pos = type.IndexOf (",");
+			type = type.Replace ("+", "/");
+			if (pos == -1)
+				return assembly.MainModule.Types [type];
+
+			string asm = type.Substring (pos + 1);
+			assembly = Resolve (AssemblyNameReference.Parse (asm));
+			return assembly.MainModule.Types [type];
+		}
+
 		public TypeDefinition Resolve (TypeReference type)
 		{
 			if (type is TypeDefinition)

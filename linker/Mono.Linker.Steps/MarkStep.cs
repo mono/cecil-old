@@ -125,7 +125,27 @@ namespace Mono.Linker.Steps {
 		void MarkCustomAttributes (ICustomAttributeProvider provider)
 		{
 			foreach (CustomAttribute ca in provider.CustomAttributes)
-				MarkMethod (ca.Constructor);
+				MarkCustomAttribute (ca);
+		}
+
+		void MarkCustomAttribute (CustomAttribute ca)
+		{
+			MarkMethod (ca.Constructor);
+			//if (!ca.Resolved)
+			//	ca.Resolve ();
+
+			if (!ca.Resolved)
+				return;
+
+			for (int i = 0; i < ca.Constructor.Parameters.Count; i++) {
+				ParameterDefinition param = ca.Constructor.Parameters [i];
+				if (param.ParameterType.FullName != Constants.Type)
+					continue;
+
+				TypeDefinition type = _context.Resolver.GetType (
+					ca.Constructor.DeclaringType.Module.Assembly, (string) ca.ConstructorParameters [i]);
+				MarkType (type);
+			}
 		}
 
 		static bool CheckProcessed (IAnnotationProvider provider)

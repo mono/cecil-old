@@ -1,6 +1,10 @@
 2007-06-06  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker.Steps/MarkStep.cs:
+	  Mono.Linker/CustomResolvercs:
+		Try to find types in custom attributes to mark them.
+
+	* Mono.Linker.Steps/MarkStep.cs:
 		Mark default constructor for serializable types.
 		Mark the special serialization constructor as well.
 
