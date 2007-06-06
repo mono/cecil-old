@@ -52,10 +52,10 @@ namespace Mono.Linker.Steps {
 		protected override void Process ()
 		{
 			foreach (string name in blacklists) {
-				if (!IsReferenced (name)
+				if (!IsReferenced (name))
 					continue;
 
-				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep (name);
+				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep (name));
 			}
 		}
 
