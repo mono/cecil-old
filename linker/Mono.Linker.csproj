@@ -79,8 +79,8 @@
     <EmbeddedResource Include="Descriptors\System.xml">
       <LogicalName>System.xml</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Descriptors\Mono.Unix.xml">
-      <LogicalName>Mono.Unix.xml</LogicalName>
+    <EmbeddedResource Include="Descriptors\Mono.Posix.xml">
+      <LogicalName>Mono.Posix.xml</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

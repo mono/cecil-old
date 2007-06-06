@@ -41,7 +41,7 @@ namespace Mono.Linker.Steps {
 			"mscorlib",
 			"System",
 			"System.Web",
-			"Mono.Unix"
+			"Mono.Posix"
 		};
 
 		protected override bool ConditionToProcess()
