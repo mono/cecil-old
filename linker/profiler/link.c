@@ -127,7 +127,7 @@ link_type_get_desc (GString *res, MonoType *type, gboolean include_namespace) {
 		break;
 	}
 	if (mono_type_is_byref (type))
-		g_string_append_c (res, '&');
+		g_string_append (res, "&amp;");
 }
 
 static char *
