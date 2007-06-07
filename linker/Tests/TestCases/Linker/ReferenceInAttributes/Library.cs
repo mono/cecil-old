@@ -1,4 +1,5 @@
 using System;
+using LibLib;
 
 public class BarAttribute : Attribute {
 
@@ -26,6 +27,9 @@ public class Foo {
 
 	[Bar (PropertyType = typeof (Guy_C))]
 	public Foo b;
+
+	[LibLib (LibLibType = typeof (BilBil))]
+	public Foo c;
 }
 
 public class Guy_A {
@@ -53,5 +57,5 @@ public class Guy_C {
 }
 
 [NotLinked, AttributeUsage (AttributeTargets.All)]
-public class NotLinkedAttribute : Attribute {
+class NotLinkedAttribute : Attribute {
 }

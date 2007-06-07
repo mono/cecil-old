@@ -66,6 +66,19 @@ namespace Mono.Linker {
 			_assemblies = new Hashtable ();
 		}
 
+		public TypeDefinition GetType (AssemblyDefinition assembly, string type)
+		{
+			int pos = type.IndexOf (",");
+			type = type.Replace ("+", "/");
+			if (pos == -1)
+				return assembly.MainModule.Types [type];
+
+			string asm = type.Substring (pos + 1);
+			type = type.Substring (0, pos);
+			assembly = Resolve (AssemblyNameReference.Parse (asm));
+			return assembly.MainModule.Types [type];
+		}
+
 		public AssemblyDefinition Resolve (string filename)
 		{
 			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (filename);

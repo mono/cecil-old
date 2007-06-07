@@ -188,7 +188,7 @@ namespace Mono.Linker.Steps {
 				return;
 
 			AssemblyDefinition assembly = ResolveAssembly (ca.Constructor.DeclaringType.Scope);
-			TypeDefinition type = _context.Resolver.GetType (assembly, (string) value);
+			TypeDefinition type = _context.GetType (assembly, (string) value);
 
 			MarkType (type);
 		}
