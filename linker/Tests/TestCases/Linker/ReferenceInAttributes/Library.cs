@@ -30,6 +30,9 @@ public class Foo {
 
 	[LibLib (LibLibType = typeof (BilBil))]
 	public Foo c;
+
+	[LibLib (LibLibType = typeof (Guy_D))]
+	public Foo d;
 }
 
 public class Guy_A {
@@ -49,6 +52,13 @@ public class Guy_B {
 public class Guy_C {
 
 	[NotLinked] public Guy_C ()
+	{
+	}
+}
+
+public class Guy_D {
+
+	[NotLinked] public Guy_D ()
 	{
 	}
 }

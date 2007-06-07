@@ -187,8 +187,7 @@ namespace Mono.Linker.Steps {
 			if (slotType.FullName != Constants.Type)
 				return;
 
-			AssemblyDefinition assembly = ResolveAssembly (ca.Constructor.DeclaringType.Scope);
-			TypeDefinition type = _context.GetType (assembly, (string) value);
+			TypeDefinition type = _context.GetType ((string) value);
 
 			MarkType (type);
 		}
