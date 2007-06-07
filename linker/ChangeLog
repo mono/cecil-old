@@ -1,5 +1,16 @@
 2007-06-06  Jb Evain  <jbevain@novell.com>
 
+	* profiler/Makefile,
+	  profiler/link.c:
+		Add a small profiler that outputs the xml format
+		that the linker can resolve.
+
+		By running an application with the profiler, one
+		can help the linker gather data. Especially for dynamic
+		cases like assembly loading an dynamic type resolving.
+
+2007-06-06  Jb Evain  <jbevain@novell.com>
+
 	* Mono.Linker.Steps/MarkStep.cs:
 	  Mono.Linker/CustomResolvercs:
 		Try to find types in custom attributes to mark them.
