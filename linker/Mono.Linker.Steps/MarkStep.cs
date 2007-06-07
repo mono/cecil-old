@@ -122,6 +122,16 @@ namespace Mono.Linker.Steps {
 				MarkInstruction (instruction);
 		}
 
+		void MarkMarshalSpec (IHasMarshalSpec spec)
+		{
+			CustomMarshalerSpec marshaler = spec.MarshalSpec as CustomMarshalerSpec;
+			if (marshaler == null)
+				return;
+
+			TypeDefinition type = _context.GetType (marshaler.ManagedType);
+			MarkType (type);
+		}
+
 		void MarkCustomAttributes (ICustomAttributeProvider provider)
 		{
 			foreach (CustomAttribute ca in provider.CustomAttributes)
@@ -131,6 +141,7 @@ namespace Mono.Linker.Steps {
 		void MarkCustomAttribute (CustomAttribute ca)
 		{
 			MarkMethod (ca.Constructor);
+
 			if (!ca.Resolved) {
 				ca = ca.Clone ();
 				ca.Resolve ();
@@ -225,6 +236,7 @@ namespace Mono.Linker.Steps {
 			MarkType (fd.DeclaringType);
 			MarkType (fd.FieldType);
 			MarkCustomAttributes (fd);
+			MarkMarshalSpec (fd);
 
 			Annotations.Mark (fd);
 		}
@@ -458,6 +470,7 @@ namespace Mono.Linker.Steps {
 			foreach (ParameterDefinition pd in md.Parameters) {
 				MarkType (pd.ParameterType);
 				MarkCustomAttributes (pd);
+				MarkMarshalSpec (pd);
 			}
 
 			foreach (MethodReference ov in md.Overrides)
@@ -465,6 +478,7 @@ namespace Mono.Linker.Steps {
 
 			MarkType (md.ReturnType.ReturnType);
 			MarkCustomAttributes (md.ReturnType);
+			MarkMarshalSpec (md.ReturnType);
 
 			if (ShouldParseMethodBody (md))
 				MarkMethodBody (md.Body);

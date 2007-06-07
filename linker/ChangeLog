@@ -1,5 +1,8 @@
 2007-06-07  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/MarkStep.cs:
+		Mark types used in some marshal specs.
+
 	* Mono.Linker.Tests/MarkStep.cs
 	  Tests/Mono.Linker.Tests/XmlLinkingTestFixture.cs
 	  Tests/TestCases/Linker/ReferenceInAttributes/*:

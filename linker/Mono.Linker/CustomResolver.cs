@@ -51,6 +51,10 @@ namespace Mono.Linker {
 				return assembly.MainModule.Types [type.FullName];
 			}
 
+			ModuleDefinition module = type.Scope as ModuleDefinition;
+			if (module != null)
+				return module.Types [type.FullName];
+
 			throw new NotImplementedException ();
 		}
 
