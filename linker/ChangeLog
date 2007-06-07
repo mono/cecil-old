@@ -1,4 +1,11 @@
-2007-06-06  Jb Evain  <jbevain@novell.com>
+2007-06-07  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Linker.Tests/MarkStep.cs
+	  Tests/Mono.Linker.Tests/XmlLinkingTestFixture.cs
+	  Tests/TestCases/Linker/ReferenceInAttributes/*:
+		Mark fields and setters used in custom attribute
+		instantiation. Mark also types used in custom attribute
+		instantiation.
 
 	* profiler/Makefile,
 	  profiler/link.c:

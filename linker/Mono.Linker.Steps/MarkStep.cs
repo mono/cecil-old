@@ -131,21 +131,66 @@ namespace Mono.Linker.Steps {
 		void MarkCustomAttribute (CustomAttribute ca)
 		{
 			MarkMethod (ca.Constructor);
-			//if (!ca.Resolved)
-			//	ca.Resolve ();
+			if (!ca.Resolved) {
+				ca = ca.Clone ();
+				ca.Resolve ();
+			}
 
 			if (!ca.Resolved)
 				return;
 
+			TypeDefinition type = _context.Resolver.Resolve (ca.Constructor.DeclaringType);
+			MarkCustomAttributeParameters (ca);
+			MarkCustomAttributeProperties (ca, type);
+			MarkCustomAttributeFields (ca, type);
+		}
+
+		void MarkCustomAttributeProperties (CustomAttribute ca, TypeDefinition attribute)
+		{
+			foreach (DictionaryEntry de in ca.Properties) {
+				string propertyname = (string) de.Key;
+
+				PropertyDefinition [] properties = attribute.Properties.GetProperties (propertyname);
+
+				if (properties != null && properties.Length != 0 && properties [0].SetMethod != null)
+					MarkMethod (properties [0].SetMethod);
+
+				TypeReference propType = ca.GetPropertyType (propertyname);
+				MarkIfType (ca, propType, de.Value);
+			}
+		}
+
+		void MarkCustomAttributeFields (CustomAttribute ca, TypeDefinition attribute)
+		{
+			foreach (DictionaryEntry de in ca.Fields) {
+				string fieldname = (string) de.Key;
+
+				FieldDefinition field = attribute.Fields.GetField (fieldname);
+				if (field != null)
+					MarkField (field);
+
+				TypeReference fieldType = ca.GetFieldType (fieldname);
+				MarkIfType (ca, fieldType, de.Value);
+			}
+		}
+
+		void MarkCustomAttributeParameters (CustomAttribute ca)
+		{
 			for (int i = 0; i < ca.Constructor.Parameters.Count; i++) {
 				ParameterDefinition param = ca.Constructor.Parameters [i];
-				if (param.ParameterType.FullName != Constants.Type)
-					continue;
-
-				TypeDefinition type = _context.Resolver.GetType (
-					ca.Constructor.DeclaringType.Module.Assembly, (string) ca.ConstructorParameters [i]);
-				MarkType (type);
+				MarkIfType (ca, param.ParameterType, ca.ConstructorParameters [i]);
 			}
+		}
+
+		void MarkIfType (CustomAttribute ca, TypeReference slotType, object value)
+		{
+			if (slotType.FullName != Constants.Type)
+				return;
+
+			AssemblyDefinition assembly = ca.Constructor.DeclaringType.Module.Assembly;
+			TypeDefinition type = _context.Resolver.GetType (assembly, (string) value);
+
+			MarkType (type);
 		}
 
 		static bool CheckProcessed (IAnnotationProvider provider)

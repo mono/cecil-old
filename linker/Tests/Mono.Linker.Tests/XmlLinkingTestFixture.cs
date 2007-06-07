@@ -74,6 +74,12 @@ namespace Mono.Linker.Tests {
 			RunTest ("PreserveFieldsRequired");
 		}
 
+		[Test]
+		public void TestReferenceInAttributes ()
+		{
+			RunTest ("ReferenceInAttributes");
+		}
+
 		protected override void RunTest (string testCase)
 		{
 			base.RunTest (testCase);
