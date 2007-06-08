@@ -40,6 +40,7 @@ namespace Mono.Linker.Steps {
 		static readonly string [] blacklists = new string [] {
 			"mscorlib",
 			"System",
+			"System.Drawing",
 			"System.Web",
 			"Mono.Posix"
 		};

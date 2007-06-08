@@ -1,5 +1,9 @@
 2007-06-08  Jb Evain  <jbevain@novell.com>
 
+	* Descriptors/System.Drawing.xml,
+	  Mono.Linker.Steps/BlackListStep.cs:
+		Add preserve infos for System.Drawing.
+
 	* Mono.Linker.Steps/MarkStep.cs:
 	  Tests/TestsCases/Linker/Generics/*:
 		Also walk through generic instances to

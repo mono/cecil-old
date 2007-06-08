@@ -2,7 +2,7 @@
 MCS = mcs
 KEY_FILE = ../../mcs/class/mono.snk
 MONO.CECIL.DLL = Mono.Cecil.dll
-MCS_FLAGS = -debug -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -resource:Descriptors/mscorlib.xml -resource:Descriptors/System.xml -resource:Descriptors/System.Web.xml -resource:Descriptors/Mono.Posix.xml
+MCS_FLAGS = -debug -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -resource:Descriptors/mscorlib.xml -resource:Descriptors/System.xml -resource:Descriptors/System.Web.xml -resource:Descriptors/Mono.Posix.xml -resource:Descriptors/System.Drawing.xml
 LINKER = monolinker.exe
 
 all: config.make monolinker.exe monolinker

@@ -82,6 +82,9 @@
     <EmbeddedResource Include="Descriptors\Mono.Posix.xml">
       <LogicalName>Mono.Posix.xml</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Descriptors\System.Drawing.xml">
+      <LogicalName>System.Drawing.xml</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
