@@ -366,12 +366,23 @@ namespace Mono.Linker.Steps {
 			return td;
 		}
 
-		static TypeReference GetOriginalType (TypeReference type)
+		TypeReference GetOriginalType (TypeReference type)
 		{
-			while (type is TypeSpecification)
+			while (type is TypeSpecification) {
+				GenericInstanceType git = type as GenericInstanceType;
+				if (git != null)
+					MarkGenericArguments (git);
+
 				type = ((TypeSpecification) type).ElementType;
+			}
 
 			return type;
+		}
+
+		void MarkGenericArguments (IGenericInstance instance)
+		{
+			foreach (TypeReference argument in instance.GenericArguments)
+				MarkType (argument);
 		}
 
 		void ApplyPreserveInfo (TypeDefinition type)
@@ -435,10 +446,15 @@ namespace Mono.Linker.Steps {
 			return assembly;
 		}
 
-		static MethodReference GetOriginalMethod (MethodReference method)
+		MethodReference GetOriginalMethod (MethodReference method)
 		{
-			while (method is MethodSpecification)
+			while (method is MethodSpecification) {
+				GenericInstanceMethod gim = method as GenericInstanceMethod;
+				if (gim != null)
+					MarkGenericArguments (gim);
+
 				method = ((MethodSpecification) method).ElementMethod;
+			}
 
 			return method;
 		}

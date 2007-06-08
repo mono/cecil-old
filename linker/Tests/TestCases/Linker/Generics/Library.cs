@@ -15,6 +15,8 @@ public class Foo {
 		bs.Gazonk ();
 		bs.Bat<int>(s, i);
 		bs.BiroBiro ();
+
+		bs.Blam<Bang> ();
 	}
 }
 
@@ -37,8 +39,23 @@ public class Baz<T> {
 		Console.WriteLine ("{0}{1}", t, m);
 	}
 
+	public void Blam<M> ()
+	{
+	}
+
 	public T [] BiroBiro ()
 	{
 		return new T [0];
 	}
+}
+
+class Bang {
+
+	[NotLinked] public Bang ()
+	{
+	}
+}
+
+[NotLinked, AttributeUsage (AttributeTargets.All)]
+public class NotLinkedAttribute : Attribute {
 }

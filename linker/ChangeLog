@@ -1,3 +1,10 @@
+2007-06-08  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Linker.Steps/MarkStep.cs:
+	  Tests/TestsCases/Linker/Generics/*:
+		Also walk through generic instances to
+		mark arguments.
+
 2007-06-07  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker.Steps/MarkStep.cs:
