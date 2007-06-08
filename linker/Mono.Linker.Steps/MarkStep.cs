@@ -167,7 +167,7 @@ namespace Mono.Linker.Steps {
 					MarkMethod (properties [0].SetMethod);
 
 				TypeReference propType = ca.GetPropertyType (propertyname);
-				MarkIfType (ca, propType, de.Value);
+				MarkIfType (propType, de.Value);
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace Mono.Linker.Steps {
 					MarkField (field);
 
 				TypeReference fieldType = ca.GetFieldType (fieldname);
-				MarkIfType (ca, fieldType, de.Value);
+				MarkIfType (fieldType, de.Value);
 			}
 		}
 
@@ -189,11 +189,11 @@ namespace Mono.Linker.Steps {
 		{
 			for (int i = 0; i < ca.Constructor.Parameters.Count; i++) {
 				ParameterDefinition param = ca.Constructor.Parameters [i];
-				MarkIfType (ca, param.ParameterType, ca.ConstructorParameters [i]);
+				MarkIfType (param.ParameterType, ca.ConstructorParameters [i]);
 			}
 		}
 
-		void MarkIfType (CustomAttribute ca, TypeReference slotType, object value)
+		void MarkIfType (TypeReference slotType, object value)
 		{
 			if (slotType.FullName != Constants.Type)
 				return;
