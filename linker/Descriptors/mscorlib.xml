@@ -6,7 +6,7 @@
 		<type fullname="Mono.Interop.IDispatch" />
 		<type fullname="Mono.Interop.IUnknown" />
 		<type fullname="System.Activator" />
-		<type fullname="System.AppDomain" preserve="fields" />
+		<type fullname="System.AppDomain" />
 		<type fullname="System.AppDomainSetup" />
 		<type fullname="System.AppDomainUnloadedException" />
 		<type fullname="System.ApplicationException" />
@@ -142,6 +142,7 @@
 		<type fullname="System.Reflection.ReflectionTypeLoadException" />
 		<type fullname="System.Reflection.TargetException" />
 		<type fullname="System.Reflection.TargetParameterCountException" />
+		<type fullname="System.Resources.ResourceSet" />
 		<type fullname="System.Runtime.CompilerServices.CallConvCdecl" />
 		<type fullname="System.Runtime.CompilerServices.CallConvStdcall" />
 		<type fullname="System.Runtime.CompilerServices.CallConvFastcall" />
