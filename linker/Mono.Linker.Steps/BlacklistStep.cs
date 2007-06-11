@@ -37,14 +37,6 @@ namespace Mono.Linker.Steps {
 
 	public class BlacklistStep : BaseStep {
 
-		static readonly string [] blacklists = new string [] {
-			"mscorlib",
-			"System",
-			"System.Drawing",
-			"System.Web",
-			"Mono.Posix"
-		};
-
 		protected override bool ConditionToProcess()
 		{
 			return Context.CoreAction == AssemblyAction.Link;
@@ -52,12 +44,21 @@ namespace Mono.Linker.Steps {
 
 		protected override void Process ()
 		{
-			foreach (string name in blacklists) {
-				if (!IsReferenced (name))
+			foreach (string name in Assembly.GetExecutingAssembly ().GetManifestResourceNames ()) {
+				if (!IsReferenced (GetAssemblyName (name)))
 					continue;
 
 				Context.Pipeline.AddStepBefore (typeof (MarkStep), GetResolveStep (name));
 			}
+		}
+
+		static string GetAssemblyName (string descriptor)
+		{
+			int pos = descriptor.LastIndexOf (".");
+			if (pos == -1)
+				return descriptor;
+
+			return descriptor.Substring (0, pos);
 		}
 
 		bool IsReferenced (string name)
@@ -83,7 +84,7 @@ namespace Mono.Linker.Steps {
 
 		static Stream GetResource (string descriptor)
 		{
-			return Assembly.GetExecutingAssembly ().GetManifestResourceStream (descriptor + ".xml");
+			return Assembly.GetExecutingAssembly ().GetManifestResourceStream (descriptor);
 		}
 	}
 }
