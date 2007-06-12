@@ -40,22 +40,32 @@ namespace Mono.Linker {
 
 		public static AssemblyAction GetAction (AssemblyDefinition assembly)
 		{
-			return (AssemblyAction) assembly.Annotations [_actionKey];
+			return (AssemblyAction) GetAction (AsProvider (assembly));
 		}
 
 		public static MethodAction GetAction (MethodDefinition method)
 		{
-			return (MethodAction) method.Annotations [_actionKey];
+			return (MethodAction) GetAction (AsProvider (method));
+		}
+
+		static object GetAction (IAnnotationProvider provider)
+		{
+			return provider.Annotations [_actionKey];
 		}
 
 		public static void SetAction (AssemblyDefinition assembly, AssemblyAction action)
 		{
-			assembly.Annotations [_actionKey] = action;
+			SetAction (AsProvider (assembly), action);
 		}
 
 		public static void SetAction (MethodDefinition method, MethodAction action)
 		{
-			method.Annotations [_actionKey] = action;
+			SetAction (AsProvider (method), action);
+		}
+
+		static void SetAction (IAnnotationProvider provider, object action)
+		{
+			provider.Annotations [_actionKey] = action;
 		}
 
 		public static void Mark (IAnnotationProvider provider)
@@ -80,17 +90,17 @@ namespace Mono.Linker {
 
 		public static bool IsPreserved (TypeDefinition type)
 		{
-			return type.Annotations.Contains (_preservedKey);
+			return AsProvider (type).Annotations.Contains (_preservedKey);
 		}
 
 		public static void SetPreserve (TypeDefinition type, TypePreserve preserve)
 		{
-			type.Annotations [_preservedKey] = preserve;
+			AsProvider (type).Annotations [_preservedKey] = preserve;
 		}
 
 		public static TypePreserve GetPreserve (TypeDefinition type)
 		{
-			return (TypePreserve) type.Annotations [_preservedKey];
+			return (TypePreserve) AsProvider (type).Annotations [_preservedKey];
 		}
 
 		public static void SetPublic (IAnnotationProvider provider)
@@ -101,6 +111,11 @@ namespace Mono.Linker {
 		public static bool IsPublic (IAnnotationProvider provider)
 		{
 			return provider.Annotations.Contains (_publicKey);
+		}
+
+		static IAnnotationProvider AsProvider (object obj)
+		{
+			return (IAnnotationProvider) obj;
 		}
 
 		private Annotations ()
