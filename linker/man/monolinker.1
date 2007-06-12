@@ -16,7 +16,7 @@
 Mono CIL Linker
 .SH SYNOPSIS
 .PP
-.B monolinker [-o output_directory] [-c skip | copy | link] -x descriptor | -a assemblies ...
+.B monolinker [-o output_directory] [-c skip | copy | link] -x descriptor | -a assembly | -i info_file ...
 .SH DESCRIPTION
 \fImonolinker\fP is a CIL Linker.
 
@@ -93,6 +93,14 @@ use an assembly as a source for the linker.
 .PP
 The linker will walk through all the methods of the assembly to generate only what
 is necessary for this assembly to run.
+.TP
+.I "-i info_file"
+use a .info xml file as a source for the linker.
+.PP
+An info file is a file produced by the tool mono-api-info. The linker will use it to
+generate an assembly that contains only what the public API defined in he info file
+needs. It will also adjust the visibility of the types that have to be present in the
+assembly, but that are not visibile from the public API.
 .SH COPYRIGHT
 Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 .SH BUGS

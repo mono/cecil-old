@@ -37,7 +37,18 @@ will use the XML descriptor as a source. That means that the linker will
 use this file to decide what to link in a set of assemblies. The format of the
 descriptors is described further on in this document.
 
-3) The `core' assemblies
+3) Linking from an api info file
+
+The command:
+
+monolinker -i assembly.info
+
+will use a file produced by mono-api-info as a source. The linker will use
+this file to link only what is necessary to match the public API defined in
+the info file. The linker will also adjust the visibility of the metadata
+elements that are linked, but not present in the public API.
+
+4) The `core' assemblies
 
 Core assemblies are the assemblies that belongs to the base class library,
 like mscorlib.dll, System.dll or System.Windows.Forms.dll.
@@ -52,7 +63,7 @@ You can specify what action to do on the core assemblies with the option:
 
 -c skip|copy|link
 
-4) The output directory
+5) The output directory
 
 By default, the linker will create an `output' directory in the current
 directory where it will emit the linked files, to avoid erasing source
