@@ -89,7 +89,8 @@ namespace Mono.Linker.Steps {
 			string name = GetName (nav);
 
 			TypeDefinition type = _context.GetType (name);
-			MarkType (type);
+			if (type != null)
+				MarkType (type);
 		}
 
 		void PushType (TypeDefinition type)
@@ -130,6 +131,9 @@ namespace Mono.Linker.Steps {
 			string name = GetClassName (nav);
 
 			TypeDefinition type = _assembly.MainModule.Types [name];
+			if (type == null)
+				return;
+
 			MarkType (type);
 
 			PushType (type);
@@ -164,7 +168,8 @@ namespace Mono.Linker.Steps {
 			TypeDefinition declaring = PeekType ();
 
 			FieldDefinition field = declaring.Fields.GetField (GetName (nav));
-			MarkField (field);
+			if (field != null)
+				MarkField (field);
 
 			ProcessAttributes (nav);
 		}
@@ -191,7 +196,8 @@ namespace Mono.Linker.Steps {
 			string signature = GetMethodSignature ();
 
 			MethodDefinition method = GetMethod (signature);
-			MarkMethod (method);
+			if (method != null)
+				MarkMethod (method);
 
 			ProcessAttributes (nav);
 		}
@@ -254,9 +260,9 @@ namespace Mono.Linker.Steps {
 			string type = GetAttribute (nav, "type");
 			int pos = int.Parse (GetAttribute (nav, "position"));
 
-			_signature.Append (type);
 			if (pos > 0)
 				_signature.Append (",");
+			_signature.Append (type);
 		}
 
 		void OnConstructor (XPathNavigator nav)
@@ -268,7 +274,8 @@ namespace Mono.Linker.Steps {
 			string signature = GetMethodSignature ();
 
 			MethodDefinition ctor = GetConstructor (signature);
-			MarkMethod (ctor);
+			if (ctor != null)
+				MarkMethod (ctor);
 
 			ProcessAttributes (nav);
 		}
@@ -285,9 +292,14 @@ namespace Mono.Linker.Steps {
 			TypeDefinition type = PeekType ();
 
 			EventDefinition evt = type.Events.GetEvent (name);
-			MarkMethod (evt.AddMethod);
-			MarkMethod(evt.InvokeMethod);
-			MarkMethod(evt.RemoveMethod);
+			if (evt != null) {
+				if (evt.AddMethod != null)
+					MarkMethod (evt.AddMethod);
+				if (evt.InvokeMethod != null)
+					MarkMethod (evt.InvokeMethod);
+				if (evt.RemoveMethod != null)
+					MarkMethod (evt.RemoveMethod);
+			}
 
 			ProcessAttributes (nav);
 		}
