@@ -2,7 +2,7 @@
 // ResolveFromApiInfoStep.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Jb Evain (jbevain@novell.com)
 //
 // (C) 2007 Novell, Inc.
 //
@@ -156,7 +156,7 @@ namespace Mono.Linker.Steps {
 
 		bool IsNestedClass ()
 		{
-			return PeekType () != null;
+			return _types.Count > 0;
 		}
 
 		void OnField (XPathNavigator nav)
@@ -199,6 +199,7 @@ namespace Mono.Linker.Steps {
 		static void MarkMethod (MethodDefinition method)
 		{
 			InternalMark (method);
+			Annotations.SetAction (method, MethodAction.Parse);
 		}
 
 		MethodDefinition GetMethod (string signature)
@@ -235,7 +236,11 @@ namespace Mono.Linker.Steps {
 		{
 			_signature = new StringBuilder ();
 
-			_signature.Append (GetAttribute (nav, "returntype"));
+			string returntype = GetAttribute (nav, "returntype");
+			if (returntype == null || returntype.Length == 0)
+				returntype = Constants.Void;
+
+			_signature.Append (returntype);
 			_signature.Append (" ");
 			_signature.Append (PeekType ().FullName);
 			_signature.Append ("::");

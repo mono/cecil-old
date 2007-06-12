@@ -105,6 +105,7 @@ namespace Mono.Linker {
 					break;
 				case 'i':
 					p.PrependStep (new ResolveFromApiInfoStep (new XPathDocument (GetParam (q))));
+					p.AddStepBefore (typeof (OutputStep), new AdjustVisibilityStep ());
 					resolver = true;
 					break;
 				default:

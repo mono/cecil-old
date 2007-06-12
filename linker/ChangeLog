@@ -1,5 +1,11 @@
 2007-06-12  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/AdjustVisibilityStep.cs,
+	  Mono.Linker.Steps/ResolveFromApiInfoStep.cs,
+	  Mono.Linker/Drivers.cs:
+		Adjust the visibility depending on the data
+		gathered in the api-info.
+
 	* Mono.Linker.Steps/ResolveFromApiInfoStep.cs:
 	  Mono.Linker/Driver.cs:
 		Started working on linking from api-info.
