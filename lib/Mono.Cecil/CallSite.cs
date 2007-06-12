@@ -66,8 +66,8 @@ namespace Mono.Cecil {
 			set { m_function.MetadataToken = value; }
 		}
 
-		public IDictionary Annotations {
-			get { return m_function.Annotations; }
+		IDictionary IAnnotationProvider.Annotations {
+			get { return ((IAnnotationProvider) m_function).Annotations; }
 		}
 
 		public CallSite (bool hasThis, bool explicitThis, MethodCallingConvention callConv, MethodReturnType retType)

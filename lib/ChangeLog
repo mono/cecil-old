@@ -1,3 +1,16 @@
+2007-06-12  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil/CallSite.cs
+	  Mono.Cecil/ModuleReference.cs
+	  Mono.Cecil/CustomAttribute.cs
+	  Mono.Cecil/AssemblyDefinition.cs
+	  Mono.Cecil/SecurityDeclaration.cs
+	  Mono.Cecil/AssemblyNameReference.cs
+	  Mono.Cecil/MemberReference.cs
+	  Mono.Cecil/Resource.cs
+	  Mono.Cecil/ParameterReference.cs:
+		Implement explicitely IAnnotationProvider.
+
 2007-06-05  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil/AssemblyNameReference.cs:
