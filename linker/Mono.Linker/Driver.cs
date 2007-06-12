@@ -150,7 +150,6 @@ namespace Mono.Linker {
 			Console.WriteLine ("   -a          Link from a list of assemblies");
 			Console.WriteLine ("   -i          Link from an mono-api-info descriptor");
 			Console.WriteLine ("");
-			Console.WriteLine ("   you have to choose one from -x and -a but not both");
 
 			Environment.Exit (1);
 		}
