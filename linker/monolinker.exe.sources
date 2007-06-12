@@ -11,6 +11,7 @@
 ./Mono.Linker.Steps/LoadReferencesStep.cs
 ./Mono.Linker.Steps/ResolveFromXmlStep.cs
 ./Mono.Linker.Steps/SweepStep.cs
+./Mono.Linker.Steps/ResolveFromApiInfoStep.cs
 ./Mono.Linker.Steps/ResolveFromAssemblyStep.cs
 ./Mono.Linker.Steps/ResolveStep.cs
 ./Mono.Linker.Steps/CleanStep.cs

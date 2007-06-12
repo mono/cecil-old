@@ -36,6 +36,7 @@ namespace Mono.Linker {
 		private static readonly object _markedKey = new object ();
 		private static readonly object _processedKey = new object ();
 		private static readonly object _preservedKey = new object ();
+		private static readonly object _publicKey = new object ();
 
 		public static AssemblyAction GetAction (AssemblyDefinition assembly)
 		{
@@ -90,6 +91,16 @@ namespace Mono.Linker {
 		public static TypePreserve GetPreserve (TypeDefinition type)
 		{
 			return (TypePreserve) type.Annotations [_preservedKey];
+		}
+
+		public static void SetPublic (IAnnotationProvider provider)
+		{
+			provider.Annotations [_publicKey] = _publicKey;
+		}
+
+		public static bool IsPublic (IAnnotationProvider provider)
+		{
+			return provider.Annotations.Contains (_publicKey);
 		}
 
 		private Annotations ()

@@ -96,19 +96,15 @@ namespace Mono.Linker {
 					context.CoreAction = ParseCoreAction (GetParam (q));
 					break;
 				case 'x':
-					if (resolver)
-						Usage ();
-
 					p.PrependStep (new ResolveFromXmlStep (new XPathDocument (GetParam (q))));
 					resolver = true;
 					break;
 				case 'a':
-					if (resolver)
-						Usage ();
-
-					while (q.Count > 0)
-						p.PrependStep (new ResolveFromAssemblyStep (GetParam (q)));
-
+					p.PrependStep (new ResolveFromAssemblyStep (GetParam (q)));
+					resolver = true;
+					break;
+				case 'i':
+					p.PrependStep (new ResolveFromApiInfoStep (new XPathDocument (GetParam (q))));
 					resolver = true;
 					break;
 				default:
@@ -144,7 +140,7 @@ namespace Mono.Linker {
 		static void Usage ()
 		{
 			Console.WriteLine (_linker);
-			Console.WriteLine ("monolinker [options] -x|-a file [files...]");
+			Console.WriteLine ("monolinker [options] -x|-a|-i file");
 
 			Console.WriteLine ("   --about     About the {0}", _linker);
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
@@ -152,6 +148,7 @@ namespace Mono.Linker {
 			Console.WriteLine ("   -c          Action on the core assemblies, skip, copy or link, default to skip");
 			Console.WriteLine ("   -x          Link from an XML descriptor");
 			Console.WriteLine ("   -a          Link from a list of assemblies");
+			Console.WriteLine ("   -i          Link from an mono-api-info descriptor");
 			Console.WriteLine ("");
 			Console.WriteLine ("   you have to choose one from -x and -a but not both");
 
