@@ -465,6 +465,7 @@ namespace Mono.Cecil.Signatures {
 				writer.Write ((long) elem.Value);
 				break;
 			case ElementType.String :
+			case ElementType.Type :
 				string s = elem.Value as string;
 				if (s == null)
 					writer.Write ((byte) 0xff);
@@ -472,12 +473,6 @@ namespace Mono.Cecil.Signatures {
 					writer.Write ((byte) 0x00);
 				else
 					Write (s);
-				break;
-			case ElementType.Type :
-				string t = elem.Value as string;
-				if (t == null || t.Length == 0)
-					throw new NotSupportedException ("Null types not allowed in custom attributes");
-				Write (t);
 				break;
 			case ElementType.Object :
 				if (elem.Value != null)

@@ -1,4 +1,14 @@
-2007-06-12  Jb Evain  <jbevain@novell.com>
+2007-06-13  Jb Evain  <jbevain@novell.com>
+
+	Integrated patches by:
+	Paul Apostolescu <papostolescu@fortifysoftware.com>
+
+	* patch2:
+	  Mono.Cecil.Signature/SignatureWriter.cs:
+		Patch to handle nullref values for types in
+		custom attributes arguments.
+
+2007-06-13  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil/StructureWriter.cs,
 	  Mono.Cecil/ReflectionWriter.cs:
