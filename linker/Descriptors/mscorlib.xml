@@ -41,6 +41,7 @@
 		<type fullname="System.Diagnostics.StackFrame" />
 		<type fullname="System.Diagnostics.StackTrace" />
 		<type fullname="System.DivideByZeroException" />
+		<type fullname="System.DllNotFoundException" />
 		<type fullname="System.Double" />
 		<type fullname="System.Enum" />
 		<type fullname="System.Environment" />
