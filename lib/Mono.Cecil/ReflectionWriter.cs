@@ -57,7 +57,6 @@ namespace Mono.Cecil {
 		ArrayList m_fieldStack;
 		ArrayList m_genericParamStack;
 		IDictionary m_typeSpecCache;
-		IDictionary m_memberRefCache;
 
 		uint m_methodIndex;
 		uint m_fieldIndex;
@@ -135,7 +134,6 @@ namespace Mono.Cecil {
 			m_fieldStack = new ArrayList ();
 			m_genericParamStack = new ArrayList ();
 			m_typeSpecCache = new Hashtable ();
-			m_memberRefCache = new Hashtable ();
 
 			m_methodIndex = 1;
 			m_fieldIndex = 1;
@@ -199,37 +197,7 @@ namespace Mono.Cecil {
 		{
 			if (member is MethodSpecification)
 				return GetMemberRefToken (((MethodSpecification) member).ElementMethod);
-			if (member is IMemberDefinition)
-				return member.MetadataToken;
-			if (m_memberRefCache.Contains (member))
-				return member.MetadataToken;
 
-			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
-
-			uint sig = 0;
-			if (member is FieldReference)
-				sig = m_sigWriter.AddFieldSig (GetFieldSig ((FieldReference) member));
-			else if (member is MethodReference)
-				sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig ((MethodReference) member));
-
-			MetadataToken declaringType = GetTypeDefOrRefToken (member.DeclaringType);
-			uint name = m_mdWriter.AddString (member.Name);
-
-			for (int i = 0; i < mrTable.Rows.Count; i++) {
-				MemberRefRow row = mrTable [i];
-				if (row.Class == declaringType && row.Name == name && row.Signature == sig)
-					return MetadataToken.FromMetadataRow (TokenType.MemberRef, i);
-			}
-
-			MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
-				declaringType,
-				name,
-				sig);
-
-			mrTable.Rows.Add (mrRow);
-			member.MetadataToken = new MetadataToken (
-				TokenType.MemberRef, (uint) mrTable.Rows.Count);
-			m_memberRefCache [member] = member.MetadataToken;
 			return member.MetadataToken;
 		}
 
@@ -379,6 +347,30 @@ namespace Mono.Cecil {
 			}
 		}
 
+		public override void VisitMemberReferenceCollection (MemberReferenceCollection members)
+		{
+			if (members.Count == 0)
+				return;
+
+			MemberRefTable mrTable = m_tableWriter.GetMemberRefTable ();
+			foreach (MemberReference member in members) {
+				uint sig = 0;
+				if (member is FieldReference)
+					sig = m_sigWriter.AddFieldSig (GetFieldSig (member as FieldReference));
+				else if (member is MethodReference)
+					sig = m_sigWriter.AddMethodRefSig (GetMethodRefSig ((MethodReference) member));
+
+				MemberRefRow mrRow = m_rowWriter.CreateMemberRefRow (
+					GetTypeDefOrRefToken (member.DeclaringType),
+					m_mdWriter.AddString (member.Name),
+					sig);
+
+				mrTable.Rows.Add (mrRow);
+				member.MetadataToken = new MetadataToken (
+					TokenType.MemberRef, (uint) mrTable.Rows.Count);
+			}
+		}
+
 		public override void VisitGenericParameterCollection (GenericParameterCollection parameters)
 		{
 			if (parameters.Count == 0)
@@ -423,7 +415,7 @@ namespace Mono.Cecil {
 				MethodImplRow miRow = m_rowWriter.CreateMethodImplRow (
 					GetRidFor (meths.Container.DeclaringType as TypeDefinition),
 					new MetadataToken (TokenType.Method, GetRidFor (meths.Container)),
-					GetMemberRefToken (ov));
+					ov.MetadataToken);
 
 				miTable.Rows.Add (miRow);
 			}

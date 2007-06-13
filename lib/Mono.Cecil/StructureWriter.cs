@@ -236,7 +236,7 @@ namespace Mono.Cecil {
 				writer.VisitModuleDefinition (mod);
 				writer.VisitTypeReferenceCollection (mod.TypeReferences);
 				writer.VisitTypeDefinitionCollection (mod.Types);
-				mod.MemberReferences.Clear ();
+				writer.VisitMemberReferenceCollection (mod.MemberReferences);
 				writer.CompleteTypeDefinitions ();
 
 				writer.TerminateModuleDefinition (mod);
