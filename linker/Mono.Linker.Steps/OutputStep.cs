@@ -55,14 +55,36 @@ namespace Mono.Linker.Steps {
 		void OutputAssembly (AssemblyDefinition assembly)
 		{
 			string directory = Context.OutputDirectory;
+
+			CopyConfigFileIfNeeded (assembly, directory);
+
 			switch (Annotations.GetAction (assembly)) {
 			case AssemblyAction.Link:
 				AssemblyFactory.SaveAssembly (assembly, GetAssemblyFileName (assembly, directory));
 				break;
 			case AssemblyAction.Copy:
-				CopyAssembly (assembly.MainModule.Image.FileInformation, directory);
+				CopyAssembly (GetOriginalAssemblyFileInfo (assembly), directory);
 				break;
 			}
+		}
+
+		static void CopyConfigFileIfNeeded (AssemblyDefinition assembly, string directory)
+		{
+			string config = GetConfigFile (GetOriginalAssemblyFileInfo (assembly).FullName);
+			if (!File.Exists (config))
+				return;
+
+			File.Copy (config, GetConfigFile (GetAssemblyFileName (assembly, directory)), true);
+		}
+
+		static string GetConfigFile (string assembly)
+		{
+			return assembly + ".config";
+		}
+
+		static FileInfo GetOriginalAssemblyFileInfo (AssemblyDefinition assembly)
+		{
+			return assembly.MainModule.Image.FileInformation;
 		}
 
 		static void CopyAssembly (FileInfo fi, string directory)

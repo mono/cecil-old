@@ -1,5 +1,8 @@
 2007-06-12  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/OutputStep.cs:
+		Copy .config files alongs with assemblies.
+
 	* Mono.Linker.Steps/CleanStep.cs:
 		Clean memberref that are not used anymore.
 
