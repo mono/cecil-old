@@ -153,7 +153,9 @@ namespace Mono.Cecil {
 					if (psig.CustomMods != null && psig.CustomMods.Length > 0)
 						pdef.PropertyType = GetModifierType (psig.CustomMods, pdef.PropertyType);
 
-					owner.Properties.Add (pdef);
+					if (!IsDeleted (pdef))
+						owner.Properties.Add (pdef);
+
 					m_properties [j - 1] = pdef;
 				}
 			}
@@ -185,7 +187,9 @@ namespace Mono.Cecil {
 						GetTypeDefOrRef (erow.EventType, context), erow.EventFlags);
 					edef.MetadataToken = MetadataToken.FromMetadataRow (TokenType.Event, j - 1);
 
-					owner.Events.Add (edef);
+					if (!IsDeleted (edef))
+						owner.Events.Add (edef);
+
 					m_events [j - 1] = edef;
 				}
 			}

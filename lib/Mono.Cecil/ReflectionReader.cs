@@ -45,6 +45,7 @@ namespace Mono.Cecil {
 		protected MetadataTableReader m_tableReader;
 		protected MetadataRoot m_root;
 		protected TablesHeap m_tHeap;
+		protected bool m_checkDeleted;
 
 		protected TypeDefinition [] m_typeDefs;
 		protected TypeReference [] m_typeRefs;
@@ -112,6 +113,7 @@ namespace Mono.Cecil {
 			m_reader = m_module.ImageReader;
 			m_root = m_module.Image.MetadataRoot;
 			m_tHeap = m_root.Streams.TablesHeap;
+			m_checkDeleted = (m_tHeap.HeapSizes & 0x80) != 0;
 			if (m_reader != null)
 				m_tableReader = m_reader.MetadataReader.TableReader;
 			m_codeReader = new CodeReader (this);
@@ -154,6 +156,17 @@ namespace Mono.Cecil {
 		public MethodDefinition GetMethodDefAt (uint rid)
 		{
 			return m_meths [rid - 1];
+		}
+
+		protected bool IsDeleted (IMemberDefinition member)
+		{
+			if (!m_checkDeleted)
+				return false;
+
+			if (!member.IsSpecialName || !member.IsRuntimeSpecialName)
+				return false;
+
+			return member.Name.StartsWith (Constants.Deleted);
 		}
 
 		public MemberReference GetMemberRefAt (uint rid, GenericContext context)
@@ -409,12 +422,14 @@ namespace Mono.Cecil {
 					TypeDefinition parent = GetTypeDefAt (row.EnclosingClass);
 					TypeDefinition child = GetTypeDefAt (row.NestedClass);
 
-					parent.NestedTypes.Add (child);
+					if (!IsDeleted (child))
+						parent.NestedTypes.Add (child);
 				}
 			}
 
 			foreach (TypeDefinition type in m_typeDefs)
-				types.Add (type);
+				if (!IsDeleted (type))
+					types.Add (type);
 
 			// type ref reading
 			if (m_tHeap.HasTable (TypeRefTable.RId)) {
@@ -558,6 +573,7 @@ namespace Mono.Cecil {
 				for (int j = (int) tdefTable [index].FieldList; j < next; j++) {
 					FieldRow frow = fldTable [j - 1];
 					FieldSig fsig = m_sigReader.GetFieldSig (frow.Signature);
+
 					FieldDefinition fdef = new FieldDefinition (
 						m_root.Streams.StringsHeap [frow.Name],
 						GetTypeRefFromSig (fsig.Type, context), frow.Flags);
@@ -566,7 +582,9 @@ namespace Mono.Cecil {
 					if (fsig.CustomMods.Length > 0)
 						fdef.FieldType = GetModifierType (fsig.CustomMods, fdef.FieldType);
 
-					dec.Fields.Add (fdef);
+					if (!IsDeleted (fdef))
+						dec.Fields.Add (fdef);
+
 					m_fields [j - 1] = fdef;
 				}
 			}
@@ -624,10 +642,14 @@ namespace Mono.Cecil {
 				for (int j = (int) tdefTable [index].MethodList; j < next; j++) {
 					MethodRow methRow = methTable [j - 1];
 					MethodDefinition mdef = m_meths [j - 1];
-					if (mdef.IsConstructor)
-						dec.Constructors.Add (mdef);
-					else
-						dec.Methods.Add (mdef);
+
+					if (!IsDeleted(mdef)) {
+						if (mdef.IsConstructor)
+							dec.Constructors.Add (mdef);
+						else
+							dec.Methods.Add (mdef);
+					}
+
 					GenericContext context = new GenericContext (mdef);
 
 					MethodDefSig msig = m_sigReader.GetMethodDefSig (methRow.Signature);

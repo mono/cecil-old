@@ -38,6 +38,7 @@ namespace Mono.Cecil {
 
 		public const string ModuleType = "<Module>";
 		public const string PrivateImplDetails = "<PrivateImplementationDetails>";
+		public const string Deleted = "_Deleted";
 
 		public const string Void = "System.Void";
 		public const string Object = "System.Object";

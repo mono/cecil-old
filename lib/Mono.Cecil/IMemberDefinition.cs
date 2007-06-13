@@ -29,5 +29,8 @@
 namespace Mono.Cecil {
 
 	public interface IMemberDefinition : IMemberReference {
+
+		bool IsSpecialName { get; set; }
+		bool IsRuntimeSpecialName { get; set; }
 	}
 }

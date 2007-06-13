@@ -3,6 +3,14 @@
 	Integrated patches by:
 	Paul Apostolescu <papostolescu@fortifysoftware.com>
 
+	* patch1:
+	  Mono.Cecil/IMemberDefinition.cs
+	  Mono.Cecil/Constants.cs
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil/AggressiveReflectionReader.cs:
+		Do not take into account special _Deleted
+		members.
+
 	* patch6:
 	  Mono.Cecil/StructureReader.cs:
 		Read the flags of the references as well.
