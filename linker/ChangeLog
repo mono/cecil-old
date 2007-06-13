@@ -1,5 +1,10 @@
 2007-06-12  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker.Steps/CleanStep.cs:
+		Clean memberref that are not used anymore.
+
+2007-06-12  Jb Evain  <jbevain@novell.com>
+
 	* Mono.Linker.Steps/AdjustVisibilityStep.cs,
 	  Mono.Linker.Steps/ResolveFromApiInfoStep.cs,
 	  Mono.Linker/Drivers.cs:
