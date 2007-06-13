@@ -3,6 +3,11 @@
 	Integrated patches by:
 	Paul Apostolescu <papostolescu@fortifysoftware.com>
 
+	* patch5:
+	  Mono.Cecil.Metadata/UserStringsHeap.cs:
+		Don't bother getting a string from the bytes
+		if the length is < 2 (0, or 0 + an encoding flag)
+
 	* patch4:
 	  Mono.Cecil/ReflectionHelper.cs:
 		Update the value type flags of types

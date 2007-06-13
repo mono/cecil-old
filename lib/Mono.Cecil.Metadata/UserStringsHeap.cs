@@ -28,7 +28,6 @@
 
 namespace Mono.Cecil.Metadata {
 
-	using System;
 	using System.Collections;
 	using System.Text;
 
@@ -51,18 +50,18 @@ namespace Mono.Cecil.Metadata {
 			set { m_strings [offset] = value; }
 		}
 
-		internal UserStringsHeap (MetadataStream stream) : base(stream, MetadataStream.UserStrings)
+		internal UserStringsHeap (MetadataStream stream) : base (stream, MetadataStream.UserStrings)
 		{
 			m_strings = new Hashtable ();
 		}
 
 		string ReadStringAt (int offset)
 		{
-			int length = Utilities.ReadCompressedInteger (this.Data, offset, out offset);
-			if (length == 0)
+			int length = Utilities.ReadCompressedInteger (this.Data, offset, out offset) - 1;
+			if (length < 1)
 				return string.Empty;
 
-			return Encoding.Unicode.GetString (this.Data, offset, length - 1);
+			return Encoding.Unicode.GetString (this.Data, offset, length);
 		}
 
 		public override void Accept (IMetadataVisitor visitor)
