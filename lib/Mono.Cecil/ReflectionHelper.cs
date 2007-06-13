@@ -226,8 +226,12 @@ namespace Mono.Cecil {
 			ImportCache ();
 
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
-			if (type != null)
+			if (type != null) {
+				if (t.IsValueType && !type.IsValueType)
+					type.IsValueType = true;
+
 				return type;
+			}
 
 			AssemblyNameReference asm = ImportAssembly (t.Assembly);
 			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);

@@ -3,6 +3,12 @@
 	Integrated patches by:
 	Paul Apostolescu <papostolescu@fortifysoftware.com>
 
+	* patch4:
+	  Mono.Cecil/ReflectionHelper.cs:
+		Update the value type flags of types
+		when they are imported if the type
+		reference was first seen as a type reference.
+
 	* patch2:
 	  Mono.Cecil.Signature/SignatureWriter.cs:
 		Patch to handle nullref values for types in
