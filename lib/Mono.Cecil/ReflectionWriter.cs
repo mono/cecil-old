@@ -195,9 +195,6 @@ namespace Mono.Cecil {
 
 		public MetadataToken GetMemberRefToken (MemberReference member)
 		{
-			if (member is MethodSpecification)
-				return GetMemberRefToken (((MethodSpecification) member).ElementMethod);
-
 			return member.MetadataToken;
 		}
 
@@ -415,7 +412,7 @@ namespace Mono.Cecil {
 				MethodImplRow miRow = m_rowWriter.CreateMethodImplRow (
 					GetRidFor (meths.Container.DeclaringType as TypeDefinition),
 					new MetadataToken (TokenType.Method, GetRidFor (meths.Container)),
-					ov.MetadataToken);
+					GetMemberRefToken (ov));
 
 				miTable.Rows.Add (miRow);
 			}
@@ -913,9 +910,6 @@ namespace Mono.Cecil {
 
 			IConvertible ic = value as IConvertible;
 			IFormatProvider fp = CultureInfo.CurrentCulture.NumberFormat;
-
-			if (ic == null)
-				throw new ArgumentException ("Non valid element for a constant");
 
 			switch (et) {
 			case ElementType.Boolean :
