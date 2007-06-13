@@ -147,6 +147,7 @@ namespace Mono.Cecil {
 								 arRow.BuildNumber, arRow.RevisionNumber));
 				aname.PublicKeyToken = ReadBlob (arRow.PublicKeyOrToken);
 				aname.Hash = ReadBlob (arRow.HashValue);
+				aname.Flags = arRow.Flags;
 				aname.MetadataToken = new MetadataToken (TokenType.AssemblyRef, (uint) i + 1);
 				names.Add (aname);
 			}

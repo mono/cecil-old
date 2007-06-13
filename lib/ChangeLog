@@ -3,6 +3,10 @@
 	Integrated patches by:
 	Paul Apostolescu <papostolescu@fortifysoftware.com>
 
+	* patch6:
+	  Mono.Cecil/StructureReader.cs:
+		Read the flags of the references as well.
+
 	* patch5:
 	  Mono.Cecil.Metadata/UserStringsHeap.cs:
 		Don't bother getting a string from the bytes
