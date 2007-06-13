@@ -3,6 +3,11 @@
 	Integrated patches by:
 	Paul Apostolescu <papostolescu@fortifysoftware.com>
 
+	* patch3:
+	  Mono.Cecil/ReflectionReader.cs
+	  Mono.Cecil.Signatures/SignatureWriter.cs:
+		In named args, objects are encoded as boxed.
+
 	* patch1:
 	  Mono.Cecil/IMemberDefinition.cs
 	  Mono.Cecil/Constants.cs

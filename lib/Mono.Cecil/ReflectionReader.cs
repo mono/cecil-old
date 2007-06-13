@@ -799,6 +799,14 @@ namespace Mono.Cecil {
 				return fa.Elems [0].ElemType;
 		}
 
+		TypeReference GetNamedArgType (CustomAttrib.NamedArg na)
+		{
+			if (na.FieldOrPropType == ElementType.Boxed)
+				return SearchCoreType (Constants.Object);
+
+			return GetFixedArgType (na.FixedArg);
+		}
+
 		protected CustomAttribute BuildCustomAttribute (MethodReference ctor, CustomAttrib sig)
 		{
 			CustomAttribute cattr = new CustomAttribute (ctor);
@@ -810,10 +818,10 @@ namespace Mono.Cecil {
 				object value = GetFixedArgValue (na.FixedArg);
 				if (na.Field) {
 					cattr.Fields [na.FieldOrPropName] = value;
-					cattr.SetFieldType (na.FieldOrPropName, GetFixedArgType (na.FixedArg));
+					cattr.SetFieldType (na.FieldOrPropName, GetNamedArgType (na));
 				} else if (na.Property) {
 					cattr.Properties [na.FieldOrPropName] = value;
-					cattr.SetPropertyType (na.FieldOrPropName, GetFixedArgType (na.FixedArg));
+					cattr.SetPropertyType (na.FieldOrPropName, GetNamedArgType (na));
 				} else
 					throw new ReflectionException ("Non valid named arg");
 			}

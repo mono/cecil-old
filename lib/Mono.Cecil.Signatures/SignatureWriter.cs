@@ -31,8 +31,8 @@ namespace Mono.Cecil.Signatures {
 	using System;
 	using System.Text;
 
-	using Mono.Cecil.Binary;
 	using Mono.Cecil;
+	using Mono.Cecil.Binary;
 	using Mono.Cecil.Metadata;
 
 	internal sealed class SignatureWriter : BaseSignatureVisitor {
@@ -408,7 +408,10 @@ namespace Mono.Cecil.Signatures {
 			if (na.FixedArg.SzArray)
 				writer.Write ((byte) ElementType.SzArray);
 
-			writer.Write ((byte) na.FieldOrPropType);
+			if (na.FieldOrPropType == ElementType.Object)
+				writer.Write ((byte) ElementType.Boxed);
+			else
+				writer.Write ((byte) na.FieldOrPropType);
 
 			if (na.FieldOrPropType == ElementType.Enum)
 				Write (na.FixedArg.Elems [0].ElemType.FullName);
