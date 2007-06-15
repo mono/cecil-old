@@ -34,6 +34,8 @@ namespace Mono.Linker.Steps {
 
 	public class LoadI18nAssemblies : BaseStep {
 
+		static readonly byte [] _pktoken = new byte [] {0x07, 0x38, 0xeb, 0x9f, 0x13, 0x2e, 0xd7, 0x56};
+
 		I18nAssemblies _assemblies;
 
 		public LoadI18nAssemblies (I18nAssemblies assemblies)
@@ -78,14 +80,25 @@ namespace Mono.Linker.Steps {
 			Annotations.SetAction (assembly, AssemblyAction.Copy);
 		}
 
-		static AssemblyNameReference GetAssemblyName (I18nAssemblies assembly)
+		AssemblyNameReference GetAssemblyName (I18nAssemblies assembly)
 		{
 			AssemblyNameReference name = new AssemblyNameReference ();
 			name.Name = "I18N";
 			if (assembly != I18nAssemblies.Base)
 				name.Name += "." + assembly;
 
+			name.Version = GetCorlibVersion ();
+			name.PublicKeyToken = _pktoken;
 			return name;
+		}
+
+		Version GetCorlibVersion ()
+		{
+			foreach (AssemblyDefinition assembly in Context.GetAssemblies ())
+				if (assembly.Name.Name == "mscorlib")
+					return assembly.Name.Version;
+
+			return new Version ();
 		}
 	}
 }
