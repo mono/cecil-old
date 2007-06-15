@@ -16,7 +16,7 @@
 Mono CIL Linker
 .SH SYNOPSIS
 .PP
-.B monolinker [-o output_directory] [-c skip | copy | link] -x descriptor | -a assembly | -i info_file ...
+.B monolinker [-o output_directory][-l i18n_assemblies][-c skip | copy | link] -x descriptor | -a assembly | -i info_file ...
 .SH DESCRIPTION
 \fImonolinker\fP is a CIL Linker.
 
@@ -36,6 +36,23 @@ Specify the output directory, default is 'output'.
 .PP
 If you specify the directory `.', please ensure that you won't write over
 important assemblies of yours.
+.TP
+.I "-l i18n_assemblies"
+Specify what to do with the region specific assemblies
+.PP
+Mono have a few assemblies which contains everything region specific:
+.nf
+I18N.CJK.dll
+I18N.MidEast.dll
+I18N.Other.dll
+I18N.Rare.dll
+I18N.West.dll
+.fi
+.PP
+By default, they will all be copied to the output directory, but you can
+specify which one you want using this command. The choice can
+either be: all, cjk, mideast, other, rare or west. You can
+combine the values with a comma.
 .TP
 .I "-c action"
 Specify the action to apply to the core assemblies.

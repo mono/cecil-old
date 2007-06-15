@@ -108,6 +108,28 @@ parameter, and it's _blah field.
 
 You can have multiple assembly nodes.
 
+6) The i18n Assemblies
+
+Mono have a few assemblies which contains everything region specific:
+
+    I18N.CJK.dll
+    I18N.MidEast.dll
+    I18N.Other.dll
+    I18N.Rare.dll
+    I18N.West.dll
+
+By default, they will all be copied to the output directory. But you can
+specify which one you want using the command:
+
+monolinker -l choice
+
+Where choice can either be: all, cjk, mideast, other, rare or west. You can
+combine the values with a comma.
+
+Example:
+
+monolinker -a assembly -l mideast,cjk
+
 * Inside the linker
 
 The linker is a quite small piece of code, and it pretty simple to address.
