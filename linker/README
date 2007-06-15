@@ -123,7 +123,7 @@ specify which one you want using the command:
 
 monolinker -l choice
 
-Where choice can either be: all, cjk, mideast, other, rare or west. You can
+Where choice can either be: none, all, cjk, mideast, other, rare or west. You can
 combine the values with a comma.
 
 Example:
