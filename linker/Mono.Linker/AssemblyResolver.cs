@@ -1,5 +1,5 @@
 //
-// CustomResolver.cs
+// AssemblyResolver.cs
 //
 // Author:
 //   Jb Evain (jbevain@novell.com)
@@ -33,11 +33,29 @@ using Mono.Cecil;
 
 namespace Mono.Linker {
 
-	public class CustomResolver : DefaultAssemblyResolver {
+	public class AssemblyResolver : BaseAssemblyResolver {
 
-		public void CacheAssembly (AssemblyDefinition assembly)
+		Hashtable _assemblies;
+
+		public IDictionary AssemblyCache {
+			get { return _assemblies; }
+		}
+
+		public AssemblyResolver ()
 		{
-			RegisterAssembly (assembly);
+			_assemblies = new Hashtable ();
+		}
+
+		public override AssemblyDefinition Resolve (AssemblyNameReference name)
+		{
+			AssemblyDefinition asm = (AssemblyDefinition) _assemblies [name.FullName];
+			if (asm == null) {
+				asm = base.Resolve (name);
+				asm.Resolver = this;
+				_assemblies [name.FullName] = asm;
+			}
+
+			return asm;
 		}
 
 		public TypeDefinition Resolve (TypeReference type)
@@ -163,6 +181,12 @@ namespace Mono.Linker {
 			}
 
 			return a.FullName == b.FullName;
+		}
+
+		public void CacheAssembly (AssemblyDefinition assembly)
+		{
+			_assemblies [assembly.Name.FullName] = assembly;
+			assembly.Resolver = this;
 		}
 	}
 }

@@ -1,10 +1,10 @@
 ./Mono.Linker/Pipeline.cs
 ./Mono.Linker/AssemblyInfo.cs
+./Mono.Linker/AssemblyResolver.cs
 ./Mono.Linker/TypePreserve.cs
 ./Mono.Linker/Annotations.cs
 ./Mono.Linker/LinkContext.cs
 ./Mono.Linker/AssemblyAction.cs
-./Mono.Linker/CustomResolver.cs
 ./Mono.Linker/Driver.cs
 ./Mono.Linker/MethodAction.cs
 ./Mono.Linker.Steps/AdjustVisibilityStep.cs

@@ -37,9 +37,8 @@ namespace Mono.Linker {
 		Pipeline _pipeline;
 		AssemblyAction _coreAction;
 		string _outputDirectory;
-		Hashtable _assemblies;
 
-		CustomResolver _resolver;
+		AssemblyResolver _resolver;
 
 		public Pipeline Pipeline {
 			get { return _pipeline; }
@@ -55,15 +54,14 @@ namespace Mono.Linker {
 			set { _coreAction = value; }
 		}
 
-		public CustomResolver Resolver {
+		public AssemblyResolver Resolver {
 			get { return _resolver; }
 		}
 
 		public LinkContext (Pipeline pipeline)
 		{
 			_pipeline = pipeline;
-			_resolver = new CustomResolver ();
-			_assemblies = new Hashtable ();
+			_resolver = new AssemblyResolver ();
 		}
 
 		public TypeDefinition GetType (string type)
@@ -88,7 +86,6 @@ namespace Mono.Linker {
 		{
 			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (filename);
 			_resolver.CacheAssembly (assembly);
-			AddAssembly (assembly.Name, assembly);
 			return assembly;
 		}
 
@@ -96,15 +93,11 @@ namespace Mono.Linker {
 		{
 			AssemblyNameReference reference = GetReference (scope);
 
-			AssemblyDefinition assembly = _assemblies [reference.Name] as AssemblyDefinition;
-			if (assembly != null)
-				return assembly;
+			AssemblyDefinition assembly = _resolver.Resolve (reference);
 
-			assembly = _resolver.Resolve (reference);
+			if (!Annotations.HasAction (assembly))
+				SetAction (assembly);
 
-			SetAction (assembly);
-
-			AddAssembly (reference, assembly);
 			return assembly;
 		}
 
@@ -129,11 +122,6 @@ namespace Mono.Linker {
 			Annotations.SetAction (assembly, action);
 		}
 
-		void AddAssembly (AssemblyNameReference reference, AssemblyDefinition assembly)
-		{
-			_assemblies.Add (reference.Name, assembly);
-		}
-
 		static bool IsCore (AssemblyNameReference name)
 		{
 			return name.Name == "mscorlib"
@@ -144,8 +132,9 @@ namespace Mono.Linker {
 
 		public AssemblyDefinition [] GetAssemblies ()
 		{
-			AssemblyDefinition [] asms = new AssemblyDefinition [_assemblies.Count];
-			_assemblies.Values.CopyTo (asms, 0);
+			IDictionary cache = _resolver.AssemblyCache;
+			AssemblyDefinition [] asms = new AssemblyDefinition [cache.Count];
+			cache.Values.CopyTo (asms, 0);
 			return asms;
 		}
 	}

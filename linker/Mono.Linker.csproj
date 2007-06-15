@@ -58,7 +58,7 @@
     <Compile Include="Mono.Linker\Annotations.cs" />
     <Compile Include="Mono.Linker\AssemblyAction.cs" />
     <Compile Include="Mono.Linker\AssemblyInfo.cs" />
-    <Compile Include="Mono.Linker\CustomResolver.cs" />
+    <Compile Include="Mono.Linker\AssemblyResolver.cs" />
     <Compile Include="Mono.Linker\Driver.cs" />
     <Compile Include="Mono.Linker\LinkContext.cs" />
     <Compile Include="Mono.Linker\MethodAction.cs" />

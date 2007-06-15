@@ -1,4 +1,14 @@
-2007-06-12  Jb Evain  <jbevain@novell.com>
+2007-06-15  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Linker/CustomResolver.cs => AssemblyResolver.cs,
+	  Mono.Linker/Annotations.cs,
+	  Mono.Linker/LinkContext.cs,
+	  Mono.Linker.Steps/ResolveFromXmlStep.cs:
+		Clean up the assembly reference system.
+		Fixes bug where the linker have multiple
+		time the same assembly in its cache.
+
+2007-06-13  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker.Steps/OutputStep.cs:
 		Copy .config files alongs with assemblies.

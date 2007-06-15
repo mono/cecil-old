@@ -53,6 +53,11 @@ namespace Mono.Linker {
 			return provider.Annotations [_actionKey];
 		}
 
+		public static bool HasAction (IAnnotationProvider provider)
+		{
+			return provider.Annotations.Contains (_actionKey);
+		}
+
 		public static void SetAction (AssemblyDefinition assembly, AssemblyAction action)
 		{
 			SetAction (AsProvider (assembly), action);
