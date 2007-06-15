@@ -32,8 +32,8 @@ using Mono.Cecil;
 
 namespace Mono.Linker.Steps {
 
-	public class LoadI18nAssemblies : BaseStep
-	{
+	public class LoadI18nAssemblies : BaseStep {
+
 		I18nAssemblies _assemblies;
 
 		public LoadI18nAssemblies (I18nAssemblies assemblies)
