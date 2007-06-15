@@ -46,6 +46,8 @@
     <Compile Include="Mono.Linker.Steps\BaseStep.cs" />
     <Compile Include="Mono.Linker.Steps\BlacklistStep.cs" />
     <Compile Include="Mono.Linker.Steps\CleanStep.cs" />
+    <Compile Include="Mono.Linker.Steps\LoadI18nAssemblies.cs" />
+    <Compile Include="Mono.Linker\I18nAssemblies.cs" />
     <Compile Include="Mono.Linker.Steps\IStep.cs" />
     <Compile Include="Mono.Linker.Steps\LoadReferencesStep.cs" />
     <Compile Include="Mono.Linker.Steps\MarkStep.cs" />

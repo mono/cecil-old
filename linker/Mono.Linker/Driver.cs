@@ -60,6 +60,7 @@ namespace Mono.Linker {
 		{
 			Pipeline p = GetStandardPipeline ();
 			LinkContext context = GetDefaultContext (p);
+			I18nAssemblies assemblies = I18nAssemblies.All;
 
 			bool resolver = false;
 			while (q.Count > 0) {
@@ -108,6 +109,9 @@ namespace Mono.Linker {
 					p.AddStepBefore (typeof (OutputStep), new AdjustVisibilityStep ());
 					resolver = true;
 					break;
+				case 'l':
+					assemblies = ParseI18n (GetParam (q));
+					break;
 				default:
 					Usage ();
 					break;
@@ -117,7 +121,19 @@ namespace Mono.Linker {
 			if (!resolver)
 				Usage ();
 
+			p.AddStepAfter (typeof (LoadReferencesStep), new LoadI18nAssemblies (assemblies));
+
 			p.Process (context);
+		}
+
+		static I18nAssemblies ParseI18n (string str)
+		{
+			I18nAssemblies assemblies = I18nAssemblies.None;
+			string [] parts = str.Split (',');
+			foreach (string part in parts)
+				assemblies |= (I18nAssemblies) Enum.Parse (typeof (I18nAssemblies), part.Trim (), true);
+
+			return assemblies;
 		}
 
 		static AssemblyAction ParseCoreAction (string s)
@@ -147,6 +163,9 @@ namespace Mono.Linker {
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
 			Console.WriteLine ("   -out        Specify the output directory, default to `output'");
 			Console.WriteLine ("   -c          Action on the core assemblies, skip, copy or link, default to skip");
+			Console.WriteLine ("   -l          List of i18n assemblies to copy to the output directory");
+			Console.WriteLine ("                 separated with a comma: all,cjk,mideast,other,rare,west");
+			Console.WriteLine ("                 default is all");
 			Console.WriteLine ("   -x          Link from an XML descriptor");
 			Console.WriteLine ("   -a          Link from a list of assemblies");
 			Console.WriteLine ("   -i          Link from an mono-api-info descriptor");

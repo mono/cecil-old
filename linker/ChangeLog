@@ -1,5 +1,10 @@
 2007-06-15  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Linker/Driver.cs,
+	  Mono.Linker/I18nAssemblies.cs,
+	  Mono.Linker.Steps/LoadI18nAssemblies.cs:
+		Copy the i18n assemblies when running Mono.
+
 	* Mono.Linker/CustomResolver.cs => AssemblyResolver.cs,
 	  Mono.Linker/Annotations.cs,
 	  Mono.Linker/LinkContext.cs,

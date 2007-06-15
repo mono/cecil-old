@@ -1,5 +1,5 @@
 //
-// BaseStep.cs
+// I18nAssemblies.cs
 //
 // Author:
 //   Jb Evain (jbevain@novell.com)
@@ -26,42 +26,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Mono.Cecil;
+using System;
 
-namespace Mono.Linker.Steps {
+namespace Mono.Linker {
 
-	public abstract class BaseStep : IStep {
+	[Flags]
+	public enum I18nAssemblies {
 
-		private LinkContext _context;
+		None = 0,
 
-		public LinkContext Context {
-			get { return _context; }
-		}
+		CJK = 1,
+		MidEast = 2,
+		Other = 4,
+		Rare = 8,
+		West = 16,
 
-		public void Process (LinkContext context)
-		{
-			_context = context;
-
-			if (!ConditionToProcess ())
-				return;
-
-			Process ();
-
-			foreach (AssemblyDefinition assembly in context.GetAssemblies ())
-				ProcessAssembly (assembly);
-		}
-
-		protected virtual bool ConditionToProcess ()
-		{
-			return true;
-		}
-
-		protected virtual void Process ()
-		{
-		}
-
-		protected virtual void ProcessAssembly (AssemblyDefinition assembly)
-		{
-		}
+		All = CJK | MidEast | Other | Rare | West,
+		Base
 	}
 }
