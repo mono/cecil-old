@@ -223,22 +223,22 @@ namespace Mono.Linker.Steps {
 				MarkCustomAttributes (module);
 		}
 
-		void MarkField (FieldReference field)
+		void MarkField (FieldReference reference)
 		{
-			if (IgnoreScope (field.DeclaringType.Scope))
+			if (IgnoreScope (reference.DeclaringType.Scope))
 				return;
 
-			FieldDefinition fd = ResolveFieldDefinition (field);
+			FieldDefinition field = ResolveFieldDefinition (reference);
 
-			if (CheckProcessed (fd))
+			if (CheckProcessed (field))
 				return;
 
-			MarkType (fd.DeclaringType);
-			MarkType (fd.FieldType);
-			MarkCustomAttributes (fd);
-			MarkMarshalSpec (fd);
+			MarkType (field.DeclaringType);
+			MarkType (field.FieldType);
+			MarkCustomAttributes (field);
+			MarkMarshalSpec (field);
 
-			Annotations.Mark (fd);
+			Annotations.Mark (field);
 		}
 
 		bool IgnoreScope (IMetadataScope scope)
@@ -256,51 +256,51 @@ namespace Mono.Linker.Steps {
 			return fd;
 		}
 
-		void MarkType (TypeReference type)
+		void MarkType (TypeReference reference)
 		{
-			if (type == null)
+			if (reference == null)
 				return;
 
-			type = GetOriginalType (type);
+			reference = GetOriginalType (reference);
 
-			if (type is GenericParameter)
+			if (reference is GenericParameter)
 				return;
 
-			if (IgnoreScope (type.Scope))
+			if (IgnoreScope (reference.Scope))
 				return;
 
-			TypeDefinition td = ResolveTypeDefinition (type);
+			TypeDefinition type = ResolveTypeDefinition (reference);
 
-			if (CheckProcessed (td))
+			if (CheckProcessed (type))
 				return;
 
-			MarkType (td.BaseType);
-			MarkType (td.DeclaringType);
-			MarkCustomAttributes(td);
+			MarkType (type.BaseType);
+			MarkType (type.DeclaringType);
+			MarkCustomAttributes(type);
 
-			if (IsMulticastDelegate (td))
-				MarkMethodCollection (td.Constructors);
+			if (IsMulticastDelegate (type))
+				MarkMethodCollection (type.Constructors);
 
-			if (IsSerializable(td)) {
-				MarkMethodsIf (td.Constructors, new MethodPredicate (IsDefaultConstructor));
-				MarkMethodsIf (td.Constructors, new MethodPredicate (IsSpecialSerializationConstructor));
+			if (IsSerializable(type)) {
+				MarkMethodsIf (type.Constructors, new MethodPredicate (IsDefaultConstructor));
+				MarkMethodsIf (type.Constructors, new MethodPredicate (IsSpecialSerializationConstructor));
 			}
 
-			MarkGenericParameters (td);
+			MarkGenericParameters (type);
 
-			if (td.IsValueType)
-				MarkFields (td);
+			if (type.IsValueType)
+				MarkFields (type);
 
-			foreach (TypeReference iface in td.Interfaces)
+			foreach (TypeReference iface in type.Interfaces)
 				MarkType (iface);
 
-			MarkMethodsIf (td.Constructors, new MethodPredicate (IsStaticConstructor));
+			MarkMethodsIf (type.Constructors, new MethodPredicate (IsStaticConstructor));
 
-			MarkMethodsIf (td.Methods, new MethodPredicate (IsVirtual));
+			MarkMethodsIf (type.Methods, new MethodPredicate (IsVirtual));
 
-			Annotations.Mark (td);
+			Annotations.Mark (type);
 
-			ApplyPreserveInfo (td);
+			ApplyPreserveInfo (type);
 		}
 
 		static bool IsSpecialSerializationConstructor (MethodDefinition method)
@@ -422,21 +422,21 @@ namespace Mono.Linker.Steps {
 				MarkMethod (method);
 		}
 
-		void MarkMethod (MethodReference method)
+		void MarkMethod (MethodReference reference)
 		{
-			method = GetOriginalMethod (method);
+			reference = GetOriginalMethod (reference);
 
-			if (method.DeclaringType is ArrayType)
+			if (reference.DeclaringType is ArrayType)
 				return;
 
-			if (IgnoreScope (method.DeclaringType.Scope))
+			if (IgnoreScope (reference.DeclaringType.Scope))
 				return;
 
-			MethodDefinition md = ResolveMethodDefinition (method);
+			MethodDefinition method = ResolveMethodDefinition (reference);
 
-			Annotations.SetAction (md, MethodAction.Parse);
+			Annotations.SetAction (method, MethodAction.Parse);
 
-			_queue.Enqueue (md);
+			_queue.Enqueue (method);
 		}
 
 		AssemblyDefinition ResolveAssembly (IMetadataScope scope)
@@ -468,38 +468,38 @@ namespace Mono.Linker.Steps {
 			return md;
 		}
 
-		void ProcessMethod (MethodDefinition md)
+		void ProcessMethod (MethodDefinition method)
 		{
-			if (CheckProcessed (md))
+			if (CheckProcessed (method))
 				return;
 
-			MarkType (md.DeclaringType);
-			MarkCustomAttributes (md);
+			MarkType (method.DeclaringType);
+			MarkCustomAttributes (method);
 
-			MarkGenericParameters (md);
+			MarkGenericParameters (method);
 
-			if (IsPropertyMethod (md))
-				MarkProperty (GetProperty (md));
-			else if (IsEventMethod (md))
-				MarkEvent (GetEvent (md));
+			if (IsPropertyMethod (method))
+				MarkProperty (GetProperty (method));
+			else if (IsEventMethod (method))
+				MarkEvent (GetEvent (method));
 
-			foreach (ParameterDefinition pd in md.Parameters) {
+			foreach (ParameterDefinition pd in method.Parameters) {
 				MarkType (pd.ParameterType);
 				MarkCustomAttributes (pd);
 				MarkMarshalSpec (pd);
 			}
 
-			foreach (MethodReference ov in md.Overrides)
+			foreach (MethodReference ov in method.Overrides)
 				MarkMethod (ov);
 
-			MarkType (md.ReturnType.ReturnType);
-			MarkCustomAttributes (md.ReturnType);
-			MarkMarshalSpec (md.ReturnType);
+			MarkType (method.ReturnType.ReturnType);
+			MarkCustomAttributes (method.ReturnType);
+			MarkMarshalSpec (method.ReturnType);
 
-			if (ShouldParseMethodBody (md))
-				MarkMethodBody (md.Body);
+			if (ShouldParseMethodBody (method))
+				MarkMethodBody (method.Body);
 
-			Annotations.Mark (md);
+			Annotations.Mark (method);
 		}
 
 		void MarkGenericParameters (IGenericParameterProvider provider)
