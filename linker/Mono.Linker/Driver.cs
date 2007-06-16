@@ -64,7 +64,7 @@ namespace Mono.Linker {
 
 			bool resolver = false;
 			while (q.Count > 0) {
-				string token = (string) q.Dequeue ();
+				string token = GetParam (q);
 				if (token.Length < 2)
 					Usage ();
 
@@ -164,7 +164,7 @@ namespace Mono.Linker {
 			Console.WriteLine ("   -out        Specify the output directory, default to `output'");
 			Console.WriteLine ("   -c          Action on the core assemblies, skip, copy or link, default to skip");
 			Console.WriteLine ("   -l          List of i18n assemblies to copy to the output directory");
-			Console.WriteLine ("                 separated with a comma: all,cjk,mideast,other,rare,west");
+			Console.WriteLine ("                 separated with a comma: none,all,cjk,mideast,other,rare,west");
 			Console.WriteLine ("                 default is all");
 			Console.WriteLine ("   -x          Link from an XML descriptor");
 			Console.WriteLine ("   -a          Link from a list of assemblies");
