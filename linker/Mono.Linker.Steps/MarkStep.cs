@@ -286,7 +286,7 @@ namespace Mono.Linker.Steps {
 				MarkMethodsIf (type.Constructors, new MethodPredicate (IsSpecialSerializationConstructor));
 			}
 
-			MarkGenericParameters (type);
+			MarkGenericParameterProvider (type);
 
 			if (type.IsValueType)
 				MarkFields (type);
@@ -301,6 +301,19 @@ namespace Mono.Linker.Steps {
 			Annotations.Mark (type);
 
 			ApplyPreserveInfo (type);
+		}
+
+		void MarkGenericParameterProvider (IGenericParameterProvider provider)
+		{
+			foreach (GenericParameter parameter in provider.GenericParameters)
+				MarkGenericParameter (parameter);
+		}
+
+		void MarkGenericParameter (GenericParameter parameter)
+		{
+			MarkCustomAttributes (parameter);
+			foreach (TypeReference constraint in parameter.Constraints)
+				MarkType (constraint);
 		}
 
 		static bool IsSpecialSerializationConstructor (MethodDefinition method)
@@ -485,7 +498,7 @@ namespace Mono.Linker.Steps {
 			MarkType (method.DeclaringType);
 			MarkCustomAttributes (method);
 
-			MarkGenericParameters (method);
+			MarkGenericParameterProvider (method);
 
 			if (IsPropertyMethod (method))
 				MarkProperty (GetProperty (method));
@@ -509,12 +522,6 @@ namespace Mono.Linker.Steps {
 				MarkMethodBody (method.Body);
 
 			Annotations.Mark (method);
-		}
-
-		void MarkGenericParameters (IGenericParameterProvider provider)
-		{
-			foreach (GenericParameter p in provider.GenericParameters)
-				MarkCustomAttributes (p);
 		}
 
 		bool ShouldParseMethodBody (MethodDefinition method)

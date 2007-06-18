@@ -1,6 +1,9 @@
 2007-06-18  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker.Steps/MarkStep.cs:
+		Mark generic parameter constraints.
+
+	* Mono.Linker.Steps/MarkStep.cs:
 		Mark modifiers of modtype.
 
 2007-06-15  Jb Evain  <jbevain@novell.com>
