@@ -373,10 +373,19 @@ namespace Mono.Linker.Steps {
 				if (git != null)
 					MarkGenericArguments (git);
 
+				ModType mod = type as ModType;
+				if (mod != null)
+					MarkModifierType (mod);
+
 				type = ((TypeSpecification) type).ElementType;
 			}
 
 			return type;
+		}
+
+		void MarkModifierType (ModType mod)
+		{
+			MarkType (mod.ModifierType);
 		}
 
 		void MarkGenericArguments (IGenericInstance instance)
