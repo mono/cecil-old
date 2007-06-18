@@ -1,3 +1,8 @@
+2007-06-18  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil/ReflectionReader.cs:
+		Fix custom mods for fields ref.
+
 2007-06-13  Jb Evain  <jbevain@novell.com>
 
 	Integrated patches by:

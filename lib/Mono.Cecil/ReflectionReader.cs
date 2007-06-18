@@ -198,10 +198,14 @@ namespace Mono.Cecil {
 
 				if (sig is FieldSig) {
 					FieldSig fs = sig as FieldSig;
+					TypeReference fieldType = GetTypeRefFromSig (fs.Type, nc);
+					if (fs.CustomMods.Length > 0)
+						fieldType = GetModifierType (fs.CustomMods, fieldType);
+
 					member = new FieldReference (
 						m_root.Streams.StringsHeap [mrefRow.Name],
 						declaringType,
-						GetTypeRefFromSig (fs.Type, nc));
+						fieldType);
 				} else {
 					string name = m_root.Streams.StringsHeap [mrefRow.Name];
 					MethodSig ms = (MethodSig) sig;
