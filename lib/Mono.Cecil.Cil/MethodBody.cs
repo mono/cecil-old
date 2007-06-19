@@ -256,7 +256,7 @@ namespace Mono.Cecil.Cil {
 					i.OpCode = OpCodes.Ldarg;
 					break;
 				case Code.Ldarga_S :
-					SimplifyFromByte (i, OpCodes.Ldarga);
+					i.OpCode = OpCodes.Ldarga;
 					break;
 				case Code.Starg_S :
 					i.OpCode = OpCodes.Starg;
@@ -265,8 +265,7 @@ namespace Mono.Cecil.Cil {
 					i.OpCode = OpCodes.Ldloc;
 					break;
 				case Code.Ldloca_S :
-					Simplify (i, OpCodes.Ldloca,
-						CodeReader.GetVariable (this, (sbyte) i.Operand));
+					i.OpCode = OpCodes.Ldloca;
 					break;
 				case Code.Stloc_S :
 					i.OpCode = OpCodes.Stloc;
@@ -305,43 +304,46 @@ namespace Mono.Cecil.Cil {
 					SimplifyFromSByte (i, OpCodes.Ldc_I4);
 					break;
 				case Code.Br_S :
-					SimplifyFromSByte (i, OpCodes.Br);
+					i.OpCode = OpCodes.Br;
 					break;
 				case Code.Brfalse_S :
-					SimplifyFromSByte (i, OpCodes.Brfalse);
+					i.OpCode = OpCodes.Brfalse;
 					break;
 				case Code.Brtrue_S :
-					SimplifyFromSByte (i, OpCodes.Brtrue);
+					i.OpCode = OpCodes.Brtrue;
 					break;
 				case Code.Beq_S :
-					SimplifyFromSByte (i, OpCodes.Beq);
+					i.OpCode = OpCodes.Beq;
 					break;
 				case Code.Bge_S :
-					SimplifyFromSByte (i, OpCodes.Bge);
+					i.OpCode = OpCodes.Bge;
 					break;
 				case Code.Bgt_S :
-					SimplifyFromSByte (i, OpCodes.Bgt);
+					i.OpCode = OpCodes.Bgt;
 					break;
 				case Code.Ble_S :
-					SimplifyFromSByte (i, OpCodes.Ble);
+					i.OpCode = OpCodes.Ble;
 					break;
 				case Code.Blt_S :
-					SimplifyFromSByte (i, OpCodes.Blt);
+					i.OpCode = OpCodes.Blt;
 					break;
 				case Code.Bne_Un_S :
-					SimplifyFromSByte (i, OpCodes.Bne_Un);
+					i.OpCode = OpCodes.Bne_Un;
 					break;
 				case Code.Bge_Un_S :
-					SimplifyFromSByte (i, OpCodes.Bge_Un);
+					i.OpCode = OpCodes.Bge_Un;
 					break;
 				case Code.Bgt_Un_S :
-					SimplifyFromSByte (i, OpCodes.Bgt_Un);
+					i.OpCode = OpCodes.Bgt_Un;
 					break;
 				case Code.Ble_Un_S :
-					SimplifyFromSByte (i, OpCodes.Ble_Un);
+					i.OpCode = OpCodes.Ble_Un;
 					break;
 				case Code.Blt_Un_S :
-					SimplifyFromSByte (i, OpCodes.Blt_Un);
+					i.OpCode = OpCodes.Blt_Un;
+					break;
+				case Code.Leave_S :
+					i.OpCode = OpCodes.Leave_S;
 					break;
 				}
 			}

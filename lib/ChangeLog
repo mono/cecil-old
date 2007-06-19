@@ -1,5 +1,9 @@
 2007-06-19  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil.Cil/MethodBody.cs:
+		Avoid invalid cast by properly simplifying
+		instructions.
+
 	* Mono.Cecil.Cil/OpCodes.cs:
 	  CodeGen/cecil.xml:
 		leave.s is a macro instruction.
