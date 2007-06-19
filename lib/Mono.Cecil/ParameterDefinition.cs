@@ -89,7 +89,7 @@ namespace Mono.Cecil {
 
 		public ParameterDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (null, m_method));
+			return Clone (this, new ImportContext (NullReferenceImporter.Instance, m_method));
 		}
 
 		internal static ParameterDefinition Clone (ParameterDefinition param, ImportContext context)

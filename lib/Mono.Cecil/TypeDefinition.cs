@@ -235,7 +235,7 @@ namespace Mono.Cecil {
 
 		public TypeDefinition Clone ()
 		{
-			return Clone (this, new ImportContext (null, this));
+			return Clone (this, new ImportContext (NullReferenceImporter.Instance, this));
 		}
 
 		internal static TypeDefinition Clone (TypeDefinition type, ImportContext context)

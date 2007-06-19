@@ -1,3 +1,9 @@
+2007-06-19  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil/TypeDefinition.cs
+	  Mono.Cecil/ParameterDefinition.cs:
+		Fix cloning.
+
 2007-06-18  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil/ReflectionReader.cs:
