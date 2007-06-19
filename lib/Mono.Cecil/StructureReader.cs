@@ -257,7 +257,7 @@ namespace Mono.Cecil {
 			for (int i = 0; i < mrTable.Rows.Count; i++) {
 				ModuleRefRow mrRow = mrTable [i];
 				ModuleReference mod = new ModuleReference (ReadString (mrRow.Name));
-				mod.MetadataToken = new MetadataToken (TokenType.ModuleRef, (uint) i + 1);
+				mod.MetadataToken = MetadataToken.FromMetadataRow (TokenType.ModuleRef, i);
 				modules.Add (mod);
 			}
 		}

@@ -475,18 +475,19 @@ namespace Mono.Cecil {
 			TypeReference parent = null;
 
 			if (type.ResolutionScope != MetadataToken.Zero) {
+				int rid = (int) type.ResolutionScope.RID - 1;
 				switch (type.ResolutionScope.TokenType) {
 				case TokenType.AssemblyRef:
-					scope = m_module.AssemblyReferences [(int) type.ResolutionScope.RID - 1];
+					scope = m_module.AssemblyReferences [rid];
 					break;
 				case TokenType.ModuleRef:
-					scope = m_module.ModuleReferences [(int) type.ResolutionScope.RID - 1];
+					scope = m_module.ModuleReferences [rid];
 					break;
 				case TokenType.Module:
-					scope = m_module.Assembly.Modules [(int) type.ResolutionScope.RID - 1];
+					scope = m_module.Assembly.Modules [rid];
 					break;
 				case TokenType.TypeRef:
-					AddTypeRef (typesRef, (int) type.ResolutionScope.RID - 1);
+					AddTypeRef (typesRef, rid);
 					parent = GetTypeRefAt (type.ResolutionScope.RID);
 					scope = parent.Scope;
 					break;
