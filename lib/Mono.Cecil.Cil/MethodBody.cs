@@ -361,12 +361,6 @@ namespace Mono.Cecil.Cil {
 			i.Operand = (int) (sbyte) i.Operand;
 		}
 
-		static void SimplifyFromByte (Instruction i, OpCode op)
-		{
-			i.OpCode = op;
-			i.Operand = (int) (byte) i.Operand;
-		}
-
 		public void Accept (ICodeVisitor visitor)
 		{
 			visitor.VisitMethodBody (this);
