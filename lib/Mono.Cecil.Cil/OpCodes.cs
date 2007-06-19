@@ -1167,7 +1167,7 @@ namespace Mono.Cecil.Cil {
 		public static readonly OpCode Leave_S = new OpCode (
 			"leave.s", 0xff, 0xde, 1,
 			Code.Leave_S, FlowControl.Branch,
-			OpCodeType.Primitive, OperandType.ShortInlineBrTarget,
+			OpCodeType.Macro, OperandType.ShortInlineBrTarget,
 			StackBehaviour.PopAll, StackBehaviour.Push0);
 
 		public static readonly OpCode Stind_I = new OpCode (

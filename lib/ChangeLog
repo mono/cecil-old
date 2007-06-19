@@ -1,5 +1,9 @@
 2007-06-19  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil.Cil/OpCodes.cs:
+	  CodeGen/cecil.xml:
+		leave.s is a macro instruction.
+
 	* Mono.Cecil/TypeDefinition.cs
 	  Mono.Cecil/ParameterDefinition.cs:
 		Fix cloning.
