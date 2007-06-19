@@ -301,7 +301,8 @@ namespace Mono.Cecil.Cil {
 					Simplify (i, OpCodes.Ldc_I4, 8);
 					break;
 				case Code.Ldc_I4_S :
-					SimplifyFromSByte (i, OpCodes.Ldc_I4);
+					i.OpCode = OpCodes.Ldc_I4;
+					i.Operand = (int) (sbyte) i.Operand;
 					break;
 				case Code.Br_S :
 					i.OpCode = OpCodes.Br;
@@ -353,12 +354,6 @@ namespace Mono.Cecil.Cil {
 		{
 			i.OpCode = op;
 			i.Operand = operand;
-		}
-
-		static void SimplifyFromSByte (Instruction i, OpCode op)
-		{
-			i.OpCode = op;
-			i.Operand = (int) (sbyte) i.Operand;
 		}
 
 		public void Accept (ICodeVisitor visitor)
