@@ -89,6 +89,11 @@ namespace Mono.Cecil {
 			return null;
 		}
 
+		static bool IsZero (Version version)
+		{
+			return version.Major == 0 && version.Minor == 0 && version.Build == 0 && version.Revision == 0;
+		}
+
 #if !CF_1_0 && !CF_2_0
 		static AssemblyDefinition GetCorlib (AssemblyNameReference reference)
 		{
@@ -123,11 +128,6 @@ namespace Mono.Cecil {
 				return AssemblyFactory.GetAssembly (Path.Combine (path, "mscorlib.dll"));
 
 			return null;
-		}
-
-		static bool IsZero (Version version)
-		{
-			return version.Major == 0 && version.Minor == 0 && version.Build == 0 && version.Revision == 0;
 		}
 
 		public static bool OnMono ()
