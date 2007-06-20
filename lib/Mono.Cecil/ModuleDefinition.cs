@@ -283,7 +283,7 @@ namespace Mono.Cecil {
 			if (type == null)
 				throw new ArgumentNullException ("type");
 
-			return m_controller.Helper.ImportTypeReference (type, GetContext ());
+			return m_controller.Importer.ImportTypeReference (type, GetContext ());
 		}
 
 		public TypeReference Import (TypeReference type, TypeDefinition context)
@@ -292,7 +292,7 @@ namespace Mono.Cecil {
 				throw new ArgumentNullException ("type");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportTypeReference (type, GetContext (context));
+			return m_controller.Importer.ImportTypeReference (type, GetContext (context));
 		}
 
 		public MethodReference Import (MethodReference meth)
@@ -300,7 +300,7 @@ namespace Mono.Cecil {
 			if (meth == null)
 				throw new ArgumentNullException ("meth");
 
-			return m_controller.Helper.ImportMethodReference (meth, GetContext ());
+			return m_controller.Importer.ImportMethodReference (meth, GetContext ());
 		}
 
 		public MethodReference Import (MethodReference meth, TypeDefinition context)
@@ -309,7 +309,7 @@ namespace Mono.Cecil {
 				throw new ArgumentNullException ("meth");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportMethodReference (meth, GetContext (context));
+			return m_controller.Importer.ImportMethodReference (meth, GetContext (context));
 		}
 
 		public FieldReference Import (FieldReference field)
@@ -317,7 +317,7 @@ namespace Mono.Cecil {
 			if (field == null)
 				throw new ArgumentNullException ("field");
 
-			return m_controller.Helper.ImportFieldReference (field, GetContext ());
+			return m_controller.Importer.ImportFieldReference (field, GetContext ());
 		}
 
 		public FieldReference Import (FieldReference field, TypeDefinition context)
@@ -326,7 +326,7 @@ namespace Mono.Cecil {
 				throw new ArgumentNullException ("field");
 			CheckContext (context);
 
-			return m_controller.Helper.ImportFieldReference (field, GetContext (context));
+			return m_controller.Importer.ImportFieldReference (field, GetContext (context));
 		}
 
 		static FieldDefinition ImportFieldDefinition (FieldDefinition field, ImportContext context)

@@ -1,3 +1,13 @@
+2007-06-20  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil/ReflectionHelper.cs
+	  Mono.Cecil/DefaultReferenceImporter.cs
+	  Mono.Cecil/ModuleDefinition.cs:
+		Move Cecil types import logic into
+		the DefaultReferenceImporter.
+
+		Needed by the merger and the extractor.
+
 2007-06-19  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil.Cil/MethodBody.cs:

@@ -39,38 +39,14 @@ namespace Mono.Cecil {
 
 		ModuleDefinition m_module;
 
-		IDictionary m_asmCache;
-		IDictionary m_memberRefCache;
-		bool m_cacheLoaded;
-
 		public ReflectionHelper (ModuleDefinition module)
 		{
 			m_module = module;
-			m_asmCache = new Hashtable ();
-			m_memberRefCache = new Hashtable ();
-			m_cacheLoaded = false;
-		}
-
-		void ImportCache ()
-		{
-			if (m_cacheLoaded)
-				return;
-
-			m_module.FullLoad ();
-
-			foreach (AssemblyNameReference ar in m_module.AssemblyReferences)
-				m_asmCache [ar.FullName] = ar;
-			foreach (MemberReference member in m_module.MemberReferences)
-				m_memberRefCache [member.ToString ()] = member;
-
-			m_cacheLoaded = true;
 		}
 
 		public AssemblyNameReference ImportAssembly (SR.Assembly asm)
 		{
-			ImportCache ();
-
-			AssemblyNameReference asmRef = (AssemblyNameReference) m_asmCache [asm.FullName];
+			AssemblyNameReference asmRef = GetAssemblyNameReference (asm.GetName ());
 			if (asmRef != null)
 				return asmRef;
 
@@ -78,11 +54,19 @@ namespace Mono.Cecil {
 			asmRef = new AssemblyNameReference (
 				asmName.Name, asmName.CultureInfo.Name, asmName.Version);
 			asmRef.PublicKeyToken = asmName.GetPublicKeyToken ();
-			asmRef.HashAlgorithm = (Mono.Cecil.AssemblyHashAlgorithm) asmName.HashAlgorithm;
+			asmRef.HashAlgorithm = (AssemblyHashAlgorithm) asmName.HashAlgorithm;
 			asmRef.Culture = asmName.CultureInfo.ToString ();
 			m_module.AssemblyReferences.Add (asmRef);
-			m_asmCache [asm.FullName] = asmRef;
 			return asmRef;
+		}
+
+		AssemblyNameReference GetAssemblyNameReference (SR.AssemblyName name)
+		{
+			foreach (AssemblyNameReference reference in m_module.AssemblyReferences)
+				if (reference.FullName == name.FullName)
+					return reference;
+
+			return null;
 		}
 
 		public static string GetTypeSignature (Type t)
@@ -199,7 +183,7 @@ namespace Mono.Cecil {
 
 			TypeReference elementType = ImportSystemType (t, context);
 			while (s.Count > 0) {
-				t = s.Pop () as Type;
+				t = (Type) s.Pop ();
 				if (t.IsPointer)
 					elementType = new PointerType (elementType);
 				else if (t.IsArray) // deal with complex arrays
@@ -222,8 +206,6 @@ namespace Mono.Cecil {
 
 			if (IsGenericParameter (t))
 				return GetGenericParameter (t, context);
-
-			ImportCache ();
 
 			TypeReference type = m_module.TypeReferences [GetTypeSignature (t)];
 			if (type != null) {
@@ -317,8 +299,6 @@ namespace Mono.Cecil {
 			if (IsGenericMethod (mb) && !IsGenericMethodDefinition (mb))
 				return ImportGenericInstanceMethod ((SR.MethodInfo) mb, context);
 
-			ImportCache ();
-
 			Type originalDecType = mb.DeclaringType;
 			Type declaringTypeDef = originalDecType;
 			while (IsGenericTypeSpec (declaringTypeDef))
@@ -337,7 +317,7 @@ namespace Mono.Cecil {
 			}
 
 			string sig = GetMethodBaseSignature (mb, originalDecType, retType);
-			MethodReference meth = m_memberRefCache [sig] as MethodReference;
+			MethodReference meth = (MethodReference) GetMemberReference (sig);
 			if (meth != null)
 				return meth;
 
@@ -363,7 +343,6 @@ namespace Mono.Cecil {
 					ImportSystemType (parameters [i].ParameterType, context)));
 
 			m_module.MemberReferences.Add (meth);
-			m_memberRefCache [sig] = meth;
 			return meth;
 		}
 
@@ -390,10 +369,8 @@ namespace Mono.Cecil {
 
 		public FieldReference ImportFieldInfo (SR.FieldInfo fi, ImportContext context)
 		{
-			ImportCache ();
-
 			string sig = GetFieldSignature (fi);
-			FieldReference f = (FieldReference) m_memberRefCache [sig];
+			FieldReference f = (FieldReference) GetMemberReference (sig);
 			if (f != null)
 				return f;
 
@@ -403,183 +380,16 @@ namespace Mono.Cecil {
 				ImportSystemType (fi.FieldType, context));
 
 			m_module.MemberReferences.Add (f);
-			m_memberRefCache [sig] = f;
 			return f;
 		}
 
-		public AssemblyNameReference ImportAssembly (AssemblyNameReference asm)
+		MemberReference GetMemberReference (string signature)
 		{
-			ImportCache ();
+			foreach (MemberReference reference in m_module.MemberReferences)
+				if (reference.ToString () == signature)
+					return reference;
 
-			AssemblyNameReference asmRef = (AssemblyNameReference) m_asmCache [asm.FullName];
-			if (asmRef != null)
-				return asmRef;
-
-			asmRef = new AssemblyNameReference (
-				asm.Name, asm.Culture, asm.Version);
-			asmRef.PublicKeyToken = asm.PublicKeyToken;
-			asmRef.HashAlgorithm = asm.HashAlgorithm;
-			m_module.AssemblyReferences.Add (asmRef);
-			m_asmCache [asm.FullName] = asmRef;
-			return asmRef;
-		}
-
-		TypeReference GetTypeSpec (TypeReference t, ImportContext context)
-		{
-			Stack s = new Stack ();
-			while (t is TypeSpecification) {
-				s.Push (t);
-				t = (t as TypeSpecification).ElementType;
-			}
-
-			TypeReference elementType = ImportTypeReference (t, context);
-			while (s.Count > 0) {
-				t = s.Pop () as TypeReference;
-				if (t is PointerType)
-					elementType = new PointerType (elementType);
-				else if (t is ArrayType) // deal with complex arrays
-					elementType = new ArrayType (elementType);
-				else if (t is ReferenceType)
-					elementType = new ReferenceType (elementType);
-				else if (t is GenericInstanceType) {
-					GenericInstanceType git = t as GenericInstanceType;
-					GenericInstanceType genElemType = new GenericInstanceType (elementType);
-					foreach (TypeReference arg in git.GenericArguments)
-						genElemType.GenericArguments.Add (ImportTypeReference (arg, context));
-
-					elementType = genElemType;
-				} else
-					throw new ReflectionException ("Unknown element type: {0}", t.GetType ().Name);
-			}
-
-			return elementType;
-		}
-
-		static GenericParameter GetGenericParameter (GenericParameter gp, ImportContext context)
-		{
-			GenericParameter p;
-			if (gp.Owner is TypeReference)
-				p = context.GenericContext.Type.GenericParameters [gp.Position];
-			else if (gp.Owner is MethodReference)
-				p = context.GenericContext.Method.GenericParameters [gp.Position];
-			else
-				throw new NotSupportedException ();
-
-			return p;
-		}
-
-		public TypeReference ImportTypeReference (TypeReference t, ImportContext context)
-		{
-			if (t.Module == m_module)
-				return t;
-
-			ImportCache ();
-
-			if (t is TypeSpecification)
-				return GetTypeSpec (t, context);
-
-			if (t is GenericParameter)
-				return GetGenericParameter (t as GenericParameter, context);
-
-			TypeReference type = m_module.TypeReferences [t.FullName];
-			if (type != null)
-				return type;
-
-			AssemblyNameReference asm;
-			if (t.Scope is AssemblyNameReference)
-				asm = ImportAssembly ((AssemblyNameReference) t.Scope);
-			else if (t.Scope is ModuleDefinition)
-				asm = ImportAssembly (((ModuleDefinition) t.Scope).Assembly.Name);
-			else
-				throw new NotImplementedException ();
-
-			type = new TypeReference (t.Name, t.Namespace, asm, t.IsValueType);
-
-			context.GenericContext.Type = type;
-
-			foreach (GenericParameter gp in t.GenericParameters)
-				type.GenericParameters.Add (GenericParameter.Clone (gp, context));
-
-			m_module.TypeReferences.Add (type);
-			return type;
-		}
-
-		MethodReference GetMethodSpec (MethodReference meth, ImportContext context)
-		{
-			if (!(meth is GenericInstanceMethod))
-				return null;
-
-			GenericInstanceMethod gim = meth as GenericInstanceMethod;
-			GenericInstanceMethod ngim = new GenericInstanceMethod (
-				ImportMethodReference (gim.ElementMethod, context));
-
-			foreach (TypeReference arg in gim.GenericArguments)
-				ngim.GenericArguments.Add (ImportTypeReference (arg, context));
-
-			return ngim;
-		}
-
-		public MethodReference ImportMethodReference (MethodReference mr, ImportContext context)
-		{
-			if (mr.DeclaringType.Module == m_module)
-				return mr;
-
-			ImportCache ();
-
-			if (mr is MethodSpecification)
-				return GetMethodSpec (mr, context);
-
-			MethodReference meth = m_memberRefCache [mr.ToString ()] as MethodReference;
-			if (meth != null)
-				return meth;
-
-			meth = new MethodReference (
-				mr.Name,
-				mr.HasThis,
-				mr.ExplicitThis,
-				mr.CallingConvention);
-			meth.DeclaringType = ImportTypeReference (mr.DeclaringType, context);
-
-			TypeReference contextType = meth.DeclaringType;
-			while (contextType is TypeSpecification)
-				contextType = (contextType as TypeSpecification).ElementType;
-
-			context.GenericContext.Method = meth;
-			context.GenericContext.Type = contextType;
-
-			foreach (GenericParameter gp in mr.GenericParameters)
-				meth.GenericParameters.Add (GenericParameter.Clone (gp, context));
-
-			meth.ReturnType.ReturnType = ImportTypeReference (mr.ReturnType.ReturnType, context);
-
-			foreach (ParameterDefinition param in mr.Parameters)
-				meth.Parameters.Add (new ParameterDefinition (
-					ImportTypeReference (param.ParameterType, context)));
-
-			m_module.MemberReferences.Add (meth);
-			m_memberRefCache [mr.ToString ()] = meth;
-			return meth;
-		}
-
-		public FieldReference ImportFieldReference (FieldReference field, ImportContext context)
-		{
-			if (field.DeclaringType.Module == m_module)
-				return field;
-
-			ImportCache ();
-
-			FieldReference f = (FieldReference) m_memberRefCache [field.ToString ()];
-			if (f != null)
-				return f;
-
-			f = new FieldReference (
-				field.Name,
-				ImportTypeReference (field.DeclaringType, context),
-				ImportTypeReference (field.FieldType, context));
-
-			m_module.MemberReferences.Add (f);
-			m_memberRefCache [field.ToString ()] = f;
-			return f;
+			return null;
 		}
 	}
 }
