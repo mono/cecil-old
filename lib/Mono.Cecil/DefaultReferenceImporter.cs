@@ -32,6 +32,11 @@ namespace Mono.Cecil {
 
 		ModuleDefinition _module;
 
+		public ModuleDefinition Module
+		{
+			get { return _module; }
+		}
+
 		public DefaultReferenceImporter (ModuleDefinition module)
 		{
 			_module = module;
