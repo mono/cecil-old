@@ -344,7 +344,7 @@ namespace Mono.Cecil.Cil {
 					i.OpCode = OpCodes.Blt_Un;
 					break;
 				case Code.Leave_S :
-					i.OpCode = OpCodes.Leave_S;
+					i.OpCode = OpCodes.Leave;
 					break;
 				}
 			}
