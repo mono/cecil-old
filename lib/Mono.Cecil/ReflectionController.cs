@@ -33,7 +33,7 @@ namespace Mono.Cecil {
 		ReflectionReader m_reader;
 		ReflectionWriter m_writer;
 		ReflectionHelper m_helper;
-		DefaultReferenceImporter m_importer;
+		DefaultImporter m_importer;
 
 		public ReflectionReader Reader {
 			get { return m_reader; }
@@ -47,7 +47,7 @@ namespace Mono.Cecil {
 			get { return m_helper; }
 		}
 
-		public IReferenceImporter Importer {
+		public IImporter Importer {
 			get { return m_importer; }
 		}
 
@@ -56,7 +56,7 @@ namespace Mono.Cecil {
 			m_reader = new AggressiveReflectionReader (module);
 			m_writer = new ReflectionWriter (module);
 			m_helper = new ReflectionHelper (module);
-			m_importer = new DefaultReferenceImporter (module);
+			m_importer = new DefaultImporter (module);
 		}
 	}
 }

@@ -1,5 +1,8 @@
 2007-06-20  Jb Evain  <jbevain@novell.com>
 
+	* Mono.Cecil/IReferenceImporter.cs => IImporter.cs
+	  Mono.Cecil/DefaultReferenceImporter.cs => DefaultImporter.cs
+
 	* Mono.Cecil/ReflectionHelper.cs
 	  Mono.Cecil/DefaultReferenceImporter.cs
 	  Mono.Cecil/ModuleDefinition.cs:

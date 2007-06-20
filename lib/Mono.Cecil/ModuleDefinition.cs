@@ -202,7 +202,7 @@ namespace Mono.Cecil {
 			return new ImportContext (m_controller.Importer);
 		}
 
-		static ImportContext GetContext (IReferenceImporter importer)
+		static ImportContext GetContext (IImporter importer)
 		{
 			return new ImportContext (importer);
 		}
@@ -212,7 +212,7 @@ namespace Mono.Cecil {
 			return new ImportContext (m_controller.Importer, context);
 		}
 
-		static ImportContext GetContext (IReferenceImporter importer, TypeDefinition context)
+		static ImportContext GetContext (IImporter importer, TypeDefinition context)
 		{
 			return new ImportContext (importer, context);
 		}
@@ -349,7 +349,7 @@ namespace Mono.Cecil {
 			return Inject (type, m_controller.Importer);
 		}
 
-		public TypeDefinition Inject (TypeDefinition type, IReferenceImporter importer)
+		public TypeDefinition Inject (TypeDefinition type, IImporter importer)
 		{
 			if (type == null)
 				throw new ArgumentNullException ("type");
@@ -366,7 +366,7 @@ namespace Mono.Cecil {
 			return Inject (type, context, m_controller.Importer);
 		}
 
-		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context, IReferenceImporter importer)
+		public TypeDefinition Inject (TypeDefinition type, TypeDefinition context, IImporter importer)
 		{
 			Check (type, context, importer);
 
@@ -380,7 +380,7 @@ namespace Mono.Cecil {
 			return Inject (meth, context, m_controller.Importer);
 		}
 
-		void Check (IMemberDefinition definition, TypeDefinition context, IReferenceImporter importer)
+		void Check (IMemberDefinition definition, TypeDefinition context, IImporter importer)
 		{
 			if (definition == null)
 				throw new ArgumentNullException ("definition");
@@ -392,7 +392,7 @@ namespace Mono.Cecil {
 				throw new ArgumentException ("The context parameter does not belongs to this module");
 		}
 
-		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context, IReferenceImporter importer)
+		public MethodDefinition Inject (MethodDefinition meth, TypeDefinition context, IImporter importer)
 		{
 			Check (meth, context, importer);
 
@@ -401,7 +401,7 @@ namespace Mono.Cecil {
 			return definition;
 		}
 
-		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context, IReferenceImporter importer)
+		public FieldDefinition Inject (FieldDefinition field, TypeDefinition context, IImporter importer)
 		{
 			Check (field, context, importer);
 

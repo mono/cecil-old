@@ -240,7 +240,7 @@
     <Compile Include="Mono.Cecil\CustomAttribute.cs" />
     <Compile Include="Mono.Cecil\CustomAttributeCollection.cs" />
     <Compile Include="Mono.Cecil\DefaultAssemblyResolver.cs" />
-    <Compile Include="Mono.Cecil\DefaultReferenceImporter.cs" />
+    <Compile Include="Mono.Cecil\DefaultImporter.cs" />
     <Compile Include="Mono.Cecil\EmbeddedResource.cs" />
     <Compile Include="Mono.Cecil\EventAttributes.cs" />
     <Compile Include="Mono.Cecil\EventDefinition.cs" />
@@ -270,6 +270,7 @@
     <Compile Include="Mono.Cecil\IHasConstant.cs" />
     <Compile Include="Mono.Cecil\IHasMarshalSpec.cs" />
     <Compile Include="Mono.Cecil\IHasSecurity.cs" />
+    <Compile Include="Mono.Cecil\IImporter.cs" />
     <Compile Include="Mono.Cecil\IMemberDefinition.cs" />
     <Compile Include="Mono.Cecil\IMemberReference.cs" />
     <Compile Include="Mono.Cecil\IMetadataScope.cs" />
@@ -277,7 +278,6 @@
     <Compile Include="Mono.Cecil\IMethodSignature.cs" />
     <Compile Include="Mono.Cecil\ImportContext.cs" />
     <Compile Include="Mono.Cecil\InterfaceCollection.cs" />
-    <Compile Include="Mono.Cecil\IReferenceImporter.cs" />
     <Compile Include="Mono.Cecil\IReflectionStructureVisitable.cs" />
     <Compile Include="Mono.Cecil\IReflectionStructureVisitor.cs" />
     <Compile Include="Mono.Cecil\IReflectionVisitable.cs" />

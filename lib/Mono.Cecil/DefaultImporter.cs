@@ -31,7 +31,7 @@ namespace Mono.Cecil {
 	using System;
 	using System.Collections;
 
-	public class DefaultReferenceImporter : IReferenceImporter {
+	public class DefaultImporter : IImporter {
 
 		ModuleDefinition m_module;
 
@@ -39,7 +39,7 @@ namespace Mono.Cecil {
 			get { return m_module; }
 		}
 
-		public DefaultReferenceImporter (ModuleDefinition module)
+		public DefaultImporter (ModuleDefinition module)
 		{
 			m_module = module;
 		}

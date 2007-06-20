@@ -31,19 +31,19 @@ namespace Mono.Cecil {
 	public class ImportContext {
 
 		GenericContext m_genContext;
-		IReferenceImporter m_importer;
+		IImporter m_importer;
 
 		public GenericContext GenericContext {
 			get { return m_genContext; }
 		}
 
-		public ImportContext (IReferenceImporter importer)
+		public ImportContext (IImporter importer)
 		{
 			m_genContext = new GenericContext ();
 			m_importer = importer;
 		}
 
-		public ImportContext (IReferenceImporter importer, IGenericParameterProvider provider)
+		public ImportContext (IImporter importer, IGenericParameterProvider provider)
 		{
 			m_importer = importer;
 			m_genContext = new GenericContext (provider);

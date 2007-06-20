@@ -1,5 +1,5 @@
 //
-// IReferenceImporter.cs
+// IImporter.cs
 //
 // Author:
 //   Jb Evain (jbevain@novell.com)
@@ -28,7 +28,7 @@
 
 namespace Mono.Cecil {
 
-	public interface IReferenceImporter {
+	public interface IImporter {
 
 		TypeReference ImportTypeReference (TypeReference type, ImportContext context);
 		FieldReference ImportFieldReference (FieldReference field, ImportContext context);
