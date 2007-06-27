@@ -1,3 +1,14 @@
+2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: Updated for 0.2.
+	* Config.cs, WorkingSet.cs: Deleted.
+	* MainWindow.cs: Main Monoxide application.
+	* Monoxide.mdp: Updated.
+	* Monoxide.cs: Reduced to start the Gtk# main window.
+	* Tab.cs: Tab page widget.
+	* system-software-update_22.png: Addin Manager icon.
+	* gtk-gui/*: Stetic generated files.
+
 2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs: New. Assembly information.

@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,43 +37,106 @@ using System.Threading;
 
 using Gtk;
 
+using Mono.Addins;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Monoxide.Framework.PlugIns;
+using Monoxide.Framework.Addins;
 
 namespace Monoxide.Security {
 
-	public class CallerAnalysisView : IGraphicDisplay, IMethodView {
+	[Extension ("/Monoxide/Method")]
+	public class CallerAnalysisView : IMethodVisualizer {
 
+		static internal Hashtable callsInto = new Hashtable ();
+		static internal Hashtable calledFrom = new Hashtable ();
 		static private Hashtable clusters = new Hashtable ();
 		static private ArrayList calls = new ArrayList ();
-
-		private Image _image;
-		private bool _display;
-
-		public void SetUp (Image image)
-		{
-			_image = image;
-		}
-
-		public bool Display {
-			get { return _display; }
-			set { _display = value; }
-		}
 
 		public string Name {
 			get { return "Callers Analysis"; }
 		}
 
-		public void Render (MethodDefinition method)
+		public void AddAssembly (AssemblyDefinition assembly)
 		{
-			if (method != null) {
-				if (_display) {
-					_image.FromFile = BuildDotImage (method);
-					_image.Visible = true;
+			foreach (ModuleDefinition module in assembly.Modules) {
+				foreach (TypeDefinition type in module.Types) {
+					foreach (MethodDefinition md in type.Methods) {
+						Process (md);
+					}
 				}
 			}
 		}
+
+		public Widget GetWidget (MethodDefinition method)
+		{
+			Image image = new Image (BuildDotImage (method));
+
+			ScrolledWindow sw = new ScrolledWindow ();
+			sw.AddWithViewport (image);
+			sw.ShowAll ();
+			return sw;
+		}
+		
+		
+		// internal stuff
+
+		private bool Process (MethodDefinition md)
+		{
+			if (md.Body == null)
+				return false;
+
+			foreach (Instruction ins in md.Body.Instructions) {
+				MethodDefinition operand = (ins.Operand as MethodDefinition);
+				if (operand != null) {
+					ProcessCall (md, operand, ins.OpCode.Name);
+				}
+			}
+			return true;
+		}
+
+		private void ProcessCall (MethodDefinition caller, MethodDefinition callee, string how)
+		{
+			// avoid recursion
+			if (caller == callee)
+				return;
+
+			ArrayList list = (callsInto[caller] as ArrayList);
+			if (list == null) {
+				list = new ArrayList ();
+				callsInto.Add (caller, list);
+				list.Add (new Calls (callee, how));
+			} else {
+				// check if it's already processed
+				bool present = false;
+				foreach (Calls c in list) {
+					if (c.Callee == callee) {
+						present = true;
+						break;
+					}
+				}
+				if (!present)
+					list.Add (new Calls (callee, how));
+			}
+
+			list = (calledFrom[callee] as ArrayList);
+			if (list == null) {
+				list = new ArrayList ();
+				calledFrom.Add (callee, list);
+				list.Add (new Calls (caller, how));
+			} else {
+				// check if it's already processed
+				bool present = false;
+				foreach (Calls c in list) {
+					if (c.Callee == caller) {
+						present = true;
+						break;
+					}
+				}
+				if (!present)
+					list.Add (new Calls (caller, how));
+			}
+		}
+		
 
 		// don't duplicate entries (as they will complicate the resulting graph)
 		private void AddToList (MethodDefinition method, IList list)
@@ -143,7 +206,7 @@ namespace Monoxide.Security {
 			if (Add (method) && (callee != null))
 				return true; // public/protected - stop analysis
 
-			ArrayList list = (CallerPlugIn.calledFrom [method] as ArrayList);
+			ArrayList list = (calledFrom [method] as ArrayList);
 			if (list == null)
 				return false;
 
@@ -213,7 +276,7 @@ namespace Monoxide.Security {
 			}
 
 			string dotexe = null;
-			if ((int)Environment.OSVersion.Platform == 128) {
+			if ((int)Environment.OSVersion.Platform == 4) {
 				dotexe = "dot";
 			} else {
 				dotexe = @"C:\Program Files\ATT\Graphviz\bin\dot.exe";

@@ -28,6 +28,7 @@
 
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Mono.Addins;
 
 [assembly: AssemblyTitle("")]
 [assembly: AssemblyDescription("")]
@@ -37,7 +38,10 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCopyright ("Copyright (C) 2005-2006 Novell, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("0.0.1.*")]
+[assembly: AssemblyVersion("0.0.2.*")]
 
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
+
+[assembly:Addin]
+[assembly:AddinDependency ("monoXide", "0.2")]

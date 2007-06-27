@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,8 +30,9 @@ using System;
 using System.Collections;
 using System.Text;
 
+using Mono.Addins;
 using Mono.Cecil;
-using Monoxide.Framework.PlugIns;
+using Monoxide.Framework.Addins;
 
 using Gtk;
 using Pango;
@@ -64,7 +65,10 @@ namespace Monoxide.Metadata {
 		}
 	}
 
-	internal class DeclarativeSecurityView : ICustomDisplay, IAssemblyView, ITypeView, IMethodView {
+	[Extension ("/Monoxide/Assembly")]
+	[Extension ("/Monoxide/Type")]
+	[Extension ("/Monoxide/Method")]
+	internal class DeclarativeSecurityView : IAssemblyVisualizer, ITypeVisualizer, IMethodVisualizer {
 
 		static SecurityAction[] list = new SecurityAction[] { 
 			SecurityAction.Request,
@@ -86,40 +90,22 @@ namespace Monoxide.Metadata {
 		private ScrolledWindow sw;
 		private VBox vbox;
 		private Action[] actions;
-		private bool _display;
-
-		public bool Display {
-			get { return _display; }
-			set { _display = value; }
-		}
 
 		public string Name {
 			get { return "Declarative Security"; }
 		}
 
-		public void SetUp (Notebook notebook)
+		public void AddAssembly (AssemblyDefinition assembly)
 		{
-			FontDescription fd = FontDescription.FromString ("Courier 10 Pitch 10");
+			// nothing to do when a new assembly is loaded
+		}
 
-			vbox = new VBox (false, 0);
-
-			sw = new ScrolledWindow ();
-			sw.Add (vbox);
-
-			actions = new Action[list.Length];
-			for (int i=0; i < list.Length; i++) {
-				actions [i] = new Action (list [i]);
-				actions [i].TextView.ModifyFont (fd);
-				vbox.Add (actions [i].Expander);
-			}
-
-			notebook.AppendPage (sw, new Label ("Declarative Security"));
- 		}
-
-		public void Render (AssemblyDefinition assembly)
+		public Widget GetWidget (AssemblyDefinition assembly)
 		{
+			Widget w = SetUp ();
+			
 			if (assembly == null)
-				return;
+				return w;
 
 			if (assembly.SecurityDeclarations.Count > 0) {
 				// hide old stuff
@@ -129,17 +115,18 @@ namespace Monoxide.Metadata {
 				foreach (SecurityDeclaration declsec in assembly.SecurityDeclarations) {
 					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
 				}
-				vbox.Show ();
-				sw.Show ();
-			} else {
-				sw.HideAll ();
 			}
+			vbox.Show ();
+			sw.Show ();
+			return w;
 		}
 
-		public void Render (TypeDefinition type)
+		public Widget GetWidget (TypeDefinition type)
 		{
+			Widget w = SetUp ();
+
 			if (type == null)
-				return;
+				return w;
 
 			if (type.SecurityDeclarations.Count > 0) {
 				// hide old stuff
@@ -149,17 +136,18 @@ namespace Monoxide.Metadata {
 				foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
 				}
-				vbox.Show ();
-				sw.Show ();
-			} else {
-				sw.HideAll ();
 			}
+			vbox.Show ();
+			sw.Show ();
+			return w;
 		}
 
-		public void Render (MethodDefinition method)
+		public Widget GetWidget (MethodDefinition method)
 		{
+			Widget w = SetUp ();
+
 			if (method == null)
-				return;
+				return w;
 
 			if (method.SecurityDeclarations.Count > 0) {
 				// hide old stuff
@@ -169,11 +157,28 @@ namespace Monoxide.Metadata {
 				foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
 					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
 				}
-				vbox.Show ();
-				sw.Show ();
-			} else {
-				sw.HideAll ();
 			}
+			vbox.Show ();
+			sw.Show ();
+			return w;
 		}
+		
+		private Widget SetUp ()
+		{
+			FontDescription fd = FontDescription.FromString ("Courier 10 Pitch 10");
+
+			vbox = new VBox (false, 0);
+
+			actions = new Action[list.Length];
+			for (int i=0; i < list.Length; i++) {
+				actions [i] = new Action (list [i]);
+				actions [i].TextView.ModifyFont (fd);
+				vbox.Add (actions [i].Expander);
+			}
+
+			sw = new ScrolledWindow ();
+			sw.AddWithViewport (vbox);
+			return sw;
+ 		}
 	}
 }

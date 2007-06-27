@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stetic-interface>
+  <configuration>
+    <images-root-path>../</images-root-path>
+  </configuration>
+  <import>
+    <widget-library name="../../Monoxide.Plugins/bin/Debug/Monoxide.Plugins.dll" />
+  </import>
+  <icon-factory>
+    <icon-set id="AddinManager">
+      <source>
+        <property name="Image">file:./system-software-update_22.png</property>
+      </source>
+    </icon-set>
+  </icon-factory>
+  <widget class="Gtk.Window" id="Monoxide.MainWindow" design-size="698 490">
+    <action-group name="Default">
+      <action id="refresh">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes" />
+        <property name="StockId">gtk-refresh</property>
+        <signal name="Activated" handler="OnRefreshActivated" />
+      </action>
+      <action id="File">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_File</property>
+        <property name="ShortLabel" translatable="yes">_File</property>
+      </action>
+      <action id="Quit">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Quit</property>
+        <property name="ShortLabel" translatable="yes">_Quit</property>
+        <property name="StockId">gtk-quit</property>
+        <signal name="Activated" handler="OnQuitActivated" />
+      </action>
+      <action id="Tools">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Tools</property>
+        <property name="ShortLabel" translatable="yes">_Tools</property>
+      </action>
+      <action id="AddinManagerAction">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">Addin Manager...</property>
+        <property name="ShortLabel" translatable="yes">Addin Manager...</property>
+        <property name="StockId">AddinManager</property>
+        <signal name="Activated" handler="OnAddinManagerActivated" />
+      </action>
+      <action id="View">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_View</property>
+        <property name="ShortLabel" translatable="yes">_View</property>
+      </action>
+      <action id="Open">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Open...</property>
+        <property name="ShortLabel" translatable="yes">_Open...</property>
+        <property name="StockId">gtk-open</property>
+        <signal name="Activated" handler="OnOpenActivated" />
+      </action>
+      <action id="Help">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Help</property>
+        <property name="ShortLabel" translatable="yes">_Help</property>
+      </action>
+      <action id="About">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_About...</property>
+        <property name="ShortLabel" translatable="yes">_About...</property>
+        <property name="StockId">gtk-about</property>
+        <signal name="Activated" handler="OnAboutActivated" />
+      </action>
+    </action-group>
+    <property name="MemberName" />
+    <property name="Title" translatable="yes">monoXide 0.2</property>
+    <property name="WindowPosition">CenterOnParent</property>
+    <child>
+      <widget class="Gtk.VBox" id="vbox2">
+        <property name="MemberName" />
+        <property name="Spacing">6</property>
+        <child>
+          <widget class="Gtk.MenuBar" id="menubar1">
+            <property name="MemberName" />
+            <node name="menubar1" type="Menubar">
+              <node type="Menu" action="File">
+                <node type="Menuitem" action="Open" />
+                <node type="Separator" />
+                <node type="Menuitem" action="Quit" />
+              </node>
+              <node type="Menu" action="View">
+                <node type="Menuitem" action="refresh" />
+              </node>
+              <node type="Menu" action="Tools">
+                <node type="Menuitem" action="AddinManagerAction" />
+                <node type="Separator" />
+              </node>
+              <node type="Menu" action="Help">
+                <node type="Menuitem" action="About" />
+              </node>
+            </node>
+          </widget>
+          <packing>
+            <property name="Position">0</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Toolbar" id="toolbar">
+            <property name="MemberName" />
+            <property name="ShowArrow">False</property>
+            <property name="ButtonStyle">Icons</property>
+            <property name="IconSize">LargeToolbar</property>
+            <node name="toolbar" type="Toolbar">
+              <node type="Toolitem" action="Open" />
+              <node type="Separator" />
+              <node type="Toolitem" action="refresh" />
+              <node type="Separator" />
+              <node type="Toolitem" action="AddinManagerAction" />
+            </node>
+          </widget>
+          <packing>
+            <property name="Position">1</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.HPaned" id="hpaned1">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Position">199</property>
+            <child>
+              <widget class="Gtk.ScrolledWindow" id="scrolledwindow1">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="VscrollbarPolicy">Automatic</property>
+                <property name="HscrollbarPolicy">Automatic</property>
+                <property name="ShadowType">In</property>
+                <child>
+                  <widget class="Gtk.TreeView" id="treeview">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="HeadersClickable">True</property>
+                    <signal name="ButtonPressEvent" handler="OnTreeviewButtonPressEvent" />
+                  </widget>
+                </child>
+              </widget>
+              <packing>
+                <property name="Resize">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="Gtk.VBox" id="vbox1">
+                <property name="MemberName" />
+                <property name="Spacing">6</property>
+                <child>
+                  <widget class="Gtk.Label" id="objectLabel">
+                    <property name="MemberName" />
+                    <property name="Xalign">0</property>
+                    <property name="LabelProp" translatable="yes">&lt;empty&gt;</property>
+                  </widget>
+                  <packing>
+                    <property name="Position">0</property>
+                    <property name="AutoSize">True</property>
+                    <property name="Expand">False</property>
+                    <property name="Fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="Gtk.Notebook" id="notebook">
+                    <property name="MemberName" />
+                    <property name="CanFocus">True</property>
+                    <property name="CurrentPage">0</property>
+                    <property name="Scrollable">True</property>
+                    <child>
+                      <widget class="Gtk.ScrolledWindow" id="scrolledwindow2">
+                        <property name="MemberName" />
+                        <property name="CanFocus">True</property>
+                        <property name="VscrollbarPolicy">Automatic</property>
+                        <property name="HscrollbarPolicy">Automatic</property>
+                        <property name="ShadowType">In</property>
+                        <child>
+                          <widget class="Gtk.Viewport" id="GtkViewport">
+                            <property name="MemberName" />
+                            <property name="ShadowType">None</property>
+                            <child>
+                              <widget class="Gtk.Image" id="image">
+                                <property name="MemberName" />
+                              </widget>
+                            </child>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="TabExpand">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder />
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="Position">1</property>
+                    <property name="AutoSize">True</property>
+                  </packing>
+                </child>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">2</property>
+            <property name="AutoSize">True</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Statusbar" id="statusbar1">
+            <property name="MemberName" />
+            <property name="Spacing">6</property>
+            <child>
+              <placeholder />
+            </child>
+            <child>
+              <placeholder />
+            </child>
+          </widget>
+          <packing>
+            <property name="Position">3</property>
+            <property name="AutoSize">True</property>
+            <property name="Expand">False</property>
+            <property name="Fill">False</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</stetic-interface>

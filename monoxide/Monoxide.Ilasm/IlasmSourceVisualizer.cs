@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,55 +30,44 @@ using System;
 using System.Collections;
 using System.Text;
 
+using Gdk;
 using Gtk;
 using Pango;
 
+using Mono.Addins;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Monoxide.Framework.PlugIns;
+using Monoxide.Framework.Addins;
 
 namespace Monoxide.Ilasm {
 
-	internal class IlSourceDisplay : ICustomDisplay, IMethodView {
-
-		private ScrolledWindow sw;
-		private TextView ilTextView;
-		private bool _display;
-
-		public void Render (MethodDefinition method)
-		{
-			if (method != null) {
-				ilTextView.Buffer.Text = GetIlSource (method);
-				sw.ShowAll ();
-			} else {
-				ilTextView.Buffer.Text = String.Empty;
-				sw.HideAll ();
-			}
-		}
-
-		public void SetUp (Notebook notebook)
-		{
-			FontDescription fd = FontDescription.FromString ("Courier 10 Pitch 10");
-
-			ilTextView = new TextView ();
-			ilTextView.ModifyFont (fd);
-			ilTextView.Editable = false;
-
-			sw = new ScrolledWindow ();
-			sw.Add (ilTextView);
-
-			notebook.AppendPage (sw, new Label ("IL"));
-		}
-
-		public bool Display {
-			get { return _display; }
-			set { _display = value; }
-		}
+	[Extension ("/Monoxide/Method")]
+	internal class IlSourceVisualizer : IMethodVisualizer {
 
 		public string Name {
 			get { return "IL Source"; }
 		}
 
+		public void AddAssembly (AssemblyDefinition assembly)
+		{
+			// nothing to do when a new assembly is loaded
+		}
+
+		public Widget GetWidget (MethodDefinition method)
+		{
+			FontDescription fd = FontDescription.FromString ("Courier 10 Pitch 10");
+
+			TextView ilTextView = new TextView ();
+			ilTextView.ModifyFont (fd);
+			ilTextView.Editable = false;
+				ilTextView.Buffer.Text = GetIlSource (method);
+
+			ScrolledWindow sw = new ScrolledWindow ();
+			sw.Add (ilTextView);
+			sw.ShowAll ();
+			return sw;
+		}
+		
 		// internal stuff
 
 		// shamelessly copied from http://evain.net/public/cecil_il_sample_source.html

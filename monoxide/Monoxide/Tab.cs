@@ -1,10 +1,10 @@
 //
-// MetadataPlugIn.cs
+// Tab.cs
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,45 +27,49 @@
 //
 
 using System;
-using System.Collections;
+
 using Gtk;
-using Mono.Cecil;
-using Monoxide.Framework.PlugIns;
 
-namespace Monoxide.Metadata {
+namespace Monoxide {
 
-	public class MetadataPlugIn : IPlugIn {
-
-		static private ArrayList _assemblies;
-
-		private IDisplay[] displays;
-
-		public MetadataPlugIn ()
+	public class Tab : HBox {
+	
+		private Widget content;
+	
+		public Tab (string tabName)
 		{
-			displays = new IDisplay [2];
-			displays[0] = new DeclarativeSecurityView ();
-			displays[1] = new AssemblyDependenciesView ();
-		}
+			if (tabName == null)
+				throw new ArgumentNullException ("tabName");
 
-		public void AddAssembly (AssemblyDefinition assembly)
-		{
-			if (_assemblies == null)
-				_assemblies = new ArrayList ();
-			_assemblies.Add (assembly);
-		}
+			Label label = new Label (tabName); 
+			label.Justify = Justification.Left;
+			label.UseUnderline = false;
+			
+			Gtk.Image image = new Gtk.Image (Stock.Close, IconSize.Menu);
+			image.Xalign = 0.5f;
+			image.Yalign = 0.5f;
+ 
+			Button button = new Button ();
+			button.HeightRequest = 20;
+			button.WidthRequest = 20;
+			button.Relief = ReliefStyle.None;
+			button.CanFocus = false;
+			button.Clicked += delegate {
+				if (CloseButtonClicked != null)
+					CloseButtonClicked (this, EventArgs.Empty);
+			};
+			button.Add (image);
 
-		public string Name {
-			get { return "Metadata Views"; }
+			this.PackStart (label, true, true, 0);
+			this.PackEnd (button, false, false, 0);
+			this.ShowAll ();
 		}
-
-		public IDisplay[] Displays {
-			get { return displays; }
+		
+		public Widget Content {
+			get { return content; }
+			set { content = value; }
 		}
-
-		// internal stuff
-
-		internal static IList Assemblies {
-			get { return _assemblies; }
-		}
+		
+		public event EventHandler CloseButtonClicked;
 	}
 }

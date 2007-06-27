@@ -1,3 +1,9 @@
+2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DotHelper.cs: Updated for 2.0 (Unix) and removed debugging.
+	* DotDebugDisplay.cs, DotDebugPlugIn.cs: Deleted, doesn't work in new
+	architecture. Will probably be replaced by something similar.
+
 2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Digraph.cs: New. Helper class to create a new digraph.

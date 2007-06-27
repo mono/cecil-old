@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -45,15 +45,15 @@ namespace Monoxide.Framework.Dot {
 
 			using (StreamWriter sw = new StreamWriter (dotfile)) {
 				string dot = graph.ToString ();
-				DotDebugPlugIn.CurrentDotContent = dot;
 				sw.WriteLine (dot);
 				sw.Close ();
 			}
 
 			string dotexe = null;
-			if ((int)Environment.OSVersion.Platform == 128) {
+			if (Environment.OSVersion.Platform == PlatformID.Unix) {
 				dotexe = "dot";
 			} else {
+				// bad but not really supported so...
 				dotexe = @"C:\Program Files\ATT\Graphviz\bin\dot.exe";
 				// -Tcmap 
 			}

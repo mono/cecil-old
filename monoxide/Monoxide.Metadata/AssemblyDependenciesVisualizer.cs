@@ -28,10 +28,12 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
+using Mono.Addins;
 using Mono.Cecil;
-using Monoxide.Framework.PlugIns;
+using Monoxide.Framework.Addins;
 using Monoxide.Framework.Dot;
 
 using Gtk;
@@ -39,38 +41,41 @@ using Pango;
 
 namespace Monoxide.Metadata {
 
-	public class AssemblyDependenciesView : IGraphicDisplay, IAssemblyView {
+	[Extension ("/Monoxide/Assembly")]
+	public class AssemblyDependenciesView : IAssemblyVisualizer {
 
-		private Image _image;
-		private bool _display;
-
-		public void SetUp (Image image)
-		{
-			_image = image;
-		}
-
-		public bool Display {
-			get { return _display; }
-			set { _display = value; }
-		}
+		private List<AssemblyDefinition> assemblies;
 
 		public string Name {
 			get { return "Assembly Dependencies"; }
 		}
 
-
-		public void Render (AssemblyDefinition assembly)
+		public void AddAssembly (AssemblyDefinition assembly)
 		{
-			if ((assembly != null) && _display) {
-				_image.FromFile = DotHelper.BuildDotImage (GetDotData (assembly));
-				_image.Visible = true;
-			}
+			if (assemblies == null)
+				assemblies = new List<AssemblyDefinition> ();
+			assemblies.Add (assembly);
+		}
+
+		public Widget GetWidget (AssemblyDefinition assembly)
+		{
+			Digraph digraph = GetDotData (assembly);
+
+			Image image = new Image (DotHelper.BuildDotImage (digraph));
+
+			ScrolledWindow sw = new ScrolledWindow ();
+			sw.AddWithViewport (image);
+			sw.ShowAll ();
+			return sw;
 		}
 
 		AssemblyDefinition GetAssemblyFromReference (AssemblyNameReference assemblyName)
 		{
+			if (assemblies == null)
+				return null;
+				
 			string fullname = assemblyName.FullName;
-			foreach (AssemblyDefinition assembly in MetadataPlugIn.Assemblies) {
+			foreach (AssemblyDefinition assembly in assemblies) {
 				if (assembly.Name.FullName == fullname)
 					return assembly;
 			}

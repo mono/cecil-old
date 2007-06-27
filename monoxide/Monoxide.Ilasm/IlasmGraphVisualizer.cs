@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,40 +33,37 @@ using System.Text;
 
 using Gtk;
 
+using Mono.Addins;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Monoxide.Framework.PlugIns;
+using Monoxide.Framework.Addins;
 using Monoxide.Framework.Dot;
 
 namespace Monoxide.Ilasm {
 
-	internal class IlGraphDisplay : IGraphicDisplay, IMethodView {
-
-		private Image image;
-		private bool display;
-
-		public void Render (MethodDefinition method)
-		{
-			if (display && (method != null)) {
-				Digraph digraph = GetIlSourceAsDot (method);
-				image.FromFile = DotHelper.BuildDotImage (digraph);
-				image.Visible = true;
-			}
-		}
-
-		public void SetUp (Image image)
-		{
-			this.image = image;
-		}
-
-		public bool Display {
-			get { return display; }
-			set { display = value; }
-		}
+	[Extension ("/Monoxide/Method")]
+	internal class IlGraphVisualizer : IMethodVisualizer {
 
 		public string Name {
 			get { return "IL Graph"; }
+		}
+
+		public void AddAssembly (AssemblyDefinition assembly)
+		{
+			// nothing to do when a new assembly is loaded
+		}
+
+		public Widget GetWidget (MethodDefinition method)
+		{
+			Digraph digraph = GetIlSourceAsDot (method);
+
+			Image image = new Image (DotHelper.BuildDotImage (digraph));
+
+			ScrolledWindow sw = new ScrolledWindow ();
+			sw.AddWithViewport (image);
+			sw.ShowAll ();
+			return sw;
 		}
 
 		// internal stuff

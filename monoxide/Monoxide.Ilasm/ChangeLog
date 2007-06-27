@@ -1,3 +1,11 @@
+2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: Updated for 0.2.
+	* Monoxide.Ilasm.mdp: Updated.
+	* IlasmPlugIn.cs: Deleted, not required with Mono.Addins.
+	* IlasmSourceVisualizer.cs: Renamed from IlasmSourceView.cs
+	* IlasmGraphVisualizer.cs: Renamed from IlasmGraphView.cs
+
 2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs: New. Assembly/plugin information.

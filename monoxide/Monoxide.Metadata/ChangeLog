@@ -1,3 +1,11 @@
+2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyInfo.cs: Updated for 0.2.
+	* Monoxide.Metadata.mdp: Updated.
+	* MetadataPlugIn.cs: Deleted, not required with Mono.Addins.
+	* AssemblyDependenciesVisualizer.cs: Renamed from AssemblyDependenciesView.cs
+	* DeclarativeSecurityVisualizer.cs: Renamed from DeclarativeSecurityView.cs
+
 2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyDependenciesView.cs: New. Display a graphical view of the 

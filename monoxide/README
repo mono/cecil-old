@@ -1,5 +1,5 @@
 monoXide: View globally, fix locally
-Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 
 
 What is it ?
@@ -45,3 +45,7 @@ Requirements
   URL	http://www.mono-project.com/Cecil
 * graphviz (dot)
   URL	http://www.graphviz.org/
+* Mono.Addins
+  URL	http://www.mono-project.com/Mono.Addins
+* Gtk#
+  URL	http://www.mono-project.com/GtkSharp
