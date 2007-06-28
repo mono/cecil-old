@@ -1,5 +1,5 @@
 //
-// IlasmGraphView.cs
+// IlGraphVisualizer.cs
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
@@ -27,8 +27,7 @@
 //
 
 using System;
-using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 
 using Gtk;
@@ -39,6 +38,13 @@ using Mono.Cecil.Cil;
 
 using Monoxide.Framework.Addins;
 using Monoxide.Framework.Dot;
+
+/*
+TODO
+- give cue about what we're calling (if we know about it)
+	e.g. SL-hints: transparent, safe-critical and critical
+	e.g. icalls, p/invoke ...
+*/
 
 namespace Monoxide.Ilasm {
 
@@ -77,18 +83,8 @@ namespace Monoxide.Ilasm {
 			dot.FontName = "tahoma";
 			dot.FontSize = 10;
 
-			dot.DefaultNode = new Node ();
-			dot.DefaultNode.Attributes["fontname"] = "tahoma";
-			dot.DefaultNode.Attributes["fontsize"] = 8;
-
-			dot.DefaultEdge = new Edge ();
-			dot.DefaultNode.Attributes["fontname"] = "tahoma";
-			dot.DefaultNode.Attributes["fontsize"] = 8;
-			dot.DefaultNode.Attributes["labelfontname"] = "tahoma";
-			dot.DefaultNode.Attributes["labelfontsize"] = 8;
-
 			if (method.Body != null) {
-				ArrayList instructions = new ArrayList ();
+				List<IlInstruction> instructions = new List<IlInstruction> ();
 
 				foreach (Instruction instr in method.Body.Instructions) {
 					IlInstruction i = new IlInstruction (instr);
@@ -99,7 +95,7 @@ namespace Monoxide.Ilasm {
 						break;
 					case OperandType.InlineSwitch:
 						int[] brchs = instr.Operand as int[];
-						i.Calls = new ArrayList (brchs.Length);
+						i.Calls = new List<string> (brchs.Length);
 
 						for (int j = 0; j < brchs.Length; j++) {
 							string switchtarget = String.Format ("IL_{0}", brchs[j].ToString ("X4"));
@@ -112,7 +108,7 @@ namespace Monoxide.Ilasm {
 						Instruction ins = (instr.Operand as Instruction);
 						string target = String.Format ("IL_{0}", ins.Offset.ToString ("X4"));
 						i.Name = String.Format ("{0} {1}", i.Name, target);
-						i.Calls = new ArrayList (1);
+						i.Calls = new List<string> (1);
 						i.Calls.Add (target);
 						break;
 					case OperandType.InlineString:
@@ -129,7 +125,7 @@ namespace Monoxide.Ilasm {
 
 				// build dot for each instructions
 				for (int j = 0; j < instructions.Count; j++) {
-					IlInstruction i = (IlInstruction)instructions[j];
+					IlInstruction i = instructions[j];
 
 					Node n = i.GetNode (true);
 					dot.Nodes.Add (n);
@@ -159,7 +155,7 @@ namespace Monoxide.Ilasm {
 			return dot;
 		}
 
-		IlInstruction FindCallee (string callee, ArrayList instructions)
+		IlInstruction FindCallee (string callee, List<IlInstruction> instructions)
 		{
 			foreach (IlInstruction candidate in instructions) {
 				if (callee == candidate.Address)
@@ -170,31 +166,40 @@ namespace Monoxide.Ilasm {
 	}
 
 	internal class IlInstruction {
-		public string Name;
-		public ArrayList Calls;
-
-		private Instruction _instr;
+		private string name;
+		private List<string> calls;
+		private Instruction instr;
 
 		public IlInstruction (Instruction instr)
 		{
-			_instr = instr;
+			this.instr = instr;
 		}
 
 		public string Address {
-			get { return String.Format ("IL_{0}", _instr.Offset.ToString ("X4")); }
+			get { return String.Format ("IL_{0}", instr.Offset.ToString ("X4")); }
+		}
+
+		public string Name {
+			get { return name; }
+			set { name = value; }
+		}
+
+		public List<string> Calls {
+			get { return calls; }
+			set { calls = value; }
 		}
 
 		public Node GetNode (bool details)
 		{
 			Node n = new Node ();
-			n.Label = String.Format ("\"{0}: {1}\"", Address, Name);
+			n.Label = String.Format ("{0}: {1}", Address, Name);
 			if (!details)
 				return n;
 
 			n.Attributes["shape"] = "box";
 
 			// now the fun part
-			switch (_instr.OpCode.Name) {
+			switch (instr.OpCode.Name) {
 			case "throw":
 				n.Attributes["style"] = "filled";
 				n.Attributes["fillcolor"] = "orange";
@@ -207,7 +212,7 @@ namespace Monoxide.Ilasm {
 				break;
 			}
 
-			MethodDefinition method = (_instr.Operand as MethodDefinition);
+			MethodDefinition method = (instr.Operand as MethodDefinition);
 			if (method != null) {
 				// double lines for internal calls
 				if ((method.ImplAttributes & MethodImplAttributes.InternalCall) != 0) {
@@ -229,7 +234,7 @@ namespace Monoxide.Ilasm {
 
 		public bool HasSecurity ()
 		{
-			MethodDefinition method = (_instr.Operand as MethodDefinition);
+			MethodDefinition method = (instr.Operand as MethodDefinition);
 			if (method == null)
 				return false;
 			return (method.SecurityDeclarations.Count > 0);
@@ -243,7 +248,7 @@ namespace Monoxide.Ilasm {
 
 		public bool IsUnconditionalBranch ()
 		{
-			switch (_instr.OpCode.Name) {
+			switch (instr.OpCode.Name) {
 			case "br":
 			case "br.s":
 			case "ret":

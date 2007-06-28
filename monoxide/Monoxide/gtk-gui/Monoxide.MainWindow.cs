@@ -45,6 +45,8 @@ namespace Monoxide {
         
         private Gtk.VBox vbox1;
         
+        private Gtk.Expander objectExpander;
+        
         private Gtk.Label objectLabel;
         
         private Gtk.Notebook notebook;
@@ -141,12 +143,16 @@ namespace Monoxide {
             this.vbox1.Name = "vbox1";
             this.vbox1.Spacing = 6;
             // Container child vbox1.Gtk.Box+BoxChild
+            this.objectExpander = new Gtk.Expander(null);
+            this.objectExpander.CanFocus = true;
+            this.objectExpander.Name = "objectExpander";
             this.objectLabel = new Gtk.Label();
             this.objectLabel.Name = "objectLabel";
-            this.objectLabel.Xalign = 0F;
             this.objectLabel.LabelProp = Mono.Unix.Catalog.GetString("<empty>");
-            this.vbox1.Add(this.objectLabel);
-            Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.objectLabel]));
+            this.objectLabel.UseUnderline = true;
+            this.objectExpander.LabelWidget = this.objectLabel;
+            this.vbox1.Add(this.objectExpander);
+            Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.objectExpander]));
             w7.Position = 0;
             w7.Expand = false;
             w7.Fill = false;

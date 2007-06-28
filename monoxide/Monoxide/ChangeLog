@@ -1,3 +1,8 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MainWindow.cs: Set page/focus on the newly created plugin.
+	* gtk-gui/*: Stetic generated files.
+
 2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs: Updated for 0.2.

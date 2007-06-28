@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,16 +27,15 @@
 //
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Monoxide.Framework.Dot {
 
 	public class Edge {
-		private string _from;
-		private string _to;
-		private Hashtable _attributes;
+		private string from;
+		private string to;
+		private Dictionary<string,string> attributes;
 
 		public Edge ()
 		{
@@ -47,10 +46,10 @@ namespace Monoxide.Framework.Dot {
 			if (from == null)
 				throw new ArgumentNullException ("form");
 			if (to == null)
-				throw new ArgumentNullException ("form");
+				throw new ArgumentNullException ("to");
 
-			_from = from;
-			_to = to;
+			this.from = from;
+			this.to = to;
 		}
 
 		public Edge (Node from, Node to)
@@ -58,56 +57,65 @@ namespace Monoxide.Framework.Dot {
 			if (from == null)
 				throw new ArgumentNullException ("form");
 			if (to == null)
-				throw new ArgumentNullException ("form");
+				throw new ArgumentNullException ("to");
 
-			_from = from.Label;
-			_to = to.Label;
+			this.from = from.Label;
+			this.to = to.Label;
 		}
 
 		public string FromLabel {
-			get { return _from; }
-			set { _from = value; }
+			get { return from; }
+			set { from = value; }
 		}
 
 		public string ToLabel {
-			get { return _to; }
-			set { _to = value; }
+			get { return to; }
+			set { to = value; }
 		}
 
-		public IDictionary Attributes {
+		public Dictionary<string,string> Attributes {
 			get {
-				if (_attributes == null)
-					_attributes = new Hashtable ();
-				return _attributes;
+				if (attributes == null)
+					attributes = new Dictionary<string,string> ();
+				return attributes;
 			}
 		}
 
-		internal string GetAttributes ()
-		{
-			if (_attributes == null)
-				return String.Empty;
+		public bool HasAttributes {
+			get {
+				if (attributes == null)
+					return false;
+				return (attributes.Count > 0);
+			}
+		}
 
+		internal void WriteAttributes (StringWriter sw)
+		{
+			if (attributes == null)
+				return;
+
+			sw.Write (" [");
 			bool first = true;
-			StringWriter sw = new StringWriter ();
-			foreach (DictionaryEntry de in _attributes) {
+			foreach (KeyValuePair<string,string> kvp in attributes) {
 				if (first) {
 					first = false;
 				} else {
 					sw.Write (",");
 				}
-				sw.Write ("{0}={1}", de.Key, de.Value);
+				sw.Write ("{0}={1}", kvp.Key, kvp.Value);
 			}
-			return sw.ToString ();
+			sw.Write ("]");
 		}
 
 		internal string ToString (string prefix)
 		{
 			StringWriter sw = new StringWriter ();
-			String attrs = GetAttributes ();
-			if (attrs.Length > 0)
-				sw.WriteLine ("{0}{1} -> {2} [{3}];", prefix, _from, _to, attrs);
-			else
-				sw.WriteLine ("{0}{1} -> {2};", prefix, _from, _to);
+			if (prefix.Length > 0)
+				sw.Write (prefix);
+			
+			sw.Write ("\"{0}\" -> \"{1}\"", from, to);
+			WriteAttributes (sw);
+			sw.WriteLine (";");
 			return sw.ToString ();
 		}
 

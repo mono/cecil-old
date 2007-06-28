@@ -1,3 +1,14 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Digraph.cs: Add default values for DefaultNode and DefaulEdge. Use
+	generics for all collections. Cleaning up source to match Mono style.
+	* Edge.cs: Change attribute support. Use generics for all collections.
+	Cleaning up source to match Mono style.
+	* Node.cs: Change attribute support. Use generics for all collections.
+	Cleaning up source to match Mono style.
+	* Subgraph.cs: Add new properties. Change attribute support. Use 
+	generics for all collections. Cleaning up source to match Mono style.
+
 2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DotHelper.cs: Updated for 2.0 (Unix) and removed debugging.

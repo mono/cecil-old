@@ -324,7 +324,8 @@ namespace Monoxide {
 					notebook.Remove ((o as Tab).Content);
 				};
 				
-				notebook.AppendPage (tab.Content, tab);
+				int new_page = notebook.AppendPage (tab.Content, tab);
+				notebook.Page = new_page;
 			};
 			popup_assemblies.Append (mi);
 			popup_assemblies.ShowAll ();
@@ -354,7 +355,8 @@ namespace Monoxide {
 					notebook.Remove ((o as Tab).Content);
 				};
 				
-				notebook.AppendPage (tab.Content, tab);
+				int new_page = notebook.AppendPage (tab.Content, tab);
+				notebook.Page = new_page;
 			};
 			popup_types.Append (mi);
 			popup_types.ShowAll ();
@@ -384,7 +386,8 @@ namespace Monoxide {
 					notebook.Remove ((o as Tab).Content);
 				};
 				
-				notebook.AppendPage (tab.Content, tab);
+				int new_page = notebook.AppendPage (tab.Content, tab);
+				notebook.Page = new_page;
 			};
 			popup_methods.Append (mi);
 			popup_methods.ShowAll ();

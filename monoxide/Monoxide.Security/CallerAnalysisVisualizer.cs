@@ -29,7 +29,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
 using System.Text;
@@ -41,16 +41,19 @@ using Mono.Addins;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Monoxide.Framework.Addins;
+using Monoxide.Framework.Dot;
 
 namespace Monoxide.Security {
 
 	[Extension ("/Monoxide/Method")]
 	public class CallerAnalysisView : IMethodVisualizer {
 
-		static internal Hashtable callsInto = new Hashtable ();
-		static internal Hashtable calledFrom = new Hashtable ();
-		static private Hashtable clusters = new Hashtable ();
-		static private ArrayList calls = new ArrayList ();
+		private Dictionary<MethodDefinition,List<Calls>> calls_into = new Dictionary<MethodDefinition,List<Calls>> ();
+		private Dictionary<MethodDefinition,List<Calls>> called_from = new Dictionary<MethodDefinition,List<Calls>> ();
+		
+		private Dictionary<TypeReference,Cluster> clusters = new Dictionary<TypeReference,Cluster> ();
+		private List<string> calls = new List<string> ();
+		private List<Edge> extra_edges = new List<Edge> ();
 
 		public string Name {
 			get { return "Callers Analysis"; }
@@ -66,17 +69,27 @@ namespace Monoxide.Security {
 				}
 			}
 		}
-
+		
 		public Widget GetWidget (MethodDefinition method)
 		{
-			Image image = new Image (BuildDotImage (method));
+			BackwardAnalysis (">", null, method);
+			Digraph digraph = BuildDotFile (method);
+
+			Image image = new Image (DotHelper.BuildDotImage (digraph));
 
 			ScrolledWindow sw = new ScrolledWindow ();
 			sw.AddWithViewport (image);
 			sw.ShowAll ();
+			Clear ();
 			return sw;
 		}
 		
+		internal void Clear ()
+		{
+			clusters.Clear ();
+			calls.Clear ();
+			extra_edges.Clear ();
+		}
 		
 		// internal stuff
 
@@ -100,10 +113,10 @@ namespace Monoxide.Security {
 			if (caller == callee)
 				return;
 
-			ArrayList list = (callsInto[caller] as ArrayList);
-			if (list == null) {
-				list = new ArrayList ();
-				callsInto.Add (caller, list);
+			List<Calls> list;
+			if (!calls_into.TryGetValue (caller, out list)) {
+				list = new List<Calls> ();
+				calls_into.Add (caller, list);
 				list.Add (new Calls (callee, how));
 			} else {
 				// check if it's already processed
@@ -118,10 +131,9 @@ namespace Monoxide.Security {
 					list.Add (new Calls (callee, how));
 			}
 
-			list = (calledFrom[callee] as ArrayList);
-			if (list == null) {
-				list = new ArrayList ();
-				calledFrom.Add (callee, list);
+			if (!called_from.TryGetValue (callee, out list)) {
+				list = new List<Calls> ();
+				called_from.Add (callee, list);
 				list.Add (new Calls (caller, how));
 			} else {
 				// check if it's already processed
@@ -139,7 +151,7 @@ namespace Monoxide.Security {
 		
 
 		// don't duplicate entries (as they will complicate the resulting graph)
-		private void AddToList (MethodDefinition method, IList list)
+		private void AddToList (MethodDefinition method, IList<MethodDefinition> list)
 		{
 			if (!list.Contains (method))
 				list.Add (method);
@@ -148,8 +160,8 @@ namespace Monoxide.Security {
 		// return true for public/protected so the analysis can be stopped
 		private bool Add (MethodDefinition method)
 		{
-			Cluster c = (Cluster)clusters[method.DeclaringType];
-			if (c == null) {
+			Cluster c;
+			if (!clusters.TryGetValue (method.DeclaringType, out c)) {
 				c = new Cluster (method.DeclaringType);
 				clusters.Add (method.DeclaringType, c);
 			}
@@ -197,17 +209,23 @@ namespace Monoxide.Security {
 				default:
 					break;
 				}*/
-				string s = String.Format ("\t\"{0}\" -> \"{1}\" [color={2}{3}]",
-					m, Helper.GetMethodString (callee), color, Helper.GetSecurity (method, callee));
-				if (!calls.Contains (s))
+				string c = Helper.GetMethodString (callee);
+				string s = String.Format ("\"{0}\" -> \"{1}\"", m, c);
+				if (!calls.Contains (s)) {
 					calls.Add (s);
+					
+					Edge edge = new Edge (m, c);
+					edge.Attributes ["color"] = color;
+					// Helper.GetSecurity (method, callee)
+					extra_edges.Add (edge);					
+				}
 			}
 
 			if (Add (method) && (callee != null))
 				return true; // public/protected - stop analysis
 
-			ArrayList list = (calledFrom [method] as ArrayList);
-			if (list == null)
+			List<Calls> list;
+			if (!called_from.TryGetValue (method, out list))
 				return false;
 
 			foreach (Calls c in list) {
@@ -217,17 +235,15 @@ namespace Monoxide.Security {
 			return true;
 		}
 
-		private string BuildDotFile (MethodDefinition method)
+		private Digraph BuildDotFile (MethodDefinition method)
 		{
-			StringBuilder dot = new StringBuilder ();
-			dot.AppendFormat ("digraph Test {{{0}", Environment.NewLine);
-//		dot.AppendFormat ("\tconcentrate=true;{0}", Environment.NewLine);
-			//		dot.AppendFormat ("\tlabel=\"{0}\" [fontname=tahoma,fontsize=10]{1}", method.ToString (), Environment.NewLine);
-			dot.AppendFormat ("\tlabel=\"{0}\";{1}", method.ToString (), Environment.NewLine);
-			dot.AppendFormat ("\tfontname=tahoma;{0}", Environment.NewLine);
-			dot.AppendFormat ("\tfontsize=10;{0}", Environment.NewLine);
-			dot.AppendFormat ("\tnode [fontname=tahoma,fontsize=8];{0}", Environment.NewLine);
-			dot.AppendFormat ("\tedge [fontname=tahoma,fontsize=8,labelfontname=tahoma,labelfontsize=8];{0}", Environment.NewLine);
+			Digraph dot = new Digraph ();
+			dot.Name = "AssemblyDependencies";
+			dot.AutoConcentrate = true;
+			dot.Label = method.ToString ();
+			dot.LabelLoc = "t";
+			dot.FontName = "tahoma";
+			dot.FontSize = 10;
 
 			bool hasInternalCall = false;
 			bool hasPublic = false;
@@ -238,60 +254,27 @@ namespace Monoxide.Security {
 				hasPublic |= c.HasPublic;
 				hasProtected |= c.HasProtected;
 				hasSpecial |= c.HasSpecial;
-				dot.Append (c.ToString ());
+
+				c.AddToDot (dot);
 			}
+			
 			if (hasInternalCall)
-				dot.AppendFormat ("\t\"runtime\";{0}", Environment.NewLine);
+				dot.Nodes.Add (new Node ("runtime"));
 //			if (hasPublic)
 //				dot.AppendFormat ("\t\"any public code\";{0}", Environment.NewLine);
 //			if (hasProtected)
 //				dot.AppendFormat ("\t\"any inherited code\";{0}", Environment.NewLine);
 			if (hasSpecial)
-				dot.AppendFormat ("\t\"unknown caller\";{0}", Environment.NewLine);
+				dot.Nodes.Add (new Node ("unknown caller"));
 
 			// calls
-			if (calls.Count > 0) {
-				foreach (string call in calls) {
-					dot.AppendFormat ("{0}{1}", call, Environment.NewLine);
+			if (extra_edges.Count > 0) {
+				foreach (Edge edge in extra_edges) {
+					dot.Edges.Add (edge);
 				}
 			}
-			dot.Append ("}");
-			return dot.ToString ();
-		}
-
-		private string BuildDotImage (MethodDefinition method)
-		{
-			// clean (optional ?)
-			calls.Clear ();
-			clusters.Clear ();
-
-			BackwardAnalysis (">", null, method);
-
-			string dotfile = Path.GetTempFileName ();
-			string pngfile = Path.ChangeExtension (dotfile, "png");
-
-			using (StreamWriter sw = new StreamWriter (dotfile)) {
-				sw.WriteLine (BuildDotFile (method));
-				sw.Close ();
-			}
-
-			string dotexe = null;
-			if ((int)Environment.OSVersion.Platform == 4) {
-				dotexe = "dot";
-			} else {
-				dotexe = @"C:\Program Files\ATT\Graphviz\bin\dot.exe";
-				// -Tcmap 
-			}
-			string options = String.Format ("-Tpng \"{0}\" -o \"{1}\"", dotfile, pngfile);
-
-			// process output dot file to get a PNG image
-			ProcessStartInfo psi = new ProcessStartInfo (dotexe, options);
-			psi.WindowStyle = ProcessWindowStyle.Hidden;
-			Process p = System.Diagnostics.Process.Start (psi);
-			Console.WriteLine ("{0} {1}", psi.FileName, psi.Arguments);
-			p.WaitForExit ();
-			// return image filename
-			return pngfile;
+			
+			return dot;
 		}
 	}
 
@@ -308,53 +291,53 @@ namespace Monoxide.Security {
 
 	class Cluster {
 		private TypeReference _type;
-		private ArrayList _internalcalls;
-		private ArrayList _publics;
-		private ArrayList _protected;
-		private ArrayList _specials;
-		private ArrayList _others;
+		private List<MethodDefinition> _internalcalls;
+		private List<MethodDefinition> _publics;
+		private List<MethodDefinition> _protected;
+		private List<MethodDefinition> _specials;
+		private List<MethodDefinition> _others;
 
 		public Cluster (TypeReference type)
 		{
 			_type = type;
 		}
 
-		public IList InternalCalls {
+		public List<MethodDefinition> InternalCalls {
 			get {
 				if (_internalcalls == null)
-					_internalcalls = new ArrayList ();
+					_internalcalls = new List<MethodDefinition> ();
 				return _internalcalls;
 			}
 		}
 
-		public IList Publics {
+		public List<MethodDefinition> Publics {
 			get {
 				if (_publics == null)
-					_publics = new ArrayList ();
+					_publics = new List<MethodDefinition> ();
 				return _publics;
 			}
 		}
 
-		public IList Protected {
+		public List<MethodDefinition> Protected {
 			get {
 				if (_protected == null)
-					_protected = new ArrayList ();
+					_protected = new List<MethodDefinition> ();
 				return _protected;
 			}
 		}
 
-		public IList Specials {
+		public List<MethodDefinition> Specials {
 			get {
 				if (_specials == null)
-					_specials = new ArrayList ();
+					_specials = new List<MethodDefinition> ();
 				return _specials;
 			}
 		}
 
-		public IList Others {
+		public List<MethodDefinition> Others {
 			get {
 				if (_others == null)
-					_others = new ArrayList ();
+					_others = new List<MethodDefinition> ();
 				return _others;
 			}
 		}
@@ -400,13 +383,15 @@ namespace Monoxide.Security {
 		}
 
 		// FIXME : Determine a maximum to stop generation
-		public override string ToString ()
+		public void AddToDot (Digraph dot)
 		{
-			// some things don't go inside the cluster
-			StringBuilder noncluster = new StringBuilder ();
+			Subgraph sg = new Subgraph ();
+		
+//			// some things don't go inside the cluster
+//			StringBuilder noncluster = new StringBuilder ();
 
-			StringBuilder dot = new StringBuilder ();
-			dot.AppendFormat ("\tsubgraph cluster{0} {{{1}", Math.Abs (GetHashCode ()), Environment.NewLine);
+//			StringBuilder dot = new StringBuilder ();
+//			dot.AppendFormat ("\tsubgraph cluster{0} {{{1}", Math.Abs (GetHashCode ()), Environment.NewLine);
 
 			bool publicType = false;
 			TypeDefinition type = (_type as TypeDefinition);
@@ -414,14 +399,21 @@ namespace Monoxide.Security {
 				// much more interesting info in a definition
 				if ((type.Attributes & TypeAttributes.Public) != 0) {
 					publicType = true;
-					dot.AppendFormat ("\t\tcolor=blue");
+//					dot.AppendFormat ("\t\tcolor=blue");
+					sg.Color = "blue";
 				}
 			}
 
-			dot.AppendFormat ("\t\tlabel = \"{0}\";{1}", GetClassLabel (), Environment.NewLine);
+			sg.Label = GetClassLabel ();
+			sg.LabelLoc = "b";
+			sg.LabelJust = "l";
+			sg.FontName = "tahoma";
+			sg.FontSize = 8;
+			
+//			dot.AppendFormat ("\t\tlabel = \"{0}\";{1}", GetClassLabel (), Environment.NewLine);
 	//		dot.AppendFormat ("\t\tstyle=filled;{0}\t\tcolor=lightgrey;{0}", Environment.NewLine);
-			dot.AppendFormat ("\t\tfontname=tahoma;{0}\t\tfontsize=8;{0}", Environment.NewLine);
-			dot.AppendFormat ("\t\tlabelloc=b;{0}\t\tlabeljust=l;{0}", Environment.NewLine); 
+//			dot.AppendFormat ("\t\tfontname=tahoma;{0}\t\tfontsize=8;{0}", Environment.NewLine);
+//			dot.AppendFormat ("\t\tlabelloc=b;{0}\t\tlabeljust=l;{0}", Environment.NewLine); 
 	//		dot.AppendFormat ("\t\tnode [style=filled,color=white];{0}", Environment.NewLine);
 	//		dot.AppendFormat ("fontname=tahoma;fontsize=8;,labelfontname=tahoma,labelfontsize=8];{0}", Environment.NewLine);
 
@@ -429,21 +421,34 @@ namespace Monoxide.Security {
 			if (HasInternalCall) {
 				foreach (MethodDefinition method in _internalcalls) {
 					string icall = Helper.GetMethodString (method);
-					dot.AppendFormat ("\t\t\"{0}\" [shape=box,peripheries=2];{1}", icall, Environment.NewLine);
-					noncluster.AppendFormat ("\t\"{0}\" -> \"runtime\" [label=\"icall\"{1}];{2}", icall, Helper.GetSecurity (method, null), Environment.NewLine);
+					Node node = new Node (icall);
+					node.Attributes ["shape"] = "box";
+					node.Attributes ["peripheries"] = "2";
+					sg.Nodes.Add (node);
+//					dot.AppendFormat ("\t\t\"{0}\" [shape=box,peripheries=2];{1}", icall, Environment.NewLine);
+//					noncluster.AppendFormat ("\t\"{0}\" -> \"runtime\" [label=\"icall\"{1}];{2}", icall, Helper.GetSecurity (method, null), Environment.NewLine);
+					Edge edge = new Edge (icall, "runtime");
+					edge.ToLabel = "icall" + Helper.GetSecurity (method, null);
+					dot.Edges.Add (edge);
 				}
 			}
 			// publics
 			if (HasPublic) {
 				foreach (MethodDefinition method in _publics) {
 					string pub = Helper.GetMethodString (method);
-					string url = Helper.Url (method);
-					string style = String.Empty;
+					Node node = new Node (pub);
+					
+//					string url = Helper.Url (method);
+//					string style = String.Empty;
 					if ((method.Attributes & MethodAttributes.Static) == MethodAttributes.Static)
-						style = ",style=bold";
+						node.Attributes ["style"] = "bold";
+
 					if ((method.Attributes & (MethodAttributes.Virtual | MethodAttributes.Final)) == MethodAttributes.Virtual)
-						style = ",style=dashed";
-					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=blue{1}{2}];{3}", pub, url, style, Environment.NewLine);
+						node.Attributes ["style"] = "dashed";
+
+//					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=blue{1}{2}];{3}", pub, url, style, Environment.NewLine);
+					node.Attributes ["shape"] = "box";
+					node.Attributes ["color"] = "blue";
 
 					string caller = "any code from\\n";
 					if (publicType) {
@@ -451,26 +456,43 @@ namespace Monoxide.Security {
 					} else {
 						caller += GetScopeName (_type.Scope);
 					}
-					noncluster.AppendFormat ("\t\"{0}\" -> \"{1}\" [style=dotted{2}];{3}", caller, pub, Helper.GetSecurity (null, method), Environment.NewLine);
+
+					sg.Nodes.Add (node);
+					
+//					noncluster.AppendFormat ("\t\"{0}\" -> \"{1}\" [style=dotted{2}];{3}", caller, pub, Helper.GetSecurity (null, method), Environment.NewLine);
+					
+					Edge edge = new Edge (caller, pub);
+					edge.Attributes ["style"] = "dotted";
+					dot.Edges.Add (edge);
 				}
 			}
 			// protected
 			if (HasProtected) {
 				foreach (MethodDefinition method in _protected) {
 					string pub = Helper.GetMethodString (method);
-					string url = Helper.Url (method);
-
-					string style = String.Empty;
+					
+					Node node = new Node (pub);
+					node.Attributes ["shape"] = "box";
+					node.Attributes ["color"] = "blueviolet";
+					sg.Nodes.Add (node);
+					
+//					string url = Helper.Url (method);
+//					string style = String.Empty;
 					if ((method.Attributes & (MethodAttributes.Virtual | MethodAttributes.Final)) == MethodAttributes.Virtual)
-						style = ",style=dashed";
+						node.Attributes ["style"] = "dashed";
+//						style = ",style=dashed";
 
-					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=blueviolet{1}{2}];{3}", pub, style, url, Environment.NewLine);
+//					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=blueviolet{1}{2}];{3}", pub, style, url, Environment.NewLine);
 
 					string caller = "any inherited class";
 					if (!publicType) {
 						caller += String.Concat (" from\\n", GetScopeName (_type.Scope));
 					}
-					noncluster.AppendFormat ("\t\"{0}\" -> \"{1}\" [style=dotted{2}];{3}", caller, pub, Helper.GetSecurity (null, method), Environment.NewLine);
+//					noncluster.AppendFormat ("\t\"{0}\" -> \"{1}\" [style=dotted{2}];{3}", caller, pub, Helper.GetSecurity (null, method), Environment.NewLine);
+
+					Edge edge = new Edge (caller, pub);
+					edge.Attributes ["style"] = "dotted";
+					dot.Edges.Add (edge);
 				}
 			}
 			// specials (e.g. .cctor)
@@ -478,8 +500,18 @@ namespace Monoxide.Security {
 				// no URL available for internal stuff
 				foreach (MethodDefinition method in _specials) {
 					string pub = Helper.GetMethodString (method);
-					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=green];{1}", pub, Environment.NewLine);
-					noncluster.AppendFormat ("\t\"unknown caller\" -> \"{0}\" [style=dotted{1}];{2}", pub, Helper.GetSecurity (null, method), Environment.NewLine);
+					Node node = new Node (pub);
+					node.Attributes ["shape"] = "box";
+					node.Attributes ["color"] = "green";
+					sg.Nodes.Add (node);
+
+//					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=green];{1}", pub, Environment.NewLine);
+
+//					noncluster.AppendFormat ("\t\"unknown caller\" -> \"{0}\" [style=dotted{1}];{2}", pub, Helper.GetSecurity (null, method), Environment.NewLine);
+
+					Edge edge = new Edge ("unknown caller", pub);
+					edge.Attributes ["style"] = "dotted";
+					dot.Edges.Add (edge);
 				}
 			}
 			// others
@@ -487,11 +519,17 @@ namespace Monoxide.Security {
 				// no URL available for internal stuff
 				foreach (MethodDefinition method in _others) {
 					string pub = Helper.GetMethodString (method);
-					dot.AppendFormat ("\t\t\"{0}\" [shape=box{1}];{2}", pub, Helper.GetSecurity (null, method), Environment.NewLine);
+					Node node = new Node (pub);
+					node.Attributes ["shape"] = "box";
+					sg.Nodes.Add (node);
+					
+//					dot.AppendFormat ("\t\t\"{0}\" [shape=box{1}];{2}", pub, Helper.GetSecurity (null, method), Environment.NewLine);
 				}
 			}
-			dot.AppendFormat ("\t}}{0}{0}", Environment.NewLine).Append (noncluster);
-			return dot.ToString ();
+//			dot.AppendFormat ("\t}}{0}{0}", Environment.NewLine).Append (noncluster);
+//			return dot.ToString ();
+
+			dot.Subgraphs.Add (sg);
 		}
 	}
 
@@ -612,16 +650,16 @@ namespace Monoxide.Security {
 			StringBuilder sb = null;
 			foreach (SecurityDeclaration declsec in declarations) {
 				switch (declsec.Action) {
-					case Mono.Cecil.SecurityAction.Assert:
-					case Mono.Cecil.SecurityAction.PermitOnly:
-					case Mono.Cecil.SecurityAction.Deny:
-						if (!stackmods)
-							continue;
-						break;
-					default:
-						if (stackmods)
-							continue;
-						break;
+				case Mono.Cecil.SecurityAction.Assert:
+				case Mono.Cecil.SecurityAction.PermitOnly:
+				case Mono.Cecil.SecurityAction.Deny:
+					if (!stackmods)
+						continue;
+					break;
+				default:
+					if (stackmods)
+						continue;
+					break;
 				}
 
 				if (sb == null) {

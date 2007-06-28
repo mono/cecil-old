@@ -1,3 +1,8 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CallerAnalysisVisualizer.cs: Converted plugin to use DotHelper, 
+	generics and cleaning up source to match Mono style.
+
 2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs: Updated for 0.2.

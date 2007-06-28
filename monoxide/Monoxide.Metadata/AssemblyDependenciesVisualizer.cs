@@ -1,10 +1,10 @@
 //
-// AssemblyDependenciesView.cs
+// AssemblyDependenciesVisualizer.cs
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,6 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,14 +36,16 @@ using Monoxide.Framework.Addins;
 using Monoxide.Framework.Dot;
 
 using Gtk;
-using Pango;
 
 namespace Monoxide.Metadata {
 
 	[Extension ("/Monoxide/Assembly")]
-	public class AssemblyDependenciesView : IAssemblyVisualizer {
+	public class AssemblyDependenciesVisualizer : IAssemblyVisualizer {
 
 		private List<AssemblyDefinition> assemblies;
+		private Dictionary<string,List<AssemblyNameReference>> clusters = new Dictionary<string,List<AssemblyNameReference>> ();
+		private List<string> partial_trust_callers = new List<string> ();
+		private List<string> trusted_callers = new List<string> ();
 
 		public string Name {
 			get { return "Assembly Dependencies"; }
@@ -91,7 +92,7 @@ namespace Monoxide.Metadata {
 
 		private string GetFriendlyName (AssemblyNameReference assemblyName)
 		{
-			return String.Concat ("\"", assemblyName.FullName.Replace (", ", ",\\n"), "\"");
+			return assemblyName.FullName.Replace (", ", ",\\n");
 		}
 
 		private void RecurseAssembly (AssemblyDefinition assembly, Digraph dot)
@@ -103,11 +104,11 @@ namespace Monoxide.Metadata {
 			string name = GetFriendlyName (assembly.Name);
 
 			if (AllowPartiallyTrustedCallers (assembly)) {
-				if (!_partialTrustCallers.Contains (name))
-					_partialTrustCallers.Add (name);
+				if (!partial_trust_callers.Contains (name))
+					partial_trust_callers.Add (name);
 			} else {
-				if (!_trustedCallers.Contains (name))
-					_trustedCallers.Add (name);
+				if (!trusted_callers.Contains (name))
+					trusted_callers.Add (name);
 			}
 
 			foreach (ModuleDefinition module in assembly.Modules) {
@@ -130,9 +131,9 @@ namespace Monoxide.Metadata {
 			if (assembly == null)
 				return null;
 
-			_clusters.Clear ();
-			_partialTrustCallers.Clear ();
-			_trustedCallers.Clear ();
+			clusters.Clear ();
+			partial_trust_callers.Clear ();
+			trusted_callers.Clear ();
 
 			Digraph dot = new Digraph ();
 			dot.Name = "AssemblyDependencies";
@@ -142,29 +143,16 @@ namespace Monoxide.Metadata {
 			dot.FontName = "tahoma";
 			dot.FontSize = 10;
 
-			dot.DefaultNode = new Node ();
-			dot.DefaultNode.Attributes["fontname"] = "tahoma";
-			dot.DefaultNode.Attributes["fontsize"] = 8;
-
-			dot.DefaultEdge = new Edge ();
-			dot.DefaultNode.Attributes["fontname"] = "tahoma";
-			dot.DefaultNode.Attributes["fontsize"] = 8;
-			dot.DefaultNode.Attributes["labelfontname"] = "tahoma";
-			dot.DefaultNode.Attributes["labelfontsize"] = 8;
-
 			RecurseAssembly (assembly, dot);
 
 			// process clusters (by public key tokens)
-			foreach (DictionaryEntry de in _clusters) {
-				string clusterName = (string) de.Key;
-				ArrayList members = (ArrayList) de.Value;
-
+			foreach (KeyValuePair<string,List<AssemblyNameReference>> kpv in clusters) {
 				Subgraph sg = new Subgraph ();
-				sg.Label = clusterName;
+				sg.Label = kpv.Key;
 				sg.LabelLoc = "b";
 				dot.Subgraphs.Add (sg);
 
-				foreach (AssemblyNameReference reference in members) {
+				foreach (AssemblyNameReference reference in kpv.Value) {
 					Node n = new Node ();
 					n.Label = GetFriendlyName (reference);
 					n.Attributes["shape"] = "box";
@@ -184,23 +172,19 @@ namespace Monoxide.Metadata {
 			}
 
 			// process edges (i.e. callers)
-			foreach (string s in _partialTrustCallers) {
-				Edge e = new Edge ("\"partially\\ntrusted\\ncallers\\n\"", s);
+			foreach (string s in partial_trust_callers) {
+				Edge e = new Edge ("partially\\ntrusted\\ncallers\\n", s);
 				e.Attributes["style"] = "dotted";
 				dot.Edges.Add (e);
 			}
-			foreach (string s in _trustedCallers) {
-				Edge e = new Edge ("\"trusted\\ncallers\\n\"", s);
+			foreach (string s in trusted_callers) {
+				Edge e = new Edge ("trusted\\ncallers\\n", s);
 				e.Attributes["style"] = "dotted";
 				dot.Edges.Add (e);
 			}
 
 			return dot;
 		}
-
-		private Hashtable _clusters = new Hashtable ();
-		private ArrayList _partialTrustCallers = new ArrayList ();
-		private ArrayList _trustedCallers = new ArrayList ();
 
 		private bool AddToCluster (AssemblyNameReference assembly)
 		{
@@ -232,10 +216,12 @@ namespace Monoxide.Metadata {
 				}
 			}
 
-			ArrayList cluster = (ArrayList) _clusters[clusterName];
-			if (cluster == null) {
-				cluster = new ArrayList ();
-				_clusters[clusterName] = cluster;
+			List<AssemblyNameReference> cluster;
+			if (clusters.ContainsKey (clusterName)) {
+				cluster = clusters[clusterName];
+			} else {
+				cluster = new List<AssemblyNameReference> ();
+				clusters[clusterName] = cluster;
 			}
 
 			if (cluster.Contains (assembly))
@@ -250,7 +236,6 @@ namespace Monoxide.Metadata {
 				if (custom.Constructor.DeclaringType.FullName == "System.Security.AllowPartiallyTrustedCallersAttribute")
 					return true;
 			}
-
 			return false;
 		}
 

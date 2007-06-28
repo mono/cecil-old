@@ -3,9 +3,6 @@
   <configuration>
     <images-root-path>../</images-root-path>
   </configuration>
-  <import>
-    <widget-library name="../../Monoxide.Plugins/bin/Debug/Monoxide.Plugins.dll" />
-  </import>
   <icon-factory>
     <icon-set id="AddinManager">
       <source>
@@ -156,14 +153,26 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.Label" id="objectLabel">
+                  <widget class="Gtk.Expander" id="objectExpander">
                     <property name="MemberName" />
-                    <property name="Xalign">0</property>
-                    <property name="LabelProp" translatable="yes">&lt;empty&gt;</property>
+                    <property name="CanFocus">True</property>
+                    <child>
+                      <placeholder />
+                    </child>
+                    <child>
+                      <widget class="Gtk.Label" id="objectLabel">
+                        <property name="MemberName" />
+                        <property name="LabelProp" translatable="yes">&lt;empty&gt;</property>
+                        <property name="UseUnderline">True</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
                     <property name="Position">0</property>
-                    <property name="AutoSize">True</property>
+                    <property name="AutoSize">False</property>
                     <property name="Expand">False</property>
                     <property name="Fill">False</property>
                   </packing>

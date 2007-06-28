@@ -1,5 +1,5 @@
 //
-// IlasmSourceView.cs
+// IlSourceVisualizer.cs
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
@@ -27,10 +27,8 @@
 //
 
 using System;
-using System.Collections;
 using System.Text;
 
-using Gdk;
 using Gtk;
 using Pango;
 
@@ -60,7 +58,7 @@ namespace Monoxide.Ilasm {
 			TextView ilTextView = new TextView ();
 			ilTextView.ModifyFont (fd);
 			ilTextView.Editable = false;
-				ilTextView.Buffer.Text = GetIlSource (method);
+			ilTextView.Buffer.Text = GetIlSource (method);
 
 			ScrolledWindow sw = new ScrolledWindow ();
 			sw.Add (ilTextView);

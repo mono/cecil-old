@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,9 +27,8 @@
 //
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Monoxide.Framework.Dot {
 
@@ -37,146 +36,164 @@ namespace Monoxide.Framework.Dot {
 
 		private const int autoConcentrateLimit = 50;
 
-		private string _name;
-		private bool _concentrate;
-		private bool _autoConcentrate;
-		private string _label;
-		private string _labelloc;
-		private string _fontname;
-		private int _fontsize;
-		private ArrayList _subgraphs;
-		private ArrayList _nodes;
-		private ArrayList _edges;
-		private Node _defaultNode;
-		private Edge _defaultEdge;
+		private string name;
+		private bool concentrate;
+		private bool auto_concentrate;
+		private string label;
+		private string label_loc;
+		private string font_name;
+		private int font_size;
+		
+		private List<Subgraph> subgraphs;
+		private List<Node> nodes;
+		private List<Edge> edges;
+		
+		private Node defaultNode;
+		private Edge defaultEdge;
 
 		public string Name {
-			get { return _name; }
-			set { _name = value; }
+			get { return name; }
+			set { name = value; }
 		}
 
 		public bool Concentrate {
 			get {
-				if (_autoConcentrate) {
+				if (auto_concentrate) {
 					int n = 0;
-					if (_edges != null)
-						n += _edges.Count;
-					if (_subgraphs != null) {
-						foreach (Subgraph sg in _subgraphs) {
+					if (edges != null)
+						n += edges.Count;
+					if (subgraphs != null) {
+						foreach (Subgraph sg in subgraphs) {
 							n += sg.Edges.Count;
 						}
 					}
 					return (n > autoConcentrateLimit);
 				}
-				return _concentrate;
+				return concentrate;
 			}
-			set { _concentrate = value; }
+			set { concentrate = value; }
 		}
 
 		public bool AutoConcentrate {
-			get { return _autoConcentrate; }
-			set { _autoConcentrate = value; }
+			get { return auto_concentrate; }
+			set { auto_concentrate = value; }
 		}
 
 		public string Label {
-			get { return _label; }
-			set { _label = value; }
+			get { return label; }
+			set { label = value; }
 		}
 
 		public string LabelLoc {
-			get { return _labelloc; }
-			set { _labelloc = value; }
+			get { return label_loc; }
+			set { label_loc = value; }
 		}
 
 		public string FontName {
-			get { return _fontname; }
-			set { _fontname = value; }
+			get { return font_name; }
+			set { font_name = value; }
 		}
 
 		public int FontSize {
-			get { return _fontsize; }
-			set { _fontsize = value; }
+			get { return font_size; }
+			set { font_size = value; }
 		}
 
-		public IList Subgraphs {
+		public List<Subgraph> Subgraphs {
 			get {
-				if (_subgraphs == null)
-					_subgraphs = new ArrayList ();
-				return _subgraphs;
+				if (subgraphs == null)
+					subgraphs = new List<Subgraph> ();
+				return subgraphs;
 			}
 		}
 
-		public IList Edges {
+		public List<Edge> Edges {
 			get {
-				if (_edges == null)
-					_edges = new ArrayList ();
-				return _edges;
+				if (edges == null)
+					edges = new List<Edge> ();
+				return edges;
 			}
 		}
 
-		public IList Nodes {
+		public List<Node> Nodes {
 			get {
-				if (_nodes == null)
-					_nodes = new ArrayList ();
-				return _nodes;
+				if (nodes == null)
+					nodes = new List<Node> ();
+				return nodes;
 			}
 		}
 
 		public Node DefaultNode {
-			get { return _defaultNode; }
-			set { _defaultNode = value; }
+			get {
+				if (defaultNode == null) {
+					defaultNode = new Node ();
+					defaultNode.Attributes["fontname"] = "tahoma";
+					defaultNode.Attributes["fontsize"] = "8";
+				}
+				return defaultNode;
+			}
+			set { defaultNode = value; }
 		}
 
 		public Edge DefaultEdge {
-			get { return _defaultEdge; }
-			set { _defaultEdge = value; }
+			get {
+				if (defaultEdge == null) {
+					defaultEdge = new Edge ();
+					defaultEdge.Attributes["fontname"] = "tahoma";
+					defaultEdge.Attributes["fontsize"] = "8";
+					defaultEdge.Attributes["labelfontname"] = "tahoma";
+					defaultEdge.Attributes["labelfontsize"] = "8";
+				}
+				return defaultEdge;
+			}
+			set { defaultEdge = value; }
 		}
 
 		public override string ToString ()
 		{
 			StringWriter sw = new StringWriter ();
-			sw.WriteLine ("digraph {0} {{", _name);
+			sw.WriteLine ("digraph {0} {{", name);
 
 			// manual or automatic
 			if (Concentrate)
 				sw.WriteLine ("\tconcentrate=true;");
 
-			if ((_label != null) && (_label.Length > 0)) {
-				sw.WriteLine ("\tlabel=\"{0}\";", _label);
-				if ((_fontname != null) && (_fontname.Length > 0))
-					sw.WriteLine ("\tfontname=\"{0}\";", _fontname);
-				if (_fontsize > 0)
-					sw.WriteLine ("\tfontsize={0};", _fontsize);
-				if ((_labelloc != null) && (_labelloc.Length > 0))
-					sw.WriteLine ("\tlabelloc={0};", _labelloc);
+			if ((label != null) && (label.Length > 0)) {
+				sw.WriteLine ("\tlabel=\"{0}\";", label);
+				if ((font_name != null) && (font_name.Length > 0))
+					sw.WriteLine ("\tfontname=\"{0}\";", font_name);
+				if (font_size > 0)
+					sw.WriteLine ("\tfontsize={0};", font_size);
+				if ((label_loc != null) && (label_loc.Length > 0))
+					sw.WriteLine ("\tlabelloc={0};", label_loc);
 			}
 
-			if (_defaultNode != null) {
-				string attrs = _defaultNode.GetAttributes ();
-				if (attrs.Length > 0)
-					sw.WriteLine ("\tnode [{0}];", attrs);
+			if (DefaultNode.HasAttributes) {
+				sw.Write ("\tnode");
+				defaultNode.WriteAttributes (sw);
+				sw.WriteLine (";");
 			}
 
-			if (_defaultEdge != null) {
-				string attrs = _defaultEdge.GetAttributes ();
-				if (attrs.Length > 0)
-					sw.WriteLine ("\tedge [{0}];", attrs);
+			if (DefaultEdge.HasAttributes) {
+				sw.Write ("\tedge");
+				defaultEdge.WriteAttributes (sw);
+				sw.WriteLine (";");
 			}
 
-			if (_subgraphs != null) {
-				foreach (Subgraph s in _subgraphs) {
+			if (subgraphs != null) {
+				foreach (Subgraph s in subgraphs) {
 					sw.WriteLine (s.ToString ("\t"));
 				}
 			}
 
-			if (_nodes != null) {
-				foreach (Node n in _nodes) {
+			if (nodes != null) {
+				foreach (Node n in nodes) {
 					sw.WriteLine (n.ToString ("\t"));
 				}
 			}
 
-			if (_edges != null) {
-				foreach (Edge e in _edges) {
+			if (edges != null) {
+				foreach (Edge e in edges) {
 					sw.WriteLine (e.ToString ("\t"));
 				}
 			}
