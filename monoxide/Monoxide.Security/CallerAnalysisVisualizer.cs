@@ -424,6 +424,7 @@ namespace Monoxide.Security {
 					Node node = new Node (icall);
 					node.Attributes ["shape"] = "box";
 					node.Attributes ["peripheries"] = "2";
+					DecorateNode (node, method);
 					sg.Nodes.Add (node);
 //					dot.AppendFormat ("\t\t\"{0}\" [shape=box,peripheries=2];{1}", icall, Environment.NewLine);
 //					noncluster.AppendFormat ("\t\"{0}\" -> \"runtime\" [label=\"icall\"{1}];{2}", icall, Helper.GetSecurity (method, null), Environment.NewLine);
@@ -457,6 +458,7 @@ namespace Monoxide.Security {
 						caller += GetScopeName (_type.Scope);
 					}
 
+					DecorateNode (node, method);
 					sg.Nodes.Add (node);
 					
 //					noncluster.AppendFormat ("\t\"{0}\" -> \"{1}\" [style=dotted{2}];{3}", caller, pub, Helper.GetSecurity (null, method), Environment.NewLine);
@@ -474,13 +476,17 @@ namespace Monoxide.Security {
 					Node node = new Node (pub);
 					node.Attributes ["shape"] = "box";
 					node.Attributes ["color"] = "blueviolet";
+					DecorateNode (node, method);
 					sg.Nodes.Add (node);
 					
 //					string url = Helper.Url (method);
-//					string style = String.Empty;
-					if ((method.Attributes & (MethodAttributes.Virtual | MethodAttributes.Final)) == MethodAttributes.Virtual)
-						node.Attributes ["style"] = "dashed";
-//						style = ",style=dashed";
+					if ((method.Attributes & (MethodAttributes.Virtual | MethodAttributes.Final)) == MethodAttributes.Virtual) {
+						string style;
+						if (node.Attributes.TryGetValue ("style", out style))
+							node.Attributes ["style"] = style + ",dashed";
+						else
+							node.Attributes ["style"] = "dashed";
+					}
 
 //					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=blueviolet{1}{2}];{3}", pub, style, url, Environment.NewLine);
 
@@ -503,6 +509,7 @@ namespace Monoxide.Security {
 					Node node = new Node (pub);
 					node.Attributes ["shape"] = "box";
 					node.Attributes ["color"] = "green";
+					DecorateNode (node, method);
 					sg.Nodes.Add (node);
 
 //					dot.AppendFormat ("\t\t\"{0}\" [shape=box,color=green];{1}", pub, Environment.NewLine);
@@ -521,6 +528,7 @@ namespace Monoxide.Security {
 					string pub = Helper.GetMethodString (method);
 					Node node = new Node (pub);
 					node.Attributes ["shape"] = "box";
+					DecorateNode (node, method);
 					sg.Nodes.Add (node);
 					
 //					dot.AppendFormat ("\t\t\"{0}\" [shape=box{1}];{2}", pub, Helper.GetSecurity (null, method), Environment.NewLine);
@@ -530,6 +538,20 @@ namespace Monoxide.Security {
 //			return dot.ToString ();
 
 			dot.Subgraphs.Add (sg);
+		}
+		
+		private void DecorateNode (Node node, MethodDefinition md)
+		{
+			// SL checks
+			if (Helper.IsCritical (md)) {
+				node.Attributes["style"] = "filled";
+				node.Attributes["fillcolor"] = "red";
+				node.Attributes["fontcolor"] = "white";
+			} else if (Helper.IsSafeCritical (md)) {
+				node.Attributes["style"] = "filled";
+				node.Attributes["fillcolor"] = "orange";
+				node.Attributes["fontcolor"] = "white";
+			}
 		}
 	}
 
@@ -693,6 +715,38 @@ namespace Monoxide.Security {
 			if (sb == null)
 				return String.Empty;
 			return sb.Append ("\"").ToString ();
+		}
+
+		private static bool CheckForAttribute (string attrName, CustomAttributeCollection cac)
+		{
+			foreach (CustomAttribute ca in cac) {
+				if (ca.Constructor.DeclaringType.FullName == attrName)
+					return true;
+			}
+			return false;
+		}
+
+		private static bool CheckForAttribute (string attrName, MethodDefinition md)
+		{
+			if (CheckForAttribute (attrName, md.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.Module.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.Module.Assembly.CustomAttributes))
+				return true;
+			return false;
+		}
+		
+		public static bool IsCritical (MethodDefinition md)
+		{
+			return CheckForAttribute ("System.Security.SecurityCriticalAttribute", md);
+		}
+
+		public static bool IsSafeCritical (MethodDefinition md)
+		{
+			return CheckForAttribute ("System.Security.SecuritySafeCriticalAttribute", md);
 		}
 	}
 }
