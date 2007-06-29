@@ -73,7 +73,6 @@ namespace Monoxide.Metadata {
 			sw.AddWithViewport (image);
 			sw.ShowAll ();
 			sw.OnRefresh += delegate  {
-				Console.WriteLine ("***REFRESH***");
 				Refresh ();
 			};
 			return sw;

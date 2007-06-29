@@ -1,5 +1,5 @@
 //
-// DeclarativeSecurityView.cs
+// DeclarativeSecurityVisualizer.cs
 //
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
@@ -86,8 +86,6 @@ namespace Monoxide.Metadata {
 			SecurityAction.NonCasLinkDemand,
 			SecurityAction.NonCasInheritance };
 
-		private ScrolledWindow sw;
-		private VBox vbox;
 		private Action[] actions;
 
 		public string Name {
@@ -101,72 +99,27 @@ namespace Monoxide.Metadata {
 
 		public Widget GetWidget (AssemblyDefinition assembly)
 		{
-			Widget w = SetUp ();
-			
-			if (assembly == null)
-				return w;
-
-			if (assembly.SecurityDeclarations.Count > 0) {
-				// hide old stuff
-				for (int i = 0; i < list.Length; i++)
-					actions[i].SetText (null);
-				// add new stuff (if any)
-				foreach (SecurityDeclaration declsec in assembly.SecurityDeclarations) {
-					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
-				}
-			}
-			vbox.Show ();
-			sw.Show ();
-			return w;
+			SecurityDeclarationCollection sdc = (assembly == null) ? null : assembly.SecurityDeclarations;
+			return GetWidget (sdc);
 		}
 
 		public Widget GetWidget (TypeDefinition type)
 		{
-			Widget w = SetUp ();
-
-			if (type == null)
-				return w;
-
-			if (type.SecurityDeclarations.Count > 0) {
-				// hide old stuff
-				for (int i = 0; i < list.Length; i++)
-					actions[i].SetText (null);
-				// add new stuff (if any)
-				foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
-					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
-				}
-			}
-			vbox.Show ();
-			sw.Show ();
-			return w;
+			SecurityDeclarationCollection sdc = (type == null) ? null : type.SecurityDeclarations;
+			return GetWidget (sdc);
 		}
 
 		public Widget GetWidget (MethodDefinition method)
 		{
-			Widget w = SetUp ();
-
-			if (method == null)
-				return w;
-
-			if (method.SecurityDeclarations.Count > 0) {
-				// hide old stuff
-				for (int i = 0; i < list.Length; i++)
-					actions[i].SetText (null);
-				// add new stuff (if any)
-				foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
-					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
-				}
-			}
-			vbox.Show ();
-			sw.Show ();
-			return w;
+			SecurityDeclarationCollection sdc = (method == null) ? null : method.SecurityDeclarations;
+			return GetWidget (sdc);
 		}
 		
-		private Widget SetUp ()
+		private Widget GetWidget (SecurityDeclarationCollection sdc)
 		{
 			FontDescription fd = FontDescription.FromString ("Courier 10 Pitch 10");
 
-			vbox = new VBox (false, 0);
+			VBox vbox = new VBox (false, 0);
 
 			actions = new Action[list.Length];
 			for (int i=0; i < list.Length; i++) {
@@ -175,8 +128,17 @@ namespace Monoxide.Metadata {
 				vbox.Add (actions [i].Expander);
 			}
 
-			sw = new ScrolledWindow ();
+			ScrolledWindow sw = new ScrolledWindow ();
 			sw.AddWithViewport (vbox);
+			
+			if ((sdc != null) && (sdc.Count >= 0)) {
+				foreach (SecurityDeclaration declsec in sdc) {
+					actions [(int)declsec.Action - 1].SetText (declsec.PermissionSet.ToString ());
+				}
+			}
+			
+			vbox.Show ();
+			sw.Show ();
 			return sw;
  		}
 	}

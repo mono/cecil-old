@@ -1,3 +1,11 @@
+2007-06-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AssemblyDependenciesVisualizer.cs: Remove debugging CWL
+	* CustomAttributesVisualizer.cs: New. Display all custom attributes.
+	Useful for tracking Security[Safe]Critical attributes in SL.
+	* DeclarativeSecurityVisualizer.cs: Simplify plugin (now that the
+	widgets aren't being reused).
+
 2007-06-28  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AssemblyDependenciesVisualizer.cs: Implement refresh, i.e. if some 
