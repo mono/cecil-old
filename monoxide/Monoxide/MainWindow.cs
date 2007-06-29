@@ -39,15 +39,17 @@ using Pango;
 using Mono.Addins;
 using Mono.Addins.Gui;
 using Mono.Cecil;
+using Monoxide.Framework;
 using Monoxide.Framework.Addins;
 
 namespace Monoxide {
 		
 	public partial class MainWindow : Gtk.Window {
 
-		private TreeStore m_store;
-		private TreeIter m_cursor;
+		private TreeStore tree_store;
+		private TreeIter tree_cursor;
 
+		private string current_directory;
 		private List<AssemblyDefinition> assemblies;
 		
 		private Menu popup_assemblies;
@@ -83,9 +85,9 @@ namespace Monoxide {
 			popup_types.ShowAll ();
 			popup_methods.ShowAll ();
 
-			m_store = new TreeStore (typeof (string), typeof (object));
+			tree_store = new TreeStore (typeof (string), typeof (object));
 
-			treeview.Model = m_store;
+			treeview.Model = tree_store;
 			treeview.EnableSearch = false;
 			treeview.AppendColumn ("Object", new CellRendererText (), "text", 0);
 			treeview.Selection.Changed += OnSelectionChanged;
@@ -110,7 +112,25 @@ namespace Monoxide {
 
 		private void OnSelectionChanged (object o, EventArgs args)
 		{
-			OnRefreshActivated (o, args);
+			TreeIter iter;
+			TreeModel model;
+			if (treeview.Selection.GetSelected (out model, out iter)) {
+				object obj = model.GetValue (iter, 1);
+				
+				AssemblyDefinition ad = (obj as AssemblyDefinition);
+				if (ad != null) {
+					objectLabel.Text = ad.Name.FullName;
+				} else {
+					TypeDefinition td = (obj as TypeDefinition);
+					if (td != null) {
+						objectLabel.Text = td.ToString ();
+					} else {
+						MethodDefinition md = (obj as MethodDefinition);
+						if (md != null)
+							objectLabel.Text = md.ToString ();
+					}
+				}
+			}
 		}
 
 		protected virtual void OnAddinManagerActivated (object sender, System.EventArgs e)
@@ -141,25 +161,25 @@ namespace Monoxide {
 
 		private void PopulateStore (AssemblyDefinition assembly) 
 		{
-			m_cursor = m_store.AppendValues (assembly.Name.FullName, assembly);
+			tree_cursor = tree_store.AppendValues (assembly.Name.FullName, assembly);
 			foreach (ModuleDefinition module in assembly.Modules) {
 
 				foreach (TypeDefinition type in module.Types) {
-					TreeIter titer = m_cursor;
+					TreeIter titer = tree_cursor;
 
-					m_cursor = m_store.AppendValues (m_cursor, type.ToString (), type);
+					tree_cursor = tree_store.AppendValues (tree_cursor, type.ToString (), type);
 
-					TreeIter miter = m_cursor;
+					TreeIter miter = tree_cursor;
 					foreach (MethodDefinition method in type.Constructors) {
-						m_store.AppendValues (miter, GetMethodName (method), method);
+						tree_store.AppendValues (miter, GetMethodName (method), method);
 					}
 					foreach (MethodDefinition method in type.Methods) {
-						m_store.AppendValues (miter, GetMethodName (method), method);
+						tree_store.AppendValues (miter, GetMethodName (method), method);
 					}
-					m_cursor = titer;
+					tree_cursor = titer;
 				}
 			}
-			m_store.SetSortColumnId (0, SortType.Ascending);
+			tree_store.SetSortColumnId (0, SortType.Ascending);
 		}
 
 		private string GetMethodName (MethodDefinition method)
@@ -185,7 +205,16 @@ namespace Monoxide {
 		{
 			// check for a right-click
 			if (args.Event.Button == 3) {
-				object obj = GetSelectedObject ();
+				// note: at this stage GetSelectedObject is "late" and return the previous item
+				object obj = null; 
+				TreePath path;
+				if (treeview.GetPathAtPos ((int)args.Event.X, (int)args.Event.Y, out path)) {
+					TreeIter iter;
+					if (treeview.Model.GetIter (out iter, path)) {
+						obj = treeview.Model.GetValue (iter, 1);
+						Console.WriteLine (obj);
+					}
+				}
 			
 				if ((obj is AssemblyDefinition) && (popup_assemblies.Children.Length > 0))
 					popup_assemblies.Popup ();
@@ -203,6 +232,9 @@ namespace Monoxide {
 			using (FileChooserDialog fcd = new FileChooserDialog ("Open Assembly...", this, FileChooserAction.Open, 
 				"Cancel", ResponseType.Cancel, "Open", ResponseType.Accept)) {
 				
+				if (current_directory != null)
+					fcd.SetCurrentFolder (current_directory);
+					
 				fcd.SelectMultiple = true;
 				
 				bool ok = (fcd.Run () == (int) ResponseType.Accept);
@@ -210,6 +242,8 @@ namespace Monoxide {
 				if (ok) {
 					foreach (string aname in fcd.Filenames)
 						LoadAssembly (aname);
+					
+					current_directory = fcd.CurrentFolder;
 				}
 			}
 		}
@@ -223,28 +257,9 @@ namespace Monoxide {
 
 		protected virtual void OnRefreshActivated (object sender, System.EventArgs e)
 		{
-			if (sender == null)
-				return;
-
-			TreeIter iter;
-			TreeModel model;
-			if (treeview.Selection.GetSelected (out model, out iter)) {
-				object obj = model.GetValue (iter, 1);
-				
-				AssemblyDefinition ad = (obj as AssemblyDefinition);
-				if (ad != null) {
-					objectLabel.Text = ad.Name.FullName;
-				} else {
-					TypeDefinition td = (obj as TypeDefinition);
-					if (td != null) {
-						objectLabel.Text = td.ToString ();
-					} else {
-						MethodDefinition md = (obj as MethodDefinition);
-						if (md != null)
-							objectLabel.Text = md.ToString ();
-					}
-				}
-			}
+			AddinScrolledWindow asw = (notebook.CurrentPageWidget as AddinScrolledWindow);
+			if (asw != null)
+				asw.Refresh ();
 		}
 
 		// Help Menu

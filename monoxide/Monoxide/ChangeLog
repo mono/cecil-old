@@ -1,3 +1,9 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>  
+
+	* MainWindow.cs: Memorize last folder used to load assemblies. Fix
+	right-click on the treeview (to always show the right popup).
+	Implement new refresh mechanism. 
+
 2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MainWindow.cs: Set page/focus on the newly created plugin.
