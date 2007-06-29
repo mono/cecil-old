@@ -1,0 +1,4 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>  
+
+	* AddinScrolledWindow.cs: New class to add a refresh method/event to
+	addin (using a ScrolledWindow).
