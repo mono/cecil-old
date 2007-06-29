@@ -1,3 +1,7 @@
+2007-06-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* CallerAnalysisVisualizer.cs: Fix graph involving icalls. 
+
 2007-06-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* CallerAnalysisVisualizer.cs: Add color cue for [SecurityCritical] 

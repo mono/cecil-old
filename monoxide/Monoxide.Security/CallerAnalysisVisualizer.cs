@@ -429,7 +429,7 @@ namespace Monoxide.Security {
 //					dot.AppendFormat ("\t\t\"{0}\" [shape=box,peripheries=2];{1}", icall, Environment.NewLine);
 //					noncluster.AppendFormat ("\t\"{0}\" -> \"runtime\" [label=\"icall\"{1}];{2}", icall, Helper.GetSecurity (method, null), Environment.NewLine);
 					Edge edge = new Edge (icall, "runtime");
-					edge.ToLabel = "icall" + Helper.GetSecurity (method, null);
+					edge.Attributes ["label"] = "icall" + Helper.GetSecurity (method, null);
 					dot.Edges.Add (edge);
 				}
 			}
