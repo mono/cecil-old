@@ -57,8 +57,6 @@ namespace Monoxide {
         
         private Gtk.ScrolledWindow scrolledwindow2;
         
-        private Gtk.Image image;
-        
         private Gtk.Statusbar statusbar1;
         
         protected virtual void Build() {
@@ -182,34 +180,25 @@ namespace Monoxide {
             this.scrolledwindow2.VscrollbarPolicy = ((Gtk.PolicyType)(1));
             this.scrolledwindow2.HscrollbarPolicy = ((Gtk.PolicyType)(1));
             this.scrolledwindow2.ShadowType = ((Gtk.ShadowType)(1));
-            // Container child scrolledwindow2.Gtk.Container+ContainerChild
-            Gtk.Viewport w9 = new Gtk.Viewport();
-            w9.Name = "GtkViewport";
-            w9.ShadowType = ((Gtk.ShadowType)(0));
-            // Container child GtkViewport.Gtk.Container+ContainerChild
-            this.image = new Gtk.Image();
-            this.image.Name = "image";
-            w9.Add(this.image);
-            this.scrolledwindow2.Add(w9);
             this.notebook.Add(this.scrolledwindow2);
-            Gtk.Notebook.NotebookChild w12 = ((Gtk.Notebook.NotebookChild)(this.notebook[this.scrolledwindow2]));
-            w12.TabExpand = false;
+            Gtk.Notebook.NotebookChild w9 = ((Gtk.Notebook.NotebookChild)(this.notebook[this.scrolledwindow2]));
+            w9.TabExpand = false;
             this.vbox1.Add(this.notebook);
-            Gtk.Box.BoxChild w13 = ((Gtk.Box.BoxChild)(this.vbox1[this.notebook]));
-            w13.Position = 1;
+            Gtk.Box.BoxChild w10 = ((Gtk.Box.BoxChild)(this.vbox1[this.notebook]));
+            w10.Position = 1;
             this.hpaned1.Add(this.vbox1);
             this.vbox2.Add(this.hpaned1);
-            Gtk.Box.BoxChild w15 = ((Gtk.Box.BoxChild)(this.vbox2[this.hpaned1]));
-            w15.Position = 2;
+            Gtk.Box.BoxChild w12 = ((Gtk.Box.BoxChild)(this.vbox2[this.hpaned1]));
+            w12.Position = 2;
             // Container child vbox2.Gtk.Box+BoxChild
             this.statusbar1 = new Gtk.Statusbar();
             this.statusbar1.Name = "statusbar1";
             this.statusbar1.Spacing = 6;
             this.vbox2.Add(this.statusbar1);
-            Gtk.Box.BoxChild w16 = ((Gtk.Box.BoxChild)(this.vbox2[this.statusbar1]));
-            w16.Position = 3;
-            w16.Expand = false;
-            w16.Fill = false;
+            Gtk.Box.BoxChild w13 = ((Gtk.Box.BoxChild)(this.vbox2[this.statusbar1]));
+            w13.Position = 3;
+            w13.Expand = false;
+            w13.Fill = false;
             this.Add(this.vbox2);
             if ((this.Child != null)) {
                 this.Child.ShowAll();
