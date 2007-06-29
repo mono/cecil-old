@@ -66,6 +66,13 @@
         <property name="StockId">gtk-about</property>
         <signal name="Activated" handler="OnAboutActivated" />
       </action>
+      <action id="Save">
+        <property name="Type">Action</property>
+        <property name="Label" translatable="yes">_Save...</property>
+        <property name="ShortLabel" translatable="yes">_Save...</property>
+        <property name="StockId">gtk-save</property>
+        <signal name="Activated" handler="OnSaveActivated" />
+      </action>
     </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">monoXide 0.2</property>
@@ -80,6 +87,7 @@
             <node name="menubar1" type="Menubar">
               <node type="Menu" action="File">
                 <node type="Menuitem" action="Open" />
+                <node type="Menuitem" action="Save" />
                 <node type="Separator" />
                 <node type="Menuitem" action="Quit" />
               </node>
@@ -157,7 +165,12 @@
                     <property name="MemberName" />
                     <property name="CanFocus">True</property>
                     <child>
-                      <placeholder />
+                      <widget class="Gtk.TextView" id="textview">
+                        <property name="MemberName" />
+                        <property name="CanFocus">True</property>
+                        <property name="Editable">False</property>
+                        <property name="Text" translatable="yes" />
+                      </widget>
                     </child>
                     <child>
                       <widget class="Gtk.Label" id="objectLabel">

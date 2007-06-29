@@ -31,6 +31,8 @@ namespace Monoxide {
         
         private Gtk.Action About;
         
+        private Gtk.Action Save;
+        
         private Gtk.VBox vbox2;
         
         private Gtk.MenuBar menubar1;
@@ -46,6 +48,8 @@ namespace Monoxide {
         private Gtk.VBox vbox1;
         
         private Gtk.Expander objectExpander;
+        
+        private Gtk.TextView textview;
         
         private Gtk.Label objectLabel;
         
@@ -88,6 +92,9 @@ namespace Monoxide {
             this.About = new Gtk.Action("About", Mono.Unix.Catalog.GetString("_About..."), null, "gtk-about");
             this.About.ShortLabel = Mono.Unix.Catalog.GetString("_About...");
             w2.Add(this.About, null);
+            this.Save = new Gtk.Action("Save", Mono.Unix.Catalog.GetString("_Save..."), null, "gtk-save");
+            this.Save.ShortLabel = Mono.Unix.Catalog.GetString("_Save...");
+            w2.Add(this.Save, null);
             w1.InsertActionGroup(w2, 0);
             this.AddAccelGroup(w1.AccelGroup);
             this.Name = "Monoxide.MainWindow";
@@ -98,7 +105,7 @@ namespace Monoxide {
             this.vbox2.Name = "vbox2";
             this.vbox2.Spacing = 6;
             // Container child vbox2.Gtk.Box+BoxChild
-            w1.AddUiFromString("<ui><menubar name='menubar1'><menu action='File'><menuitem action='Open'/><separator/><menuitem action='Quit'/></menu><menu action='View'><menuitem action='refresh'/></menu><menu action='Tools'><menuitem action='AddinManagerAction'/><separator/></menu><menu action='Help'><menuitem action='About'/></menu></menubar></ui>");
+            w1.AddUiFromString("<ui><menubar name='menubar1'><menu action='File'><menuitem action='Open'/><menuitem action='Save'/><separator/><menuitem action='Quit'/></menu><menu action='View'><menuitem action='refresh'/></menu><menu action='Tools'><menuitem action='AddinManagerAction'/><separator/></menu><menu action='Help'><menuitem action='About'/></menu></menubar></ui>");
             this.menubar1 = ((Gtk.MenuBar)(w1.GetWidget("/menubar1")));
             this.menubar1.Name = "menubar1";
             this.vbox2.Add(this.menubar1);
@@ -146,16 +153,22 @@ namespace Monoxide {
             this.objectExpander = new Gtk.Expander(null);
             this.objectExpander.CanFocus = true;
             this.objectExpander.Name = "objectExpander";
+            // Container child objectExpander.Gtk.Container+ContainerChild
+            this.textview = new Gtk.TextView();
+            this.textview.CanFocus = true;
+            this.textview.Name = "textview";
+            this.textview.Editable = false;
+            this.objectExpander.Add(this.textview);
             this.objectLabel = new Gtk.Label();
             this.objectLabel.Name = "objectLabel";
             this.objectLabel.LabelProp = Mono.Unix.Catalog.GetString("<empty>");
             this.objectLabel.UseUnderline = true;
             this.objectExpander.LabelWidget = this.objectLabel;
             this.vbox1.Add(this.objectExpander);
-            Gtk.Box.BoxChild w7 = ((Gtk.Box.BoxChild)(this.vbox1[this.objectExpander]));
-            w7.Position = 0;
-            w7.Expand = false;
-            w7.Fill = false;
+            Gtk.Box.BoxChild w8 = ((Gtk.Box.BoxChild)(this.vbox1[this.objectExpander]));
+            w8.Position = 0;
+            w8.Expand = false;
+            w8.Fill = false;
             // Container child vbox1.Gtk.Box+BoxChild
             this.notebook = new Gtk.Notebook();
             this.notebook.CanFocus = true;
@@ -170,33 +183,33 @@ namespace Monoxide {
             this.scrolledwindow2.HscrollbarPolicy = ((Gtk.PolicyType)(1));
             this.scrolledwindow2.ShadowType = ((Gtk.ShadowType)(1));
             // Container child scrolledwindow2.Gtk.Container+ContainerChild
-            Gtk.Viewport w8 = new Gtk.Viewport();
-            w8.Name = "GtkViewport";
-            w8.ShadowType = ((Gtk.ShadowType)(0));
+            Gtk.Viewport w9 = new Gtk.Viewport();
+            w9.Name = "GtkViewport";
+            w9.ShadowType = ((Gtk.ShadowType)(0));
             // Container child GtkViewport.Gtk.Container+ContainerChild
             this.image = new Gtk.Image();
             this.image.Name = "image";
-            w8.Add(this.image);
-            this.scrolledwindow2.Add(w8);
+            w9.Add(this.image);
+            this.scrolledwindow2.Add(w9);
             this.notebook.Add(this.scrolledwindow2);
-            Gtk.Notebook.NotebookChild w11 = ((Gtk.Notebook.NotebookChild)(this.notebook[this.scrolledwindow2]));
-            w11.TabExpand = false;
+            Gtk.Notebook.NotebookChild w12 = ((Gtk.Notebook.NotebookChild)(this.notebook[this.scrolledwindow2]));
+            w12.TabExpand = false;
             this.vbox1.Add(this.notebook);
-            Gtk.Box.BoxChild w12 = ((Gtk.Box.BoxChild)(this.vbox1[this.notebook]));
-            w12.Position = 1;
+            Gtk.Box.BoxChild w13 = ((Gtk.Box.BoxChild)(this.vbox1[this.notebook]));
+            w13.Position = 1;
             this.hpaned1.Add(this.vbox1);
             this.vbox2.Add(this.hpaned1);
-            Gtk.Box.BoxChild w14 = ((Gtk.Box.BoxChild)(this.vbox2[this.hpaned1]));
-            w14.Position = 2;
+            Gtk.Box.BoxChild w15 = ((Gtk.Box.BoxChild)(this.vbox2[this.hpaned1]));
+            w15.Position = 2;
             // Container child vbox2.Gtk.Box+BoxChild
             this.statusbar1 = new Gtk.Statusbar();
             this.statusbar1.Name = "statusbar1";
             this.statusbar1.Spacing = 6;
             this.vbox2.Add(this.statusbar1);
-            Gtk.Box.BoxChild w15 = ((Gtk.Box.BoxChild)(this.vbox2[this.statusbar1]));
-            w15.Position = 3;
-            w15.Expand = false;
-            w15.Fill = false;
+            Gtk.Box.BoxChild w16 = ((Gtk.Box.BoxChild)(this.vbox2[this.statusbar1]));
+            w16.Position = 3;
+            w16.Expand = false;
+            w16.Fill = false;
             this.Add(this.vbox2);
             if ((this.Child != null)) {
                 this.Child.ShowAll();
@@ -209,6 +222,7 @@ namespace Monoxide {
             this.AddinManagerAction.Activated += new System.EventHandler(this.OnAddinManagerActivated);
             this.Open.Activated += new System.EventHandler(this.OnOpenActivated);
             this.About.Activated += new System.EventHandler(this.OnAboutActivated);
+            this.Save.Activated += new System.EventHandler(this.OnSaveActivated);
             this.treeview.ButtonPressEvent += new Gtk.ButtonPressEventHandler(this.OnTreeviewButtonPressEvent);
         }
     }

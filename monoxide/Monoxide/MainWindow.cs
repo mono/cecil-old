@@ -50,7 +50,12 @@ namespace Monoxide {
 		private TreeIter tree_cursor;
 
 		private string current_directory;
+		private FileFilter dotnet_filter;
+		private FileFilter list_filter;
+		private FileFilter all_filter;
+		
 		private List<AssemblyDefinition> assemblies;
+		private List<string> locations;
 		
 		private Menu popup_assemblies;
 		private Menu popup_types;
@@ -93,11 +98,27 @@ namespace Monoxide {
 			treeview.Selection.Changed += OnSelectionChanged;
 			OnSelectionChanged (null, EventArgs.Empty);
 			
-			if (args.Length > 0) {
-				foreach (string aname in args) {
-					LoadAssembly (aname);
-				}
-			}
+			if (args.Length > 0)
+				Load (args);
+		}
+		
+		private void BuildFilters ()
+		{
+			if (dotnet_filter != null)
+				return;
+				
+			dotnet_filter = new FileFilter ();
+			dotnet_filter.Name = ".NET assemblies (*.exe, *.dll)";
+			dotnet_filter.AddPattern ("*.exe");
+			dotnet_filter.AddPattern ("*.dll");
+
+			list_filter = new FileFilter ();
+			list_filter.Name = "Assembly List (*.lst)";
+			list_filter.AddPattern ("*.lst");
+
+			all_filter = new FileFilter ();
+			all_filter.Name = "All (*.*)";
+			all_filter.AddPattern ("*.*");
 		}
 		
 		private object GetSelectedObject ()
@@ -110,6 +131,27 @@ namespace Monoxide {
 				return null;
 		}
 
+		private void OnAssemblySelection (AssemblyDefinition ad)
+		{
+			objectLabel.Text = ad.Name.FullName;
+			// very useful for debugging
+			textview.Buffer.Text = String.Empty;
+		}
+
+		private void OnTypeSelection (TypeDefinition td)
+		{
+			objectLabel.Text = td.ToString ();
+			// very useful for debugging
+			textview.Buffer.Text = String.Empty;
+		}
+
+		private void OnMethodSelection (MethodDefinition md)
+		{
+			objectLabel.Text = md.ToString ();
+			// very useful for debugging
+			textview.Buffer.Text = String.Empty;
+		}
+		
 		private void OnSelectionChanged (object o, EventArgs args)
 		{
 			TreeIter iter;
@@ -119,15 +161,15 @@ namespace Monoxide {
 				
 				AssemblyDefinition ad = (obj as AssemblyDefinition);
 				if (ad != null) {
-					objectLabel.Text = ad.Name.FullName;
+					OnAssemblySelection (ad);
 				} else {
 					TypeDefinition td = (obj as TypeDefinition);
 					if (td != null) {
-						objectLabel.Text = td.ToString ();
+						OnTypeSelection (td);
 					} else {
 						MethodDefinition md = (obj as MethodDefinition);
 						if (md != null)
-							objectLabel.Text = md.ToString ();
+							OnMethodSelection (md);
 					}
 				}
 			}
@@ -142,6 +184,8 @@ namespace Monoxide {
 		{
 			if (assemblies == null)
 				assemblies = new List<AssemblyDefinition> ();
+			if (locations == null)
+				locations = new List<string> ();
 
 			try {
 				AssemblyDefinition ad = AssemblyFactory.GetAssembly (filename);
@@ -153,12 +197,49 @@ namespace Monoxide {
 
 				// add assembly to the treeview
 				PopulateStore (ad);
+				
+				locations.Add (filename);
 			}
 			catch (Exception e) {
 				Console.WriteLine (e);
 			}
 		}
+		
+		private void LoadAssemblyList (string listname)
+		{
+			using (StreamReader sr = new StreamReader (listname)) {
+				while (!sr.EndOfStream) {
+					string filename = sr.ReadLine ();
+					if (filename.Length > 0)
+						LoadAssembly (filename);
+				}
+			}
+		}
 
+		private void Load (string[] filenames)
+		{
+			foreach (string filename in filenames) {
+				switch (System.IO.Path.GetExtension (filename).ToLower ()) {
+				case ".lst":
+					LoadAssemblyList (filename);
+					break;
+				default:
+					LoadAssembly (filename);
+					break;
+				}
+			}
+		}
+
+		private void SaveAssemblyList (string listname)
+		{
+			using (StreamWriter sw = new StreamWriter (listname)) {
+				if (locations != null) {
+					foreach (string filename in locations)
+						sw.WriteLine (filename);
+				}
+			}
+		}
+		
 		private void PopulateStore (AssemblyDefinition assembly) 
 		{
 			tree_cursor = tree_store.AppendValues (assembly.Name.FullName, assembly);
@@ -229,6 +310,7 @@ namespace Monoxide {
 		
 		protected virtual void OnOpenActivated (object sender, System.EventArgs e)
 		{
+			BuildFilters ();
 			using (FileChooserDialog fcd = new FileChooserDialog ("Open Assembly...", this, FileChooserAction.Open, 
 				"Cancel", ResponseType.Cancel, "Open", ResponseType.Accept)) {
 				
@@ -236,12 +318,32 @@ namespace Monoxide {
 					fcd.SetCurrentFolder (current_directory);
 					
 				fcd.SelectMultiple = true;
+				fcd.AddFilter (dotnet_filter);
+				fcd.AddFilter (list_filter);
+				fcd.AddFilter (all_filter);
 				
 				bool ok = (fcd.Run () == (int) ResponseType.Accept);
 				fcd.Hide ();
 				if (ok) {
-					foreach (string aname in fcd.Filenames)
-						LoadAssembly (aname);
+					Load (fcd.Filenames);
+					
+					current_directory = fcd.CurrentFolder;
+				}
+			}
+		}
+
+		protected virtual void OnSaveActivated (object sender, System.EventArgs e)
+		{
+			using (FileChooserDialog fcd = new FileChooserDialog ("Save Assembly List...", this, FileChooserAction.Save, 
+				"Cancel", ResponseType.Cancel, "Save", ResponseType.Accept)) {
+				
+				if (current_directory != null)
+					fcd.SetCurrentFolder (current_directory);
+					
+				bool ok = (fcd.Run () == (int) ResponseType.Accept);
+				fcd.Hide ();
+				if (ok) {
+					SaveAssemblyList (fcd.Filename);
 					
 					current_directory = fcd.CurrentFolder;
 				}

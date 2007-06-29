@@ -1,3 +1,8 @@
+2007-06-29  Sebastien Pouliot  <sebastien@ximian.com>  
+
+	* MainWindow.cs: Re-introduce assembly-list files (as I'm too lazy
+	to live without them).
+
 2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>  
 
 	* MainWindow.cs: Memorize last folder used to load assemblies. Fix
