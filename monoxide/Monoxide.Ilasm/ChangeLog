@@ -1,3 +1,9 @@
+2007-06-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* IlasmGraphVisualizer.cs: Add labels when a call is made to a method 
+	(or it's type, module or assembly) marked with [SecurityCritical] or 
+	[SecuritySafeCritical] attributes.
+
 2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* IlasmSourceVisualizer.cs, IlasmGraphVisualizer.cs: Use of generics

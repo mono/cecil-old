@@ -124,20 +124,26 @@ namespace Monoxide.Ilasm {
 				}
 
 				// build dot for each instructions
-				for (int j = 0; j < instructions.Count; j++) {
-					IlInstruction i = instructions[j];
-
+				
+				// first add the nodes
+				foreach (IlInstruction i in instructions) {
 					Node n = i.GetNode (true);
 					dot.Nodes.Add (n);
+				}
+				// then add the edges
+				for (int j = 0; j < instructions.Count; j++) {
+					IlInstruction i = instructions[j];
+					Node n = i.GetNode (false);
+
 					if (i.Calls != null) {
 						foreach (string callee in i.Calls) {
 							IlInstruction target = FindCallee (callee, instructions);
 							Node t = target.GetNode (false);
 							Edge e = new Edge (n, t);
 
-							if (target.HasSecurity ()) {
-								e.Attributes["label"] = target.GetSecurity ();
-							}
+							string label = target.Label;
+							if (label.Length > 0)
+								e.Attributes["label"] = label;
 
 							dot.Edges.Add (e);
 						}
@@ -147,6 +153,9 @@ namespace Monoxide.Ilasm {
 					if ((j < instructions.Count - 1) && !i.IsUnconditionalBranch ()) {
 						IlInstruction next = (IlInstruction)instructions[j + 1];
 						Edge e = new Edge (n, next.GetNode (false));
+						string label = next.Label;
+						if (label.Length > 0)
+							e.Attributes["label"] = label;
 						dot.Edges.Add (e);
 					}
 				}
@@ -169,6 +178,7 @@ namespace Monoxide.Ilasm {
 		private string name;
 		private List<string> calls;
 		private Instruction instr;
+		private string label;
 
 		public IlInstruction (Instruction instr)
 		{
@@ -187,6 +197,15 @@ namespace Monoxide.Ilasm {
 		public List<string> Calls {
 			get { return calls; }
 			set { calls = value; }
+		}
+		
+		public string Label {
+			get {
+				if (label == null)
+					return String.Empty;
+				return label;
+			}
+			set { label = value; }
 		}
 
 		public Node GetNode (bool details)
@@ -219,7 +238,7 @@ namespace Monoxide.Ilasm {
 					n.Attributes["peripheries"] = "2";
 				}
 
-				// red background for security runtime methods
+				// CAS checks - red background for security runtime methods
 				switch (method.DeclaringType.FullName) {
 				case "System.Security.SecurityManager":
 				case "System.Security.CodeAccessPermission":
@@ -228,22 +247,32 @@ namespace Monoxide.Ilasm {
 					n.Attributes["fontcolor"] = "white";
 					break;
 				}
+				if (method.SecurityDeclarations.Count > 0) {
+					AddLabel ("\"HasSecurity\"");
+				}
+				
+				// SL checks
+				if (IsCritical (method)) {
+					n.Attributes["style"] = "filled";
+					n.Attributes["fillcolor"] = "red";
+					n.Attributes["fontcolor"] = "white";
+					AddLabel ("\"[SecurityCritical]\"");
+				} else if (IsSafeCritical (method)) {
+					n.Attributes["style"] = "filled";
+					n.Attributes["fillcolor"] = "orange";
+					n.Attributes["fontcolor"] = "white";
+					AddLabel ("\"[SecuritySafeCritical]\"");
+				}
 			}
 			return n;
 		}
 
-		public bool HasSecurity ()
+		private void AddLabel (string s)
 		{
-			MethodDefinition method = (instr.Operand as MethodDefinition);
-			if (method == null)
-				return false;
-			return (method.SecurityDeclarations.Count > 0);
-		}
-
-		public string GetSecurity ()
-		{
-			// TODO
-			return "*** here ***";
+			if (label == null)
+				label = s;
+			else
+				label += "\n" + s;
 		}
 
 		public bool IsUnconditionalBranch ()
@@ -257,6 +286,38 @@ namespace Monoxide.Ilasm {
 			default:
 				return false;
 			}
+		}
+		
+		private bool CheckForAttribute (string attrName, CustomAttributeCollection cac)
+		{
+			foreach (CustomAttribute ca in cac) {
+				if (ca.Constructor.DeclaringType.FullName == attrName)
+					return true;
+			}
+			return false;
+		}
+
+		private bool CheckForAttribute (string attrName, MethodDefinition md)
+		{
+			if (CheckForAttribute (attrName, md.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.Module.CustomAttributes))
+				return true;
+			if (CheckForAttribute (attrName, md.DeclaringType.Module.Assembly.CustomAttributes))
+				return true;
+			return false;
+		}
+		
+		public bool IsCritical (MethodDefinition md)
+		{
+			return CheckForAttribute ("System.Security.SecurityCriticalAttribute", md);
+		}
+
+		public bool IsSafeCritical (MethodDefinition md)
+		{
+			return CheckForAttribute ("System.Security.SecuritySafeCriticalAttribute", md);
 		}
 	}
 }
