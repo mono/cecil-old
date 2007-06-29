@@ -1,0 +1,7 @@
+2007-06-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Addins.cs: Renamed from IPlugIn.cs and converted to Mono.Addins
+
+2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* IPlugIn.cs: New. Interfaces for the plugins.
