@@ -32,6 +32,7 @@ using System.Text;
 
 using Mono.Addins;
 using Mono.Cecil;
+using Monoxide.Framework;
 using Monoxide.Framework.Addins;
 using Monoxide.Framework.Dot;
 
@@ -46,6 +47,9 @@ namespace Monoxide.Metadata {
 		private Dictionary<string,List<AssemblyNameReference>> clusters = new Dictionary<string,List<AssemblyNameReference>> ();
 		private List<string> partial_trust_callers = new List<string> ();
 		private List<string> trusted_callers = new List<string> ();
+		
+		private AssemblyDefinition assembly;
+		private Image image;
 
 		public string Name {
 			get { return "Assembly Dependencies"; }
@@ -60,14 +64,25 @@ namespace Monoxide.Metadata {
 
 		public Widget GetWidget (AssemblyDefinition assembly)
 		{
+			this.assembly = assembly;
 			Digraph digraph = GetDotData (assembly);
 
-			Image image = new Image (DotHelper.BuildDotImage (digraph));
+			image = new Image (DotHelper.BuildDotImage (digraph));
 
-			ScrolledWindow sw = new ScrolledWindow ();
+			AddinScrolledWindow sw = new AddinScrolledWindow ();
 			sw.AddWithViewport (image);
 			sw.ShowAll ();
+			sw.OnRefresh += delegate  {
+				Console.WriteLine ("***REFRESH***");
+				Refresh ();
+			};
 			return sw;
+		}
+
+		public void Refresh ()
+		{
+			Digraph digraph = GetDotData (assembly);
+			image.FromFile = DotHelper.BuildDotImage (digraph);
 		}
 
 		AssemblyDefinition GetAssemblyFromReference (AssemblyNameReference assemblyName)

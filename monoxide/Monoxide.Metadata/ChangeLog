@@ -1,3 +1,9 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AssemblyDependenciesVisualizer.cs: Implement refresh, i.e. if some 
+	assemblies are loaded after the original graph it will be possible to
+	refresh it (menu/toolbar) with the new available information.
+
 2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyDependenciesVisualizer.cs, DeclarativeSecurityVisualizer.cs: 
