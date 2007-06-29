@@ -1,3 +1,8 @@
+2007-06-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Framework/*: New. Helper classes for addins.
+	* Monoxide.Plugins.mdp: Updated.
+
 2006-10-17  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyInfo.cs: New. Assembly information.
