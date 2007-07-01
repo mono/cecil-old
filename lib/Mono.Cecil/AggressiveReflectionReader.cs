@@ -314,6 +314,9 @@ namespace Mono.Cecil {
 				} else
 					cattr = BuildCustomAttribute (ctor, ca);
 
+				if (caRow.Parent.RID == 0)
+					continue;
+
 				ICustomAttributeProvider owner = null;
 				switch (caRow.Parent.TokenType) {
 				case TokenType.Assembly :
