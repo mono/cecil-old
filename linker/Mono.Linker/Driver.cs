@@ -141,7 +141,17 @@ namespace Mono.Linker {
 				return new string [] {param};
 
 			string file = param.Substring (1);
-			return File.ReadAllLines (file);
+			return ReadLines (file);
+		}
+
+		static string [] ReadLines (string file)
+		{
+			ArrayList lines = new ArrayList ();
+			using (StreamReader reader = new StreamReader (file)) {
+				while (!reader.EndOfStream)
+					lines.Add (reader.ReadLine ());
+			}
+			return (string []) lines.ToArray ();
 		}
 
 		static I18nAssemblies ParseI18n (string str)
