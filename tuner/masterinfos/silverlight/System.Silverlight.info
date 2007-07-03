@@ -1,0 +1,1728 @@
+<?xml version="1.0"?>
+<assemblies>
+  <assembly name="System.SilverLight" version="1.0.0.0">
+    <attributes>
+      <attribute name="System.Runtime.CompilerServices.CompilationRelaxationsAttribute" />
+      <attribute name="System.Runtime.InteropServices.ComVisibleAttribute" />
+      <attribute name="System.Runtime.CompilerServices.RuntimeCompatibilityAttribute">
+        <properties>
+          <property name="WrapNonExceptionThrows" value="True" />
+        </properties>
+      </attribute>
+      <attribute name="System.Reflection.AssemblyTrademarkAttribute" />
+      <attribute name="System.Reflection.AssemblyCopyrightAttribute" />
+      <attribute name="System.Diagnostics.DebuggableAttribute" />
+      <attribute name="System.Reflection.AssemblyFileVersionAttribute" />
+      <attribute name="System.CLSCompliantAttribute" />
+      <attribute name="System.Runtime.CompilerServices.InternalsVisibleToAttribute" />
+      <attribute name="System.Reflection.AssemblyProductAttribute" />
+      <attribute name="System.Reflection.AssemblyCompanyAttribute" />
+      <attribute name="System.Reflection.AssemblyConfigurationAttribute" />
+      <attribute name="System.Reflection.AssemblyDescriptionAttribute" />
+      <attribute name="System.Reflection.AssemblyTitleAttribute" />
+    </attributes>
+    <namespaces>
+      <namespace name="System.Windows">
+        <classes>
+          <class name="ApplicationUnhandledExceptionEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Exception, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="ex" position="0" attrib="0" type="System.Exception" />
+                  <parameter name="handled" position="1" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="ExceptionObject" attrib="0" ptype="System.Exception" params="">
+                <methods>
+                  <method name="get_ExceptionObject()" attrib="2182" returntype="System.Exception">
+                    <parameters />
+                  </method>
+                  <method name="set_ExceptionObject(System.Exception)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Exception" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Handled" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_Handled()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Handled(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="WebApplication" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Current" attrib="0" ptype="System.Windows.WebApplication" params="">
+                <methods>
+                  <method name="get_Current()" attrib="2198" static="true" returntype="System.Windows.WebApplication">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="StartupArguments" attrib="0" ptype="System.Collections.Generic.IDictionary`2&lt;System.String,System.String&gt;" params="">
+                <methods>
+                  <method name="get_StartupArguments()" attrib="2182" returntype="System.Collections.Generic.IDictionary`2&lt;System.String,System.String&gt;">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="ApplicationUnhandledException" attrib="0" eventtype="System.EventHandler`1&lt;System.Windows.ApplicationUnhandledExceptionEventArgs&gt;" />
+            </events>
+            <methods>
+              <method name="RegisterScriptableObject(System.String, System.Object)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="scriptKey" position="0" attrib="0" type="System.String" />
+                  <parameter name="instance" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Windows.Browser">
+        <classes>
+          <class name="BrowserInformation" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.String, System.String, System.String, System.String, System.Boolean)" attrib="6278">
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="version" position="1" attrib="0" type="System.String" />
+                  <parameter name="platform" position="2" attrib="0" type="System.String" />
+                  <parameter name="userAgent" position="3" attrib="0" type="System.String" />
+                  <parameter name="cookieEnabled" position="4" attrib="0" type="System.Boolean" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BrowserVersion" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_BrowserVersion()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CookiesEnabled" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_CookiesEnabled()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Name" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Platform" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Platform()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="UserAgent" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_UserAgent()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="BrowserRuntimeSettings" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <properties>
+              <property name="Culture" attrib="0" ptype="System.Globalization.CultureInfo" params="">
+                <methods>
+                  <method name="get_Culture()" attrib="2182" returntype="System.Globalization.CultureInfo">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableDebugging" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_EnableDebugging()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableHtmlAccess" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_EnableHtmlAccess()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableHttpNetworkAccess" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_EnableHttpNetworkAccess()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EnableScriptAccess" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_EnableScriptAccess()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="UICulture" attrib="0" ptype="System.Globalization.CultureInfo" params="">
+                <methods>
+                  <method name="get_UICulture()" attrib="2182" returntype="System.Globalization.CultureInfo">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="HtmlDocument" type="class" base="System.Windows.Browser.HtmlObject" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="DocumentElement" attrib="0" ptype="System.Windows.Browser.HtmlElement" params="">
+                <methods>
+                  <method name="get_DocumentElement()" attrib="2182" returntype="System.Windows.Browser.HtmlElement">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="CreateElement(System.String)" attrib="134" returntype="System.Windows.Browser.HtmlElement">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="tagName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetElementByID(System.String)" attrib="134" returntype="System.Windows.Browser.HtmlElement">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="id" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetElementsByTagName(System.String)" attrib="134" returntype="System.Windows.Browser.HtmlElementCollection">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="tagName" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="HtmlElement" type="class" base="System.Windows.Browser.HtmlObject" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Children" attrib="0" ptype="System.Windows.Browser.HtmlElementCollection" params="">
+                <methods>
+                  <method name="get_Children()" attrib="2182" returntype="System.Windows.Browser.HtmlElementCollection">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CssClass" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_CssClass()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_CssClass(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ID" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_ID()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_ID(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Parent" attrib="0" ptype="System.Windows.Browser.HtmlElement" params="">
+                <methods>
+                  <method name="get_Parent()" attrib="2182" returntype="System.Windows.Browser.HtmlElement">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="TagName" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_TagName()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="AppendChild(System.Windows.Browser.HtmlElement)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="System.Windows.Browser.HtmlElement" />
+                </parameters>
+              </method>
+              <method name="AppendChild(System.Windows.Browser.HtmlElement, System.Windows.Browser.HtmlElement)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="System.Windows.Browser.HtmlElement" />
+                  <parameter name="referenceElement" position="1" attrib="0" type="System.Windows.Browser.HtmlElement" />
+                </parameters>
+              </method>
+              <method name="Focus()" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="GetAttribute(System.String)" attrib="134" returntype="System.String">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="GetStyleAttribute(System.String)" attrib="134" returntype="System.String">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="RemoveAttribute(System.String)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="RemoveChild(System.Windows.Browser.HtmlElement)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="element" position="0" attrib="0" type="System.Windows.Browser.HtmlElement" />
+                </parameters>
+              </method>
+              <method name="RemoveStyleAttribute(System.String)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetAttribute(System.String, System.String)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetProperty(System.String, System.Object)" attrib="198" virtual="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="SetStyleAttribute(System.String, System.String)" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="HtmlElementCollection" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Reflection.DefaultMemberAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IDisposable" />
+              <interface name="System.Collections.Generic.IEnumerable`1&lt;System.Windows.Browser.HtmlElement&gt;" />
+              <interface name="System.Collections.IEnumerable" />
+            </interfaces>
+            <properties>
+              <property name="Count" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_Count()" attrib="2182" returntype="System.Int32">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Item" attrib="0" ptype="System.Windows.Browser.HtmlElement" params="System.Int32">
+                <methods>
+                  <method name="get_Item(System.Int32)" attrib="2182" returntype="System.Windows.Browser.HtmlElement">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="index" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="HtmlEventArgs" type="class" base="System.EventArgs" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Windows.Browser.HtmlElement, System.Int32, System.Int32, System.Int32, System.Int32, System.Boolean, System.Boolean, System.Boolean, System.Int32, System.Int32, System.Int32, System.String)" attrib="6278">
+                <parameters>
+                  <parameter name="sourceElement" position="0" attrib="0" type="System.Windows.Browser.HtmlElement" />
+                  <parameter name="clientX" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="clientY" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="offsetX" position="3" attrib="0" type="System.Int32" />
+                  <parameter name="offsetY" position="4" attrib="0" type="System.Int32" />
+                  <parameter name="altKey" position="5" attrib="0" type="System.Boolean" />
+                  <parameter name="ctrlKey" position="6" attrib="0" type="System.Boolean" />
+                  <parameter name="shiftKey" position="7" attrib="0" type="System.Boolean" />
+                  <parameter name="mouseButton" position="8" attrib="0" type="System.Int32" />
+                  <parameter name="keyCode" position="9" attrib="0" type="System.Int32" />
+                  <parameter name="charCode" position="10" attrib="0" type="System.Int32" />
+                  <parameter name="eventType" position="11" attrib="0" type="System.String" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="AltKey" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_AltKey()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CharCode" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_CharCode()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ClientX" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_ClientX()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ClientY" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_ClientY()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="CtrlKey" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_CtrlKey()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="EventType" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_EventType()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="KeyCode" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_KeyCode()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="MouseButton" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_MouseButton()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OffsetX" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_OffsetX()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="OffsetY" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_OffsetY()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="ShiftKey" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_ShiftKey()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SourceElement" attrib="0" ptype="System.Windows.Browser.HtmlElement" params="">
+                <methods>
+                  <method name="get_SourceElement()" attrib="2182" returntype="System.Windows.Browser.HtmlElement">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+          </class>
+          <class name="HtmlObject" type="class" base="System.Windows.Browser.ScriptableObject" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="AttachEvent(System.String, System.EventHandler`1[System.Windows.Browser.HtmlEventArgs])" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="eventName" position="0" attrib="0" type="System.String" />
+                  <parameter name="handler" position="1" attrib="0" type="System.EventHandler`1&lt;System.Windows.Browser.HtmlEventArgs&gt;" />
+                </parameters>
+              </method>
+              <method name="AttachEvent(System.String, System.EventHandler)" attrib="134" returntype="System.Boolean">
+                <parameters>
+                  <parameter name="eventName" position="0" attrib="0" type="System.String" />
+                  <parameter name="handler" position="1" attrib="0" type="System.EventHandler" />
+                </parameters>
+              </method>
+              <method name="DetachEvent(System.String, System.EventHandler`1[System.Windows.Browser.HtmlEventArgs])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="eventName" position="0" attrib="0" type="System.String" />
+                  <parameter name="handler" position="1" attrib="0" type="System.EventHandler`1&lt;System.Windows.Browser.HtmlEventArgs&gt;" />
+                </parameters>
+              </method>
+              <method name="DetachEvent(System.String, System.EventHandler)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="eventName" position="0" attrib="0" type="System.String" />
+                  <parameter name="handler" position="1" attrib="0" type="System.EventHandler" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="HtmlPage" type="class" base="System.Windows.Browser.HtmlObject" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="BrowserInformation" attrib="0" ptype="System.Windows.Browser.BrowserInformation" params="">
+                <methods>
+                  <method name="get_BrowserInformation()" attrib="2198" static="true" returntype="System.Windows.Browser.BrowserInformation">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Cookies" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Cookies()" attrib="2198" static="true" returntype="System.String">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                  <method name="set_Cookies(System.String)" attrib="2198" static="true" returntype="System.Void">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CurrentBookmark" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_CurrentBookmark()" attrib="2198" static="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_CurrentBookmark(System.String)" attrib="2198" static="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Document" attrib="0" ptype="System.Windows.Browser.HtmlDocument" params="">
+                <methods>
+                  <method name="get_Document()" attrib="2198" static="true" returntype="System.Windows.Browser.HtmlDocument">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="DocumentUri" attrib="0" ptype="System.Uri" params="">
+                <methods>
+                  <method name="get_DocumentUri()" attrib="2198" static="true" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="QueryString" attrib="0" ptype="System.Collections.Generic.IDictionary`2&lt;System.String,System.String&gt;" params="">
+                <methods>
+                  <method name="get_QueryString()" attrib="2198" static="true" returntype="System.Collections.Generic.IDictionary`2&lt;System.String,System.String&gt;">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Window" attrib="0" ptype="System.Windows.Browser.HtmlObject" params="">
+                <methods>
+                  <method name="get_Window()" attrib="2198" static="true" returntype="System.Windows.Browser.HtmlObject">
+                    <attributes>
+                      <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                    </attributes>
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Navigate(System.String, System.String, System.String)" attrib="150" static="true" returntype="System.Windows.Browser.ScriptableObject">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="navigateToUri" position="0" attrib="0" type="System.String" />
+                  <parameter name="target" position="1" attrib="0" type="System.String" />
+                  <parameter name="targetFeatures" position="2" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Navigate(System.String, System.String)" attrib="150" static="true" returntype="System.Windows.Browser.ScriptableObject">
+                <parameters>
+                  <parameter name="navigateToUri" position="0" attrib="0" type="System.String" />
+                  <parameter name="target" position="1" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Navigate(System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="navigateToUri" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="NavigateToBookmark(System.String)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="bookmark" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Submit(System.String)" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="formId" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="Submit()" attrib="150" static="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="HtmlTimer" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.ObsoleteAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Enabled" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_Enabled()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Enabled(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Interval" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_Interval()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Interval(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <events>
+              <event name="Tick" attrib="0" eventtype="System.EventHandler" />
+            </events>
+            <methods>
+              <method name="Dispose(System.Boolean)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="disposing" position="0" attrib="0" type="System.Boolean" />
+                </parameters>
+              </method>
+              <method name="OnTick(System.EventArgs)" attrib="452" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="e" position="0" attrib="0" type="System.EventArgs" />
+                </parameters>
+              </method>
+              <method name="Start()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="Stop()" attrib="134" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ToString()" attrib="198" virtual="true" returntype="System.String">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="HttpUtility" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="HtmlDecode(System.String, System.IO.TextWriter)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                  <parameter name="output" position="1" attrib="0" type="System.IO.TextWriter" />
+                </parameters>
+              </method>
+              <method name="HtmlDecode(System.String)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="HtmlEncode(System.String, System.IO.TextWriter)" attrib="150" static="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                  <parameter name="output" position="1" attrib="0" type="System.IO.TextWriter" />
+                </parameters>
+              </method>
+              <method name="HtmlEncode(System.String)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="s" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="UrlDecode(System.Byte[], System.Text.Encoding)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="UrlDecode(System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                  <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="UrlDecode(System.String)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="UrlDecode(System.Byte[], System.Int32, System.Int32, System.Text.Encoding)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                  <parameter name="e" position="3" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="UrlDecodeToBytes(System.String)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="UrlDecodeToBytes(System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="UrlDecodeToBytes(System.Byte[])" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="UrlDecodeToBytes(System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                  <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="UrlEncode(System.String)" attrib="150" static="true" returntype="System.String">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="UrlEncodeToBytes(System.String, System.Text.Encoding)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="str" position="0" attrib="0" type="System.String" />
+                  <parameter name="e" position="1" attrib="0" type="System.Text.Encoding" />
+                </parameters>
+              </method>
+              <method name="UrlEncodeToBytes(System.Byte[])" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                </parameters>
+              </method>
+              <method name="UrlEncodeToBytes(System.Byte[], System.Int32, System.Int32)" attrib="150" static="true" returntype="System.Byte[]">
+                <parameters>
+                  <parameter name="bytes" position="0" attrib="0" type="System.Byte[]" />
+                  <parameter name="offset" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="count" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ScriptableAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute">
+                <properties>
+                  <property name="AllowMultiple" value="False" />
+                  <property name="Inherited" value="True" />
+                </properties>
+              </attribute>
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="ScriptableObject" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="Dispose()" attrib="452" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="GetProperty(System.String)" attrib="134" returntype="T">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="SetProperty(System.String, System.Object)" attrib="454" virtual="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="name" position="0" attrib="0" type="System.String" />
+                  <parameter name="value" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Windows.Browser.Net">
+        <classes>
+          <class name="BrowserHttpWebRequest" type="class" base="System.Net.HttpWebRequest" charset="Ansi" layout="Auto">
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor(System.Uri)" attrib="6278">
+                <parameters>
+                  <parameter name="uri" position="0" attrib="0" type="System.Uri" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Accept" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Accept()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Accept(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Address" attrib="0" ptype="System.Uri" params="">
+                <methods>
+                  <method name="get_Address()" attrib="2246" virtual="true" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="AllowAutoRedirect" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_AllowAutoRedirect()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_AllowAutoRedirect(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="AllowWriteStreamBuffering" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_AllowWriteStreamBuffering()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_AllowWriteStreamBuffering(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="AutomaticDecompression" attrib="0" ptype="System.Net.DecompressionMethods" params="">
+                <methods>
+                  <method name="get_AutomaticDecompression()" attrib="2246" virtual="true" returntype="System.Net.DecompressionMethods">
+                    <parameters />
+                  </method>
+                  <method name="set_AutomaticDecompression(System.Net.DecompressionMethods)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Net.DecompressionMethods" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Connection" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Connection()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Connection(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ContentLength" attrib="0" ptype="System.Int64" params="">
+                <methods>
+                  <method name="get_ContentLength()" attrib="2246" virtual="true" returntype="System.Int64">
+                    <parameters />
+                  </method>
+                  <method name="set_ContentLength(System.Int64)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int64" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ContentType" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_ContentType()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_ContentType(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ContinueDelegate" attrib="0" ptype="System.Delegate" params="">
+                <methods>
+                  <method name="get_ContinueDelegate()" attrib="2182" returntype="System.Delegate">
+                    <parameters />
+                  </method>
+                  <method name="set_ContinueDelegate(System.Delegate)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Delegate" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="CookieContainer" attrib="0" ptype="System.Object" params="">
+                <methods>
+                  <method name="get_CookieContainer()" attrib="2182" returntype="System.Object">
+                    <parameters />
+                  </method>
+                  <method name="set_CookieContainer(System.Object)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Credentials" attrib="0" ptype="System.Object" params="">
+                <methods>
+                  <method name="get_Credentials()" attrib="2182" returntype="System.Object">
+                    <parameters />
+                  </method>
+                  <method name="set_Credentials(System.Object)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Object" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Expect" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Expect()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Expect(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="HaveResponse" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_HaveResponse()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Headers" attrib="0" ptype="System.Net.WebHeaderCollection" params="">
+                <methods>
+                  <method name="get_Headers()" attrib="2246" virtual="true" returntype="System.Net.WebHeaderCollection">
+                    <parameters />
+                  </method>
+                  <method name="set_Headers(System.Net.WebHeaderCollection)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Net.WebHeaderCollection" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="IfModifiedSince" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_IfModifiedSince()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_IfModifiedSince(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="KeepAlive" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_KeepAlive()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_KeepAlive(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="MediaType" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_MediaType()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_MediaType(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Method" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Method()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Method(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Pipelined" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_Pipelined()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_Pipelined(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="PreAuthenticate" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_PreAuthenticate()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_PreAuthenticate(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="ReadWriteTimeout" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_ReadWriteTimeout()" attrib="2246" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_ReadWriteTimeout(System.Int32)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Referer" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Referer()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Referer(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RequestUri" attrib="0" ptype="System.Uri" params="">
+                <methods>
+                  <method name="get_RequestUri()" attrib="2246" virtual="true" returntype="System.Uri">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SendChunked" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_SendChunked()" attrib="2246" virtual="true" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_SendChunked(System.Boolean)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Timeout" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_Timeout()" attrib="2246" virtual="true" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_Timeout(System.Int32)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="TransferEncoding" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_TransferEncoding()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_TransferEncoding(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="UserAgent" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_UserAgent()" attrib="2246" virtual="true" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_UserAgent(System.String)" attrib="2246" virtual="true" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Abort()" attrib="198" virtual="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="AddRange(System.String, System.Int32)" attrib="198" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="rangeSpecifier" position="0" attrib="0" type="System.String" />
+                  <parameter name="range" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="AddRange(System.String, System.Int32, System.Int32)" attrib="198" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="rangeSpecifier" position="0" attrib="0" type="System.String" />
+                  <parameter name="from" position="1" attrib="0" type="System.Int32" />
+                  <parameter name="to" position="2" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="AddRange(System.Int32, System.Int32)" attrib="198" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="from" position="0" attrib="0" type="System.Int32" />
+                  <parameter name="to" position="1" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="AddRange(System.Int32)" attrib="198" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="range" position="0" attrib="0" type="System.Int32" />
+                </parameters>
+              </method>
+              <method name="BeginGetRequestStream(System.AsyncCallback, System.Object)" attrib="198" virtual="true" returntype="System.IAsyncResult">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="BeginGetResponse(System.AsyncCallback, System.Object)" attrib="198" virtual="true" returntype="System.IAsyncResult">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="callback" position="0" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="state" position="1" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Close()" attrib="134" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="EndGetRequestStream(System.IAsyncResult)" attrib="198" virtual="true" returntype="System.IO.Stream">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="EndGetResponse(System.IAsyncResult)" attrib="198" virtual="true" returntype="System.Net.HttpWebResponse">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Finalize()" attrib="196" virtual="true" returntype="System.Void">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="GetRequestStream()" attrib="198" virtual="true" returntype="System.IO.Stream">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+              <method name="GetResponse()" attrib="198" virtual="true" returntype="System.Net.HttpWebResponse">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="SoapHttpClientProtocol" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="Url" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Url()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Url(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="BeginInvoke(System.String, System.Windows.Browser.Net.SoapHttpClientProtocol/ServiceParameter[], System.Type, System.AsyncCallback, System.Object)" attrib="132" returntype="System.IAsyncResult">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="methodName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Windows.Browser.Net.SoapHttpClientProtocol/ServiceParameter[]" />
+                  <parameter name="returnType" position="2" attrib="0" type="System.Type" />
+                  <parameter name="callback" position="3" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="asyncState" position="4" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="CancelAsync(System.Object)" attrib="132" returntype="System.Void">
+                <parameters>
+                  <parameter name="userState" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="132" returntype="System.Object[]">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="asyncResult" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.String, System.Windows.Browser.Net.SoapHttpClientProtocol/ServiceParameter[], System.Type)" attrib="132" returntype="System.Object[]">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters>
+                  <parameter name="methodName" position="0" attrib="0" type="System.String" />
+                  <parameter name="parameters" position="1" attrib="0" type="System.Windows.Browser.Net.SoapHttpClientProtocol/ServiceParameter[]" />
+                  <parameter name="returnType" position="2" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+            </methods>
+            <classes>
+              <class name="ServiceParameter" type="struct" base="System.ValueType" sealed="true" charset="Ansi" layout="Sequential">
+                <constructors>
+                  <constructor name=".ctor(System.String, System.Object)" attrib="6278">
+                    <parameters>
+                      <parameter name="name" position="0" attrib="0" type="System.String" />
+                      <parameter name="value" position="1" attrib="0" type="System.Object" />
+                    </parameters>
+                  </constructor>
+                </constructors>
+                <properties>
+                  <property name="Name" attrib="0" ptype="System.String" params="">
+                    <methods>
+                      <method name="get_Name()" attrib="2182" returntype="System.String">
+                        <parameters />
+                      </method>
+                    </methods>
+                  </property>
+                  <property name="Value" attrib="0" ptype="System.Object" params="">
+                    <methods>
+                      <method name="get_Value()" attrib="2182" returntype="System.Object">
+                        <parameters />
+                      </method>
+                    </methods>
+                  </property>
+                </properties>
+              </class>
+            </classes>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Windows.Browser.Serialization">
+        <classes>
+          <class name="JavaScriptConverter" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="SupportedTypes" attrib="0" ptype="System.Collections.Generic.IEnumerable`1&lt;System.Type&gt;" params="">
+                <methods>
+                  <method name="get_SupportedTypes()" attrib="3526" abstract="true" virtual="true" returntype="System.Collections.Generic.IEnumerable`1&lt;System.Type&gt;">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Deserialize(System.Collections.Generic.IDictionary`2[System.String,System.Object], System.Type, System.Windows.Browser.Serialization.JavaScriptSerializer)" attrib="1478" abstract="true" virtual="true" returntype="System.Object">
+                <parameters>
+                  <parameter name="dictionary" position="0" attrib="0" type="System.Collections.Generic.IDictionary`2&lt;System.String,System.Object&gt;" />
+                  <parameter name="type" position="1" attrib="0" type="System.Type" />
+                  <parameter name="serializer" position="2" attrib="0" type="System.Windows.Browser.Serialization.JavaScriptSerializer" />
+                </parameters>
+              </method>
+              <method name="Serialize(System.Object, System.Windows.Browser.Serialization.JavaScriptSerializer)" attrib="1478" abstract="true" virtual="true" returntype="System.Collections.Generic.IDictionary`2&lt;System.String,System.Object&gt;">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                  <parameter name="serializer" position="1" attrib="0" type="System.Windows.Browser.Serialization.JavaScriptSerializer" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="JavaScriptSerializer" type="class" base="System.Object" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Windows.Browser.Serialization.JavaScriptTypeResolver)" attrib="6278">
+                <parameters>
+                  <parameter name="resolver" position="0" attrib="0" type="System.Windows.Browser.Serialization.JavaScriptTypeResolver" />
+                </parameters>
+              </constructor>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="MaxJsonLength" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_MaxJsonLength()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_MaxJsonLength(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="RecursionLimit" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_RecursionLimit()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_RecursionLimit(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="ConvertToType(System.Object)" attrib="134" returntype="T">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="Deserialize(System.String)" attrib="134" returntype="T">
+                <parameters>
+                  <parameter name="input" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="DeserializeObject(System.String)" attrib="134" returntype="System.Object">
+                <parameters>
+                  <parameter name="input" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="RegisterConverters(System.Collections.Generic.IEnumerable`1[System.Windows.Browser.Serialization.JavaScriptConverter])" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="converters" position="0" attrib="0" type="System.Collections.Generic.IEnumerable`1&lt;System.Windows.Browser.Serialization.JavaScriptConverter&gt;" />
+                </parameters>
+              </method>
+              <method name="Serialize(System.Object, System.Text.StringBuilder)" attrib="134" returntype="System.Void">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                  <parameter name="output" position="1" attrib="0" type="System.Text.StringBuilder" />
+                </parameters>
+              </method>
+              <method name="Serialize(System.Object)" attrib="134" returntype="System.String">
+                <parameters>
+                  <parameter name="obj" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="JavaScriptTypeResolver" type="class" base="System.Object" abstract="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6276">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ResolveType(System.String)" attrib="1478" abstract="true" virtual="true" returntype="System.Type">
+                <parameters>
+                  <parameter name="id" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ResolveTypeId(System.Type)" attrib="1478" abstract="true" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+          <class name="ScriptIgnoreAttribute" type="class" base="System.Attribute" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.AttributeUsageAttribute" />
+            </attributes>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+          </class>
+          <class name="SimpleTypeResolver" type="class" base="System.Windows.Browser.Serialization.JavaScriptTypeResolver" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="ResolveType(System.String)" attrib="198" virtual="true" returntype="System.Type">
+                <parameters>
+                  <parameter name="id" position="0" attrib="0" type="System.String" />
+                </parameters>
+              </method>
+              <method name="ResolveTypeId(System.Type)" attrib="198" virtual="true" returntype="System.String">
+                <parameters>
+                  <parameter name="type" position="0" attrib="0" type="System.Type" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Windows.Controls">
+        <classes>
+          <class name="DialogResult" type="enum" base="System.Enum" sealed="true" serializable="true" charset="Ansi" layout="Auto">
+            <fields>
+              <field name="Abort" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="3" />
+              <field name="Cancel" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="2" />
+              <field name="Ignore" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="5" />
+              <field name="No" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="7" />
+              <field name="None" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="0" />
+              <field name="OK" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="1" />
+              <field name="Retry" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="4" />
+              <field name="Yes" attrib="32854" fieldtype="System.Windows.Controls.DialogResult" value="6" />
+            </fields>
+          </class>
+          <class name="FileDialogFileInfo" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+            </attributes>
+            <properties>
+              <property name="Name" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Name()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="OpenRead()" attrib="134" returntype="System.IO.Stream">
+                <parameters />
+              </method>
+              <method name="OpenText()" attrib="134" returntype="System.IO.StreamReader">
+                <parameters />
+              </method>
+            </methods>
+          </class>
+          <class name="OpenFileDialog" type="class" base="System.Object" sealed="true" charset="Ansi" layout="Auto">
+            <attributes>
+              <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+            </attributes>
+            <interfaces>
+              <interface name="System.IDisposable" />
+            </interfaces>
+            <constructors>
+              <constructor name=".ctor()" attrib="6278">
+                <parameters />
+              </constructor>
+            </constructors>
+            <properties>
+              <property name="EnableMultipleSelection" attrib="0" ptype="System.Boolean" params="">
+                <methods>
+                  <method name="get_EnableMultipleSelection()" attrib="2182" returntype="System.Boolean">
+                    <parameters />
+                  </method>
+                  <method name="set_EnableMultipleSelection(System.Boolean)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Boolean" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="Filter" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Filter()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Filter(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="FilterIndex" attrib="0" ptype="System.Int32" params="">
+                <methods>
+                  <method name="get_FilterIndex()" attrib="2182" returntype="System.Int32">
+                    <parameters />
+                  </method>
+                  <method name="set_FilterIndex(System.Int32)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.Int32" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+              <property name="SelectedFile" attrib="0" ptype="System.Windows.Controls.FileDialogFileInfo" params="">
+                <methods>
+                  <method name="get_SelectedFile()" attrib="2182" returntype="System.Windows.Controls.FileDialogFileInfo">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="SelectedFiles" attrib="0" ptype="System.Collections.Generic.IEnumerable`1&lt;System.Windows.Controls.FileDialogFileInfo&gt;" params="">
+                <methods>
+                  <method name="get_SelectedFiles()" attrib="2182" returntype="System.Collections.Generic.IEnumerable`1&lt;System.Windows.Controls.FileDialogFileInfo&gt;">
+                    <parameters />
+                  </method>
+                </methods>
+              </property>
+              <property name="Title" attrib="0" ptype="System.String" params="">
+                <methods>
+                  <method name="get_Title()" attrib="2182" returntype="System.String">
+                    <parameters />
+                  </method>
+                  <method name="set_Title(System.String)" attrib="2182" returntype="System.Void">
+                    <parameters>
+                      <parameter name="value" position="0" attrib="0" type="System.String" />
+                    </parameters>
+                  </method>
+                </methods>
+              </property>
+            </properties>
+            <methods>
+              <method name="Dispose()" attrib="486" virtual="true" returntype="System.Void">
+                <parameters />
+              </method>
+              <method name="ShowDialog()" attrib="134" returntype="System.Windows.Controls.DialogResult">
+                <attributes>
+                  <attribute name="System.Security.SecuritySafeCriticalAttribute" />
+                </attributes>
+                <parameters />
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+      <namespace name="System.Windows.Hosting">
+        <classes>
+          <class name="Callback" type="delegate" base="System.MulticastDelegate" sealed="true" charset="Ansi" layout="Auto">
+            <constructors>
+              <constructor name=".ctor(System.Object, System.IntPtr)" attrib="6278">
+                <parameters>
+                  <parameter name="object" position="0" attrib="0" type="System.Object" />
+                  <parameter name="method" position="1" attrib="0" type="System.IntPtr" />
+                </parameters>
+              </constructor>
+            </constructors>
+            <methods>
+              <method name="BeginInvoke(System.Object, System.AsyncCallback, System.Object)" attrib="454" virtual="true" returntype="System.IAsyncResult">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="System.Object" />
+                  <parameter name="callback" position="1" attrib="0" type="System.AsyncCallback" />
+                  <parameter name="object" position="2" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+              <method name="EndInvoke(System.IAsyncResult)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="result" position="0" attrib="0" type="System.IAsyncResult" />
+                </parameters>
+              </method>
+              <method name="Invoke(System.Object)" attrib="454" virtual="true" returntype="System.Void">
+                <parameters>
+                  <parameter name="context" position="0" attrib="0" type="System.Object" />
+                </parameters>
+              </method>
+            </methods>
+          </class>
+        </classes>
+      </namespace>
+    </namespaces>
+  </assembly>
+</assemblies>
