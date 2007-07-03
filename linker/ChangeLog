@@ -1,6 +1,9 @@
 2007-07-03  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Linker/Driver.cs:
+		Add support for @files
+
+	* Mono.Linker/Driver.cs:
 		Add a way to add search directories to the resolver.
 
 2007-06-18  Jb Evain  <jbevain@novell.com>

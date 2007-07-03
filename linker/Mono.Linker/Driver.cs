@@ -103,15 +103,18 @@ namespace Mono.Linker {
 					context.CoreAction = ParseCoreAction (GetParam (q));
 					break;
 				case 'x':
-					p.PrependStep (new ResolveFromXmlStep (new XPathDocument (GetParam (q))));
+					foreach (string file in GetFiles (GetParam (q)))
+						p.PrependStep (new ResolveFromXmlStep (new XPathDocument (file)));
 					resolver = true;
 					break;
 				case 'a':
-					p.PrependStep (new ResolveFromAssemblyStep (GetParam (q)));
+					foreach (string file in GetFiles (GetParam (q)))
+						p.PrependStep (new ResolveFromAssemblyStep (file));
 					resolver = true;
 					break;
 				case 'i':
-					p.PrependStep (new ResolveFromApiInfoStep (new XPathDocument (GetParam (q))));
+					foreach (string file in GetFiles (GetParam (q)))
+						p.PrependStep (new ResolveFromApiInfoStep (new XPathDocument (file)));
 					p.AddStepBefore (typeof (OutputStep), new AdjustVisibilityStep ());
 					resolver = true;
 					break;
@@ -130,6 +133,15 @@ namespace Mono.Linker {
 			p.AddStepAfter (typeof (LoadReferencesStep), new LoadI18nAssemblies (assemblies));
 
 			p.Process (context);
+		}
+
+		static string [] GetFiles (string param)
+		{
+			if (param.Length < 1 || param [0] != '@')
+				return new string [] {param};
+
+			string file = param.Substring (1);
+			return File.ReadAllLines (file);
 		}
 
 		static I18nAssemblies ParseI18n (string str)
