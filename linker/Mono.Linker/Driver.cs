@@ -148,8 +148,9 @@ namespace Mono.Linker {
 		{
 			ArrayList lines = new ArrayList ();
 			using (StreamReader reader = new StreamReader (file)) {
-				while (!reader.EndOfStream)
-					lines.Add (reader.ReadLine ());
+				string line;
+				while ((line = reader.ReadLine ()) != null)
+					lines.Add (line);
 			}
 			return (string []) lines.ToArray ();
 		}
