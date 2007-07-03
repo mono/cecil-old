@@ -1,3 +1,9 @@
+2007-07-03  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil/BaseAssemblyResolver.cs:
+		Expose a way to add default directories
+		where the assemblies are first looked for.
+
 2007-06-20  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil/IReferenceImporter.cs => IImporter.cs

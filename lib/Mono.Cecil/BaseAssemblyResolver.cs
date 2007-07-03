@@ -29,15 +29,40 @@
 namespace Mono.Cecil {
 
 	using System;
+	using System.Collections;
 	using System.IO;
 	using SR = System.Reflection;
 	using System.Text;
 
 	public abstract class BaseAssemblyResolver : IAssemblyResolver {
 
+		ArrayList m_directories;
+
+		public void AddSearchDirectory (string directory)
+		{
+			m_directories.Add (directory);
+		}
+
+		public void RemoveSearchDirectory (string directory)
+		{
+			m_directories.Remove (directory);
+		}
+
+		public string [] GetSearchDirectories ()
+		{
+			return (string []) m_directories.ToArray ();
+		}
+
 		public virtual AssemblyDefinition Resolve (string fullName)
 		{
 			return Resolve (AssemblyNameReference.Parse (fullName));
+		}
+
+		public BaseAssemblyResolver ()
+		{
+			m_directories = new ArrayList ();
+			m_directories.Add (".");
+			m_directories.Add ("bin");
 		}
 
 		public virtual AssemblyDefinition Resolve (AssemblyNameReference name)
@@ -46,12 +71,12 @@ namespace Mono.Cecil {
 			string frameworkdir = Path.GetDirectoryName (typeof (object).Module.FullyQualifiedName);
 
 			if (IsZero (name.Version)) {
-				assembly = SearchDirectory (name, frameworkdir);
+				assembly = SearchDirectory (name, new string [] {frameworkdir});
 				if (assembly != null)
 					return assembly;
 			}
 
-			assembly = SearchDirectory (name, ".", ".bin");
+			assembly = SearchDirectory (name, m_directories);
 			if (assembly != null)
 				return assembly;
 
@@ -67,7 +92,7 @@ namespace Mono.Cecil {
 				return assembly;
 #endif
 
-			assembly = SearchDirectory (name, frameworkdir);
+			assembly = SearchDirectory (name, new string [] {frameworkdir});
 			if (assembly != null)
 				return assembly;
 
@@ -76,7 +101,7 @@ namespace Mono.Cecil {
 
 		static readonly string [] _extentions = new string [] { ".dll", ".exe" };
 
-		static AssemblyDefinition SearchDirectory (AssemblyNameReference name, params string [] directories)
+		static AssemblyDefinition SearchDirectory (AssemblyNameReference name, IEnumerable directories)
 		{
 			foreach (string dir in directories) {
 				foreach (string ext in _extentions) {
