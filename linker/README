@@ -130,6 +130,15 @@ Example:
 
 monolinker -a assembly -l mideast,cjk
 
+7) Specifying directories where the linker should look for assemblies
+
+By default, the linker will first look for assemblies in the directories `.'
+and `bin'. You can specify
+
+Example:
+
+monoliner -d ../../libs -a program.exe
+
 * Inside the linker
 
 The linker is a quite small piece of code, and it pretty simple to address.

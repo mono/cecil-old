@@ -28,6 +28,7 @@
 
 using System;
 using System.Collections;
+using System.IO;
 using SR = System.Reflection;
 using System.Xml.XPath;
 
@@ -90,6 +91,11 @@ namespace Mono.Linker {
 				}
 
 				switch (token [1]) {
+				case 'd': {
+					DirectoryInfo info = new DirectoryInfo (GetParam (q));
+					context.Resolver.AddSearchDirectory (info.FullName);
+					break;
+				}
 				case 'o':
 					context.OutputDirectory = GetParam (q);
 					break;
