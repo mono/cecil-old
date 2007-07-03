@@ -152,7 +152,7 @@ namespace Mono.Linker {
 				while ((line = reader.ReadLine ()) != null)
 					lines.Add (line);
 			}
-			return (string []) lines.ToArray ();
+			return (string []) lines.ToArray (typeof (string));
 		}
 
 		static I18nAssemblies ParseI18n (string str)
