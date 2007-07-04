@@ -47,7 +47,8 @@ namespace Mono.Linker {
 
 			try {
 
-				Run (new Queue (args));
+				Driver driver = new Driver (args);
+				driver.Run ();
 
 			} catch (Exception e) {
 				Console.WriteLine ("Fatal error in {0}", _linker);
@@ -57,15 +58,27 @@ namespace Mono.Linker {
 			return 0;
 		}
 
-		static void Run (Queue q)
+		Queue _queue;
+
+		public Driver (string [] args)
+		{
+			_queue = new Queue (args);
+		}
+
+		bool HaveMoreTokens ()
+		{
+			return _queue.Count > 0;
+		}
+
+		void Run ()
 		{
 			Pipeline p = GetStandardPipeline ();
 			LinkContext context = GetDefaultContext (p);
 			I18nAssemblies assemblies = I18nAssemblies.All;
 
 			bool resolver = false;
-			while (q.Count > 0) {
-				string token = GetParam (q);
+			while (HaveMoreTokens ()) {
+				string token = GetParam ();
 				if (token.Length < 2)
 					Usage ();
 
@@ -92,34 +105,34 @@ namespace Mono.Linker {
 
 				switch (token [1]) {
 				case 'd': {
-					DirectoryInfo info = new DirectoryInfo (GetParam (q));
+					DirectoryInfo info = new DirectoryInfo (GetParam ());
 					context.Resolver.AddSearchDirectory (info.FullName);
 					break;
 				}
 				case 'o':
-					context.OutputDirectory = GetParam (q);
+					context.OutputDirectory = GetParam ();
 					break;
 				case 'c':
-					context.CoreAction = ParseCoreAction (GetParam (q));
+					context.CoreAction = ParseCoreAction (GetParam ());
 					break;
 				case 'x':
-					foreach (string file in GetFiles (GetParam (q)))
+					foreach (string file in GetFiles (GetParam ()))
 						p.PrependStep (new ResolveFromXmlStep (new XPathDocument (file)));
 					resolver = true;
 					break;
 				case 'a':
-					foreach (string file in GetFiles (GetParam (q)))
+					foreach (string file in GetFiles (GetParam ()))
 						p.PrependStep (new ResolveFromAssemblyStep (file));
 					resolver = true;
 					break;
 				case 'i':
-					foreach (string file in GetFiles (GetParam (q)))
+					foreach (string file in GetFiles (GetParam ()))
 						p.PrependStep (new ResolveFromApiInfoStep (new XPathDocument (file)));
 					p.AddStepBefore (typeof (OutputStep), new AdjustVisibilityStep ());
 					resolver = true;
 					break;
 				case 'l':
-					assemblies = ParseI18n (GetParam (q));
+					assemblies = ParseI18n (GetParam ());
 					break;
 				default:
 					Usage ();
@@ -170,9 +183,12 @@ namespace Mono.Linker {
 			return (AssemblyAction) Enum.Parse (typeof (AssemblyAction), s, true);
 		}
 
-		static string GetParam (Queue q)
+		string GetParam ()
 		{
-			return (string) q.Dequeue ();
+			if (_queue.Count == 0)
+				Usage ();
+
+			return (string) _queue.Dequeue ();
 		}
 
 		static LinkContext GetDefaultContext (Pipeline pipeline)
