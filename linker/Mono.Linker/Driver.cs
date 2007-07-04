@@ -192,6 +192,7 @@ namespace Mono.Linker {
 			Console.WriteLine ("   --version   Print the version number of the {0}", _linker);
 			Console.WriteLine ("   -out        Specify the output directory, default to `output'");
 			Console.WriteLine ("   -c          Action on the core assemblies, skip, copy or link, default to skip");
+			Console.WriteLine ("   -d          Add a directory where the linker will look for assemblies");
 			Console.WriteLine ("   -l          List of i18n assemblies to copy to the output directory");
 			Console.WriteLine ("                 separated with a comma: none,all,cjk,mideast,other,rare,west");
 			Console.WriteLine ("                 default is all");
