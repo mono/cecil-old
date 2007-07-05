@@ -122,6 +122,12 @@ An info file is a file produced by the tool mono-api-info. The linker will use i
 generate an assembly that contains only what the public API defined in he info file
 needs. It will also adjust the visibility of the types that have to be present in the
 assembly, but that are not visibile from the public API.
+.TP
+.I "-s [StepBefore:]StepFullName,StepAssembly[:StepAfter]"
+.PP
+You can ask the linker to execute custom steps by using the -s command. This command
+takes the standard TypeFullName,Assembly format to locate the step. You can customize
+its position in the pipeline by either adding it before a step, or after.
 .SH COPYRIGHT
 Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 .SH BUGS

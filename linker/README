@@ -139,6 +139,44 @@ Example:
 
 monoliner -d ../../libs -a program.exe
 
+8) Adding custom steps to the linker.
+
+You can write custom steps for the linker and tell the linker to use them.
+Let's take a simple example:
+
+using System;
+
+using Mono.Linker;
+using Mono.Linker.Steps;
+
+namespace Foo {
+
+	public class FooStep : IStep {
+
+		public void Process (LinkContext context)
+		{
+			foreach (IStep step in context.Pipeline.GetSteps ()) {
+				Console.WriteLine (step.GetType ().Name);
+			}
+		}
+	}
+}
+
+
+That is compiled against the linker to a Foo.dll assembly.
+
+You can ask the linker to add it at the end of the pipeline:
+
+monolinker -s Foo.FooStep,Foo -a program.exe
+
+Or you can ask the linker to add it after a specific step:
+
+monolinker -s MarkStep:Foo.FooStep,Foo -a program.exe
+
+Or before a specific step:
+
+monolinker -s Foo.FooStep,Foo:MarkStep
+
 * Inside the linker
 
 The linker is a quite small piece of code, and it pretty simple to address.
