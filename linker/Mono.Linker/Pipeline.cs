@@ -83,5 +83,10 @@ namespace Mono.Linker {
 				_steps.Remove (step);
 			}
 		}
+
+		public IStep [] GetSteps ()
+		{
+			return (IStep []) _steps.ToArray (typeof (IStep));
+		}
 	}
 }

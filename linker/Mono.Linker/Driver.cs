@@ -115,6 +115,9 @@ namespace Mono.Linker {
 				case 'c':
 					context.CoreAction = ParseCoreAction (GetParam ());
 					break;
+				case 's':
+					AddCustomStep (p, GetParam ());
+					break;
 				case 'x':
 					foreach (string file in GetFiles (GetParam ()))
 						p.PrependStep (new ResolveFromXmlStep (new XPathDocument (file)));
@@ -146,6 +149,43 @@ namespace Mono.Linker {
 			p.AddStepAfter (typeof (LoadReferencesStep), new LoadI18nAssemblies (assemblies));
 
 			p.Process (context);
+		}
+
+		static void AddCustomStep (Pipeline pipeline, string arg)
+		{
+			int pos = arg.IndexOf (":");
+			if (pos == -1) {
+				pipeline.AppendStep (ResolveStep (arg));
+				return;
+			}
+
+			string [] parts = arg.Split (':');
+			if (parts.Length != 2)
+				Usage ();
+
+			if (parts [0].IndexOf (",") > -1)
+				pipeline.AddStepBefore (FindStep (pipeline, parts [1]), ResolveStep (parts [0]));
+			else if (parts [1].IndexOf (",") > -1)
+				pipeline.AddStepAfter (FindStep (pipeline, parts [0]), ResolveStep (parts [1]));
+			else
+				Usage ();
+		}
+
+		static Type FindStep (Pipeline pipeline, string name)
+		{
+			foreach (IStep step in pipeline.GetSteps ()) {
+				Type t = step.GetType ();
+				if (t.Name == name)
+					return t;
+			}
+
+			return null;
+		}
+
+		static IStep ResolveStep (string type)
+		{
+			Type step = Type.GetType (type, true);
+			return (IStep) Activator.CreateInstance (step);
 		}
 
 		static string [] GetFiles (string param)
