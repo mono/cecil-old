@@ -1,0 +1,3 @@
+2007-07-05  Jb Evain  <jbevain@novell.com>
+
+	* Makefile: use sl alpha 1.1 api infos. 
