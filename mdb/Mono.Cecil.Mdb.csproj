@@ -11,7 +11,7 @@
     <AssemblyName>Mono.Cecil.Mdb</AssemblyName>
     <StartupObject>
     </StartupObject>
-	<SignAssembly>true</SignAssembly>
+    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\mcs\class\mono.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -40,12 +40,6 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\lib\Mono.Cecil.csproj">
-      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Mono.Cecil.Mdb\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Mdb\MdbFactory.cs" />
     <Compile Include="Mono.Cecil.Mdb\MdbReader.cs" />
@@ -57,5 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
