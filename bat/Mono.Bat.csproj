@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mono.Bat\AbstractAssemblyTestFixture.cs" />
+    <Compile Include="Mono.Bat\AssemblyInfo.cs" />
     <Compile Include="Mono.Bat\CodeDomScript.cs" />
     <Compile Include="Mono.Bat\ReadAssemblyScript.cs" />
     <Compile Include="Mono.Bat\IScript.cs" />
@@ -58,7 +59,7 @@
     <Compile Include="Mono.Bat\WriteAssemblyScript.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lib\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
