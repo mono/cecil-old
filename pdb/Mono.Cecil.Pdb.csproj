@@ -40,12 +40,6 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\lib\Mono.Cecil.csproj">
-      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
-      <Name>Mono.Cecil</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Mono.Cecil.Pdb\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataDispenser.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataImport.cs" />
@@ -57,5 +51,11 @@
   <ItemGroup>
     <Reference Include="ISymWrapper" />
     <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
