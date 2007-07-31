@@ -22,6 +22,7 @@
     <File name="./TypeExposeFieldsTest.cs" subtype="Code" buildaction="Compile" />
     <File name="./TypeIsNotSubsetOfMethodSecurityTest.cs" subtype="Code" buildaction="Compile" />
     <File name="./TypeLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="./StringWithFormattedSqlTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
