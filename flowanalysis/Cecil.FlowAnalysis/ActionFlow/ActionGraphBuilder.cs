@@ -26,10 +26,9 @@
 using System;
 using System.Collections;
 using Cecil.FlowAnalysis.ActionFlow;
-using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.CodeStructure;
+using Cecil.FlowAnalysis.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
@@ -39,14 +38,18 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 	/// </summary>
 	internal class ActionGraphBuilder : AbstractInstructionVisitor {
 
-		private ActionBlockCollection _blocks = new ActionBlockCollection();
-		private IDictionary _instruction2block = new Hashtable();
-		private IDictionary _processed = new Hashtable();
-		private ExpressionDecompiler _expressionDecompiler;
-		private MethodDefinition _method;
-		private IControlFlowGraph _cfg;
-		private Instruction _current;
-		private ActionFlowGraph _graph;
+		ActionBlockCollection _blocks = new ActionBlockCollection();
+		IDictionary _instruction2block = new Hashtable();
+		IDictionary _processed = new Hashtable();
+		ExpressionDecompiler _expressionDecompiler;
+		MethodDefinition _method;
+		IControlFlowGraph _cfg;
+		Instruction _current;
+		ActionFlowGraph _graph;
+
+		public IActionFlowGraph ActionFlowGraph {
+			get { return _graph; }
+		}
 
 		internal ActionGraphBuilder (IControlFlowGraph cfg)
 		{
@@ -58,12 +61,6 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_graph = new ActionFlowGraph (_cfg, _blocks);
 
 			Run ();
-		}
-
-		public IActionFlowGraph ActionFlowGraph {
-			get {
-				return _graph;
-			}
 		}
 
 		void Run ()
@@ -97,10 +94,10 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 						&& 1 == cbr.Then.Predecessors.Count
 						&& 1 == cbr.Else.Predecessors.Count) {
 						BinaryOperator op = BinaryOperator.LogicalOr;
-						IExpression lhs = cbr.Condition;
-						IExpression rhs = ((ReturnActionBlock) cbr.Else).Expression;
+						Expression lhs = cbr.Condition;
+						Expression rhs = ((ReturnActionBlock) cbr.Else).Expression;
 
-						if (((ILiteralExpression)((ReturnActionBlock) cbr.Then).Expression).Value.Equals (0)) {
+						if (((LiteralExpression) ((ReturnActionBlock) cbr.Then).Expression).Value.Equals (0)) {
 							op = BinaryOperator.LogicalAnd;
 							_expressionDecompiler.Negate (lhs);
 							lhs = _expressionDecompiler.Pop ();
@@ -121,27 +118,27 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private bool IsReturnTrueOrFalse (ActionBlock block)
+		static bool IsReturnTrueOrFalse (ActionBlock block)
 		{
 			ReturnActionBlock ret = block as ReturnActionBlock;
 			return ret != null && IsTrueOrFalse (ret.Expression);
 		}
 
-		private bool IsTrueOrFalse (IExpression expression)
+		static bool IsTrueOrFalse (Expression expression)
 		{
-			ILiteralExpression literal = expression as ILiteralExpression;
+			LiteralExpression literal = expression as LiteralExpression;
 			return literal != null
 				&& literal.Value != null
 				&& (literal.Value.Equals (1)
 				|| literal.Value.Equals (0));
 		}
 
-		private static bool IsReturn (ActionBlock block)
+		static bool IsReturn (ActionBlock block)
 		{
 			return block.ActionType == ActionType.Return;
 		}
 
-		private void ConnectActionBlocks ()
+		void ConnectActionBlocks ()
 		{
 			for (int i=0; i < _blocks.Count; ++i) {
 				ActionBlock block = _blocks [i];
@@ -167,19 +164,19 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private ActionBlock GetBlockAtOrNull (int index)
+		ActionBlock GetBlockAtOrNull (int index)
 		{
 			return index >= _blocks.Count
 				? null
 				: _blocks [index];
 		}
 
-		private ActionBlock GetBranchTarget (Instruction instruction)
+		ActionBlock GetBranchTarget (Instruction instruction)
 		{
 			return GetActionBlock ((Instruction) instruction.Operand);
 		}
 
-		private void ProcessBlocks ()
+		void ProcessBlocks ()
 		{
 			foreach (InstructionBlock block in _cfg.Blocks) {
 				if (WasProcessed (block)) continue;
@@ -188,7 +185,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void ProcessBlock (InstructionBlock block)
+		void ProcessBlock (InstructionBlock block)
 		{
 			switch (block.Successors.Length) {
 			case 0:
@@ -206,7 +203,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			MarkProcessed (block);
 		}
 
-		private void ProcessTwoWayBlock (InstructionBlock block)
+		void ProcessTwoWayBlock (InstructionBlock block)
 		{
 			if (IsLogicalExpression (block)) {
 				ProcessLogicalExpressionBlock (block);
@@ -221,12 +218,12 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		/// </summary>
 		/// <param name="block"></param>
 		/// <returns></returns>
-		private bool IsLogicalExpression (InstructionBlock block)
+		bool IsLogicalExpression (InstructionBlock block)
 		{
 			return IsLogicalExpression (new Hashtable (), block);
 		}
 
-		private bool IsLogicalExpression (Hashtable visited, InstructionBlock block)
+		bool IsLogicalExpression (Hashtable visited, InstructionBlock block)
 		{
 			if (visited.Contains (block)) return false;
 			visited.Add (block, block);
@@ -238,7 +235,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		}
 
 
-		private void ProcessSimpleBlock (InstructionBlock block)
+		void ProcessSimpleBlock (InstructionBlock block)
 		{
 			foreach (Instruction instruction in block) {
 				_expressionDecompiler.Visit (instruction);
@@ -249,7 +246,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void ProcessLogicalExpressionBlock (InstructionBlock block)
+		void ProcessLogicalExpressionBlock (InstructionBlock block)
 		{
 			switch (DetectExpressionPattern (block)) {
 			case ExpressionPattern.SimpleOr:
@@ -277,7 +274,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			NestedNotAnd
 		}
 
-		ExpressionPattern DetectExpressionPattern (InstructionBlock block)
+		static ExpressionPattern DetectExpressionPattern (InstructionBlock block)
 		{
 			InstructionBlock then = GetThen (block);
 			if (IsTrue (then)) return ExpressionPattern.SimpleOr;
@@ -316,13 +313,13 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_expressionDecompiler.PushBinaryExpression (BinaryOperator.LogicalAnd);
 		}
 
-		private void BuildNegateExpression (InstructionBlock block)
+		void BuildNegateExpression (InstructionBlock block)
 		{
 			BuildExpression (block);
 			_expressionDecompiler.Negate ();
 		}
 
-		private void ProcessNestedExpression (InstructionBlock block)
+		void ProcessNestedExpression (InstructionBlock block)
 		{
 			switch (block.Successors.Length) {
 			case 1:
@@ -338,7 +335,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void BuildExpression (InstructionBlock block)
+		void BuildExpression (InstructionBlock block)
 		{
 			if (WasProcessed (block)) return;
 			foreach (Instruction instruction in block) {
@@ -359,13 +356,13 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 				&& block.FirstInstruction.OpCode.Value == OpCodes.Ldc_I4_0.Value;
 		}
 
-		private void AssertStackIsEmpty ()
+		void AssertStackIsEmpty ()
 		{
 			if (0 == _expressionDecompiler.Count) return;
 			throw new InvalidOperationException ("stack should be empty after a statement");
 		}
 
-		private void CreateActionBlock (Instruction instruction)
+		void CreateActionBlock (Instruction instruction)
 		{
 			Visit (instruction);
 			AssertStackIsEmpty ();
@@ -406,7 +403,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			AddConditionalBranch (instruction);
 		}
 
-		private void AddConditionalBranch (Instruction instruction)
+		void AddConditionalBranch (Instruction instruction)
 		{
 			Add (new ConditionalBranchActionBlock (instruction, Pop ()));
 		}
@@ -417,16 +414,16 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		public override void OnRet (Instruction instruction)
 		{
-			IExpression expression = null;
-			if (1 == GetStackBefore (instruction)) {
+			Expression expression = null;
+			if (1 == GetStackBefore (instruction))
 				expression = Pop ();
-			}
+
 			Add (new ReturnActionBlock (instruction, expression));
 		}
 
 		public override void OnCall (Instruction instruction)
 		{
-			Add (new InvokeActionBlock (instruction, (IMethodInvocationExpression) Pop ()));
+			Add (new InvokeActionBlock (instruction, (MethodInvocationExpression) Pop ()));
 		}
 
 		public override void OnBr (Instruction instruction)
@@ -436,7 +433,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		public override void OnStloc_0 (Instruction instruction)
 		{
-			Add (new AssignActionBlock (instruction, (IAssignExpression) Pop ()));
+			Add (new AssignActionBlock (instruction, (AssignExpression) Pop ()));
 		}
 
 		int GetStackBefore (Instruction instruction)
@@ -466,7 +463,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return (ActionBlock) _instruction2block [block];
 		}
 
-		IExpression Pop ()
+		Expression Pop ()
 		{
 			return _expressionDecompiler.Pop ();
 		}
@@ -488,12 +485,12 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return _processed.Contains (block);
 		}
 
-		private static InstructionBlock GetThen (InstructionBlock block)
+		static InstructionBlock GetThen (InstructionBlock block)
 		{
 			return block.Successors [0];
 		}
 
-		private static InstructionBlock GetElse (InstructionBlock block)
+		static InstructionBlock GetElse (InstructionBlock block)
 		{
 			return block.Successors [1];
 		}

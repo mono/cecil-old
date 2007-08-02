@@ -4,57 +4,57 @@ abstract class Expression(ICodeElement):
 abstract class Statement(ICodeElement):
 	pass
 
-[collection(IExpression)]
+[collection(Expression)]
 class ExpressionCollection:
 	pass
 
-[collection(IStatement)]
+[collection(Statement)]
 class StatementCollection:
 	pass
 
-class MethodInvocationExpression(IExpression):
+class MethodInvocationExpression(Expression):
 	Target as Expression
 	Arguments as ExpressionCollection
 
-class MethodReferenceExpression(IExpression):
+class MethodReferenceExpression(Expression):
 	Target as Expression
 	Method as MethodReference
 
-class LiteralExpression(IExpression):
+class LiteralExpression(Expression):
 	Value as object
 
-class UnaryExpression(IExpression):
+class UnaryExpression(Expression):
 	Operator as UnaryOperator
 	Operand as Expression
 
-class BinaryExpression(IExpression):
+class BinaryExpression(Expression):
 	Operator as BinaryOperator
 	Left as Expression
 	Right as Expression
 
-class AssignExpression(IExpression):
+class AssignExpression(Expression):
 	Target as Expression
 	Expression as Expression
 
-class ArgumentReferenceExpression(IExpression):
+class ArgumentReferenceExpression(Expression):
 	Parameter as ParameterReference
 
-class VariableReferenceExpression(IExpression):
+class VariableReferenceExpression(Expression):
 	Variable as VariableReference
 
-class ThisReferenceExpression(IExpression):
+class ThisReferenceExpression(Expression):
 	pass
 
-class FieldReferenceExpression(IExpression):
+class FieldReferenceExpression(Expression):
 	Target as Expression
 	Field as FieldReference
 
-class PropertyReferenceExpression(IExpression):
+class PropertyReferenceExpression(Expression):
 	Target as Expression
 	Property as PropertyReference
 
-class BlockStatement(IStatement):
+class BlockStatement(Statement):
 	Statements as StatementCollection
 
-class ReturnStatement(IStatement):
+class ReturnStatement(Statement):
 	Expression as Expression

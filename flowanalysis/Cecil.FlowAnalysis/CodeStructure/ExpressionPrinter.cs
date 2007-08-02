@@ -29,10 +29,12 @@ using Cecil.FlowAnalysis.Utilities;
 using Mono.Cecil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
+
 	/// <summary>
 	/// </summary>
 	public class ExpressionPrinter : AbstractCodeStructureVisitor {
-		public static string ToString (IExpression expression)
+
+		public static string ToString (Expression expression)
 		{
 			ExpressionPrinter printer = new ExpressionPrinter ();
 			expression.Accept (printer);
@@ -56,14 +58,14 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			get { return _writer; }
 		}
 
-		public override void Visit (IAssignExpression node)
+		public override void Visit (AssignExpression node)
 		{
 			Visit (node.Target);
 			Write (" = ");
 			Visit (node.Expression);
 		}
 
-		public override void Visit (IBinaryExpression node)
+		public override void Visit (BinaryExpression node)
 		{
 			Write ("(");
 			Visit (node.Left);
@@ -72,23 +74,23 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Write (")");
 		}
 
-		public override void Visit (IArgumentReferenceExpression node)
+		public override void Visit (ArgumentReferenceExpression node)
 		{
 			Write (node.Parameter.Name);
 		}
 
-		public override void Visit (IThisReferenceExpression node)
+		public override void Visit (ThisReferenceExpression node)
 		{
 			Write ("this");
 		}
 
-		public override void Visit (IFieldReferenceExpression node)
+		public override void Visit (FieldReferenceExpression node)
 		{
 			Visit (node.Target);
 			Write (".{0}", node.Field.Name);
 		}
 
-		public override void Visit (IMethodReferenceExpression node)
+		public override void Visit (MethodReferenceExpression node)
 		{
 			MethodReference method = node.Method;
 			if (null == node.Target) {
@@ -99,7 +101,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Write (".{0}", method.Name);
 		}
 
-		public override void Visit (IMethodInvocationExpression node)
+		public override void Visit (MethodInvocationExpression node)
 		{
 			Visit (node.Target);
 			Write ("(");
@@ -110,13 +112,13 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Write (")");
 		}
 
-		public override void Visit (IVariableReferenceExpression node)
+		public override void Visit (VariableReferenceExpression node)
 		{
 			string name = "local" + node.Variable.Index;
 			Write (name);
 		}
 
-		public override void Visit (ILiteralExpression node)
+		public override void Visit (LiteralExpression node)
 		{
 			object value = node.Value;
 			if (value is string) {
@@ -127,7 +129,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Write (value == null ? "null" : Formatter.ToInvariantCultureString (value).ToLower ());
 		}
 
-		public override void Visit (IUnaryExpression node)
+		public override void Visit (UnaryExpression node)
 		{
 			Write ("(");
 			Write (ToString (node.Operator));
@@ -135,16 +137,15 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Write (")");
 		}
 
-		private string ToString (UnaryOperator op)
+		static string ToString (UnaryOperator op)
 		{
 			switch (op) {
 			case UnaryOperator.Not: return "!";
-
 			}
 			throw new ArgumentException (op.ToString (), "op");
 		}
 
-		private string ToString (BinaryOperator op)
+		static string ToString (BinaryOperator op)
 		{
 			switch (op) {
 			case BinaryOperator.LogicalAnd: return "&&";
@@ -160,12 +161,12 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			throw new ArgumentException (op.ToString (), "op");
 		}
 
-		private void Write (string text)
+		void Write (string text)
 		{
 			_writer.Write (text);
 		}
 
-		private void Write (string format, params object[] args)
+		void Write (string format, params object [] args)
 		{
 			_writer.Write (format, args);
 		}

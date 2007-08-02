@@ -25,37 +25,32 @@
 
 // Warning: generated do not edit
 
-using System.Collections;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	public class AbstractCodeStructureVisitor : ICodeStructureVisitor {
+	public class VariableReferenceExpression : Expression {
+		VariableReference _variable;
 
-		public virtual void Visit (ICodeElement node)
+		public VariableReferenceExpression (VariableReference variable)
 		{
-			if (null == node) return;
-			node.Accept (this);
+			_variable = variable;
 		}
 
-		public virtual void Visit (ICollection collection)
+		public VariableReference Variable
 		{
-			foreach (ICodeElement node in collection)
-			{
-				Visit (node);
-			}
+			get	{ return _variable; }
 		}
-<%
-	for node in model.GetVisitableNodes():
-%>
-		public virtual void Visit (${node.Name} node)
+
+		public override CodeElementType CodeElementType
 		{
-<%
-		for field in model.GetVisitableFields(node):
-%>			Visit (node.${field.Name});
-<%
-		end
-%>		}
-<%
-	end
-%>	}
+			get { return CodeElementType.VariableReferenceExpression; }
+		}
+
+		public override void Accept (ICodeStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

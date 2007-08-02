@@ -33,15 +33,14 @@ itemType = model.GetCollectionItemType(node)
 using System.Collections;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Cecil.FlowAnalysis.CodeStructure;
 
-namespace Cecil.FlowAnalysis.Impl.CodeStructure {
+namespace Cecil.FlowAnalysis.CodeStructure {
 
-	internal class ${node.Name} : CollectionBase, I${node.Name} 	{
+	public class ${node.Name} : CollectionBase, ICollection {
 
-		public ${itemType} this[int index]
+		public ${itemType} this [int index]
 		{
-			get { return (${itemType}) InnerList[index]; }
+			get { return (${itemType}) InnerList [index]; }
 		}
 
 		public void Add (${itemType} element)

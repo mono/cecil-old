@@ -25,37 +25,39 @@
 
 // Warning: generated do not edit
 
-using System.Collections;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	public class AbstractCodeStructureVisitor : ICodeStructureVisitor {
+	public class UnaryExpression : Expression {
+		UnaryOperator _operator;
+		Expression _operand;
 
-		public virtual void Visit (ICodeElement node)
+		public UnaryExpression (UnaryOperator operator_, Expression operand)
 		{
-			if (null == node) return;
-			node.Accept (this);
+			_operator = operator_;
+			_operand = operand;
 		}
 
-		public virtual void Visit (ICollection collection)
+		public UnaryOperator Operator
 		{
-			foreach (ICodeElement node in collection)
-			{
-				Visit (node);
-			}
+			get	{ return _operator; }
 		}
-<%
-	for node in model.GetVisitableNodes():
-%>
-		public virtual void Visit (${node.Name} node)
+
+		public Expression Operand
 		{
-<%
-		for field in model.GetVisitableFields(node):
-%>			Visit (node.${field.Name});
-<%
-		end
-%>		}
-<%
-	end
-%>	}
+			get	{ return _operand; }
+		}
+
+		public override CodeElementType CodeElementType
+		{
+			get { return CodeElementType.UnaryExpression; }
+		}
+
+		public override void Accept (ICodeStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
+	}
 }

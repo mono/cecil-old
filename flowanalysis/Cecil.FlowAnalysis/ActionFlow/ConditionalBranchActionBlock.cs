@@ -33,7 +33,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 	/// </summary>
 	public class ConditionalBranchActionBlock : ActionBlock {
 
-		IExpression _condition;
+		Expression _condition;
 		ActionBlock _then;
 		ActionBlock _else;
 
@@ -41,7 +41,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			get { return ActionType.ConditionalBranch; }
 		}
 
-		public IExpression Condition {
+		public Expression Condition {
 			get { return _condition; }
 		}
 
@@ -61,7 +61,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			}
 		}
 
-		public ConditionalBranchActionBlock (Instruction sourceInstruction, IExpression condition)
+		public ConditionalBranchActionBlock (Instruction sourceInstruction, Expression condition)
 			: base (sourceInstruction)
 		{
 			if (null == condition) throw new ArgumentNullException ("condition");

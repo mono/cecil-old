@@ -27,29 +27,26 @@ using System;
 using System.Collections;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.CodeStructure;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+namespace Cecil.FlowAnalysis.ActionFlow {
+
 	internal class ExpressionDecompiler : AbstractInstructionVisitor {
-		private Stack _expressionStack;
 
-		private MethodDefinition _method;
+		Stack _expressionStack;
+		MethodDefinition _method;
+		TypeReference _SystemBoolean;
 
-		private TypeReference _SystemBoolean;
+		public int Count {
+			get { return _expressionStack.Count; }
+		}
 
 		public ExpressionDecompiler (MethodDefinition method)
 		{
 			_method = method;
 			_expressionStack = new Stack ();
 			_SystemBoolean = _method.DeclaringType.Module.Import (typeof(bool));
-		}
-
-		public int Count {
-			get {
-				return _expressionStack.Count;
-			}
 		}
 
 		public override void OnNop (Instruction instruction)
@@ -80,7 +77,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			MethodReference method = (MethodReference)instruction.Operand;
 
 			ExpressionCollection args = PopRange (method.Parameters.Count);
-			IExpression target = method.HasThis ? Pop () : null;
+			Expression target = method.HasThis ? Pop () : null;
 
 			Push (
 				new MethodInvocationExpression (
@@ -95,8 +92,8 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		public void PushBinaryExpression (BinaryOperator op)
 		{
-			IExpression rhs = Pop ();
-			IExpression lhs = Pop ();
+			Expression rhs = Pop ();
+			Expression lhs = Pop ();
 			Push (new BinaryExpression (op, lhs, rhs));
 		}
 
@@ -130,17 +127,17 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			PushLiteral (-1);
 		}
 
-		public override void OnLdc_I4_0 (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnLdc_I4_0 (Instruction instruction)
 		{
 			PushLiteral (0);
 		}
 
-		public override void OnLdc_I4_1 (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnLdc_I4_1 (Instruction instruction)
 		{
 			PushLiteral (1);
 		}
 
-		public override void OnLdc_I4_2 (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnLdc_I4_2 (Instruction instruction)
 		{
 			PushLiteral (2);
 		}
@@ -175,7 +172,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			PushLiteral (8);
 		}
 
-		public override void OnLdloc_0 (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnLdloc_0 (Instruction instruction)
 		{
 			PushVariableReference (0);
 		}
@@ -184,8 +181,8 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		{
 			// XXX: ceq might be used for reference equality as well
 
-			IExpression rhs = Pop ();
-			IExpression lhs = Pop ();
+			Expression rhs = Pop ();
+			Expression lhs = Pop ();
 
 			// simplify common expression patterns
 			// ((x < y) == 0) => x >= y
@@ -199,26 +196,26 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private bool IsFalse (IExpression expression)
+		static bool IsFalse (Expression expression)
 		{
-			ILiteralExpression literal = expression as ILiteralExpression;
+			LiteralExpression literal = expression as LiteralExpression;
 			return literal != null && literal.Value.Equals (0);
 		}
 
-		private bool IsBooleanExpression (IExpression expression)
+		bool IsBooleanExpression (Expression expression)
 		{
 			switch (expression.CodeElementType) {
 			case CodeElementType.BinaryExpression:
-				return IsComparisonOperator (((IBinaryExpression)expression).Operator);
+				return IsComparisonOperator (((BinaryExpression) expression).Operator);
 			case CodeElementType.MethodInvocationExpression:
-				IMethodReferenceExpression mre = ((IMethodInvocationExpression)expression).Target as IMethodReferenceExpression;
+				MethodReferenceExpression mre = ((MethodInvocationExpression) expression).Target as MethodReferenceExpression;
 				if (null != mre) return mre.Method.ReturnType.ReturnType == _SystemBoolean;
 				break;
 			}
 			return false;
 		}
 
-		private bool IsComparisonOperator (BinaryOperator op)
+		static bool IsComparisonOperator (BinaryOperator op)
 		{
 			switch (op) {
 			case BinaryOperator.GreaterThan:
@@ -302,7 +299,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			PushLiteral (null);
 		}
 
-		public override void OnLdarg_0 (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnLdarg_0 (Instruction instruction)
 		{
 			PushArgumentReference (0);
 		}
@@ -317,11 +314,11 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			Negate (Pop ());
 		}
 
-		public void Negate (IExpression expression)
+		public void Negate (Expression expression)
 		{
 			switch (expression.CodeElementType) {
 			case CodeElementType.BinaryExpression:
-				IBinaryExpression be = (IBinaryExpression)expression as BinaryExpression;
+				BinaryExpression be = (BinaryExpression) expression;
 				BinaryOperator op = GetInverseOperator (be.Operator);
 				if (BinaryOperator.None != op) {
 					Push (new BinaryExpression (op, be.Left, be.Right));
@@ -337,7 +334,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 				break;
 
 			case CodeElementType.UnaryExpression:
-				IUnaryExpression ue = (IUnaryExpression)expression;
+				UnaryExpression ue = (UnaryExpression) expression;
 				switch (ue.Operator) {
 				case UnaryOperator.Not:
 					Push (ue.Operand);
@@ -354,12 +351,12 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void PushNotExpression (IExpression expression)
+		void PushNotExpression (Expression expression)
 		{
 			Push (new UnaryExpression (UnaryOperator.Not, expression));
 		}
 
-		private BinaryOperator GetInverseOperator (BinaryOperator op)
+		static BinaryOperator GetInverseOperator (BinaryOperator op)
 		{
 			switch (op) {
 			case BinaryOperator.ValueEquality:
@@ -378,7 +375,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return BinaryOperator.None;
 		}
 
-		private void PushArgumentReference (int index)
+		void PushArgumentReference (int index)
 		{
 			if (_method.HasThis) {
 				if (index == 0) {
@@ -395,18 +392,18 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			Push (new LiteralExpression (value));
 		}
 
-		private void Push (IExpression expression)
+		void Push (Expression expression)
 		{
 			if (null == expression) throw new ArgumentNullException ("expression");
 			_expressionStack.Push (expression);
 		}
 
-		public IExpression Pop ()
+		public Expression Pop ()
 		{
-			return (IExpression) _expressionStack.Pop ();
+			return (Expression) _expressionStack.Pop ();
 		}
 
-		private ExpressionCollection PopRange (int count)
+		ExpressionCollection PopRange (int count)
 		{
 			ExpressionCollection range = new ExpressionCollection ();
 			for (int i=0; i < count; ++i) {

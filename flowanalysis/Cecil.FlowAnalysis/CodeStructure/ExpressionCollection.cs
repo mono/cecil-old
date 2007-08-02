@@ -25,37 +25,30 @@
 
 // Warning: generated do not edit
 
+using System;
 using System.Collections;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	public class AbstractCodeStructureVisitor : ICodeStructureVisitor {
+	public class ExpressionCollection : CollectionBase, ICollection {
 
-		public virtual void Visit (ICodeElement node)
+		public Expression this [int index]
 		{
-			if (null == node) return;
-			node.Accept (this);
+			get { return (Expression) InnerList [index]; }
 		}
 
-		public virtual void Visit (ICollection collection)
+		public void Add (Expression element)
 		{
-			foreach (ICodeElement node in collection)
-			{
-				Visit (node);
-			}
+			if (element == null) throw new ArgumentNullException ("element");
+			InnerList.Add (element);
 		}
-<%
-	for node in model.GetVisitableNodes():
-%>
-		public virtual void Visit (${node.Name} node)
+
+		public void Insert (int index, Expression element)
 		{
-<%
-		for field in model.GetVisitableFields(node):
-%>			Visit (node.${field.Name});
-<%
-		end
-%>		}
-<%
-	end
-%>	}
+			if (element == null) throw new ArgumentNullException ("element");
+			InnerList.Insert (index, element);
+		}
+	}
 }

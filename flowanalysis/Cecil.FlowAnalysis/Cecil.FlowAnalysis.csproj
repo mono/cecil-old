@@ -97,75 +97,41 @@
     <Compile Include="CodeStructure\AbstractCodeStructureVisitor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeStructure\ArgumentReferenceExpression.cs" />
+    <Compile Include="CodeStructure\AssignExpression.cs" />
+    <Compile Include="CodeStructure\BinaryExpression.cs" />
     <Compile Include="CodeStructure\BinaryOperator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeStructure\BlockStatement.cs" />
     <Compile Include="CodeStructure\CodeElementType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeStructure\Expression.cs" />
+    <Compile Include="CodeStructure\ExpressionCollection.cs" />
     <Compile Include="CodeStructure\ExpressionPrinter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeStructure\IArgumentReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IAssignExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IBinaryExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IBlockStatement.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="CodeStructure\FieldReferenceExpression.cs" />
     <Compile Include="CodeStructure\ICodeElement.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeStructure\ICodeStructureVisitor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeStructure\IExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IExpressionCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IFieldReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\ILiteralExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IMethodInvocationExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IMethodReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IPropertyReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IReturnStatement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IStatement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IStatementCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IThisReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IUnaryExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CodeStructure\IVariableReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="CodeStructure\LiteralExpression.cs" />
+    <Compile Include="CodeStructure\MethodInvocationExpression.cs" />
+    <Compile Include="CodeStructure\MethodReferenceExpression.cs" />
+    <Compile Include="CodeStructure\PropertyReferenceExpression.cs" />
+    <Compile Include="CodeStructure\ReturnStatement.cs" />
+    <Compile Include="CodeStructure\Statement.cs" />
+    <Compile Include="CodeStructure\StatementCollection.cs" />
+    <Compile Include="CodeStructure\ThisReferenceExpression.cs" />
+    <Compile Include="CodeStructure\UnaryExpression.cs" />
     <Compile Include="CodeStructure\UnaryOperator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeStructure\VariableReferenceExpression.cs" />
     <Compile Include="ControlFlow\FlowGraph.cs" />
     <Compile Include="ControlFlow\FlowGraphBuilder.cs" />
     <Compile Include="ControlFlow\IControlFlowGraph.cs">
@@ -174,51 +140,6 @@
     <Compile Include="ControlFlow\InstructionBlock.cs" />
     <Compile Include="ControlFlow\InstructionData.cs" />
     <Compile Include="FlowGraphFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\ArgumentReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\AssignExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\BinaryExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\BlockStatement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\ExpressionCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\FieldReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\LiteralExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\MethodInvocationExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\MethodReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\PropertyReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\ReturnStatement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\StatementCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\ThisReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\UnaryExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\CodeStructure\VariableReferenceExpression.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\AbstractInstructionVisitor.cs" />
@@ -231,6 +152,9 @@
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Impl\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

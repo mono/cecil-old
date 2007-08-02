@@ -31,14 +31,13 @@ fields = model.GetFields(node)
 
 %>using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Cecil.FlowAnalysis.CodeStructure;
 
-namespace Cecil.FlowAnalysis.Impl.CodeStructure {
+namespace Cecil.FlowAnalysis.CodeStructure {
 
-	internal class ${node.Name} : I${node.Name}	{
+	public <% if node.IsAbstract: %>abstract <% end %>class ${node.Name} : ${join(node.BaseTypes, ', ')} {
 <%	for field in fields:
 %>		${GetFieldTypeName(field)} ${ToFieldName(field.Name)};
-<%	end %>
+<%end %>
 <%
 	args = join("${GetFieldTypeName(field)} ${ToParamName(field.Name)}" for field in fields, ", ")
 %>		public ${node.Name} (${args})
@@ -55,14 +54,19 @@ namespace Cecil.FlowAnalysis.Impl.CodeStructure {
 			get	{ return ${ToFieldName(field.Name)}; }
 		}
 <%	end %>
-		public CodeElementType CodeElementType
+<% if node.IsAbstract: %>		public abstract CodeElementType CodeElementType {
+			get;
+		}
+
+		public abstract void Accept (ICodeStructureVisitor visitor);
+<% else: %>		public override CodeElementType CodeElementType
 		{
 			get { return CodeElementType.${node.Name}; }
 		}
 
-		public void Accept (ICodeStructureVisitor visitor)
+		public override void Accept (ICodeStructureVisitor visitor)
 		{
 			visitor.Visit (this);
 		}
-	}
+<% end %>	}
 }

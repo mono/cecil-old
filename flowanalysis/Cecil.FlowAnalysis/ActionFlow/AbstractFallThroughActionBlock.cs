@@ -40,7 +40,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			get { return new ActionBlock [] { _next }; }
 		}
 
-		public AbstractFallThroughActionBlock (Instruction sourceInstruction) : base(sourceInstruction)
+		public AbstractFallThroughActionBlock (Instruction sourceInstruction) : base (sourceInstruction)
 		{
 		}
 

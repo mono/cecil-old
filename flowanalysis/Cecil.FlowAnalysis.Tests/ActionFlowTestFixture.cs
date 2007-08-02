@@ -231,7 +231,7 @@ namespace Cecil.FlowAnalysis.Tests {
 			Assert.AreEqual (Normalize (LoadTestCaseFile (name + "-afg.txt")), Normalize (ToString (afg)));
 		}
 
-		private IActionFlowGraph GetActionFlowGraph (string name)
+		IActionFlowGraph GetActionFlowGraph (string name)
 		{
 			MethodDefinition method = LoadTestCaseMethod (name);
 			return FlowGraphFactory.CreateActionFlowGraph (FlowGraphFactory.CreateControlFlowGraph (method));
@@ -301,7 +301,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				WriteGoto (afg, block.Target);
 			}
 
-			private void WriteGoto (IActionFlowGraph afg, ActionBlock target)
+			void WriteGoto (IActionFlowGraph afg, ActionBlock target)
 			{
 				_writer.Write ("goto block{0}", afg.Blocks.IndexOf (target) + 1);
 			}
@@ -325,7 +325,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				WriteExpression (block.Expression);
 			}
 
-			private void WriteExpression (IExpression expression)
+			void WriteExpression (Expression expression)
 			{
 				_expressionPrinter.Visit (expression);
 			}

@@ -27,8 +27,6 @@
 
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	using System;
-
 	public enum CodeElementType	{
 <%
 nodes = array(model.GetVisitableNodes())

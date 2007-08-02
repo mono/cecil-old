@@ -31,17 +31,17 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 	public class AssignActionBlock : AbstractFallThroughActionBlock {
 
-		IAssignExpression _assignExpression;
+		AssignExpression _assignExpression;
 
 		public override ActionType ActionType {
 			get { return ActionType.Assign; }
 		}
 
-		public IAssignExpression AssignExpression {
+		public AssignExpression AssignExpression {
 			get { return _assignExpression; }
 		}
 
-		public AssignActionBlock (Instruction sourceInstruction, IAssignExpression assign)
+		public AssignActionBlock (Instruction sourceInstruction, AssignExpression assign)
 			: base (sourceInstruction)
 		{
 			_assignExpression = assign;

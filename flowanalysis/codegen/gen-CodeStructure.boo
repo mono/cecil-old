@@ -100,7 +100,7 @@ class CodeTemplate(AbstractTemplate):
 
 	def GetFieldTypeName(field as Field):
 		type = model.ResolveType(field.Type)
-		return "I${field.Type}" if type is not null
+		return "${field.Type}" if type is not null
 		return field.Type.ToString()
 
 def parse(fname as string):
@@ -144,12 +144,9 @@ for node in module.Members:
 		applyTemplate(node, interfaceTemplate, "CodeStructure/${node.Name}.cs")
 	elif node isa ClassDefinition:
 		if model.IsCollection(node):
-			applyTemplate(node, collectionInterfaceTemplate, "CodeStructure/I${node.Name}.cs")
-			applyTemplate(node, collectionClassTemplate, "Impl/CodeStructure/${node.Name}.cs")
+			applyTemplate(node, collectionClassTemplate, "CodeStructure/${node.Name}.cs")
 		else:
-			applyTemplate(node, classInterfaceTemplate, "CodeStructure/I${node.Name}.cs")
-			if not node.IsAbstract:
-				applyTemplate(node, classTemplate, "Impl/CodeStructure/${node.Name}.cs")
+			applyTemplate(node, classTemplate, "CodeStructure/${node.Name}.cs")
 
 applyModelTemplate(model, "ICodeStructureVisitor.cs")
 applyModelTemplate(model, "AbstractCodeStructureVisitor.cs")

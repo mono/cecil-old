@@ -31,13 +31,13 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 	public class ReturnActionBlock : ActionBlock {
 
-		IExpression _expression;
+		Expression _expression;
 
 		public override ActionType ActionType {
 			get { return ActionType.Return; }
 		}
 
-		public IExpression Expression {
+		public Expression Expression {
 			get { return _expression; }
 		}
 
@@ -45,7 +45,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			get { return new ActionBlock [0]; }
 		}
 
-		public ReturnActionBlock (Instruction sourceInstruction, IExpression expression)
+		public ReturnActionBlock (Instruction sourceInstruction, Expression expression)
 			: base (sourceInstruction)
 		{
 			_expression = expression;

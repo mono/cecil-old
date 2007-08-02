@@ -28,18 +28,18 @@
 namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public interface ICodeStructureVisitor	{
-		void Visit (IMethodInvocationExpression node);
-		void Visit (IMethodReferenceExpression node);
-		void Visit (ILiteralExpression node);
-		void Visit (IUnaryExpression node);
-		void Visit (IBinaryExpression node);
-		void Visit (IAssignExpression node);
-		void Visit (IArgumentReferenceExpression node);
-		void Visit (IVariableReferenceExpression node);
-		void Visit (IThisReferenceExpression node);
-		void Visit (IFieldReferenceExpression node);
-		void Visit (IPropertyReferenceExpression node);
-		void Visit (IBlockStatement node);
-		void Visit (IReturnStatement node);
+		void Visit (MethodInvocationExpression node);
+		void Visit (MethodReferenceExpression node);
+		void Visit (LiteralExpression node);
+		void Visit (UnaryExpression node);
+		void Visit (BinaryExpression node);
+		void Visit (AssignExpression node);
+		void Visit (ArgumentReferenceExpression node);
+		void Visit (VariableReferenceExpression node);
+		void Visit (ThisReferenceExpression node);
+		void Visit (FieldReferenceExpression node);
+		void Visit (PropertyReferenceExpression node);
+		void Visit (BlockStatement node);
+		void Visit (ReturnStatement node);
 	}
 }

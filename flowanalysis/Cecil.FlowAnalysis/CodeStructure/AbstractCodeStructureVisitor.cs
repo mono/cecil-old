@@ -25,6 +25,8 @@
 
 // Warning: generated do not edit
 
+using System.Collections;
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public class AbstractCodeStructureVisitor : ICodeStructureVisitor {
@@ -35,7 +37,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			node.Accept (this);
 		}
 
-		public virtual void Visit (System.Collections.ICollection collection)
+		public virtual void Visit (ICollection collection)
 		{
 			foreach (ICodeElement node in collection)
 			{
@@ -43,66 +45,66 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			}
 		}
 
-		public virtual void Visit (IMethodInvocationExpression node)
+		public virtual void Visit (MethodInvocationExpression node)
 		{
 			Visit (node.Target);
 			Visit (node.Arguments);
 		}
 
-		public virtual void Visit (IMethodReferenceExpression node)
+		public virtual void Visit (MethodReferenceExpression node)
 		{
 			Visit (node.Target);
 		}
 
-		public virtual void Visit (ILiteralExpression node)
+		public virtual void Visit (LiteralExpression node)
 		{
 		}
 
-		public virtual void Visit (IUnaryExpression node)
+		public virtual void Visit (UnaryExpression node)
 		{
 			Visit (node.Operand);
 		}
 
-		public virtual void Visit (IBinaryExpression node)
+		public virtual void Visit (BinaryExpression node)
 		{
 			Visit (node.Left);
 			Visit (node.Right);
 		}
 
-		public virtual void Visit (IAssignExpression node)
+		public virtual void Visit (AssignExpression node)
 		{
 			Visit (node.Target);
 			Visit (node.Expression);
 		}
 
-		public virtual void Visit (IArgumentReferenceExpression node)
+		public virtual void Visit (ArgumentReferenceExpression node)
 		{
 		}
 
-		public virtual void Visit (IVariableReferenceExpression node)
+		public virtual void Visit (VariableReferenceExpression node)
 		{
 		}
 
-		public virtual void Visit (IThisReferenceExpression node)
+		public virtual void Visit (ThisReferenceExpression node)
 		{
 		}
 
-		public virtual void Visit (IFieldReferenceExpression node)
-		{
-			Visit (node.Target);
-		}
-
-		public virtual void Visit (IPropertyReferenceExpression node)
+		public virtual void Visit (FieldReferenceExpression node)
 		{
 			Visit (node.Target);
 		}
 
-		public virtual void Visit (IBlockStatement node)
+		public virtual void Visit (PropertyReferenceExpression node)
+		{
+			Visit (node.Target);
+		}
+
+		public virtual void Visit (BlockStatement node)
 		{
 			Visit (node.Statements);
 		}
 
-		public virtual void Visit (IReturnStatement node)
+		public virtual void Visit (ReturnStatement node)
 		{
 			Visit (node.Expression);
 		}

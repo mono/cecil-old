@@ -31,7 +31,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 	public class InvokeActionBlock : AbstractFallThroughActionBlock {
 
-		IMethodInvocationExpression _expression;
+		MethodInvocationExpression _expression;
 
 		public override ActionType ActionType {
 			get {
@@ -39,13 +39,13 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			}
 		}
 
-		public IMethodInvocationExpression Expression {
+		public MethodInvocationExpression Expression {
 			get {
 				return _expression;
 			}
 		}
 
-		public InvokeActionBlock (Instruction sourceInstruction, IMethodInvocationExpression expression)
+		public InvokeActionBlock (Instruction sourceInstruction, MethodInvocationExpression expression)
 			: base (sourceInstruction)
 		{
 			_expression = expression;
