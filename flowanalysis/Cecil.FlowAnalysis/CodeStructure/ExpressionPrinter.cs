@@ -25,7 +25,7 @@
 
 using System;
 using System.IO;
-using Cecil.FlowAnalysis.CecilUtilities;
+using Cecil.FlowAnalysis.Utilities;
 using Mono.Cecil;
 
 namespace Cecil.FlowAnalysis.CodeStructure {

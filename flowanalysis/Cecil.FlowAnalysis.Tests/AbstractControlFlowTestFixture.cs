@@ -23,10 +23,9 @@
 //
 #endregion
 
-using System;
 using System.Collections;
 using System.IO;
-using Cecil.FlowAnalysis.CecilUtilities;
+using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
 using Mono.Cecil.Cil;

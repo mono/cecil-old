@@ -28,7 +28,7 @@ using System.IO;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.CecilUtilities {
+namespace Cecil.FlowAnalysis.Utilities {
 
 	/// <summary>
 	/// </summary>

@@ -28,7 +28,7 @@
 using System;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.CecilUtilities {
+namespace Cecil.FlowAnalysis.Utilities {
 
 	public class AbstractInstructionVisitor : IInstructionVisitor {
 		public virtual void OnNop (Instruction instruction)

@@ -25,7 +25,7 @@
 
 using System;
 using System.Collections;
-using Cecil.FlowAnalysis.CecilUtilities;
+using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
 using Mono.Cecil.Cil;

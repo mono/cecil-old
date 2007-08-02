@@ -26,7 +26,7 @@
 using System;
 using System.Collections;
 using Cecil.FlowAnalysis.ActionFlow;
-using Cecil.FlowAnalysis.CecilUtilities;
+using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Cecil.FlowAnalysis.Impl.CodeStructure;

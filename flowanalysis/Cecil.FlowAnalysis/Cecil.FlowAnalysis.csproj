@@ -107,18 +107,6 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CecilUtilities\AbstractInstructionVisitor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CecilUtilities\CecilFormatter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CecilUtilities\IInstructionVisitor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CecilUtilities\InstructionDispatcher.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="CodeStructure\AbstractCodeStructureVisitor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -293,6 +281,10 @@
     <Compile Include="Impl\ControlFlow\InstructionData.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\AbstractInstructionVisitor.cs" />
+    <Compile Include="Utilities\CecilFormatter.cs" />
+    <Compile Include="Utilities\IInstructionVisitor.cs" />
+    <Compile Include="Utilities\InstructionDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
