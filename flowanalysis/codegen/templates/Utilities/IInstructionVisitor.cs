@@ -27,7 +27,7 @@
 
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.CecilUtilities {
+namespace Cecil.FlowAnalysis.Utilities {
 
 	public interface IInstructionVisitor {
 <%

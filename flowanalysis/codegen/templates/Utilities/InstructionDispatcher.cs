@@ -29,7 +29,7 @@ using System;
 using System.Collections;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.CecilUtilities {
+namespace Cecil.FlowAnalysis.Utilities {
 
 	public class InstructionDispatcher {
 
