@@ -25,14 +25,15 @@
 
 using System;
 using System.IO;
-using System.Text;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CecilUtilities {
+
 	/// <summary>
 	/// </summary>
 	public class CecilFormatter {
+
 		public static string FormatInstruction (Instruction instruction)
 		{
 			StringWriter writer = new StringWriter ();
@@ -49,7 +50,7 @@ namespace Cecil.FlowAnalysis.CecilUtilities {
 
 		public static void WriteMethodBody (TextWriter writer, MethodDefinition method)
 		{
-			writer.WriteLine (method.ToString ());
+			writer.WriteLine (method);
 			foreach (Instruction instruction in method.Body.Instructions) {
 				writer.Write ('\t');
 				WriteInstruction (writer, instruction);

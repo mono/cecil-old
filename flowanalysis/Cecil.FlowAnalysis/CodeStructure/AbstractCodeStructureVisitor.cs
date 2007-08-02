@@ -23,6 +23,8 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public class AbstractCodeStructureVisitor : ICodeStructureVisitor {

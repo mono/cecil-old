@@ -6,7 +6,7 @@
 	<!-- allow properties to be customized in external file" -->
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 
-	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Mono.Cecil.dll" />
+	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Debug/Mono.Cecil.dll" />
 	<property name="build.dir" value="bin" />
 	<property name="booi" value="booi" />
 	<property name="optimize" value="false" />

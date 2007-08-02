@@ -23,6 +23,8 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.CecilUtilities {

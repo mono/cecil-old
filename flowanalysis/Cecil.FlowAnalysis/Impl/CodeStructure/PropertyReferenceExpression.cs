@@ -23,6 +23,8 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Cecil.FlowAnalysis.CodeStructure;

@@ -23,6 +23,8 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 using System;
 using System.Collections;
 using Mono.Cecil.Cil;

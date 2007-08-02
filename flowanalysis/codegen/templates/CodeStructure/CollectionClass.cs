@@ -23,6 +23,8 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 <%
 
 itemType = model.GetCollectionItemType(node)
