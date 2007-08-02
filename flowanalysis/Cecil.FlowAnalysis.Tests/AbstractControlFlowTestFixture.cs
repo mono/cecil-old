@@ -38,7 +38,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		{
 			MethodDefinition method = LoadTestCaseMethod (name);
 			IControlFlowGraph cfg = FlowGraphFactory.CreateControlFlowGraph (method);
-			Assert.AreEqual (normalize (LoadExpectedControlFlowString (name)), normalize (ToString (cfg)));
+			Assert.AreEqual (Normalize (LoadExpectedControlFlowString (name)), Normalize (ToString (cfg)));
 		}
 
 		public static string ToString (IControlFlowGraph cfg)

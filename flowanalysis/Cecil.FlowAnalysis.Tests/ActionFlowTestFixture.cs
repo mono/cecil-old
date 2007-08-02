@@ -227,7 +227,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		protected void RunTestCase (string name)
 		{
 			IActionFlowGraph afg = GetActionFlowGraph (name);
-			Assert.AreEqual (normalize (LoadTestCaseFile (name + "-afg.txt")), normalize (ToString (afg)));
+			Assert.AreEqual (Normalize (LoadTestCaseFile (name + "-afg.txt")), Normalize (ToString (afg)));
 		}
 
 		private IActionFlowGraph GetActionFlowGraph (string name)

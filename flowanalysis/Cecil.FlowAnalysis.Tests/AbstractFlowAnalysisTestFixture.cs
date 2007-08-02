@@ -23,14 +23,17 @@
 //
 #endregion
 
+using System;
 using System.Diagnostics;
 using System.IO;
 using Mono.Cecil;
 using NUnit.Framework;
 
 namespace Cecil.FlowAnalysis.Tests {
+
 	public class AbstractFlowAnalysisTestFixture {
-		protected string normalize (string s)
+
+		protected static string Normalize (string s)
 		{
 			return s.Trim ().Replace ("\r\n", "\n");
 		}
@@ -54,7 +57,7 @@ namespace Cecil.FlowAnalysis.Tests {
 			return Path.Combine (TestCasesDirectory, name);
 		}
 
-		private void ilasm (string arguments)
+		static void ilasm (string arguments)
 		{
 			Process p = new Process ();
 			p.StartInfo.Arguments = arguments;
@@ -85,13 +88,20 @@ namespace Cecil.FlowAnalysis.Tests {
 
 		public string TestCasesDirectory {
 			get {
-				return Path.GetFullPath (Path.Combine (Path.GetDirectoryName (GetCurrentModulePath ()), "../testcases/FlowAnalysis"));
+				return Path.GetFullPath (Path.Combine (FindTestcasesDirectory (), "FlowAnalysis"));
 			}
 		}
 
-		private string GetCurrentModulePath ()
+		static string FindTestcasesDirectory()
 		{
-			return new System.Uri (GetType ().Assembly.CodeBase).LocalPath;
+			string currentPath = Environment.CurrentDirectory;
+			while (!Directory.Exists(Path.Combine(currentPath, "testcases")))
+			{
+				string oldPath = currentPath;
+				currentPath = Path.GetDirectoryName(currentPath);
+				Assert.AreNotEqual(oldPath, currentPath);
+			}
+			return Path.Combine(currentPath, "testcases");
 		}
 
 		public string TestAssemblyPath {
