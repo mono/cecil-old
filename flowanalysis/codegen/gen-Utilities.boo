@@ -53,7 +53,7 @@ def parse(fname as string):
 
 def applyTemplate(instructions as (InstructionInfo), fname as string):
 	compiler = TemplateCompiler(TemplateBaseClass: CodeTemplate)
-	result = compiler.CompileFile(Path.Combine("codegen/templates/CecilUtilities", fname))
+	result = compiler.CompileFile(Path.Combine("codegen/templates/Utilities", fname))
 	assert 0 == len(result.Errors), result.Errors.ToString()
 
 	templateType = result.GeneratedAssembly.GetType("Template")
@@ -61,7 +61,7 @@ def applyTemplate(instructions as (InstructionInfo), fname as string):
 	template.Instructions = instructions
 
 	print fname
-	using writer=StreamWriter(Path.Combine("Cecil.FlowAnalysis/CecilUtilities", fname)):
+	using writer=StreamWriter(Path.Combine("Cecil.FlowAnalysis/Utilities", fname)):
 		template.Output = writer
 		template.Execute()
 
@@ -69,5 +69,3 @@ instructions = array(parse("codegen/instructions.txt"))
 applyTemplate(instructions, "InstructionDispatcher.cs")
 applyTemplate(instructions, "IInstructionVisitor.cs")
 applyTemplate(instructions, "AbstractInstructionVisitor.cs")
-
-
