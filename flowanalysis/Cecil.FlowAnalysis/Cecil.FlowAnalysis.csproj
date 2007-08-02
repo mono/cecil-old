@@ -74,12 +74,23 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ActionFlow\AbstractActionBlock.cs" />
+    <Compile Include="ActionFlow\AbstractFallThroughActionBlock.cs" />
+    <Compile Include="ActionFlow\ActionBlockCollection.cs" />
+    <Compile Include="ActionFlow\ActionFlowGraph.cs" />
+    <Compile Include="ActionFlow\ActionGraphBuilder.cs" />
     <Compile Include="ActionFlow\ActionType.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ActionFlow\AssignActionBlock.cs" />
+    <Compile Include="ActionFlow\BranchActionBlock.cs" />
+    <Compile Include="ActionFlow\ConditionalBranchActionBlock.cs" />
+    <Compile Include="ActionFlow\ExpressionDecompiler.cs" />
     <Compile Include="ActionFlow\IActionFlowGraph.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ActionFlow\InvokeActionBlock.cs" />
+    <Compile Include="ActionFlow\ReturnActionBlock.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -163,37 +174,6 @@
     <Compile Include="ControlFlow\InstructionBlock.cs" />
     <Compile Include="ControlFlow\InstructionData.cs" />
     <Compile Include="FlowGraphFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\AbstractActionBlock.cs" />
-    <Compile Include="Impl\ActionFlow\AbstractFallThroughActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ActionBlockCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ActionFlowGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ActionGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\AssignActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\BranchActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ConditionalBranchActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ExpressionDecompiler.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\InvokeActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ActionFlow\ReturnActionBlock.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Impl\CodeStructure\ArgumentReferenceExpression.cs">
