@@ -282,7 +282,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\AbstractInstructionVisitor.cs" />
-    <Compile Include="Utilities\CecilFormatter.cs" />
+    <Compile Include="Utilities\Formatter.cs" />
     <Compile Include="Utilities\IInstructionVisitor.cs" />
     <Compile Include="Utilities\InstructionDispatcher.cs" />
   </ItemGroup>
