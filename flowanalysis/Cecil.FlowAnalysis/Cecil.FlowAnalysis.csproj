@@ -129,8 +129,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeStructure\VariableReferenceExpression.cs" />
-    <Compile Include="ControlFlow\FlowGraph.cs" />
-    <Compile Include="ControlFlow\FlowGraphBuilder.cs" />
+    <Compile Include="ControlFlow\ControlFlowGraph.cs" />
+    <Compile Include="ControlFlow\ControlFlowGraphBuilder.cs" />
     <Compile Include="ControlFlow\InstructionBlock.cs" />
     <Compile Include="ControlFlow\InstructionData.cs" />
     <Compile Include="FlowGraphFactory.cs">
