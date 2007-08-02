@@ -179,9 +179,13 @@
     <Compile Include="CodeStructure\UnaryOperator.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ControlFlow\FlowGraph.cs" />
+    <Compile Include="ControlFlow\FlowGraphBuilder.cs" />
     <Compile Include="ControlFlow\IControlFlowGraph.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ControlFlow\InstructionBlock.cs" />
+    <Compile Include="ControlFlow\InstructionData.cs" />
     <Compile Include="FlowGraphFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -261,18 +265,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Impl\CodeStructure\VariableReferenceExpression.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ControlFlow\FlowGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ControlFlow\FlowGraphBuilder.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ControlFlow\InstructionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Impl\ControlFlow\InstructionData.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\AbstractInstructionVisitor.cs" />
