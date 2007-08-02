@@ -32,22 +32,24 @@ using Mono.Cecil.Cil;
 using NUnit.Framework;
 
 namespace Cecil.FlowAnalysis.Tests {
+
 	public class AbstractControlFlowTestFixture : AbstractFlowAnalysisTestFixture {
+
 		protected void RunTestCase (string name)
 		{
 			MethodDefinition method = LoadTestCaseMethod (name);
-			IControlFlowGraph cfg = FlowGraphFactory.CreateControlFlowGraph (method);
+			ControlFlowGraph cfg = FlowGraphFactory.CreateControlFlowGraph (method);
 			Assert.AreEqual (Normalize (LoadExpectedControlFlowString (name)), Normalize (ToString (cfg)));
 		}
 
-		public static string ToString (IControlFlowGraph cfg)
+		public static string ToString (ControlFlowGraph cfg)
 		{
 			StringWriter writer = new StringWriter ();
 			FormatControlFlowGraph (writer, cfg);
 			return writer.ToString ();
 		}
 
-		public static void FormatControlFlowGraph (TextWriter writer, IControlFlowGraph cfg)
+		public static void FormatControlFlowGraph (TextWriter writer, ControlFlowGraph cfg)
 		{
 			int id = 1;
 			foreach (InstructionBlock block in cfg.Blocks) {
@@ -70,9 +72,9 @@ namespace Cecil.FlowAnalysis.Tests {
 			}
 		}
 
-		private static int GetBlockId (IControlFlowGraph cfg, InstructionBlock block)
+		private static int GetBlockId (ControlFlowGraph cfg, InstructionBlock block)
 		{
-			return ((IList)cfg.Blocks).IndexOf (block) + 1;
+			return ((IList) cfg.Blocks).IndexOf (block) + 1;
 		}
 
 		private string LoadExpectedControlFlowString (string name)

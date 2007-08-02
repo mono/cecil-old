@@ -34,14 +34,14 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 	/// <summary>
 	/// </summary>
-	internal class FlowGraphBuilder {
+	internal class ControlFlowGraphBuilder {
 
 		MethodBody _body;
 		Hashtable _instructionData;
 		Hashtable _blocks = new Hashtable();
 		TypeReference _SystemVoid;
 
-		internal FlowGraphBuilder (MethodDefinition method)
+		internal ControlFlowGraphBuilder (MethodDefinition method)
 		{
 			if (method.Body.ExceptionHandlers.Count > 0) {
 				throw new ArgumentException ("Exception handlers are not supported.", "body");
@@ -53,11 +53,11 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			ComputeInstructionData ();
 		}
 
-		internal IControlFlowGraph ControlFlowGraph {
-			get { return new FlowGraph (_body, RegisteredBlocks, _instructionData); }
+		internal ControlFlowGraph ControlFlowGraph {
+			get { return new ControlFlowGraph (_body, RegisteredBlocks, _instructionData); }
 		}
 
-		private void DelimitBlocks ()
+		void DelimitBlocks ()
 		{
 			InstructionCollection instructions = _body.Instructions;
 
@@ -65,7 +65,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			MarkBlockEnds (instructions);
 		}
 
-		private void MarkBlockStarts (InstructionCollection instructions)
+		void MarkBlockStarts (InstructionCollection instructions)
 		{
 			Instruction instruction = instructions [0];
 
@@ -119,19 +119,19 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			RegisterBlock (block);
 		}
 
-		private void ComputeInstructionData ()
+		void ComputeInstructionData ()
 		{
 			_instructionData = new Hashtable ();
 			Hashtable visited = new Hashtable ();
 			ComputeInstructionData (visited, 0, GetFirstBlock ());
 		}
 
-		private InstructionBlock GetFirstBlock ()
+		InstructionBlock GetFirstBlock ()
 		{
 			return GetBlock (_body.Instructions [0]);
 		}
 
-		private void ComputeInstructionData (IDictionary visited, int stackHeight, InstructionBlock block)
+		void ComputeInstructionData (IDictionary visited, int stackHeight, InstructionBlock block)
 		{
 			if (visited.Contains (block)) return;
 			visited.Add (block, block);
@@ -145,7 +145,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			}
 		}
 
-		private int ComputeInstructionData (int stackHeight, Instruction instruction)
+		int ComputeInstructionData (int stackHeight, Instruction instruction)
 		{
 			int before = stackHeight;
 			int after = ComputeNewStackHeight (stackHeight, instruction);
@@ -153,12 +153,12 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return after;
 		}
 
-		private int ComputeNewStackHeight (int stackHeight, Instruction instruction)
+		int ComputeNewStackHeight (int stackHeight, Instruction instruction)
 		{
 			return stackHeight + GetPushDelta (instruction) - GetPopDelta (stackHeight, instruction);
 		}
 
-		private int GetPushDelta (Instruction instruction)
+		int GetPushDelta (Instruction instruction)
 		{
 			OpCode code = instruction.OpCode;
 			switch (code.StackBehaviourPush) {
@@ -188,7 +188,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			throw new ArgumentException (Formatter.FormatInstruction (instruction));
 		}
 
-		private int GetPopDelta (int stackHeight, Instruction instruction)
+		int GetPopDelta (int stackHeight, Instruction instruction)
 		{
 			OpCode code = instruction.OpCode;
 			switch (code.StackBehaviourPop) {
@@ -239,37 +239,33 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			throw new ArgumentException (Formatter.FormatInstruction (instruction));
 		}
 
-		private bool IsVoidMethod ()
+		bool IsVoidMethod ()
 		{
 			TypeReference type = _body.Method.ReturnType.ReturnType;
 			return IsVoid (type);
 		}
 
-		private bool IsVoid (TypeReference type)
+		bool IsVoid (TypeReference type)
 		{
 			return type == _SystemVoid;
 		}
 
-		private InstructionBlock[] RegisteredBlocks {
-			get {
-				return (InstructionBlock[]) ToArray (new InstructionBlock [BlockCount]);
-			}
+		InstructionBlock [] RegisteredBlocks {
+			get { return (InstructionBlock []) ToArray (new InstructionBlock [BlockCount]); }
 		}
 
-		private int BlockCount {
-			get {
-				return _blocks.Count;
-			}
+		int BlockCount {
+			get { return _blocks.Count; }
 		}
 
-		private Array ToArray (Array blocks)
+		Array ToArray (Array blocks)
 		{
 			_blocks.Values.CopyTo (blocks, 0);
 			Array.Sort (blocks);
 			return blocks;
 		}
 
-		private void ConnectBlocks ()
+		void ConnectBlocks ()
 		{
 			foreach (InstructionBlock block in _blocks.Values) {
 				if (block.LastInstruction == null) {
@@ -315,22 +311,22 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			}
 		}
 
-		private InstructionBlock GetBranchTargetBlock (Instruction instruction)
+		InstructionBlock GetBranchTargetBlock (Instruction instruction)
 		{
 			return GetBlock (GetBranchTarget (instruction));
 		}
 
-		private Instruction GetBranchTarget (Instruction instruction)
+		Instruction GetBranchTarget (Instruction instruction)
 		{
-			return (Instruction)instruction.Operand;
+			return (Instruction) instruction.Operand;
 		}
 
-		private void RegisterBlock (InstructionBlock block)
+		void RegisterBlock (InstructionBlock block)
 		{
 			_blocks.Add (block.FirstInstruction.Offset, block);
 		}
 
-		private InstructionBlock GetBlock (Instruction firstInstruction)
+		InstructionBlock GetBlock (Instruction firstInstruction)
 		{
 			return (InstructionBlock)_blocks [firstInstruction.Offset];
 		}

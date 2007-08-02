@@ -32,7 +32,7 @@ using Cecil.FlowAnalysis.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+namespace Cecil.FlowAnalysis.ActionFlow {
 
 	/// <summary>
 	/// </summary>
@@ -43,15 +43,15 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		IDictionary _processed = new Hashtable();
 		ExpressionDecompiler _expressionDecompiler;
 		MethodDefinition _method;
-		IControlFlowGraph _cfg;
+		ControlFlowGraph _cfg;
 		Instruction _current;
 		ActionFlowGraph _graph;
 
-		public IActionFlowGraph ActionFlowGraph {
+		public ActionFlowGraph ActionFlowGraph {
 			get { return _graph; }
 		}
 
-		internal ActionGraphBuilder (IControlFlowGraph cfg)
+		internal ActionGraphBuilder (ControlFlowGraph cfg)
 		{
 			_method = cfg.MethodBody.Method;
 

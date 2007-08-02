@@ -26,7 +26,6 @@
 using System;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil;
 
 namespace Cecil.FlowAnalysis {
@@ -35,13 +34,13 @@ namespace Cecil.FlowAnalysis {
 	/// </summary>
 	public class FlowGraphFactory {
 
-		public static IControlFlowGraph CreateControlFlowGraph (MethodDefinition method)
+		public static ControlFlowGraph CreateControlFlowGraph (MethodDefinition method)
 		{
 			if (null == method) throw new ArgumentNullException ("method");
-			return new FlowGraphBuilder (method).ControlFlowGraph;
+			return new ControlFlowGraphBuilder (method).ControlFlowGraph;
 		}
 
-		public static IActionFlowGraph CreateActionFlowGraph (IControlFlowGraph cfg)
+		public static ActionFlowGraph CreateActionFlowGraph (ControlFlowGraph cfg)
 		{
 			if (null == cfg) throw new ArgumentNullException ("cfg");
 			return new ActionGraphBuilder (cfg).ActionFlowGraph;

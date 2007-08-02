@@ -171,7 +171,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		[Test]
 		public void ConditionalBranchActionBlock ()
 		{
-			IActionFlowGraph afg = GetActionFlowGraph ("SimpleIf");
+			ActionFlowGraph afg = GetActionFlowGraph ("SimpleIf");
 			ConditionalBranchActionBlock cbr = (ConditionalBranchActionBlock) afg.Blocks [0];
 			Assert.AreSame (afg.Blocks [2], cbr.Then, "Then");
 			Assert.AreSame (afg.Blocks [1], cbr.Else, "Else");
@@ -227,11 +227,11 @@ namespace Cecil.FlowAnalysis.Tests {
 
 		protected void RunTestCase (string name)
 		{
-			IActionFlowGraph afg = GetActionFlowGraph (name);
+			ActionFlowGraph afg = GetActionFlowGraph (name);
 			Assert.AreEqual (Normalize (LoadTestCaseFile (name + "-afg.txt")), Normalize (ToString (afg)));
 		}
 
-		IActionFlowGraph GetActionFlowGraph (string name)
+		ActionFlowGraph GetActionFlowGraph (string name)
 		{
 			MethodDefinition method = LoadTestCaseMethod (name);
 			return FlowGraphFactory.CreateActionFlowGraph (FlowGraphFactory.CreateControlFlowGraph (method));
@@ -247,7 +247,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				_expressionPrinter = new ExpressionPrinter (writer);
 			}
 
-			public void Print (IActionFlowGraph afg)
+			public void Print (ActionFlowGraph afg)
 			{
 				int i = 1;
 				foreach (ActionBlock block in afg.Blocks) {
@@ -288,7 +288,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				_writer.Write ("block{0}: ", index);
 			}
 
-			void WriteConditionalBranch (IActionFlowGraph afg,  ConditionalBranchActionBlock block)
+			void WriteConditionalBranch (ActionFlowGraph afg,  ConditionalBranchActionBlock block)
 			{
 				_writer.Write ("if ");
 				WriteExpression (block.Condition);
@@ -296,12 +296,12 @@ namespace Cecil.FlowAnalysis.Tests {
 				WriteGoto (afg, block.Then);
 			}
 
-			void WriteBranch (IActionFlowGraph afg,  BranchActionBlock block)
+			void WriteBranch (ActionFlowGraph afg,  BranchActionBlock block)
 			{
 				WriteGoto (afg, block.Target);
 			}
 
-			void WriteGoto (IActionFlowGraph afg, ActionBlock target)
+			void WriteGoto (ActionFlowGraph afg, ActionBlock target)
 			{
 				_writer.Write ("goto block{0}", afg.Blocks.IndexOf (target) + 1);
 			}
@@ -331,7 +331,7 @@ namespace Cecil.FlowAnalysis.Tests {
 			}
 		}
 
-		public static string ToString (IActionFlowGraph afg)
+		public static string ToString (ActionFlowGraph afg)
 		{
 			StringWriter writer = new StringWriter ();
 			new ActionFlowGraphPrinter (writer).Print (afg);

@@ -29,7 +29,7 @@ using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
 
-	internal class FlowGraph : IControlFlowGraph {
+	public class ControlFlowGraph {
 
 		InstructionBlock [] _blocks;
 		MethodBody _body;
@@ -43,7 +43,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			get { return _blocks; }
 		}
 
-		public FlowGraph (MethodBody body, InstructionBlock [] blocks, IDictionary instructionData)
+		public ControlFlowGraph (MethodBody body, InstructionBlock [] blocks, IDictionary instructionData)
 		{
 			_body = body;
 			_blocks = blocks;

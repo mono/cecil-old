@@ -27,14 +27,14 @@ using System;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+namespace Cecil.FlowAnalysis.ActionFlow {
 
-	internal class ActionFlowGraph : IActionFlowGraph {
+	public class ActionFlowGraph {
 
 		ActionBlockCollection _blocks;
-		IControlFlowGraph _cfg;
+		ControlFlowGraph _cfg;
 
-		public ActionFlowGraph (IControlFlowGraph cfg, ActionBlockCollection blocks)
+		public ActionFlowGraph (ControlFlowGraph cfg, ActionBlockCollection blocks)
 		{
 			if (null == cfg) throw new ArgumentNullException ("cfg");
 			if (null == blocks) throw new ArgumentNullException ("blocks");
@@ -43,7 +43,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_blocks = blocks;
 		}
 
-		public IControlFlowGraph ControlFlowGraph {
+		public ControlFlowGraph ControlFlowGraph {
 			get { return _cfg; }
 		}
 
@@ -70,7 +70,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return false;
 		}
 
-		public void ReplaceAt (int index, ActionBlock block)
+		internal void ReplaceAt (int index, ActionBlock block)
 		{
 			if (null == block) throw new ArgumentNullException ("block");
 
@@ -82,7 +82,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_blocks.Insert (index, block);
 		}
 
-		private void Remove (ActionBlock block)
+		void Remove (ActionBlock block)
 		{
 			foreach (ActionBlock s in block.Successors) {
 				s.RemovePredecessor (block);

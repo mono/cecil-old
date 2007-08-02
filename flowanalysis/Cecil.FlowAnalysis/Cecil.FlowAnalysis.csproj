@@ -86,9 +86,6 @@
     <Compile Include="ActionFlow\BranchActionBlock.cs" />
     <Compile Include="ActionFlow\ConditionalBranchActionBlock.cs" />
     <Compile Include="ActionFlow\ExpressionDecompiler.cs" />
-    <Compile Include="ActionFlow\IActionFlowGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ActionFlow\InvokeActionBlock.cs" />
     <Compile Include="ActionFlow\ReturnActionBlock.cs" />
     <Compile Include="AssemblyInfo.cs">
@@ -134,9 +131,6 @@
     <Compile Include="CodeStructure\VariableReferenceExpression.cs" />
     <Compile Include="ControlFlow\FlowGraph.cs" />
     <Compile Include="ControlFlow\FlowGraphBuilder.cs" />
-    <Compile Include="ControlFlow\IControlFlowGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ControlFlow\InstructionBlock.cs" />
     <Compile Include="ControlFlow\InstructionData.cs" />
     <Compile Include="FlowGraphFactory.cs">
