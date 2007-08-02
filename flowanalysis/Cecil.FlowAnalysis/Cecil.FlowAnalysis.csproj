@@ -182,12 +182,6 @@
     <Compile Include="ControlFlow\IControlFlowGraph.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ControlFlow\IInstructionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ControlFlow\IInstructionData.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="FlowGraphFactory.cs">
       <SubType>Code</SubType>
     </Compile>

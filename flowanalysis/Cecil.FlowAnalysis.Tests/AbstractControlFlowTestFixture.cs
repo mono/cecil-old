@@ -50,7 +50,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		public static void FormatControlFlowGraph (TextWriter writer, IControlFlowGraph cfg)
 		{
 			int id = 1;
-			foreach (IInstructionBlock block in cfg.Blocks) {
+			foreach (InstructionBlock block in cfg.Blocks) {
 				writer.WriteLine ("block {0}:", id);
 				writer.WriteLine ("\tbody:");
 				foreach (Instruction instruction in block) {
@@ -58,10 +58,10 @@ namespace Cecil.FlowAnalysis.Tests {
 					Formatter.WriteInstruction (writer, instruction);
 					writer.WriteLine ();
 				}
-				IInstructionBlock[] successors = block.Successors;
+				InstructionBlock [] successors = block.Successors;
 				if (successors.Length > 0) {
 					writer.WriteLine ("\tsuccessors:");
-					foreach (IInstructionBlock successor in successors) {
+					foreach (InstructionBlock successor in successors) {
 						writer.WriteLine ("\t\tblock {0}", GetBlockId (cfg, successor));
 					}
 				}
@@ -70,7 +70,7 @@ namespace Cecil.FlowAnalysis.Tests {
 			}
 		}
 
-		private static int GetBlockId (IControlFlowGraph cfg, IInstructionBlock block)
+		private static int GetBlockId (IControlFlowGraph cfg, InstructionBlock block)
 		{
 			return ((IList)cfg.Blocks).IndexOf (block) + 1;
 		}

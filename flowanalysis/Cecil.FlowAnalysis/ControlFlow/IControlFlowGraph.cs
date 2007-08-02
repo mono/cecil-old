@@ -26,7 +26,9 @@
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
+
 	public interface IControlFlowGraph {
+
 		/// <summary>
 		/// The method body represented by this control flow graph.
 		/// </summary>
@@ -35,13 +37,13 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 		/// <summary>
 		/// The blocks.
 		/// </summary>
-		IInstructionBlock[] Blocks { get; }
+		InstructionBlock [] Blocks { get; }
 
 		/// <summary>
 		/// Retrieves data about a specific instruction.
 		/// </summary>
 		/// <param name="instruction"></param>
 		/// <returns></returns>
-		IInstructionData GetData (Instruction instruction);
+		InstructionData GetData (Instruction instruction);
 	}
 }

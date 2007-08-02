@@ -27,7 +27,6 @@ using System;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
 using Cecil.FlowAnalysis.Impl.ActionFlow;
-using Cecil.FlowAnalysis.Impl.ControlFlow;
 using Mono.Cecil;
 
 namespace Cecil.FlowAnalysis {

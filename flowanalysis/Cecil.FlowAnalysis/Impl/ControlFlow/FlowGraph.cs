@@ -27,34 +27,32 @@ using System.Collections;
 using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ControlFlow {
-	internal class FlowGraph : IControlFlowGraph {
-		private InstructionBlock[] _blocks;
-		private MethodBody _body;
-		private IDictionary _data;
+namespace Cecil.FlowAnalysis.ControlFlow {
 
-		public FlowGraph (MethodBody body, InstructionBlock[] blocks, IDictionary instructionData)
+	internal class FlowGraph : IControlFlowGraph {
+
+		InstructionBlock [] _blocks;
+		MethodBody _body;
+		IDictionary _data;
+
+		public MethodBody MethodBody {
+			get { return _body; }
+		}
+
+		public InstructionBlock [] Blocks {
+			get { return _blocks; }
+		}
+
+		public FlowGraph (MethodBody body, InstructionBlock [] blocks, IDictionary instructionData)
 		{
 			_body = body;
 			_blocks = blocks;
 			_data = instructionData;
 		}
 
-		public IInstructionData GetData (Instruction instruction)
+		public InstructionData GetData (Instruction instruction)
 		{
-			return (IInstructionData) _data [instruction.Offset];
-		}
-
-		public MethodBody MethodBody {
-			get {
-				return _body;
-			}
-		}
-
-		public IInstructionBlock[] Blocks {
-			get {
-				return _blocks;
-			}
+			return (InstructionData) _data [instruction.Offset];
 		}
 	}
 }

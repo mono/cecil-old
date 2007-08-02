@@ -30,21 +30,23 @@ using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ControlFlow {
+namespace Cecil.FlowAnalysis.ControlFlow {
+
 	/// <summary>
 	/// </summary>
 	internal class FlowGraphBuilder {
-		private MethodBody _body;
-		private Hashtable _instructionData;
-		private Hashtable _blocks = new Hashtable();
-		private TypeReference _SystemVoid;
+
+		MethodBody _body;
+		Hashtable _instructionData;
+		Hashtable _blocks = new Hashtable();
+		TypeReference _SystemVoid;
 
 		internal FlowGraphBuilder (MethodDefinition method)
 		{
 			if (method.Body.ExceptionHandlers.Count > 0) {
 				throw new ArgumentException ("Exception handlers are not supported.", "body");
 			}
-			_SystemVoid = method.DeclaringType.Module.Import (typeof(void));
+			_SystemVoid = method.DeclaringType.Module.Import (typeof (void));
 			_body = method.Body;
 			DelimitBlocks ();
 			ConnectBlocks ();
@@ -52,9 +54,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 		}
 
 		internal IControlFlowGraph ControlFlowGraph {
-			get {
-				return new FlowGraph (_body, RegisteredBlocks, _instructionData);
-			}
+			get { return new FlowGraph (_body, RegisteredBlocks, _instructionData); }
 		}
 
 		private void DelimitBlocks ()
@@ -84,7 +84,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			}
 		}
 
-		private void MarkBlockEnds (InstructionCollection instructions)
+		void MarkBlockEnds (InstructionCollection instructions)
 		{
 			InstructionBlock[] blocks = this.RegisteredBlocks;
 			InstructionBlock current = blocks [0];
@@ -97,7 +97,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			current.SetLastInstruction (instructions [instructions.Count - 1]);
 		}
 
-		private bool IsBlockDelimiter (Instruction instruction)
+		static bool IsBlockDelimiter (Instruction instruction)
 		{
 			FlowControl control = instruction.OpCode.FlowControl;
 			switch (control) {
@@ -110,7 +110,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			return false;
 		}
 
-		private void MarkBlockStart (Instruction instruction)
+		void MarkBlockStart (Instruction instruction)
 		{
 			InstructionBlock block = GetBlock (instruction);
 			if (null != block) return;
@@ -280,12 +280,12 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				case FlowControl.Branch:
 				case FlowControl.Cond_Branch:
 					{
-						IInstructionBlock target = GetBranchTargetBlock (instruction);
+						InstructionBlock target = GetBranchTargetBlock (instruction);
 						if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch
 							&& instruction.Next != null) {
-							block.SetSuccessors (new IInstructionBlock [] { target, GetBlock (instruction.Next) });
+							block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
 						} else {
-							block.SetSuccessors (new IInstructionBlock [] { target })	;
+							block.SetSuccessors (new InstructionBlock [] { target })	;
 						}
 						break;
 					}
@@ -294,7 +294,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				case FlowControl.Next:
 					{
 						if (null != instruction.Next) {
-							block.SetSuccessors (new IInstructionBlock [] { GetBlock (instruction.Next) });
+							block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
 						}
 						break;
 					}
@@ -315,7 +315,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 			}
 		}
 
-		private IInstructionBlock GetBranchTargetBlock (Instruction instruction)
+		private InstructionBlock GetBranchTargetBlock (Instruction instruction)
 		{
 			return GetBlock (GetBranchTarget (instruction));
 		}

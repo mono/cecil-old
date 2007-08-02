@@ -28,16 +28,18 @@ using System.Collections;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
+using Cecil.FlowAnalysis.CodeStructure;
 using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Cecil.FlowAnalysis.Impl.CodeStructure;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
-using Cecil.FlowAnalysis.CodeStructure;
 
 namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+
 	/// <summary>
 	/// </summary>
 	internal class ActionGraphBuilder : AbstractInstructionVisitor {
+
 		private ActionBlockCollection _blocks = new ActionBlockCollection();
 		private IDictionary _instruction2block = new Hashtable();
 		private IDictionary _processed = new Hashtable();
@@ -180,14 +182,14 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		private void ProcessBlocks ()
 		{
-			foreach (IInstructionBlock block in _cfg.Blocks) {
+			foreach (InstructionBlock block in _cfg.Blocks) {
 				if (WasProcessed (block)) continue;
 				_current = block.FirstInstruction;
 				ProcessBlock (block);
 			}
 		}
 
-		private void ProcessBlock (IInstructionBlock block)
+		private void ProcessBlock (InstructionBlock block)
 		{
 			switch (block.Successors.Length) {
 			case 0:
@@ -205,7 +207,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			MarkProcessed (block);
 		}
 
-		private void ProcessTwoWayBlock (IInstructionBlock block)
+		private void ProcessTwoWayBlock (InstructionBlock block)
 		{
 			if (IsLogicalExpression (block)) {
 				ProcessLogicalExpressionBlock (block);
@@ -220,16 +222,16 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		/// </summary>
 		/// <param name="block"></param>
 		/// <returns></returns>
-		private bool IsLogicalExpression (IInstructionBlock block)
+		private bool IsLogicalExpression (InstructionBlock block)
 		{
 			return IsLogicalExpression (new Hashtable (), block);
 		}
 
-		private bool IsLogicalExpression (Hashtable visited, IInstructionBlock block)
+		private bool IsLogicalExpression (Hashtable visited, InstructionBlock block)
 		{
 			if (visited.Contains (block)) return false;
 			visited.Add (block, block);
-			foreach (IInstructionBlock successor in block.Successors) {
+			foreach (InstructionBlock successor in block.Successors) {
 				if (GetStackAfter (successor.LastInstruction) > 0) return true;
 				if (IsLogicalExpression (visited, successor)) return true;
 			}
@@ -237,7 +239,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		}
 
 
-		private void ProcessSimpleBlock (IInstructionBlock block)
+		private void ProcessSimpleBlock (InstructionBlock block)
 		{
 			foreach (Instruction instruction in block) {
 				_expressionDecompiler.Visit (instruction);
@@ -248,7 +250,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void ProcessLogicalExpressionBlock (IInstructionBlock block)
+		private void ProcessLogicalExpressionBlock (InstructionBlock block)
 		{
 			switch (DetectExpressionPattern (block)) {
 			case ExpressionPattern.SimpleOr:
@@ -276,9 +278,9 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			NestedNotAnd
 		}
 
-		ExpressionPattern DetectExpressionPattern (IInstructionBlock block)
+		ExpressionPattern DetectExpressionPattern (InstructionBlock block)
 		{
-			IInstructionBlock then = GetThen (block);
+			InstructionBlock then = GetThen (block);
 			if (IsTrue (then)) return ExpressionPattern.SimpleOr;
 			if (IsFalse (then)) return ExpressionPattern.SimpleNotAnd;
 
@@ -292,36 +294,36 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return ExpressionPattern.Unknown;
 		}
 
-		void ProcessNestedNotAnd (IInstructionBlock block)
+		void ProcessNestedNotAnd (InstructionBlock block)
 		{
 			BuildNegateExpression (block);
-			IInstructionBlock y = GetElse (block);
+			InstructionBlock y = GetElse (block);
 			BuildExpression (y);
 			_expressionDecompiler.PushBinaryExpression (BinaryOperator.LogicalAnd);
 			ProcessNestedExpression (y);
 		}
 
-		void ProcessOr (IInstructionBlock block)
+		void ProcessOr (InstructionBlock block)
 		{
 			BuildExpression (block);
 			ProcessNestedExpression (GetElse (block));
 			_expressionDecompiler.PushBinaryExpression (BinaryOperator.LogicalOr);
 		}
 
-		void ProcessNotAnd (IInstructionBlock block)
+		void ProcessNotAnd (InstructionBlock block)
 		{
 			BuildNegateExpression (block);
 			ProcessNestedExpression (GetElse (block));
 			_expressionDecompiler.PushBinaryExpression (BinaryOperator.LogicalAnd);
 		}
 
-		private void BuildNegateExpression (IInstructionBlock block)
+		private void BuildNegateExpression (InstructionBlock block)
 		{
 			BuildExpression (block);
 			_expressionDecompiler.Negate ();
 		}
 
-		private void ProcessNestedExpression (IInstructionBlock block)
+		private void ProcessNestedExpression (InstructionBlock block)
 		{
 			switch (block.Successors.Length) {
 			case 1:
@@ -337,7 +339,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private void BuildExpression (IInstructionBlock block)
+		private void BuildExpression (InstructionBlock block)
 		{
 			if (WasProcessed (block)) return;
 			foreach (Instruction instruction in block) {
@@ -346,13 +348,13 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			MarkProcessed (block);
 		}
 
-		bool IsTrue (IInstructionBlock block)
+		static bool IsTrue (InstructionBlock block)
 		{
 			return block.FirstInstruction == block.LastInstruction
 				&& block.FirstInstruction.OpCode.Value == OpCodes.Ldc_I4_1.Value;
 		}
 
-		bool IsFalse (IInstructionBlock block)
+		static bool IsFalse (InstructionBlock block)
 		{
 			return block.FirstInstruction == block.LastInstruction
 				&& block.FirstInstruction.OpCode.Value == OpCodes.Ldc_I4_0.Value;
@@ -448,7 +450,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return GetInstructionData (instruction).StackAfter;
 		}
 
-		private IInstructionData GetInstructionData (Instruction instruction)
+		private InstructionData GetInstructionData (Instruction instruction)
 		{
 			return _cfg.GetData (instruction);
 		}
@@ -470,29 +472,29 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return _expressionDecompiler.Pop ();
 		}
 
-		void MarkProcessed (IInstructionBlock[] blocks)
+		void MarkProcessed (InstructionBlock [] blocks)
 		{
-			foreach (IInstructionBlock block in blocks) {
+			foreach (InstructionBlock block in blocks) {
 				MarkProcessed (block);
 			}
 		}
 
-		void MarkProcessed (IInstructionBlock block)
+		void MarkProcessed (InstructionBlock block)
 		{
 			_processed [block] = block;
 		}
 
-		bool WasProcessed (IInstructionBlock block)
+		bool WasProcessed (InstructionBlock block)
 		{
 			return _processed.Contains (block);
 		}
 
-		private static IInstructionBlock GetThen (IInstructionBlock block)
+		private static InstructionBlock GetThen (InstructionBlock block)
 		{
 			return block.Successors [0];
 		}
 
-		private static IInstructionBlock GetElse (IInstructionBlock block)
+		private static InstructionBlock GetElse (InstructionBlock block)
 		{
 			return block.Successors [1];
 		}
