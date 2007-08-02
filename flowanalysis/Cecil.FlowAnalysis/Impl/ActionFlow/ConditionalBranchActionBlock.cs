@@ -24,26 +24,51 @@
 #endregion
 
 using System;
-using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.CodeStructure;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+namespace Cecil.FlowAnalysis.ActionFlow {
+
 	/// <summary>
 	/// </summary>
-	internal class ConditionalBranchActionBlock : AbstractActionBlock, IConditionalBranchActionBlock {
+	public class ConditionalBranchActionBlock : ActionBlock {
+
 		IExpression _condition;
-		private IActionBlock _then;
-		private IActionBlock _else;
+		ActionBlock _then;
+		ActionBlock _else;
+
+		public override ActionType ActionType {
+			get { return ActionType.ConditionalBranch; }
+		}
+
+		public IExpression Condition {
+			get { return _condition; }
+		}
+
+		public ActionBlock Then {
+			get { return _then; }
+		}
+
+		public ActionBlock Else {
+			get { return _else; }
+		}
+
+		public override ActionBlock [] Successors {
+			get {
+				return _else != null
+					? new ActionBlock [] { _then, _else }
+					: new ActionBlock [] { _then };
+			}
+		}
 
 		public ConditionalBranchActionBlock (Instruction sourceInstruction, IExpression condition)
-		: base(sourceInstruction)
+			: base (sourceInstruction)
 		{
 			if (null == condition) throw new ArgumentNullException ("condition");
 			_condition = condition;
 		}
 
-		public void SetTargets (IActionBlock then, IActionBlock else_)
+		internal void SetTargets (ActionBlock then, ActionBlock else_)
 		{
 			if (null == then) throw new ArgumentNullException ("then");
 			AddAsPredecessorOf (then);
@@ -52,39 +77,14 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			_else = else_;
 		}
 
-		override public ActionType ActionType {
-			get { return ActionType.ConditionalBranch; }
-		}
-
-		public IExpression Condition {
-			get { return _condition; }
-		}
-
-		public IActionBlock Then {
-			get { return _then; }
-		}
-
-		public IActionBlock Else {
-			get { return _else; }
-		}
-
-		public override IActionBlock[] Successors {
-			get {
-				return _else != null
-					? new IActionBlock [] { _then, _else }
-					: new IActionBlock [] { _then };
-			}
-		}
-
-		public override void ReplaceSuccessor (IActionBlock existing, IActionBlock newBlock)
+		internal override void ReplaceSuccessor (ActionBlock existing, ActionBlock newBlock)
 		{
-			if (existing == _then) {
+			if (existing == _then)
 				_then = newBlock;
-			} else if (existing == _else) {
+			else if (existing == _else)
 				_else = newBlock;
-			} else {
+			else
 				throw new ArgumentException ("existing");
-			}
 		}
 	}
 }

@@ -24,18 +24,17 @@
 #endregion
 
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 #if !EMBEDDED
 
-[assembly: AssemblyTitle("Cecil.FlowAnalysis")]
-[assembly: AssemblyDescription("A flow analysis framework for Mono.Cecil")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("db4objects Inc.")]
-[assembly: AssemblyProduct("Cecil.FlowAnalysis")]
-[assembly: AssemblyCopyright("(C) db4objects Inc.")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyTitle ("Cecil.FlowAnalysis")]
+[assembly: AssemblyDescription ("A flow analysis framework for Mono.Cecil")]
+[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyCompany ("db4objects Inc.")]
+[assembly: AssemblyProduct ("Cecil.FlowAnalysis")]
+[assembly: AssemblyCopyright ("(C) db4objects Inc.")]
+[assembly: AssemblyTrademark ("")]
+[assembly: AssemblyCulture ("")]
 
 [assembly: AssemblyVersion("0.1.0.0")]
 

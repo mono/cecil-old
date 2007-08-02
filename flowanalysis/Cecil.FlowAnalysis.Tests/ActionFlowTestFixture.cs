@@ -31,6 +31,7 @@ using Mono.Cecil;
 using NUnit.Framework;
 
 namespace Cecil.FlowAnalysis.Tests {
+
 	[TestFixture]
 	public class ActionFlowTestFixture : AbstractFlowAnalysisTestFixture {
 
@@ -171,7 +172,7 @@ namespace Cecil.FlowAnalysis.Tests {
 		public void ConditionalBranchActionBlock ()
 		{
 			IActionFlowGraph afg = GetActionFlowGraph ("SimpleIf");
-			IConditionalBranchActionBlock cbr = (IConditionalBranchActionBlock) afg.Blocks [0];
+			ConditionalBranchActionBlock cbr = (ConditionalBranchActionBlock) afg.Blocks [0];
 			Assert.AreSame (afg.Blocks [2], cbr.Then, "Then");
 			Assert.AreSame (afg.Blocks [1], cbr.Else, "Else");
 		}
@@ -249,29 +250,29 @@ namespace Cecil.FlowAnalysis.Tests {
 			public void Print (IActionFlowGraph afg)
 			{
 				int i = 1;
-				foreach (IActionBlock block in afg.Blocks) {
+				foreach (ActionBlock block in afg.Blocks) {
 					if (afg.IsBranchTarget (block)) {
 						WriteLabel (i);
 					}
 					switch (block.ActionType) {
 					case ActionType.Return:
-						WriteReturn ((IReturnActionBlock) block);
+						WriteReturn ((ReturnActionBlock) block);
 						break;
 
 					case ActionType.Branch:
-						WriteBranch (afg, (IBranchActionBlock) block);
+						WriteBranch (afg, (BranchActionBlock) block);
 						break;
 
 					case ActionType.ConditionalBranch:
-						WriteConditionalBranch (afg, (IConditionalBranchActionBlock) block);
+						WriteConditionalBranch (afg, (ConditionalBranchActionBlock) block);
 						break;
 
 					case ActionType.Assign:
-						WriteAssign ((IAssignActionBlock) block);
+						WriteAssign ((AssignActionBlock) block);
 						break;
 
 					case ActionType.Invoke:
-						WriteInvoke ((IInvokeActionBlock) block);
+						WriteInvoke ((InvokeActionBlock) block);
 						break;
 
 					default:
@@ -287,7 +288,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				_writer.Write ("block{0}: ", index);
 			}
 
-			void WriteConditionalBranch (IActionFlowGraph afg,  IConditionalBranchActionBlock block)
+			void WriteConditionalBranch (IActionFlowGraph afg,  ConditionalBranchActionBlock block)
 			{
 				_writer.Write ("if ");
 				WriteExpression (block.Condition);
@@ -295,22 +296,22 @@ namespace Cecil.FlowAnalysis.Tests {
 				WriteGoto (afg, block.Then);
 			}
 
-			void WriteBranch (IActionFlowGraph afg,  IBranchActionBlock block)
+			void WriteBranch (IActionFlowGraph afg,  BranchActionBlock block)
 			{
 				WriteGoto (afg, block.Target);
 			}
 
-			private void WriteGoto (IActionFlowGraph afg, IActionBlock target)
+			private void WriteGoto (IActionFlowGraph afg, ActionBlock target)
 			{
 				_writer.Write ("goto block{0}", afg.Blocks.IndexOf (target) + 1);
 			}
 
-			void WriteAssign (IAssignActionBlock block)
+			void WriteAssign (AssignActionBlock block)
 			{
 				WriteExpression (block.AssignExpression);
 			}
 
-			void WriteReturn (IReturnActionBlock block)
+			void WriteReturn (ReturnActionBlock block)
 			{
 				_writer.Write ("return");
 				if (null != block.Expression) {
@@ -319,7 +320,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				}
 			}
 
-			void WriteInvoke (IInvokeActionBlock block)
+			void WriteInvoke (InvokeActionBlock block)
 			{
 				WriteExpression (block.Expression);
 			}

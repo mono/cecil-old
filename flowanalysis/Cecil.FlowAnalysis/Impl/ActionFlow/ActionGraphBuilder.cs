@@ -29,7 +29,6 @@ using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Cecil.FlowAnalysis.Impl.CodeStructure;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -78,7 +77,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		{
 			int index = 0;
 			while (index < _blocks.Count) {
-				IActionBlock block = _blocks [index];
+				ActionBlock block = _blocks [index];
 				switch (block.ActionType) {
 				case ActionType.ConditionalBranch:
 					/// if condition goto label
@@ -99,15 +98,15 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 						&& 1 == cbr.Else.Predecessors.Count) {
 						BinaryOperator op = BinaryOperator.LogicalOr;
 						IExpression lhs = cbr.Condition;
-						IExpression rhs = ((IReturnActionBlock)cbr.Else).Expression;
+						IExpression rhs = ((ReturnActionBlock) cbr.Else).Expression;
 
-						if (((ILiteralExpression)((IReturnActionBlock)cbr.Then).Expression).Value.Equals (0)) {
+						if (((ILiteralExpression)((ReturnActionBlock) cbr.Then).Expression).Value.Equals (0)) {
 							op = BinaryOperator.LogicalAnd;
 							_expressionDecompiler.Negate (lhs);
 							lhs = _expressionDecompiler.Pop ();
 						}
 
-						IActionBlock newBlock = new ReturnActionBlock (
+						ActionBlock newBlock = new ReturnActionBlock (
 							block.SourceInstruction,
 							new BinaryExpression (op, lhs, rhs));
 
@@ -122,9 +121,9 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private bool IsReturnTrueOrFalse (IActionBlock block)
+		private bool IsReturnTrueOrFalse (ActionBlock block)
 		{
-			IReturnActionBlock ret = block as IReturnActionBlock;
+			ReturnActionBlock ret = block as ReturnActionBlock;
 			return ret != null && IsTrueOrFalse (ret.Expression);
 		}
 
@@ -137,7 +136,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 				|| literal.Value.Equals (0));
 		}
 
-		private static bool IsReturn (IActionBlock block)
+		private static bool IsReturn (ActionBlock block)
 		{
 			return block.ActionType == ActionType.Return;
 		}
@@ -145,15 +144,15 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 		private void ConnectActionBlocks ()
 		{
 			for (int i=0; i < _blocks.Count; ++i) {
-				IActionBlock block = _blocks [i];
+				ActionBlock block = _blocks [i];
 				switch (block.ActionType) {
 				case ActionType.Branch:
-					BranchActionBlock br = (BranchActionBlock)block;
+					BranchActionBlock br = (BranchActionBlock) block;
 					br.SetTarget (GetBranchTarget (br.SourceInstruction));
 					break;
 
 				case ActionType.ConditionalBranch:
-					ConditionalBranchActionBlock cbr = (ConditionalBranchActionBlock)block;
+					ConditionalBranchActionBlock cbr = (ConditionalBranchActionBlock) block;
 					cbr.SetTargets (GetBranchTarget (cbr.SourceInstruction), GetBlockAtOrNull (i + 1));
 					break;
 
@@ -168,16 +167,16 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			}
 		}
 
-		private IActionBlock GetBlockAtOrNull (int index)
+		private ActionBlock GetBlockAtOrNull (int index)
 		{
 			return index >= _blocks.Count
 				? null
 				: _blocks [index];
 		}
 
-		private IActionBlock GetBranchTarget (Instruction instruction)
+		private ActionBlock GetBranchTarget (Instruction instruction)
 		{
-			return GetActionBlock ((Instruction)instruction.Operand);
+			return GetActionBlock ((Instruction) instruction.Operand);
 		}
 
 		private void ProcessBlocks ()
@@ -427,7 +426,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 
 		public override void OnCall (Instruction instruction)
 		{
-			Add (new InvokeActionBlock (instruction, (IMethodInvocationExpression)Pop ()));
+			Add (new InvokeActionBlock (instruction, (IMethodInvocationExpression) Pop ()));
 		}
 
 		public override void OnBr (Instruction instruction)
@@ -440,31 +439,31 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			Add (new AssignActionBlock (instruction, (IAssignExpression) Pop ()));
 		}
 
-		private int GetStackBefore (Instruction instruction)
+		int GetStackBefore (Instruction instruction)
 		{
 			return GetInstructionData (instruction).StackBefore;
 		}
 
-		private int GetStackAfter (Instruction instruction)
+		int GetStackAfter (Instruction instruction)
 		{
 			return GetInstructionData (instruction).StackAfter;
 		}
 
-		private InstructionData GetInstructionData (Instruction instruction)
+		InstructionData GetInstructionData (Instruction instruction)
 		{
 			return _cfg.GetData (instruction);
 		}
 
-		void Add (IActionBlock block)
+		void Add (ActionBlock block)
 		{
 			if (null == block) throw new ArgumentNullException ("block");
 			_blocks.Add (block);
 			_instruction2block.Add (_current, block);
 		}
 
-		IActionBlock GetActionBlock (Instruction block)
+		ActionBlock GetActionBlock (Instruction block)
 		{
-			return (IActionBlock) _instruction2block [block];
+			return (ActionBlock) _instruction2block [block];
 		}
 
 		IExpression Pop ()

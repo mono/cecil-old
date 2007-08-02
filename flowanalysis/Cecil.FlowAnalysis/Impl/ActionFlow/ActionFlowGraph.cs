@@ -28,9 +28,11 @@ using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
 
 namespace Cecil.FlowAnalysis.Impl.ActionFlow {
+
 	internal class ActionFlowGraph : IActionFlowGraph {
-		private ActionBlockCollection _blocks;
-		private IControlFlowGraph _cfg;
+
+		ActionBlockCollection _blocks;
+		IControlFlowGraph _cfg;
 
 		public ActionFlowGraph (IControlFlowGraph cfg, ActionBlockCollection blocks)
 		{
@@ -45,22 +47,22 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			get { return _cfg; }
 		}
 
-		public IActionBlockCollection Blocks {
+		public ActionBlockCollection Blocks {
 			get { return _blocks; }
 		}
 
-		public bool IsBranchTarget (IActionBlock block)
+		public bool IsBranchTarget (ActionBlock block)
 		{
 			if (null == block) throw new ArgumentNullException ("block");
-			foreach (IActionBlock p in block.Predecessors) {
+			foreach (ActionBlock p in block.Predecessors) {
 				switch (p.ActionType) {
 				case ActionType.Branch:
-					IBranchActionBlock br = (IBranchActionBlock) p;
+					BranchActionBlock br = (BranchActionBlock) p;
 					if (br.Target == block) return true;
 					break;
 
 				case ActionType.ConditionalBranch:
-					IConditionalBranchActionBlock cbr = (IConditionalBranchActionBlock) p;
+					ConditionalBranchActionBlock cbr = (ConditionalBranchActionBlock) p;
 					if (cbr.Then == block) return true;
 					break;
 				}
@@ -68,21 +70,21 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			return false;
 		}
 
-		public void ReplaceAt (int index, IActionBlock block)
+		public void ReplaceAt (int index, ActionBlock block)
 		{
 			if (null == block) throw new ArgumentNullException ("block");
 
-			IActionBlock existing = _blocks [index];
-			foreach (AbstractActionBlock p in existing.Predecessors.ToArray ()) {
+			ActionBlock existing = _blocks [index];
+			foreach (ActionBlock p in existing.Predecessors.ToArray ()) {
 				p.ReplaceSuccessor (existing, block);
 			}
 			Remove (existing);
 			_blocks.Insert (index, block);
 		}
 
-		private void Remove (IActionBlock block)
+		private void Remove (ActionBlock block)
 		{
-			foreach (AbstractActionBlock s in block.Successors) {
+			foreach (ActionBlock s in block.Successors) {
 				s.RemovePredecessor (block);
 				if (0 == s.Predecessors.Count) {
 					Remove (s);

@@ -25,20 +25,15 @@
 
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
-	internal class InvokeActionBlock : AbstractFallThroughActionBlock, IInvokeActionBlock {
-		private IMethodInvocationExpression _expression;
+namespace Cecil.FlowAnalysis.ActionFlow {
 
-		public InvokeActionBlock (Instruction sourceInstruction, IMethodInvocationExpression expression)
-		: base(sourceInstruction)
-		{
-			_expression = expression;
-		}
+	public class InvokeActionBlock : AbstractFallThroughActionBlock {
 
-		override public ActionType ActionType {
+		IMethodInvocationExpression _expression;
+
+		public override ActionType ActionType {
 			get {
 				return ActionType.Invoke;
 			}
@@ -48,6 +43,12 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 			get {
 				return _expression;
 			}
+		}
+
+		public InvokeActionBlock (Instruction sourceInstruction, IMethodInvocationExpression expression)
+			: base (sourceInstruction)
+		{
+			_expression = expression;
 		}
 	}
 }

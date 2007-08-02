@@ -77,31 +77,7 @@
     <Compile Include="ActionFlow\ActionType.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ActionFlow\IActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IActionBlockCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="ActionFlow\IActionFlowGraph.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IAssignActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IBranchActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IConditionalBranchActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IFallThroughActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IInvokeActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ActionFlow\IReturnActionBlock.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AssemblyInfo.cs">
@@ -189,9 +165,7 @@
     <Compile Include="FlowGraphFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Impl\ActionFlow\AbstractActionBlock.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Impl\ActionFlow\AbstractActionBlock.cs" />
     <Compile Include="Impl\ActionFlow\AbstractFallThroughActionBlock.cs">
       <SubType>Code</SubType>
     </Compile>

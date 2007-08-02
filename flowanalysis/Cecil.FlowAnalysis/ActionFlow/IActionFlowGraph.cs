@@ -26,6 +26,7 @@
 using Cecil.FlowAnalysis.ControlFlow;
 
 namespace Cecil.FlowAnalysis.ActionFlow {
+
 	public interface IActionFlowGraph {
 		/// <summary>
 		/// The control flow graph upon which this action flow graph
@@ -36,7 +37,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		/// <summary>
 		/// Action blocks.
 		/// </summary>
-		IActionBlockCollection Blocks { get; }
+		ActionBlockCollection Blocks { get; }
 
 		/// <summary>
 		/// Checks if the specified block is the target of
@@ -45,6 +46,6 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		/// </summary>
 		/// <param name="block">a block</param>
 		/// <returns>true if the block is the target of a branch</returns>
-		bool IsBranchTarget (IActionBlock block);
+		bool IsBranchTarget (ActionBlock block);
 	}
 }

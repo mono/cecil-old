@@ -26,12 +26,14 @@
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.ActionFlow {
+
 	public interface IActionBlock {
+
 		ActionType ActionType { get; }
 
-		IActionBlock[] Successors { get; }
+		ActionBlock [] Successors { get; }
 
-		IActionBlockCollection Predecessors { get; }
+		ActionBlockCollection Predecessors { get; }
 
 		Instruction SourceInstruction { get; }
 	}

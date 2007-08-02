@@ -24,43 +24,36 @@
 #endregion
 
 using System;
-using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
-	internal class ReturnActionBlock : AbstractActionBlock, IReturnActionBlock {
-		private IExpression _expression;
+namespace Cecil.FlowAnalysis.ActionFlow {
+
+	public class ReturnActionBlock : ActionBlock {
+
+		IExpression _expression;
+
+		public override ActionType ActionType {
+			get { return ActionType.Return; }
+		}
+
+		public IExpression Expression {
+			get { return _expression; }
+		}
+
+		public override ActionBlock [] Successors {
+			get { return new ActionBlock [0]; }
+		}
 
 		public ReturnActionBlock (Instruction sourceInstruction, IExpression expression)
-		: base(sourceInstruction)
+			: base (sourceInstruction)
 		{
 			_expression = expression;
 		}
 
-		override public ActionType ActionType {
-			get {
-				return ActionType.Return;
-			}
-		}
-
-		public IExpression Expression {
-			get {
-				return _expression;
-			}
-		}
-
-		public override IActionBlock[] Successors {
-			get {
-				return new IActionBlock [0];
-			}
-		}
-
-		public override void ReplaceSuccessor (IActionBlock existing, IActionBlock newBlock)
+		internal override void ReplaceSuccessor (ActionBlock existing, ActionBlock newBlock)
 		{
 			throw new InvalidOperationException ();
 		}
-
 	}
 }

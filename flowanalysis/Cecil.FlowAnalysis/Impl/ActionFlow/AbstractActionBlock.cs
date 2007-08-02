@@ -24,54 +24,49 @@
 #endregion
 
 using System;
-using Cecil.FlowAnalysis.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow
+namespace Cecil.FlowAnalysis.ActionFlow
 {
 	/// <summary>
 	/// </summary>
-	internal abstract class AbstractActionBlock : IActionBlock
-	{
-		ActionBlockCollection _predecessors = new ActionBlockCollection();
-		private Instruction _sourceInstruction;
+	public abstract class ActionBlock {
 
-		public AbstractActionBlock(Instruction sourceInstruction)
-		{
-			if (null == sourceInstruction) throw new ArgumentNullException("sourceInstruction");
-			_sourceInstruction = sourceInstruction;
-		}
+		ActionBlockCollection _predecessors = new ActionBlockCollection ();
+		Instruction _sourceInstruction;
 
-		public Instruction SourceInstruction
-		{
+		public Instruction SourceInstruction {
 			get { return _sourceInstruction; }
 		}
 
-		public virtual IActionBlockCollection Predecessors
-		{
+		public virtual ActionBlockCollection Predecessors {
 			get { return _predecessors; }
 		}
 
-		public abstract ActionType ActionType
-		{
+		public abstract ActionType ActionType {
 			get;
 		}
 
-		public abstract IActionBlock[] Successors
-		{
+		public abstract ActionBlock [] Successors {
 			get;
 		}
 
-		protected void AddAsPredecessorOf(IActionBlock block)
+		internal ActionBlock (Instruction sourceInstruction)
 		{
-			((ActionBlockCollection)block.Predecessors).Add(this);
+			if (null == sourceInstruction) throw new ArgumentNullException ("sourceInstruction");
+			_sourceInstruction = sourceInstruction;
 		}
 
-		public void RemovePredecessor(IActionBlock block)
+		protected void AddAsPredecessorOf (ActionBlock block)
 		{
-			_predecessors.Remove(block);
+			block.Predecessors.Add (this);
 		}
 
-		public abstract void ReplaceSuccessor(IActionBlock existing, IActionBlock newBlock);
+		internal void RemovePredecessor (ActionBlock block)
+		{
+			_predecessors.Remove (block);
+		}
+
+		internal abstract void ReplaceSuccessor (ActionBlock existing, ActionBlock newBlock);
 	}
 }

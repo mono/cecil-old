@@ -25,29 +25,26 @@
 
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.CodeStructure;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
-	internal class AssignActionBlock : AbstractFallThroughActionBlock, IAssignActionBlock {
-		private IAssignExpression _assignExpression;
+namespace Cecil.FlowAnalysis.ActionFlow {
 
-		public AssignActionBlock (Instruction sourceInstruction, IAssignExpression assign)
-		: base(sourceInstruction)
-		{
-			_assignExpression = assign;
-		}
+	public class AssignActionBlock : AbstractFallThroughActionBlock {
+
+		IAssignExpression _assignExpression;
 
 		public override ActionType ActionType {
-			get {
-				return ActionType.Assign;
-			}
+			get { return ActionType.Assign; }
 		}
 
 		public IAssignExpression AssignExpression {
-			get {
-				return _assignExpression;
-			}
+			get { return _assignExpression; }
+		}
+
+		public AssignActionBlock (Instruction sourceInstruction, IAssignExpression assign)
+			: base (sourceInstruction)
+		{
+			_assignExpression = assign;
 		}
 	}
 }

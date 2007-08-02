@@ -24,38 +24,34 @@
 #endregion
 
 using System;
-using Cecil.FlowAnalysis.ActionFlow;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
-	internal abstract class AbstractFallThroughActionBlock : AbstractActionBlock, IFallThroughActionBlock {
-		protected IActionBlock _next;
+namespace Cecil.FlowAnalysis.ActionFlow {
+
+	public abstract class AbstractFallThroughActionBlock : ActionBlock {
+
+		protected ActionBlock _next;
+
+		public ActionBlock Next {
+			get { return _next; }
+		}
+
+		public override ActionBlock [] Successors {
+			get { return new ActionBlock [] { _next }; }
+		}
 
 		public AbstractFallThroughActionBlock (Instruction sourceInstruction) : base(sourceInstruction)
 		{
 		}
 
-		public void SetNext (IActionBlock next)
+		internal void SetNext (ActionBlock next)
 		{
 			if (null == next) return;
 			_next = next;
 			AddAsPredecessorOf (_next);
 		}
 
-		public IActionBlock Next {
-			get {
-				return _next;
-			}
-		}
-
-		public override IActionBlock[] Successors {
-			get {
-				return new IActionBlock [] { _next };
-			}
-		}
-
-		public override void ReplaceSuccessor (IActionBlock existing, IActionBlock newBlock)
+		internal override void ReplaceSuccessor (ActionBlock existing, ActionBlock newBlock)
 		{
 			if (_next != existing) throw new ArgumentException ("existing");
 			_next = newBlock;

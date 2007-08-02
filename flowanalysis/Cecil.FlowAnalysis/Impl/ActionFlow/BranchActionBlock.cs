@@ -25,43 +25,38 @@
 
 using System;
 using Cecil.FlowAnalysis.ActionFlow;
-using Cecil.FlowAnalysis.Impl.ActionFlow;
 using Mono.Cecil.Cil;
 
-namespace Cecil.FlowAnalysis.Impl.ActionFlow {
-	internal class BranchActionBlock : AbstractActionBlock, IBranchActionBlock {
-		IActionBlock _target;
+namespace Cecil.FlowAnalysis.ActionFlow {
 
-		public BranchActionBlock (Instruction sourceInstruction) : base(sourceInstruction)
+	public class BranchActionBlock : ActionBlock {
+
+		ActionBlock _target;
+
+		public ActionBlock Target {
+			get { return _target; }
+		}
+
+		public override ActionType ActionType {
+			get { return ActionType.Branch; }
+		}
+
+		public override ActionBlock [] Successors {
+			get { return new ActionBlock [] { _target }; }
+		}
+
+		public BranchActionBlock (Instruction sourceInstruction) : base (sourceInstruction)
 		{
 		}
 
-		public void SetTarget (IActionBlock target)
+		internal void SetTarget (ActionBlock target)
 		{
 			if (null == target) throw new ArgumentNullException ("target");
 			_target = target;
 			AddAsPredecessorOf (target);
 		}
 
-		public IActionBlock Target {
-			get {
-				return _target;
-			}
-		}
-
-		override public ActionType ActionType {
-			get {
-				return ActionType.Branch;
-			}
-		}
-
-		public override IActionBlock[] Successors {
-			get {
-				return new IActionBlock [] { _target };
-			}
-		}
-
-		public override void ReplaceSuccessor (IActionBlock existing, IActionBlock newBlock)
+		internal override void ReplaceSuccessor (ActionBlock existing, ActionBlock newBlock)
 		{
 			if (_target != existing) throw new ArgumentException ("existing");
 			_target = newBlock;
