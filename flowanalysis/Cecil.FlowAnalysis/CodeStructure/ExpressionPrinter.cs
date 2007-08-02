@@ -92,7 +92,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		{
 			MethodReference method = node.Method;
 			if (null == node.Target) {
-				Write (CecilFormatter.FormatTypeReference (method.DeclaringType));
+				Write (Formatter.FormatTypeReference (method.DeclaringType));
 			} else {
 				Visit (node.Target);
 			}
@@ -124,7 +124,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 				return;
 			}
 
-			Write (value == null ? "null" : CecilFormatter.ToInvariantCultureString (value).ToLower ());
+			Write (value == null ? "null" : Formatter.ToInvariantCultureString (value).ToLower ());
 		}
 
 		public override void Visit (IUnaryExpression node)

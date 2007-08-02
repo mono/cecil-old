@@ -264,7 +264,7 @@ namespace Cecil.FlowAnalysis.Impl.ActionFlow {
 				break;
 
 			default:
-				throw new ArgumentException ("Unknown expression pattern starting at " + CecilFormatter.FormatInstruction (block.FirstInstruction), "block");
+				throw new ArgumentException ("Unknown expression pattern starting at " + Formatter.FormatInstruction (block.FirstInstruction), "block");
 			}
 			MarkProcessed (block.Successors);
 		}

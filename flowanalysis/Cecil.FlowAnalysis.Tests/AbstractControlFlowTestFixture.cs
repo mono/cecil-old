@@ -55,7 +55,7 @@ namespace Cecil.FlowAnalysis.Tests {
 				writer.WriteLine ("\tbody:");
 				foreach (Instruction instruction in block) {
 					writer.Write ("\t\t");
-					CecilFormatter.WriteInstruction (writer, instruction);
+					Formatter.WriteInstruction (writer, instruction);
 					writer.WriteLine ();
 				}
 				IInstructionBlock[] successors = block.Successors;

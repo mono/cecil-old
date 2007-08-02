@@ -35,7 +35,7 @@ namespace Cecil.FlowAnalysis.Utilities {
 %>
 		public virtual void On${instr.OpCodes[0]} (Instruction instruction)
 		{
-			throw new NotImplementedException (CecilFormatter.FormatInstruction (instruction));
+			throw new NotImplementedException (Formatter.FormatInstruction (instruction));
 		}
 <%
 	end

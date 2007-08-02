@@ -36,7 +36,7 @@ namespace Cecil.FlowAnalysis.Utilities {
 		public static void Dispatch (Instruction instruction, IInstructionVisitor visitor)
 		{
 			InstructionVisitorDelegate handler = (InstructionVisitorDelegate)_handlers[instruction.OpCode.Value];
-			if (null == handler) throw new ArgumentException (CecilFormatter.FormatInstruction (instruction), "instruction");
+			if (null == handler) throw new ArgumentException (Formatter.FormatInstruction (instruction), "instruction");
 			handler (visitor, instruction);
 		}
 

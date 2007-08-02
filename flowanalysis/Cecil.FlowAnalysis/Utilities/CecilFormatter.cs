@@ -32,7 +32,7 @@ namespace Cecil.FlowAnalysis.Utilities {
 
 	/// <summary>
 	/// </summary>
-	public class CecilFormatter {
+	public class Formatter {
 
 		public static string FormatInstruction (Instruction instruction)
 		{
@@ -146,7 +146,7 @@ namespace Cecil.FlowAnalysis.Utilities {
 			return typeName;
 		}
 
-		private CecilFormatter ()
+		private Formatter ()
 		{
 		}
 	}

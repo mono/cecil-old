@@ -185,7 +185,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				}
 				break;
 			}
-			throw new ArgumentException (CecilFormatter.FormatInstruction (instruction));
+			throw new ArgumentException (Formatter.FormatInstruction (instruction));
 		}
 
 		private int GetPopDelta (int stackHeight, Instruction instruction)
@@ -236,7 +236,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 				}
 				break;
 			}
-			throw new ArgumentException (CecilFormatter.FormatInstruction (instruction));
+			throw new ArgumentException (Formatter.FormatInstruction (instruction));
 		}
 
 		private bool IsVoidMethod ()
@@ -309,7 +309,7 @@ namespace Cecil.FlowAnalysis.Impl.ControlFlow {
 						throw new ApplicationException (
 							string.Format ("Unhandled instruction flow behavior {0}: {1}",
 								instruction.OpCode.FlowControl,
-								CecilFormatter.FormatInstruction (instruction)));
+								Formatter.FormatInstruction (instruction)));
 					}
 				}
 			}
