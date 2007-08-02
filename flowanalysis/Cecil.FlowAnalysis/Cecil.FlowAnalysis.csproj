@@ -74,8 +74,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ActionFlow\AbstractActionBlock.cs" />
     <Compile Include="ActionFlow\AbstractFallThroughActionBlock.cs" />
+    <Compile Include="ActionFlow\ActionBlock.cs" />
     <Compile Include="ActionFlow\ActionBlockCollection.cs" />
     <Compile Include="ActionFlow\ActionFlowGraph.cs" />
     <Compile Include="ActionFlow\ActionGraphBuilder.cs" />
