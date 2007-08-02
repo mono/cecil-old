@@ -63,9 +63,9 @@
 		</csc>
 	</target>
 
-	<target name="codegen" depends="init" description="generates CodeStructure and CecilUtilities classes">
+	<target name="codegen" depends="init" description="generates CodeStructure and Utilities classes">
 		<exec program="${booi}" workingdir=".">
-			<arg value="codegen/gen-CecilUtilities.boo" />
+			<arg value="codegen/gen-Utilities.boo" />
 		</exec>
 
 		<exec program="${booi}" workingdir=".">
