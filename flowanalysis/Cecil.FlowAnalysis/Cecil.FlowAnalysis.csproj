@@ -1,90 +1,310 @@
-<VisualStudioProject>
-    <CSHARP ProductVersion="7.10.3077" ProjectGuid="{ED1BE103-1699-4116-A732-616BEB142EB2}" ProjectType="Local" SchemaVersion="2.0">
-        <Build>
-            <Settings ApplicationIcon="" AssemblyKeyContainerName="" AssemblyName="Cecil.FlowAnalysis" AssemblyOriginatorKeyFile="" DefaultClientScript="JScript" DefaultHTMLPageLayout="Grid" DefaultTargetSchema="IE50" DelaySign="false" OutputType="Library" PostBuildEvent="" PreBuildEvent="" RootNamespace="Cecil.FlowAnalysis" RunPostBuildEvent="OnBuildSuccess" StartupObject="">
-                <Config AllowUnsafeBlocks="false" BaseAddress="285212672" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DebugSymbols="true" DefineConstants="DEBUG;TRACE" DocumentationFile="" FileAlignment="4096" IncrementalBuild="false" Name="Debug" NoStdLib="false" NoWarn="" Optimize="false" OutputPath="bin\Debug\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="4"/>
-                <Config AllowUnsafeBlocks="false" BaseAddress="285212672" CheckForOverflowUnderflow="false" ConfigurationOverrideFile="" DebugSymbols="false" DefineConstants="TRACE" DocumentationFile="" FileAlignment="4096" IncrementalBuild="false" Name="Release" NoStdLib="false" NoWarn="" Optimize="true" OutputPath="bin\Release\" RegisterForComInterop="false" RemoveIntegerChecks="false" TreatWarningsAsErrors="false" WarningLevel="4"/>
-            </Settings>
-            <References>
-                <Reference AssemblyName="Mono.Cecil" HintPath="..\lib\cecil\bin\Mono.Cecil.dll" Name="Mono.Cecil"/>
-            </References>
-        </Build>
-        <Files>
-            <Include>
-                <File BuildAction="Compile" RelPath="ActionFlow\ActionType.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IActionBlockCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IActionFlowGraph.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IAssignActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IBranchActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IConditionalBranchActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IFallThroughActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IInvokeActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ActionFlow\IReturnActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="AssemblyInfo.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CecilUtilities\AbstractInstructionVisitor.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CecilUtilities\CecilFormatter.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CecilUtilities\IInstructionVisitor.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CecilUtilities\InstructionDispatcher.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\AbstractCodeStructureVisitor.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\BinaryOperator.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\CodeElementType.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\ExpressionPrinter.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IArgumentReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IAssignExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IBinaryExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IBlockStatement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\ICodeElement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\ICodeStructureVisitor.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IExpressionCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IFieldReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\ILiteralExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IMethodInvocationExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IMethodReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IPropertyReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IReturnStatement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IStatement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IStatementCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IThisReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IUnaryExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\IVariableReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="CodeStructure\UnaryOperator.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ControlFlow\IControlFlowGraph.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ControlFlow\IInstructionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="ControlFlow\IInstructionData.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="FlowGraphFactory.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\AbstractActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\AbstractFallThroughActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ActionBlockCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ActionFlowGraph.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ActionGraphBuilder.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\AssignActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\BranchActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ConditionalBranchActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ExpressionDecompiler.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\InvokeActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ActionFlow\ReturnActionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\ArgumentReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\AssignExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\BinaryExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\BlockStatement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\ExpressionCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\FieldReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\LiteralExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\MethodInvocationExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\MethodReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\PropertyReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\ReturnStatement.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\StatementCollection.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\ThisReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\UnaryExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\CodeStructure\VariableReferenceExpression.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ControlFlow\FlowGraph.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ControlFlow\FlowGraphBuilder.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ControlFlow\InstructionBlock.cs" SubType="Code"/>
-                <File BuildAction="Compile" RelPath="Impl\ControlFlow\InstructionData.cs" SubType="Code"/>
-            </Include>
-        </Files>
-    </CSHARP>
-</VisualStudioProject>
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <ProjectGuid>{ED1BE103-1699-4116-A732-616BEB142EB2}</ProjectGuid>
+    <ProjectType>Local</ProjectType>
+    <SchemaVersion>2.0</SchemaVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Cecil.FlowAnalysis</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Cecil.FlowAnalysis</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="ActionFlow\ActionType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IActionBlockCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IActionFlowGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IAssignActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IBranchActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IConditionalBranchActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IFallThroughActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IInvokeActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ActionFlow\IReturnActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CecilUtilities\AbstractInstructionVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CecilUtilities\CecilFormatter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CecilUtilities\IInstructionVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CecilUtilities\InstructionDispatcher.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\AbstractCodeStructureVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\BinaryOperator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\CodeElementType.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\ExpressionPrinter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IArgumentReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IAssignExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IBinaryExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IBlockStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\ICodeElement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\ICodeStructureVisitor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IExpressionCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IFieldReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\ILiteralExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IMethodInvocationExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IMethodReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IPropertyReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IReturnStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IStatementCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IThisReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IUnaryExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\IVariableReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CodeStructure\UnaryOperator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ControlFlow\IControlFlowGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ControlFlow\IInstructionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ControlFlow\IInstructionData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FlowGraphFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\AbstractActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\AbstractFallThroughActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ActionBlockCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ActionFlowGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ActionGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\AssignActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\BranchActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ConditionalBranchActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ExpressionDecompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\InvokeActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ActionFlow\ReturnActionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\ArgumentReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\AssignExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\BinaryExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\BlockStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\ExpressionCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\FieldReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\LiteralExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\MethodInvocationExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\MethodReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\PropertyReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\ReturnStatement.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\StatementCollection.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\ThisReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\UnaryExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\CodeStructure\VariableReferenceExpression.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ControlFlow\FlowGraph.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ControlFlow\FlowGraphBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ControlFlow\InstructionBlock.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Impl\ControlFlow\InstructionData.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
