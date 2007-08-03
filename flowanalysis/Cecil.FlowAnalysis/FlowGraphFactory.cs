@@ -44,7 +44,7 @@ namespace Cecil.FlowAnalysis {
 		public static ActionFlowGraph CreateActionFlowGraph (ControlFlowGraph cfg)
 		{
 			if (null == cfg) throw new ArgumentNullException ("cfg");
-			ActionGraphBuilder builder = new ActionGraphBuilder (cfg);
+			ActionFlowGraphBuilder builder = new ActionFlowGraphBuilder (cfg);
 			return builder.BuildGraph ();
 		}
 

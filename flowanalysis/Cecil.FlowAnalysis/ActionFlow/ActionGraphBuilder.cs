@@ -36,7 +36,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 	/// <summary>
 	/// </summary>
-	internal class ActionGraphBuilder : AbstractInstructionVisitor {
+	internal class ActionFlowGraphBuilder : AbstractInstructionVisitor {
 
 		ActionBlockCollection _blocks = new ActionBlockCollection ();
 		IDictionary _instruction2block = new Hashtable ();
@@ -47,7 +47,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		Instruction _current;
 		ActionFlowGraph _graph;
 
-		internal ActionGraphBuilder (ControlFlowGraph cfg)
+		internal ActionFlowGraphBuilder (ControlFlowGraph cfg)
 		{
 			_method = cfg.MethodBody.Method;
 
