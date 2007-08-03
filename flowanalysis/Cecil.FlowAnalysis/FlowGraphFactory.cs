@@ -37,13 +37,15 @@ namespace Cecil.FlowAnalysis {
 		public static ControlFlowGraph CreateControlFlowGraph (MethodDefinition method)
 		{
 			if (null == method) throw new ArgumentNullException ("method");
-			return new ControlFlowGraphBuilder (method).ControlFlowGraph;
+			ControlFlowGraphBuilder builder = new ControlFlowGraphBuilder (method);
+			return builder.BuildGraph ();
 		}
 
 		public static ActionFlowGraph CreateActionFlowGraph (ControlFlowGraph cfg)
 		{
 			if (null == cfg) throw new ArgumentNullException ("cfg");
-			return new ActionGraphBuilder (cfg).ActionFlowGraph;
+			ActionGraphBuilder builder = new ActionGraphBuilder (cfg);
+			return builder.BuildGraph ();
 		}
 
 		private FlowGraphFactory ()

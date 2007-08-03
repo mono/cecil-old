@@ -38,18 +38,14 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 	/// </summary>
 	internal class ActionGraphBuilder : AbstractInstructionVisitor {
 
-		ActionBlockCollection _blocks = new ActionBlockCollection();
-		IDictionary _instruction2block = new Hashtable();
-		IDictionary _processed = new Hashtable();
+		ActionBlockCollection _blocks = new ActionBlockCollection ();
+		IDictionary _instruction2block = new Hashtable ();
+		IDictionary _processed = new Hashtable ();
 		ExpressionDecompiler _expressionDecompiler;
 		MethodDefinition _method;
 		ControlFlowGraph _cfg;
 		Instruction _current;
 		ActionFlowGraph _graph;
-
-		public ActionFlowGraph ActionFlowGraph {
-			get { return _graph; }
-		}
 
 		internal ActionGraphBuilder (ControlFlowGraph cfg)
 		{
@@ -59,8 +55,13 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			_expressionDecompiler = new ExpressionDecompiler (_method);
 
 			_graph = new ActionFlowGraph (_cfg, _blocks);
+		}
 
+		public ActionFlowGraph BuildGraph ()
+		{
 			Run ();
+
+			return _graph;
 		}
 
 		void Run ()
@@ -70,7 +71,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			SimplifyActionBlocks ();
 		}
 
-		private void SimplifyActionBlocks ()
+		void SimplifyActionBlocks ()
 		{
 			int index = 0;
 			while (index < _blocks.Count) {

@@ -38,23 +38,27 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		MethodBody _body;
 		Hashtable _instructionData;
-		Hashtable _blocks = new Hashtable();
-		TypeReference _SystemVoid;
+		Hashtable _blocks = new Hashtable ();
+
+		InstructionBlock [] RegisteredBlocks {
+			get { return (InstructionBlock []) ToArray (new InstructionBlock [BlockCount]); }
+		}
+
+		int BlockCount {
+			get { return _blocks.Count; }
+		}
 
 		internal ControlFlowGraphBuilder (MethodDefinition method)
 		{
-			if (method.Body.ExceptionHandlers.Count > 0) {
-				throw new ArgumentException ("Exception handlers are not supported.", "body");
-			}
-			_SystemVoid = method.DeclaringType.Module.Import (typeof (void));
 			_body = method.Body;
+		}
+
+		public ControlFlowGraph BuildGraph ()
+		{
 			DelimitBlocks ();
 			ConnectBlocks ();
 			ComputeInstructionData ();
-		}
-
-		internal ControlFlowGraph ControlFlowGraph {
-			get { return new ControlFlowGraph (_body, RegisteredBlocks, _instructionData); }
+			return new ControlFlowGraph (_body, RegisteredBlocks, _instructionData);
 		}
 
 		void DelimitBlocks ()
@@ -71,7 +75,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 			// the first instruction starts a block
 			MarkBlockStart (instruction);
-			for (int i=1; i < instructions.Count; ++i) {
+			for (int i = 1; i < instructions.Count; ++i) {
 				instruction = instructions [i];
 				if (IsBlockDelimiter (instruction)) {
 					// the target of a branch starts a block
@@ -86,14 +90,15 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		void MarkBlockEnds (InstructionCollection instructions)
 		{
-			InstructionBlock[] blocks = this.RegisteredBlocks;
+			InstructionBlock [] blocks = this.RegisteredBlocks;
 			InstructionBlock current = blocks [0];
 
-			for (int i=1; i < blocks.Length; ++i) {
+			for (int i = 1; i < blocks.Length; ++i) {
 				InstructionBlock block = blocks [i];
 				current.SetLastInstruction (block.FirstInstruction.Previous);
 				current = block;
 			}
+
 			current.SetLastInstruction (instructions [instructions.Count - 1]);
 		}
 
@@ -158,7 +163,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return stackHeight + GetPushDelta (instruction) - GetPopDelta (stackHeight, instruction);
 		}
 
-		int GetPushDelta (Instruction instruction)
+		static int GetPushDelta (Instruction instruction)
 		{
 			OpCode code = instruction.OpCode;
 			switch (code.StackBehaviourPush) {
@@ -245,17 +250,9 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return IsVoid (type);
 		}
 
-		bool IsVoid (TypeReference type)
+		static bool IsVoid (TypeReference type)
 		{
-			return type == _SystemVoid;
-		}
-
-		InstructionBlock [] RegisteredBlocks {
-			get { return (InstructionBlock []) ToArray (new InstructionBlock [BlockCount]); }
-		}
-
-		int BlockCount {
-			get { return _blocks.Count; }
+			return type.FullName == Constants.Void;
 		}
 
 		Array ToArray (Array blocks)
@@ -274,39 +271,27 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 				Instruction instruction = block.LastInstruction;
 				switch (instruction.OpCode.FlowControl) {
 				case FlowControl.Branch:
-				case FlowControl.Cond_Branch:
-					{
-						InstructionBlock target = GetBranchTargetBlock (instruction);
-						if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch
-							&& instruction.Next != null) {
-							block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
-						} else {
-							block.SetSuccessors (new InstructionBlock [] { target })	;
-						}
-						break;
-					}
-
+				case FlowControl.Cond_Branch: {
+					InstructionBlock target = GetBranchTargetBlock (instruction);
+					if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch && instruction.Next != null)
+						block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
+					else
+						block.SetSuccessors (new InstructionBlock [] { target });
+					break;
+				}
 				case FlowControl.Call:
 				case FlowControl.Next:
-					{
-						if (null != instruction.Next) {
-							block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
-						}
-						break;
-					}
+					if (null != instruction.Next)
+						block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
 
+					break;
 				case FlowControl.Return:
-					{
-						break;
-					}
-
+					break;
 				default:
-					{
 						throw new ApplicationException (
 							string.Format ("Unhandled instruction flow behavior {0}: {1}",
 								instruction.OpCode.FlowControl,
 								Formatter.FormatInstruction (instruction)));
-					}
 				}
 			}
 		}
