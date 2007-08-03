@@ -78,7 +78,7 @@
     <Compile Include="ActionFlow\ActionBlock.cs" />
     <Compile Include="ActionFlow\ActionBlockCollection.cs" />
     <Compile Include="ActionFlow\ActionFlowGraph.cs" />
-    <Compile Include="ActionFlow\ActionGraphBuilder.cs" />
+    <Compile Include="ActionFlow\ActionFlowGraphBuilder.cs" />
     <Compile Include="ActionFlow\ActionType.cs">
       <SubType>Code</SubType>
     </Compile>
