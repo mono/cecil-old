@@ -37,14 +37,14 @@ namespace Mono.Util.CorCompare
 			htIgnore.Add ("System.Runtime.InteropServices.ComVisibleAttribute", null);
 		}
 
-		public MissingAttribute (Object _attributeMono, Object _attributeMS) 
+		public MissingAttribute (Object _attributeMono, Object _attributeMS)
 		{
 			attributeMono = _attributeMono;
 			attributeMS = _attributeMS;
 			m_nodeStatus = new NodeStatus (attributeMono, attributeMS);
 		}
 
-		public override string Name 
+		public override string Name
 		{
 			get { return Attribute.ToString (); }
 		}

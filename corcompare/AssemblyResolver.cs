@@ -9,7 +9,7 @@ namespace Mono.Util.CorCompare.Cecil
     /// <summary>
     /// Summary description for Resolver.
     /// </summary>
-    /// 
+    ///
     public class AssemblyResolver : IAssemblyResolver
     {
         private readonly string[] _libpath;

@@ -8,7 +8,7 @@
 using System;
 using Mono.Cecil;
 
-namespace Mono.Util.CorCompare 
+namespace Mono.Util.CorCompare
 {
 
 	/// <summary>
@@ -18,7 +18,7 @@ namespace Mono.Util.CorCompare
 	/// 	created by - Piers
 	/// 	created on - 10:34 AM 3/12/2002
 	/// </remarks>
-	class MissingInterface : MissingBase 
+	class MissingInterface : MissingBase
 	{
 		protected TypeReference ifaceMono;
 		protected TypeReference ifaceMS;
@@ -31,7 +31,7 @@ namespace Mono.Util.CorCompare
 			m_nodeStatus = new NodeStatus (ifaceMono, ifaceMS);
 		}
 
-		public override string Type 
+		public override string Type
 		{
 			get { return "interface"; }
 		}

@@ -19,12 +19,12 @@ namespace Mono.Util.CorCompare {
 	/// 	created by - Nick
 	/// 	created on - 2/20/2002 10:43:57 PM
 	/// </remarks>
-	class MissingProperty : MissingMember 
+	class MissingProperty : MissingMember
 	{
 		// e.g. <property name="Length" status="missing"/>
 		public MissingProperty (PropertyDefinition infoMono, PropertyDefinition infoMS) : base (infoMono, infoMS) { }
 
-		public override string Type 
+		public override string Type
 		{
 			get { return "property"; }
 		}

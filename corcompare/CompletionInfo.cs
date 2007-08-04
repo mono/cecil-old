@@ -9,7 +9,7 @@ using System;
 using System.Xml;
 using System.Collections;
 
-namespace Mono.Util.CorCompare 
+namespace Mono.Util.CorCompare
 {
 	#region
 	public struct CompletionType

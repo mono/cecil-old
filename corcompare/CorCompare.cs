@@ -11,7 +11,7 @@ using System.IO;
 namespace Mono.Util.CorCompare {
 
 	/// <summary>
-	/// 	Handles command line arguments, and generates appropriate report(s) 
+	/// 	Handles command line arguments, and generates appropriate report(s)
 	/// 	based on those arguments
 	/// </summary>
 	/// <remarks>

@@ -18,7 +18,7 @@ namespace Mono.Util.CorCompare {
 	/// 	created by - Nick
 	/// 	created on - 2/20/2002 10:43:57 PM
 	/// </remarks>
-	class MissingMethod : MissingMember 
+	class MissingMethod : MissingMember
 	{
 		// e.g. <method name="Equals" status="missing"/>
 		public MissingMethod (MethodDefinition infoMono, MethodDefinition infoMS) : base (infoMono, infoMS) { }

@@ -19,14 +19,14 @@ namespace Mono.Util.CorCompare
 		protected MemberReference mInfoMono;
 		protected MemberReference mInfoMS;
 
-		public MissingMember (MemberReference infoMono, MemberReference infoMS) 
+		public MissingMember (MemberReference infoMono, MemberReference infoMS)
 		{
 			mInfoMono = infoMono;
 			mInfoMS = infoMS;
 			m_nodeStatus = new NodeStatus (infoMono, infoMS);
 		}
 
-		public override string Name 
+		public override string Name
 		{
 			get { return Info.Name; }
 		}

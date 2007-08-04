@@ -28,7 +28,7 @@ namespace Mono.AssemblyInfo
 				return 1;
 
 			AssemblyCollection acoll = new AssemblyCollection ();
-			
+
 			foreach (string fullName in args) {
 				acoll.Add (fullName);
 			}
@@ -141,7 +141,7 @@ namespace Mono.AssemblyInfo
 				typesArray [i] = typesCollection [i];
 			}
 			Array.Sort (typesArray, TypeReferenceComparer.Default);
-			
+
 			XmlNode nss = document.CreateElement ("namespaces", null);
 			nassembly.AppendChild (nss);
 
@@ -158,7 +158,7 @@ namespace Mono.AssemblyInfo
 
 				if (t.DeclaringType != null)
 					continue; // enforce !nested
-				
+
 				if (t.Namespace != currentNS) {
 					currentNS = t.Namespace;
 					ns = document.CreateElement ("namespace", null);
@@ -167,7 +167,7 @@ namespace Mono.AssemblyInfo
 					classes = document.CreateElement ("classes", null);
 					ns.AppendChild (classes);
 				}
-				
+
 				TypeData bd = new TypeData (document, classes, t);
 				bd.DoOutput ();
 			}
@@ -227,7 +227,7 @@ namespace Mono.AssemblyInfo
 		public virtual string ParentTag {
 			get { return "NoPARENTTAG"; }
 		}
-		
+
 		public virtual string Tag {
 			get { return "NoTAG"; }
 		}
@@ -277,7 +277,7 @@ namespace Mono.AssemblyInfo
 				AddAttribute (nclass, "layout", layout);
 
 			parent.AppendChild (nclass);
-			
+
 			AttributeData.OutputAttributes (document, nclass, GetCustomAttributes(type));
 
 			InterfaceCollection interfaces = type.Interfaces;
@@ -394,7 +394,7 @@ namespace Mono.AssemblyInfo
 		{
 			if (memberDefenition != type)
 				throw new InvalidOperationException ("odd");
-				
+
 			return ((int) type.Attributes).ToString (CultureInfo.InvariantCulture);
 		}
 
@@ -416,7 +416,7 @@ namespace Mono.AssemblyInfo
 
 			if (t.IsInterface)
 				return "interface";
-			
+
 			if (TypeHelper.IsDelegate(t))
 				return "delegate";
 
@@ -793,7 +793,7 @@ namespace Mono.AssemblyInfo
 			string rettype = mbase.ReturnType.ReturnType.FullName;
 			if (rettype != "System.Void" || !mbase.IsConstructor)
 				AddAttribute (p, "returntype", (rettype));
-			
+
 			AttributeData.OutputAttributes (document, p,mbase.ReturnType.CustomAttributes);
 #if NET_2_0
 			// Generic constraints
@@ -825,7 +825,7 @@ namespace Mono.AssemblyInfo
 			get { return noAtts; }
 			set { noAtts = value; }
 		}
-		
+
 		public override string ParentTag {
 			get { return "methods"; }
 		}
@@ -995,7 +995,7 @@ namespace Mono.AssemblyInfo
 
 			StringBuilder sb = new StringBuilder ();
 			foreach (ParameterDefinition info in infos) {
-				
+
 				string modifier;
 				if ((info.Attributes & ParameterAttributes.In) != 0)
 					modifier = "in ";

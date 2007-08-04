@@ -266,14 +266,14 @@ namespace Mono.AssemblyCompare
 		public bool HaveWarnings {
 			get { return haveWarnings; }
 		}
-		
+
 		public Counters Counters {
 			get { return counters; }
 		}
-		
+
 		public abstract void CompareTo (XmlDocument doc, XmlNode parent, object other);
 	}
-	
+
 	abstract class XMLNameGroup : XMLData
 	{
 		protected XmlNode group;
@@ -503,7 +503,7 @@ namespace Mono.AssemblyCompare
 			this.document = doc;
 			XmlNode parent = doc.CreateElement ("assemblies", null);
 			doc.AppendChild (parent);
-			
+
 			CompareTo (doc, parent, other);
 
 			XmlNode decl = doc.CreateXmlDeclaration ("1.0", null, null);
@@ -636,7 +636,7 @@ namespace Mono.AssemblyCompare
 		XMLEvents events;
 		XMLMethods methods;
 		XMLClass [] nested;
-		
+
 		public override void LoadData (XmlNode node)
 		{
 			if (node == null)
@@ -670,7 +670,7 @@ namespace Mono.AssemblyCompare
 				// Console.Error.WriteLine ("Empty class {0} {1}", name, type);
 				return;
 			}
-				
+
 			if (child.Name == "attributes") {
 				attributes = new XMLAttributes ();
 				attributes.LoadData (child);
@@ -950,7 +950,7 @@ namespace Mono.AssemblyCompare
 
 			if (type != oparm.type)
 				AddWarning (parent, "Parameter type is wrong: {0} != {1}", type, oparm.type);
-			
+
 			if (attrib != oparm.attrib)
 				AddWarning (parent, "Parameter attributes wrong: {0} != {1}", attrib, oparm.attrib);
 
@@ -1040,7 +1040,7 @@ namespace Mono.AssemblyCompare
 				if (de.Value.Equals (other_value))
 					continue;
 
-				AddWarning (parent, "Property '{0}' is '{1}' and should be '{2}'", 
+				AddWarning (parent, "Property '{0}' is '{1}' and should be '{2}'",
 					de.Key, de.Value, other_value == null ? "null" : other_value);
 			}
 		}
@@ -1095,7 +1095,7 @@ namespace Mono.AssemblyCompare
 		{
 			string key = null;
 
-			// if multiple attributes with the same name (type) exist, then we 
+			// if multiple attributes with the same name (type) exist, then we
 			// cannot be sure which attributes correspond, so we must use the
 			// name of the attribute (type) and the name/value of its properties
 			// as key
@@ -1114,7 +1114,7 @@ namespace Mono.AssemblyCompare
 					}
 				}
 
-				// sort properties by name, as order of properties in XML is 
+				// sort properties by name, as order of properties in XML is
 				// undefined
 				keyParts.Sort ();
 
@@ -1233,7 +1233,7 @@ namespace Mono.AssemblyCompare
 			XmlAttribute xatt = node.Attributes ["attrib"];
 			if (xatt != null)
 				access [name] = xatt.Value;
-			
+
 			XmlNode orig = node;
 
 			node = node.FirstChild;
@@ -1303,7 +1303,7 @@ namespace Mono.AssemblyCompare
 			return null;
 		}
 	}
-	
+
 	class XMLFields : XMLMember
 	{
 		Hashtable fieldTypes;
@@ -1349,7 +1349,7 @@ namespace Mono.AssemblyCompare
 				if (fields.fieldValues != null)
 					ofvalue = fields.fieldValues [name] as string;
 
-				if (fvalue != ofvalue) { 
+				if (fvalue != ofvalue) {
 					AddWarning (parent, "Field value is {0} and should be {1}", ofvalue, /*TODO: fvalue (fix 0xFFFF bug)*/ 0);
 				}
 			}
@@ -1713,7 +1713,7 @@ namespace Mono.AssemblyCompare
 			if ((ma & MethodAttributes.RequireSecObject) != 0)
 				ma = (MethodAttributes) (att - (int) MethodAttributes.RequireSecObject);
 
-			// we don't care if the implementation is forwarded through PInvoke 
+			// we don't care if the implementation is forwarded through PInvoke
 			if ((ma & MethodAttributes.PInvokeImpl) != 0)
 				ma = (MethodAttributes) (att - (int) MethodAttributes.PInvokeImpl);
 

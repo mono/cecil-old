@@ -11,7 +11,7 @@ using System.Collections;
 using Mono.Cecil;
 using Mono.Util.CorCompare.Cecil;
 
-namespace Mono.Util.CorCompare 
+namespace Mono.Util.CorCompare
 {
 
 	/// <summary>
@@ -50,7 +50,7 @@ namespace Mono.Util.CorCompare
 			m_nodeStatus = new NodeStatus (_typeMono, _typeMS);
 		}
 
-		public override string Name 
+		public override string Name
 		{
 			get
 			{
@@ -101,7 +101,7 @@ namespace Mono.Util.CorCompare
 		{
 			MemberReference mref = (infoMono != null) ? infoMono : infoMS;
 			MissingMember mm;
-			
+
 			if(mref.GetType().Equals(typeof(MethodDefinition)))
 			{
 				if (((MethodDefinition) mref).IsConstructor) {
@@ -153,7 +153,7 @@ namespace Mono.Util.CorCompare
 			}
 			else
 				throw new Exception ("Unexpected MemberType");
-			
+
 			mm.Analyze ();
 			return mm;
 		}
@@ -169,31 +169,31 @@ namespace Mono.Util.CorCompare
 			XmlElement eltMember;
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("methods", rgMethods, nsMethods, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("properties", rgProperties, nsProperties, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("events", rgEvents, nsEvents, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("fields", rgFields, nsFields, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("constructors", rgConstructors, nsConstructors, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("nestedTypes", rgNestedTypes, nsNestedTypes, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			eltMember = MissingBase.CreateMemberCollectionElement ("interfaces", rgInterfaces, nsInterfaces, doc);
-			if (eltMember != null) 
+			if (eltMember != null)
 				eltClass.AppendChild (eltMember);
 
 			return eltClass;
@@ -245,7 +245,7 @@ namespace Mono.Util.CorCompare
 
 			Hashtable htMS = new Hashtable ();
 			FillMembersMap (htMS, typeMS);
-			
+
 			Hashtable htMethodsMS = new Hashtable ();
 
 			foreach (MemberReference miMS in htMS)
@@ -383,7 +383,7 @@ namespace Mono.Util.CorCompare
 				return Accessibility.FamilyAndAssembly;
 			else if (maskedMVisibility == TypeAttributes.NestedPrivate)
 				return Accessibility.Private;
-			throw new Exception ("Unexpected error in MissingType.GetAccessibility");		
+			throw new Exception ("Unexpected error in MissingType.GetAccessibility");
 		}
 	}
 }

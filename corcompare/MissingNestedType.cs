@@ -50,7 +50,7 @@ namespace Mono.Util.CorCompare {
 			return ((TypeDefinition) mref).CustomAttributes;
 		}
 
-		public override string Name 
+		public override string Name
 		{
 			get { return Info.DeclaringType.Name + "+" + Info.Name; }
 		}

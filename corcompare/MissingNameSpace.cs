@@ -57,7 +57,7 @@ namespace Mono.Util.CorCompare {
 			get { return null; }
 		}
 
-		public override string Name 
+		public override string Name
 		{
 			get { return strNamespace; }
 		}
@@ -135,7 +135,7 @@ namespace Mono.Util.CorCompare {
 				XmlElement eltClasses = doc.CreateElement("classes");
 				eltNameSpace.AppendChild (eltClasses);
 
-				foreach (MissingType type in rgTypes) 
+				foreach (MissingType type in rgTypes)
 				{
 					XmlElement eltClass = type.CreateXML (doc);
 					if (eltClass != null)
@@ -146,12 +146,12 @@ namespace Mono.Util.CorCompare {
 		}
 
 
-		public static ArrayList GetNamespaces (TypeDefinitionCollection types) 
+		public static ArrayList GetNamespaces (TypeDefinitionCollection types)
 		{
 			ArrayList nsList = new ArrayList();
-			foreach (TypeDefinition t in types) 
+			foreach (TypeDefinition t in types)
 			{
-				if (!nsList.Contains(t.Namespace)) 
+				if (!nsList.Contains(t.Namespace))
 				{
 					nsList.Add(t.Namespace);
 				}

@@ -34,6 +34,6 @@ mono-api-info.exe: mono-api-info.cs $(SHARED_SOURCES) $(REF)
 mono-api-diff.exe: mono-api-diff.cs $(SHARED_SOURCES) $(REF)
 	$(CSC) -out:mono-api-diff.exe mono-api-diff.cs $(REFERENCES) $(SHARED_SOURCES)
 
-clean: 
+clean:
 	rm *exe
 
