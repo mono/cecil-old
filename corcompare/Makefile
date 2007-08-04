@@ -1,5 +1,3 @@
-CECIL = ../../mcs/class/Mono.Cecil/Mono.Cecil.dll
-
 SHARED_SOURCES = \
 	AssemblyResolver.cs	\
 	CompletionInfo.cs	\
@@ -25,7 +23,7 @@ REF=Mono.Cecil.dll
 all: CorCompare.exe mono-api-diff.exe mono-api-info.exe
 
 Mono.Cecil.dll: $(CECIL)
-	cp $(CECIL) .
+	cp `pkg-config --variable=Libraries cecil` .
 
 CorCompare.exe: CorCompare.cs $(SHARED_SOURCES) $(REF)
 	$(CSC) -out:CorCompare.exe CorCompare.cs $(REFERENCES) $(SHARED_SOURCES)
