@@ -158,11 +158,9 @@
 		</div>
 	</xsl:template>
 
-
 	<xsl:template match="namespace/classes">
-		</xsl:apply-templates />
+		<xsl:apply-templates />
 	</xsl:template>
-
 
 	<!-- class -->
 	<xsl:template match="class[@type='class']">
