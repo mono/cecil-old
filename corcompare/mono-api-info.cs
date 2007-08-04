@@ -501,7 +501,7 @@ namespace Mono.AssemblyInfo
 
 			MethodDefinitionCollection methods = type.Methods;//type.GetMethods (flags);
 			foreach (MethodDefinition method in methods) {
-				if (method.IsSpecialName)
+				if (method.IsSpecialName && !method.Name.StartsWith ("op_"))
 					continue;
 
 				// we're only interested in public or protected members
