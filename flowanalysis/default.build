@@ -106,21 +106,32 @@
 	</target>
 
 	<target name="compactframework-compilation">
-		<csc output="${build.dir}/Cecil.FlowAnalysis.dll"
-			target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
-			noconfig="true" nostdlib="true" keyfile="${keyfile}"
-			define="${compactframework.defines}">
-			/>
-			<sources basedir="Cecil.FlowAnalysis">
-				<include name="**/*.cs" />
-			</sources>
+	   <!--
+	   a bug/limitation in the csc task prevents the
+	   compact framework libraries to be referenced by their full paths
+	   so we have to copy them to build.dir first
+	   -->
+	   <copy todir="${build.dir}">
+			   <fileset basedir="${compactframework.dir}">
+					   <include name="System.dll" />
+					   <include name="mscorlib.dll" />
+			   </fileset>
+	   </copy>
+	   <csc output="${build.dir}/Cecil.FlowAnalysis.dll"
+			   target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
+			   noconfig="true" nostdlib="true" keyfile="${keyfile}"
+			   define="${compactframework.defines}">
+			   />
+			   <sources basedir="Cecil.FlowAnalysis">
+					   <include name="**/*.cs" />
+			   </sources>
 
-			<references>
-				<include name="${compactframework.dir}/mscorlib.dll" />
-				<include name="${compactframework.dir}/System.dll" />
-				<include name="${build.dir}/Mono.Cecil.dll" />
-			</references>
-		</csc>
-	</target>
+			   <references basedir="${build.dir}">
+					   <include name="mscorlib.dll" />
+					   <include name="System.dll" />
+					   <include name="Mono.Cecil.dll" />
+			   </references>
+	   </csc>
+   </target>
 
 </project>
