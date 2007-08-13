@@ -6,12 +6,13 @@
 	<!-- allow properties to be customized in external file" -->
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 
-	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Debug/Mono.Cecil.dll" />
+	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Mono.Cecil.dll" />
 	<property name="build.dir" value="bin" />
 	<property name="booi" value="booi" />
 	<property name="optimize" value="false" />
 	<property name="debug" value="true" />
 	<property name="keyfile" value="../../mcs/class/mono.snk" />
+	<property name="csc.defines" value="NO_DEFINE" />
 
 	<target name="test" depends="build">
 		<nunit2>
@@ -38,7 +39,8 @@
 			output="${build.dir}/Cecil.FlowAnalysis.dll"
 			debug="${debug}"
 			optimize="${optimize}"
-			keyfile="${keyfile}">
+			keyfile="${keyfile}"
+			define="${csc.defines}">
 			<sources basedir="Cecil.FlowAnalysis">
 				<include name="**/*.cs" />
 			</sources>
@@ -94,13 +96,13 @@
 	</target>
 
 	<target name="compactframework" depends="init" description="compiles cecil to run on the CompactFramework 1.0">
-		<property name="compactframework.defines" value="CF_1_0" />
+		<property name="compactframework.defines" value="CF_1_0;${csc.defines}" />
 		<property name="compactframework.dir" value="${compactframework.v1.dir}" />
 		<call target="compactframework-compilation" />
 	</target>
 
 	<target name="compactframework2" depends="init" description="compiles cecil to run on the CompactFramework 2.0">
-		<property name="compactframework.defines" value="CF_2_0" />
+		<property name="compactframework.defines" value="CF_2_0;${csc.defines}" />
 		<property name="compactframework.dir" value="${compactframework.v2.dir}" />
 		<call target="compactframework-compilation" />
 	</target>
@@ -121,7 +123,7 @@
 			   target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
 			   noconfig="true" nostdlib="true" keyfile="${keyfile}"
 			   define="${compactframework.defines}">
-			   />
+			   
 			   <sources basedir="Cecil.FlowAnalysis">
 					   <include name="**/*.cs" />
 			   </sources>
