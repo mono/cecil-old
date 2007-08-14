@@ -39,7 +39,7 @@ using System.Reflection;
 [assembly: AssemblyVersion("0.1.0.0")]
 
 #if KEYFILE
-[assembly: AssemblyKeyFile("../../mono.snk")]
+[assembly: AssemblyKeyFile("../../../mcs/class/mono.snk")]
 #endif
 
 #endif
