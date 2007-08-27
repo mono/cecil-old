@@ -47,12 +47,14 @@ namespace Mono.Cecil.Mdb {
 		public void Write (MethodBody body, byte [][] variables)
 		{
 			Document document = CreateDocuments (body);
-			m_writer.OpenMethod (new SDS.SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));
-			m_writer.SetSymAttribute (new SDS.SymbolToken (), "__name", System.Text.Encoding.UTF8.GetBytes (body.Method.Name));
 			if (document != null) {
 				SDS.ISymbolDocumentWriter docWriter = GetDocument (document);
 				m_writer.SetMethodSourceRange (docWriter, 1, 1, docWriter, int.MaxValue, int.MaxValue);
 			}
+
+			m_writer.OpenMethod (new SDS.SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));
+			m_writer.SetSymAttribute (new SDS.SymbolToken (), "__name", System.Text.Encoding.UTF8.GetBytes (body.Method.Name));
+
 			CreateScopes (body, body.Scopes, variables);
 			m_writer.CloseMethod ();
 		}
@@ -66,8 +68,8 @@ namespace Mono.Cecil.Mdb {
 					s.End.Offset;
 
 				m_writer.OpenScope (startOffset);
-				m_writer.UsingNamespace (body.Method.DeclaringType.Namespace);
-				m_writer.OpenNamespace (body.Method.DeclaringType.Namespace);
+				//m_writer.UsingNamespace (body.Method.DeclaringType.Namespace);
+				//m_writer.OpenNamespace (body.Method.DeclaringType.Namespace);
 
 				int start = body.Instructions.IndexOf (s.Start);
 				int end = s.End == body.Instructions.Outside ?
