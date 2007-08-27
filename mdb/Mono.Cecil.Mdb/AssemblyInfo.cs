@@ -30,10 +30,10 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("Mono.Cecil.MdbSupport")]
+[assembly: AssemblyTitle ("Mono.Cecil.Mdb")]
 [assembly: AssemblyDescription ("Support for the mdb symbols store in Cecil")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyProduct("Mono.Cecil.MdbSupport")]
+[assembly: AssemblyProduct ("Mono.Cecil")]
 [assembly: AssemblyCopyright ("(C) 2006, Jb Evain")]
 [assembly: AssemblyCulture ("")]
 
