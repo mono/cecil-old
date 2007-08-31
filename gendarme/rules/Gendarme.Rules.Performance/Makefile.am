@@ -10,7 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Performance.xml TestResult.xml
 performance_rules_sources_in = ../../AssemblyInfo.cs.in
 performance_rules_generated_sources = $(performance_rules_sources_in:.in=)
 performance_rules_sources = EmptyDestructorRule.cs IDisposableWithDestructorWithoutSuppressFinalizeRule.cs \
-	UseStringEmptyRule.cs
+	UseStringEmptyRule.cs AvoidUnusedParametersRule.cs
 
 performance_rules_build_sources = $(addprefix $(srcdir)/, $(performance_rules_sources))
 performance_rules_build_sources += $(performance_rules_generated_sources)
@@ -33,7 +33,7 @@ uninstall-hook:
 	done;
 
 performance_test_sources = EmptyDestructorTest.cs IDisposableWithDestructorWithoutSuppressFinalizeTest.cs \
-		UseStringEmptyTest.cs
+		UseStringEmptyTest.cs AvoidUnusedParametersTest.cs
 performance_test_build_sources = $(addprefix $(srcdir)/Test/, $(performance_test_sources))
 
 Test.Rules.Performance.dll: $(performance_rules_build_sources)

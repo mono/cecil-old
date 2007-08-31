@@ -1,3 +1,8 @@
+2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidUnusedParametersTest.cs: New. Unit tests for
+	AvoidUnusedParametersRule.
+
 2006-09-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Adjust EXTRA_DIST to include project files in tarballs.
