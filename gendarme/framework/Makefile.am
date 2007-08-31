@@ -1,8 +1,13 @@
 frameworkdir=$(pkglibdir)
 framework_SCRIPTS = Gendarme.Framework.dll
-EXTRA_DIST = $(framework_sources) $(framework_sources_in) framework.mdp Gendarme.Framework.csproj
+EXTRA_DIST = $(framework_sources) $(framework_sources_in) framework.mdp Gendarme.Framework.csproj gendarme-framework.pc.in
 CLEANFILES = Gendarme.Framework.dll
-DISTCLEANFILES = ../AssemblyInfo.cs Makefile.in
+DISTCLEANFILES = ../AssemblyInfo.cs Makefile.in gendarme-framework.pc
+
+pkgconfig_in_files = gendarme-framework.pc.in
+
+pkgconfigdir= $(prefix)/lib/pkgconfig
+pkgconfig_DATA = $(pkgconfig_in_files:.pc.in=.pc)
 
 framework_sources_in = ../AssemblyInfo.cs.in
 framework_generated_sources = $(framework_sources_in:.in=)

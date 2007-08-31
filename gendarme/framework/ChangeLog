@@ -1,3 +1,8 @@
+2007-08-31  Nestor Salceda <nestor.salceda@gmail.com>
+	
+	* gendarme-framework.pc.in, Makefile.am: Install Gendarme.Framework to
+	be reusable (pkg-config) with other runners.
+
 2007-03-12  Jb Evain  <jbevain@gmail.com>
 
 	* IRule.cs, Runner.cs: Simplify the rules interface.

@@ -54,6 +54,7 @@ man/Makefile
 man/gendarme.1
 console/Makefile
 framework/Makefile
+framework/gendarme-framework.pc
 rules/Makefile
 rules/Gendarme.Rules.Security/Makefile
 rules/Gendarme.Rules.Security/Gendarme.Rules.Security.xml
