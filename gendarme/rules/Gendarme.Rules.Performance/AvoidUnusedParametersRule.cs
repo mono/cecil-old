@@ -70,25 +70,25 @@ namespace Gendarme.Rules.Performance {
 
 		private bool ContainsReferenceDelegateInstructionFor (MethodDefinition method, MethodDefinition delegateMethod) 
 		{
-			if (method.HasBody) {
-				foreach (Instruction instruction in method.Body.Instructions) {
-					if (instruction.OpCode.Code == Code.Ldftn) 
-						return instruction.Operand.Equals (delegateMethod);
-				}
+			if (!method.HasBody) 
+				return false;
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.OpCode.Code == Code.Ldftn) 
+					return instruction.Operand.Equals (delegateMethod);
 			}
 			return false;
 		}
 		
 		private bool IsReferencedByDelegate (MethodDefinition delegateMethod) 
 		{
-			if (delegateMethod.DeclaringType is TypeDefinition) {
-				TypeDefinition type = (TypeDefinition) delegateMethod.DeclaringType;	
-				foreach (MethodDefinition method in type.Methods) {
+			TypeDefinition declaringType = delegateMethod.DeclaringType as TypeDefinition;
+			if (declaringType != null) {
+				foreach (MethodDefinition method in declaringType.Methods) {
 					if (ContainsReferenceDelegateInstructionFor (method, delegateMethod)) 
 						return true;
 				}
 
-				foreach (MethodDefinition method in type.Constructors) {
+				foreach (MethodDefinition method in declaringType.Constructors) {
 					if (ContainsReferenceDelegateInstructionFor (method, delegateMethod))
 						return true;
 				}
