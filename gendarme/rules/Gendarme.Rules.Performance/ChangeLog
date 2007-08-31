@@ -1,4 +1,9 @@
 2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Performance.xml.in: Added the rule information in the
+	xml file.
+	
+2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidUnusedParametersRule.cs: New rule to check for unused parameters
 	in a method.
