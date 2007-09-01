@@ -1,4 +1,9 @@
 2007-09-01  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* Gendarme.Rules.Exceptions.xml.in: Added the rule information for
+	DontSwallowErrorsCatchingNonSpecificExceptions rule in the xml file.
+
+2007-09-01  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Makefile.am: Added the sources of new rule and unit tests.
 	* DontSwallowErrorsCatchingNonspecificExceptionsRule.cs: New. Rule for
