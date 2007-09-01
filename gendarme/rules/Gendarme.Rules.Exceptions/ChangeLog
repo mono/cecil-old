@@ -1,3 +1,9 @@
+2007-09-01  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Makefile.am: Added the sources of new rule and unit tests.
+	* DontSwallowErrorsCatchingNonspecificExceptionsRule.cs: New. Rule for
+	check error swallowing.
+
 2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Exceptions.xml.in: Update Uri for rules (to generate

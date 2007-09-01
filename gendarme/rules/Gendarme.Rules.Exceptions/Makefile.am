@@ -13,7 +13,8 @@ exceptions_rules_sources = DontDestroyStackTrace.cs ISEHCatchBlock.cs \
 	ISEHGuardedBlock.cs ISEHHandlerBlock.cs \
 	SEHHandlerType.cs Impl/ExceptionBlockParser.cs Impl/ExecutionBlock.cs \
 	Impl/ExecutionPath.cs Impl/ExecutionPathFactory.cs Impl/SEHCatchBlock.cs \
-	Impl/SEHGuardedBlock.cs Impl/SEHHandlerBlock.cs Impl/SEHHandlerBlockCollection.cs
+	Impl/SEHGuardedBlock.cs Impl/SEHHandlerBlock.cs Impl/SEHHandlerBlockCollection.cs \
+	DontSwallowErrorsCatchingNonspecificExceptionsRule.cs
 
 exceptions_rules_build_sources = $(addprefix $(srcdir)/, $(exceptions_rules_sources))
 exceptions_rules_build_sources += $(exceptions_rules_generated_sources)
@@ -35,7 +36,7 @@ uninstall-hook:
 		rm -f $(DESTDIR)$(pkglibdir)/`basename $$ASM`; \
 	done;
 
-exceptions_test_sources = TestPatterns.cs 
+exceptions_test_sources = TestPatterns.cs DontSwallowErrorsCatchingNonspecificExceptionsTest.cs 
 exceptions_test_build_sources = $(addprefix $(srcdir)/Test/, $(exceptions_test_sources))
 
 Test.Rules.Exceptions.dll: $(exceptions_test_build_sources)
