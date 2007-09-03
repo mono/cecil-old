@@ -39,6 +39,8 @@ namespace Gendarme.Rules.Performance {
 	
 		private bool UseParameter (MethodDefinition method, ParameterDefinition parameter) 
 		{
+			if (!method.HasBody)
+				return false;
 			foreach (Instruction instruction in method.Body.Instructions) {
 				switch (instruction.OpCode.Code) {
 					case Code.Ldarg_0:

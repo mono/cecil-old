@@ -1,4 +1,8 @@
-2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+2007-09-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidUnusedParametersTest.cs: Added a test case for empty method.
+
+2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidUnusedParametersTest.cs: New. Unit tests for
 	AvoidUnusedParametersRule.

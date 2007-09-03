@@ -128,6 +128,10 @@ namespace Test.Rules.Performance {
 		{
 		}
 
+		public void EmptyMethod (int x) 
+		{
+		}
+
 		[TestFixtureSetUp]
 		public void FixtureSetUp () 
 		{
@@ -261,6 +265,15 @@ namespace Test.Rules.Performance {
 			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (5, messageCollection.Count);
+		}
+
+		[Test]
+		public void EmptyMethodTest ()
+		{
+			method = GetMethodForTest ("EmptyMethod");
+			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
+			Assert.IsNotNull (messageCollection);
+			Assert.AreEqual (1, messageCollection.Count);
 		}
 	
 		private MethodDefinition GetMethodForTest (string methodName) 

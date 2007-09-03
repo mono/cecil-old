@@ -1,16 +1,21 @@
-2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+2007-09-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidUnusedParametersRule.cs: Fixes a NullReference exception if the
+	method hasn't body.
+
+2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidUnusedParametersRule.cs: Following the Jb Evain comments, I used
 	a guard pattern for the method.HasBody in the
 	ContainsReferenceDelegateInstructionFor method.  I also avoid 2 cast
 	instructions in IsReferencedByDelegateMethod.
 
-2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Performance.xml.in: Added the rule information in the
 	xml file.
 	
-2007-09-31  Nestor Salceda  <nestor.salceda@gmail.com>
+2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidUnusedParametersRule.cs: New rule to check for unused parameters
 	in a method.
