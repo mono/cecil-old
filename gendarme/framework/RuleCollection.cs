@@ -42,10 +42,6 @@ namespace Gendarme.Framework {
 			set { List[index] = value; }
 		}
 
-		public IRule this [string name] {
-			get { return null; }
-		}
-
 		public void Add (IRule rule)
 		{
 			List.Add (rule);
