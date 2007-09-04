@@ -41,6 +41,12 @@ namespace Mono.Cecil.Tests {
 			RunCSharpRoundTripTestCase ("GenericIterator");
 		}
 
+		[Test]
+		public void GenericConstraints ()
+		{
+			RunCSharpRoundTripTestCase ("GenericConstraints");
+		}
+
 		protected override string GetTestCasePath (string file)
 		{
 			return base.GetTestCasePath (Path.Combine ("RoundTrip", file));

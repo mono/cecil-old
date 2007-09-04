@@ -34,18 +34,19 @@
     <Compile Include="Mono.Cecil.Tests\RegressionTestFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
     <ProjectReference Include="..\bat\Mono.Bat.csproj">
       <Project>{B2A9085A-7808-4682-8ED2-AB5FD2239146}</Project>
       <Name>Mono.Bat</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lib\Mono.Cecil.csproj">
-      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
-      <Name>Mono.Cecil</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="TestCases\Creation\HelloWorld.boo" />
     <None Include="TestCases\Regression\SimpleAssembly.boo" />
+    <None Include="TestCases\RoundTrip\GenericConstraints.boo" />
     <None Include="TestCases\RoundTrip\GenericIterator.boo" />
   </ItemGroup>
   <ItemGroup>
