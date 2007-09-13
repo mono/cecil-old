@@ -1,3 +1,7 @@
+2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* configure.ac: Add Gendarme.Rules.Naming to the build.
+
 2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* configure.ac: Install Gendarme.Framework to be reusable (pkg-config)

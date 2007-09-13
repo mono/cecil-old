@@ -1,0 +1,11 @@
+2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Makefile.am: New.  Build Gendarme.Rules.Naming rules and tests.
+	* Gendarme.Rules.Naming.xml.in: New.  Configuration for
+	Gendarme.Rules.Naming.
+	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs,
+	UsePluralNameInFlagEnumsRule.cs,
+	UseSingularNameInEnumsUnlessAreFlagsRule.cs,
+	AttributeEndsWithAttributeSuffixRule.cs:  New. Rules for check the
+	naming conventions.
+

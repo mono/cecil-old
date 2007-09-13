@@ -77,4 +77,7 @@ rules/Gendarme.Rules.Exceptions/Test/Makefile
 rules/Gendarme.Rules.Ui/Makefile
 rules/Gendarme.Rules.Ui/Gendarme.Rules.Ui.xml
 rules/Gendarme.Rules.Ui/Test/Makefile
+rules/Gendarme.Rules.Naming/Makefile
+rules/Gendarme.Rules.Naming/Gendarme.Rules.Naming.xml
+rules/Gendarme.Rules.Naming/Test/Makefile
 ])

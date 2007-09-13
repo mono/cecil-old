@@ -1,0 +1,8 @@
+2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AttributeEndsWithAttributeSuffixTest.cs,
+	EnumNotEndsWithEnumOrFlagsSuffixTest.cs,
+	UsePluralNameInFlagEnumsTest.cs,
+	UseSingularNameInEnumsUnlessAreFlagsTest.cs: New.  Unit tests for the
+	rules.
+

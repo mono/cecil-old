@@ -1,3 +1,8 @@
+2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Naming: Merging GSoC 2007 work.
+	* Makefile.am: Added Gendarme.Rules.Naming.
+
 2007-03-12  Jb Evain  <jbevain@gmail.com>
 
 	* Update to match the new rules interfaces.
