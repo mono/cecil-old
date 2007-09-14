@@ -1,5 +1,5 @@
 prefix=@prefix@
-assemblies_dir=${prefix}/lib/Gendarme.Framework
+assemblies_dir=${prefix}/lib/gendarme
 Libraries=${assemblies_dir}/Gendarme.Framework.dll
 
 Name: Gendarme.Framework

@@ -1,3 +1,9 @@
+2007-09-14  Nestor Salceda <nestor.salceda@gmail.com>
+
+	* gendarme-framework.pc.in:  The framework will be installed in
+	${prefix}/lib/gendarme not in ${prefix}/lib/Gendarme.Framework.  It
+	works correctly now.
+
 2007-09-03  Nestor Salceda <nestor.salceda@gmail.com>
 
 	* RuleCollection.cs: Removed the indexer with name as parameter.
