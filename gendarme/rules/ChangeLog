@@ -1,3 +1,8 @@
+2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Smells: Merging GSoC 2007 work.
+	* Makefile.am: Added Gendarme.Rules.Smells.
+
 2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Naming: Merging GSoC 2007 work.

@@ -80,4 +80,7 @@ rules/Gendarme.Rules.Ui/Test/Makefile
 rules/Gendarme.Rules.Naming/Makefile
 rules/Gendarme.Rules.Naming/Gendarme.Rules.Naming.xml
 rules/Gendarme.Rules.Naming/Test/Makefile
+rules/Gendarme.Rules.Smells/Makefile
+rules/Gendarme.Rules.Smells/Gendarme.Rules.Smells.xml
+rules/Gendarme.Rules.Smells/Test/Makefile
 ])

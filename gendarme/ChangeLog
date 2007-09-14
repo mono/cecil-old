@@ -1,3 +1,7 @@
+2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* configure.ad: Add Gendarme.Rules.Smells to the build.
+
 2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* configure.ac: Add Gendarme.Rules.Naming to the build.
