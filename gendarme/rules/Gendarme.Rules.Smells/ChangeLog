@@ -1,4 +1,13 @@
-2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com
+2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidCodeDuplicatedInSameClassRule.cs,
+	AvoidCodeDuplicatedInSiblingClassesRule.cs, AvoidLargeClassesRule.cs,
+	AvoidLongMethodsRule.cs, AvoidLongParameterListsRule.cs,
+	AvoidSpeculativeGeneralityRule.cs, CodeDuplicatedLocator.cs,
+	Expression.cs, ExpressionFillerVisitor.cs, Utilities.cs:  Added svn
+	propset svn:eol-native.
+
+2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Makefile.am: Build Gendarme.Rules.Smells rules and tests.
 	* Gendarme.Rules.Smells.xml.in: New.  Configuration for
