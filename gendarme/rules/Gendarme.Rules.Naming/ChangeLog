@@ -1,3 +1,9 @@
+2007-09-21  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AttributeEndsWithAttributeSuffixRule.cs:  Fixed a
+	NullReferenceException when the current type is System.Object.  Change
+	cast to as operator for avoid two type tests.
+
 2007-09-13  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Makefile.am: New.  Build Gendarme.Rules.Naming rules and tests.

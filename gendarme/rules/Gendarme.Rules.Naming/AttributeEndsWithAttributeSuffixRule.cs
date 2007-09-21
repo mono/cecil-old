@@ -40,22 +40,21 @@ namespace Gendarme.Rules.Naming {
 		//the method returns false.
 		private bool InheritsFromAttribute (TypeReference typeReference)
 		{
-			if (typeReference is TypeDefinition) {
-				TypeDefinition current = (TypeDefinition) typeReference;
-				while (current.BaseType.FullName != "System.Object") {
-					if (current.BaseType.FullName == "System.Attribute")
-						return true;
-					else {
-						if (current.BaseType is TypeDefinition) 
-							current = (TypeDefinition) current.BaseType;
-						else
-							return false;
-					}
+			TypeDefinition current = typeReference as TypeDefinition;
+			if (current == null) 
+				return false;
+			
+			while (current.BaseType != null && current.BaseType.FullName != "System.Object") {
+				if (current.BaseType.FullName == "System.Attribute")
+					return true;
+				else {
+					if (current.BaseType is TypeDefinition && current.BaseType != null) 
+						current = (TypeDefinition) current.BaseType;
+					else
+						return false;
 				}
-				return false;
 			}
-			else 
-				return false;
+			return false;
 		}
 		
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
