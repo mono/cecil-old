@@ -1,5 +1,10 @@
 2007-09-21  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* AttributeEndsWithAttributeSuffixRule.cs:  Change cast to as operator
+	for avoid two type tests in method body.
+
+2007-09-21  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* AttributeEndsWithAttributeSuffixRule.cs:  Fixed a
 	NullReferenceException when the current type is System.Object.  Change
 	cast to as operator for avoid two type tests.

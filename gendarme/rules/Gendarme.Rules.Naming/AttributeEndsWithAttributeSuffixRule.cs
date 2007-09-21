@@ -48,9 +48,8 @@ namespace Gendarme.Rules.Naming {
 				if (current.BaseType.FullName == "System.Attribute")
 					return true;
 				else {
-					if (current.BaseType is TypeDefinition && current.BaseType != null) 
-						current = (TypeDefinition) current.BaseType;
-					else
+					current = current.BaseType as TypeDefinition;
+					if (current == null)
 						return false;
 				}
 			}
