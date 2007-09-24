@@ -1,3 +1,9 @@
+2007-09-24  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* DontSwallowErrorsCatchingNonspecificExceptionsRule.cs: Change rule
+	name for adhere to coding guidelines.  With this change, the rule
+	information in the xml file will be shown.
+
 2007-09-01  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* Gendarme.Rules.Exceptions.xml.in: Added the rule information for

@@ -53,7 +53,7 @@ namespace Test.Rules.Exceptions {
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
-			rule = new DontSwallowErrorsCatchingNonspecificExceptions ();
+			rule = new DontSwallowErrorsCatchingNonspecificExceptionsRule ();
 			type = assembly.MainModule.Types ["Test.Rules.Exceptions.DontSwallowErrorsCatchingNonspecificExceptionsTest"];
 			messageCollection = null;
 		}

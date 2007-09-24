@@ -33,7 +33,7 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Exceptions {
-	public class DontSwallowErrorsCatchingNonspecificExceptions : IMethodRule {
+	public class DontSwallowErrorsCatchingNonspecificExceptionsRule : IMethodRule {
 		
 		//Added System.Object because is the code behind the following block:
 		//try {

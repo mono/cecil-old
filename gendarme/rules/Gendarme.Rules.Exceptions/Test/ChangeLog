@@ -1,4 +1,10 @@
-2007-09-01  Nestor Salceda <nestor.salceda@gmail.com>
+2007-09-24  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* DontSwallowErrorsCatchingNonspecificExceptionsTest.cs:  Change rule
+	name for adhere to coding guidelines.  With this change, the rule
+        information in the xml file will be shown.
+
+2007-09-01  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* DontSwallowErrorsCatchingNonspecificExceptionsTest.cs: New.  Unit
 	tests for DontSwallowErrorsCatchingNonSpecificExceptionsRule.
