@@ -1,14 +1,18 @@
-2007-09-14  Nestor Salceda <nestor.salceda@gmail.com>
+2007-09-25  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Runner.cs: Implemented the inclusion and exclusion of rules.
+
+2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* gendarme-framework.pc.in:  The framework will be installed in
 	${prefix}/lib/gendarme not in ${prefix}/lib/Gendarme.Framework.  It
 	works correctly now.
 
-2007-09-03  Nestor Salceda <nestor.salceda@gmail.com>
+2007-09-03  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* RuleCollection.cs: Removed the indexer with name as parameter.
 
-2007-08-31  Nestor Salceda <nestor.salceda@gmail.com>
+2007-08-31  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* gendarme-framework.pc.in, Makefile.am: Install Gendarme.Framework to
 	be reusable (pkg-config) with other runners.

@@ -81,18 +81,31 @@ namespace Gendarme.Framework {
 			return (IRule) Activator.CreateInstance (type);
 		}
 
+		private bool IsContainedInRuleSet (string rule, string mask)
+		{
+			string[] ruleSet = mask.Split ('|');
+			foreach (string entry in ruleSet) {
+				if (String.Compare (rule, entry.Trim ()) == 0)
+					return true;
+			}
+			return false;
+		}
+
 		public int LoadRulesFromAssembly (string assembly, string includeMask, string excludeMask)
 		{
-			if (includeMask != "*")
-				throw new NotImplementedException ("includeMask");
-			if ((excludeMask != null) && (excludeMask.Length > 0))
-				throw new NotImplementedException ("excludeMask");
-
 			int total = 0;
 			Assembly a = Assembly.LoadFile (Path.GetFullPath (assembly));
 			foreach (Type t in a.GetTypes ()) {
 				if (t.IsAbstract || t.IsInterface)
 					continue;
+				
+				if (includeMask != "*")
+					if (!IsContainedInRuleSet (t.Name, includeMask))
+						continue;
+				
+				if ((excludeMask != null) && (excludeMask.Length > 0)) 
+					if (IsContainedInRuleSet (t.Name, excludeMask))
+						continue;
 
 				LoadRules (typeof (IAssemblyRule), t, Rules.Assembly, ref total);
 				LoadRules (typeof (IModuleRule), t, Rules.Module, ref total);
