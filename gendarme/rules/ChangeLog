@@ -1,3 +1,9 @@
+2007-09-26  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* rules.xml: Added Naming rules to "all" and new "naming" ruleset.
+	Added new "smells" ruleset.  Added "monoBCL" ruleset as part of the
+	profiles task.
+
 2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Smells: Merging GSoC 2007 work.

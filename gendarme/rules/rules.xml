@@ -6,7 +6,17 @@
 		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
 		<rules include="*" from="Gendarme.Rules.Ui.dll" />
+		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
 	</ruleset>
+
+	<ruleset name="monoBCL">
+		<rules include="*" from="Gendarme.Rules.Concurrency.dll"/>
+		<rules include="BadRecursiveInvocationRule | NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
+		<rules include="DontDestroyStackTraceRule" from="Gendarme.Rules.Exceptions.dll"/>
+		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | UseStringEmptyRule" from="Gendarme.Rules.Performance.dll"/>
+		<rules include="*" from="Gendarme.Rules.Portability.dll"/>
+	</ruleset>
+
 	<ruleset name="concurrency">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
 	</ruleset>
@@ -27,5 +37,11 @@
 	</ruleset>
 	<ruleset name="ui">
 		<rules include="*" from="Gendarme.Rules.Ui.dll" />
+	</ruleset>
+	<ruleset name="naming">
+		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
+	</ruleset>
+	<ruleset name="smells">
+		<rules include="*" from="Gendarme.Rules.Smells.dll"/>
 	</ruleset>
 </gendarme>
