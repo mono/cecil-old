@@ -41,6 +41,12 @@ namespace Mono.Cecil.Tests {
 			RunReadAssemblyTestCase ("SimpleAssembly");
 		}
 
+		[Test]
+		public void TestUnicodeStringConstant ()
+		{
+			RunReadAssemblyTestCase ("UnicodeStringConstant");
+		}
+
 		protected override string GetTestCasePath (string file)
 		{
 			return base.GetTestCasePath (Path.Combine ("Regression", file));
