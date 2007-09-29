@@ -52,7 +52,7 @@ namespace Test.Rules.Naming {
 	}
 
 	[TestFixture]
-	public class UsePluralNameInFlagsEnumsTest {
+	public class UsePluralNameInEnumFlagsTest {
 		
 		private ITypeRule rule;
 		private AssemblyDefinition assembly;

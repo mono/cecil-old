@@ -1,3 +1,11 @@
+2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* UsePluralNameInFlagEnumsRule.cs,
+	UsePluralNameInEnumFlagsRule.cs:  Rename 
+	UsePluralNameInFlagEnumsRule.cs to UsePluralNameInEnumFlagsRule.cs
+	because this file doesn't follow the coding guidelines.
+	* Makefile.am: Change files to build the renamed rule.
+
 2007-09-21  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AttributeEndsWithAttributeSuffixRule.cs:  Change cast to as operator

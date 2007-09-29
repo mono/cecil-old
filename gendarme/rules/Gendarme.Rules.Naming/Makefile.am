@@ -10,7 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Naming.xml TestResult.xml
 naming_rules_sources_in = ../../AssemblyInfo.cs.in
 naming_rules_generated_sources = $(naming_rules_sources_in:.in=)
 naming_rules_sources = AttributeEndsWithAttributeSuffixRule.cs  EnumNotEndsWithEnumOrFlagsSuffixRule.cs \
-UsePluralNameInFlagEnumsRule.cs UseSingularNameInEnumsUnlessAreFlagsRule.cs
+UsePluralNameInEnumFlagsRule.cs UseSingularNameInEnumsUnlessAreFlagsRule.cs
 
 naming_rules_build_sources = $(addprefix $(srcdir)/, $(naming_rules_sources))
 naming_rules_build_sources += $(naming_rules_generated_sources)
@@ -33,7 +33,7 @@ uninstall-hook:
 	done;
 
 naming_test_sources = AttributeEndsWithAttributeSuffixTest.cs EnumNotEndsWithEnumOrFlagsSuffixTest.cs \
-UsePluralNameInFlagEnumsTest.cs UseSingularNameInEnumsUnlessAreFlagsTest.cs
+UsePluralNameInEnumFlagsTest.cs UseSingularNameInEnumsUnlessAreFlagsTest.cs
 
 naming_test_build_sources = $(addprefix $(srcdir)/Test/, $(naming_test_sources))
 
