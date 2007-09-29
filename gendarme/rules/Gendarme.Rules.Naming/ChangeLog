@@ -1,5 +1,10 @@
 2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* Gendarme.Rules.Naming.xml.in: Fixed error from copy and paste for the
+	performance xml file.  The correct namespace is Gendarme.Rules.Naming.
+
+2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* UsePluralNameInFlagEnumsRule.cs,
 	UsePluralNameInEnumFlagsRule.cs:  Rename 
 	UsePluralNameInFlagEnumsRule.cs to UsePluralNameInEnumFlagsRule.cs

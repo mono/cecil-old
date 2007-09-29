@@ -1,6 +1,6 @@
 <rules>
 	<rule 	Name="AttributeEndsWithAttributeSuffixRule"
-		Type="Gendarme.Rules.Performance.AttributeEndsWithAttributeSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Type="Gendarme.Rules.Naming.AttributeEndsWithAttributeSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="">
 	
 		<problem>The type '{0}' is an attribute and by convention the attributes should end with the Attribute suffix.</problem>
@@ -8,7 +8,7 @@
 	</rule>
 
 	<rule 	Name="EnumNotEndsWithEnumOrFlagsSuffixRule"
-		Type="Gendarme.Rules.Performance.EnumNotEndsWithEnumOrFlagsSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Type="Gendarme.Rules.Naming.EnumNotEndsWithEnumOrFlagsSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="">
 	
 		<problem>The type '{0}' is an enumeration and by convention the enums shoudn't end with the suffix Enum or Flags.</problem>
@@ -16,8 +16,8 @@
 	</rule>
 
 
-	<rule 	Name="UsePluralNameInFlagEnumsRule"
-		Type="Gendarme.Rules.Performance.UsePluralNameInFlagEnumsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+	<rule 	Name="UsePluralNameInEnumFlagsRule"
+		Type="Gendarme.Rules.Naming.UsePluralNameInEnumFlagsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="">
 	
 		<problem>The type '{0}' is a flags enumeration and by convention the flag enums should have a plural name.</problem>
@@ -26,7 +26,7 @@
 
 
 	<rule 	Name="UseSingularNameInEnumsUnlessAreFlagsRule"
-		Type="Gendarme.Rules.Performance.UseSingularNameInEnumsUnlessAreFlagsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Type="Gendarme.Rules.Naming.UseSingularNameInEnumsUnlessAreFlagsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="">
 	
 		<problem>The type '{0}' is an enumeration and by convention the enums should have a singular name.</problem>
