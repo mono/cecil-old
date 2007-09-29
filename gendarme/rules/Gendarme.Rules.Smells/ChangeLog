@@ -1,3 +1,7 @@
+2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Smells.xml.in:  Added Uri for these rules.
+
 2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidCodeDuplicatedInSameClassRule.cs,
