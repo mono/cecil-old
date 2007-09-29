@@ -1,3 +1,8 @@
+2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Performance.xml.in:  Added Uri for
+	AvoidUnusedParametersRule.
+
 2007-09-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidUnusedParametersRule.cs: Fixes a NullReference exception if the

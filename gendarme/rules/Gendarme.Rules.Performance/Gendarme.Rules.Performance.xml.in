@@ -19,7 +19,7 @@
 	</rule>
 	<rule	Name="AvoidUnusedParametersRule"
 		Type="Gendarme.Rules.Performance.AvoidUnusedParametersRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="">	
+		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#AvoidUnusedParametersRule">	
 		<problem>The method '{0}' contains unused parameters.</problem>
 		<solution>You should remove the unused parameters.</solution>
 	</rule>
