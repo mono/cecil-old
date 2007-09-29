@@ -7,7 +7,7 @@
 	</rule>
 	<rule	Name="DontSwallowErrorsCatchingNonspecificExceptionsRule"
 		Type="Gendarme.Rules.Exceptions.DontSwallowErrorsCatchingNonspecificExceptionsRule, Gendarme.Rules.Exceptions, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="">
+		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#DontSwallowErrorsCatchingNonspecificExceptionsRule">
 		<problem>The method '{0}' catch a nonspecific exception.</problem>
 		<solution>You can rethrow the original exception for don't destroy the stacktrace, or you can handle the specific exceptions.</solution>
 	</rule>
