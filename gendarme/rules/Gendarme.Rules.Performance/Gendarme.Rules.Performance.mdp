@@ -13,16 +13,17 @@
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
-  <DeployTargets />
   <Contents>
     <File name="./EmptyDestructorRule.cs" subtype="Code" buildaction="Compile" />
     <File name="./IDisposableWithDestructorWithoutSuppressFinalizeRule.cs" subtype="Code" buildaction="Compile" />
     <File name="./UseStringEmptyRule.cs" subtype="Code" buildaction="Compile" />
     <File name="./Gendarme.Rules.Performance.xml.in" subtype="Code" buildaction="Nothing" />
+    <File name="./AvoidUnusedParametersRule.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Project" localcopy="True" refto="framework" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../lib/Mono.Cecil.dll" />
   </References>
+  <DeployTargets />
 </Project>
