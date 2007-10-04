@@ -1,3 +1,8 @@
+2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Naming.mdp: New.  Created MonoDevelop project file for the
+	naming rules.
+
 2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Naming.xml.in: Added Uri for the rules.

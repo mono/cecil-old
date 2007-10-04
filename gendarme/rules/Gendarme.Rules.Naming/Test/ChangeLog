@@ -1,3 +1,8 @@
+2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Test.Rules.Naming.mdp:  New.  Created MonoDevelop project file for the
+	unit tests for the naming rules.
+
 2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* UsePluralNameInFlagEnumsTest.cs, 
