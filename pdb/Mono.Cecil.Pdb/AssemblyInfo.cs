@@ -30,10 +30,10 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("Mono.Cecil.PdbSupport")]
+[assembly: AssemblyTitle ("Mono.Cecil.Pdb")]
 [assembly: AssemblyDescription ("Support for the pdb symbols store in Cecil")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyProduct("Mono.Cecil.PdbSupport")]
+[assembly: AssemblyProduct ("Mono.Cecil")]
 [assembly: AssemblyCopyright ("(C) 2006, Jb Evain")]
 [assembly: AssemblyCulture ("")]
 
