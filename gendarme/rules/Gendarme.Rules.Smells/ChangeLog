@@ -1,5 +1,10 @@
 2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* Gendarme.Rules.Smells.mdp:  Removed empty directory entry in the
+	MonoDevelop project file.
+
+2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* Gendarme.Rules.Smells.mdp:  New.  Created MonoDevelop project file for
 	the smell rules.
 
