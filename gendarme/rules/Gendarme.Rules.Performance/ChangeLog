@@ -1,7 +1,8 @@
 2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
-	* Gendarme.Rules.Performance.mdp:  Added AvoidUnusedParametersRule and
-	the respective unit test to MonoDevelop project file.
+	* Gendarme.Rules.Performance.mdp, Test.Rules.Performance.mdp:  Added 
+	AvoidUnusedParametersRule and the respective unit test to 
+	MonoDevelop project file.
 
 2007-09-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
