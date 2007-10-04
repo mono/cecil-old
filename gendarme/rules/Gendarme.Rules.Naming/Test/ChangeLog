@@ -1,5 +1,10 @@
 2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* Test.Rules.Naming.mdp:  Removed empty directory entry in the
+	MonoDevelop project file.
+
+2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* Test.Rules.Naming.mdp:  New.  Created MonoDevelop project file for the
 	unit tests for the naming rules.
 

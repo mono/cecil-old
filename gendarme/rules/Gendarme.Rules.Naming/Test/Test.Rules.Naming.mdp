@@ -14,7 +14,6 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./" subtype="Directory" buildaction="Compile" />
     <File name="./AttributeEndsWithAttributeSuffixTest.cs" subtype="Code" buildaction="Compile" />
     <File name="./EnumNotEndsWithEnumOrFlagsSuffixTest.cs" subtype="Code" buildaction="Compile" />
     <File name="./UsePluralNameInEnumFlagsTest.cs" subtype="Code" buildaction="Compile" />
