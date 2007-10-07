@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Test.Rules.Concurrency.mdp: Update project file.
+
 2007-06-14  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* WriteStaticFieldFromInstanceMethodTest.cs: Update API to fix build.

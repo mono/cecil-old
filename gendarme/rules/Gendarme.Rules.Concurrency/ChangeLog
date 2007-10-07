@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Concurrency.mdp: Update project file.
+
 2006-11-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Concurrency.mdp: Add new rule to MonoDevelop project.
