@@ -1,0 +1,10 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CloneMethodShouldNotReturnNullRule.cs: New rule (Nidhi Rawal, GSoC 
+	2007)
+	* EqualShouldHandleNullArgRule.cs: New rule (Nidhi Rawal, GSoC 2007)
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule.cs: New rule
+	(Nidhi Rawal, GSoC 2007)
+	* ToStringReturnsNullRule.cs: New rule (Nidhi Rawal, GSoC 2007)
+	* Gendarme.Rules.BadPractice.mdp: Project file for MonoDevelop.
+	* Makefile.am: Build file.

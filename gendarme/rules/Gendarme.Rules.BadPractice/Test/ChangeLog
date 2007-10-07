@@ -1,0 +1,10 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CloneMethodShouldNotReturnNullTest.cs: Unit tests (Nidhi Rawal, 
+	GSoC 2007)
+	* EqualShouldHandleNullArgTest.cs: Unit tests (Nidhi Rawal, GSoC 2007)
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaTest.cs: Unit tests 
+	(Nidhi Rawal, GSoC 2007)
+	* ToStringReturnsNullTest.cs: Unit tests (Nidhi Rawal, GSoC 2007)
+	* Test.Rules.BadPractice.mdp: Project file for MonoDevelop
+	* Makefile.am: Build file.
