@@ -1,6 +1,6 @@
 AC_INIT(README)
 AC_CANONICAL_SYSTEM
-AM_INIT_AUTOMAKE(gendarme, 0.0.3.1)
+AM_INIT_AUTOMAKE(gendarme, 0.0.4.0)
 AM_MAINTAINER_MODE
 
 AC_PROG_INSTALL
@@ -13,7 +13,7 @@ fi
 
 dnl C# compiler
 AC_PATH_PROG(CSC, csc, no)
-AC_PATH_PROG(MCS, mcs, no)
+AC_PATH_PROG(MCS, gmcs, no)
 AC_PATH_PROG(MONO, mono, no)
 
 CS="C#"
@@ -27,7 +27,7 @@ if test "x$MCS" = "xno" ; then
 fi
 
 if test "x$MONO" = "xno"; then
-	AC_MSG_ERROR([No mono runtime found])
+	AC_MSG_ERROR([No mono 2.x runtime found])
 fi
 
 AC_SUBST(MCS)
@@ -83,4 +83,10 @@ rules/Gendarme.Rules.Naming/Test/Makefile
 rules/Gendarme.Rules.Smells/Makefile
 rules/Gendarme.Rules.Smells/Gendarme.Rules.Smells.xml
 rules/Gendarme.Rules.Smells/Test/Makefile
+rules/Gendarme.Rules.BadPractice/Makefile
+rules/Gendarme.Rules.BadPractice/Gendarme.Rules.BadPractice.xml
+rules/Gendarme.Rules.BadPractice/Test/Makefile
+rules/Gendarme.Rules.Design/Makefile
+rules/Gendarme.Rules.Design/Gendarme.Rules.Design.xml
+rules/Gendarme.Rules.Design/Test/Makefile
 ])

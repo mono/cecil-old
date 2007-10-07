@@ -1,4 +1,4 @@
-<Combine name="gendarme" fileversion="2.0">
+<Combine name="gendarme" fileversion="2.0" outputpath="./build/bin/">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="framework" configuration="Debug" />
@@ -8,14 +8,13 @@
       <Entry build="True" name="unit-tests" configuration="Default" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
-      <Entry build="True" name="framework" configuration="Debug" />
-      <Entry build="True" name="console" configuration="Debug" />
+      <Entry build="True" name="framework" configuration="Release" />
+      <Entry build="True" name="console" configuration="Release" />
       <Entry build="True" name="rules" configuration="" />
       <Entry build="True" name="tests" configuration="" />
       <Entry build="True" name="unit-tests" configuration="Default" />
     </Configuration>
   </Configurations>
-  <DeployTargets />
   <StartMode startupentry="console" single="True">
     <Execute type="None" entry="framework" />
     <Execute type="None" entry="console" />
@@ -23,6 +22,8 @@
     <Execute type="None" entry="tests" />
     <Execute type="None" entry="unit-tests" />
   </StartMode>
+  <MonoDevelop.ChangeLogAddIn.ChangeLogInfo policy="UpdateNearestChangeLog" />
+  <DeployTargets />
   <Entries>
     <Entry filename="./framework/framework.mdp" />
     <Entry filename="./console/console.mdp" />

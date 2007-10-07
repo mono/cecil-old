@@ -1,3 +1,10 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AUTHORS: Add the GSoC 2007 crew!
+	* configure.ac: Add new assemblies. Bump version number for (soon to
+	be ready) next version.
+	* gendarme.mds: Update MonoDevelop solution.
+
 2007-09-14  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* configure.ad: Add Gendarme.Rules.Smells to the build.
