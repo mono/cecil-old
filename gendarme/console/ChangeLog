@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* console.mdp: Now built with 2.0 rutime.
+
 2006-10-15  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* gendarme.xsl: Create only one new browser-window per rule.
