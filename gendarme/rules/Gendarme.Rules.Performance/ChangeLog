@@ -1,3 +1,16 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidToStringOnStringsRule.cs: New rule (Lukasz Knop, GSoC 2007)
+	* AvoidUncalledPrivateCodeRule.cs: New rule (Nidhi Rawal, GSoC 2007)
+	* AvoidUninstantiatedInternalClassesRule.cs: New rule (Nidhi Rawal, 
+	GSoC 2007)
+	* DontIgnoreMethodResultRule.cs: New rule (Lukasz Knop, GSoC 2007)
+	* UsingStringLengthInsteadOfCheckingEmptyStringRule.cs: New rule
+	(Nidhi Rawal, GSoC 2007)
+	* Gendarme.Rules.Performance.xml.in: Update rule descriptions.
+	* Makefile.am: Add new rules/tests to build.
+	* Gendarme.Rules.Performance.mdp: Update project file.
+
 2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Performance.mdp, Test.Rules.Performance.mdp:  Added 

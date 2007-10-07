@@ -1,3 +1,14 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidToStringOnStringsTest.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* AvoidUncalledPrivateCodeTest.cs: Unit tests (Nidhi Rawal, GSoC 2007)
+	* AvoidUninstantiatedInternalClassesTest.cs: Unit tests (Nidhi Rawal,
+	GSoC 2007)
+	* DontIgnoreMethodResultTest.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* UsingStringLengthInsteadOfCheckingEmptyStringTest.cs: Unit tests 
+	(Nidhi Rawal, GSoC 2007)
+	* Test.Rules.Performance.mdp: Update project file.
+
 2007-09-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidUnusedParametersTest.cs: Added a test case for empty method.

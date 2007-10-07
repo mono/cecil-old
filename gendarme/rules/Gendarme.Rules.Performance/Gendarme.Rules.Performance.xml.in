@@ -23,4 +23,22 @@
 		<problem>The method '{0}' contains unused parameters.</problem>
 		<solution>You should remove the unused parameters.</solution>
 	</rule>
+	<rule	Name="UsingStringLengthInsteadOfCheckingEmptyStringRule" 
+		Type="Gendarme.Rules.Performance.UsingStringLengthInsteadOfCheckingEmptyStringRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The method '{0}' compares the empty string by using Equals ("").</problem>
+		<solution>use String.Length instead.</solution>
+	</rule>
+	<rule	Name="AvoidUninstantiatedInternalClassesRule" 
+		Type="Gendarme.Rules.Performance.AvoidUninstantiatedInternalClassesRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The internal type '{0}' is not instantiated by code within the assembly.</problem>
+		<solution>Remove the type or add the code that uses it.  If the type contains only static methods then either add the static modifier to the type or add the private construtor to the type to prevent the compiler from emitting a default public instance constructor.</solution>
+	</rule>
+	<rule	Name="AvoidUncalledPrivateCodeRule" 
+		Type="Gendarme.Rules.Performance.AvoidUncalledPrivateCodeRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>A private or internal (assembly-level) member '{0}' does not have callers in the assembly, is not invoked by the common language runtime, and the member is not invoked by a delegate.</problem>
+		<solution>Remove the non-callable code or add the code that calls it.</solution>
+	</rule>
 </rules>
