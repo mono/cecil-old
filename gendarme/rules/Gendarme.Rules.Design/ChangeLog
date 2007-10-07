@@ -1,0 +1,9 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontDeclareProtectedFieldsInSealedClassRule.cs: New rule (Nidhi 
+	Rawal, GSoC 2007)
+	* UsingCloneWithoutImplementingICloneableRule.cs: New rule (Nidhi 
+	Rawal, GSoC 2007)
+	* Gendarme.Rules.Design.mdp: New. Project file for MonoDevelop.
+	* Gendarme.Rules.Design.xml.in: New. Rule descriptions.
+	* Makefile.am: New. Build file for rules and unit tests.

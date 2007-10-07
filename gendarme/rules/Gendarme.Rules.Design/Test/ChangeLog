@@ -1,0 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontDeclareProtectedFieldsInSealedClassTest.cs: Unit tests (Nidhi 
+	Rawal, GSoC 2007)
+	* UsingCloneWithoutImplementingICloneableTest.cs: Unit tests (Nidhi 
+	Rawal, GSoC 2007)
+	* Test.Rules.Design.mdp: New. Project file for MonoDevelop.

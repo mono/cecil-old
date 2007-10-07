@@ -1,0 +1,14 @@
+<rules>
+	<rule	Name="UsingCloneWithoutImplementingICloneableRule" 
+		Type="Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The class '{0}' uses Clone () method but does not implement ICloneable interface.</problem>
+		<solution>Implement the ICloneable interface.</solution>
+	</rule>
+	<rule	Name="DontDeclareProtectedFieldsInSealedClassRule" 
+		Type="Gendarme.Rules.Design.DontDeclareProtectedFieldsInSealedClassRule, Gendarme.Rules.Dodgy, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The sealed class '{0}' contains protected field(s).</problem>
+		<solution>Change the access specifier to public or private to represent the true use for the field.</solution>
+	</rule>
+</rules>
