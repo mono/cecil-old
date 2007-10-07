@@ -47,7 +47,7 @@ Test.Rules.Smells.dll: $(smells_rules_build_sources)
 test: Gendarme.Rules.Smells.dll Test.Rules.Smells.dll
 
 run-test: Gendarme.Rules.Smells.dll Test.Rules.Smells.dll
-	MONO_PATH=../../framework/:../Gendarme.Rules.Performance/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Smells.dll
+	MONO_PATH=../../framework/:../Gendarme.Rules.Performance/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Smells.dll
 
 self-test: test
 	gendarme Gendarme.Rules.Smells.dll

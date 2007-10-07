@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Test.Rules.Smells.mdp: Update project file.
+
 2007-10-05  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Test.Rules.Smells.mdp:  Changed output directory, by convention
