@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* framework.mdp: Now built with 2.0 rutime.
+
 2007-09-25  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Runner.cs: Implemented the inclusion and exclusion of rules.
