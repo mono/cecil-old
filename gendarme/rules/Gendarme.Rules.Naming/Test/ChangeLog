@@ -1,3 +1,9 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DetectNonAlphaNumericsInTypeNamesTest.cs: Unit tests (Nidhi Rawal, 
+	GSoC 2007)
+	* Test.Rules.Portability.mdp: Update project file.
+
 2007-10-05  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Test.Rules.Naming.mdp:  Changed output directory, by convention

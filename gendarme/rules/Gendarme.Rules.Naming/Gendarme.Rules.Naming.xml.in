@@ -2,34 +2,31 @@
 	<rule 	Name="AttributeEndsWithAttributeSuffixRule"
 		Type="Gendarme.Rules.Naming.AttributeEndsWithAttributeSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#AttributeEndsWithAttributeSuffixRule">
-	
 		<problem>The type '{0}' is an attribute and by convention the attributes should end with the Attribute suffix.</problem>
 		<solution>You should rename the type and append the Attribute suffix.</solution>
 	</rule>
-
 	<rule 	Name="EnumNotEndsWithEnumOrFlagsSuffixRule"
 		Type="Gendarme.Rules.Naming.EnumNotEndsWithEnumOrFlagsSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#EnumNotEndsWithEnumOrFlagsSuffixRule">
-	
 		<problem>The type '{0}' is an enumeration and by convention the enums shoudn't end with the suffix Enum or Flags.</problem>
 		<solution>You should remove the Enum or Flags suffix.</solution>
 	</rule>
-
-
 	<rule 	Name="UsePluralNameInEnumFlagsRule"
 		Type="Gendarme.Rules.Naming.UsePluralNameInEnumFlagsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#UsePluralNameInEnumFlagsRule">
-	
 		<problem>The type '{0}' is a flags enumeration and by convention the flag enums should have a plural name.</problem>
 		<solution>You should convert from singular to plural.</solution>
 	</rule>
-
-
 	<rule 	Name="UseSingularNameInEnumsUnlessAreFlagsRule"
 		Type="Gendarme.Rules.Naming.UseSingularNameInEnumsUnlessAreFlagsRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#UseSingularNameInEnumsUnlessAreFlagsRule">
-	
 		<problem>The type '{0}' is an enumeration and by convention the enums should have a singular name.</problem>
 		<solution>You should convert to plural to singular.</solution>
+	</rule>
+	<rule	Name="DetectNonAlphaNumericsInTypeNamesRule" 
+		Type="Gendarme.Rules.Naming.DetectNonAlphaNumericsInTypeNamesRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type or method name '{0}' contains underscore in its name.</problem>
+		<solution>Remove the underscore from name.</solution>
 	</rule>
 </rules>
