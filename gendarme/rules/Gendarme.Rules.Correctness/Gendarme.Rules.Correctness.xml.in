@@ -17,4 +17,10 @@
 		<problem>Method or property '{0}' might dereference a null pointer, or cause other code to do so.</problem>
 		<solution>Examine the detailed listing of problem locations, and ensure that the variables in question cannot be null.</solution>
 	</rule>
+	<rule	Name="CallingEqualsWithNullArgRule"
+		Type="Gendarme.Rules.Correctness.CallingEqualsWithNullArgRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>Method '{0}' calls Object.Equals (Object) with null argument.</problem>
+		<solution>Pass some other appropriate argument than null, as passing null parameter should always return false.</solution>
+	</rule>
 </rules>

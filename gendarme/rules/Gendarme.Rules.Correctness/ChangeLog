@@ -1,3 +1,14 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidConstructorsInStaticTypesRule.cs: Unit tests (Lukasz Knop, 
+	GSoC 2007)
+	* CallingEqualsWithNullArgRule.cs: New rule (Nidhi Rawal, GSoC 2007)
+	* FloatComparisonRule.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* UseValueInPropertySetterRule.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* Gendarme.Rules.Correctness.xml.in: Update rule description.
+	* Gendarme.Rules.Correctness.mdp: Update project file.
+	* Makefile.am: Update build file.
+
 2007-03-12  Alp Toker  <alp@atoker.com>
 
 	* Gendarme.Rules.Correctness.xml.in: Typo fix.

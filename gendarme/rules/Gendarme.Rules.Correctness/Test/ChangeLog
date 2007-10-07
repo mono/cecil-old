@@ -1,3 +1,12 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidConstructorsInStaticTypesTest.cs: Unit tests (Lukasz Knop, 
+	GSoC 2007)
+	* CallingEqualsWithNullArgTest.cs: Unit tests (Nidhi Rawal, GSoC 2007)
+	* FloatComparisonRuleTest.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* UseValueInPropertySetterTest.cs: Unit tests (Lukasz Knop, GSoC 2007)
+	* Test.Rules.Correctness.mdp: Update project files.
+
 2007-02-27  Jb Evain  <jbevain@gmail.com>
 
 	* MethodCanBeMadeStaticTest.cs:
