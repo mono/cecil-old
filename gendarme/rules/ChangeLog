@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Add Gendarme.Rules.BadPractice to the build
+
 2007-09-26  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* rules.xml: Added Naming rules to "all" and new "naming" ruleset.

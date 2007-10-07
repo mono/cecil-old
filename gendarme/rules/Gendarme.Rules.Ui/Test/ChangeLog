@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Test.Rules.Ui.mdp: Update project file.
+
 2006-11-08  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Tests.Rules.Ui.csproj: New. Build file for VS.NET

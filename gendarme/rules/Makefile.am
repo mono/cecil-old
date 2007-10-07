@@ -1,8 +1,8 @@
 SUBDIRS= Gendarme.Rules.Performance Gendarme.Rules.Security \
 	 Gendarme.Rules.Correctness Gendarme.Rules.Concurrency \
 	 Gendarme.Rules.Portability Gendarme.Rules.Exceptions \
-	 Gendarme.Rules.Ui Gendarme.Rules.Naming \
-	 Gendarme.Rules.Smells
+	 Gendarme.Rules.Ui Gendarme.Rules.Naming Gendarme.Rules.Design \
+	 Gendarme.Rules.Smells Gendarme.Rules.BadPractice
 
 EXTRA_DIST = rules.xml rules.mds tests.mds
 DISTCLEANFILES = Makefile.in
