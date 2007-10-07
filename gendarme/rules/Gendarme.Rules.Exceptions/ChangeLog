@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Gendarme.Rules.Exceptions.mdp: Update project file.
+
 2007-10-04  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Exceptions.mdp, Test.Rules.Exceptions.mdp:  Added

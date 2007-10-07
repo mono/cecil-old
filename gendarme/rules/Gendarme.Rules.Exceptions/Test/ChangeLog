@@ -1,3 +1,7 @@
+2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Test.Rules.Exeptions.mdp: Update project file.
+
 2007-09-24  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* DontSwallowErrorsCatchingNonspecificExceptionsTest.cs:  Change rule
