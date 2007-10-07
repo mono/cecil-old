@@ -13,7 +13,6 @@
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
-  <DeployTargets />
   <Contents>
     <File name="./NewLineLiteralRule.cs" subtype="Code" buildaction="Compile" />
   </Contents>
@@ -22,4 +21,6 @@
     <ProjectReference type="Project" localcopy="True" refto="framework" />
     <ProjectReference type="Assembly" localcopy="True" refto="../../../lib/Mono.Cecil.dll" />
   </References>
+  <Deployment.LinuxDeployData generatePcFile="False" />
+  <DeployTargets />
 </Project>
