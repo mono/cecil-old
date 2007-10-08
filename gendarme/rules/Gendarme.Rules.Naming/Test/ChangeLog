@@ -1,3 +1,10 @@
+2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DetectNonAlphaNumericsInTypeNamesTest.cs: Add test cases for 
+	non-nested types. Add test case with a delegate (2.0). Make sure 
+	everything is tested inside loops.
+	* Test.Rules.Naming.mdp: Use 2.0 runtime for tests.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DetectNonAlphaNumericsInTypeNamesTest.cs: Unit tests (Nidhi Rawal, 
