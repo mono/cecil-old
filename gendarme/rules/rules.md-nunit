@@ -2,12 +2,17 @@
   <Configurations active="Default">
     <Configuration name="Default" ctype="NUnitAssemblyGroupProjectConfiguration">
       <Assemblies>
-        <Assembly Path="../bin/Debug/Test.Rules.Security.dll" />
-        <Assembly Path="../bin/Debug/Test.Rules.Portability.dll" />
-        <Assembly Path="../bin/Debug/Test.Rules.Performance.dll" />
-        <Assembly Path="../bin/Debug/Test.Rules.Exceptions.dll" />
-        <Assembly Path="../bin/Debug/Test.Rules.Concurrency.dll" />
-        <Assembly Path="../bin/Debug/Test.Rules.Correctness.dll" />
+        <Assembly Path="../bin/Test.Rules.Ui.dll" />
+        <Assembly Path="../bin/Test.Rules.Smells.dll" />
+        <Assembly Path="../bin/Test.Rules.Security.dll" />
+        <Assembly Path="../bin/Test.Rules.Portability.dll" />
+        <Assembly Path="../bin/Test.Rules.Performance.dll" />
+        <Assembly Path="../bin/Test.Rules.Naming.dll" />
+        <Assembly Path="../bin/Test.Rules.Exceptions.dll" />
+        <Assembly Path="../bin/Test.Rules.Design.dll" />
+        <Assembly Path="../bin/Test.Rules.Correctness.dll" />
+        <Assembly Path="../bin/Test.Rules.Concurrency.dll" />
+        <Assembly Path="../bin/Gendarme.Rules.BadPractice.dll" />
       </Assemblies>
     </Configuration>
   </Configurations>
