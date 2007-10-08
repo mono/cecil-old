@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005-2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -48,7 +48,7 @@ class ConsoleRunner : Runner {
 	private string output;
 
 	private static Assembly assembly;
-	private static bool quiet;
+	private bool quiet;
 
 	static Assembly Assembly {
 		get {
@@ -179,7 +179,7 @@ class ConsoleRunner : Runner {
 		return result;
 	}
 
-	static void Header ()
+	void Header ()
 	{
 		if (quiet)
 			return;
@@ -212,19 +212,19 @@ class ConsoleRunner : Runner {
 		Console.WriteLine ();
 	}
 
-	static void Write (string text)
+	void Write (string text)
 	{
 		if (!quiet)
 			Console.Write (text);
 	}
 
-	static void WriteLine (string text)
+	void WriteLine (string text)
 	{
 		if (!quiet)
 			Console.WriteLine (text);
 	}
 	
-	static void WriteLine (string text, params object[] args)
+	void WriteLine (string text, params object[] args)
 	{
 		if (!quiet)
 			Console.WriteLine (text, args);
@@ -253,29 +253,29 @@ class ConsoleRunner : Runner {
 
 		// processing
 		
-		Header ();
+		runner.Header ();
 		string[] assemblies = new string [runner.assemblies.Count];
 		runner.assemblies.Keys.CopyTo (assemblies, 0);
 		DateTime total = DateTime.UtcNow;
 		foreach (string assembly in assemblies) {
 			DateTime start = DateTime.UtcNow;
-			Write (assembly);
+			runner.Write (assembly);
 			try {
 				AssemblyDefinition ad = AssemblyFactory.GetAssembly (assembly);
 				try {
 					runner.Process (ad);
 					runner.assemblies [assembly] = ad;
-					WriteLine (" - completed ({0} seconds).", (DateTime.UtcNow - start).TotalSeconds);
+					runner.WriteLine (" - completed ({0} seconds).", (DateTime.UtcNow - start).TotalSeconds);
 				}
 				catch (Exception e) {
-					WriteLine (" - error executing rules{0}Details: {1}", Environment.NewLine, e);
+					runner.WriteLine (" - error executing rules{0}Details: {1}", Environment.NewLine, e);
 				}
 			}
 			catch (Exception e) {
-				WriteLine (" - error processing{0}\tDetails: {1}", Environment.NewLine, e);
+				runner.WriteLine (" - error processing{0}\tDetails: {1}", Environment.NewLine, e);
 			}
 		}
-		WriteLine ("{0}{1} assemblies processed in {2} seconds.{0}",  Environment.NewLine, runner.assemblies.Count, 
+		runner. WriteLine ("{0}{1} assemblies processed in {2} seconds.{0}",  Environment.NewLine, runner.assemblies.Count, 
 			(DateTime.UtcNow - total).TotalSeconds);
 
 		// reporting
@@ -302,7 +302,7 @@ class ConsoleRunner : Runner {
 		writer.End ();
 		
 		if (runner.Violations.Count == 0) {
-			WriteLine ("No rule's violation were found.");
+			runner.WriteLine ("No rule's violation were found.");
 			return 0;
 		}
 		return 1;
