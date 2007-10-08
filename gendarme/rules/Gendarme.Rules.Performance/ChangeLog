@@ -1,7 +1,9 @@
-2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
+2007-10-08  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidToStringOnStringsRule.cs: Fix in case where the method has no
 	body (e.g. p/invoke, icalls...);
+	* UsingStringLengthInsteadOfCheckingEmptyStringRule.cs: Fix in case 
+	where the method has no	body (e.g. p/invoke, icalls...);
 
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
