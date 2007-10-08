@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +27,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -34,53 +35,41 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Naming {
 
 	public class DetectNonAlphaNumericsInTypeNamesRule: IMethodRule, ITypeRule {
-		
-		private bool IsPropertyEventOrOperator (MethodDefinition method)
+
+		// Compiler generates an error for any other non alpha-numerics than underscore ('_'), so we just need to check the presence of underscore in method names
+		private bool CheckName (string name)
 		{
-			if (method.SemanticsAttributes.ToString () == "Getter" || method.SemanticsAttributes.ToString () == "Setter" || method.SemanticsAttributes.ToString() == "AddOn" || method.SemanticsAttributes.ToString () == "RemoveOn" || method.Name == "op_Implicit" || method.Name == "op_Explicit")
-				return true;
-			else
-				return false;
+			return (name.IndexOf ("_") == -1);
 		}
-			
+		
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			string [] access_spec  = type.Attributes.ToString ().Split(',');
-			MessageCollection messageCollection = new MessageCollection ();
-			
-			// Compiler generates an error for any other non alpha-numerics than underscore ('_'), so we just need to check the presence of underscore in type names 
-			
-			if (access_spec[0] != "NestedPrivate" && type.Name.IndexOf ("_") != -1)
-			{
-				Location location = new Location (type.FullName, type.Name, 0);
-				Message message = new Message ("Type name contains underscore", location, MessageType.Error);
-				messageCollection.Add (message);
-			}
-			
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			// type must be public and, if nested, public too
+			if (type.IsNotPublic || type.IsNestedPrivate)
+				return runner.RuleSuccess;
+
+			// check the type name
+			if (CheckName (type.Name))
+				return runner.RuleSuccess;
+
+			Location location = new Location (type.FullName, type.Name, 0);
+			Message message = new Message ("Type name contains underscore", location, MessageType.Error);
+			return new MessageCollection (message);
 		}
 		
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			string [] access_spec  = method.Attributes.ToString ().Split(',');
-			MessageCollection messageCollection = new MessageCollection ();
-			
-			if(!IsPropertyEventOrOperator(method))
-			{
-				// Compiler generates an error for any other non alpha-numerics than underscore ('_'), so we just need to check the presence of underscore in method names
-				if (access_spec[0] != "Private" && method.Name.IndexOf("_") != -1)
-				{
-					Location location = new Location (method.DeclaringType.ToString(), method.Name, 0);
-					Message message = new Message ("Method name contains underscore", location, MessageType.Error);
-					messageCollection.Add (message);
-				}
-			}
-			
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			// exclude private methods and special names (like Getter and Setter)
+			if (method.IsPrivate || method.IsSpecialName)
+				return runner.RuleSuccess;
+
+			// check the method name
+			if (CheckName (method.Name))
+				return runner.RuleSuccess;
+
+			Location location = new Location (method.DeclaringType.ToString(), method.Name, 0);
+			Message message = new Message ("Method name contains an underscore.", location, MessageType.Error);
+			return new MessageCollection (message);
 		}
 	}
 }

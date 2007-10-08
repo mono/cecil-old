@@ -1,3 +1,9 @@
+2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DetectNonAlphaNumericsInTypeNamesRule.cs: Rework rule to avoid 
+	strings, dependency on string/enum position and creating a 
+	MessageCollection unless we need one.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DetectNonAlphaNumericsInTypeNamesRule.cs: New rule (Nidhi Rawal, GSoC 2007)
