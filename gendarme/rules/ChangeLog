@@ -1,5 +1,10 @@
 2007-10-09  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* rules.md-nunit: Fix the path for Test.Rules.BadDesign.dll assembly in
+	the unit tests.
+
+2007-10-09  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* rules.md-nunit: Update unit tests to load assemblies in ../bin
 	directory.
 

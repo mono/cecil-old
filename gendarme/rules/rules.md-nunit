@@ -12,7 +12,7 @@
         <Assembly Path="../bin/Test.Rules.Design.dll" />
         <Assembly Path="../bin/Test.Rules.Correctness.dll" />
         <Assembly Path="../bin/Test.Rules.Concurrency.dll" />
-        <Assembly Path="../bin/Gendarme.Rules.BadPractice.dll" />
+        <Assembly Path="../bin/Test.Rules.BadPractice.dll" />
       </Assemblies>
     </Configuration>
   </Configurations>
