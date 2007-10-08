@@ -12,8 +12,7 @@ $(bin_SCRIPTS): $(srcdir)/gendarme.in Makefile
 	$(REWRITE) $(srcdir)/gendarme.in > $@.tmp
 	mv $@.tmp $@
 
-CLEANFILES = \
-	gendarme
+CLEANFILES = gendarme bin/rules.xml bin/Gendarme.Rules.*.xml
 
 DISTCLEANFILES = \
 	AssemblyInfo.cs \
@@ -38,13 +37,9 @@ run-test: test
 	cd ..;
 
 self-test: all
-	cd framework;	\
-	make self-test;	\
-	cd ../console;	\
-	make self-test;	\
-	cd ../rules;	\
-	make self-test;	\
-	cd ..
+	cd bin;	\
+	mono --debug gendarme.exe --html self-test.html gendarme.exe *.dll;	\
+	cd ..;
 
 dist:
 	make dist-zip

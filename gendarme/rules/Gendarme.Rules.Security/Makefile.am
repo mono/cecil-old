@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 security_rulesdir=$(pkglibdir)
-security_rules_SCRIPTS = Gendarme.Rules.Security.dll
+security_rules_SCRIPTS = ../../bin/Gendarme.Rules.Security.dll
 EXTRA_DIST = $(security_rules_sources) $(security_rules_sources_in) Gendarme.Rules.Security.xml \
 	Gendarme.Rules.Security.mdp Gendarme.Rules.Security.csproj
-CLEANFILES = Gendarme.Rules.Security.dll Test.Rules.Security.dll
+CLEANFILES = $(security_rules_SCRIPTS) $(security_rules_SCRIPTS).mdb Test.Rules.Security.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Security.xml TestResult.xml
 
 security_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -16,8 +16,9 @@ security_rules_sources = MethodCallWithSubsetLinkDemandRule.cs NonVirtualMethodW
 security_rules_build_sources = $(addprefix $(srcdir)/, $(security_rules_sources))
 security_rules_build_sources += $(security_rules_generated_sources)
 
-Gendarme.Rules.Security.dll: $(security_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(security_rules_build_sources)
+../../bin/Gendarme.Rules.Security.dll: $(security_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(security_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -38,14 +39,15 @@ security_test_sources = MethodCallWithSubsetLinkDemandTest.cs NonVirtualMethodWi
 	TypeExposeFieldsTest.cs TypeIsNotSubsetOfMethodSecurityTest.cs TypeLinkDemandTest.cs
 security_test_build_sources = $(addprefix $(srcdir)/Test/, $(security_test_sources))
 
-Test.Rules.Security.dll: $(security_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Security.dll -out:$@ $(security_test_build_sources)
+Test.Rules.Security.dll: $(security_rules_build_sources) $(security_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(security_rules_SCRIPTS) -out:$@ $(security_test_build_sources)
 
-test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
+test: Test.Rules.Security.dll
 
-run-test: Gendarme.Rules.Security.dll Test.Rules.Security.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll
 
-self-test: test
-	gendarme Gendarme.Rules.Security.dll
+self-test: $(security_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(security_rules_SCRIPTS)
+

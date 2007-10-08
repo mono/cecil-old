@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 correctness_rulesdir=$(pkglibdir)
-correctness_rules_SCRIPTS = Gendarme.Rules.Correctness.dll
+correctness_rules_SCRIPTS = ../../bin/Gendarme.Rules.Correctness.dll
 EXTRA_DIST = $(correctness_rules_sources) $(correctness_rules_sources_in) Gendarme.Rules.Correctness.xml \
 	 Gendarme.Rules.Correctness.mdp  Gendarme.Rules.Correctness.csproj
-CLEANFILES = Gendarme.Rules.Correctness.dll Test.Rules.Correctness.dll
+CLEANFILES = $(correctness_rules_SCRIPTS) $(correctness_rules_SCRIPTS).mdb Test.Rules.Correctness.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Correctness.xml TestResult.xml
 
 correctness_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -19,8 +19,9 @@ correctness_rules_sources = BadRecursiveInvocationRule.cs OpCodeConstants.cs Met
 correctness_rules_build_sources = $(addprefix $(srcdir)/, $(correctness_rules_sources))
 correctness_rules_build_sources += $(correctness_rules_generated_sources)
 
-Gendarme.Rules.Correctness.dll: $(correctness_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
+../../bin/Gendarme.Rules.Correctness.dll: $(correctness_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -41,14 +42,15 @@ correctness_test_sources = BadRecursiveInvocationTest.cs MethodCanBeMadeStaticTe
 
 correctness_test_build_sources = $(addprefix $(srcdir)/Test/, $(correctness_test_sources))
 
-Test.Rules.Correctness.dll: $(correctness_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Correctness.dll -out:$@ $(correctness_test_build_sources)
+Test.Rules.Correctness.dll: $(correctness_rules_build_sources) $(correctness_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(correctness_rules_SCRIPTS) -out:$@ $(correctness_test_build_sources)
 
-test: Gendarme.Rules.Correctness.dll Test.Rules.Correctness.dll
+test: Test.Rules.Correctness.dll
 
-run-test: Test.Rules.Correctness.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Correctness.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Correctness.dll
 
-self-test: test
-	gendarme Gendarme.Rules.Correctness.dll
+self-test: $(correctness_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(correctness_rules_SCRIPTS)
+

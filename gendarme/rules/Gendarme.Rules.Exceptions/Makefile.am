@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
-security_rulesdir=$(pkglibdir)
-security_rules_SCRIPTS = Gendarme.Rules.Exceptions.dll
+exceptions_rulesdir=$(pkglibdir)
+exceptions_rules_SCRIPTS = ../../bin/Gendarme.Rules.Exceptions.dll
 EXTRA_DIST = $(exceptions_rules_sources) $(exceptions_rules_sources_in) Gendarme.Rules.Exceptions.xml \
 	Gendarme.Rules.Exceptions.mdp Gendarme.Rules.Exceptions.csproj
-CLEANFILES = Gendarme.Rules.Exceptions.dll Test.Rules.Exceptions.dll
+CLEANFILES = $(exceptions_rules_SCRIPTS) $(exceptions_rules_SCRIPTS).mdb Test.Rules.Exceptions.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Exceptions.xml TestResult.xml
 
 exceptions_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -19,8 +19,9 @@ exceptions_rules_sources = DontDestroyStackTrace.cs ISEHCatchBlock.cs \
 exceptions_rules_build_sources = $(addprefix $(srcdir)/, $(exceptions_rules_sources))
 exceptions_rules_build_sources += $(exceptions_rules_generated_sources)
 
-Gendarme.Rules.Exceptions.dll: $(exceptions_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(exceptions_rules_build_sources)
+../../bin/Gendarme.Rules.Exceptions.dll: $(exceptions_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(exceptions_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -39,11 +40,15 @@ uninstall-hook:
 exceptions_test_sources = TestPatterns.cs DontSwallowErrorsCatchingNonspecificExceptionsTest.cs 
 exceptions_test_build_sources = $(addprefix $(srcdir)/Test/, $(exceptions_test_sources))
 
-Test.Rules.Exceptions.dll: $(exceptions_test_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Exceptions.dll -out:$@ $(exceptions_test_build_sources)
+Test.Rules.Exceptions.dll: $(exceptions_test_build_sources) $(exceptions_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(exceptions_rules_SCRIPTS) -out:$@ $(exceptions_test_build_sources)
 
-test: Gendarme.Rules.Exceptions.dll Test.Rules.Exceptions.dll
+test: Test.Rules.Exceptions.dll
 
-run-test: Gendarme.Rules.Exceptions.dll Test.Rules.Exceptions.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Exceptions.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Exceptions.dll
+
+self-test: $(exceptions_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(exceptions_rules_SCRIPTS)
+

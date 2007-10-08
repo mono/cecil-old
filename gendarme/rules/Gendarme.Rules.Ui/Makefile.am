@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 ui_rulesdir=$(pkglibdir)
-ui_rules_SCRIPTS = Gendarme.Rules.Ui.dll
+ui_rules_SCRIPTS = ../../bin/Gendarme.Rules.Ui.dll
 EXTRA_DIST = $(ui_rules_sources) $(ui_rules_sources_in) Gendarme.Rules.Ui.xml \
 	Gendarme.Rules.Ui.mdp Gendarme.Rules.Ui.csproj
-CLEANFILES = Gendarme.Rules.Ui.dll Test.Rules.Ui.dll
+CLEANFILES = $(ui_rules_SCRIPTS) $(ui_rules_SCRIPTS).mdb Test.Rules.Ui.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Ui.xml TestResult.xml
 
 ui_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -15,8 +15,9 @@ ui_rules_sources = ExecutableTargetRule.cs GtkSharpExecutableTargetRule.cs \
 ui_rules_build_sources = $(addprefix $(srcdir)/, $(ui_rules_sources))
 ui_rules_build_sources += $(ui_rules_generated_sources)
 
-Gendarme.Rules.Ui.dll: $(ui_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(ui_rules_build_sources)
+../../bin/Gendarme.Rules.Ui.dll: $(ui_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(ui_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -37,14 +38,15 @@ ui_test_sources = ExecutableTargetTest.cs GtkSharpExecutableTargetTest.cs \
 
 ui_test_build_sources = $(addprefix $(srcdir)/Test/, $(ui_test_sources))
 
-Test.Rules.Ui.dll: $(ui_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Ui.dll -out:$@ $(ui_test_build_sources)
+Test.Rules.Ui.dll: $(ui_rules_build_sources) $(ui_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(ui_rules_SCRIPTS) -out:$@ $(ui_test_build_sources)
 
-test: Gendarme.Rules.Ui.dll Test.Rules.Ui.dll
+test: Test.Rules.Ui.dll
 
-run-test: Gendarme.Rules.Ui.dll Test.Rules.Ui.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Ui.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Ui.dll
 
-self-test: test
-	gendarme Gendarme.Rules.Ui.dll
+self-test: $(ui_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(ui_rules_SCRIPTS)
+

@@ -1,7 +1,7 @@
 frameworkdir=$(pkglibdir)
-framework_SCRIPTS = Gendarme.Framework.dll
+framework_SCRIPTS = ../bin/Gendarme.Framework.dll
 EXTRA_DIST = $(framework_sources) $(framework_sources_in) framework.mdp Gendarme.Framework.csproj gendarme-framework.pc.in
-CLEANFILES = Gendarme.Framework.dll
+CLEANFILES = $(framework_SCRIPTS) $(framework_SCRIPTS).mdb
 DISTCLEANFILES = ../AssemblyInfo.cs Makefile.in gendarme-framework.pc
 
 pkgconfig_in_files = gendarme-framework.pc.in
@@ -20,11 +20,14 @@ framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 framework_build_sources = $(addprefix $(srcdir)/, $(framework_sources))
 framework_build_sources += $(framework_generated_sources)
 
-Gendarme.Framework.dll: $(framework_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
+../bin/:
+	mkdir ../bin
 
-self-test: Gendarme.Framework.dll
-	gendarme Gendarme.Framework.dll
+../bin/Gendarme.Framework.dll: ../bin/ $(framework_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
+
+self-test: ($framework_SCRIPTS)
+	mono --debug ../bin/gendarme.exe ($framework_SCRIPTS)
 
 # Install Unstable Mono Libraries (see configure.ac)
 

@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 concurrency_rulesdir=$(pkglibdir)
-concurrency_rules_SCRIPTS = Gendarme.Rules.Concurrency.dll
+concurrency_rules_SCRIPTS = ../../bin/Gendarme.Rules.Concurrency.dll
 EXTRA_DIST = $(concurrency_rules_sources) $(concurrency_rules_sources_in) Gendarme.Rules.Concurrency.xml \
 	Gendarme.Rules.Concurrency.mdp Gendarme.Rules.Concurrency.csproj
-CLEANFILES = Gendarme.Rules.Concurrency.dll Test.Rules.Concurrency.dll
+CLEANFILES = $(concurrency_rules_SCRIPTS) $(concurrency_rules_SCRIPTS).mdb Test.Rules.Concurrency.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Concurrency.xml TestResult.xml
 
 concurrency_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -14,8 +14,9 @@ concurrency_rules_sources = DoubleCheckLockingRule.cs WriteStaticFieldFromInstan
 concurrency_rules_build_sources = $(addprefix $(srcdir)/, $(concurrency_rules_sources))
 concurrency_rules_build_sources += $(concurrency_rules_generated_sources)
 
-Gendarme.Rules.Concurrency.dll: $(concurrency_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(concurrency_rules_build_sources)
+../../bin/Gendarme.Rules.Concurrency.dll: $(concurrency_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(concurrency_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -34,14 +35,15 @@ uninstall-hook:
 concurrency_test_sources = DoubleCheckLockingTest.cs WriteStaticFieldFromInstanceMethodTest.cs
 concurrency_test_build_sources = $(addprefix $(srcdir)/Test/, $(concurrency_test_sources))
 
-Test.Rules.Concurrency.dll: $(concurrency_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Concurrency.dll -out:$@ $(concurrency_test_build_sources)
+Test.Rules.Concurrency.dll: $(concurrency_rules_build_sources) $(concurrency_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(concurrency_rules_SCRIPTS) -out:$@ $(concurrency_test_build_sources)
 
-test: Gendarme.Rules.Concurrency.dll Test.Rules.Concurrency.dll
+test: Test.Rules.Concurrency.dll
 
-run-test: Test.Rules.Concurrency.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Concurrency.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Concurrency.dll
 
-self-test: test
-	gendarme Gendarme.Rules.Concurrency.dll
+self-test: $(concurrency_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(concurrency_rules_SCRIPTS)
+

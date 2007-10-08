@@ -90,3 +90,4 @@ rules/Gendarme.Rules.Design/Makefile
 rules/Gendarme.Rules.Design/Gendarme.Rules.Design.xml
 rules/Gendarme.Rules.Design/Test/Makefile
 ])
+

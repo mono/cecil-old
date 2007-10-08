@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 badpractice_rulesdir=$(pkglibdir)
-badpractice_rules_SCRIPTS = Gendarme.Rules.BadPractice.dll
+badpractice_rules_SCRIPTS = ../../bin/Gendarme.Rules.BadPractice.dll
 EXTRA_DIST = $(badpractice_rules_sources) $(badpractice_rules_sources_in) Gendarme.Rules.BadPractice.xml \
 	Gendarme.Rules.BadPractice.mdp Gendarme.Rules.BadPractice.csproj
-CLEANFILES = Gendarme.Rules.BadPractice.dll Test.Rules.BadPractice.dll
+CLEANFILES = $(badpractice_rules_SCRIPTS) $(badpractice_rules_SCRIPTS).mdb Test.Rules.BadPractice.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.BadPractice.xml TestResult.xml
 
 badpractice_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -15,8 +15,9 @@ badpractice_rules_sources = CloneMethodShouldNotReturnNullRule.cs EqualShouldHan
 badpractice_rules_build_sources = $(addprefix $(srcdir)/, $(badpractice_rules_sources))
 badpractice_rules_build_sources += $(badpractice_rules_generated_sources)
 
-Gendarme.Rules.BadPractice.dll: $(badpractice_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(badpractice_rules_build_sources)
+../../bin/Gendarme.Rules.BadPractice.dll: $(badpractice_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(badpractice_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -36,14 +37,15 @@ badpractice_test_sources = CloneMethodShouldNotReturnNullTest.cs EqualShouldHand
 	ImplementingEqualsButNotGetHashCodeAndViceVersaTest.cs ToStringReturnsNullTest.cs
 badpractice_test_build_sources = $(addprefix $(srcdir)/Test/, $(badpractice_test_sources))
 
-Test.Rules.BadPractice.dll: $(badpractice_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.BadPractice.dll -out:$@ $(badpractice_test_build_sources)
+Test.Rules.BadPractice.dll: $(badpractice_rules_build_sources) $(badpractice_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(badpractice_rules_SCRIPTS) -out:$@ $(badpractice_test_build_sources)
 
-test: Gendarme.Rules.BadPractice.dll Test.Rules.BadPractice.dll
+test: Test.Rules.BadPractice.dll
 
-run-test: Gendarme.Rules.BadPractice.dll Test.Rules.BadPractice.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.BadPractice.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.BadPractice.dll
 
-self-test: test
-	gendarme Gendarme.Rules.BadPractice.dll
+self-test: $(badpractice_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(badpractice_rules_SCRIPTS)
+

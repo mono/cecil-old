@@ -1,10 +1,10 @@
 SUBDIRS=Test
 
 portability_rulesdir=$(pkglibdir)
-portability_rules_SCRIPTS = Gendarme.Rules.Portability.dll
+portability_rules_SCRIPTS = ../../bin/Gendarme.Rules.Portability.dll
 EXTRA_DIST = $(portability_rules_sources) $(portability_rules_sources_in) Gendarme.Rules.Portability.xml \
 	Gendarme.Rules.Portability.mdp Gendarme.Rules.Portability.csproj
-CLEANFILES = Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
+CLEANFILES = $(portability_rules_SCRIPTS) $(portability_rules_SCRIPTS).mdb Test.Rules.Portability.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Portability.xml TestResult.xml
 
 portability_rules_sources_in = ../../AssemblyInfo.cs.in
@@ -14,8 +14,9 @@ portability_rules_sources = NewLineLiteralRule.cs
 portability_rules_build_sources = $(addprefix $(srcdir)/, $(portability_rules_sources))
 portability_rules_build_sources += $(portability_rules_generated_sources)
 
-Gendarme.Rules.Portability.dll: $(portability_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -r:../../framework/Gendarme.Framework.dll -out:$@ $(portability_rules_build_sources)
+../../bin/Gendarme.Rules.Portability.dll: $(portability_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(portability_rules_build_sources)
+	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
 
@@ -34,14 +35,15 @@ uninstall-hook:
 portability_test_sources = NewLineLiteralTest.cs
 portability_test_build_sources = $(addprefix $(srcdir)/Test/, $(portability_test_sources))
 
-Test.Rules.Portability.dll: $(portability_rules_build_sources)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../framework/Gendarme.Framework.dll \
-		-r:Gendarme.Rules.Portability.dll -out:$@ $(portability_test_build_sources)
+Test.Rules.Portability.dll: $(portability_rules_build_sources) $(portability_rules_SCRIPTS)
+	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+		-r:$(portability_rules_SCRIPTS) -out:$@ $(portability_test_build_sources)
 
-test: Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
+test: Test.Rules.Portability.dll
 
-run-test: Gendarme.Rules.Portability.dll Test.Rules.Portability.dll
-	MONO_PATH=../../framework/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Portability.dll
+run-test: test
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Portability.dll
 
-self-test: test
-	gendarme Gendarme.Rules.Portability.dll
+self-test: $(portability_rules_SCRIPTS)
+	mono --debug ../../bin/gendarme.exe $(portability_rules_SCRIPTS)
+

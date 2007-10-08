@@ -28,8 +28,10 @@ run-test:
 	done;
 
 self-test: all
+	cp rules.xml ../bin/
 	for ASM in $(SUBDIRS); do \
 		cd $$ASM;	\
 		make self-test;	\
 		cd ..;		\
 	done;
+
