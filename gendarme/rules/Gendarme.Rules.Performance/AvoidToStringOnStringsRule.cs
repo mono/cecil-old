@@ -26,7 +26,6 @@
 //
 
 using System;
-using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -44,6 +43,10 @@ namespace Gendarme.Rules.Performance
 
 		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
 		{
+			// rule apply only if the method has a body (e.g. p/invokes, icalls don't)
+			if (!method.HasBody)
+				return runner.RuleSuccess;
+
 			MessageCollection messageCollection = new MessageCollection();
 
 			foreach (Instruction instruction in method.Body.Instructions)
