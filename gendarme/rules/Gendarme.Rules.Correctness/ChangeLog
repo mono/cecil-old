@@ -1,3 +1,9 @@
+2007-10-09  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Makefile.am: Remove the duplicate entry of 
+	CallingEqualsWithNullArgRule.cs in the building process.  This fixes a
+	compiler warning.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidConstructorsInStaticTypesRule.cs: Unit tests (Lukasz Knop, 

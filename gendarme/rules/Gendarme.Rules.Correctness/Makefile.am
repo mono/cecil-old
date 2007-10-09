@@ -13,8 +13,7 @@ correctness_rules_sources = BadRecursiveInvocationRule.cs OpCodeConstants.cs Met
 	CallingEqualsWithNullArgRule.cs NonNullAttribute.cs NonNullAttributeCollector.cs NullDerefAnalysis.cs NullDerefRule.cs \
 	NullDerefFrame.cs Nullity.cs graph/INode.cs graph/Node.cs graph/IEdge.cs graph/Edge.cs graph/IGraph.cs \
 	graph/Graph.cs dataflow/BasicBlock.cs dataflow/CFG.cs dataflow/CFGEdge.cs dataflow/Dataflow.cs graph/DFS.cs \
-	dataflow/IDataflowAnalysis.cs FloatComparisonRule.cs CallingEqualsWithNullArgRule.cs UseValueInPropertySetterRule.cs \
-	AvoidConstructorsInStaticTypesRule.cs
+	dataflow/IDataflowAnalysis.cs FloatComparisonRule.cs UseValueInPropertySetterRule.cs AvoidConstructorsInStaticTypesRule.cs
 
 correctness_rules_build_sources = $(addprefix $(srcdir)/, $(correctness_rules_sources))
 correctness_rules_build_sources += $(correctness_rules_generated_sources)
