@@ -1,3 +1,8 @@
+2007-10-09  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Makefile.am: Put parenthesis and dollar in correct order for avoid the
+	make self-test fail.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* framework.mdp: Now built with 2.0 rutime.

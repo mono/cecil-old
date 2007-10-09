@@ -26,8 +26,8 @@ framework_build_sources += $(framework_generated_sources)
 ../bin/Gendarme.Framework.dll: ../bin/ $(framework_build_sources)
 	$(MCS) -debug -target:library -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
 
-self-test: ($framework_SCRIPTS)
-	mono --debug ../bin/gendarme.exe ($framework_SCRIPTS)
+self-test: $(framework_SCRIPTS)
+	mono --debug ../bin/gendarme.exe $(framework_SCRIPTS)
 
 # Install Unstable Mono Libraries (see configure.ac)
 
