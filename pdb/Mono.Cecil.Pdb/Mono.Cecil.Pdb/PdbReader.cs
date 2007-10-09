@@ -127,12 +127,9 @@ namespace Mono.Cecil.Pdb {
 				return doc;
 
 			doc = new Cil.Document (document.URL);
-			doc.Type = (Cil.DocumentType) Cil.GuidAttribute.GetValueFromGuid (
-				document.DocumentType, typeof (Cil.DocumentType));
-			doc.Language = (Cil.DocumentLanguage) Cil.GuidAttribute.GetValueFromGuid (
-				document.Language, typeof (Cil.DocumentLanguage));
-			doc.LanguageVendor = (Cil.DocumentLanguageVendor) Cil.GuidAttribute.GetValueFromGuid (
-				document.LanguageVendor, typeof (Cil.DocumentLanguageVendor));
+			doc.Type = document.DocumentType;
+			doc.Language = document.Language;
+			doc.LanguageVendor = document.LanguageVendor;
 
 			m_documents [doc.Url] = doc;
 			return doc;

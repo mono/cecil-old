@@ -151,9 +151,9 @@ namespace Mono.Cecil.Pdb {
 
 			docWriter = m_writer.DefineDocument (
 				document.Url,
-				GuidAttribute.GetGuidFromValue ((int) document.Language, typeof (DocumentLanguage)),
-				GuidAttribute.GetGuidFromValue ((int) document.LanguageVendor, typeof (DocumentLanguageVendor)),
-				GuidAttribute.GetGuidFromValue ((int) document.Type, typeof (DocumentType)));
+				document.Language,
+				document.LanguageVendor,
+				document.Type);
 
 			m_documents [document.Url] = docWriter;
 			return docWriter;
