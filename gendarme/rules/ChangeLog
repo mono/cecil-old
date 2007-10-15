@@ -1,3 +1,7 @@
+2007-10-15  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* rules.xml: Added the design and badpractice rulesets.
+
 2007-10-09  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* rules.md-nunit: Fix the path for Test.Rules.BadDesign.dll assembly in

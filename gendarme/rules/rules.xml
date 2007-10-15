@@ -44,4 +44,10 @@
 	<ruleset name="smells">
 		<rules include="*" from="Gendarme.Rules.Smells.dll"/>
 	</ruleset>
+	<ruleset name="badpractice">
+		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
+	</ruleset>
+	<ruleset name="design">
+		<rules include="*" from="Gendarme.Rules.Design.dll"/>
+	</ruleset>
 </gendarme>
