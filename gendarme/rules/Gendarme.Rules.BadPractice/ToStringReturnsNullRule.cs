@@ -40,6 +40,10 @@ namespace Gendarme.Rules.BadPractice {
 			Instruction prevIns;
 			int offset = 0;
 			bool nullReturned = false;
+
+			if (!method.HasBody)
+				return null;
+
 			foreach (Instruction ins in method.Body.Instructions)
 				if (method.Name == "ToString")
 					if (ins.OpCode == OpCodes.Ret) {
