@@ -1,20 +1,31 @@
 <gendarme>
 	<ruleset name="default">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
-		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+		<!-- Not including, because contains some kind of bug -->
+		<rules exclude="AvoidUninstantiatedInternalClassesRule" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
 		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
 		<rules include="*" from="Gendarme.Rules.Ui.dll" />
 		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
+		<rules exclude="ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
+		<rules include="*" from="Gendarme.Rules.Design.dll"/>
 	</ruleset>
 
 	<ruleset name="monoBCL">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll"/>
-		<rules include="BadRecursiveInvocationRule | NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
+		<rules exclude="MethodCanBeMadeStaticRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="DontDestroyStackTraceRule" from="Gendarme.Rules.Exceptions.dll"/>
-		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | UseStringEmptyRule" from="Gendarme.Rules.Performance.dll"/>
+		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | 
+			UseStringEmptyRule | AvoidToStringOnStringsRule |
+			UseValueInPropertySetterValue" from="Gendarme.Rules.Performance.dll"/>
 		<rules include="*" from="Gendarme.Rules.Portability.dll"/>
+		<!-- Not including ToStringReturnsNullRule because launches a
+		NullRef in System.Byte-->
+		<rules include="CloneMethodShouldNotReturnNullRule |
+			EqualShouldHandleNullArgRule |
+			ImplementingEqualsButNotGetHashCodeAndViceVersaRule" from="Gendarme.Rules.BadPractice.dll"/>
+		
 	</ruleset>
 
 	<ruleset name="concurrency">

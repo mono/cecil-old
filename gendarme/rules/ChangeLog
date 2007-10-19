@@ -1,3 +1,8 @@
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* rules.xml: Update with the profiles page in the group.  There are 2
+	rules deactivated because I should deal with and fix some bugs.
+
 2007-10-15  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* rules.xml: Added the design and badpractice rulesets.
