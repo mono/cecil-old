@@ -1,5 +1,11 @@
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* FloatComparisonRule.cs: Before get the instructions from the method
+	body, the existence of method body should be checked.  This fixes the
+	NullReferenceException.
+
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* CallingEqualsWithNullArgRule.cs:  Before get the instructions from a
 	method body, the existence of method body should be checked.  Perhaps
 	exists better solutions for this case, but this solution fixes the

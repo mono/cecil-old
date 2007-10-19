@@ -42,6 +42,9 @@ namespace Gendarme.Rules.Correctness
 		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection();
+
+			if (!method.HasBody)
+				return null;
 			
 			foreach (Instruction instruction in method.Body.Instructions)
 			{
