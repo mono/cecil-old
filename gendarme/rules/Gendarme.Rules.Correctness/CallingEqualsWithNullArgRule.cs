@@ -38,6 +38,9 @@ namespace Gendarme.Rules.Correctness {
 		{			
 			MessageCollection messageCollection = new MessageCollection ();
 			
+			if (!method.HasBody)
+				return null;
+
 			foreach (Instruction ins in method.Body.Instructions)
 				if (ins.OpCode == OpCodes.Call || ins.OpCode == OpCodes.Callvirt) {
 					MethodReference calledMethod = (MethodReference) ins.Operand;
