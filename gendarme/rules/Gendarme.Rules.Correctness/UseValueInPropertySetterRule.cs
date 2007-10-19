@@ -49,6 +49,12 @@ namespace Gendarme.Rules.Correctness
 			if ((method.Attributes & MethodAttributes.SpecialName) == MethodAttributes.SpecialName && method.Name.StartsWith("set_"))
 			{
 				bool valueAccessed = false;
+
+				//Skip the test, instead of flooding messages 
+				//in stubs or empty setters empty setter.
+				if (!method.HasBody) 
+					return null;
+
 				foreach (Instruction instruction in method.Body.Instructions)
 				{
 					if (instruction.OpCode.Code == Code.Ldarg_1)

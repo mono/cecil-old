@@ -1,4 +1,10 @@
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* UseValueInPropertySetterRule.cs:  If a method is empty, then the rule
+	will skip this method, because could be an stub or empty method.  This
+	fixes the NullReferenceException if the method body is empty.
+
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* FloatComparisonRule.cs: Before get the instructions from the method
 	body, the existence of method body should be checked.  This fixes the
