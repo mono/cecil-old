@@ -1,3 +1,8 @@
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* CloneMethodShouldNotReturnNullRule.cs: Fixed NullReferenceException
+	when try to inspect a method without body.
+
 2007-10-16  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* ToStringReturnsNullRule.cs: Fixed NullReferenceException when try

@@ -48,7 +48,7 @@ namespace Gendarme.Rules.BadPractice
 			MessageCollection messageCollection = new MessageCollection ();
 			if (ImplementsICloneable (type))
 				foreach (MethodDefinition method in type.Methods) 
-					if (method.Name == "Clone" && method.Parameters.Count == 0)
+					if (method.Name == "Clone" && method.Parameters.Count == 0 && method.HasBody)
 						foreach (Instruction instruction in method.Body.Instructions) {
 							Instruction prevInstr = instruction.Previous;
 							if (instruction.OpCode.Name == "ret" && prevInstr.OpCode.Name == "ldnull") {
