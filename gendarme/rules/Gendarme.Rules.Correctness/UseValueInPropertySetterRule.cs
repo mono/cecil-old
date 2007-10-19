@@ -51,7 +51,7 @@ namespace Gendarme.Rules.Correctness
 				bool valueAccessed = false;
 
 				//Skip the test, instead of flooding messages 
-				//in stubs or empty setters empty setter.
+				//in stubs or empty setters.
 				if (!method.HasBody) 
 					return null;
 
