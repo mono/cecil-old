@@ -1,3 +1,8 @@
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Utilities.cs: Marked this class as static for avoid uninstantiated
+	internal class rule violation.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Smells.mdp: Update project file.

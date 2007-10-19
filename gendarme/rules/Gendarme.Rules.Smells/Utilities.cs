@@ -33,7 +33,7 @@ using Mono.Cecil;
 
 namespace Gendarme.Rules.Smells {
 	
-	internal class Utilities {
+	internal static class Utilities {
 		public static ICollection GetInheritedClassesFrom (TypeDefinition baseType)
 		{
 			ArrayList inheritedClasses = new ArrayList ();
