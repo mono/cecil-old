@@ -1,4 +1,10 @@
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* Expression.cs: When overriding the Equals method, if the value is
+	null, then return false.  Fixes the EqualShouldHandleNullArgRule
+	violation.
+
+2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Utilities.cs: Marked this class as static for avoid uninstantiated
 	internal class rule violation.

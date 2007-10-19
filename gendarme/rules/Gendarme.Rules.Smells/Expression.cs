@@ -62,7 +62,9 @@ namespace Gendarme.Rules.Smells {
 		{
 			if (!(value is Expression))
 				throw new ArgumentException ("The value argument should be an Expression", "value");
-						
+			if (value == null)
+				return false;	
+
 			Expression targetExpression = (Expression) value;
 						
 			if (HasSameSize (targetExpression)) 
