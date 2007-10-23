@@ -1,3 +1,8 @@
+2007-10-24  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.BadPractice.xml.in: Put the version attribute with 
+	autotools helpers. Added documentation for these rules.
+
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* CloneMethodShouldNotReturnNullRule.cs: Fixed NullReferenceException

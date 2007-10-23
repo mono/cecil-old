@@ -1,25 +1,25 @@
 <rules>
 	<rule	Name="ImplementingEqualsButNotGetHashCodeAndViceVersaRule" 
-		Type="Gendarme.Rules.BadPractice.ImplementingEqualsButNotGetHashCodeAndViceVersaRule, Gendarme.Rules.BadPractice, Version=0.0.3.1, Culture=neutral, PublicKeyToken=null"
-		Uri="http://www.mono-project.com/Gendarme#ImplementingEqualsButNotGetHashCodeAndViceVersaRule" >
+		Type="Gendarme.Rules.BadPractice.ImplementingEqualsButNotGetHashCodeAndViceVersaRule, Gendarme.Rules.BadPractice, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#ImplementingEqualsButNotGetHashCodeAndViceVersaRule" >
 		<problem>Only one method of Object.Equals (Object) and Object.GetHashCode () is implemented in '{0}'.</problem>
 		<solution>Implement the other method also.</solution>
 	</rule>
 	<rule	Name="CloneMethodShouldNotReturnNullRule" 
-		Type="Gendarme.Rules.BadPractice.CloneMethodShouldNotReturnNullRule, Gendarme.Rules.BadPractice, Version=0.0.3.1, Culture=neutral, PublicKeyToken=null"
-		Uri="http://www.mono-project.com/Gendarme#CloneMethodShouldNotReturnNullRule" >
+		Type="Gendarme.Rules.BadPractice.CloneMethodShouldNotReturnNullRule, Gendarme.Rules.BadPractice, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#CloneMethodShouldNotReturnNullRule" >
 		<problem>The ICloneable.Clone () method in '{0}' seems to return null in some circumstances.</problem>
 		<solution>Please return an appropriate object instead of returning null.</solution>
 	</rule>
 	<rule	Name="ToStringReturnsNullRule" 
-		Type="Gendarme.Rules.BadPractice.ToStringReturnsNullRule, Gendarme.Rules.BadPractice, Version=0.0.3.1, Culture=neutral, PublicKeyToken=null"
-		Uri="http://www.mono-project.com/Gendarme#ToStringReturnsNullRule" >
+		Type="Gendarme.Rules.BadPractice.ToStringReturnsNullRule, Gendarme.Rules.BadPractice, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#ToStringReturnsNullRule" >
 		<problem>The method '{0}' contains ToString () conversion that returns null.</problem>
 		<solution>Return an empty string or other appropriate string rather than returning null.</solution>
 	</rule>
 	<rule	Name="EqualShouldHandleNullArgRule" 
-		Type="Gendarme.Rules.BadPractice.EqualShouldHandleNullArgRule, Gendarme.Rules.BadPractice, Version=0.0.3.1, Culture=neutral, PublicKeyToken=null"
-		Uri="http://www.mono-project.com/Gendarme#EqualShouldHandleNullArgRule" >
+		Type="Gendarme.Rules.BadPractice.EqualShouldHandleNullArgRule, Gendarme.Rules.BadPractice, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#EqualShouldHandleNullArgRule" >
 		<problem>The method '{0}' does not handle null argument as it should be.</problem>
 		<solution>Modify the method implementation to return false if null argument found.</solution>
 	</rule>
