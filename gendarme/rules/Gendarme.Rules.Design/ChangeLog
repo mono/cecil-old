@@ -1,3 +1,8 @@
+2007-10-27  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* Gendarme.Rules.Design.xml.in:  Added Uri with the documentation for
+	the rules.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DontDeclareProtectedFieldsInSealedClassRule.cs: New rule (Nidhi 
