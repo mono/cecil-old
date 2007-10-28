@@ -1,3 +1,9 @@
+2007-10-28  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Gendarme.Rules.Correctness.xml.in: Added documentation for
+	AvoidConstructorsInStaticTypes, FloatComparisonRule and
+	UseValueInPropertySetterRule.
+
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* UseValueInPropertySetterRule.cs:  If a method is empty, then the rule
