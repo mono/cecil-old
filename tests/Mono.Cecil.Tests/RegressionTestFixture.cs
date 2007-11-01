@@ -47,6 +47,12 @@ namespace Mono.Cecil.Tests {
 			RunReadAssemblyTestCase ("UnicodeStringConstant");
 		}
 
+		[Test]
+		public void TestCloneCustomMarshalOnReturnType ()
+		{
+			RunReadAssemblyTestCase ("CloneCustomMarshalOnReturnType");
+		}
+
 		protected override string GetTestCasePath (string file)
 		{
 			return base.GetTestCasePath (Path.Combine ("Regression", file));

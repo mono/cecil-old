@@ -1,3 +1,11 @@
+2007-11-01  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil.Tests/RegressionTestFixture.cs
+	* TestCases/Regression/CloneCustomMarshalOnReturnType.boo:
+
+		Add a test for cloning methods with custom marshalers on
+		the return type.
+
 2007-05-11  Jb Evain  <jb@nurv.fr>
 
 	* first check-in of the new Cecil

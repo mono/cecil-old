@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TestCases\Creation\HelloWorld.boo" />
+    <None Include="TestCases\Regression\CloneCustomMarshalOnReturnType.boo" />
     <None Include="TestCases\Regression\SimpleAssembly.boo" />
     <None Include="TestCases\Regression\UnicodeStringConstant.boo" />
     <None Include="TestCases\RoundTrip\GenericConstraints.boo" />
