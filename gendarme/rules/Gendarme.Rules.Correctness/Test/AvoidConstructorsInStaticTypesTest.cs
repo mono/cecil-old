@@ -73,7 +73,10 @@ namespace Test.Rules.Correctness
 			public static void Method()
 			{
 			}
+		}
 
+		public class EmptyClass 
+		{
 		}
 
 		private ITypeRule rule;
@@ -124,7 +127,12 @@ namespace Test.Rules.Correctness
 			Assert.IsNotNull(messageCollection);
 		}
 
-
-
+		[Test]
+		public void TestEmptyClass ()
+		{
+			type = assembly.MainModule.Types["Test.Rules.Correctness.AvoidConstructorsInStaticTypesTest/EmptyClass"];
+			messageCollection = rule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
 	}
 }

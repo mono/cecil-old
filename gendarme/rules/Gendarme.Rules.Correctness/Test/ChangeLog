@@ -1,3 +1,8 @@
+2007-11-03  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidConstructorsInStaticTypesTest.cs: Added test for avoid false
+	positives if the class doesn't contains fields or methods.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidConstructorsInStaticTypesTest.cs: Unit tests (Lukasz Knop, 
