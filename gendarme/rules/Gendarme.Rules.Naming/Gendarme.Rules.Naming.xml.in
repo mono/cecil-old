@@ -25,7 +25,7 @@
 	</rule>
 	<rule	Name="DetectNonAlphaNumericsInTypeNamesRule" 
 		Type="Gendarme.Rules.Naming.DetectNonAlphaNumericsInTypeNamesRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="" >
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#DetectNonAlphaNumericsInTypeNamesRule">
 		<problem>The type or method name '{0}' contains underscore in its name.</problem>
 		<solution>Remove the underscore from name.</solution>
 	</rule>
