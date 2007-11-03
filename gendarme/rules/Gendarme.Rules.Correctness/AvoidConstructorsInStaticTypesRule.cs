@@ -43,6 +43,9 @@ namespace Gendarme.Rules.Correctness
 		{
 			MessageCollection messageCollection = new MessageCollection();
 
+			if (type.Methods.Count == 0 && type.Fields.Count == 0)
+				return null;
+
 			foreach (MethodDefinition method in type.Methods)
 			{
 				if (!method.IsStatic)

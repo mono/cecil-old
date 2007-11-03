@@ -1,3 +1,8 @@
+2007-11-03  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidConstructorsInStaticTypesRule.cs:  Added the code for avoid false
+	positives if the class doesn't contains fields and methods.
+
 2007-10-28  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Correctness.xml.in: Added documentation for
