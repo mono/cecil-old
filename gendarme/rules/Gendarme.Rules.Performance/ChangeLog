@@ -1,3 +1,8 @@
+2007-11-10  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* Gendarme.Rules.Performance.xml.in:  Added documentation for
+	AvoidToStringOnStringsRule and DontIgnoreMethodResultRule.
+
 2007-10-08  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidToStringOnStringsRule.cs: Fix in case where the method has no

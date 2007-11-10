@@ -41,4 +41,16 @@
 		<problem>A private or internal (assembly-level) member '{0}' does not have callers in the assembly, is not invoked by the common language runtime, and the member is not invoked by a delegate.</problem>
 		<solution>Remove the non-callable code or add the code that calls it.</solution>
 	</rule>
+	<rule	Name="AvoidToStringOnStringsRule"
+		Type="Gendarme.Rules.Performance.AvoidToStringOnStringsRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="">
+		<problem>You are calling ToString () in a string in the member '{0}', this is redundant and may produce some performance penalities.</a>
+		<solution>You should remove the ToString () call.</solution>
+	</rule>
+	<rule	Name="DontIgnoreMethodResultRule"
+		Type="Gendarme.Rules.Performance.DontIgnoreMethodResultRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="">
+		<problem>The member '{0}' ignores the result from the call.</problem>
+		<solution>You shouldn't ignore this result.</solution>
+	</rule>
 </rules>
