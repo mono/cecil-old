@@ -1,5 +1,12 @@
 2007-11-10  Nestor Salceda  <nestor.salceda@gmail.com>
 	
+	* Gendarme.Rules.Performance.xml.in: Added Uri for
+	UsingStringLengthInsteadOfEmptyStringRule,
+	AvoidUninstantiatedInternalClassesRule, AvoidUncalledPrivateCodeRule,
+	AvoidToStringOnStringsRule and DontIgnoreMethodResultRule.
+
+2007-11-10  Nestor Salceda  <nestor.salceda@gmail.com>
+	
 	* Gendarme.Rules.Performance.xml.in:  Added documentation for
 	AvoidToStringOnStringsRule and DontIgnoreMethodResultRule.
 
