@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project name="Bat" default="build" basedir=".">
+
+	<property name="debug" value="false" />
+	<property name="optimize" value="true" />
+	<property name="build.dir" value="${path::get-full-path('bin')}" />
+	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Mono.Cecil.dll" />
+	<include buildfile="nunit.inc" />
+	<!-- allow properties to be customized in external file" -->
+	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
+	
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset>
+				<include name="**/bin/**" />
+				<include name="**/obj/**" />
+				<include name="${build.dir}/**" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}">
+			<fileset basedir="libs">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}" file="${Mono.Cecil.dll}" />
+		<copy todir="${build.dir}" file="${nunit.framework.dll}" />
+	</target>
+
+	<target name="build" depends="init">
+		<csc output="${build.dir}/Mono.Bat.dll"
+			target="library" debug="${debug}"
+			unsafe="false" optimize="${optimize}">
+			<sources basedir="Mono.Bat">
+				<include name="**/*.cs" />
+			</sources>
+			<references basedir="${build.dir}">
+				<include name="Boo.Lang.*.dll" />
+				<include name="nunit.framework.dll" />
+				<include name="Mono.Cecil.dll" />
+			</references>
+		</csc>
+	</target>
+</project>
