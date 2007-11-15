@@ -4,11 +4,11 @@
 	<!-- allow properties to be customized in external file" -->
 	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 
-	<property name="Mono.Cecil.dll" value="../../mcs/class/Mono.Cecil/bin/Mono.Cecil.dll" />
+	<property name="Mono.Cecil.dll" value="../../../mcs/class/Mono.Cecil/bin/Mono.Cecil.dll" />
 	<property name="build.dir" value="bin" />
 	<property name="optimize" value="false" />
 	<property name="debug" value="true" />
-	<property name="keyfile" value="../../mcs/class/mono.snk" />
+	<property name="keyfile" value="../../../mcs/class/mono.snk" />
 	<property name="csc.defines" value="NO_DEFINE" />
 	
 	<target name="release" depends="clean, set-release, build">
