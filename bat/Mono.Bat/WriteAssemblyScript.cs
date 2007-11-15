@@ -59,7 +59,12 @@ namespace Mono.Bat {
 
 		protected MethodReference ImportConsoleWriteLine ()
 		{
-			return Import (typeof (Console).GetMethod ("WriteLine", new Type [] { typeof (string) }));
+			return ImportConsoleWriteLine (typeof (string));
+		}
+		
+		protected MethodReference ImportConsoleWriteLine (params System.Type[] paramTypes)
+		{
+			return Import (typeof (Console).GetMethod ("WriteLine", paramTypes));
 		}
 
 		protected TypeReference Import (Type type)
