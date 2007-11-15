@@ -40,6 +40,12 @@ namespace Mono.Cecil.Tests {
 		{
 			RunWriteAssemblyTestCase ("HelloWorld");
 		}
+		
+		[Test]
+		public void OptimizeLdc_I4 ()
+		{
+			RunWriteAssemblyTestCase ("OptimizeLdc_I4");
+		}
 
 		protected override string GetTestCasePath (string file)
 		{

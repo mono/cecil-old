@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<project name="Mono.Cecil.Tests" default="test" basedir=".">
+
+	<property name="debug" value="false" />
+	<property name="optimize" value="true" />
+	<property name="build.dir" value="${path::get-full-path('bin')}" />
+	<property name="bat.bin.dir" value="../bat/bin" />
+	
+	<include buildfile="../bat/nunit.inc" />
+	<!-- allow properties to be customized in external file" -->
+	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
+	
+	<target name="test" depends="build">
+		<nunit2>
+			<formatter type="Plain" />
+			<test>
+				<assemblies basedir="${build.dir}">
+					<include name="Mono.Cecil.Tests.dll" />
+				</assemblies>
+			</test>
+		</nunit2>
+	</target>
+
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset>
+				<include name="**/bin/**" />
+				<include name="**/obj/**" />
+				<include name="${build.dir}/**" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}">
+			<fileset basedir="${bat.bin.dir}">
+				<include name="*.dll" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build" depends="init">
+		<csc output="${build.dir}/Mono.Cecil.Tests.dll"
+			target="library" debug="${debug}"
+			unsafe="false" optimize="${optimize}">
+			<sources basedir="Mono.Cecil.Tests">
+				<include name="**/*.cs" />
+			</sources>
+			<references basedir="${build.dir}">
+				<include name="Mono.Bat.dll" />
+				<include name="nunit.framework.dll" />
+				<include name="Mono.Cecil.dll" />
+			</references>
+		</csc>
+	</target>
+</project>
