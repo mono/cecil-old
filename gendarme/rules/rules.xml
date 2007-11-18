@@ -20,11 +20,10 @@
 			UseStringEmptyRule | AvoidToStringOnStringsRule |
 			UseValueInPropertySetterValue" from="Gendarme.Rules.Performance.dll"/>
 		<rules include="*" from="Gendarme.Rules.Portability.dll"/>
-		<!-- Not including ToStringReturnsNullRule because launches a
-		NullRef in System.Byte-->
 		<rules include="CloneMethodShouldNotReturnNullRule |
 			EqualShouldHandleNullArgRule |
-			ImplementingEqualsButNotGetHashCodeAndViceVersaRule" from="Gendarme.Rules.BadPractice.dll"/>
+			ImplementingEqualsButNotGetHashCodeAndViceVersaRule |
+			ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
 		
 	</ruleset>
 
