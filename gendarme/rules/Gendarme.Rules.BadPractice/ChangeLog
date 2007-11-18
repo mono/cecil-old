@@ -1,3 +1,9 @@
+2007-11-18  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* ToStringReturnsNullRule.cs: Fixed NullReferenceException when doesn't
+	exist the key in the hash table.  Some internal refactoring (fix the
+	selection for the ToString () method).
+
 2007-10-24  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.BadPractice.xml.in: Put the version attribute with 

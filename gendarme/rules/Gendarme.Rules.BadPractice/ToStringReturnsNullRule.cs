@@ -34,6 +34,11 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.BadPractice {
 	public class ToStringReturnsNullRule: IMethodRule
 	{
+		private bool IsOverridenToString (MethodDefinition method)
+		{
+			return method.Name == "ToString" && method.IsVirtual;
+		}
+
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
@@ -42,37 +47,42 @@ namespace Gendarme.Rules.BadPractice {
 			bool nullReturned = false;
 
 			if (!method.HasBody)
-				return null;
+				return runner.RuleSuccess;
 
-			foreach (Instruction ins in method.Body.Instructions)
-				if (method.Name == "ToString")
-					if (ins.OpCode == OpCodes.Ret) {
-						prevIns = ins.Previous;
-						if (prevIns.OpCode != OpCodes.Ldnull) {
-							string opCodeSt;
-							if (prevIns.OpCode == OpCodes.Call || prevIns.OpCode == OpCodes.Callvirt)
-								opCodeSt = ReturnSt (method, prevIns.Previous);
-							else 
-								opCodeSt = ReturnSt (method, prevIns);
-							if (opCodeSt == null && prevIns.Operand.ToString () != "System.String System.Convert::ToString(System.Object)")
-								nullReturned = true;
-							if (MethodReturnsNull (method, opCodeSt)) {
-								nullReturned = true;
-								offset = ins.Offset;
-							}
-						}
-						else {
+			if (!IsOverridenToString (method))
+				return runner.RuleSuccess;
+
+			foreach (Instruction ins in method.Body.Instructions) {
+				if (ins.OpCode == OpCodes.Ret) {
+					prevIns = ins.Previous;
+					if (prevIns.OpCode != OpCodes.Ldnull) {
+						string opCodeSt;
+						if (prevIns.OpCode == OpCodes.Call || prevIns.OpCode == OpCodes.Callvirt)
+							opCodeSt = ReturnSt (method, prevIns.Previous);
+						else 
+							opCodeSt = ReturnSt (method, prevIns);
+						if (opCodeSt == null && (prevIns.Operand == null || prevIns.Operand.ToString () != "System.String System.Convert::ToString(System.Object)"))
+							nullReturned = true;
+						if (MethodReturnsNull (method, opCodeSt)) {
 							nullReturned = true;
 							offset = ins.Offset;
 						}
 					}
+					else {
+						nullReturned = true;
+						offset = ins.Offset;
+					}
+				}
+			}
+
 			if (nullReturned) {
 				Location location = new Location (method.DeclaringType.FullName, method.Name, offset);
 				Message message = new Message ("ToString () seems to returns null in some condition", location, MessageType.Error);
 				messageCollection.Add (message);
 			}
+
 			if (messageCollection.Count == 0)
-				return null;
+				return runner.RuleSuccess;
 			return messageCollection;
 		}
 		
@@ -82,21 +92,21 @@ namespace Gendarme.Rules.BadPractice {
 			string stOpCode = null;
 			switch (instruc.OpCode.Code) {
 			case Code.Ldloc_0:
-				stOpCode = opCodes [0].ToString ();
+				stOpCode = opCodes.ContainsKey (0)? opCodes [0].ToString () : null;
 				break;
 			case Code.Ldloc_1:
-				stOpCode = opCodes [1].ToString ();
+				stOpCode = opCodes.ContainsKey (1)? opCodes [1].ToString () : null;
 				break;
 			case Code.Ldloc_2:
-				stOpCode = opCodes [2].ToString ();
+				stOpCode = opCodes.ContainsKey (2)? opCodes [2].ToString () : null;
 				break;
 			case Code.Ldloc_3:
-				stOpCode = opCodes [3].ToString ();
+				stOpCode = opCodes.ContainsKey (3)? opCodes [3].ToString () : null;
 				break;
 			case Code.Ldloc_S:
 				string [] s = instruc.Operand.ToString ().Split ('_');
 				int i = Convert.ToInt32 (s [1]);
-				stOpCode = opCodes [i].ToString ();
+				stOpCode = opCodes.ContainsKey (i) ? opCodes [i].ToString () : null;
 				break;
 			case Code.Ldfld:
 				TypeDefinition type = (TypeDefinition) method.DeclaringType;
@@ -116,17 +126,16 @@ namespace Gendarme.Rules.BadPractice {
 		{
 			int count = 0;
 			Hashtable hash = new Hashtable ();			
-			if (method.Name == "ToString") {
-				foreach (Instruction ins in method.Body.Instructions) {
-					if (ins.OpCode.Code.ToString().Substring(0,2) == "St") {
-						if (ins.OpCode.Code == Code.Stloc_S) {
-							hash.Add (count, ins.Operand.ToString ());
-							count ++;
-						} 
-						else {
-							hash.Add (count, ins.OpCode.Code.ToString ());
-							count ++;
-						}
+			
+			foreach (Instruction ins in method.Body.Instructions) {
+				if (ins.OpCode.Code.ToString().Substring(0,2) == "St") {
+					if (ins.OpCode.Code == Code.Stloc_S) {
+						hash.Add (count, ins.Operand.ToString ());
+						count ++;
+					} 
+					else {
+						hash.Add (count, ins.OpCode.Code.ToString ());
+						count ++;
 					}
 				}
 			}
