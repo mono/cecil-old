@@ -44,7 +44,7 @@
 	<rule	Name="AvoidToStringOnStringsRule"
 		Type="Gendarme.Rules.Performance.AvoidToStringOnStringsRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#AvoidToStringOnStringsRule">
-		<problem>You are calling ToString () in a string in the member '{0}', this is redundant and may produce some performance penalities.</a>
+		<problem>You are calling ToString () in a string in the member '{0}', this is redundant and may produce some performance penalities.</problem>
 		<solution>You should remove the ToString () call.</solution>
 	</rule>
 	<rule	Name="DontIgnoreMethodResultRule"
