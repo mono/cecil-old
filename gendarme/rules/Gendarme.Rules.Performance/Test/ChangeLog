@@ -1,3 +1,8 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUncalledPrivateCodeTest.cs: Handle more cases (don't check for
+	method.Name). Add test case for finalizers.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidToStringOnStringsTest.cs: Unit tests (Lukasz Knop, GSoC 2007)

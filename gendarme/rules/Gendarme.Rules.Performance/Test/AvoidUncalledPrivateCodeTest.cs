@@ -229,7 +229,17 @@ namespace Test.Rules.Performance
 				delegateExample d = new delegateExample (c.privateMethod);
 			}
 		}
-		
+
+		public class ClassWithFinalizer {
+
+			// finalizer is private but we can't report it as unused
+			~ClassWithFinalizer ()
+			{
+			}
+
+			// note: don't add anything else in this class or the test will break
+		}
+
 		private IMethodRule methodRule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
@@ -254,42 +264,48 @@ namespace Test.Rules.Performance
 		public void uncalledPrivateMethodTest ()
 		{
 			type = GetTest ("UncalledPrivateMethod");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "display")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.AreEqual (1, type.Methods.Count, "Methods.Count");
+			messageCollection = methodRule.CheckMethod (type.Methods [0], new MinimalRunner ());
+			Assert.IsNotNull (messageCollection, "UncalledPrivateMethod");
+			Assert.AreEqual (1, messageCollection.Count, "Count");
 		}
 		
 		[Test]
 		public void calledPrivateMethodTest ()
 		{
 			type = GetTest ("CalledPrivateMethod");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "display")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			foreach (MethodDefinition md in type.Methods) {
+				switch (md.Name) {
+				case "Main":
+					// rule does not apply to Main
+					messageCollection = methodRule.CheckMethod (md, new MinimalRunner ());
+					Assert.IsNull (messageCollection, "Main");
+					break;
+				case "display":
+					messageCollection = methodRule.CheckMethod (md, new MinimalRunner ());
+					Assert.IsNull (messageCollection, "display");
+					break;
+				}
+			}
 		}
 		
 		[Test]
 		public void uncalledInternalMethodTest ()
 		{
 			type = GetTest ("UncalledInternalMethod");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "print")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.AreEqual (1, type.Methods.Count, "Methods.Count");
+			messageCollection = methodRule.CheckMethod (type.Methods[0], new MinimalRunner ());
+			Assert.IsNotNull (messageCollection, "UncalledInternalMethod");
+			Assert.AreEqual (1, messageCollection.Count, "Count");
 		}
 		
 		[Test]
 		public void calledInternalMethodTest ()
 		{
 			type = GetTest ("CalledInternalMethod");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "CalledMethod")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			Assert.AreEqual (1, type.Methods.Count, "Methods.Count");
+			messageCollection = methodRule.CheckMethod (type.Methods[0], new MinimalRunner ());
+			Assert.IsNull (messageCollection, "CalledInternalMethod");
 		}
 		
 		[Test]
@@ -359,10 +375,20 @@ namespace Test.Rules.Performance
 		public void implementingInterfacesMembersTest ()
 		{
 			type = GetTest ("ImplementingExplicitInterfacesMembers");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Test.Rules.Performance.AvoidUncalledPrivateCodeTest+Iface2.IfaceMethod2")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "Main":
+				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest.Iface1.IfaceMethod1":
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest.Iface2.IfaceMethod2":
+					Assert.IsNotNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				default:
+					Assert.Fail ("Test case not handled");
+					break;
+				}
+			}
 		}
 		
 		[Test]
@@ -435,6 +461,12 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
+		[Test]
+		public void CheckClassWithFinalizer ()
+		{
+			type = GetTest ("ClassWithFinalizer");
+			Assert.IsNull (methodRule.CheckMethod (type.Methods[0], new MinimalRunner ()));
+		}
 	}
 }
