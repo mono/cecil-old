@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,175 +27,164 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.Performance
-{
-	public class AvoidUncalledPrivateCodeRule: IMethodRule
-	{
-		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
-		{
-			MessageCollection messageCollection = new MessageCollection ();
-			TypeDefinition type = method.DeclaringType as TypeDefinition;
+namespace Gendarme.Rules.Performance {
 
-			if (MemberIsCallable (type, method) && !MemberIsCalled (type, method)) {
-				Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
-				Message message = new Message ("The private or internal code is not called", location, MessageType.Error);
-				messageCollection.Add (message);
+	public class AvoidUncalledPrivateCodeRule: IMethodRule {
+
+		// we should move these methods into an helper class (e.g. MethodHelper)
+		// and reuse them in other rules
+
+		public bool IsStaticConstructor (MethodDefinition md)
+		{
+			return (md.IsStatic && md.IsConstructor);
+		}
+
+		public bool IsEntryPoint (MethodDefinition md)
+		{
+			return (md == md.DeclaringType.Module.Assembly.EntryPoint);
+		}
+
+		public bool IsSerializationConstructor (MethodDefinition md)
+		{
+			if (!md.IsConstructor || (md.Parameters.Count != 2))
+				return false;
+
+			if (md.Parameters[0].ParameterType.Name != "System.Runtime.Serialization.SerializationInfo")
+				return false;
+
+			return (md.Parameters[1].ParameterType.Name == "System.Runtime.Serialization.StreamingContext");
+		}
+
+		// static [void|int] Main ()
+		// static [void|int] Main (string[] args)
+		public bool IsMain (MethodDefinition md)
+		{
+			// Main must be static
+			if (!md.IsStatic)
+				return false;
+
+			if (md.Name != "Main")
+				return false;
+
+			// Main must return void or int
+			switch (md.ReturnType.ReturnType.Name) {
+			case "Void":
+			case "Int":
+				// ok, continue checks
+				break;
+			default:
+				return false;
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			switch (md.Parameters.Count) {
+			case 0 :
+				// Main (void)
+				return true;
+			case 1:
+				// Main (string[] args)
+				return (md.Parameters[0].ParameterType.Name == "String[]");
+			default:
+				return false;
+			}
 		}
 
-		private bool MemberIsCalled (TypeDefinition type, MethodDefinition method)
+		//
+
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			bool isCalled = false;
+			// #1 - rule doesn't apply to static ctor
+			if (IsStaticConstructor (method))
+				return runner.RuleSuccess;
 
-			if (TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsInternal (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (TypeIsInternal (type) && !TypeIsPrivate (type) && MemberIsInternal (method))
-				isCalled = InternalMemberIsCalled (method);
-			if (TypeIsInternal (type) && !TypeIsPrivate (type) && MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (!TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsInternal (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (!TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (!TypeIsInternal (type) && !TypeIsPrivate (type) && MemberIsInternal (method))
-				isCalled = InternalMemberIsCalled (method);
-			if (!TypeIsInternal (type) && !TypeIsPrivate (type) && MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (TypeIsInternal (type) && TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (TypeIsInternal (type) && !TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
-				isCalled = InternalMemberIsCalled (method);
-			if (!TypeIsInternal (type) && TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
-				isCalled = PrivateMemberIsCalled (type, method);
-			if (!TypeIsInternal (type) && !TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
-				isCalled = true;
+			// #2 - rule doesn't apply if the method is the assembly entry point
+			if (IsEntryPoint (method))
+				return runner.RuleSuccess;
 
-			return isCalled;
+			if (IsMain (method))
+				return runner.RuleSuccess;
+
+
+			// ok, the rule applies
+
+			// check if the method is private
+			if (method.IsPrivate) {
+				// then we must check if this type use the private method
+				if (!CheckTypeForMethodUsage ((method.DeclaringType as TypeDefinition), method)) {
+					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+					Message message = new Message ("The private method code is not used in it's declaring type.", location, MessageType.Error);
+					return new MessageCollection (message);
+				}
+			}
+
+			// check if method is internal
+			if (method.IsAssembly) {
+				// then we must check if something in the assembly is using this method
+				if (!CheckAssemblyForMethodUsage (method.DeclaringType.Module.Assembly, method)) {
+					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+					Message message = new Message ("The internal method code is not used in it's declaring assembly.", location, MessageType.Error);
+					return new MessageCollection (message);
+				}
+			}
+
+			// then method is accessible
+			return runner.RuleSuccess;
 		}
 
-		private bool PrivateMemberIsCalled (TypeDefinition type, MethodDefinition ToBeCalledMethod)
+		private bool CheckAssemblyForMethodUsage (AssemblyDefinition ad, MethodDefinition md)
 		{
-			bool isCalled = false;
-
-			foreach (MethodDefinition method in type.Methods)
-				if (method.HasBody)
-					foreach (Instruction instruction in method.Body.Instructions)
-						if (instruction.Operand != null && instruction.Operand.ToString () == ToBeCalledMethod.ToString ())
-							isCalled = true;
-
-			if (type.NestedTypes.Count > 0)
-				foreach (TypeDefinition nestedType in type.NestedTypes)
-					isCalled = PrivateMemberIsCalled (nestedType, ToBeCalledMethod);
-
-			return isCalled;
+			// scan each module
+			foreach (ModuleDefinition module in ad.Modules) {
+				// scan each type
+				foreach (TypeDefinition type in module.Types) {
+					if (CheckTypeForMethodUsage (type, md))
+						return true;
+				}
+			}
+			return false;
 		}
 
-		private bool InternalMemberIsCalled (MethodDefinition ToBeCalledMethod)
+		private bool CheckTypeForMethodUsage (TypeDefinition td, MethodDefinition md)
 		{
-			bool isCalled = false;
-
-			foreach (ModuleDefinition module in ToBeCalledMethod.DeclaringType.Module.Assembly.Modules)
-				foreach (TypeDefinition type in module.Types)
-					foreach (MethodDefinition method in type.Methods)
-						if (method.HasBody)
-							foreach (Instruction instruction in method.Body.Instructions)
-								if (instruction.Operand != null && instruction.Operand.ToString () == ToBeCalledMethod.ToString ())
-									isCalled = true;
-
-			return isCalled;
+			// check every constructor for the type
+			foreach (MethodDefinition ctor in td.Constructors) {
+				// skip ourself
+				if (ctor == md)
+					continue;
+				if (CheckMethodUsage (ctor, md))
+					return true;
+			}
+			// check every method for the type
+			foreach (MethodDefinition method in td.Methods) {
+				// skip check ourself (even with recursion if no one call us then it's still unused)
+				if (method == md)
+					continue;
+				if (CheckMethodUsage (method, md))
+					return true;
+			}
+			return false;
 		}
 
-		private bool TypeIsInternal (TypeDefinition type)
+		private bool CheckMethodUsage (MethodDefinition method, MethodDefinition md)
 		{
-			bool isInternalType = true;
-			string [] modifier = type.Attributes.ToString ().Split (',');
+			if (!method.HasBody)
+				return false;
 
-			if (modifier [0] == "NestedAssembly" || modifier [0] == "NestedFamANDAssem" || modifier [0] == "NestedFamORAssem")
-				isInternalType = true;
-			for (int i = 0; i < modifier.Length; i++)
-				if (modifier [i] == "Public" || modifier [i] == "Private" || modifier [i] == "NestedPublic" || modifier [i] == "NestedPrivate" || modifier [i] == "NestedFamily")
-					isInternalType = false;
-
-			if (isInternalType)
-				return isInternalType;
-			else if (type.DeclaringType != null)
-					isInternalType = TypeIsInternal (type.DeclaringType as TypeDefinition);
-			return isInternalType;
-		}
-
-		private bool TypeIsPrivate (TypeDefinition type)
-		{
-			bool isPrivateType = false;
-			string [] modifier = type.Attributes.ToString ().Split (',');
-
-			for (int i = 0; i < modifier.Length; i++)
-				if (modifier [i] == "NestedPrivate")
-					isPrivateType = true;
-
-			if (isPrivateType)
-				return isPrivateType;
-			else if (type.DeclaringType != null)
-					isPrivateType = TypeIsPrivate (type.DeclaringType as TypeDefinition);
-			return isPrivateType;
-		}
-
-		private bool MemberIsInternal (MethodDefinition method)
-		{
-			bool isInternalMember = false;
-			string [] modifier = method.Attributes.ToString ().Split (',');
-
-			if (modifier [0] == "Assem")
-				isInternalMember = true;
-
-			return isInternalMember;
-		}
-
-		private bool MemberIsPrivate (MethodDefinition method)
-		{
-			bool isPrivateMember = false;
-			string [] modifier = method.Attributes.ToString ().Split (',');
-
-			if (modifier [0] == "Private")
-				isPrivateMember = true;
-
-			return isPrivateMember;
-		}
-
-		private bool MemberIsCallable (TypeDefinition type, MethodDefinition method)
-		{
-			bool isCallable = true;
-			AssemblyDefinition assemblyDefinition = method.DeclaringType.Module.Assembly;
-
-			foreach (CustomAttribute customAttribute in method.CustomAttributes)
-				if (customAttribute.Constructor.DeclaringType.FullName == "System.Runtime.InteropServices.ComRegisterFunctionAttribute" || customAttribute.Constructor.DeclaringType.FullName == "System.Runtime.InteropServices.ComUnregisterFunctionAttribute")
-					isCallable = false;
-			if (type.IsInterface)
-				isCallable = false;
-			if (method.Attributes.ToString () == "Private, Final, Virtual, HideBySig, NewSlot")
-				isCallable = false;
-			if (method.IsStatic && method.IsConstructor)
-				isCallable = false;
-			if (method == assemblyDefinition.EntryPoint)
-				isCallable = false;
-			if (method.IsConstructor && method.Parameters.Count == 2)
-				if (method.Parameters [0].ParameterType.Name == "System.Runtime.Serialization.SerializationInfo" && method.Parameters [0].ParameterType.Name == "System.Runtime.Serialization.StreamingContext")
-					isCallable = false;
-			if (method.IsVirtual && !method.IsNewSlot)
-				isCallable = false;
-
-			return isCallable;
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.Operand == md)
+					return true;
+				if (instruction.OpCode.Code == Code.Callvirt) {
+					foreach (MethodDefinition virtmd in md.Overrides) {
+						if (instruction.Operand == virtmd)
+							return true;
+					}
+				}
+			}
+			return false;
 		}
 	}
 }
