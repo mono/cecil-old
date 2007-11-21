@@ -35,17 +35,10 @@
 		<problem>The method '{0}' contais some code that performs equality operation between floating points.</problem>
 		<solution>Perhaps you want get the near equality, is the number almost the same as another.</solution>
 	</rule>
-
 	<rule	Name="UseValueInPropertySetterRule"
 		Type="Gendarme.Rules.Correctness.UseValueInPropertySetterRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#UseValueInPropertySetterRule">
 		<problem>The property setter '{0}' doesn't use the value.</problem>
 		<solution>You should use the value, or if you don't want use it, you should consider remove the setter property because could be confusing.</solution>
-	</rule>
-	<rule	Name="MethodShouldNotAccessSerializationInfo"
-		Type="Gendarme.Rules.Correctness.MethodShouldNotAccessSerializationInfo, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#MethodShouldNotAccessSerializationInfo">
-		<problem>The method '{0}' access the serialization info while it should not.</problem>
-		<solution>KILL IT.</solution>
 	</rule>
 </rules>
