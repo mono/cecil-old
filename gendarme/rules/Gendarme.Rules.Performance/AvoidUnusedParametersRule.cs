@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -36,8 +36,8 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Performance {
 
 	public class AvoidUnusedParametersRule : IMethodRule {
-	
-		private bool UseParameter (MethodDefinition method, ParameterDefinition parameter) 
+
+		private bool UseParameter (MethodDefinition method, ParameterDefinition parameter)
 		{
 			if (!method.HasBody)
 				return false;
@@ -70,23 +70,23 @@ namespace Gendarme.Rules.Performance {
 			return false;
 		}
 
-		private bool ContainsReferenceDelegateInstructionFor (MethodDefinition method, MethodDefinition delegateMethod) 
+		private bool ContainsReferenceDelegateInstructionFor (MethodDefinition method, MethodDefinition delegateMethod)
 		{
-			if (!method.HasBody) 
+			if (!method.HasBody)
 				return false;
 			foreach (Instruction instruction in method.Body.Instructions) {
-				if (instruction.OpCode.Code == Code.Ldftn) 
+				if (instruction.OpCode.Code == Code.Ldftn)
 					return instruction.Operand.Equals (delegateMethod);
 			}
 			return false;
 		}
-		
-		private bool IsReferencedByDelegate (MethodDefinition delegateMethod) 
+
+		private bool IsReferencedByDelegate (MethodDefinition delegateMethod)
 		{
 			TypeDefinition declaringType = delegateMethod.DeclaringType as TypeDefinition;
 			if (declaringType != null) {
 				foreach (MethodDefinition method in declaringType.Methods) {
-					if (ContainsReferenceDelegateInstructionFor (method, delegateMethod)) 
+					if (ContainsReferenceDelegateInstructionFor (method, delegateMethod))
 						return true;
 				}
 
@@ -98,13 +98,13 @@ namespace Gendarme.Rules.Performance {
 			return false;
 		}
 
-		private bool IsExaminable (MethodDefinition method) 
+		private bool IsExaminable (MethodDefinition method)
 		{
-			return !(method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0 
+			return !(method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0
 				|| method.PInvokeInfo != null || IsReferencedByDelegate (method));
 		}
 
-		private ICollection GetUnusedParameters (MethodDefinition method) 
+		private ICollection GetUnusedParameters (MethodDefinition method)
 		{
 			ArrayList unusedParameters = new ArrayList ();
 			if (IsExaminable (method)) {
@@ -115,7 +115,7 @@ namespace Gendarme.Rules.Performance {
 			}
 			return unusedParameters;
 		}
-	
+
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();

@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -32,51 +32,51 @@ using System.Collections;
 using Mono.Cecil.Cil;
 
 namespace Gendarme.Rules.Smells {
-	
+
 	internal class ExpressionFillerVisitor : BaseCodeVisitor {
 		private IList expressionContainer;
 		private Expression currentExpression;
 
 		public ExpressionFillerVisitor () : base () {}
-	
-		public override void VisitMethodBody (MethodBody methodBody) 
+
+		public override void VisitMethodBody (MethodBody methodBody)
 		{
 			expressionContainer = new ArrayList ();
 			currentExpression = null;
 		}
-		
-		private bool IsAcceptable (Instruction instruction) 
+
+		private bool IsAcceptable (Instruction instruction)
 		{
-			return instruction.OpCode.FlowControl == FlowControl.Call || 
-				instruction.OpCode.FlowControl == FlowControl.Branch || 
+			return instruction.OpCode.FlowControl == FlowControl.Call ||
+				instruction.OpCode.FlowControl == FlowControl.Branch ||
 				instruction.OpCode.FlowControl == FlowControl.Cond_Branch;
 		}
 
-		private void CreateExpressionAndAddToExpressionContainer () 
+		private void CreateExpressionAndAddToExpressionContainer ()
 		{
 			currentExpression = new Expression ();
 			expressionContainer.Add (currentExpression);
 		}
 
-		private bool IsDelimiter (Instruction instruction) 
+		private bool IsDelimiter (Instruction instruction)
 		{
 			return instruction.OpCode.Code == Code.Ldarg_0 ||
 				instruction.OpCode.FlowControl == FlowControl.Branch;
 		}
 
-		private void AddToExpression (Instruction instruction) 
+		private void AddToExpression (Instruction instruction)
 		{
 			if (currentExpression == null)
 				CreateExpressionAndAddToExpressionContainer ();
 			currentExpression.Add (instruction);
 		}
 
-		public override void VisitInstructionCollection (InstructionCollection instructionCollection) 
+		public override void VisitInstructionCollection (InstructionCollection instructionCollection)
 		{
 			foreach (Instruction instruction in instructionCollection) {
-				if (IsDelimiter (instruction)) 
+				if (IsDelimiter (instruction))
 					CreateExpressionAndAddToExpressionContainer ();
-				if (IsAcceptable (instruction)) 
+				if (IsAcceptable (instruction))
 					AddToExpression (instruction);
 			}
 		}

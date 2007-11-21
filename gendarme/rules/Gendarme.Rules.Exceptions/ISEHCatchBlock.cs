@@ -7,7 +7,7 @@ namespace Gendarme.Rules.Exceptions {
 	/// Represents a catch type handler block
 	/// </summary>
 	public interface ISEHCatchBlock : ISEHHandlerBlock {
-	
+
 		/// <summary>
 		/// Gets the type of <see cref="Exception"/> handled by this
 		/// catch block
@@ -19,5 +19,5 @@ namespace Gendarme.Rules.Exceptions {
 		TypeReference ExceptionType {
 			get;
 		}
-	}	
+	}
 }

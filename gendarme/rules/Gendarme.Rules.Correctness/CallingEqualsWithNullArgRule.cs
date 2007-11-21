@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Correctness.CallingEqualsWithNullArgRule
 //
 // Authors:
@@ -35,9 +35,9 @@ namespace Gendarme.Rules.Correctness {
 	public class CallingEqualsWithNullArgRule: IMethodRule
 	{
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
-		{			
+		{
 			MessageCollection messageCollection = new MessageCollection ();
-			
+
 			if (!method.HasBody)
 				return null;
 
@@ -51,7 +51,7 @@ namespace Gendarme.Rules.Correctness {
 							messageCollection.Add (message);
 						}
 				}
-		
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;

@@ -1,5 +1,5 @@
 
-// Gendarme.Rules.Correctness.UseValueInPropertySetterRule 
+// Gendarme.Rules.Correctness.UseValueInPropertySetterRule
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
@@ -40,8 +40,8 @@ namespace Gendarme.Rules.Correctness
 	public class UseValueInPropertySetterRule : IMethodRule
 	{
 		private const string MessageString = "Property setter should use the assigned value";
-		
-			
+
+
 		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection();
@@ -50,9 +50,9 @@ namespace Gendarme.Rules.Correctness
 			{
 				bool valueAccessed = false;
 
-				//Skip the test, instead of flooding messages 
+				//Skip the test, instead of flooding messages
 				//in stubs or empty setters.
-				if (!method.HasBody) 
+				if (!method.HasBody)
 					return null;
 
 				foreach (Instruction instruction in method.Body.Instructions)
@@ -69,10 +69,10 @@ namespace Gendarme.Rules.Correctness
 					messageCollection.Add(message);
 				}
 			}
-			
+
 			return messageCollection.Count > 0 ? messageCollection : null;
 		}
 
-		
+
 	}
 }

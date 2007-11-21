@@ -60,4 +60,7 @@
 	<ruleset name="design">
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
 	</ruleset>
+	<ruleset name="moonlight">
+			<rules include="MethodShouldNotAccessSerializationInfo" from="Gendarme.Rules.Correctness.dll"/>
+	</ruleset>
 </gendarme>

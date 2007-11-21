@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -39,7 +39,7 @@ namespace Gendarme.Rules.Smells {
 	//be useful.
 	public class AvoidLongParameterListsRule : IMethodRule {
 		private int maxParameters = 6;
-	
+
 		public int MaxParameters {
 			get {
 				return maxParameters;
@@ -49,7 +49,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool IsOverloaded (MethodDefinition method) 
+		private bool IsOverloaded (MethodDefinition method)
 		{
 			if (method.DeclaringType is TypeDefinition) {
 				TypeDefinition type = (TypeDefinition) method.DeclaringType;
@@ -58,7 +58,7 @@ namespace Gendarme.Rules.Smells {
 			return false;
 		}
 
-		private MethodReference GetShortestOverloaded (MethodDefinition method) 
+		private MethodReference GetShortestOverloaded (MethodDefinition method)
 		{
 			if (method.DeclaringType is TypeDefinition) {
 				TypeDefinition type = (TypeDefinition) method.DeclaringType;
@@ -72,20 +72,20 @@ namespace Gendarme.Rules.Smells {
 			return method;
 		}
 
-		private bool HasLongParameterList (MethodDefinition method) 
+		private bool HasLongParameterList (MethodDefinition method)
 		{
-			if (IsOverloaded (method)) 
+			if (IsOverloaded (method))
 				return GetShortestOverloaded (method).Parameters.Count >= MaxParameters;
-			else 
+			else
 				return method.Parameters.Count >= MaxParameters;
 		}
 
-		public MessageCollection CheckMethod (MethodDefinition method, Runner runner) 
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
-			
+
 			if (HasLongParameterList (method)) {
-				Location location = new Location (method.DeclaringType.Name, method.Name, 0);		
+				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
 				Message message = new Message ("The method contains a long parameter list.",location, MessageType.Error);
 				messageCollection.Add (message);
 			}

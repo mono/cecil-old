@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -36,11 +36,11 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Smells {
-	
+
 	internal class CodeDuplicatedLocator {
 		private StringCollection checkedMethods = new StringCollection ();
 		private StringCollection checkedTypes = new StringCollection ();
-		
+
 		internal StringCollection CheckedMethods {
 			get {
 				return checkedMethods;
@@ -72,32 +72,32 @@ namespace Gendarme.Rules.Smells {
 			return false;
 		}
 
-		private ICollection GetExpressionsFrom (MethodBody methodBody) 
+		private ICollection GetExpressionsFrom (MethodBody methodBody)
 		{
 			ExpressionFillerVisitor expressionFillerVisitor = new ExpressionFillerVisitor ();
 			methodBody.Accept (expressionFillerVisitor);
 			return expressionFillerVisitor.Expressions;
 		}
 
-		private bool CanCompareMethods (MethodDefinition currentMethod, MethodDefinition targetMethod) 
+		private bool CanCompareMethods (MethodDefinition currentMethod, MethodDefinition targetMethod)
 		{
 			return currentMethod.HasBody && targetMethod.HasBody &&
-				!CheckedMethods.Contains (targetMethod.Name) && 
+				!CheckedMethods.Contains (targetMethod.Name) &&
 				currentMethod != targetMethod;
 		}
 
-		private bool ContainsDuplicatedCode (MethodDefinition currentMethod, MethodDefinition targetMethod) 
+		private bool ContainsDuplicatedCode (MethodDefinition currentMethod, MethodDefinition targetMethod)
 		{
 			if (CanCompareMethods (currentMethod, targetMethod)) {
 				ICollection currentExpressions = GetExpressionsFrom (currentMethod.Body);
 				ICollection targetExpressions = GetExpressionsFrom (targetMethod.Body);
-										
+
 				return ExistsExpressionsReplied (currentExpressions, targetExpressions);
 			}
 			return false;
 		}
 
-		internal MessageCollection CompareMethodAgainstTypeMethods (MethodDefinition currentMethod, TypeDefinition targetTypeDefinition) 
+		internal MessageCollection CompareMethodAgainstTypeMethods (MethodDefinition currentMethod, TypeDefinition targetTypeDefinition)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
 			if (!CheckedTypes.Contains (targetTypeDefinition.Name)) {

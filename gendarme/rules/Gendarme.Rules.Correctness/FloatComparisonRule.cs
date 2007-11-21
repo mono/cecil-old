@@ -45,16 +45,16 @@ namespace Gendarme.Rules.Correctness
 
 			if (!method.HasBody)
 				return null;
-			
+
 			foreach (Instruction instruction in method.Body.Instructions)
 			{
 				if (instruction.OpCode == OpCodes.Ceq)
 				{
 					Instruction precedingInstruction = SkipArithmeticOperations(instruction);
-					
+
 					switch (precedingInstruction.OpCode.Code)
 					{
-						
+
 						case Code.Conv_R4:
 						case Code.Conv_R8:
 							AddProblem(method, instruction, messageCollection);
@@ -108,7 +108,7 @@ namespace Gendarme.Rules.Correctness
 				else if (instruction.OpCode.Code == Code.Call)
 				{
 					MemberReference member = instruction.Operand as MemberReference;
-					
+
 					if (member.DeclaringType.FullName.Equals("System.Single") &&
 						member.Name.Equals("Equals"))
 					{
@@ -123,12 +123,12 @@ namespace Gendarme.Rules.Correctness
 		private Instruction SkipArithmeticOperations(Instruction instruction)
 		{
 			Instruction prevInstr = instruction.Previous;
-			OpCode[] arithOpCodes = new OpCode[] 
-				{	
-					OpCodes.Mul, 
-					OpCodes.Add, 
-					OpCodes.Sub, 
-					OpCodes.Div 
+			OpCode[] arithOpCodes = new OpCode[]
+				{
+					OpCodes.Mul,
+					OpCodes.Add,
+					OpCodes.Sub,
+					OpCodes.Div
 				};
 
 			while (Array.Exists(arithOpCodes, delegate(OpCode code) { return code == prevInstr.OpCode; }))
@@ -156,7 +156,7 @@ namespace Gendarme.Rules.Correctness
 
 		private void CheckFloatConstants(object operand, MethodDefinition method, Instruction instruction, MessageCollection messageCollection)
 		{
-			object[] specialValues = new object[] 
+			object[] specialValues = new object[]
 			{
 				float.PositiveInfinity,
 				float.NegativeInfinity,

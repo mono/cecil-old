@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,17 +33,17 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Naming {
 	public class AttributeEndsWithAttributeSuffixRule : ITypeRule {
-	
-		//If the type is defined outside of the assembly I can't get a 
+
+		//If the type is defined outside of the assembly I can't get a
 		//TypeDefinition, then I can't get the BaseType (only in TypeDefinition).
-		//Then, in order to avoid false positives, if we can't determine basetype, 
+		//Then, in order to avoid false positives, if we can't determine basetype,
 		//the method returns false.
 		private bool InheritsFromAttribute (TypeReference typeReference)
 		{
 			TypeDefinition current = typeReference as TypeDefinition;
-			if (current == null) 
+			if (current == null)
 				return false;
-			
+
 			while (current.BaseType != null && current.BaseType.FullName != "System.Object") {
 				if (current.BaseType.FullName == "System.Attribute")
 					return true;
@@ -55,7 +55,7 @@ namespace Gendarme.Rules.Naming {
 			}
 			return false;
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
@@ -63,7 +63,7 @@ namespace Gendarme.Rules.Naming {
 				if (!typeDefinition.Name.EndsWith ("Attribute")) {
 					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
 					Message message = new Message ("The class name doesn't end with Attribute Suffix", location, MessageType.Error);
-					messageCollection.Add (message);                        
+					messageCollection.Add (message);
 				}
 			}
 			if (messageCollection.Count == 0)

@@ -2,12 +2,12 @@ using System;
 using Mono.Cecil.Cil;
 
 namespace Gendarme.Rules.Exceptions {
-	
+
 	/// <summary>
 	/// Represents a block of code that handles an exception
 	/// </summary>
 	public interface ISEHHandlerBlock {
-	
+
 		/// <summary>
 		/// Gets the first instruction in the handler
 		/// </summary>
@@ -29,7 +29,7 @@ namespace Gendarme.Rules.Exceptions {
 		Instruction End {
 			get;
 		}
-		
+
 		/// <summary>
 		/// Gets the type of this handler
 		/// </summary>
@@ -40,5 +40,5 @@ namespace Gendarme.Rules.Exceptions {
 			get;
 		}
 	}
-	
+
 }

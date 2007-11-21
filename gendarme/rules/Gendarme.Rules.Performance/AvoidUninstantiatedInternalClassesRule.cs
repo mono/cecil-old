@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Performance.AvoidUninstantiatedInternalClassesRule
 //
 // Authors:
@@ -34,34 +34,34 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Performance
 {
 	public class AvoidUninstantiatedInternalClassesRule: ITypeRule
-	{		
+	{
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
-			
+
 			if (!ImplementsInternalsVisibleToAttribute (type) && (type.GetType ().IsAnsiClass || type.GetType ().IsClass || type.GetType ().IsAutoClass) && type.Name != "<Module>" && IsInstantiable (type) && !IsInstantiated (type, type)) {
 				Location location = new Location (type.FullName, type.Name, 0);
 				Message message = new Message ("There is no call for any of the types constructor found", location, MessageType.Error);
 				messageCollection.Add (message);
 			}
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;
 		}
-		
+
 		private bool ImplementsInternalsVisibleToAttribute (TypeDefinition type)
-		{			
+		{
 			foreach (MemberReference memberReference in type.Module.MemberReferences)
 				if (memberReference.DeclaringType.ToString () == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
 					return true;
 			return false;
 		}
-		
+
 		private bool IsInstantiated (TypeDefinition type, TypeDefinition nestedType)
 		{
 			bool instantiated = false;
-			
+
 			foreach (MethodDefinition method in nestedType.Methods)
 				foreach (Instruction ins in method.Body.Instructions)
 					if (ins.OpCode == OpCodes.Newobj) {
@@ -70,17 +70,17 @@ namespace Gendarme.Rules.Performance
 							if (MethodIsCalled (nestedType, method))
 								instantiated = true;
 					}
-			
+
 			if (nestedType.NestedTypes.Count > 0)
 				foreach (TypeDefinition nested in type.NestedTypes)
 					instantiated = IsInstantiated (type, nested);
 			return instantiated;
 		}
-		
+
 		private bool MethodIsCalled (TypeDefinition type, MethodDefinition callingMethod)
 		{
 			string strCallingMethod = "";
-			
+
 			if (callingMethod.Name == "Main" && callingMethod.IsStatic && callingMethod.ReturnType.ReturnType.FullName == "System.Void" && callingMethod.Parameters.Count == 1 && callingMethod.Parameters [0].ParameterType.FullName == "System.String[]")
 				return true;
 			else
@@ -88,9 +88,9 @@ namespace Gendarme.Rules.Performance
 				strCallingMethod = callingMethod.ReturnType.ReturnType.FullName + " " + callingMethod.DeclaringType + "::" + callingMethod.Name + "(";
 				foreach (ParameterDefinition parameter in callingMethod.Parameters)
 					strCallingMethod += parameter.ParameterType.FullName + ",";
-				
+
 				strCallingMethod = strCallingMethod.Remove (strCallingMethod.Length-1, 1) + ")";
-				
+
 				foreach (MethodDefinition method in type.Methods)
 					foreach (Instruction ins in method.Body.Instructions)
 						if (ins.OpCode == OpCodes.Call || ins.OpCode == OpCodes.Calli || ins.OpCode == OpCodes.Callvirt)
@@ -99,15 +99,15 @@ namespace Gendarme.Rules.Performance
 			}
 			return false;
 		}
-		
+
 		private bool IsInstantiable (TypeDefinition type)
 		{
-			if (!type.IsAbstract && TypeIsInternal (type) && !TypeIsStatic (type)) 
+			if (!type.IsAbstract && TypeIsInternal (type) && !TypeIsStatic (type))
 				return true;
 			else
 				return false;
 		}
-		
+
 		private bool TypeIsStatic (TypeDefinition type)
 		{
 			if (type.IsAbstract && type.IsSealed)
@@ -115,7 +115,7 @@ namespace Gendarme.Rules.Performance
 			else
 				return false;
 		}
-		
+
 		private bool TypeIsInternal (TypeDefinition type)
 		{
 			bool flag = true;

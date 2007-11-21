@@ -46,7 +46,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
         this.nnaCollector = nnaCollector;
         this.runner = runner;
     }
-    
+
     [NonNull]
     public object NewTop()
     {
@@ -115,7 +115,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
             Console.WriteLine("Input frame:");
             Console.Write(outFrame.ToString());
         }
-        
+
         for(int i = bb.first; i <= bb.last; i++) {
             Instruction insn = bb.Instructions[i];
             OpCode opcode = insn.OpCode;
@@ -174,7 +174,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 case Starg_S: {
                     ParameterDefinition param =
                         (ParameterDefinition)insn.Operand;
-                    outFrame.SetArgNullity(param.Sequence - 1, 
+                    outFrame.SetArgNullity(param.Sequence - 1,
                             outFrame.PopStack());
                     break;
                 }

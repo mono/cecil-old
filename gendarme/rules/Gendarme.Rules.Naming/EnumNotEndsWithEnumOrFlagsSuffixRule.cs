@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -33,8 +33,8 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Naming {
 	public class EnumNotEndsWithEnumOrFlagsSuffixRule : ITypeRule {
-		
-		private bool HasFlagsAttribute (TypeDefinition typeDefinition) 
+
+		private bool HasFlagsAttribute (TypeDefinition typeDefinition)
 		{
 			foreach (CustomAttribute customAttribute in typeDefinition.CustomAttributes) {
 				if (customAttribute.Constructor.DeclaringType.FullName == "System.FlagsAttribute")
@@ -42,26 +42,26 @@ namespace Gendarme.Rules.Naming {
 			}
 			return false;
 		}
-		
-		private bool EndsWithEnumSuffix (string typeName) 
+
+		private bool EndsWithEnumSuffix (string typeName)
 		{
 			return typeName.EndsWith ("Enum") || typeName.ToLower ().EndsWith ("enum");
 		}
-		
-		private bool EndsWithFlagsSuffix (string typeName) 
+
+		private bool EndsWithFlagsSuffix (string typeName)
 		{
-			return typeName.EndsWith ("Flags") || typeName.ToLower ().EndsWith ("flags");			
+			return typeName.EndsWith ("Flags") || typeName.ToLower ().EndsWith ("flags");
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
-		{	
+		{
 			MessageCollection messageCollection = new MessageCollection ();
 			if (typeDefinition.IsEnum) {
 				if (!HasFlagsAttribute (typeDefinition)) {
 					if (EndsWithEnumSuffix (typeDefinition.Name)) {
 						Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
 						Message message = new Message ("The class name ends with Enum Suffix", location, MessageType.Error);
-						messageCollection.Add (message);  
+						messageCollection.Add (message);
 					}
 				}
 				else {

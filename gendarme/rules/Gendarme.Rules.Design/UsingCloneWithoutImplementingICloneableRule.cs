@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule
 //
 // Authors:
@@ -37,12 +37,12 @@ namespace Gendarme.Rules.Design
 	{
 		private bool ImplementsICloneable (TypeDefinition type)
 		{
-			foreach (TypeReference iface in type.Interfaces) 
+			foreach (TypeReference iface in type.Interfaces)
 				if(iface.FullName == "System.ICloneable")
 					return true;
 			return false;
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Design
 						Message message = new Message ("The Clone () method is used, but ICloneable is not implemented", location, MessageType.Error);
 						messageCollection.Add (message);
 					}
-					    
+					
 			if (messageCollection.Count == 0)
 					return null;
 			return messageCollection;

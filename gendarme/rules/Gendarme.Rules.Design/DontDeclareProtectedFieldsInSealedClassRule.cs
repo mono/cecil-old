@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Dodgy.DontDeclareProtectedFieldsInSealedClassRule
 //
 // Authors:
@@ -34,7 +34,7 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Design
 {
 	public class DontDeclareProtectedFieldsInSealedClassRule: ITypeRule
-	{		
+	{
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();

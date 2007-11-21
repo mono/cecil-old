@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -60,7 +60,7 @@ namespace Gendarme.Rules.Portability {
 						// make the invalid char visible on output
 						s = s.Replace ("\n", "\\n");
 						s = s.Replace ("\r", "\\r");
-						Message msg = new Message (String.Format ("Found string: \"{0}\"", s), 
+						Message msg = new Message (String.Format ("Found string: \"{0}\"", s),
 							loc, MessageType.Warning);
 						results.Add (msg);
 					}

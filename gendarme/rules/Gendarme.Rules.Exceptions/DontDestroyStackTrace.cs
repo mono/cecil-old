@@ -8,15 +8,15 @@ using Gendarme.Rules.Exceptions.Impl;
 namespace Gendarme.Rules.Exceptions {
 
 	public class DontDestroyStackTrace : IMethodRule {
-		
+
 		private static TypeReference void_reference;
 		private ArrayList warned_offsets_in_method;
 
-		public DontDestroyStackTrace () 
+		public DontDestroyStackTrace ()
 		{
 		}
 
-		public MessageCollection CheckMethod (MethodDefinition method, Runner runner) 
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			ModuleDefinition module = method.DeclaringType.Module;
 			if (void_reference == null)
@@ -27,39 +27,39 @@ namespace Gendarme.Rules.Exceptions {
 			ExceptionBlockParser ebp = new ExceptionBlockParser ();
 			ISEHGuardedBlock[] guardedBlocks = ebp.GetExceptionBlocks (method);
 			foreach (ISEHGuardedBlock guardedBlock in guardedBlocks) {
-				foreach (ISEHHandlerBlock handlerBlock in 
+				foreach (ISEHHandlerBlock handlerBlock in
 					 guardedBlock.SEHHandlerBlocks) {
 					if (handlerBlock is SEHCatchBlock) {
-					    ExecutionPath[] ret = 
+					    ExecutionPath[] ret =
 						epf.CreatePaths (handlerBlock.Start,
 								 handlerBlock.End);
 						executionPaths.AddRange (ret);
 					}
 				}
 			}
-			
+
 			MessageCollection violations = new MessageCollection ();
 			warned_offsets_in_method = new ArrayList ();
 
 			// Look for paths that 'throw ex;' instead of 'throw'
-			foreach (ExecutionPath catchPath in executionPaths) 
+			foreach (ExecutionPath catchPath in executionPaths)
 				ProcessCatchPath (catchPath, method, violations);
-			
-			return (violations.Count == 0) ? null : violations;	
+
+			return (violations.Count == 0) ? null : violations;
 		}
 
-		private void ProcessCatchPath (ExecutionPath catchPath, 
-					       MethodDefinition method, 
+		private void ProcessCatchPath (ExecutionPath catchPath,
+					       MethodDefinition method,
 					       MessageCollection violations)
 		{
 			// Track original exception (top of stack at start) through to the final
 			// return (be it throw, rethrow, leave, or leave.s)
-			
+
 			// Current stack position: 0 = top of stack
 			int exStackPos = 0;
 			// Local variable position: -1 = not stored in local variable
 			int localVarPos = -1;
-			
+
 			foreach (ExecutionBlock block in catchPath) {
 				Instruction cur = null;
 				while (cur != block.Last) {
@@ -68,17 +68,17 @@ namespace Gendarme.Rules.Exceptions {
 					else
 						cur = cur.Next;
 
-					if (cur.OpCode == OpCodes.Rethrow) 
+					if (cur.OpCode == OpCodes.Rethrow)
 						// Rethrown exception - no problem!
 						return;
-	
+
 					if (cur.OpCode == OpCodes.Stloc ||
 					   cur.OpCode == OpCodes.Stloc_0 ||
 					   cur.OpCode == OpCodes.Stloc_1 ||
 					   cur.OpCode == OpCodes.Stloc_2 ||
 					   cur.OpCode == OpCodes.Stloc_3 ||
 					   cur.OpCode == OpCodes.Stloc_S) {
-						
+
 						int varIndex = GetVarIndex (cur);
 						if (exStackPos == 0)
 						{
@@ -88,7 +88,7 @@ namespace Gendarme.Rules.Exceptions {
 						} else if (localVarPos != -1 && varIndex == localVarPos)
 							// Writing over orignal exception...
 							localVarPos = -1;
-					} else if (localVarPos != -1 && 
+					} else if (localVarPos != -1 &&
 						   (cur.OpCode == OpCodes.Ldloc ||
 						    cur.OpCode == OpCodes.Ldloc_0 ||
 						    cur.OpCode == OpCodes.Ldloc_1 ||
@@ -101,10 +101,10 @@ namespace Gendarme.Rules.Exceptions {
 							// Loading exception from local var back onto stack
 							exStackPos = 0;
 					} else if (cur.OpCode == OpCodes.Throw && exStackPos == 0) {
-						// If our original exception is on top of the stack, 
+						// If our original exception is on top of the stack,
 						// we're rethrowing it.This is deemed naughty...
 						if (!warned_offsets_in_method.Contains(cur.Offset)) {
-							Location loc = 
+							Location loc =
 								new Location (method.DeclaringType.FullName,
 										method.Name,cur.Offset);
 							Message msg = new Message (
@@ -164,12 +164,12 @@ namespace Gendarme.Rules.Exceptions {
 					MethodReference callMethod = (MethodReference)instr.Operand;
 					return callMethod.Parameters.Count;
 				} else {
-					throw new InvalidOperationException("Unexpected instruction: '" + 
-					instr.OpCode.ToString() + "' at offset 0x" + 
+					throw new InvalidOperationException("Unexpected instruction: '" +
+					instr.OpCode.ToString() + "' at offset 0x" +
 					instr.Offset.ToString("X"));
 				}
 			}
-			
+
 			return 0;
 		}
 
@@ -191,10 +191,10 @@ namespace Gendarme.Rules.Exceptions {
 				// We have to determine from the call how many arguments will
 				// be pushed onto the stack
 				MethodReference callMethod = (MethodReference)instr.Operand;
-				return (callMethod.ReturnType.ReturnType == void_reference) ? 
+				return (callMethod.ReturnType.ReturnType == void_reference) ?
 					0 : 1;
 			}
-			
+
 			return 0;
 		}
 
@@ -208,7 +208,7 @@ namespace Gendarme.Rules.Exceptions {
 				return 2;
 			else if (instr.OpCode == OpCodes.Stloc_3 || instr.OpCode == OpCodes.Ldloc_3)
 				return 3;
-			else if (instr.OpCode == OpCodes.Stloc_S || instr.OpCode == OpCodes.Stloc || 
+			else if (instr.OpCode == OpCodes.Stloc_S || instr.OpCode == OpCodes.Stloc ||
 				instr.OpCode == OpCodes.Ldloc_S || instr.OpCode == OpCodes.Ldloc_0)
 			{
 				VariableDefinition varDef = (VariableDefinition)instr.Operand;
@@ -217,5 +217,5 @@ namespace Gendarme.Rules.Exceptions {
 
 			return -1;
 		}
-	}	
+	}
 }

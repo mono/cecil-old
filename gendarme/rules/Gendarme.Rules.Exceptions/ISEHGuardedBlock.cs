@@ -9,7 +9,7 @@ namespace Gendarme.Rules.Exceptions {
 	/// for this guarded block
 	/// </summary>
 	public interface ISEHGuardedBlock {
-	
+
 		/// <summary>
 		/// The first guarded instruction
 		/// </summary>
@@ -31,7 +31,7 @@ namespace Gendarme.Rules.Exceptions {
 		Instruction End {
 			get;
 		}
-		
+
 		/// <summary>
 		/// All handler blocks for the guarded instructions
 		/// </summary>
@@ -48,5 +48,5 @@ namespace Gendarme.Rules.Exceptions {
 		ISEHHandlerBlock[] SEHHandlerBlocks {
 			get;
 		}
-	}	
+	}
 }

@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Naming.DetectNonAlphaNumericsInTypeNamesRule
 //
 // Authors:
@@ -41,7 +41,7 @@ namespace Gendarme.Rules.Naming {
 		{
 			return (name.IndexOf ("_") == -1);
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// type must be public and, if nested, public too
@@ -56,7 +56,7 @@ namespace Gendarme.Rules.Naming {
 			Message message = new Message ("Type name contains underscore", location, MessageType.Error);
 			return new MessageCollection (message);
 		}
-		
+
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// exclude private methods and special names (like Getter and Setter)

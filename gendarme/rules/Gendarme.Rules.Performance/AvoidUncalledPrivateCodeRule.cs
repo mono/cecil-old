@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Performance.AvoidUncalledPrivateCodeRule
 //
 // Authors:
@@ -34,27 +34,27 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Performance
 {
 	public class AvoidUncalledPrivateCodeRule: IMethodRule
-	{		
+	{
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
 			TypeDefinition type = method.DeclaringType as TypeDefinition;
-			
+
 			if (MemberIsCallable (type, method) && !MemberIsCalled (type, method)) {
 				Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
 				Message message = new Message ("The private or internal code is not called", location, MessageType.Error);
 				messageCollection.Add (message);
 			}
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;
 		}
-		
+
 		private bool MemberIsCalled (TypeDefinition type, MethodDefinition method)
 		{
 			bool isCalled = false;
-			
+
 			if (TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsInternal (method))
 				isCalled = PrivateMemberIsCalled (type, method);
 			if (TypeIsInternal (type) && TypeIsPrivate (type) && MemberIsPrivate (method))
@@ -77,33 +77,33 @@ namespace Gendarme.Rules.Performance
 				isCalled = InternalMemberIsCalled (method);
 			if (!TypeIsInternal (type) && TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
 				isCalled = PrivateMemberIsCalled (type, method);
-			if (!TypeIsInternal (type) && !TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))  
+			if (!TypeIsInternal (type) && !TypeIsPrivate (type) && !MemberIsInternal (method) && !MemberIsPrivate (method))
 				isCalled = true;
-	
+
 			return isCalled;
 		}
-		
+
 		private bool PrivateMemberIsCalled (TypeDefinition type, MethodDefinition ToBeCalledMethod)
 		{
 			bool isCalled = false;
-			
+
 			foreach (MethodDefinition method in type.Methods)
 				if (method.HasBody)
 					foreach (Instruction instruction in method.Body.Instructions)
 						if (instruction.Operand != null && instruction.Operand.ToString () == ToBeCalledMethod.ToString ())
 							isCalled = true;
-			
+
 			if (type.NestedTypes.Count > 0)
 				foreach (TypeDefinition nestedType in type.NestedTypes)
 					isCalled = PrivateMemberIsCalled (nestedType, ToBeCalledMethod);
-			
+
 			return isCalled;
 		}
-		
+
 		private bool InternalMemberIsCalled (MethodDefinition ToBeCalledMethod)
 		{
 			bool isCalled = false;
-			
+
 			foreach (ModuleDefinition module in ToBeCalledMethod.DeclaringType.Module.Assembly.Modules)
 				foreach (TypeDefinition type in module.Types)
 					foreach (MethodDefinition method in type.Methods)
@@ -114,25 +114,25 @@ namespace Gendarme.Rules.Performance
 
 			return isCalled;
 		}
-		
+
 		private bool TypeIsInternal (TypeDefinition type)
 		{
 			bool isInternalType = true;
 			string [] modifier = type.Attributes.ToString ().Split (',');
-			
+
 			if (modifier [0] == "NestedAssembly" || modifier [0] == "NestedFamANDAssem" || modifier [0] == "NestedFamORAssem")
 				isInternalType = true;
 			for (int i = 0; i < modifier.Length; i++)
 				if (modifier [i] == "Public" || modifier [i] == "Private" || modifier [i] == "NestedPublic" || modifier [i] == "NestedPrivate" || modifier [i] == "NestedFamily")
 					isInternalType = false;
-				
+
 			if (isInternalType)
 				return isInternalType;
 			else if (type.DeclaringType != null)
 					isInternalType = TypeIsInternal (type.DeclaringType as TypeDefinition);
 			return isInternalType;
 		}
-		
+
 		private bool TypeIsPrivate (TypeDefinition type)
 		{
 			bool isPrivateType = false;
@@ -141,41 +141,41 @@ namespace Gendarme.Rules.Performance
 			for (int i = 0; i < modifier.Length; i++)
 				if (modifier [i] == "NestedPrivate")
 					isPrivateType = true;
-		
+
 			if (isPrivateType)
 				return isPrivateType;
 			else if (type.DeclaringType != null)
 					isPrivateType = TypeIsPrivate (type.DeclaringType as TypeDefinition);
 			return isPrivateType;
 		}
-				
+
 		private bool MemberIsInternal (MethodDefinition method)
 		{
 			bool isInternalMember = false;
 			string [] modifier = method.Attributes.ToString ().Split (',');
-		
+
 			if (modifier [0] == "Assem")
 				isInternalMember = true;
-			
+
 			return isInternalMember;
 		}
-		
+
 		private bool MemberIsPrivate (MethodDefinition method)
 		{
 			bool isPrivateMember = false;
 			string [] modifier = method.Attributes.ToString ().Split (',');
-		
+
 			if (modifier [0] == "Private")
 				isPrivateMember = true;
-			
+
 			return isPrivateMember;
 		}
-		
+
 		private bool MemberIsCallable (TypeDefinition type, MethodDefinition method)
 		{
 			bool isCallable = true;
 			AssemblyDefinition assemblyDefinition = method.DeclaringType.Module.Assembly;
-			
+
 			foreach (CustomAttribute customAttribute in method.CustomAttributes)
 				if (customAttribute.Constructor.DeclaringType.FullName == "System.Runtime.InteropServices.ComRegisterFunctionAttribute" || customAttribute.Constructor.DeclaringType.FullName == "System.Runtime.InteropServices.ComUnregisterFunctionAttribute")
 					isCallable = false;
@@ -192,7 +192,7 @@ namespace Gendarme.Rules.Performance
 					isCallable = false;
 			if (method.IsVirtual && !method.IsNewSlot)
 				isCallable = false;
-			
+
 			return isCallable;
 		}
 	}

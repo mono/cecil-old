@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,8 +34,8 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Naming {
 	public class UseSingularNameInEnumsUnlessAreFlagsRule : ITypeRule {
-		
-		private bool HasFlagsAttribute (TypeDefinition typeDefinition) 
+
+		private bool HasFlagsAttribute (TypeDefinition typeDefinition)
 		{
 			foreach (CustomAttribute customAttribute in typeDefinition.CustomAttributes) {
 				if (customAttribute.Constructor.DeclaringType.FullName == "System.FlagsAttribute")
@@ -43,13 +43,13 @@ namespace Gendarme.Rules.Naming {
 			}
 			return false;
 		}
-		
-		private bool IsPlural (string typeName) 
+
+		private bool IsPlural (string typeName)
 		{
 			int stringComparation = String.Compare (typeName, typeName.Length -1, "s", 0, 1, true, CultureInfo.CurrentCulture);
 			return stringComparation == 0;
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();

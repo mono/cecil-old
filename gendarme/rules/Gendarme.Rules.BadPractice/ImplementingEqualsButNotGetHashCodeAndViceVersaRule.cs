@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.BadPractice.ImplementingEqualsButNotGetHashCodeAndViceVersaRule
 //
 // Authors:
@@ -23,7 +23,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-				         
+				
 using System;
 using System.Collections;
 
@@ -37,12 +37,12 @@ namespace Gendarme.Rules.BadPractice {
 	{
 		bool equals = false;
 		bool getHashCode = false;
-		
+
 		private void EqualsOrGetHashCode (TypeDefinition type)
 		{
 			equals = false;
 			getHashCode = false;
-			
+
 			foreach (MethodDefinition method in type.Methods) {
 				if (method.Name == "Equals" && method.Parameters.Count == 1)
 					equals = true;
@@ -50,12 +50,12 @@ namespace Gendarme.Rules.BadPractice {
 					getHashCode = true;
 			}
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
 			EqualsOrGetHashCode (type);
-			
+
 			if (equals == true && getHashCode == false)
 			{
 				Location location = new Location (type.FullName, type.Name, 0);
@@ -70,7 +70,7 @@ namespace Gendarme.Rules.BadPractice {
 			}
 			else
 				return runner.RuleSuccess;
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;

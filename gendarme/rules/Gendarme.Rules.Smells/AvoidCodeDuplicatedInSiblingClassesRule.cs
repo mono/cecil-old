@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,12 +34,12 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Smells {
-	
+
 	public class AvoidCodeDuplicatedInSiblingClassesRule : ITypeRule {
 		private MessageCollection messageCollection;
 		private CodeDuplicatedLocator codeDuplicatedLocator;
 
-		private void FindCodeDuplicated (TypeDefinition type, ICollection siblingClasses) 
+		private void FindCodeDuplicated (TypeDefinition type, ICollection siblingClasses)
 		{
 			foreach (MethodDefinition method in type.Methods) {
 				foreach (TypeDefinition sibling in siblingClasses) {
@@ -50,7 +50,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private void CompareSiblingClasses (ICollection siblingClasses) 
+		private void CompareSiblingClasses (ICollection siblingClasses)
 		{
 			foreach (TypeDefinition type in siblingClasses) {
 				FindCodeDuplicated (type, siblingClasses);
@@ -58,13 +58,13 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		public MessageCollection CheckType (TypeDefinition type, Runner runner) 
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			messageCollection = new MessageCollection ();
 			codeDuplicatedLocator = new CodeDuplicatedLocator ();
-			
+
 			ICollection siblingClasses = Utilities.GetInheritedClassesFrom (type);
-			if (siblingClasses.Count >= 2) 
+			if (siblingClasses.Count >= 2)
 				CompareSiblingClasses (siblingClasses);
 
 			if (messageCollection.Count == 0)

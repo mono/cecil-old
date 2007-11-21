@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -36,12 +36,12 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Smells {
-	
+
 	internal class Expression : CollectionBase {
 
 		public Expression () : base () {}
 
-		public void Add (Instruction instruction) 
+		public void Add (Instruction instruction)
 		{
 			InnerList.Add (instruction);
 		}
@@ -51,40 +51,40 @@ namespace Gendarme.Rules.Smells {
 				return (Instruction) InnerList[index];
 			}
 		}
-				
-		protected override void OnValidate (object value) 
+
+		protected override void OnValidate (object value)
 		{
 			if (!(value is Instruction))
 				throw new ArgumentException ("You should use this class with Mono.Cecil.Cil.Instruction", "value");
 		}
 
-		public override bool Equals (object value) 
+		public override bool Equals (object value)
 		{
 			if (!(value is Expression))
 				throw new ArgumentException ("The value argument should be an Expression", "value");
 			if (value == null)
-				return false;	
+				return false;
 
 			Expression targetExpression = (Expression) value;
-						
-			if (HasSameSize (targetExpression)) 
+
+			if (HasSameSize (targetExpression))
 				return CompareInstructionsInOrder (targetExpression);
-						
+
 			return false;
 		}
 
-		private bool HasSameSize (Expression expression) 
+		private bool HasSameSize (Expression expression)
 		{
 			return Count == expression.Count;
 		}
 
-		private bool CompareInstructionsInOrder (Expression targetExpression) 
+		private bool CompareInstructionsInOrder (Expression targetExpression)
 		{
 			bool equality = true;
 			for (int index = 0; index < Count; index++) {
 				Instruction instruction = this[index];
 				Instruction targetInstruction = targetExpression[index];
-										
+
 				if (CheckEqualityForOpCodes (instruction, targetInstruction)) {
 					if (instruction.OpCode.FlowControl == FlowControl.Call) {
 						equality = equality & (instruction.Operand == targetInstruction.Operand);
@@ -95,8 +95,8 @@ namespace Gendarme.Rules.Smells {
 			}
 			return equality;
 		}
-				
-		private bool CheckEqualityForOpCodes (Instruction currentInstruction, Instruction targetInstruction) 
+
+		private bool CheckEqualityForOpCodes (Instruction currentInstruction, Instruction targetInstruction)
 		{
 			if (currentInstruction.OpCode.Name == targetInstruction.OpCode.Name)
 				return true;
@@ -110,12 +110,12 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		public override int GetHashCode () 
+		public override int GetHashCode ()
 		{
 			return base.GetHashCode ();
 		}
 
-		public override string ToString () 
+		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder ();
 			stringBuilder.Append ("\tFor the expression:");

@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.BadPractice.CloneMethodShouldNotReturnNullRule
 //
 // Authors:
@@ -37,17 +37,17 @@ namespace Gendarme.Rules.BadPractice
 	{
 		private bool ImplementsICloneable (TypeDefinition type)
 		{
-			foreach (TypeReference iface in type.Interfaces) 
+			foreach (TypeReference iface in type.Interfaces)
 				if(iface.FullName == "System.ICloneable")
 					return true;
 			return false;
 		}
-		
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
 			if (ImplementsICloneable (type))
-				foreach (MethodDefinition method in type.Methods) 
+				foreach (MethodDefinition method in type.Methods)
 					if (method.Name == "Clone" && method.Parameters.Count == 0 && method.HasBody)
 						foreach (Instruction instruction in method.Body.Instructions) {
 							Instruction prevInstr = instruction.Previous;

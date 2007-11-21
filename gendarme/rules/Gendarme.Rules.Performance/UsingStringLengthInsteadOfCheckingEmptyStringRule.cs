@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.Performance.UsingStringLengthInsteadOfCheckingEmptyStringRule
 //
 // Authors:
@@ -33,16 +33,16 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Performance
 {
 	public class UsingStringLengthInsteadOfCheckingEmptyStringRule: IMethodRule
-	{		
+	{
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			if (!method.HasBody)
 				return runner.RuleSuccess;
- 
+
  			MessageCollection messageCollection = new MessageCollection ();
-			
-			foreach (Instruction instruction in method.Body.Instructions) {					
+
+			foreach (Instruction instruction in method.Body.Instructions) {
 				if (instruction.Operand != null) {
 					if (instruction.Operand.ToString () == "System.Boolean System.String::Equals(System.String)") {
 						Instruction prevInstr = instruction.Previous;
@@ -54,7 +54,7 @@ namespace Gendarme.Rules.Performance
 					}
 				}
 			}
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;

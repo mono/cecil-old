@@ -36,7 +36,7 @@ namespace Gendarme.Rules.Performance
 {
 	public class DontIgnoreMethodResultRule : IMethodRule
 	{
-		
+
 		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection();
@@ -58,7 +58,7 @@ namespace Gendarme.Rules.Performance
 					}
 				}
 			}
-			
+
 
 			return messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
 		}
@@ -83,11 +83,11 @@ namespace Gendarme.Rules.Performance
 					{
 						messageType = MessageType.Error;
 					}
-					else 
+					else
 					{
 						messageType = MessageType.Warning;
 					}
-					
+
 					if (!(method.Name.Equals("Append") && method.DeclaringType.FullName.Equals("System.Text.StringBuilder")))
 					{
 						message = new Message("Do not ignore method results", null, messageType);

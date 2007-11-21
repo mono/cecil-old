@@ -67,10 +67,10 @@ namespace Gendarme.Rules.Performance
 
 		private void CheckStack(Instruction instruction, MethodDefinition method, MessageCollection messageCollection)
 		{
-			
+
 			switch (instruction.OpCode.Code)
 			{
-				
+
 				case Code.Ldloc_0:
 					CheckTypeReference(method.Body.Variables[0].VariableType, method, instruction, messageCollection);
 					break;

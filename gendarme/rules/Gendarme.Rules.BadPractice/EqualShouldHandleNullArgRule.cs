@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.BadPractice.EqualShouldHandleNullArgRule
 //
 // Authors:
@@ -37,7 +37,7 @@ namespace Gendarme.Rules.BadPractice {
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
-			
+
 			if (method.HasBody && method.Name == "Equals" && method.ReturnType.ReturnType.ToString () == "System.Boolean" && method.IsVirtual && !method.IsNewSlot)
 				foreach (ParameterDefinition param in method.Parameters)
 					if (param.ParameterType.FullName == "System.Object")
@@ -46,12 +46,12 @@ namespace Gendarme.Rules.BadPractice {
 						Message message = new Message ("The overridden method Object.Equals (Object) does not return false if null value is found", location, MessageType.Error);
 						messageCollection.Add (message);
 					}
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;
 		}
-		
+
 		public bool HandlesNullArg (MethodDefinition method)
 		{
 			Instruction prevIns;

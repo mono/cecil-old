@@ -1,4 +1,4 @@
-// 
+//
 // Gendarme.Rules.BadPractice.ToStringReturnsNullRule
 //
 // Authors:
@@ -59,7 +59,7 @@ namespace Gendarme.Rules.BadPractice {
 						string opCodeSt;
 						if (prevIns.OpCode == OpCodes.Call || prevIns.OpCode == OpCodes.Callvirt)
 							opCodeSt = ReturnSt (method, prevIns.Previous);
-						else 
+						else
 							opCodeSt = ReturnSt (method, prevIns);
 						if (opCodeSt == null && (prevIns.Operand == null || prevIns.Operand.ToString () != "System.String System.Convert::ToString(System.Object)"))
 							nullReturned = true;
@@ -85,9 +85,9 @@ namespace Gendarme.Rules.BadPractice {
 				return runner.RuleSuccess;
 			return messageCollection;
 		}
-		
+
 		public string ReturnSt (MethodDefinition method, Instruction instruc)
-		{ 
+		{
 			Hashtable opCodes = InitializeHashTable (method);
 			string stOpCode = null;
 			switch (instruc.OpCode.Code) {
@@ -121,18 +121,18 @@ namespace Gendarme.Rules.BadPractice {
 			}
 			return stOpCode;
 		}
-		
+
 		public Hashtable InitializeHashTable (MethodDefinition method)
 		{
 			int count = 0;
-			Hashtable hash = new Hashtable ();			
-			
+			Hashtable hash = new Hashtable ();
+
 			foreach (Instruction ins in method.Body.Instructions) {
 				if (ins.OpCode.Code.ToString().Substring(0,2) == "St") {
 					if (ins.OpCode.Code == Code.Stloc_S) {
 						hash.Add (count, ins.Operand.ToString ());
 						count ++;
-					} 
+					}
 					else {
 						hash.Add (count, ins.OpCode.Code.ToString ());
 						count ++;
@@ -141,7 +141,7 @@ namespace Gendarme.Rules.BadPractice {
 			}
 			return hash;
 		}
-		
+
 		public bool MethodReturnsNull (MethodDefinition method, string code)
 		{
 			bool isNull = false;
@@ -161,6 +161,6 @@ namespace Gendarme.Rules.BadPractice {
 			}
 			return isNull;
 		}
-	
+
 	}
 }

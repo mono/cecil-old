@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -49,25 +49,25 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool IsTooLarge (TypeDefinition type) 
+		private bool IsTooLarge (TypeDefinition type)
 		{
 			return type.Fields.Count >= MaxFields;
 		}
-		
-		private void CheckForClassFields (TypeDefinition type) 
+
+		private void CheckForClassFields (TypeDefinition type)
 		{
-			if (IsTooLarge (type)) 
+			if (IsTooLarge (type))
 				AddMessage (type.Name, "This class contains a lot of fields.  This is a sign for the Large Class Smell", MessageType.Error);
 		}
 
-		private void AddMessage (string typeName, string summary, MessageType messageType) 
+		private void AddMessage (string typeName, string summary, MessageType messageType)
 		{
 			Location location = new Location (typeName, String.Empty, 0);
 			Message message = new Message (summary, location, messageType);
 			messageCollection.Add (message);
 		}
 
-		private bool HasPrefixedFields (string prefix, TypeDefinition type) 
+		private bool HasPrefixedFields (string prefix, TypeDefinition type)
 		{
 			if (prefix == String.Empty)
 				return false;
@@ -80,7 +80,7 @@ namespace Gendarme.Rules.Smells {
 			return counter > 1;
 		}
 
-		private int GetIndexOfFirstUpper (string value) 
+		private int GetIndexOfFirstUpper (string value)
 		{
 			foreach (char character in value) {
 				if (Char.IsUpper (character))
@@ -89,7 +89,7 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
-		private int GetIndexOfFirstNumber (string value) 
+		private int GetIndexOfFirstNumber (string value)
 		{
 			foreach (char character in value) {
 				if (Char.IsNumber (character))
@@ -98,7 +98,7 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
-		private int GetIndexOfFirstDash (string value) 
+		private int GetIndexOfFirstDash (string value)
 		{
 			bool valueTruncated = false;
 			if (value.IndexOf ('_') == 1) {
@@ -107,7 +107,7 @@ namespace Gendarme.Rules.Smells {
 			}
 
 			foreach (char character in value) {
-				if (character.Equals ('_')) 
+				if (character.Equals ('_'))
 					return value.IndexOf (character) + (valueTruncated? 2 : 0);
 			}
 			return -1;
@@ -116,21 +116,21 @@ namespace Gendarme.Rules.Smells {
 		private string GetFieldPrefix (FieldDefinition field)
 		{
 			int index = GetIndexOfFirstNumber (field.Name);
-			if (index != -1) 
+			if (index != -1)
 				return field.Name.Substring (0, index);
-			
+
 			index = GetIndexOfFirstUpper (field.Name);
-			if (index != -1) 
+			if (index != -1)
 				return field.Name.Substring (0, index);
-			
+
 			index = GetIndexOfFirstDash (field.Name);
-			if (index != -1) 
+			if (index != -1)
 				return field.Name.Substring (0, index);
 
 			return String.Empty;
 		}
 
-		private bool ExitsCommonPrefixes (TypeDefinition type) 
+		private bool ExitsCommonPrefixes (TypeDefinition type)
 		{
 			foreach (FieldDefinition field in type.Fields) {
 				string prefix = GetFieldPrefix (field);
@@ -140,17 +140,17 @@ namespace Gendarme.Rules.Smells {
 			return false;
 		}
 
-		private void CheckForCommonPrefixesInFields (TypeDefinition type) 
+		private void CheckForCommonPrefixesInFields (TypeDefinition type)
 		{
-			if (ExitsCommonPrefixes (type)) 
+			if (ExitsCommonPrefixes (type))
 				AddMessage (type.Name, "This type contains some fields with the same prefix.  Although this isn't bad, it's a sign for extract a class, for avoid the Large Class smell.", MessageType.Warning);
 		}
 
 
-		public MessageCollection CheckType (TypeDefinition type, Runner runner) 
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			messageCollection = new MessageCollection ();
-			
+
 			CheckForClassFields (type);
 			CheckForCommonPrefixesInFields (type);
 

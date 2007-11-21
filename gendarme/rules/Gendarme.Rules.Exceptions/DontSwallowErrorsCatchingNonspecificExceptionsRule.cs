@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -34,7 +34,7 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Exceptions {
 	public class DontSwallowErrorsCatchingNonspecificExceptionsRule : IMethodRule {
-		
+
 		//Added System.Object because is the code behind the following block:
 		//try {
 		//	File.Open (foo, bar);
@@ -42,8 +42,8 @@ namespace Gendarme.Rules.Exceptions {
 		//catch {
 		//}
 		private string[] forbiddenTypeInCatches = {"System.Exception", "System.SystemException", "System.Object"};
-	
-		private bool IsForbiddenTypeInCatches (string typeName) 
+
+		private bool IsForbiddenTypeInCatches (string typeName)
 		{
 			foreach (String forbiddenTypeName in forbiddenTypeInCatches) {
 				if (typeName.Equals (forbiddenTypeName)) {
@@ -52,8 +52,8 @@ namespace Gendarme.Rules.Exceptions {
 			}
 			return false;
 		}
-		
-		private bool ThrowsGeneralException (ExceptionHandler exceptionHandler) 
+
+		private bool ThrowsGeneralException (ExceptionHandler exceptionHandler)
 		{
 			for (Instruction currentInstruction = exceptionHandler.HandlerStart; currentInstruction != exceptionHandler.HandlerEnd; currentInstruction = currentInstruction.Next) {
 				if (currentInstruction.OpCode.Code == Code.Rethrow)
@@ -61,7 +61,7 @@ namespace Gendarme.Rules.Exceptions {
 			}
 			return false;
 		}
-	
+
 		public MessageCollection CheckMethod (MethodDefinition methodDefinition, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection ();
@@ -80,7 +80,7 @@ namespace Gendarme.Rules.Exceptions {
 					}
 				}
 			}
-			
+
 			if (messageCollection.Count == 0)
 				return null;
 			return messageCollection;

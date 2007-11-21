@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -37,38 +37,38 @@ namespace Gendarme.Rules.Smells {
 	public class AvoidSpeculativeGeneralityRule : ITypeRule {
 
 		private MessageCollection messageCollection;
-		
-		private void CheckAbstractClassWithoutResponsability (TypeDefinition type) 
+
+		private void CheckAbstractClassWithoutResponsability (TypeDefinition type)
 		{
 			if (type.IsAbstract) {
 				ICollection inheritedClasses = Utilities.GetInheritedClassesFrom (type);
-				if (inheritedClasses.Count == 1) 
+				if (inheritedClasses.Count == 1)
 					AddMessage (type.Name, "This abstract class only has one class inheritting from.  The abstract classes without responsability are a sign for the Speculative Generality smell.");
 			}
 		}
 
-		private void AddMessage (string typeName, string summary) 
+		private void AddMessage (string typeName, string summary)
 		{
 			Location location = new Location (typeName, String.Empty, 0);
 			Message message = new Message (summary, location, MessageType.Error);
 			messageCollection.Add (message);
 		}
-		
-		private int CountClientsFrom (TypeDefinition type) 
+
+		private int CountClientsFrom (TypeDefinition type)
 		{
 			int counter = 0;
 			foreach (TypeDefinition client in type.Module.Types) {
 				foreach (FieldDefinition field in client.Fields) {
-					if (field.FieldType.Equals (type)) 
+					if (field.FieldType.Equals (type))
 						counter++;
 				}
 			}
 			return counter;
 		}
-	
-		private void CheckUnnecesaryDelegation (TypeDefinition type) 
+
+		private void CheckUnnecesaryDelegation (TypeDefinition type)
 		{
-			if (CountClientsFrom (type) == 1) 
+			if (CountClientsFrom (type) == 1)
 				AddMessage (type.Name, "This class has only one client.  This unnecesary delegation is a sign for the Speculative Generality smell.");
 		}
 
@@ -91,24 +91,24 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private void CheckMethods (IMethodRule rule, ICollection methods, Runner runner) 
+		private void CheckMethods (IMethodRule rule, ICollection methods, Runner runner)
 		{
 			foreach (MethodDefinition method in methods) {
 				AddExistingMessages (rule.CheckMethod (method, runner));
 			}
 		}
 
-		private void CheckUnusedParameters (TypeDefinition type, Runner runner) 
+		private void CheckUnusedParameters (TypeDefinition type, Runner runner)
 		{
 			IMethodRule avoidUnusedParameters = new AvoidUnusedParametersRule ();
 			CheckMethods (avoidUnusedParameters, type.Methods, runner);
 			CheckMethods (avoidUnusedParameters, type.Constructors, runner);
 		}
 
-		public MessageCollection CheckType (TypeDefinition type, Runner runner) 
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			messageCollection = new MessageCollection ();
-			
+
 			CheckAbstractClassWithoutResponsability (type);
 			CheckUnnecesaryDelegation (type);
 			if (!ContainsAvoidUnusedParametersRule (runner))

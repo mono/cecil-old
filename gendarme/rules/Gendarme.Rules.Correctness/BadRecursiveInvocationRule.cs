@@ -38,7 +38,7 @@ public class BadRecursiveInvocationRule : IMethodRule {
                 string rDecl = mref.DeclaringType.Name;
                 string mName = method.Name;
                 string mDecl = method.DeclaringType.Name;
-                bool argsEqual = 
+                bool argsEqual =
                     (mref.Parameters.Count == method.Parameters.Count);
                 bool namesEqual = rName.Equals(mName);
                 // Don't need to compare declaring types if this is a
@@ -66,7 +66,7 @@ public class BadRecursiveInvocationRule : IMethodRule {
         return runner.RuleSuccess;
     }
 
-	// note: parameter names do not have to match because we can be 
+	// note: parameter names do not have to match because we can be
 	// calling a base class virtual method
 	private bool CheckParameters (MethodReference caller, MethodReference callee)
 	{

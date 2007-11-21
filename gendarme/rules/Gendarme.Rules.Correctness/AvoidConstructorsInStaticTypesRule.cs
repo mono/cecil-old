@@ -38,7 +38,7 @@ namespace Gendarme.Rules.Correctness
 	public class AvoidConstructorsInStaticTypesRule : ITypeRule
 	{
 		private const string MessageString = "Types with no instance fields or methods should not have public instance constructors";
-		
+
 		public MessageCollection CheckType(TypeDefinition type, Runner runner)
 		{
 			MessageCollection messageCollection = new MessageCollection();
@@ -61,7 +61,7 @@ namespace Gendarme.Rules.Correctness
 					return null;
 				}
 			}
-			
+
 			foreach (MethodDefinition ctor in type.Constructors)
 			{
 				if (!ctor.IsStatic && (ctor.Attributes & MethodAttributes.Public) == MethodAttributes.Public)
@@ -73,7 +73,7 @@ namespace Gendarme.Rules.Correctness
 			}
 
 			return messageCollection.Count > 0 ? messageCollection : null;
-			
+
 		}
 	}
 }
