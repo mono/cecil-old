@@ -1,3 +1,8 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConsoleRunner.cs: Ensure patterns, like * and ?, works inside the 
+	current directory. Return the full path in this case too.
+
 2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConsoleRunner.cs: Avoid WriteStaticFieldFromInstanceMethodRule 

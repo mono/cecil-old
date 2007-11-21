@@ -89,9 +89,12 @@ class ConsoleRunner : Runner {
 				}
 			}
 		} else if (name.IndexOfAny (new char[] { '*', '?' }) >= 0) {
-			string[] files = Directory.GetFiles (Path.GetDirectoryName (name), Path.GetFileName (name));
+			string dirname = Path.GetDirectoryName (name);
+			if (dirname.Length == 0)
+				dirname = "."; // assume current directory
+			string [] files = Directory.GetFiles (dirname, Path.GetFileName (name));
 			foreach (string file in files) {
-				assemblies.Add (file, null);
+				assemblies.Add (Path.GetFullPath (file), null);
 			}
 		} else {
 			assemblies.Add (Path.GetFullPath (name), null);
