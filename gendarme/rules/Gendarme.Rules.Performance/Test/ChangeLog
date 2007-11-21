@@ -1,3 +1,10 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesTest.cs: Moved class outside
+	the fixture (because it made them all nested). Removed test for 
+	InternalsVisibleToAttribute. This must be done from another assembly 
+	(or it will mess every results in this one).
+
 2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUncalledPrivateCodeTest.cs: Word around bug #343465 so test

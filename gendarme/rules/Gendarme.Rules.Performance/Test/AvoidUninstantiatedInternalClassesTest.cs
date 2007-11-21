@@ -33,91 +33,74 @@ using Gendarme.Rules.Performance;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.Performance
-{
+namespace Test.Rules.Performance {
+
+	internal class UninstantiatedInternalClass {
+
+		public void display ()
+		{
+		}
+
+		public static void Main (string [] args)
+		{
+		}
+	}
+
+	internal class InstantiatedInternalClass {
+
+		public void display ()
+		{
+		}
+
+		public static void Main (string [] args)
+		{
+			InstantiatedInternalClass i = new InstantiatedInternalClass ();
+			i.display ();
+		}
+	}
+
+	internal class NestedInternalUninstantiatedClass {
+		public class NestedClass {
+			public void display ()
+			{
+			}
+		}
+	}
+
+	internal class NestedInternalInstantiatedClass {
+		public class NestedClass {
+			public static void Main (string [] args)
+			{
+				NestedInternalInstantiatedClass n = new NestedInternalInstantiatedClass ();
+			}
+		}
+	}
+
+	public class NonInternalClassNotInstantiated {
+		public void display ()
+		{
+		}
+	}
+
+	public static class StaticClass {
+		public static void display ()
+		{
+		}
+	}
+
+	internal class MethodContainingObjectCallIsNotCalled {
+		public void display ()
+		{
+			MethodContainingObjectCallIsNotCalled n = new MethodContainingObjectCallIsNotCalled ();
+		}
+	}
+
+	internal interface IFace {
+		void display ();
+	}
+
 	[TestFixture]
 	public class AvoidUninstantiatedInternalClassesTest {
-		
-		internal class UninstantiatedInternalClass
-		{
-			public void display ()
-			{
-			}
-			
-			public static void Main (string [] args)
-			{
-			}
-		}
-		
-		internal class InstantiatedInternalClass
-		{
-			public void display ()
-			{
-			}
-			public static void Main (string [] args)
-			{
-				InstantiatedInternalClass i = new InstantiatedInternalClass ();
-				i.display ();
-			}
-		}
-		
-		internal class NestedInternalUninstantiatedClass
-		{
-			public class NestedClass
-			{
-				public void display ()
-				{
-				}
-			}
-		}
-		
-		internal class NestedInternalInstantiatedClass
-		{
-			public class NestedClass
-			{
-				public static void Main (string [] args)
-				{
-					NestedInternalInstantiatedClass n = new NestedInternalInstantiatedClass ();
-				}
-			}
-		}
-		
-		public class NonInternalClassNotInstantiated
-		{
-			public void display ()
-			{
-			}
-		}
-		
-		public static class StaticClass
-		{
-			public static void display ()
-			{
-			}
-		}
-		
-		internal class MethodContainingObjectCallIsNotCalled
-		{
-			public void display ()
-			{
-				MethodContainingObjectCallIsNotCalled n = new MethodContainingObjectCallIsNotCalled ();
-			}
-		}
-		
-		internal interface IFace
-		{
-			void display ();
-		}
-		
-#if net_2_0
-		[assembly:InternalsVisibleToAttribute ("BadPractice")]
-		internal class ImplementingInternalsVisibleToAttribute
-		{ 
-			public static void Main (string [] args)
-			{
-			}
-		}
-#endif
 		
 		private ITypeRule typeRule;
 		private AssemblyDefinition assembly;
@@ -135,7 +118,7 @@ namespace Test.Rules.Performance
 		
 		private TypeDefinition GetTest (string name)
 		{
-			string fullname = "Test.Rules.Performance.AvoidUninstantiatedInternalClassesTest/" + name;
+			string fullname = "Test.Rules.Performance." + name;
 			return assembly.MainModule.Types[fullname];
 		}
 		
@@ -205,15 +188,5 @@ namespace Test.Rules.Performance
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
-#if net_2_0
-		[Test]
-		public void implementingInternalsVisibleToAttributeTest ()
-		{
-			type = GetTest ("ImplementingInternalsVisibleToAttribute");
-			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-		}
-#endif
 	}
 }
