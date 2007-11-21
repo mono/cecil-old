@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,131 +37,115 @@ using Gendarme.Rules.Performance;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.Performance
-{
+namespace Test.Rules.Performance {
 	[TestFixture]
 	public class AvoidUncalledPrivateCodeTest {
-		
-		public class UncalledPrivateMethod
-		{
+
+		public class UncalledPrivateMethod {
 			private void display ()
 			{
 			}
 		}
-		
-		public class CalledPrivateMethod
-		{
+
+		public class CalledPrivateMethod {
 			private void display ()
 			{
 			}
-			
+
 			public static void Main (string [] args)
 			{
 				CalledPrivateMethod c = new CalledPrivateMethod ();
 				c.display ();
 			}
 		}
-		
-		public class UncalledInternalMethod
-		{
+
+		public class UncalledInternalMethod {
 			internal void print ()
 			{
 			}
 		}
-		
-		public class CalledInternalMethod
-		{
+
+		public class CalledInternalMethod {
 			internal void CalledMethod ()
 			{
 			}
 		}
-		
-		public class MethodCallingClass
-		{
+
+		public class MethodCallingClass {
 			public static void Main (string [] args)
 			{
 				CalledInternalMethod c = new CalledInternalMethod ();
 				c.CalledMethod ();
 			}
 		}
-		
-		private class PublicMethodNotCalledInPrivateClass
-		{
+
+		private class PublicMethodNotCalledInPrivateClass {
 			public void publicMethod ()
 			{
 			}
 		}
-		
-		internal class PublicMethodNotCalledInInternalClass
-		{
+
+		internal class PublicMethodNotCalledInInternalClass {
 			public void publicMethod ()
 			{
 			}
 		}
-		
-		private class PublicMethodCalledInPrivateClass
-		{
+
+		private class PublicMethodCalledInPrivateClass {
 			public void publicCalledMethod ()
 			{
 			}
-			
+
 			public static void Main (string [] args)
 			{
 				PublicMethodCalledInPrivateClass p = new PublicMethodCalledInPrivateClass ();
 				p.publicCalledMethod ();
 			}
 		}
-		
-		internal class PublicMethodCalledInInternalClass
-		{
+
+		internal class PublicMethodCalledInInternalClass {
 			public void publicMethodCalled ()
 			{
 			}
-			
+
 			public static void Main (string [] args)
 			{
 				PublicMethodCalledInInternalClass p = new PublicMethodCalledInInternalClass ();
 				p.publicMethodCalled ();
 			}
 		}
-		
-		private class PrivateMethodInPrivateClassNotCalled
-		{
+
+		private class PrivateMethodInPrivateClassNotCalled {
 			private void privateMethodNotCalled ()
 			{
 			}
 		}
-		
-		internal class NestedClasses
-		{
-			public class AnotherClass
-			{
+
+		internal class NestedClasses {
+			public class AnotherClass {
 				public void publicMethodNotCalledInNestedInternalClass ()
 				{
 				}
 			}
 		}
-		
-		interface Iface1
-		{
+
+		interface Iface1 {
 			void IfaceMethod1 ();
 		}
-		
-		interface Iface2
-		{
+
+		interface Iface2 {
 			void IfaceMethod2 ();
 		}
-		
-		public class ImplementingExplicitInterfacesMembers: Iface1, Iface2 
-		{
+
+		public class ImplementingExplicitInterfacesMembers : Iface1, Iface2 {
 			void Iface1.IfaceMethod1 ()
 			{
 			}
-			
+
 			void Iface2.IfaceMethod2 ()
 			{
 			}
-		
+
 			public static void Main (string [] args)
 			{
 				ImplementingExplicitInterfacesMembers i = new ImplementingExplicitInterfacesMembers ();
@@ -167,43 +153,38 @@ namespace Test.Rules.Performance
 				iobject.IfaceMethod1 ();
 			}
 		}
-		
-		public class PrivateConstructorNotCalled
-		{
+
+		public class PrivateConstructorNotCalled {
 			private PrivateConstructorNotCalled ()
 			{
 			}
 		}
-		
-		public class StaticConstructorNotCalled
-		{
+
+		public class StaticConstructorNotCalled {
 			static int i = 0;
 			static StaticConstructorNotCalled ()
 			{
 				i = 5;
 			}
 		}
-		
+
 		[SerializableAttribute]
-		public class SerializableConstructorNotCalled
-		{
+		public class SerializableConstructorNotCalled {
 			private int i;
 			public SerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
 			{
 				i = 0;
 			}
 		}
-		
-		public class UncalledOverriddenMethod
-		{
+
+		public class UncalledOverriddenMethod {
 			public override string ToString ()
 			{
 				return String.Empty;
 			}
 		}
-		
-		public class UsingComRegisterAndUnRegisterFunctionAttribute
-		{
+
+		public class UsingComRegisterAndUnRegisterFunctionAttribute {
 			[ComRegisterFunctionAttribute]
 			private void register ()
 			{
@@ -213,16 +194,15 @@ namespace Test.Rules.Performance
 			{
 			}
 		}
-		
-		public class CallingPrivateMethodsThroughDelegates
-		{
+
+		public class CallingPrivateMethodsThroughDelegates {
 			delegate string delegateExample ();
-			
+
 			private string privateMethod ()
 			{
 				return String.Empty;
 			}
-			
+
 			public static void Main (string [] args)
 			{
 				CallingPrivateMethodsThroughDelegates c = new CallingPrivateMethodsThroughDelegates ();
@@ -251,15 +231,20 @@ namespace Test.Rules.Performance
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
 			methodRule = new AvoidUncalledPrivateCodeRule ();
+		}
+
+		[SetUp]
+		public void SetUp ()
+		{
 			messageCollection = null;
 		}
-		
+
 		private TypeDefinition GetTest (string name)
 		{
 			string fullname = "Test.Rules.Performance.AvoidUncalledPrivateCodeTest/" + name;
 			return assembly.MainModule.Types [fullname];
 		}
-		
+
 		[Test]
 		public void uncalledPrivateMethodTest ()
 		{
@@ -269,7 +254,7 @@ namespace Test.Rules.Performance
 			Assert.IsNotNull (messageCollection, "UncalledPrivateMethod");
 			Assert.AreEqual (1, messageCollection.Count, "Count");
 		}
-		
+
 		[Test]
 		public void calledPrivateMethodTest ()
 		{
@@ -288,26 +273,26 @@ namespace Test.Rules.Performance
 				}
 			}
 		}
-		
+
 		[Test]
 		public void uncalledInternalMethodTest ()
 		{
 			type = GetTest ("UncalledInternalMethod");
 			Assert.AreEqual (1, type.Methods.Count, "Methods.Count");
-			messageCollection = methodRule.CheckMethod (type.Methods[0], new MinimalRunner ());
+			messageCollection = methodRule.CheckMethod (type.Methods [0], new MinimalRunner ());
 			Assert.IsNotNull (messageCollection, "UncalledInternalMethod");
 			Assert.AreEqual (1, messageCollection.Count, "Count");
 		}
-		
+
 		[Test]
 		public void calledInternalMethodTest ()
 		{
 			type = GetTest ("CalledInternalMethod");
 			Assert.AreEqual (1, type.Methods.Count, "Methods.Count");
-			messageCollection = methodRule.CheckMethod (type.Methods[0], new MinimalRunner ());
+			messageCollection = methodRule.CheckMethod (type.Methods [0], new MinimalRunner ());
 			Assert.IsNull (messageCollection, "CalledInternalMethod");
 		}
-		
+
 		[Test]
 		public void checkingForMainMethodTest ()
 		{
@@ -317,18 +302,23 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void publicMethodNotCalledInPrivateClassTest ()
 		{
 			type = GetTest ("PublicMethodNotCalledInPrivateClass");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "publicMethod")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "publicMethod":
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				default:
+					Assert.Fail ("Test case for method {0} is not handled", method.Name);
+					break;
+				}
+			}
 		}
-		
+
 		[Test]
 		public void publicMethodCalledInPrivateClassTest ()
 		{
@@ -338,7 +328,7 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void publicMethodCalledInInternalClassTest ()
 		{
@@ -348,7 +338,7 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void privateMethodInPrivateClassNotCalledTest ()
 		{
@@ -359,18 +349,23 @@ namespace Test.Rules.Performance
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (1, messageCollection.Count);
 		}
-		
+
 		[Test]
 		public void publicMethodNotCalledInNestedInternalClassTest ()
 		{
 			type = GetTest ("NestedClasses");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "publicMethodNotCalledInNestedInternalClass")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "publicMethodNotCalledInNestedInternalClass":
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				default:
+					Assert.Fail ("Test case for method {0} is not handled", method.Name);
+					break;
+				}
+			}
 		}
-		
+
 		[Test]
 		public void implementingInterfacesMembersTest ()
 		{
@@ -379,18 +374,22 @@ namespace Test.Rules.Performance
 				switch (method.Name) {
 				case "Main":
 				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest.Iface1.IfaceMethod1":
+// mono bug #343465
+				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest+Iface1.IfaceMethod1":
 					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
 					break;
 				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest.Iface2.IfaceMethod2":
+				// mono bug #343465
+				case "Test.Rules.Performance.AvoidUncalledPrivateCodeTest+Iface2.IfaceMethod2":
 					Assert.IsNotNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
 					break;
 				default:
-					Assert.Fail ("Test case not handled");
+					Assert.Fail ("Test case for method {0} is not handled", method.Name);
 					break;
 				}
 			}
 		}
-		
+
 		[Test]
 		public void privateConstructorNotCalledTest ()
 		{
@@ -401,7 +400,7 @@ namespace Test.Rules.Performance
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (1, messageCollection.Count);
 		}
-		
+
 		[Test]
 		public void staticConstructorNotCalledTest ()
 		{
@@ -411,7 +410,7 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void serializableConstructorNotCalledTest ()
 		{
@@ -421,17 +420,23 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void uncalledOverriddenMethodTest ()
 		{
 			type = GetTest ("UncalledOverriddenMethod");
-			foreach (MethodDefinition method in type.Constructors)
-				if (method.Name == "ToString")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "ToString":
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				default:
+					Assert.Fail ("Test case not handled");
+					break;
+				}
+			}
 		}
-		
+
 		[Test]
 		public void implementingComRegisterFunctionAttributeTest ()
 		{
@@ -441,7 +446,7 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void implementingComUnregisterFunctionAttributeTest ()
 		{
@@ -451,7 +456,7 @@ namespace Test.Rules.Performance
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
 		public void callingPrivateMethodsThroughDelegatesTest ()
 		{
@@ -466,7 +471,7 @@ namespace Test.Rules.Performance
 		public void CheckClassWithFinalizer ()
 		{
 			type = GetTest ("ClassWithFinalizer");
-			Assert.IsNull (methodRule.CheckMethod (type.Methods[0], new MinimalRunner ()));
+			Assert.IsNull (methodRule.CheckMethod (type.Methods [0], new MinimalRunner ()));
 		}
 	}
 }

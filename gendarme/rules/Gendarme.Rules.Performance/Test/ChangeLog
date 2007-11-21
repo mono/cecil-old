@@ -1,3 +1,8 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidUncalledPrivateCodeTest.cs: Word around bug #343465 so test
+	all works under Mono and MS runtimes.
+
 2007-11-21  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeTest.cs: Handle more cases (don't check for
