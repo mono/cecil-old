@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,29 +34,61 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Correctness {
-	public class CallingEqualsWithNullArgRule: IMethodRule
-	{
+
+	public class CallingEqualsWithNullArgRule: IMethodRule {
+
+		private bool IsEquals (MethodReference md)
+		{
+			if ((md == null) || (md.Name != "Equals"))
+				return false;
+
+			return (md.ReturnType.ReturnType.FullName == "System.Boolean");
+		}
+
+		private bool IsCall (Instruction ins)
+		{
+			OpCode oc = ins.OpCode;
+			return ((oc == OpCodes.Call) || (oc == OpCodes.Calli) || (oc == OpCodes.Callvirt));
+		}
+
+		private bool IsPreviousLdnull (Instruction ins)
+		{
+			while (ins.Previous != null) {
+				OpCode oc = ins.Previous.OpCode;
+				if (oc == OpCodes.Ldnull) {
+					return true;
+				} else if ((oc == OpCodes.Constrained) || (oc == OpCodes.Nop)) {
+					ins = ins.Previous;
+				} else {
+					return false;
+				}
+			}
+			return false;
+		}
+
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-
 			if (!method.HasBody)
 				return null;
 
-			foreach (Instruction ins in method.Body.Instructions)
-				if (ins.OpCode == OpCodes.Call || ins.OpCode == OpCodes.Callvirt) {
-					MethodReference calledMethod = (MethodReference) ins.Operand;
-					if (calledMethod.Name == "Equals" && calledMethod.ReturnType.ReturnType.FullName == "System.Boolean")
-						if (ins.Previous.OpCode == OpCodes.Ldnull) {
-							Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
-							Message message = new Message ("You should not call Equals (null), i.e., argument should not be null", location, MessageType.Error);
-							messageCollection.Add (message);
-						}
-				}
+			MessageCollection mc = null;
+			foreach (Instruction ins in method.Body.Instructions) {
+				// if we're calling bool type.Equals()
+				if (IsCall (ins) && IsEquals (ins.Operand as MethodReference)) {
+					// and that the previous, real, instruction is loading a null value
+					if (IsPreviousLdnull (ins)) {
+						Location location = new Location (method.DeclaringType.FullName, method.Name, ins.Offset);
+						Message message = new Message ("You should not call Equals (null), i.e., argument should not be null", location, MessageType.Error);
 
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+						if (mc == null)
+							mc = new MessageCollection (message);
+						else
+							mc.Add (message);
+					}
+				}
+			}
+
+			return mc;
 		}
 	}
 }

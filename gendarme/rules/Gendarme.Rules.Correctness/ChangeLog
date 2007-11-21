@@ -1,3 +1,11 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* CallingEqualsWithNullArgRule.cs: Avoid creating MessageCollection 
+	if unneeded (e.g. no error). Check for calli (along with call and 
+	callvirt). Check previous instructions (not just the last one) for
+	ldnull (skipping NOP and constrained). Fix bug on MS.NET where a 
+	constrained instruction could be found just before).
+
 2007-11-03  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* Gendarme.Rules.Correctness.xml.in: Added the Uri for
