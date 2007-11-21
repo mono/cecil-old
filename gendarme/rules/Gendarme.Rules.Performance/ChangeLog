@@ -1,8 +1,14 @@
+2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidUninstantiatedInternalClassesRule.cs: Simplified logic. 
+	Avoid using strings. IsInstantiated logic looks incomplete in scope
+	(needs more tests).
+
 2007-11-21  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeRule.cs: Simplified logic. Avoid using 
 	strings. Consider finalizers (since it's normal that they look 
-	uncalled). Pass all unit tests under Mono but 3 fails under MS 2.0!
+	uncalled). 
 
 2007-11-18  Nestor Salceca  <nestor.salceda@gmail.com>
 	

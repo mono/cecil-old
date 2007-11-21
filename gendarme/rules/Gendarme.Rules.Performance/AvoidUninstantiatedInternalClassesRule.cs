@@ -37,25 +37,37 @@ namespace Gendarme.Rules.Performance
 	{
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
+			// rule apply to non-public types
+			if (type.IsPublic)
+				return runner.RuleSuccess;
 
-			if (!ImplementsInternalsVisibleToAttribute (type) && (type.GetType ().IsAnsiClass || type.GetType ().IsClass || type.GetType ().IsAutoClass) && type.Name != "<Module>" && IsInstantiable (type) && !IsInstantiated (type, type)) {
+			// rule doesn't apply if the assembly open up itself to others using [InternalsVisibleTo]
+			if (ImplementsInternalsVisibleToAttribute (type))
+				return runner.RuleSuccess;
+
+			if (IsInstantiable (type) && !IsInstantiated (type, type)) {
 				Location location = new Location (type.FullName, type.Name, 0);
 				Message message = new Message ("There is no call for any of the types constructor found", location, MessageType.Error);
-				messageCollection.Add (message);
+				return new MessageCollection (message);
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			return runner.RuleSuccess;
 		}
 
+		// FIXME: we should have a common method to check attributes
 		private bool ImplementsInternalsVisibleToAttribute (TypeDefinition type)
 		{
-			foreach (MemberReference memberReference in type.Module.MemberReferences)
-				if (memberReference.DeclaringType.ToString () == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
+			foreach (CustomAttribute ca in type.Module.Assembly.CustomAttributes) {
+				if (ca.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.InternalsVisibleToAttribute")
 					return true;
+			}
 			return false;
+		}
+
+		private bool IsInstantiable (TypeDefinition type)
+		{
+			// note: that also excludes static types (2.0)
+			return !type.IsAbstract;
 		}
 
 		private bool IsInstantiated (TypeDefinition type, TypeDefinition nestedType)
@@ -79,7 +91,7 @@ namespace Gendarme.Rules.Performance
 
 		private bool MethodIsCalled (TypeDefinition type, MethodDefinition callingMethod)
 		{
-			string strCallingMethod = "";
+			string strCallingMethod = String.Empty;
 
 			if (callingMethod.Name == "Main" && callingMethod.IsStatic && callingMethod.ReturnType.ReturnType.FullName == "System.Void" && callingMethod.Parameters.Count == 1 && callingMethod.Parameters [0].ParameterType.FullName == "System.String[]")
 				return true;
@@ -98,34 +110,6 @@ namespace Gendarme.Rules.Performance
 								return true;
 			}
 			return false;
-		}
-
-		private bool IsInstantiable (TypeDefinition type)
-		{
-			if (!type.IsAbstract && TypeIsInternal (type) && !TypeIsStatic (type))
-				return true;
-			else
-				return false;
-		}
-
-		private bool TypeIsStatic (TypeDefinition type)
-		{
-			if (type.IsAbstract && type.IsSealed)
-				return true;
-			else
-				return false;
-		}
-
-		private bool TypeIsInternal (TypeDefinition type)
-		{
-			bool flag = true;
-			string [] modifier = type.Attributes.ToString ().Split (',');
-			if (modifier [0] == "NestedAssembly" || modifier [0] == "NestedFamANDAssem" || modifier [0] == "NestedFamORAssem")
-				return true;
-			for (int i = 0; i < modifier.Length; i++)
-				if (modifier [i] == "Public" || modifier [i] == "Private" || modifier [i] == "NestedPublic" || modifier [i] == "NestedPrivate" || modifier [i] == "NestedFamily" || modifier [i] == "NotPublic")
-					flag = false;
-			return flag;
 		}
 	}
 }
