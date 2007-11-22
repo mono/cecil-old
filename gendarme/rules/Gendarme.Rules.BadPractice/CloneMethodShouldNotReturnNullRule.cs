@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,41 +27,87 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.BadPractice
-{
-	public class CloneMethodShouldNotReturnNullRule: ITypeRule
-	{
+namespace Gendarme.Rules.BadPractice {
+
+	public class CloneMethodShouldNotReturnNullRule: ITypeRule {
+
 		private bool ImplementsICloneable (TypeDefinition type)
 		{
-			foreach (TypeReference iface in type.Interfaces)
-				if(iface.FullName == "System.ICloneable")
+			foreach (TypeReference iface in type.Interfaces) {
+				if (iface.FullName == "System.ICloneable")
 					return true;
+			}
 			return false;
+		}
+
+		private bool IsCloneMethod (MethodDefinition method)
+		{
+			return (method.Name == "Clone" && (method.Parameters.Count == 0));
 		}
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-			if (ImplementsICloneable (type))
-				foreach (MethodDefinition method in type.Methods)
-					if (method.Name == "Clone" && method.Parameters.Count == 0 && method.HasBody)
-						foreach (Instruction instruction in method.Body.Instructions) {
-							Instruction prevInstr = instruction.Previous;
-							if (instruction.OpCode.Name == "ret" && prevInstr.OpCode.Name == "ldnull") {
-								Location location = new Location (type.FullName, type.Name, instruction.Offset);
-								Message message = new Message ("The ICloneable.Clone () method returns null", location, MessageType.Error);
-								messageCollection.Add (message);
-							}
+			// rule applies only to types implementing System.ICloneable
+			if (!ImplementsICloneable (type))
+				return runner.RuleSuccess;
+
+			foreach (MethodDefinition method in type.Methods) {
+				// look for the Clone() method
+				if (!IsCloneMethod (method))
+					continue;
+
+				// rule applies only if a body is available (e.g. not for pinvokes...)
+				if (!method.HasBody)
+					return runner.RuleSuccess;
+
+				// FIXME: still *very* incomplete, but that will handle non-optimized code
+				// from MS CSC where "return null" == "nop | ldnull | stloc.0 | br.s | ldloc.0 | ret"
+				bool return_null = false;
+				Instruction previous = null;
+				foreach (Instruction instruction in method.Body.Instructions) {
+					switch (instruction.OpCode.Code) {
+					case Code.Nop:
+					case Code.Constrained:
+						// don't update previous
+						break;
+					case Code.Ldnull:
+						return_null = true;
+						previous = instruction;
+						break;
+					case Code.Br:
+					case Code.Br_S:
+						// don't update previous if branching to next instruction
+						if (instruction.Operand != instruction.Next)
+							previous = instruction;
+						break;
+					case Code.Ldloc_0:
+						if ((previous != null) && (previous.OpCode.Code == Code.Stloc_0))
+							break;
+						return_null = false;
+						break;
+					case Code.Ret:
+						if (return_null) {
+							Location location = new Location (type.FullName, type.Name, instruction.Offset);
+							Message message = new Message ("The ICloneable.Clone () method returns null", location, MessageType.Error);
+							return new MessageCollection (message);
 						}
-			if (messageCollection.Count == 0)
-					return null;
-			return messageCollection;
+						previous = instruction;
+						break;
+					case Code.Stloc_0:
+						// return_null doesn't change state
+					default:
+						previous = instruction;
+						break;
+					}
+				}
+			}
+
+			return runner.RuleSuccess;
 		}
 	}
 }
