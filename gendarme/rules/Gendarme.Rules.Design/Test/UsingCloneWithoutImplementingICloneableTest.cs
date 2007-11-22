@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -75,6 +77,13 @@ namespace Test.Rules.Design
 				return this.MemberwiseClone ();
 			}
 		}
+
+		public class CloningType {
+			public CloningType Clone ()
+			{
+				return new CloningType ();
+			}
+		}
 		
 		private ITypeRule typeRule;
 		private AssemblyDefinition assembly;
@@ -135,6 +144,13 @@ namespace Test.Rules.Design
 			type = GetTest ("OneMoreExample");
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void CloneReturnTypeNotObject ()
+		{
+			type = GetTest ("CloningType");
+			Assert.IsNotNull (typeRule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

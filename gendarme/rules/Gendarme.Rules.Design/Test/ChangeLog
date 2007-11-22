@@ -1,3 +1,9 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UsingCloneWithoutImplementingICloneableTest.cs: Add a test case
+	where the Clone method return the type itself (not System.Object) 
+	since this is also a good candidate for ICloneable
+
 2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Add missing file
