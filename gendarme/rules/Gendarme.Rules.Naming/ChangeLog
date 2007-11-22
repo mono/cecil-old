@@ -1,3 +1,14 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AttributeEndsWithAttributeSuffixRule.cs: Don't create 
+	MessageCollection unless we need to report an error/warning.
+	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs: Don't create 
+	MessageCollection unless we need to report an error/warning.
+	* UsePluralNameInEnumFlagsRule.cs: Don't create MessageCollection
+	unless we need to report an error/warning.
+	* UseSingularNameInEnumsUnlessAreFlagsRule.cs: Don't create 
+	MessageCollection unless we need to report an error/warning.
+
 2007-11-03  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Gendarme.Rules.Naming.xml.in: Added the Uri for

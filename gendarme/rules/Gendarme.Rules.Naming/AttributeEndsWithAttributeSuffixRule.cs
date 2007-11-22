@@ -58,17 +58,16 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-			if (InheritsFromAttribute (typeDefinition)) {
-				if (!typeDefinition.Name.EndsWith ("Attribute")) {
-					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
-					Message message = new Message ("The class name doesn't end with Attribute Suffix", location, MessageType.Error);
-					messageCollection.Add (message);
-				}
-			}
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			// rule applies only for type that inherits from System.Attribute
+			if (!InheritsFromAttribute (typeDefinition))
+				return runner.RuleSuccess;
+
+			if (typeDefinition.Name.EndsWith ("Attribute"))
+				return runner.RuleSuccess;
+
+			Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+			Message message = new Message ("The class name doesn't end with Attribute Suffix", location, MessageType.Error);
+			return new MessageCollection (message);
 		}
 	}
 }

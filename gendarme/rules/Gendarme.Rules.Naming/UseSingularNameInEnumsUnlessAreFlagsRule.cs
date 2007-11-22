@@ -52,19 +52,18 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-			if (typeDefinition.IsEnum) {
-				if (!HasFlagsAttribute (typeDefinition)) {
-					if (IsPlural (typeDefinition.Name)) {
-						Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
-						Message message = new Message ("The enum has a plural name.", location, MessageType.Error);
-						messageCollection.Add (message);
-					}
+			// rule applies only to enums
+			if (!typeDefinition.IsEnum)
+				return runner.RuleSuccess;
+
+			if (!HasFlagsAttribute (typeDefinition)) {
+				if (IsPlural (typeDefinition.Name)) {
+					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+					Message message = new Message ("The enum has a plural name.", location, MessageType.Error);
+					return new MessageCollection (message);
 				}
 			}
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			return runner.RuleSuccess;
 		}
 	}
 }
