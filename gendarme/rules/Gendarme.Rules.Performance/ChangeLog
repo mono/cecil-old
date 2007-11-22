@@ -1,3 +1,10 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* DontIgnoreMethodResultRule.cs: Don't create a MessageCollection 
+	unless we have at least one message to return to the runner. Reduce
+	false positives by handling all Append* methods from StringBuilder
+	and add exception for PermissionSet.[Add|Remove]Permission.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeRule.cs: Use MethodReference (not 

@@ -1,9 +1,12 @@
+//
 // Gendarme.Rules.Performance.DontIgnoreMethodResultRule
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,76 +29,75 @@
 //
 
 using System;
-using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.Performance
-{
-	public class DontIgnoreMethodResultRule : IMethodRule
-	{
+namespace Gendarme.Rules.Performance {
 
-		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
+	public class DontIgnoreMethodResultRule : IMethodRule {
+
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection();
+			// rule only applies if the method has a body
+			if (!method.HasBody)
+				return runner.RuleSuccess;
 
-			if (method.Body == null || method.Body.Instructions == null)
-			{
-				return null;
-			}
-
-			foreach (Instruction instruction in method.Body.Instructions)
-			{
-				if (instruction.OpCode.Code == Code.Pop)
-				{
+			MessageCollection mc = null;
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.OpCode.Code == Code.Pop) {
 					Message message = CheckForViolation(instruction.Previous);
-
-					if (message != null)
-					{
-						messageCollection.Add(message);
+					if (message != null) {
+						if (mc == null)
+							mc = new MessageCollection (message);
+						else
+							mc.Add (message);
 					}
 				}
 			}
-
-
-			return messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
+			return mc;
 		}
 
-		private Message CheckForViolation(Instruction instruction)
+		// some method return stuff that isn't required in most cases
+		// the rule ignores them
+		private bool IsException (MethodReference method)
 		{
-			MessageType messageType;
-			Message message = null;
+			if (method == null)
+				return true;
 
-			if (instruction.OpCode.Code == Code.Newobj || instruction.OpCode.Code == Code.Newarr)
-			{
-				messageType = MessageType.Warning;
-				message = new Message("Unused object created", null, messageType);
+			switch (method.DeclaringType.FullName) {
+			case "System.Text.StringBuilder":
+				// StringBuilder Append* methods return the StringBuilder itself so
+				// the calls can be chained
+				return method.Name.StartsWith ("Append");
+			case "System.Security.PermissionSet":
+				// PermissionSet return the permission (modified or unchanged) when
+				// IPermission are added or removed
+				return (method.Name == "AddPermission" || method.Name == "RemovePermission");
+			default:
+				return false;
 			}
-			else if (instruction.OpCode.Code == Code.Call || instruction.OpCode.Code == Code.Callvirt)
-			{
+		}
+
+		private Message CheckForViolation (Instruction instruction)
+		{
+			if ((instruction.OpCode.Code == Code.Newobj || instruction.OpCode.Code == Code.Newarr))
+				return new Message("Unused object created", null, MessageType.Warning);
+
+			if (instruction.OpCode.Code == Code.Call || instruction.OpCode.Code == Code.Callvirt) {
 				MethodReference method = instruction.Operand as MethodReference;
-
-				if (method != null && !method.ReturnType.ReturnType.IsValueType)
-				{
-					if (method.DeclaringType.FullName.Equals("System.String"))
-					{
-						messageType = MessageType.Error;
-					}
-					else
-					{
-						messageType = MessageType.Warning;
-					}
-
-					if (!(method.Name.Equals("Append") && method.DeclaringType.FullName.Equals("System.Text.StringBuilder")))
-					{
-						message = new Message("Do not ignore method results", null, messageType);
+				if (method != null && !method.ReturnType.ReturnType.IsValueType) {
+					// check for some common exceptions (to reduce false positive)
+					if (!IsException (method)) {
+						Location loc = new Location (method.DeclaringType.Name, method.Name, instruction.Offset);
+						// most common case is something like: s.ToLower ();
+						MessageType messageType = (method.DeclaringType.FullName == "System.String") ? MessageType.Error : MessageType.Warning;
+						return new Message ("Do not ignore method results", loc, messageType);
 					}
 				}
 			}
-			return message;
+			return null;
 		}
-
 	}
 }
