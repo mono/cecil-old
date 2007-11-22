@@ -1,10 +1,12 @@
-
+//
 // Gendarme.Rules.Correctness.UseValueInPropertySetterRule
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,52 +29,47 @@
 //
 
 using System;
-using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using Gendarme.Framework;
 
+namespace Gendarme.Rules.Correctness {
 
-namespace Gendarme.Rules.Correctness
-{
-	public class UseValueInPropertySetterRule : IMethodRule
-	{
+	public class UseValueInPropertySetterRule : IMethodRule {
+
 		private const string MessageString = "Property setter should use the assigned value";
 
-
-		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection();
+			//Skip the test, instead of flooding messages
+			//in stubs or empty setters.
+			if (!method.HasBody)
+				return runner.RuleSuccess;
 
-			if ((method.Attributes & MethodAttributes.SpecialName) == MethodAttributes.SpecialName && method.Name.StartsWith("set_"))
-			{
-				bool valueAccessed = false;
+			// rule applies to methods marked as SpecialName
+			if (!method.IsSpecialName)
+				return runner.RuleSuccess;
+			// which starts with set_
+			if (!method.Name.StartsWith ("set_"))
+				return runner.RuleSuccess;
 
-				//Skip the test, instead of flooding messages
-				//in stubs or empty setters.
-				if (!method.HasBody)
-					return null;
-
-				foreach (Instruction instruction in method.Body.Instructions)
-				{
-					if (instruction.OpCode.Code == Code.Ldarg_1)
-					{
-						valueAccessed = true;
-					}
-				}
-				if (!valueAccessed)
-				{
-					Location location = new Location(method.DeclaringType.Name, method.Name, 0);
-					Message message = new Message(MessageString, location, MessageType.Error);
-					messageCollection.Add(message);
+			// rule applies, looks instruction for references to value
+			bool valueAccessed = false;
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.OpCode.Code == Code.Ldarg_1) {
+					valueAccessed = true;
+					break;
 				}
 			}
 
-			return messageCollection.Count > 0 ? messageCollection : null;
+			if (!valueAccessed) {
+				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
+				Message message = new Message (MessageString, location, MessageType.Error);
+				return new MessageCollection (message);
+			}
+			return runner.RuleSuccess;
 		}
-
-
 	}
 }

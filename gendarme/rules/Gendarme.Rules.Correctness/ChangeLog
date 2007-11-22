@@ -1,3 +1,9 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* UseValueInPropertySetterRule.cs: Avoid creating MessageCollection
+	if unneeded (e.g. no error). Stop looping instruction when we 
+	determine that value has been accessed.
+
 2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* CallingEqualsWithNullArgRule.cs: Avoid creating MessageCollection 
