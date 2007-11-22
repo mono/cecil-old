@@ -1,3 +1,11 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontDeclareProtectedFieldsInSealedClassRule.cs: Avoid creating
+	MessageCollection unless needed.
+	* UsingCloneWithoutImplementingICloneableRule.cs: Avoid creating
+	MessageCollection unless needed. Also check Clone methods that return
+	the current type (not just System.Object)
+
 2007-10-27  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* Gendarme.Rules.Design.xml.in:  Added Uri with the documentation for

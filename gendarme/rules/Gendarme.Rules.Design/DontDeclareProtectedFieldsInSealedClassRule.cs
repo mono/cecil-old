@@ -25,31 +25,34 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
-using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.Design
-{
-	public class DontDeclareProtectedFieldsInSealedClassRule: ITypeRule
-	{
+namespace Gendarme.Rules.Design {
+
+	public class DontDeclareProtectedFieldsInSealedClassRule: ITypeRule {
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-			if (type.IsSealed) {
-				foreach (FieldDefinition field in type.Fields) {
-					if (field.Attributes.ToString () == "Family") {
-						Location location = new Location (type.FullName, type.Name, 0);
-						Message message = new Message ("This sealed class contains protected field(s)", location, MessageType.Error);
-						messageCollection.Add (message);
-					}
+			// rule applies only to sealed types
+			if (!type.IsSealed)
+				return runner.RuleSuccess;
+
+			MessageCollection mc = null;
+			foreach (FieldDefinition field in type.Fields) {
+				if (field.IsFamily) {
+					Location location = new Location (type.FullName, type.Name, 0);
+					Message message = new Message ("This sealed class contains protected field(s)", location, MessageType.Error);
+					if (mc == null)
+						mc = new MessageCollection (message);
+					else
+						mc.Add (message);
 				}
 			}
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+
+			return mc;
 		}
 	}
 }
