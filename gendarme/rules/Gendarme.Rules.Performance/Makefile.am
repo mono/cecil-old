@@ -49,7 +49,7 @@ Test.Rules.Performance.dll: $(performance_rules_build_sources) $(performance_rul
 test: Test.Rules.Performance.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Performance.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Performance.dll
 
 self-test: $(performance_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(performance_rules_SCRIPTS)

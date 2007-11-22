@@ -1,3 +1,9 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUncalledPrivateCodeRule.cs: Don't report unused code for
+	explicit interface implementation.
+	* Makefile.am: Use nunit-console2 to run tests
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* DontIgnoreMethodResultRule.cs: Don't create a MessageCollection 

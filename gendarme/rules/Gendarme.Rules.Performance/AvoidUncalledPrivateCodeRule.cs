@@ -93,6 +93,20 @@ namespace Gendarme.Rules.Performance {
 			}
 		}
 
+		public bool IsExplicitImplementationOfInterface (MethodDefinition method)
+		{
+			// quick out if the name doesn't include a .
+			if (!method.Name.Contains ("."))
+				return false;
+
+			TypeDefinition type = (method.DeclaringType as TypeDefinition);
+			foreach (TypeReference intf in type.Interfaces) {
+				if (method.Name.StartsWith (intf.FullName))
+					return true;
+			}
+			return false;
+		}
+
 		//
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
@@ -111,8 +125,8 @@ namespace Gendarme.Rules.Performance {
 
 			// ok, the rule applies
 
-			// check if the method is private
-			if (method.IsPrivate) {
+			// check if the method is private and doesn't implement explicitely an interface of the type
+			if (method.IsPrivate && !IsExplicitImplementationOfInterface (method)) {
 				// then we must check if this type use the private method
 				if (!CheckTypeForMethodUsage ((method.DeclaringType as TypeDefinition), method)) {
 					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
@@ -188,4 +202,3 @@ namespace Gendarme.Rules.Performance {
 		}
 	}
 }
-			
