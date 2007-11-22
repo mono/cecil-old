@@ -48,11 +48,8 @@ namespace Gendarme.Rules.Correctness {
 			if (!method.HasBody)
 				return runner.RuleSuccess;
 
-			// rule applies to methods marked as SpecialName
-			if (!method.IsSpecialName)
-				return runner.RuleSuccess;
-			// which starts with set_
-			if (!method.Name.StartsWith ("set_"))
+			// rule applies to setters methods
+			if (method.SemanticsAttributes != MethodSemanticsAttributes.Setter)
 				return runner.RuleSuccess;
 
 			// rule applies, looks instruction for references to value

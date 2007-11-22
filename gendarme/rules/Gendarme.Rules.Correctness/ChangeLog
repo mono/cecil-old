@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UseValueInPropertySetterRule.cs: Apply JB's suggestion to use
+	SemanticsAttributes instead of the SpecialName + "set_" checks.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* UseValueInPropertySetterRule.cs: Avoid creating MessageCollection
