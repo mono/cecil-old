@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUncalledPrivateCodeRule.cs: Use MethodReference (not 
+	MethodDefinition) when iterating thru overrides.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* UseStringEmptyRule.cs: Don't create a MessageCollection unless we 

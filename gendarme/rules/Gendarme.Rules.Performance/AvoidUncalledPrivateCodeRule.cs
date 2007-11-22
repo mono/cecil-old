@@ -178,7 +178,7 @@ namespace Gendarme.Rules.Performance {
 				if (instruction.Operand == md)
 					return true;
 				if (instruction.OpCode.Code == Code.Callvirt) {
-					foreach (MethodDefinition virtmd in md.Overrides) {
+					foreach (MethodReference virtmd in md.Overrides) {
 						if (instruction.Operand == virtmd)
 							return true;
 					}
