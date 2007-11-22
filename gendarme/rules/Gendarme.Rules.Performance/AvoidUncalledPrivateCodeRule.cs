@@ -125,8 +125,16 @@ namespace Gendarme.Rules.Performance {
 
 			// ok, the rule applies
 
-			// check if the method is private and doesn't implement explicitely an interface of the type
-			if (method.IsPrivate && !IsExplicitImplementationOfInterface (method)) {
+			// check if the method is private 
+			if (method.IsPrivate) {
+				// it's ok for have unused private ctor (and common before static class were introduced in 2.0)
+				if (method.IsConstructor)
+					return runner.RuleSuccess;
+
+				// it's ok (used or not) if it's required to implement explicitely an interface
+				if (IsExplicitImplementationOfInterface (method))
+					return runner.RuleSuccess;
+
 				// then we must check if this type use the private method
 				if (!CheckTypeForMethodUsage ((method.DeclaringType as TypeDefinition), method)) {
 					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);

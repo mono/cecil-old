@@ -1,3 +1,7 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidUncalledPrivateCodeRule.cs: Allow unused private ctor.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeRule.cs: Don't report unused code for
