@@ -69,8 +69,8 @@ namespace Test.Rules.BadPractice
 			{
 				if (obj == null)
 					return true;
-				else
-					return this == obj;
+
+				return this == obj;
 			}
 			public override int GetHashCode ()
 			{
@@ -94,10 +94,10 @@ namespace Test.Rules.BadPractice
 		{
 			public new bool Equals (System.Object obj)
 			{
-				if (obj == null)
-					return true;
-				else
+				if (obj != null)
 					return this == obj;
+
+				return true;
 			}
 			public override int GetHashCode ()
 			{

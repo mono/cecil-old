@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EqualShouldHandleNullArgTest.cs: Add little variations in the null
+	checks.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* CloneMethodShouldNotReturnNullTest.cs: Unit tests (Nidhi Rawal, 
