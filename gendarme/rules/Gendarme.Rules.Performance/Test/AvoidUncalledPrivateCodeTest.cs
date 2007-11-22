@@ -468,11 +468,9 @@ namespace Test.Rules.Performance {
 		public void privateConstructorNotCalledTest ()
 		{
 			type = GetTest ("PrivateConstructorNotCalled");
-			foreach (MethodDefinition method in type.Constructors)
-				if (method.Name == ".ctor")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			foreach (MethodDefinition method in type.Constructors) {
+				Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+			}
 		}
 
 		[Test]
