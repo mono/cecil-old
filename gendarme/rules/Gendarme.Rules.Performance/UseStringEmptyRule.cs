@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -41,12 +41,12 @@ namespace Gendarme.Rules.Performance {
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
-			if (method.Body == null)
+			if (!method.HasBody)
 				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
 
-			MessageCollection results = new MessageCollection ();
+			MessageCollection results = null;
 			string fullname = method.DeclaringType.FullName;
 
 			// #2 - look for string references
@@ -58,14 +58,15 @@ namespace Gendarme.Rules.Performance {
 						Location loc = new Location (fullname, method.Name, ins.Offset);
 						Message msg = new Message ("instance of an empty string has been found.",
 							loc, MessageType.Warning);
-						results.Add (msg);
+						if (results == null)
+							results = new MessageCollection (msg);
+						else
+							results.Add (msg);
 					}
 					break;
 				}
 			}
 
-			if (results.Count == 0)
-				return null;
 			return results;
 		}
 	}

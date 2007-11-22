@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* UseStringEmptyRule.cs: Don't create a MessageCollection unless we 
+	have at least one message to return to the runner.
+
 2007-11-21  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Simplified logic. 
