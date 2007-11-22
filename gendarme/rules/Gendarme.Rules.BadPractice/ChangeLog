@@ -1,10 +1,12 @@
-2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* CloneMethodShouldNotReturnNullRule.cs: Don't create a 
 	MessageCollection unless we return a message. IL check logic is too
 	simplistic, added a little more logic (but it's still needs to be 
 	fixed) so the test run correctly under Windows (VS in Debug mode 
 	really generates crap).
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule.cs: Avoid 
+	creating MessageCollection unless needed.
 
 2007-11-18  Nestor Salceda  <nestor.salceda@gmail.com>
 

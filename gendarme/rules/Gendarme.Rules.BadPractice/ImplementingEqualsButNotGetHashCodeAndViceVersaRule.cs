@@ -25,16 +25,15 @@
 // THE SOFTWARE.
 				
 using System;
-using System.Collections;
 
 using Mono.Cecil;
-using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.BadPractice {
 
-	public class ImplementingEqualsButNotGetHashCodeAndViceVersaRule: ITypeRule
-	{
+	public class ImplementingEqualsButNotGetHashCodeAndViceVersaRule: ITypeRule {
+
 		bool equals = false;
 		bool getHashCode = false;
 
@@ -53,27 +52,24 @@ namespace Gendarme.Rules.BadPractice {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
 			EqualsOrGetHashCode (type);
 
-			if (equals == true && getHashCode == false)
-			{
+			// if we have Equals but no GetHashCode method
+			if (equals && !getHashCode) {
 				Location location = new Location (type.FullName, type.Name, 0);
 				Message message = new Message ("Implements Object.Equals (Object) but does not implement Object.GetHashCode ()", location, MessageType.Error);
-				messageCollection.Add (message);
+				return new MessageCollection (message);
 			}
-			else if (equals == false && getHashCode == true)
-			{
+
+			// if we have GetHashCode but no Equals method
+			if (!equals && getHashCode) {
 				Location location = new Location (type.FullName, type.Name, 0);
 				Message message = new Message ("Implements Object.GetHashCode () but does not implement Object.Equals (Object)", location, MessageType.Error);
-				messageCollection.Add (message);
+				return new MessageCollection (message);
 			}
-			else
-				return runner.RuleSuccess;
 
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			// we either have both Equals and GetHashCode or none (both fine)
+			return runner.RuleSuccess;
 		}
 	}
 }
