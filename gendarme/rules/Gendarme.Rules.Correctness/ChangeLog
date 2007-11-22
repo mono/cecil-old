@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* NullDerefFrame.cs: Remove use of /n using StringBuilder.AppendLine
+	* dataflow/CFG.cs: Remove use of /n using StreamWriter.WriteLine
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UseValueInPropertySetterRule.cs: Apply JB's suggestion to use

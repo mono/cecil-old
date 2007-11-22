@@ -333,29 +333,28 @@ public class CFG : Graph {
         string name = method.DeclaringType.Name + "." + method.Name + ".dot";
         FileMode mode = FileMode.Create;
         StreamWriter writer = new StreamWriter(new FileStream(name, mode));
-        writer.Write("digraph {0} ", method.Name);
-        writer.Write("{\n");
+	writer.WriteLine ("digraph {0} {", method.Name);
         foreach(Node node in Nodes) {
             BasicBlock bb = (BasicBlock)node;
-            writer.Write("    \"{0}\" [ label = \"{1}\" ];\n", bb, bb);
+	    writer.WriteLine ("    \"{0}\" [ label = \"{1}\" ];", bb, bb);
         }
 
         foreach(Edge edge in Edges) {
             CFGEdge ce = (CFGEdge)edge;
             writer.Write("    \"{0}\" -> \"{1}\"", ce.Start, ce.End);
             if(ce.Type == CFGEdgeType.Branch) {
-                writer.Write(" [ label = \"branch\" ];\n");
+		    writer.WriteLine (" [ label = \"branch\" ];");
             } else if(ce.Type == CFGEdgeType.Forward) {
-                writer.Write(" [ label = \"forward\" ];\n");
+		    writer.WriteLine (" [ label = \"forward\" ];");
             } else if(ce.Type == CFGEdgeType.Return) {
-                writer.Write(" [ label = \"return\" ];\n");
+		    writer.WriteLine (" [ label = \"return\" ];");
             } else if(ce.Type == CFGEdgeType.Exception) {
-                writer.Write(" [ label = \"exception\" ];\n");
+		    writer.WriteLine (" [ label = \"exception\" ];");
             } else {
-                writer.Write(" [ label = \"unknown\" ];\n");
+		    writer.WriteLine (" [ label = \"unknown\" ];");
             }
         }
-        writer.Write("}\n");
+        writer.WriteLine ("}");
         writer.Close();
     }
 }

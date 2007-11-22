@@ -13,6 +13,8 @@
  **********************************************************************/
 
 using System;
+using System.Text;
+
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Correctness {
@@ -226,22 +228,30 @@ public class NullDerefFrame : ICloneable {
         return result;
     }
 
-    public override string ToString()
+    public override string ToString ()
     {
-        string result;
-        int i;
-
-        result = "Locals {";
-        for(i = 0; i < locals.Length; i++)
-            result += " " + locals[i].ToString();
-        result += " }\nArgs { ";
-        for(i = 0; i < args.Length; i++)
-            result += " " + args[i].ToString();
-        result += " }\nStack { ";
-        for(i = 0; i < stack.Length; i++)
-            result += " " + stack[i].ToString();
-        result += " }\nstackDepth = " + stackDepth + "\n";
-        return result;
+        StringBuilder sb = new StringBuilder ("Locals {");
+	for (int i = 0; i < locals.Length; i++) {
+		sb.Append (" ");
+		sb.Append (locals [i].ToString ());
+	}
+	sb.AppendLine (" }");
+	sb.Append ("Args { ");
+	for (int i = 0; i < args.Length; i++) {
+		sb.Append (" ");
+		sb.Append (args [i].ToString ());
+	}
+	sb.AppendLine (" }");
+	sb.Append ("Stack { ");
+	for (int i = 0; i < stack.Length; i++) {
+		sb.Append (" ");
+		sb.Append (stack [i].ToString ());
+	}
+	sb.AppendLine (" }");
+	sb.Append ("stackDepth = ");
+	sb.Append (stackDepth);
+	sb.AppendLine ();
+        return sb.ToString ();
     }
 }
 
