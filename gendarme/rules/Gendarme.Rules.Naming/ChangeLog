@@ -1,3 +1,8 @@
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* DetectNonAlphaNumericsInTypeNamesRule.cs: IsPrivate is different
+	than !IsPublic. Fix false positive reports about anonymous methods.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AttributeEndsWithAttributeSuffixRule.cs: Don't create 

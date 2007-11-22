@@ -59,8 +59,8 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			// exclude private methods and special names (like Getter and Setter)
-			if (method.IsPrivate || method.IsSpecialName)
+			// exclude non-public methods and special names (like Getter and Setter)
+			if (!method.IsPublic || method.IsSpecialName)
 				return runner.RuleSuccess;
 
 			// check the method name
