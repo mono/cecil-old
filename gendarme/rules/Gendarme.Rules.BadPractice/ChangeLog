@@ -1,3 +1,9 @@
+2007-11-23  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* EqualShouldHandleNullArgRule.cs: Don't create a MessageCollection
+	unless we return a message. Avoid NRE if Equals simply return a 
+	boolean. Add FIXME to rework logic for MS compilers in debug mode.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* CloneMethodShouldNotReturnNullRule.cs: Don't create a 

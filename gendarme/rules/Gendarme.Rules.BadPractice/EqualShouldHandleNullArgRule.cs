@@ -32,33 +32,54 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.BadPractice {
-	public class EqualShouldHandleNullArgRule: IMethodRule
-	{
-		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
+
+	public class EqualShouldHandleNullArgRule: IMethodRule {
+
+		// copy-paste from gendarme\rules\Gendarme.Rules.Correctness\CallingEqualsWithNullArgRule.cs
+		private bool IsEquals (MethodReference md)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
+			if ((md == null) || (md.Name != "Equals"))
+				return false;
 
-			if (method.HasBody && method.Name == "Equals" && method.ReturnType.ReturnType.ToString () == "System.Boolean" && method.IsVirtual && !method.IsNewSlot)
-				foreach (ParameterDefinition param in method.Parameters)
-					if (param.ParameterType.FullName == "System.Object")
-						if (!HandlesNullArg (method)) {
-						Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
-						Message message = new Message ("The overridden method Object.Equals (Object) does not return false if null value is found", location, MessageType.Error);
-						messageCollection.Add (message);
-					}
-
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			return (md.ReturnType.ReturnType.FullName == "System.Boolean");
 		}
 
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
+		{
+			// rule applies only if a body is available (e.g. not for pinvokes...)
+			if (!method.HasBody)
+				return runner.RuleSuccess;
+
+			// rules applies for Equals overrides
+			if (!IsEquals (method) || !method.IsVirtual)
+				return runner.RuleSuccess;
+
+			foreach (ParameterDefinition param in method.Parameters) {
+				if (param.ParameterType.FullName == "System.Object") {
+					if (!HandlesNullArg (method)) {
+						Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+						Message message = new Message ("The overridden method Object.Equals (Object) does not return false if null value is found", location, MessageType.Error);
+						return new MessageCollection (message);
+					}
+				}
+			}
+			return runner.RuleSuccess;
+		}
+
+		// FIXME: this logic seems to work only on mono generated assemblies
+		// and can fail on VS.NET (e.g. debug)
 		public bool HandlesNullArg (MethodDefinition method)
 		{
 			Instruction prevIns;
 			foreach (Instruction ins in method.Body.Instructions) {
 				prevIns = ins.Previous;
-				if (ins.OpCode == OpCodes.Ret && prevIns.OpCode == OpCodes.Ldc_I4_0 && prevIns.Previous.OpCode == OpCodes.Brtrue)
-					return true;
+				if (ins.OpCode == OpCodes.Ret && prevIns.OpCode == OpCodes.Ldc_I4_0) {
+					// added check for case where Equals simpli returns true (or false)
+					if (prevIns.Previous == null)
+						return false;
+					else if (prevIns.Previous.OpCode == OpCodes.Brtrue)
+						return true;
+				}
 			}
 			return false;
 		}
