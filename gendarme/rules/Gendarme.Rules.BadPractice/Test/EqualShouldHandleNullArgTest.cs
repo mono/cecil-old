@@ -104,6 +104,17 @@ namespace Test.Rules.BadPractice
 				return 1;
 			}
 		}
+
+		public class EqualsReturnsFalse {
+			public override bool Equals (object obj)
+			{
+				return false;
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
 		
 		private IMethodRule methodRule;
 		private AssemblyDefinition assembly;
@@ -175,6 +186,23 @@ namespace Test.Rules.BadPractice
 				if (method.Name == "Equals")
 					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void EqualsReturnConstant ()
+		{
+			type = GetTest ("EqualsReturnsFalse");
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "Equals":
+					Assert.IsNotNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				default:
+					// otherwise rule does not apply
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
+					break;
+				}
+			}
 		}
 	}
 }

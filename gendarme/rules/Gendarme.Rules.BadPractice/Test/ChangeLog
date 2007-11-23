@@ -1,3 +1,8 @@
+2007-11-23  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EqualShouldHandleNullArgTest.cs: Add a test case where Equals 
+	simply return false.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EqualShouldHandleNullArgTest.cs: Add little variations in the null
