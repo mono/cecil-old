@@ -3,6 +3,8 @@
 	* AvoidUncalledPrivateCodeTest.cs: Change behaviour, it's ok to have
 	unused private ctor (and it's common before static classes were 
 	available).
+	* AvoidUnusedParametersTest.cs: Added test cases for operators when
+	tracking some false positives reported in Cecil (make self-check)
 
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 

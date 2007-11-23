@@ -132,6 +132,42 @@ namespace Test.Rules.Performance {
 		{
 		}
 
+		public static bool operator == (AvoidUnusedParametersTest t1, AvoidUnusedParametersTest t2)
+		{
+			return t1.Equals (t2);
+		}
+
+		public static bool operator != (AvoidUnusedParametersTest t1, AvoidUnusedParametersTest t2)
+		{
+			return !t1.Equals (t2);
+		}
+
+		public struct StructureOk {
+
+			public static bool operator == (StructureOk s1, StructureOk s2)
+			{
+				return Object.ReferenceEquals (s1, s2);
+			}
+
+			public static bool operator != (StructureOk s1, StructureOk s2)
+			{
+				return !Object.ReferenceEquals (s1, s2);
+			}
+		}
+
+		public struct StructureBad {
+
+			public static bool operator == (StructureBad s1, StructureBad s2)
+			{
+				return true;
+			}
+
+			public static bool operator != (StructureBad s1, StructureBad s2)
+			{
+				return false;
+			}
+		}
+
 		[TestFixtureSetUp]
 		public void FixtureSetUp () 
 		{
@@ -275,19 +311,67 @@ namespace Test.Rules.Performance {
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (1, messageCollection.Count);
 		}
+
+		[Test]
+		public void OperatorsClass ()
+		{
+			method = GetMethodForTest ("op_Equality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Equality");
+
+			method = GetMethodForTest ("op_Inequality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Inequality");
+		}
+
+		[Test]
+		public void OperatorsStructureOk ()
+		{
+			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/StructureOk", "op_Equality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Equality");
+
+			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/StructureOk", "op_Inequality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Inequality");
+		}
+
+		[Test]
+		public void OperatorsStructureBad ()
+		{
+			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/StructureBad", "op_Equality");
+			Assert.AreEqual (2, rule.CheckMethod (method, new MinimalRunner ()).Count, "op_Equality");
+
+			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/StructureBad", "op_Inequality");
+			Assert.AreEqual (2, rule.CheckMethod (method, new MinimalRunner ()).Count, "op_Inequality");
+		}
+
+		[Test]
+		public void OperatorsCecil ()
+		{
+			string cecil = typeof (Mono.Cecil.Cil.OpCode).Assembly.Location;
+			AssemblyDefinition ad = AssemblyFactory.GetAssembly (cecil);
+
+			method = GetMethodFromAssembly (ad, "Mono.Cecil.Cil.OpCode", "op_Equality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Equality");
+
+			method = GetMethodFromAssembly (ad, "Mono.Cecil.Cil.OpCode", "op_Inequality");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "op_Inequality");
+		}
 	
 		private MethodDefinition GetMethodForTest (string methodName) 
 		{
-			return GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest", methodName);
+			return GetMethodFromAssembly (assembly, "Test.Rules.Performance.AvoidUnusedParametersTest", methodName);
 		}
 
 		private MethodDefinition GetMethodForTestFrom (string fullTypeName, string methodName) 
 		{
-			TypeDefinition type =  assembly.MainModule.Types[fullTypeName];
+			return GetMethodFromAssembly (assembly, fullTypeName, methodName);
+		}
+
+		private MethodDefinition GetMethodFromAssembly (AssemblyDefinition ad, string fullTypeName, string methodName)
+		{
+			TypeDefinition type = ad.MainModule.Types[fullTypeName];
 			if (type != null) {
 				foreach (MethodDefinition method in type.Methods) {
-				if (method.Name == methodName)
-					return method;
+					if (method.Name == methodName)
+						return method;
 				}
 			}
 			return null;
