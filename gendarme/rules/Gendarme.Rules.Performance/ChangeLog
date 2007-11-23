@@ -1,6 +1,9 @@
-2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
+2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeRule.cs: Allow unused private ctor.
+	* AvoidUnusedParametersRule.cs: Add checks for Ldarga[_S] IL opcodes.
+	Don't create a MessageCollection unless we have at least one message
+	to return to the runner.
 
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 

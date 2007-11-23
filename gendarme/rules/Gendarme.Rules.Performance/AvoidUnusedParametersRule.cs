@@ -60,6 +60,8 @@ namespace Gendarme.Rules.Performance {
 							return true;
 						break;
 					case Code.Ldarg_S:
+					case Code.Ldarga:
+					case Code.Ldarga_S:
 						if (instruction.Operand.Equals (parameter))
 							return true;
 						break;
@@ -118,15 +120,16 @@ namespace Gendarme.Rules.Performance {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
+			MessageCollection mc = null;
 			foreach (ParameterDefinition parameter in GetUnusedParameters (method)) {
 				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
 				Message message = new Message (String.Format ("The parameter {0} is never used.", parameter.Name),location, MessageType.Error);
-				messageCollection.Add (message);
+				if (mc == null)
+					mc = new MessageCollection (message);
+				else
+					mc.Add (message);
 			}
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			return mc;
 		}
 	}
 }
