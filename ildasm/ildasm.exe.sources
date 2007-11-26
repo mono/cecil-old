@@ -1,3 +1,4 @@
+Mono.Disassembler/AssemblyInfo.cs
 Mono.Disassembler/CilWriter.cs
 Mono.Disassembler/CodeDisassembler.cs
 Mono.Disassembler/Driver.cs

@@ -1,4 +1,6 @@
-MCS = mcs
+MCS = gmcs
+
+ASSEMBLIES = -r:Mono.Cecil
 
 all: 
-	$(MCS) @ildasm.exe.sources /target:exe /out:ildasm.exe /r:Mono.Cecil.dll
+	$(MCS) -debug /target:exe /out:ildasm.exe $(ASSEMBLIES) @ildasm.exe.sources
