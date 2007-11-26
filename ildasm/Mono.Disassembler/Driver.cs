@@ -113,7 +113,7 @@ namespace Mono.Disassembler {
 					m_error = "Multiple input files specified !";
 					return;
 				}
-					
+
 				m_assembly = value;
 				if (!File.Exists (m_assembly)) {
 					m_error = "Specified file does not exists !";
@@ -151,9 +151,10 @@ namespace Mono.Disassembler {
 					Version ();
 					break;
 				default:
-					if (cmd [0] == '-')
-						break;
-					break;	
+					if (cmd [0] == '/')
+						//FIXME: This is only for unix
+						AssemblyName = cmd;
+					break;
 				}
 			}
 
@@ -202,7 +203,7 @@ namespace Mono.Disassembler {
 		void About ()
 		{
 			Console.WriteLine (
-				"Mono CIL Disassembler" +
+				"Mono CIL Disassembler\n" +
 				"For more information on Mono, visit\n" +
 				"   http://www.mono-project.com\n" +
 				"");

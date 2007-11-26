@@ -49,6 +49,7 @@ namespace Mono.Disassembler {
 		public void DisassembleManifest (AssemblyDefinition asm, CilWriter writer)
 		{
 			m_writer = writer;
+			m_rd.Writer = writer;
 
 			VisitModuleReferenceCollection (asm.MainModule.ModuleReferences);
 			VisitAssemblyNameReferenceCollection (asm.MainModule.AssemblyReferences);
@@ -93,10 +94,10 @@ namespace Mono.Disassembler {
 				m_writer.BaseWriter.WriteLine ("0:0:0:0");
 			else {
 				Version ver = name.Version;
-				m_writer.BaseWriter.WriteLine ("{0}:{1}:{2}:{3}", ver.Major, ver.Minor, ver.Revision, ver.Build);
+				m_writer.BaseWriter.WriteLine ("{0}:{1}:{2}:{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
 			}
 
-			if (name.PublicKeyToken != null && name.PublicKeyToken.Length > 0) {
+			if (!(name is AssemblyNameDefinition) && name.PublicKeyToken != null && name.PublicKeyToken.Length > 0) {
 				m_writer.Write (".publickeytoken = ");
 				m_writer.Write (name.PublicKeyToken);
 			}
@@ -124,7 +125,7 @@ namespace Mono.Disassembler {
 		public override void VisitAssemblyDefinition (AssemblyDefinition asm)
 		{
 			m_writer.Write (".assembly ");
-			m_writer.WriteLine (Formater.Escape (asm.Name.Name));
+			m_writer.WriteLine (String.Concat ("'", Formater.Escape (asm.Name.Name), "'"));
 			m_writer.OpenBlock ();
 			AssemblyDetails (asm.Name);
 

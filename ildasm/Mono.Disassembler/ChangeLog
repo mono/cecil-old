@@ -1,3 +1,15 @@
+2007-11-26  Jb Evain  <jbevain@novell.com>
+
+	* Driver.cs
+	* AssemblyInfo.cs
+	* StructureDisassembler.cs
+	* Formater.cs
+	* CilWriter.cs
+	* CodeDisassembler.cs
+	* ReflectionDisassembler.cs:
+
+		Patch by Ankit!
+
 2006-07-25  Ankit Jain  <jankit@novell.com>
 
 	* CodeDisassembler.cs (VisitVariableDefinition): Update for API change.

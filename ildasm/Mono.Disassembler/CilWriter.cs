@@ -38,6 +38,7 @@ namespace Mono.Disassembler {
 
 		TextWriter m_writer;
 		int m_indentLevel = 0;
+		bool new_line = true;
 
 		public TextWriter BaseWriter {
 			get { return m_writer; }
@@ -64,8 +65,15 @@ namespace Mono.Disassembler {
 
 		void WriteIndent ()
 		{
+			if (!new_line) {
+				m_writer.Write (" ");
+				return;
+			}
+
+
 			for (int i = 0; i < m_indentLevel; i++)
 				m_writer.Write ("  ");
+			new_line = false;
 		}
 
 		public override void Write (ulong value)
@@ -174,119 +182,138 @@ namespace Mono.Disassembler {
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (char [] buffer, int index, int count)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (buffer, index, count);
+			new_line = true;
 		}
 
 		public override void WriteLine (ulong value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (char value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (double value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (int value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (float value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (uint value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (string format, object arg0, object arg1, object arg2)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (format, arg0, arg1, arg2);
+			new_line = true;
 		}
 
 		public override void WriteLine (long value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (string format, object arg0)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (format, arg0);
+			new_line = true;
 		}
 
 		public override void WriteLine (string format, object [] arg)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (format, arg);
+			new_line = true;
 		}
 
 		public override void WriteLine (bool value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (string format, object arg0, object arg1)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (format, arg0, arg1);
+			new_line = true;
 		}
 
 		public override void WriteLine (decimal value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (char [] value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine (string value)
 		{
 			WriteIndent ();
 			m_writer.WriteLine (value);
+			new_line = true;
 		}
 
 		public override void WriteLine ()
 		{
 			WriteIndent ();
 			m_writer.WriteLine ();
+			new_line = true;
 		}
 
 		public void Write (byte [] ary)
 		{
 			m_writer.WriteLine ("(");
+			new_line = true;
 			Indent ();
 
 			WriteIndent ();
 			for (int i = 0; i < ary.Length; i++) {
 				if (i > 0 && i % 16 == 0) {
-					m_writer.WriteLine ();
+					WriteLine ();
 					WriteIndent ();
 				} else
 					m_writer.Write (" ");
@@ -294,7 +321,7 @@ namespace Mono.Disassembler {
 				m_writer.Write (ary [i].ToString ("x2"));
 			}
 
-			m_writer.WriteLine ();
+			WriteLine ();
 			Unindent ();
 			WriteLine (")");
 		}
@@ -314,7 +341,7 @@ namespace Mono.Disassembler {
 		public void WriteFlags (int value, int [] vals, string [] map)
 		{
 			for (int i = 0; i < vals.Length; i++)
-				if ((value & vals [i]) > 0) {
+				if ((value & vals [i]) > 0 || (vals [i] == 0 && value == 0)) {
 					m_writer.Write (map [i]);
 					m_writer.Write (" ");
 				}
@@ -342,3 +369,4 @@ namespace Mono.Disassembler {
 		}
 	}
 }
+

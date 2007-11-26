@@ -26,6 +26,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+using System;
+using System.Text;
+
 namespace Mono.Disassembler {
 
 	using Mono.Cecil;
@@ -40,6 +43,18 @@ namespace Mono.Disassembler {
 		{
 			m_structDis = sd;
 			m_codeDis = new CodeDisassembler (this);
+		}
+
+		public StructureDisassembler StructureDisassembler {
+			get { return m_structDis; }
+		}
+
+		public CilWriter Writer {
+			get { return m_writer; }
+			set {
+				m_writer = value;
+				m_codeDis.Writer = value;
+			}
 		}
 
 		public void DisassembleModule (ModuleDefinition module, CilWriter writer)
@@ -58,8 +73,8 @@ namespace Mono.Disassembler {
 
 		static readonly int [] m_typeVisibilityVals = new int [] {
 			(int) TypeAttributes.NotPublic, (int) TypeAttributes.Public, (int) TypeAttributes.NestedPublic,
-			(int) TypeAttributes.NestedPrivate, (int) TypeAttributes.NestedFamily, (int) TypeAttributes.NestedFamANDAssem,
-			(int) TypeAttributes.NestedFamORAssem,
+			(int) TypeAttributes.NestedPrivate, (int) TypeAttributes.NestedFamily, (int) TypeAttributes.NestedAssembly,
+			(int) TypeAttributes.NestedFamANDAssem, (int) TypeAttributes.NestedFamORAssem
 		};
 
 		static readonly string [] m_typeVisibilityMap = new string [] {
@@ -98,7 +113,7 @@ namespace Mono.Disassembler {
 			m_writer.Write (".class ");
 
 			if ((type.Attributes & TypeAttributes.ClassSemanticMask) == TypeAttributes.Interface)
-				m_writer.BaseWriter.Write ("interface ");
+				m_writer.Write ("interface ");
 
 			int attributes = (int) type.Attributes;
 			m_writer.WriteFlags (attributes, (int) TypeAttributes.VisibilityMask,
@@ -109,12 +124,12 @@ namespace Mono.Disassembler {
 				m_typeFormatVals, m_typeFormatMap);
 			m_writer.WriteFlags (attributes, m_typeVals, m_typeMap);
 
-			m_writer.BaseWriter.WriteLine (Formater.Escape (type.Name));
+			m_writer.WriteLine (Formater.Escape (type.Name));
 
 			if (type.BaseType != null) {
 				m_writer.Indent ();
 				m_writer.Write ("extends ");
-				m_writer.BaseWriter.WriteLine (Formater.Format (type.BaseType));
+				m_writer.WriteLine (Formater.Format (type.BaseType));
 				m_writer.Unindent ();
 			}
 		}
@@ -126,9 +141,9 @@ namespace Mono.Disassembler {
 
 			if (type.HasLayoutInfo) {
 				m_writer.Write (".pack ");
-				m_writer.BaseWriter.WriteLine (type.PackingSize);
+				m_writer.WriteLine (type.PackingSize);
 				m_writer.Write (".size ");
-				m_writer.BaseWriter.WriteLine (type.ClassSize);
+				m_writer.WriteLine (type.ClassSize);
 			}
 
 			VisitFieldDefinitionCollection (type.Fields);
@@ -145,23 +160,33 @@ namespace Mono.Disassembler {
 
 			if (type.Namespace.Length > 0) {
 				m_writer.Write (".namespace ");
-				m_writer.BaseWriter.WriteLine (type.Namespace);
+				m_writer.WriteLine (type.Namespace);
 				m_writer.OpenBlock ();
 			}
 
-			WriteTypeHeader (type);
+			if (type.MetadataToken.RID == 1) {
+				//<Module>
+				WriteTypeBody (type);
+			} else {
+				WriteTypeHeader (type);
 
-			m_writer.OpenBlock ();
+				m_writer.OpenBlock ();
 
-			WriteTypeBody (type);
-			VisitNestedTypeCollection (type.NestedTypes);
+				WriteTypeBody (type);
+				VisitNestedTypeCollection (type.NestedTypes);
 
-			m_writer.CloseBlock ();
-
-			if (type.Namespace.Length > 0)
 				m_writer.CloseBlock ();
 
+				if (type.Namespace.Length > 0)
+					m_writer.CloseBlock ();
+			}
+
 			m_writer.WriteLine ();
+		}
+
+		public override void VisitTypeReference (TypeReference type)
+		{
+			m_writer.Write (Formater.Signature (type));
 		}
 
 		public override void VisitFieldDefinitionCollection (FieldDefinitionCollection fields)
@@ -176,8 +201,28 @@ namespace Mono.Disassembler {
 
 		public override void VisitMethodDefinitionCollection (MethodDefinitionCollection methods)
 		{
-			foreach (MethodDefinition meth in methods)
+			foreach (MethodDefinition meth in methods) {
 				VisitMethodDefinition (meth);
+				m_writer.WriteLine ();
+			}
+		}
+
+		public override void VisitParameterDefinitionCollection (ParameterDefinitionCollection parameters)
+		{
+			int i = 0;
+			foreach (ParameterDefinition param in parameters) {
+				//FIXME: do param.Accept ?
+				if (i ++ > 0)
+					m_writer.Write (", ");
+				VisitParameterDefinition (param);
+			}
+		}
+
+		public override void VisitParameterDefinition (ParameterDefinition parameter)
+		{
+			//parameter.ParameterType.Accept (this);
+			m_writer.Write (Formater.Signature (parameter.ParameterType, true, true));
+			m_writer.Write (" {0}", Formater.Escape (parameter.Name));
 		}
 
 		public override void VisitConstructorCollection (ConstructorCollection ctors)
@@ -188,7 +233,7 @@ namespace Mono.Disassembler {
 
 		public override void VisitMethodDefinition (MethodDefinition meth)
 		{
-			//m_codeDis.DisassembleMethod (meth, m_writer);
+			m_codeDis.DisassembleMethod (meth, m_writer);
 		}
 
 		public override void VisitNestedTypeCollection (NestedTypeCollection nesteds)
@@ -207,6 +252,27 @@ namespace Mono.Disassembler {
 			m_writer.OpenBlock ();
 			WriteTypeBody (type);
 			m_writer.CloseBlock ();
+		}
+
+		public override void VisitCustomAttributeCollection (CustomAttributeCollection customAttrs)
+		{
+			foreach (CustomAttribute attr in customAttrs)
+				VisitCustomAttribute (attr);
+		}
+
+		public override void VisitCustomAttribute (CustomAttribute attr)
+		{
+			if (attr == null)
+				return;
+
+			m_writer.Write (".custom");
+			m_codeDis.VisitMemberReference (attr.Constructor);
+			if (attr.Blob != null) {
+				m_writer.Write ("=");
+				m_writer.Write (attr.Blob);
+			}
+
+			m_writer.WriteLine ();
 		}
 	}
 }
