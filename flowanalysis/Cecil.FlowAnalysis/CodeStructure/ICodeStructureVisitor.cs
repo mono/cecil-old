@@ -41,5 +41,6 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		void Visit (PropertyReferenceExpression node);
 		void Visit (BlockStatement node);
 		void Visit (ReturnStatement node);
+		void Visit (CastExpression node);
 	}
 }

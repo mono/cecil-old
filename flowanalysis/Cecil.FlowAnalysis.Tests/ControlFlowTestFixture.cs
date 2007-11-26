@@ -28,6 +28,13 @@ using NUnit.Framework;
 namespace Cecil.FlowAnalysis.Tests {
 	[TestFixture]
 	public class ControlFlowTestFixture : AbstractControlFlowTestFixture {
+		
+		[Test]
+		public void StringCast ()
+		{
+			RunTestCase("StringCast");
+		}
+		
 		[Test]
 		public void FloatGreaterThan ()
 		{

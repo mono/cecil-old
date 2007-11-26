@@ -71,6 +71,14 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		{
 			OnCall (instruction);
 		}
+		
+		public override void OnCastclass (Instruction instruction)
+		{
+			Push (
+				new CastExpression(
+					Pop(),
+					(TypeReference)instruction.Operand));
+		}
 
 		public override void OnCall (Instruction instruction)
 		{
@@ -82,6 +90,10 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			Push (
 				new MethodInvocationExpression (
 					new MethodReferenceExpression (target, method), args));
+		}
+		
+		public override void OnPop (Instruction instruction)
+		{
 		}
 
 		public override void OnMul (Mono.Cecil.Cil.Instruction instruction)

@@ -1,0 +1,3 @@
+((System.Collections.IEnumerable)s).GetEnumerator()
+goto block3
+block3: return

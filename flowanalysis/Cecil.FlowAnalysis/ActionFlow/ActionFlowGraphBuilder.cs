@@ -426,6 +426,16 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		{
 			Add (new InvokeActionBlock (instruction, (MethodInvocationExpression) Pop ()));
 		}
+		
+		public override void OnCallvirt (Instruction instruction)
+		{
+			Add (new InvokeActionBlock (instruction, (MethodInvocationExpression) Pop ()));
+		}
+		
+		public override void OnPop (Instruction instruction)
+		{
+			Visit (instruction.Previous);
+		}		
 
 		public override void OnBr (Instruction instruction)
 		{

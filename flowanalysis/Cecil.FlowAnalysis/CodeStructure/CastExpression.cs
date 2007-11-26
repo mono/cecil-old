@@ -25,23 +25,39 @@
 
 // Warning: generated do not edit
 
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	public enum CodeElementType	{
-		MethodInvocationExpression,
-		MethodReferenceExpression,
-		LiteralExpression,
-		UnaryExpression,
-		BinaryExpression,
-		AssignExpression,
-		ArgumentReferenceExpression,
-		VariableReferenceExpression,
-		ThisReferenceExpression,
-		FieldReferenceExpression,
-		PropertyReferenceExpression,
-		BlockStatement,
-		ReturnStatement,
-		CastExpression
+	public class CastExpression : Expression {
+		Expression _target;
+		TypeReference _toType;
+
+		public CastExpression (Expression target, TypeReference toType)
+		{
+			_target = target;
+			_toType = toType;
+		}
+
+		public Expression Target
+		{
+			get	{ return _target; }
+		}
+
+		public TypeReference ToType
+		{
+			get	{ return _toType; }
+		}
+
+		public override CodeElementType CodeElementType
+		{
+			get { return CodeElementType.CastExpression; }
+		}
+
+		public override void Accept (ICodeStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 	}
 }
-

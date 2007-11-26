@@ -6,13 +6,13 @@ and their corresponding flow graphs.
 import System.IO
 import Mono.Cecil
 import Cecil.FlowAnalysis
-import Cecil.FlowAnalysis.CecilUtilities
+import Cecil.FlowAnalysis.Utilities
 import Cecil.FlowAnalysis.Tests
 
 def WriteMethod(writer as TextWriter, method as MethodDefinition):
 
-	returnType = CecilFormatter.FormatTypeReference(method.ReturnType.ReturnType)
-	args = "${CecilFormatter.FormatTypeReference(p.ParameterType)} ${p.Name}" for p as ParameterReference in method.Parameters
+	returnType = Formatter.FormatTypeReference(method.ReturnType.ReturnType)
+	args = "${Formatter.FormatTypeReference(p.ParameterType)} ${p.Name}" for p as ParameterReference in method.Parameters
 
 	writer.WriteLine(""".assembly TestCase {}
 
@@ -23,7 +23,7 @@ def WriteMethod(writer as TextWriter, method as MethodDefinition):
 	{""")
 
 	for i in method.Body.Instructions:
-		writer.WriteLine("\t\t${CecilFormatter.FormatInstruction(i)}")
+		writer.WriteLine("\t\t${Formatter.FormatInstruction(i)}")
 
 	writer.WriteLine("""	}
 }""")

@@ -108,5 +108,10 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		{
 			Visit (node.Expression);
 		}
+
+		public virtual void Visit (CastExpression node)
+		{
+			Visit (node.Target);
+		}
 	}
 }

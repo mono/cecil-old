@@ -1,3 +1,22 @@
+2007-11-26	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+	* codegen/gen-ControlFlowGraphRegression.boo
+	  codegen/CodeStructureModel.boo
+	  Cecil.FlowAnalysis/ActionFlow/ActionFlowGraphBuilder.cs
+	  Cecil.FlowAnalysis/ActionFlow/ExpressionDecompiler.cs
+	  Cecil.FlowAnalysis/Cecil.FlowAnalysis.csproj
+	  Cecil.FlowAnalysis/CodeStructure/ICodeStructureVisitor.cs
+	  Cecil.FlowAnalysis/CodeStructure/CodeElementType.cs
+	  Cecil.FlowAnalysis/CodeStructure/AbstractCodeStructureVisitor.cs
+	  Cecil.FlowAnalysis/CodeStructure/ExpressionPrinter.cs
+	  Cecil.FlowAnalysis/CodeStructure/CastExpression.cs
+	  Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	  Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	  testcases/FlowAnalysis/StringCast.il
+	  testcases/FlowAnalysis/StringCast-afg.txt
+	  testcases/FlowAnalysis/StringCast-cfg.txt:	  
+	  	Support for converting castclass to CastExpression and callvirt to
+		MethodInvocationExpression.
+		
 2007-09-30  Jb Evain  <jbevain@novell.com>
 
 	* README: test commit script
