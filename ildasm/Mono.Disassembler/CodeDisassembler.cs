@@ -49,6 +49,12 @@ namespace Mono.Disassembler {
 			"private", "famandassem", "assembly", "family", "famorassem", "public"
 		};
 
+		void WriteMethodVisibility (MethodAttributes attributes)
+		{
+			m_writer.WriteFlags ((int) attributes, (int) (ushort) MethodAttributes.MemberAccessMask,
+				m_methodVisibilityVals, m_methodVisibilityMap);
+		}
+
 		static readonly int [] m_methodFlagsVals = new int [] {
 			(int) MethodAttributes.Static, (int) MethodAttributes.Final, (int) MethodAttributes.Virtual, (int) MethodAttributes.HideBySig,
 			(int) MethodAttributes.Abstract, (int) MethodAttributes.SpecialName, (int) MethodAttributes.PInvokeImpl,
@@ -62,6 +68,11 @@ namespace Mono.Disassembler {
 			"requiresecobj", "newslot"
 		};
 
+		void WriteMethodAttributes (MethodAttributes attributes)
+		{
+			m_writer.WriteFlags ((int) attributes, m_methodFlagsVals, m_methodFlagsMap);
+		}
+
 		static readonly int [] m_methodCallConvVals = new int [] {
 			(int) MethodCallingConvention.Default, (int) MethodCallingConvention.C, (int) MethodCallingConvention.StdCall,
 			(int) MethodCallingConvention.ThisCall, (int) MethodCallingConvention.FastCall, (int) MethodCallingConvention.VarArg,
@@ -73,6 +84,11 @@ namespace Mono.Disassembler {
 			"unmanaged thiscall", "unmanaged fastcall", "vararg"
 		};
 
+		void WriteMethodCallingConvention (MethodCallingConvention cc)
+		{
+			m_writer.WriteFlags ((int) cc, m_methodCallConvVals, m_methodCallConvMap);
+		}
+
 		static readonly int [] m_methodImplVals = new int [] {
 			(int) MethodImplAttributes.IL, (int) MethodImplAttributes.Native, (int) MethodImplAttributes.OPTIL,
 			(int) MethodImplAttributes.Runtime
@@ -82,6 +98,11 @@ namespace Mono.Disassembler {
 			"cil", "native", "optil", "runtime"
 		};
 
+		void WriteMethodCodeType (MethodImplAttributes attributes)
+		{
+			m_writer.WriteFlags ((int) attributes, (int) MethodImplAttributes.CodeTypeMask, m_methodImplVals, m_methodImplMap);
+		}
+
 		static readonly int [] m_methodManagedTypeVals = new int [] {
 			(int) MethodImplAttributes.Managed, (int) MethodImplAttributes.Unmanaged
 		};
@@ -89,6 +110,11 @@ namespace Mono.Disassembler {
 		static readonly string [] m_methodManagedTypeMap = new string [] {
 			"managed", "unmanaged"
 		};
+		
+		void WriteMethodManagedType (MethodImplAttributes attributes)
+		{
+			m_writer.WriteFlags ((int) attributes, (int) MethodImplAttributes.ManagedMask, m_methodManagedTypeVals, m_methodManagedTypeMap);
+		}
 
 		public CodeDisassembler (ReflectionDisassembler dis)
 		{
@@ -112,9 +138,9 @@ namespace Mono.Disassembler {
 			m_writer.Write (".method ");
 
 			//emit flags
-			m_writer.WriteFlags ((int) method.Attributes, (int) (ushort) MethodAttributes.MemberAccessMask,
-				m_methodVisibilityVals, m_methodVisibilityMap);
-			m_writer.WriteFlags ((int) method.Attributes, m_methodFlagsVals, m_methodFlagsMap);
+			WriteMethodVisibility (method.Attributes);
+			WriteMethodAttributes (method.Attributes);
+
 			m_writer.WriteLine ();
 			m_writer.Indent ();
 
@@ -122,7 +148,7 @@ namespace Mono.Disassembler {
 				m_writer.Write ("instance ");
 
 			//call convention
-			m_writer.WriteFlags ((int) method.CallingConvention, m_methodCallConvVals, m_methodCallConvMap);
+			WriteMethodCallingConvention (method.CallingConvention);
 
 			//return type
 			//method.ReturnType.ReturnType.Accept (m_reflectDis);
@@ -135,8 +161,8 @@ namespace Mono.Disassembler {
 			method.Parameters.Accept (m_reflectDis);
 			m_writer.Write (") ");
 			//cil managed
-			m_writer.WriteFlags ((int) method.ImplAttributes, (int) MethodImplAttributes.CodeTypeMask, m_methodImplVals, m_methodImplMap);
-			m_writer.WriteFlags ((int) method.ImplAttributes, (int) MethodImplAttributes.ManagedMask, m_methodManagedTypeVals, m_methodManagedTypeMap);
+			WriteMethodCodeType (method.ImplAttributes);
+			WriteMethodManagedType (method.ImplAttributes);
 
 			m_writer.Unindent ();
 
