@@ -448,19 +448,17 @@ namespace Mono.AssemblyCompare
 				newNS.Add (node);
 				AddAttribute (node, "name", xns.Name);
 
-				if (oh.ContainsKey (xns.Name)) {
-					int idx = (int) oh [xns.Name];
-					xns.CompareTo (document, node, other [idx]);
+				int idx = -1;
+				if (oh.ContainsKey (xns.Name))
+					idx = (int) oh [xns.Name];
+				XMLNamespace ons = idx >= 0 ? (XMLNamespace) other [idx] : null;
+				xns.CompareTo (document, node, ons);
+				if (idx >= 0)
 					other [idx] = null;
-					xns.AddCountersAttributes (node);
-					counters.Present++;
-					counters.PresentTotal++;
-					counters.AddPartialToTotal (xns.Counters);
-				} else {
-					AddAttribute (node, "presence", "missing");
-					counters.Missing++;
-					counters.MissingTotal++;
-				}
+				xns.AddCountersAttributes (node);
+				counters.Present++;
+				counters.PresentTotal++;
+				counters.AddPartialToTotal (xns.Counters);
 			}
 
 			if (other != null) {
@@ -547,7 +545,7 @@ namespace Mono.AssemblyCompare
 			XmlNode childA = doc.CreateElement ("classes", null);
 			parent.AppendChild (childA);
 
-			CompareTypes (childA, nspace.types);
+			CompareTypes (childA, nspace != null ? nspace.types : new XMLClass [0]);
 		}
 
 		void CompareTypes (XmlNode parent, XMLClass [] other)
@@ -564,16 +562,13 @@ namespace Mono.AssemblyCompare
 				AddAttribute (node, "name", xclass.Name);
 				AddAttribute (node, "type", xclass.Type);
 
-				if (oh.ContainsKey (xclass.Name)) {
-					int idx = (int) oh [xclass.Name];
-					xclass.CompareTo (document, node, other [idx]);
+				int idx = -1;
+				if (oh.ContainsKey (xclass.Name))
+					idx = (int) oh [xclass.Name];
+				xclass.CompareTo (document, node, idx >= 0 ? other [idx] : new XMLClass ());
+				if (idx >= 0)
 					other [idx] = null;
-					counters.AddPartialToPartial (xclass.Counters);
-				} else {
-					AddAttribute (node, "presence", "missing");
-					counters.Missing++;
-					counters.MissingTotal++;
-				}
+				counters.AddPartialToPartial (xclass.Counters);
 			}
 
 			if (other != null) {
