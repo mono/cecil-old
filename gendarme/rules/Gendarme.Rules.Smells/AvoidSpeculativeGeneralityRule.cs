@@ -51,6 +51,8 @@ namespace Gendarme.Rules.Smells {
 		{
 			Location location = new Location (typeName, String.Empty, 0);
 			Message message = new Message (summary, location, MessageType.Error);
+			if (messageCollection == null)
+				messageCollection = new MessageCollection ();
 			messageCollection.Add (message);
 		}
 
@@ -72,7 +74,7 @@ namespace Gendarme.Rules.Smells {
 				AddMessage (type.Name, "This class has only one client.  This unnecesary delegation is a sign for the Speculative Generality smell.");
 		}
 
-		private bool ContainsAvoidUnusedParametersRule (Runner runner)
+		private bool AvoidUnusedParametersRuleScheduled (Runner runner)
 		{
 			foreach (IMethodRule rule in runner.Rules.Method) {
 				if (rule is AvoidUnusedParametersRule)
@@ -87,6 +89,8 @@ namespace Gendarme.Rules.Smells {
 
 			foreach (Message violation in existingMessages) {
 				Message message = new Message ("This method contains unused parameters.  This is a sign for the Speculative Generality smell.",violation.Location, MessageType.Error);
+				if (messageCollection == null)
+					messageCollection = new MessageCollection ();
 				messageCollection.Add (message);
 			}
 		}
@@ -107,16 +111,16 @@ namespace Gendarme.Rules.Smells {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			messageCollection = new MessageCollection ();
+			messageCollection = null;
 
 			CheckAbstractClassWithoutResponsability (type);
 			CheckUnnecesaryDelegation (type);
-			if (!ContainsAvoidUnusedParametersRule (runner))
+			if (!AvoidUnusedParametersRuleScheduled (runner))
 				CheckUnusedParameters (type, runner);
 
-			if (messageCollection.Count != 0)
-				return messageCollection;
-			return null;
+			if (messageCollection == null || messageCollection.Count == 0)
+				return runner.RuleSuccess;
+			return messageCollection;
 		}
 	}
 }

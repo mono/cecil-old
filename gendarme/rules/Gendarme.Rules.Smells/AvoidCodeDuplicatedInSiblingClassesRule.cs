@@ -44,6 +44,8 @@ namespace Gendarme.Rules.Smells {
 			foreach (MethodDefinition method in type.Methods) {
 				foreach (TypeDefinition sibling in siblingClasses) {
 					foreach (Message message in codeDuplicatedLocator.CompareMethodAgainstTypeMethods (method, sibling)) {
+						if (messageCollection == null)
+							messageCollection = new MessageCollection ();
 						messageCollection.Add (message);
 					}
 				}
@@ -60,15 +62,18 @@ namespace Gendarme.Rules.Smells {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			messageCollection = new MessageCollection ();
+			//As rules are once instantiated and MessageCollection
+			//is a field, then you will need initialize the
+			//messageCollection every time you check a type.
+			messageCollection = null;
 			codeDuplicatedLocator = new CodeDuplicatedLocator ();
 
 			ICollection siblingClasses = Utilities.GetInheritedClassesFrom (type);
 			if (siblingClasses.Count >= 2)
 				CompareSiblingClasses (siblingClasses);
 
-			if (messageCollection.Count == 0)
-				return null;
+			if (messageCollection == null || messageCollection.Count == 0)
+				return runner.RuleSuccess;
 			return messageCollection;
 		}
 	}

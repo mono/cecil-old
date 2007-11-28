@@ -1,3 +1,11 @@
+2007-11-28  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* AvoidCodeDuplicatedInSameClassRule.cs,
+	AvoidCodeDuplicatedInSiblingClassesRule.cs, AvoidLongMethodsRule.cs,
+	AvoidLongParameterListsRule.cs, AvoidLargeClassesRule.cs,
+	AvoidSpeculativeGeneralityRule.cs: Avoid instantiating MessageCollection
+	unless we use it for returning a message.
+
 2007-10-19  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* Expression.cs: When overriding the Equals method, if the value is

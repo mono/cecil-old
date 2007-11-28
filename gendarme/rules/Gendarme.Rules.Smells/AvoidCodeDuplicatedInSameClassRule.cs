@@ -38,21 +38,22 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Smells {
 
 	public class AvoidCodeDuplicatedInSameClassRule : ITypeRule {
-		private MessageCollection messageCollection;
 
-		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			messageCollection = new MessageCollection ();
-			CodeDuplicatedLocator codeDuplicatedLocator = new CodeDuplicatedLocator ();
-			foreach (MethodDefinition currentMethod in typeDefinition.Methods) {
-				foreach (Message message in codeDuplicatedLocator.CompareMethodAgainstTypeMethods (currentMethod, typeDefinition)) {
+			MessageCollection messageCollection = null;
+			CodeDuplicatedLocator locator = new CodeDuplicatedLocator ();
+			foreach (MethodDefinition current in type.Methods) {
+				foreach (Message message in locator.CompareMethodAgainstTypeMethods (current, type)) {
+					if (messageCollection == null)
+						messageCollection = new MessageCollection ();
 					messageCollection.Add (message);
 				}
-				codeDuplicatedLocator.CheckedMethods.Add (currentMethod.Name);
+				locator.CheckedMethods.Add (current.Name);
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
+			if (messageCollection == null || messageCollection.Count == 0)
+				return runner.RuleSuccess;
 			return messageCollection;
 		}
 	}

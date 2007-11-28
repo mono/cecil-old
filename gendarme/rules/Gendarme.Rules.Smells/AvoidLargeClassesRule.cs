@@ -64,6 +64,8 @@ namespace Gendarme.Rules.Smells {
 		{
 			Location location = new Location (typeName, String.Empty, 0);
 			Message message = new Message (summary, location, messageType);
+			if (messageCollection == null)
+				messageCollection = new MessageCollection ();
 			messageCollection.Add (message);
 		}
 
@@ -149,14 +151,14 @@ namespace Gendarme.Rules.Smells {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			messageCollection = new MessageCollection ();
+			messageCollection = null;
 
 			CheckForClassFields (type);
 			CheckForCommonPrefixesInFields (type);
 
-			if (messageCollection.Count != 0)
-				return messageCollection;
-			return null;
+			if (messageCollection == null || messageCollection.Count == 0)
+				return runner.RuleSuccess;
+			return messageCollection;
 		}
 	}
 }

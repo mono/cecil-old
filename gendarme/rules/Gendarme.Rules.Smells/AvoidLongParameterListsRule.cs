@@ -82,17 +82,15 @@ namespace Gendarme.Rules.Smells {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-
 			if (HasLongParameterList (method)) {
+				MessageCollection messageCollection = new MessageCollection ();
 				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
 				Message message = new Message ("The method contains a long parameter list.",location, MessageType.Error);
 				messageCollection.Add (message);
+				return messageCollection;
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
-			return messageCollection;
+			return runner.RuleSuccess;
 		}
 	}
 }
