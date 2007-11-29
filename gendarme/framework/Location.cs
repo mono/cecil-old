@@ -13,38 +13,50 @@
  **********************************************************************/
 
 using System;
+using System.Text;
 
 namespace Gendarme.Framework {
 
-public class Location {
-    private string type;
-    private string method;
-    private int offset; /* Offset of instruction into method */
+	public class Location {
+		private string type;
+		private string method;
+		private int offset;	// Offset of instruction into method
 
-    public Location(string type, string method, int offset)
-    {
-        this.type = type;
-        this.method = method;
-        this.offset = offset;
-    }
+		public Location (string type, string method)
+		{
+			this.type = type;
+			this.method = method;
+			this.offset = -1;
+		}
 
-    public override string ToString()
-    {
-        string result = String.Empty;
-        if(type != null)
-            result += type;
-        if(method != null) {
-            if(type != null)
-                result += "::";
-            result += method;
-        }
-        if(offset >= 0) {
-            if(result.Length != 0)
-                result += ":";
-            result += offset.ToString("x4");
-        }
-        return result;
-    }
+		public Location (string type, string method, int offset)
+		{
+			this.type = type;
+			this.method = method;
+			this.offset = offset;
+		}
+
+		public override string ToString ()
+		{
+			StringBuilder sb = new StringBuilder ();
+
+			if (!String.IsNullOrEmpty (type))
+				sb.Append (type);
+
+			if (!String.IsNullOrEmpty (method)) {
+				if (sb.Length > 0)
+					sb.Append ("::");
+				sb.Append (method);
+			}
+
+			if (offset >= 0) {
+				if (sb.Length > 0)
+					sb.Append (":");
+				sb.AppendFormat ("{0:x4}", offset);
+			}
+
+			return sb.ToString ();
+	        }
+	}
 }
 
-}

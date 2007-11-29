@@ -1,3 +1,9 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Location.cs: Use StringBuilder in ToString. Add a new ctor that
+	doesn't requires an offset (as it doesn't apply to many rules).
+	Source now conforms to Mono source style.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* RuleInformation.cs: Remove ReadOnly property.
