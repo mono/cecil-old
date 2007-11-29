@@ -146,6 +146,36 @@ class ConsoleRunner : Runner {
 		return (assemblies.Count > 0);
 	}
 
+	bool LoadCustomParameters (XmlElement ruleset) {
+		foreach (XmlElement parameter in ruleset.SelectNodes ("parameter")) {
+			try {
+				if (!parameter.HasAttribute ("name"))
+					throw new XmlException ("The attribute name can't be found");
+				if (!parameter.HasAttribute ("value"))
+					throw new XmlException ("The attribute value can't be found");
+				if (!parameter.HasAttribute ("rule"))
+					throw new XmlException ("The attribute rule can't be found");
+					
+				string name = GetAttribute (parameter, "name", String.Empty);
+				int value = 0;
+				try {
+					value = Int32.Parse (GetAttribute (parameter, "value", String.Empty));
+				} 
+				catch (Exception exception) {
+					throw new XmlException ("The value for the value field should be an integer.", exception);
+				}
+				string ruleName = GetAttribute (parameter, "rule", String.Empty);
+
+				ApplyCustomParameterToRule (ruleName, name, value);
+			}
+			catch (Exception e) {
+				Console.WriteLine ("Error reading parameters{0}Details: {1}", Environment.NewLine, e);
+				return false;
+			}
+		}
+		return true;
+	}
+
 	static string GetAttribute (XmlElement xel, string name, string defaultValue)
 	{
 		XmlAttribute xa = xel.Attributes [name];
@@ -178,8 +208,48 @@ class ConsoleRunner : Runner {
 					return false;
 				}
 			}
+			if (!LoadCustomParameters (ruleset))
+				return false;
 		}
 		return result;
+	}
+
+	void ApplyCustomParameterToRule (string ruleName, string name, int value) 
+	{
+		IRule rule = GetRule (ruleName);
+		if (rule == null)
+			throw new ArgumentException (String.Format ("The rule name {0} can't be found in the rules collection", ruleName), "rule");
+		PropertyInfo property = rule.GetType ().GetProperty (name);
+		if (property == null)
+			throw new ArgumentException (String.Format ("The property {0} can't be found in the rule {1}", name, ruleName), "name");
+		if (!property.CanWrite)
+			throw new ArgumentException (String.Format ("The property {0} can't be written in the rule {1}", name, ruleName), "name");
+		property.GetSetMethod ().Invoke (rule, new object[] {value});
+	}
+
+	IRule GetRule (string name) 
+	{
+		IRule result;
+		result = GetRuleFromSet (name, Rules.Assembly);
+		if (result == null) {
+			result = GetRuleFromSet (name, Rules.Module);
+			if (result == null) {
+				result = GetRuleFromSet (name, Rules.Type);
+				if (result == null) {
+					result = GetRuleFromSet (name, Rules.Method);
+				}
+			}
+		}
+		return result;
+	}
+
+	IRule GetRuleFromSet (string name, RuleCollection rules) 
+	{
+		foreach (IRule rule in rules) {
+			if (String.Compare (name, rule.GetType ().FullName) == 0)
+				return rule;
+		}
+		return null;
 	}
 
 	void Header ()
