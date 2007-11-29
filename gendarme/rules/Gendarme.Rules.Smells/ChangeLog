@@ -1,5 +1,10 @@
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* CodeDuplicatedLocator.cs: Renamed field's for avoid the common prefix
+	that warn us for the LargeClass smell.
+
+2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* AvoidSpeculativeGeneralityRule.cs: Change the behavior of unnecessary
 	delegation.  A class with unnecessary delegation is a class that mostly
 	forwards and delegates the calls.

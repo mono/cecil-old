@@ -38,18 +38,18 @@ using Gendarme.Framework;
 namespace Gendarme.Rules.Smells {
 
 	internal class CodeDuplicatedLocator {
-		private StringCollection checkedMethods = new StringCollection ();
-		private StringCollection checkedTypes = new StringCollection ();
+		private StringCollection methods = new StringCollection ();
+		private StringCollection types = new StringCollection ();
 
 		internal StringCollection CheckedMethods {
 			get {
-				return checkedMethods;
+				return methods;
 			}
 		}
 
 		internal StringCollection CheckedTypes {
 			get {
-				return checkedTypes;
+				return types;
 			}
 		}
 
