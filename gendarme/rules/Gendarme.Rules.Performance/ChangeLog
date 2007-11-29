@@ -1,3 +1,8 @@
+2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidUncalledPrivateCodeRule: Allow if the method is a compiler
+	generated method.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUncalledPrivateCodeRule.cs: Allow unused private ctor.

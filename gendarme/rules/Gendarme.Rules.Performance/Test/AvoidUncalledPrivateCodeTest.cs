@@ -39,8 +39,18 @@ using NUnit.Framework;
 using System.Collections;
 
 namespace Test.Rules.Performance {
+	
 	[TestFixture]
 	public class AvoidUncalledPrivateCodeTest {
+		
+		public class AnonymousMethod {
+			private void MethodWithAnonymousMethod ()
+			{
+				string[] values = new string[] {"one", "two", "three"};
+				if (Array.Exists (values, delegate (string  myString) { return myString.Length == 3;}))
+					Console.WriteLine ("Exists strings with length == 3");
+			}
+		}
 
 		public class UncalledPrivateMethod {
 			private void display ()
@@ -553,6 +563,14 @@ namespace Test.Rules.Performance {
 			foreach (MethodDefinition method in type.Methods) {
 				Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
 			}
+		}
+
+		[Test]
+		public void AnonymousMethodTest ()
+		{
+			type = GetTest ("AnonymousMethod/<>c__CompilerGenerated0");
+			foreach (MethodDefinition method in type.Methods)  
+				Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
 }
