@@ -9,7 +9,7 @@ namespace Gendarme.Rules.Exceptions {
 
 	public class DontDestroyStackTrace : IMethodRule {
 
-		private static TypeReference void_reference;
+		private TypeReference void_reference;
 		private ArrayList warned_offsets_in_method;
 
 		public DontDestroyStackTrace ()

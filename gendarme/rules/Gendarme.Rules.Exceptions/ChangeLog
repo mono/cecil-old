@@ -1,3 +1,8 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontDestroyStackTrace.cs: Don't use a static field (it fails a rule)
+	as the rules are reusable and created only a single time by runners.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Exceptions.mdp: Update project file.
