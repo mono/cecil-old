@@ -1,3 +1,8 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* rules.xml: Add a new "self-test" set used for testing Gendarme 
+	itself
+
 2007-11-18  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* rules.xml: Added ToStringReturnsNullRule to the profiles, because the
