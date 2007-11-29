@@ -95,7 +95,6 @@ namespace Gendarme.Framework {
 						ri.Uri = GetAttribute (xel, "Uri");
 						ri.Problem = GetSubElement (xel, "problem");
 						ri.Solution = GetSubElement (xel, "solution");
-						ri.ReadOnly = true;
 					}
 				}
 			}

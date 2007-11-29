@@ -92,11 +92,6 @@ namespace Gendarme.Framework {
 			}
 		}
 
-		internal bool ReadOnly {
-			get { return readOnly; }
-			set { readOnly = value; }
-		}
-
 		static public RuleInformation Empty {
 			get { return empty; }
 		}
