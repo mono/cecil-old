@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,10 +37,24 @@ namespace Gendarme.Rules.Performance
 {
 	public class AvoidUninstantiatedInternalClassesRule: ITypeRule
 	{
+		private bool CheckSpecialTypes (TypeDefinition type)
+		{
+			switch (type.Name) {
+			case "<PrivateImplementationDetails>":
+			case "<Module>":
+				return (type.IsNotPublic && (type.Namespace.Length == 0));
+			}
+			return false;
+		}
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// rule apply to non-public types
 			if (type.IsPublic)
+				return runner.RuleSuccess;
+
+			// some types are created by compilers and should be ignored
+			if (CheckSpecialTypes (type))
 				return runner.RuleSuccess;
 
 			// rule doesn't apply if the assembly open up itself to others using [InternalsVisibleTo]
@@ -93,6 +109,7 @@ namespace Gendarme.Rules.Performance
 		{
 			string strCallingMethod = String.Empty;
 
+//FIXME: use a IsMain kind of method
 			if (callingMethod.Name == "Main" && callingMethod.IsStatic && callingMethod.ReturnType.ReturnType.FullName == "System.Void" && callingMethod.Parameters.Count == 1 && callingMethod.Parameters [0].ParameterType.FullName == "System.String[]")
 				return true;
 			else
