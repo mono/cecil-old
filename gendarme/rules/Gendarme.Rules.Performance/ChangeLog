@@ -1,7 +1,8 @@
-2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com> 
 
-	* AvoidUninstantiatedInternalClassesRule.cs: Ignore special types
-	like <Module> and <PrivateImplementationDetails>
+	* AvoidUninstantiatedInternalClassesRule.cs: Ignore special types 
+	like <Module> and <PrivateImplementationDetails>. Also check for
+	nested types (like array defs) and use constants instead of strings.
 
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 

@@ -39,9 +39,13 @@ namespace Gendarme.Rules.Performance
 	{
 		private bool CheckSpecialTypes (TypeDefinition type)
 		{
+			// some stuff, like arrays, is nested under <PrivateImplementationDetails>
+			if (type.IsNested)
+				return (type.DeclaringType.Name == Constants.PrivateImplDetails);
+
 			switch (type.Name) {
-			case "<PrivateImplementationDetails>":
-			case "<Module>":
+			case Constants.PrivateImplDetails:
+			case Constants.ModuleType:
 				return (type.IsNotPublic && (type.Namespace.Length == 0));
 			}
 			return false;
