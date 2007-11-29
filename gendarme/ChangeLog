@@ -1,3 +1,8 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Change self-test to use the self-test set of rules
+	instead of the default one.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AUTHORS: Add the GSoC 2007 crew!

@@ -39,7 +39,7 @@ run-test: test
 self-test: all
 	cp rules/rules.xml bin; \
 	cd bin;	\
-	mono --debug gendarme.exe --html self-test.html gendarme.exe *.dll;	\
+	mono --debug gendarme.exe --set self-test --html self-test.html gendarme.exe *.dll;	\
 	cd ..;
 
 dist:
