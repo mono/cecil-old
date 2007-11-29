@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,9 +34,31 @@ namespace Gendarme.Rules.Ui {
 
 	abstract public class ExecutableTargetRule : IAssemblyRule {
 
-		abstract protected bool CheckReferences (AssemblyDefinition assembly);
+		private bool CheckReferences (AssemblyDefinition assembly)
+		{
+			byte[] publicKeyToken = GetAssemblyPublicKeyToken ();
+
+			foreach (AssemblyNameReference a in assembly.MainModule.AssemblyReferences) {
+				// check name and public key token (but not version or culture)
+				if (a.Name == AssemblyName) {
+					byte[] token = a.PublicKeyToken;
+					if (token != null) {
+						if ((token[0] == publicKeyToken[0]) && (token[1] == publicKeyToken[1]) &&
+						    (token[2] == publicKeyToken[2]) && (token[3] == publicKeyToken[3]) &&
+						    (token[4] == publicKeyToken[4]) && (token[5] == publicKeyToken[5]) &&
+						    (token[6] == publicKeyToken[6]) && (token[7] == publicKeyToken[7]))
+							return true;
+					}
+				}
+			}
+			return false;
+		}
 
 		abstract protected string Toolkit { get; }
+
+		abstract protected string AssemblyName { get; }
+
+		abstract protected byte[] GetAssemblyPublicKeyToken ();
 
 		public MessageCollection CheckAssembly (AssemblyDefinition assembly, Runner runner)
 		{
@@ -44,7 +66,7 @@ namespace Gendarme.Rules.Ui {
 			if (assembly.EntryPoint == null)
 				return runner.RuleSuccess;
 
-			// 2. Check if the assembly references SWF
+			// 2. Check if the assembly references SWF or GTK#
 			if (!CheckReferences (assembly))
 				return runner.RuleSuccess;
 
@@ -57,8 +79,7 @@ namespace Gendarme.Rules.Ui {
 
 			string text = String.Format ("This {0} application was compiled without /target:winexe", Toolkit);
 			Message msg = new Message (text, null, MessageType.Warning);
-			MessageCollection mc = new MessageCollection (msg);
-			return mc;
+			return new MessageCollection (msg);
 		}
 	}
 }

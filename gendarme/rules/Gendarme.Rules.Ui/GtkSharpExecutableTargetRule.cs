@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,33 +27,22 @@
 //
 
 using System;
-using Mono.Cecil;
-using Gendarme.Framework;
 
 namespace Gendarme.Rules.Ui {
 
 	public class GtkSharpExecutableTargetRule: ExecutableTargetRule {
 
-		protected override bool CheckReferences (AssemblyDefinition assembly)
-		{
-			foreach (AssemblyNameReference a in assembly.MainModule.AssemblyReferences) {
-				// check name and public key token (but not version or culture)
-				if (a.Name == "gtk-sharp") {
-					byte[] token = a.PublicKeyToken;
-					if (token != null) {
-						if ((token[0] == 0x35) && (token[1] == 0xe1) &&
-						    (token[2] == 0x01) && (token[3] == 0x95) &&
-						    (token[4] == 0xda) && (token[5] == 0xb3) &&
-						    (token[6] == 0xc9) && (token[7] == 0x9f))
-							return true;
-					}
-				}
-			}
-			return false;
-		}
-
 		protected override string Toolkit {
 			get { return "GtkSharp"; }
+		}
+
+		protected override string AssemblyName {
+			get { return "gtk-sharp"; }
+		}
+
+		protected override byte[] GetAssemblyPublicKeyToken ()
+		{
+			return new byte[] { 0x35, 0xe1, 0x01, 0x95, 0xda, 0xb3, 0xc9, 0x9f };
 		}
 	}
 }

@@ -1,3 +1,10 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ExecutableTargetRule.cs: Move assembly reference checking code in
+	order to reduce code duplication for both rules.
+	* GtkSharpExecutableTargetRule.cs: Avoid code duplication.
+	* SystemWindowsFormsExecutableTargetRule.cs: Avoid code duplication.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Ui.mdp: Update project file.

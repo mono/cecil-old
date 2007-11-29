@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,33 +27,22 @@
 //
 
 using System;
-using Mono.Cecil;
-using Gendarme.Framework;
 
 namespace Gendarme.Rules.Ui {
 
 	public class SystemWindowsFormsExecutableTargetRule: ExecutableTargetRule {
 
-		protected override bool CheckReferences (AssemblyDefinition assembly)
-		{
-			foreach (AssemblyNameReference a in assembly.MainModule.AssemblyReferences) {
-				// check name and public key token (but not version or culture)
-				if (a.Name == "System.Windows.Forms") {
-					byte[] token = a.PublicKeyToken;
-					if (token != null) {
-						if ((token[0] == 0xb7) && (token[1] == 0x7a) &&
-						    (token[2] == 0x5c) && (token[3] == 0x56) &&
-						    (token[4] == 0x19) && (token[5] == 0x34) &&
-						    (token[6] == 0xe0) && (token[7] == 0x89))
-							return true;
-					}
-				}
-			}
-			return false;
-		}
-
 		protected override string Toolkit {
 			get { return "WinForms"; }
+		}
+
+		protected override string AssemblyName {
+			get { return "System.Windows.Forms"; }
+		}
+
+		protected override byte[] GetAssemblyPublicKeyToken ()
+		{
+			return new byte[] { 0xb7, 0x7a, 0x5c, 0x56, 0x19, 0x34, 0xe0, 0x89 };
 		}
 	}
 }
