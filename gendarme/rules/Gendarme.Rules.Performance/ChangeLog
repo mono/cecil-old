@@ -1,3 +1,10 @@
+2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesRule.cs: Reworked to check for
+	the more general CompilerGeneratedAttribute (removing the direct 
+	check required for <PrivateImplementationDetails>). Refactor to 
+	reduce code duplication for checking attributes.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Ignore special types 
