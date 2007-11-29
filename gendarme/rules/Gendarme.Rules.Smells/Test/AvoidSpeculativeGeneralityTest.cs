@@ -28,6 +28,7 @@
 
 using System;
 using System.Reflection;
+using System.Collections.Generic;
 
 using Mono.Cecil;
 using NUnit.Framework;
@@ -66,39 +67,7 @@ namespace Test.Rules.Smells {
 	}
 
 	//
-	public class Person {
-		int age;
-		string name;
-		Telephone phone;
-	}
 
-	public class Telephone {
-		int areaCode;
-		int phone;
-	}
-
-	//
-	public class Keyboard {
-		Key pressedKey;
-	}
-
-	public class Calculator {
-		Key pointKey;
-	}
-
-	public class Key {
-	}
-	
-	//
-	public class Motorbike {
-		Wheel first;
-		Wheel last;
-	}
-
-	public class Wheel {
-	}
-
-	//
 	public class ClassWithUnusedParameter {
 		public void Foo (int x) 
 		{
@@ -118,6 +87,40 @@ namespace Test.Rules.Smells {
 		{
 		}
 
+	}
+	
+	//
+	public class UnnecessaryDelegatedClass {
+		public void WriteLine (string message) 
+		{
+			Console.WriteLine (message);
+		}
+
+		public DateTime GetDateTime ()
+		{
+			return DateTime.Now;
+		}
+	}
+
+	//
+	public class NotUnnecessaryDelegatedClass {
+		public void WriteLog (string message)
+		{
+			Console.WriteLine ("Starting Logging...");
+			Console.WriteLine ("[LOGGING FOR] {0}", message);
+		}
+
+		public void PrintBanner ()
+		{
+			Console.WriteLine ("This is a simple banner");
+			Console.WriteLine ("For the incredible Foo-Bar program");
+			Console.WriteLine ("Send your suggestions to foo@domain.com");
+		}
+
+		public DateTime GetDateTime ()
+		{
+			return DateTime.Now;
+		}
 	}
 
 	[TestFixture]
@@ -154,31 +157,6 @@ namespace Test.Rules.Smells {
 		}
 
 		[Test]
-		public void ClassWithUnnecesaryDelegationTest () 
-		{
-			type = assembly.MainModule.Types ["Test.Rules.Smells.Telephone"];
-			messageCollection = rule.CheckType (type, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
-		}
-
-		[Test]
-		public void ClassWithoutUnnecesaryDelegationTest () 
-		{
-			type = assembly.MainModule.Types ["Test.Rules.Smells.Key"];
-			messageCollection = rule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-		}
-
-		[Test]
-		public void OtherClassWithUnnecesaryDelegationTest () 
-		{
-			type = assembly.MainModule.Types ["Test.Rules.Smells.Wheel"];
-			messageCollection = rule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-		}
-
-		[Test]
 		public void ClassWithUnusedParameterTest () 
 		{
 			type = assembly.MainModule.Types ["Test.Rules.Smells.ClassWithUnusedParameter"];
@@ -194,6 +172,23 @@ namespace Test.Rules.Smells {
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (4, messageCollection.Count);
+		}
+
+		[Test]
+		public void ClassWithUnnecessaryDelegationTest ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.UnnecessaryDelegatedClass"];
+			messageCollection = rule.CheckType (type, new MinimalRunner ());
+			Assert.IsNotNull (messageCollection);
+			Assert.AreEqual (1, messageCollection.Count);
+		}
+
+		[Test]
+		public void ClassWithoutUnnecessaryDelegationTest ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.NotUnnecessaryDelegatedClass"];
+			messageCollection = rule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
 		}
 	}
 }

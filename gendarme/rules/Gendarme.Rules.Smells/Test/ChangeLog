@@ -1,3 +1,8 @@
+2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidSpeculativeGeneralityTest.cs: Updated unit test for the new
+	behavior for unnecessary delegation.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Smells.mdp: Update project file.

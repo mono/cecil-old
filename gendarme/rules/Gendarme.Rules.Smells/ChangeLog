@@ -1,3 +1,9 @@
+2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidSpeculativeGeneralityRule.cs: Change the behavior of unnecessary
+	delegation.  A class with unnecessary delegation is a class that mostly
+	forwards and delegates the calls.
+
 2007-11-28  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidCodeDuplicatedInSameClassRule.cs,

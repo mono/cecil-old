@@ -30,6 +30,7 @@ using System;
 using System.Collections;
 
 using Mono.Cecil;
+using Mono.Cecil.Cil;
 using Gendarme.Framework;
 using Gendarme.Rules.Performance;
 
@@ -55,23 +56,45 @@ namespace Gendarme.Rules.Smells {
 				messageCollection = new MessageCollection ();
 			messageCollection.Add (message);
 		}
-
-		private int CountClientsFrom (TypeDefinition type)
+		
+		//return true if the method only contains only a single call.
+		private bool OnlyDelegatesCall (MethodDefinition method)
 		{
-			int counter = 0;
-			foreach (TypeDefinition client in type.Module.Types) {
-				foreach (FieldDefinition field in client.Fields) {
-					if (field.FieldType.Equals (type))
-						counter++;
-				}
+			if (!method.HasBody)
+				return false;
+			bool onlyOneCallInstruction = false;
+
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.OpCode.Code == Code.Call || instruction.OpCode.Code == Code.Calli || instruction.OpCode.Code == Code.Callvirt)
+					if (onlyOneCallInstruction)
+						return false;
+					else
+						onlyOneCallInstruction = true;
 			}
-			return counter;
+
+			return onlyOneCallInstruction;
+		}
+
+		private bool InheritsOnlyFromObject (TypeDefinition type)
+		{
+			return type.BaseType.FullName == "System.Object" && type.Interfaces.Count == 0;
+		}
+
+		private bool MostlyMethodsDelegatesCall (TypeDefinition type)
+		{
+			int delegationCounter = 0;
+			foreach (MethodDefinition method in type.Methods) {
+				if (OnlyDelegatesCall (method))
+					delegationCounter++;
+			}
+			
+			return type.Methods.Count / 2 + 1 <= delegationCounter;
 		}
 
 		private void CheckUnnecesaryDelegation (TypeDefinition type)
 		{
-			if (CountClientsFrom (type) == 1)
-				AddMessage (type.Name, "This class has only one client.  This unnecesary delegation is a sign for the Speculative Generality smell.");
+			if (MostlyMethodsDelegatesCall (type) && InheritsOnlyFromObject (type))
+				AddMessage (type.Name, "This class contains a lot of methods that only delgates the call to other.  This kind of Delegation could be a sign for Speculative Generality");
 		}
 
 		private bool AvoidUnusedParametersRuleScheduled (Runner runner)
@@ -109,15 +132,26 @@ namespace Gendarme.Rules.Smells {
 			CheckMethods (avoidUnusedParameters, type.Constructors, runner);
 		}
 
+		private bool IsCompilerGenerated (TypeDefinition type)
+		{
+			foreach (CustomAttribute custom in type.CustomAttributes)
+				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
+					return true;
+			return false;
+		}
+
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
+			if (IsCompilerGenerated (type))
+				return runner.RuleSuccess;
+
 			messageCollection = null;
 
 			CheckAbstractClassWithoutResponsability (type);
-			CheckUnnecesaryDelegation (type);
 			if (!AvoidUnusedParametersRuleScheduled (runner))
 				CheckUnusedParameters (type, runner);
 
+			CheckUnnecesaryDelegation (type);
 			if (messageCollection == null || messageCollection.Count == 0)
 				return runner.RuleSuccess;
 			return messageCollection;
