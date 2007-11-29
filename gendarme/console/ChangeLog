@@ -1,5 +1,10 @@
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* ConsoleRunner.cs: Don't ignore methods result (it fails a rule) in the
+	self-test.
+
+2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* ConsoleRunner.cs: Added support for set values for some properties in
 	the configuration XML file.
 

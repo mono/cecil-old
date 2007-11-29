@@ -224,7 +224,7 @@ class ConsoleRunner : Runner {
 			throw new ArgumentException (String.Format ("The property {0} can't be found in the rule {1}", name, ruleName), "name");
 		if (!property.CanWrite)
 			throw new ArgumentException (String.Format ("The property {0} can't be written in the rule {1}", name, ruleName), "name");
-		property.GetSetMethod ().Invoke (rule, new object[] {value});
+		object result = property.GetSetMethod ().Invoke (rule, new object[] {value});
 	}
 
 	IRule GetRule (string name) 
