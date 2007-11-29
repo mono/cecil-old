@@ -33,13 +33,12 @@ namespace Gendarme.Framework {
 
 	public class RuleInformation {
 
-		static private RuleInformation empty = new RuleInformation (true);
+		static private RuleInformation empty = new RuleInformation ();
 
 		private string name;
 		private string uri;
 		private string problem;
 		private string solution;
-		private bool readOnly;
 
 		public RuleInformation ()
 		{
@@ -49,47 +48,24 @@ namespace Gendarme.Framework {
 			solution = String.Empty;
 		}
 
-		internal RuleInformation (bool readOnly)
-			: this ()
-		{
-			this.readOnly = readOnly;
-		}
-
-
 		public string Name {
 			get { return name; }
-			set {
-				if (readOnly)
-					throw new NotSupportedException ("Informations are read-only.");
-				name = value;
-			}
+			set { name = value; }
 		}
 
 		public string Uri {
 			get { return uri; }
-			set {
-				if (readOnly)
-					throw new NotSupportedException ("Informations are read-only.");
-				uri = value;
-			}
+			set { uri = value; }
 		}
 
 		public string Problem {
 			get { return problem; }
-			set {
-				if (readOnly)
-					throw new NotSupportedException ("Informations are read-only.");
-				problem = value;
-			}
+			set { problem = value; }
 		}
 
 		public string Solution {
 			get { return solution; }
-			set {
-				if (readOnly)
-					throw new NotSupportedException ("Informations are read-only.");
-				solution = value;
-			}
+			set { solution = value;	}
 		}
 
 		static public RuleInformation Empty {
