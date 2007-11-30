@@ -1,3 +1,9 @@
+2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesRule.cs: Reworked to make the
+	rule works with all types defined in the assembly. Information for
+	each assembly is cached to speed up searches.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Reworked to check for
