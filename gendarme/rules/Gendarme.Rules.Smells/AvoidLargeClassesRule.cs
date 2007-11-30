@@ -105,14 +105,8 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
-		//TODO: Check if csc generates also the $$field-, on
-		//<PrivateImplementationDetails> class
 		private string GetFieldPrefix (FieldDefinition field)
 		{
-			//For some compiler generated classes with mcs, the
-			//fields are called following this pattern.
-			if (field.Name.StartsWith ("$$field-"))
-				return String.Empty;
 
 			int index = GetIndexOfFirst (field.Name, delegate (char character) {return Char.IsNumber (character);});
 			if (index != -1)
@@ -129,6 +123,14 @@ namespace Gendarme.Rules.Smells {
 			return String.Empty;
 		}
 
+		private bool IsGeneratedByCompiler (TypeDefinition type)
+		{
+			foreach (CustomAttribute custom in type.CustomAttributes)
+				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
+					return true;
+			return false;
+		}
+		
 		private bool ExitsCommonPrefixes (TypeDefinition type)
 		{
 			foreach (FieldDefinition field in type.Fields) {
@@ -149,6 +151,9 @@ namespace Gendarme.Rules.Smells {
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			messageCollection = null;
+
+			if (IsGeneratedByCompiler (type))
+				return runner.RuleSuccess;
 
 			CheckForClassFields (type);
 			CheckForCommonPrefixesInFields (type);

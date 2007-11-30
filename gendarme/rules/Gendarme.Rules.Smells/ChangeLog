@@ -1,5 +1,11 @@
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* AvoidLargeClassesRule.cs: As the rule is only applied to types, then
+	if the type is Compiler Generated, skip the type; instead of check the
+	field names.
+
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* AvoidLargeClassesRule.cs: Added the special case for the fields
 	prefixed as $$field-, when this happens, there aren't a common prefix.
 
