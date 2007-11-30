@@ -1,3 +1,9 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* DoubleCheckingLockingRule.cs: Extracted a method for return the error
+	messages.  This fixes the AvoidLongMethod violation in self-test.  The
+	source now conforms the Mono style.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Concurrency.mdp: Update project file.
