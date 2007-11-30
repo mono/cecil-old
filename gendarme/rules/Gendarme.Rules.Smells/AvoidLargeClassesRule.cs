@@ -105,8 +105,15 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
+		//TODO: Check if csc generates also the $$field-, on
+		//<PrivateImplementationDetails> class
 		private string GetFieldPrefix (FieldDefinition field)
 		{
+			//For some compiler generated classes with mcs, the
+			//fields are called following this pattern.
+			if (field.Name.StartsWith ("$$field-"))
+				return String.Empty;
+
 			int index = GetIndexOfFirst (field.Name, delegate (char character) {return Char.IsNumber (character);});
 			if (index != -1)
 				return field.Name.Substring (0, index);
