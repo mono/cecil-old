@@ -1,3 +1,8 @@
+2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypeIsNotSubsetOfMethodSecurityRule.cs: Refactor to reduce method 
+	size.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Gendarme.Rules.Security.mdp: Update project file.

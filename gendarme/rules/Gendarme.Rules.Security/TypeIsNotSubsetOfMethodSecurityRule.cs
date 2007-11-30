@@ -38,18 +38,25 @@ namespace Gendarme.Rules.Security {
 
 	public class TypeIsNotSubsetOfMethodSecurityRule : ITypeRule {
 
-		public MessageCollection CheckType (TypeDefinition type, Runner runner)
+		private PermissionSet assert;
+		private PermissionSet deny;
+		private PermissionSet permitonly;
+		private PermissionSet demand;
+
+		private bool RuleDoesAppliesToType (TypeDefinition type)
 		{
-			// #1 - this rules apply if type as security permissions
+			assert = null;
+			deny = null;
+			permitonly = null;
+			demand = null;
+
+			// #1 - this rules apply if type has security permissions
 			if (type.SecurityDeclarations.Count == 0)
-				return runner.RuleSuccess;
+				return false;
 
-			PermissionSet assert = null;
-			PermissionSet deny = null;
-			PermissionSet permitonly = null;
-			PermissionSet demand = null;
 			bool apply = false;
-
+			// #2 - this rules doesn't apply to LinkDemand (both are executed)
+			// and to InheritanceDemand (both are executed at different time).
 			foreach (SecurityDeclaration declsec in type.SecurityDeclarations) {
 				switch (declsec.Action) {
 				case Mono.Cecil.SecurityAction.Assert:
@@ -70,10 +77,12 @@ namespace Gendarme.Rules.Security {
 					break;
 				}
 			}
+			return apply;
+		}
 
-			// #2 - this rules doesn't apply to LinkDemand (both are executed)
-			// and to InheritanceDemand (both are executed at different time).
-			if (!apply)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
+		{
+			if (!RuleDoesAppliesToType (type))
 				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
@@ -119,3 +128,4 @@ namespace Gendarme.Rules.Security {
 		}
 	}
 }
+
