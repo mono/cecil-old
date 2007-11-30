@@ -1,3 +1,8 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs: Avoid code duplicated
+	violation when running self-test target.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* DetectNonAlphaNumericsInTypeNamesRule.cs: IsPrivate is different

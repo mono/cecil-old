@@ -43,14 +43,9 @@ namespace Gendarme.Rules.Naming {
 			return false;
 		}
 
-		private bool EndsWithEnumSuffix (string typeName)
+		private bool EndsWithSuffix (string suffix, string typeName)
 		{
-			return typeName.EndsWith ("Enum") || typeName.ToLower ().EndsWith ("enum");
-		}
-
-		private bool EndsWithFlagsSuffix (string typeName)
-		{
-			return typeName.EndsWith ("Flags") || typeName.ToLower ().EndsWith ("flags");
+			return typeName.EndsWith (suffix) || typeName.ToLower ().EndsWith (suffix.ToLower ());
 		}
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
@@ -60,13 +55,13 @@ namespace Gendarme.Rules.Naming {
 				return runner.RuleSuccess;
 
 			if (!HasFlagsAttribute (typeDefinition)) {
-				if (EndsWithEnumSuffix (typeDefinition.Name)) {
+				if (EndsWithSuffix ("Enum", typeDefinition.Name)) {
 					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
 					Message message = new Message ("The class name ends with Enum Suffix", location, MessageType.Error);
 					return new MessageCollection (message);
 				}
 			} else {
-				if (EndsWithFlagsSuffix (typeDefinition.Name)){
+				if (EndsWithSuffix ("Flags", typeDefinition.Name)){
 					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
 					Message message = new Message ("The class name ends with Flags Suffix", location, MessageType.Error);
 					return new MessageCollection (message);
