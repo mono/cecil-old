@@ -1,3 +1,8 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidLargeClassesRule.cs: Extract a method and use a predicate for the
+	checking.  This fixes the code duplication warning.
+
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* CodeDuplicatedLocator.cs: Renamed field's for avoid the common prefix

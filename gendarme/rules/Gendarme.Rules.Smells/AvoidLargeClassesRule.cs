@@ -82,21 +82,11 @@ namespace Gendarme.Rules.Smells {
 			return counter > 1;
 		}
 
-		private int GetIndexOfFirstUpper (string value)
+		private int GetIndexOfFirst (string value, Predicate<char> predicate)
 		{
-			foreach (char character in value) {
-				if (Char.IsUpper (character))
+			foreach (char character in value)
+				if (predicate (character))
 					return value.IndexOf (character);
-			}
-			return -1;
-		}
-
-		private int GetIndexOfFirstNumber (string value)
-		{
-			foreach (char character in value) {
-				if (Char.IsNumber (character))
-					return value.IndexOf (character);
-			}
 			return -1;
 		}
 
@@ -117,11 +107,11 @@ namespace Gendarme.Rules.Smells {
 
 		private string GetFieldPrefix (FieldDefinition field)
 		{
-			int index = GetIndexOfFirstNumber (field.Name);
+			int index = GetIndexOfFirst (field.Name, delegate (char character) {return Char.IsNumber (character);});
 			if (index != -1)
 				return field.Name.Substring (0, index);
 
-			index = GetIndexOfFirstUpper (field.Name);
+			index = GetIndexOfFirst (field.Name, delegate (char character) {return Char.IsUpper (character);});
 			if (index != -1)
 				return field.Name.Substring (0, index);
 
