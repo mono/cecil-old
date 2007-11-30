@@ -1,3 +1,8 @@
+2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesTest.cs: Change the behavior of
+	a test since the condition is already checked by another rule.
+
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidUncalledPrivateCodeTest.cs: Added testcase for check compiler

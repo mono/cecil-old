@@ -88,6 +88,7 @@ namespace Test.Rules.Performance {
 		}
 	}
 
+	// note: we now consider this valid for this rule (it should be flagged that display isn't used by anyone elsewhere)
 	internal class MethodContainingObjectCallIsNotCalled {
 		public void display ()
 		{
@@ -176,9 +177,7 @@ namespace Test.Rules.Performance {
 		public void methodContainingObjectCallIsNotCalledTest ()
 		{
 			type = GetTest ("MethodContainingObjectCallIsNotCalled");
-			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.IsNull (typeRule.CheckType (type, new MinimalRunner ()));
 		}
 		
 		[Test]
