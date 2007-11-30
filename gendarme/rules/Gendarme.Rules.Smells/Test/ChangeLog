@@ -1,3 +1,8 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* AvoidCodeDuplicatedInSameClassTest.cs: Added the test for avoid the
+	error if the code stores in a class field.
+
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidSpeculativeGeneralityTest.cs: Updated unit test for the new

@@ -86,7 +86,8 @@ namespace Gendarme.Rules.Smells {
 				Instruction targetInstruction = targetExpression[index];
 
 				if (CheckEqualityForOpCodes (instruction, targetInstruction)) {
-					if (instruction.OpCode.FlowControl == FlowControl.Call) {
+					if (instruction.OpCode.FlowControl == FlowControl.Call ||
+						instruction.OpCode.Code == Code.Stfld) {
 						equality = equality & (instruction.Operand == targetInstruction.Operand);
 					}
 				}

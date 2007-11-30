@@ -1,5 +1,11 @@
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* Expression.cs, ExpressionFillerVisitor.cs: Added the code for
+	including the Stfld in the Expressions, and computate it for check the
+	code duplication.
+
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* AvoidLargeClassesRule.cs: Extract a method and use a predicate for the
 	checking.  This fixes the code duplication warning.
 

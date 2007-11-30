@@ -39,6 +39,23 @@ namespace Test.Rules.Smells {
 
 	public class ClassWithoutCodeDuplicated {
 		private IList myList;
+		private IList otherList;
+
+		public IList MyList {
+			get {
+				if (myList == null)
+					myList = new ArrayList ();
+				return myList;
+			}
+		}
+
+		public IList OtherList {
+			get {
+				if (otherList == null)
+					otherList = new ArrayList ();
+				return otherList;
+			}
+		}
 
 		public ClassWithoutCodeDuplicated () 
 		{
