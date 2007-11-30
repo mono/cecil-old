@@ -303,29 +303,8 @@ class ConsoleRunner : Runner {
 			Console.WriteLine (text, args);
 	}
 
-	static int Main (string[] args)
+	static void ProcessRules (ConsoleRunner runner)
 	{
-		ConsoleRunner runner = new ConsoleRunner ();
-
-		// runner options and configuration
-		
-		try {
-			if (!runner.ParseOptions (args)) {
-				Help ();
-				return 1;
-			}
-			if (!runner.LoadConfiguration ()) {
-				Console.WriteLine ("No assembly file were specified.");
-				return 1;
-			}
-		}
-		catch (Exception e) {
-			Console.WriteLine (e);
-			return 1;
-		}
-
-		// processing
-		
 		runner.Header ();
 		string[] assemblies = new string [runner.assemblies.Count];
 		runner.assemblies.Keys.CopyTo (assemblies, 0);
@@ -350,9 +329,10 @@ class ConsoleRunner : Runner {
 		}
 		runner. WriteLine ("{0}{1} assemblies processed in {2} seconds.{0}",  Environment.NewLine, runner.assemblies.Count, 
 			(DateTime.UtcNow - total).TotalSeconds);
+	}
 
-		// reporting
-
+ 	static void Report (ConsoleRunner runner)
+	{
 		IResultWriter writer;
 		switch (runner.format) {
 		case "xml":
@@ -373,6 +353,31 @@ class ConsoleRunner : Runner {
 			writer.Write (v);
 		}
 		writer.End ();
+	}
+
+	static int Main (string[] args)
+	{
+		ConsoleRunner runner = new ConsoleRunner ();
+
+		// runner options and configuration
+		
+		try {
+			if (!runner.ParseOptions (args)) {
+				Help ();
+				return 1;
+			}
+			if (!runner.LoadConfiguration ()) {
+				Console.WriteLine ("No assembly file were specified.");
+				return 1;
+			}
+		}
+		catch (Exception e) {
+			Console.WriteLine (e);
+			return 1;
+		}
+
+		ProcessRules (runner);
+		Report (runner);
 		
 		if (runner.Violations.Count == 0) {
 			runner.WriteLine ("No rule's violation were found.");

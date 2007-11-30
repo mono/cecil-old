@@ -1,3 +1,8 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* ConsoleRunner.cs: Extracted methods for avoid a long method violation
+	from Main.
+
 2007-11-29  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* ConsoleRunner.cs: Don't ignore methods result (it fails a rule) in the
