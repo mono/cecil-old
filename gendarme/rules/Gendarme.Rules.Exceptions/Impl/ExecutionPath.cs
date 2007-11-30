@@ -28,6 +28,9 @@ namespace Gendarme.Rules.Exceptions.Impl {
 
 		public override bool Equals (object obj)
 		{
+			if (obj == null)
+				return false;
+
 			ExecutionPath other = obj as ExecutionPath;
 			if(other == null)
 				return false;			
