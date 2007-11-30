@@ -55,17 +55,6 @@ namespace Gendarme.Rules.Exceptions.Impl {
 		{
 			return List.GetHashCode ();
 		}
-
-		public void Print ()
-		{
-			Console.WriteLine ("Path:");
-			int i = 1;
-			foreach (ExecutionBlock block in List) {
-				Console.Write ("{0}:  ", i++);
-				block.Print ();
-			}
-		}
-
 		#region ICloneable Members
 
 		public object Clone ()

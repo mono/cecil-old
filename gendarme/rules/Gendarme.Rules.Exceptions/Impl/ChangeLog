@@ -1,5 +1,9 @@
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* ExecutionPath.cs: Removed some unused code.
+
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* ExecutionPath.cs: Handle the null argument in the Equals method.
 
 2006-06-19  Russell Morris  <russell@russellsprojects.com>
