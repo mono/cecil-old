@@ -1,3 +1,8 @@
+2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* FloatComparisonRule.cs: Extract a method for avoid the Long Method
+	smell.  This fixes the warning in the self-test.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* NullDerefFrame.cs: Remove use of /n using StringBuilder.AppendLine

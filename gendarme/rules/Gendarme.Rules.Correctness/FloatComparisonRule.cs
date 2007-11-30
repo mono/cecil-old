@@ -38,72 +38,74 @@ namespace Gendarme.Rules.Correctness
 	public class FloatComparisonRule : IMethodRule
 	{
 		private const string MessageString = "Floating point values should not be compared for equality";
+		private MessageCollection messageCollection = null;
+
+		private void CheckCeqInstruction (Instruction instruction, Instruction precedingInstruction, MethodDefinition method) 
+		{
+			switch (precedingInstruction.OpCode.Code) {
+				case Code.Conv_R4:
+				case Code.Conv_R8:
+					AddProblem(method, instruction);
+					break;
+				case Code.Ldc_R4:
+				case Code.Ldc_R8:
+					CheckFloatConstants(precedingInstruction.Operand, method, instruction);
+					break;
+				case Code.Ldloc_0:
+					CheckTypeReference(method.Body.Variables[0].VariableType, method, instruction);
+					break;
+				case Code.Ldloc_1:
+					CheckTypeReference(method.Body.Variables[1].VariableType, method, instruction);
+					break;
+				case Code.Ldloc_2:
+					CheckTypeReference(method.Body.Variables[2].VariableType, method, instruction);
+					break;
+				case Code.Ldloc_3:
+					CheckTypeReference(method.Body.Variables[3].VariableType, method, instruction);
+					break;
+				case Code.Ldloc_S:
+					VariableReference local = precedingInstruction.Operand as VariableReference;
+					CheckTypeReference(local.VariableType, method, instruction);
+					break;
+				case Code.Ldarg_1:
+					CheckTypeReference(method.Parameters[0].ParameterType, method, instruction);
+					break;
+				case Code.Ldarg_2:
+					CheckTypeReference(method.Parameters[1].ParameterType, method, instruction);
+					break;
+				case Code.Ldarg_3:
+					CheckTypeReference(method.Parameters[2].ParameterType, method, instruction);
+					break;
+				case Code.Ldarg:
+					ParameterReference parameter = precedingInstruction.Operand as ParameterReference;
+					CheckTypeReference(parameter.ParameterType, method, instruction);
+					break;
+				case Code.Call:
+				case Code.Calli:
+				case Code.Callvirt:
+					MethodReference call = precedingInstruction.Operand as MethodReference;
+					CheckTypeReference(call.ReturnType.ReturnType, method, instruction);
+					break;
+				case Code.Ldfld:
+				case Code.Ldsfld:
+					FieldReference field = precedingInstruction.Operand as FieldReference;
+					CheckTypeReference(field.FieldType, method, instruction);
+					break;
+			}
+		}
 
 		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection();
+			//For the rule's lifecycle I should initializate the
+			//field to null.
+			messageCollection = null;
 
 			if (!method.HasBody)
-				return null;
+				return runner.RuleSuccess;
 
-			foreach (Instruction instruction in method.Body.Instructions)
-			{
-				if (instruction.OpCode == OpCodes.Ceq)
-				{
-					Instruction precedingInstruction = SkipArithmeticOperations(instruction);
-
-					switch (precedingInstruction.OpCode.Code)
-					{
-
-						case Code.Conv_R4:
-						case Code.Conv_R8:
-							AddProblem(method, instruction, messageCollection);
-							break;
-						case Code.Ldc_R4:
-						case Code.Ldc_R8:
-							CheckFloatConstants(precedingInstruction.Operand, method, instruction, messageCollection);
-							break;
-						case Code.Ldloc_0:
-							CheckTypeReference(method.Body.Variables[0].VariableType, method, instruction, messageCollection);
-							break;
-						case Code.Ldloc_1:
-							CheckTypeReference(method.Body.Variables[1].VariableType, method, instruction, messageCollection);
-							break;
-						case Code.Ldloc_2:
-							CheckTypeReference(method.Body.Variables[2].VariableType, method, instruction, messageCollection);
-							break;
-						case Code.Ldloc_3:
-							CheckTypeReference(method.Body.Variables[3].VariableType, method, instruction, messageCollection);
-							break;
-						case Code.Ldloc_S:
-							VariableReference local = precedingInstruction.Operand as VariableReference;
-							CheckTypeReference(local.VariableType, method, instruction, messageCollection);
-							break;
-						case Code.Ldarg_1:
-							CheckTypeReference(method.Parameters[0].ParameterType, method, instruction, messageCollection);
-							break;
-						case Code.Ldarg_2:
-							CheckTypeReference(method.Parameters[1].ParameterType, method, instruction, messageCollection);
-							break;
-						case Code.Ldarg_3:
-							CheckTypeReference(method.Parameters[2].ParameterType, method, instruction, messageCollection);
-							break;
-						case Code.Ldarg:
-							ParameterReference parameter = precedingInstruction.Operand as ParameterReference;
-							CheckTypeReference(parameter.ParameterType, method, instruction, messageCollection);
-							break;
-						case Code.Call:
-						case Code.Calli:
-						case Code.Callvirt:
-							MethodReference call = precedingInstruction.Operand as MethodReference;
-							CheckTypeReference(call.ReturnType.ReturnType, method, instruction, messageCollection);
-							break;
-						case Code.Ldfld:
-						case Code.Ldsfld:
-							FieldReference field = precedingInstruction.Operand as FieldReference;
-							CheckTypeReference(field.FieldType, method, instruction, messageCollection);
-							break;
-					}
+			foreach (Instruction instruction in method.Body.Instructions) {
+				if (instruction.OpCode == OpCodes.Ceq) {
+					CheckCeqInstruction (instruction, SkipArithmeticOperations (instruction), method); 
 				}
 				else if (instruction.OpCode.Code == Code.Call)
 				{
@@ -111,13 +113,11 @@ namespace Gendarme.Rules.Correctness
 
 					if (member.DeclaringType.FullName.Equals("System.Single") &&
 						member.Name.Equals("Equals"))
-					{
-						AddProblem(method, instruction, messageCollection);
-					}
+						AddProblem(method, instruction);
 				}
 			}
 
-			return messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
+			return messageCollection == null || messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
 		}
 
 		private Instruction SkipArithmeticOperations(Instruction instruction)
@@ -132,29 +132,26 @@ namespace Gendarme.Rules.Correctness
 				};
 
 			while (Array.Exists(arithOpCodes, delegate(OpCode code) { return code == prevInstr.OpCode; }))
-			{
 				prevInstr = prevInstr.Previous;
-			}
 			return prevInstr;
 		}
 
-		private void AddProblem(MethodDefinition method, Instruction instruction, MessageCollection messageCollection)
+		private void AddProblem(MethodDefinition method, Instruction instruction)
 		{
+			if (messageCollection == null)
+				messageCollection = new MessageCollection ();
 			Location location = new Location(method.DeclaringType.Name, method.Name, instruction.Offset);
 			Message message = new Message(MessageString, location, MessageType.Error);
 			messageCollection.Add(message);
 		}
 
-		private void CheckTypeReference(TypeReference type, MethodDefinition method, Instruction instruction, MessageCollection messageCollection)
+		private void CheckTypeReference(TypeReference type, MethodDefinition method, Instruction instruction)
 		{
 			if (type.FullName.Equals("System.Single") || type.FullName.Equals("System.Double"))
-			{
-				AddProblem(method, instruction, messageCollection);
-			}
-
+				AddProblem(method, instruction);
 		}
 
-		private void CheckFloatConstants(object operand, MethodDefinition method, Instruction instruction, MessageCollection messageCollection)
+		private void CheckFloatConstants(object operand, MethodDefinition method, Instruction instruction)
 		{
 			object[] specialValues = new object[]
 			{
@@ -169,9 +166,7 @@ namespace Gendarme.Rules.Correctness
 			};
 
 			if (!Array.Exists(specialValues, delegate(object value) { return value.Equals(operand); }))
-			{
-				AddProblem(method, instruction, messageCollection);
-			}
+				AddProblem(method, instruction);
 		}
 
 	}
