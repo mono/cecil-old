@@ -58,7 +58,11 @@ class BlockStatement(Statement):
 
 class ReturnStatement(Statement):
 	Expression as Expression
-	
+
 class CastExpression(Expression):
+	Target as Expression
+	ToType as TypeReference
+
+class TryCastExpression(Expression):
 	Target as Expression
 	ToType as TypeReference

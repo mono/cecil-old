@@ -101,6 +101,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeStructure\BlockStatement.cs" />
+    <Compile Include="CodeStructure\CastExpression.cs" />
     <Compile Include="CodeStructure\CodeElementType.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -124,6 +125,7 @@
     <Compile Include="CodeStructure\Statement.cs" />
     <Compile Include="CodeStructure\StatementCollection.cs" />
     <Compile Include="CodeStructure\ThisReferenceExpression.cs" />
+    <Compile Include="CodeStructure\TryCastExpression.cs" />
     <Compile Include="CodeStructure\UnaryExpression.cs" />
     <Compile Include="CodeStructure\UnaryOperator.cs">
       <SubType>Code</SubType>
@@ -142,7 +144,7 @@
     <Compile Include="Utilities\InstructionDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mono.Cecil\Mono.Cecil.csproj">
+    <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>

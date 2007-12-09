@@ -25,23 +25,39 @@
 
 // Warning: generated do not edit
 
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
-	public interface ICodeStructureVisitor	{
-		void Visit (MethodInvocationExpression node);
-		void Visit (MethodReferenceExpression node);
-		void Visit (LiteralExpression node);
-		void Visit (UnaryExpression node);
-		void Visit (BinaryExpression node);
-		void Visit (AssignExpression node);
-		void Visit (ArgumentReferenceExpression node);
-		void Visit (VariableReferenceExpression node);
-		void Visit (ThisReferenceExpression node);
-		void Visit (FieldReferenceExpression node);
-		void Visit (PropertyReferenceExpression node);
-		void Visit (BlockStatement node);
-		void Visit (ReturnStatement node);
-		void Visit (CastExpression node);
-		void Visit (TryCastExpression node);
+	public class TryCastExpression : Expression {
+		Expression _target;
+		TypeReference _toType;
+
+		public TryCastExpression (Expression target, TypeReference toType)
+		{
+			_target = target;
+			_toType = toType;
+		}
+
+		public Expression Target
+		{
+			get	{ return _target; }
+		}
+
+		public TypeReference ToType
+		{
+			get	{ return _toType; }
+		}
+
+		public override CodeElementType CodeElementType
+		{
+			get { return CodeElementType.TryCastExpression; }
+		}
+
+		public override void Accept (ICodeStructureVisitor visitor)
+		{
+			visitor.Visit (this);
+		}
 	}
 }

@@ -41,7 +41,8 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		PropertyReferenceExpression,
 		BlockStatement,
 		ReturnStatement,
-		CastExpression
+		CastExpression,
+		TryCastExpression
 	}
 }
 

@@ -71,18 +71,26 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		{
 			OnCall (instruction);
 		}
-		
+
 		public override void OnCastclass (Instruction instruction)
 		{
 			Push (
-				new CastExpression(
-					Pop(),
-					(TypeReference)instruction.Operand));
+				new CastExpression (
+					Pop (),
+					(TypeReference) instruction.Operand));
+		}
+
+		public override void OnIsinst (Instruction instruction)
+		{
+			Push (
+				new TryCastExpression (
+					Pop (),
+					(TypeReference) instruction.Operand));
 		}
 
 		public override void OnCall (Instruction instruction)
 		{
-			MethodReference method = (MethodReference)instruction.Operand;
+			MethodReference method = (MethodReference) instruction.Operand;
 
 			ExpressionCollection args = PopRange (method.Parameters.Count);
 			Expression target = method.HasThis ? Pop () : null;
@@ -91,7 +99,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 				new MethodInvocationExpression (
 					new MethodReferenceExpression (target, method), args));
 		}
-		
+
 		public override void OnPop (Instruction instruction)
 		{
 		}

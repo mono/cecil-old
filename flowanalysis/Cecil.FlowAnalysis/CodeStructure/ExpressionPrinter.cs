@@ -73,13 +73,22 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			Visit (node.Right);
 			Write (")");
 		}
-		
+
 		public override void Visit (CastExpression node)
 		{
 			Write ("((");
 			Write (node.ToType.FullName);
 			Write (")");
 			Visit (node.Target);
+			Write (")");
+		}
+
+		public override void Visit (TryCastExpression node)
+		{
+			Write ("(");
+			Visit (node.Target);
+			Write (" as ");
+			Write (node.ToType.FullName);
 			Write (")");
 		}
 

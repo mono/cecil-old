@@ -113,5 +113,10 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		{
 			Visit (node.Target);
 		}
+
+		public virtual void Visit (TryCastExpression node)
+		{
+			Visit (node.Target);
+		}
 	}
 }
