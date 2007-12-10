@@ -1,9 +1,9 @@
-2007-09-30  Jb Evain  <jbevain@novell.com>
+2007-12-10  Jb Evain  <jbevain@novell.com>
 
 	* Support for dup, add and stfld.
 	Patch by Sanghyeon Seo <sanxiyn@gmail.com>
 
-2007-09-30  Jb Evain  <jbevain@novell.com>
+2007-12-09  Jb Evain  <jbevain@novell.com>
 
 	* Support for isinst.
 
