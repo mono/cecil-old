@@ -67,6 +67,17 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			Push (new AssignExpression (Pop (), Pop ()));
 		}
 
+		public override void OnStfld (Instruction instruction)
+		{
+			FieldReference field = (FieldReference) instruction.Operand;
+			Expression expression = Pop ();
+			Expression target = Pop ();
+			Push (
+				new AssignExpression (
+					new FieldReferenceExpression (target, field),
+					expression));
+		}
+
 		public override void OnCallvirt (Instruction instruction)
 		{
 			OnCall (instruction);
@@ -100,11 +111,24 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 					new MethodReferenceExpression (target, method), args));
 		}
 
+		public override void OnDup (Instruction instruction)
+		{
+			Expression expression = Pop ();
+			Push (expression);
+			Push (expression);
+		}
+
 		public override void OnPop (Instruction instruction)
 		{
 		}
 
-		public override void OnMul (Mono.Cecil.Cil.Instruction instruction)
+		public override void OnAdd (Instruction instruction)
+		{
+			BinaryOperator op = BinaryOperator.Add;
+			PushBinaryExpression (op);
+		}
+
+		public override void OnMul (Instruction instruction)
 		{
 			BinaryOperator op = BinaryOperator.Multiply;
 			PushBinaryExpression (op);

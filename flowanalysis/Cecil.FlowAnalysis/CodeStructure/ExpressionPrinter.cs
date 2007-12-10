@@ -168,6 +168,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			switch (op) {
 			case BinaryOperator.LogicalAnd: return "&&";
 			case BinaryOperator.LogicalOr: return "||";
+			case BinaryOperator.Add: return "+";
 			case BinaryOperator.Multiply: return "*";
 			case BinaryOperator.ValueEquality: return "==";
 			case BinaryOperator.ValueInequality: return "!=";

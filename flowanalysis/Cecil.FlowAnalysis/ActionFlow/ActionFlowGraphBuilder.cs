@@ -447,6 +447,11 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			Add (new AssignActionBlock (instruction, (AssignExpression) Pop ()));
 		}
 
+		public override void OnStfld (Instruction instruction)
+		{
+			Add (new AssignActionBlock (instruction, (AssignExpression) Pop ()));
+		}
+
 		int GetStackBefore (Instruction instruction)
 		{
 			return GetInstructionData (instruction).StackBefore;

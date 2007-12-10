@@ -26,6 +26,7 @@
 namespace Cecil.FlowAnalysis.CodeStructure {
 	public enum BinaryOperator {
 		None,
+		Add,
 		Multiply,
 		ValueEquality,
 		ValueInequality,

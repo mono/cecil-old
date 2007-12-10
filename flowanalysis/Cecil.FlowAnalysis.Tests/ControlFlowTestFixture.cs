@@ -26,6 +26,7 @@
 using NUnit.Framework;
 
 namespace Cecil.FlowAnalysis.Tests {
+
 	[TestFixture]
 	public class ControlFlowTestFixture : AbstractControlFlowTestFixture {
 
@@ -249,6 +250,12 @@ namespace Cecil.FlowAnalysis.Tests {
 		public void StringPredicate ()
 		{
 			RunTestCase ("StringPredicate");
+		}
+
+		[Test]
+		public void InPlaceAdd ()
+		{
+			RunTestCase ("InPlaceAdd");
 		}
 	}
 }

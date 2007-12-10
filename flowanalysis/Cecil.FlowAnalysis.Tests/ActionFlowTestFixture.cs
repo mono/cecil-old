@@ -237,6 +237,12 @@ namespace Cecil.FlowAnalysis.Tests {
 			RunTestCase ("StringPredicate");
 		}
 
+		[Test]
+		public void InPlaceAdd ()
+		{
+			RunTestCase ("InPlaceAdd");
+		}
+
 		protected void RunTestCase (string name)
 		{
 			ActionFlowGraph afg = GetActionFlowGraph (name);

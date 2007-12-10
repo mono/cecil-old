@@ -1,5 +1,10 @@
 2007-09-30  Jb Evain  <jbevain@novell.com>
 
+	* Support for dup, add and stfld.
+	Patch by Sanghyeon Seo <sanxiyn@gmail.com>
+
+2007-09-30  Jb Evain  <jbevain@novell.com>
+
 	* Support for isinst.
 
 2007-11-26	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
@@ -17,7 +22,7 @@
 	  Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
 	  testcases/FlowAnalysis/StringCast.il
 	  testcases/FlowAnalysis/StringCast-afg.txt
-	  testcases/FlowAnalysis/StringCast-cfg.txt:	
+	  testcases/FlowAnalysis/StringCast-cfg.txt:
 	  	Support for converting castclass to CastExpression and callvirt to
 		MethodInvocationExpression.
 
