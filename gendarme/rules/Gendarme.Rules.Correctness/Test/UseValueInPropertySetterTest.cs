@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,12 +29,11 @@
 //
 
 using System;
-using System.Text;
+using System.Reflection;
 using Gendarme.Framework;
 using Gendarme.Rules.Correctness;
 using Mono.Cecil;
 using NUnit.Framework;
-using System.Reflection;
 
 namespace Test.Rules.Correctness
 {
@@ -61,6 +62,23 @@ namespace Test.Rules.Correctness
 			public void set_NotAProperty(bool value)
 			{
 				bool val = true;
+			}
+
+			public int Throw1 {
+				set { throw new NotSupportedException (); }
+			}
+
+			public int Throw2 {
+				set { throw new NotSupportedException ("value isn't used here"); }
+			}
+
+			private string Translate (string s)
+			{
+				return "value n'est pas utilise ici";
+			}
+
+			public int Throw3 {
+				set { throw new NotSupportedException (Translate ("value isn't used here")); }
 			}
 		}
 
@@ -114,5 +132,15 @@ namespace Test.Rules.Correctness
 			Assert.IsNull(CheckMethod(method));
 		}
 
+		[Test]
+		public void ThrowException ()
+		{
+			MethodDefinition method = GetTest ("set_Throw1");
+			Assert.IsNull (CheckMethod (method), "1");
+			method = GetTest ("set_Throw2");
+			Assert.IsNull (CheckMethod (method), "2");
+			method = GetTest ("set_Throw3");
+			Assert.IsNull (CheckMethod (method), "3");
+		}
 	}
 }
