@@ -1,3 +1,9 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodCallWithSubsetLinkDemandRule.cs: Actualize one of the oldest
+	rule to return multiple message if appropriate (and update it's use
+	Cecil).
+
 2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* TypeIsNotSubsetOfMethodSecurityRule.cs: Refactor to reduce method 

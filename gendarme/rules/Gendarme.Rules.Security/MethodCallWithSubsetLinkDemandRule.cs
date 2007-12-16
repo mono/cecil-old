@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005, 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,6 @@
 //
 
 using System;
-using System.Collections;
 using System.Security;
 using System.Security.Permissions;
 
@@ -39,7 +38,7 @@ namespace Gendarme.Rules.Security {
 
 	public class MethodCallWithSubsetLinkDemandRule : IMethodRule {
 
-		private PermissionSet GetLinkDemand (MethodDefinition method)
+		private static PermissionSet GetLinkDemand (MethodDefinition method)
 		{
 			foreach (SecurityDeclaration declsec in method.SecurityDeclarations) {
 				switch (declsec.Action) {
@@ -66,33 +65,41 @@ namespace Gendarme.Rules.Security {
 		{
 			// #1 - rule apply to methods are publicly accessible
 			//	note that the type doesn't have to be public (indirect access)
-			if ((method.Attributes & MethodAttributes.Public) != MethodAttributes.Public)
+			if (!method.IsPublic)
 				return runner.RuleSuccess;
 
 			// #2 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			//	otherwise we don't know what it's calling
-			if (method.Body == null)
+			if (!method.HasBody)
 				return runner.RuleSuccess;
 
 			// *** ok, the rule applies! ***
 
 			// #3 - look for every method we call
+			MessageCollection mc = null;
 			foreach (Instruction ins in method.Body.Instructions) {
-				switch (ins.OpCode.Name) {
-				case "call":
-				case "callvirt":
+				switch (ins.OpCode.Code) {
+				case Code.Call:
+				case Code.Callvirt:
+				case Code.Calli:
 					MethodDefinition callee = AssemblyManager.GetMethod (ins.Operand);
 					if (callee == null) {
 						return runner.RuleSuccess; // ignore (missing reference)
 					}
 					// 4 - and if it has security, ensure we don't reduce it's strength
 					if ((callee.SecurityDeclarations.Count > 0) && !Check (method, callee)) {
+						Location loc = new Location (method.DeclaringType.ToString (), method.Name, ins.Offset);
+						Message msg = new Message ("Method doesn't have a subset of the LinkDemand", loc, MessageType.Warning); 
+						if (mc == null)
+							mc = new MessageCollection (msg);
+						else
+							mc.Add (msg);
 						return runner.RuleFailure;
 					}
 					break;
 				}
 			}
-			return runner.RuleSuccess;
+			return mc;
 		}
 	}
 }
