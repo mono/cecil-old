@@ -1,3 +1,8 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyManager.cs: Make class static since we're now targetting
+	the 2.0 framework.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Location.cs: Use StringBuilder in ToString. Add a new ctor that

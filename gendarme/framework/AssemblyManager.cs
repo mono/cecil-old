@@ -36,7 +36,7 @@ using Mono.Cecil;
 
 namespace Gendarme.Framework {
 
-	public class AssemblyManager {
+	public static class AssemblyManager {
 
 		static public MethodDefinition GetMethod (object method)
 		{
