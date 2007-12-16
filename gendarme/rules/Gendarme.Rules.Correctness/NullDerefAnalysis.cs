@@ -20,7 +20,7 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Correctness {
 
-public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
+public class NullDerefAnalysis : IDataflowAnalysis {
 
     int stackDepth;
     int locals;
@@ -132,23 +132,23 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 }
             }
 
-            switch((int)((ushort)opcode.Value)) {
+            switch (opcode.Code) {
                 /* Load argument */
                 /* Stored nullities are set to declared values on method
                  * entry. Starg and kin can change this over time. */
-                case Ldarg_0:
+                case Code.Ldarg_0:
                     outFrame.PushStack(outFrame.GetArgNullity(0));
                     break;
-                case Ldarg_1:
+		case Code.Ldarg_1:
                     outFrame.PushStack(outFrame.GetArgNullity(1));
                     break;
-                case Ldarg_2:
+		case Code.Ldarg_2:
                     outFrame.PushStack(outFrame.GetArgNullity(2));
                     break;
-                case Ldarg_3:
+		case Code.Ldarg_3:
                     outFrame.PushStack(outFrame.GetArgNullity(3));
                     break;
-                case Ldarg:
+		case Code.Ldarg:
 		    if (insn.Operand is int) {
 			outFrame.PushStack (outFrame.GetArgNullity ((int) insn.Operand));
 		    } else if (insn.Operand is ParameterDefinition) {
@@ -159,25 +159,23 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
 			outFrame.PushStack(Nullity.NonNull);
 		    }
                     break;
-                case Ldarg_S: {
+		case Code.Ldarg_S: {
                     ParameterDefinition param =
                         (ParameterDefinition)insn.Operand;
                     outFrame.PushStack(
                             outFrame.GetArgNullity(param.Sequence - 1));
                     break;
                 }
-                case Ldarga:
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldarga_S:
+		case Code.Ldarga:
+		case Code.Ldarga_S:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
                 /* Store argument */
-                case Starg:
+		case Code.Starg:
                     outFrame.SetArgNullity((int)insn.Operand,
                             outFrame.PopStack());
                     break;
-                case Starg_S: {
+		case Code.Starg_S: {
                     ParameterDefinition param =
                         (ParameterDefinition)insn.Operand;
                     outFrame.SetArgNullity(param.Sequence - 1,
@@ -186,95 +184,90 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 }
 
                 /* Load local */
-                case Ldloc_0:
+		case Code.Ldloc_0:
                     outFrame.PushStack(outFrame.GetLocNullity(0));
                     break;
-                case Ldloc_1:
+		case Code.Ldloc_1:
                     outFrame.PushStack(outFrame.GetLocNullity(1));
                     break;
-                case Ldloc_2:
+		case Code.Ldloc_2:
                     outFrame.PushStack(outFrame.GetLocNullity(2));
                     break;
-                case Ldloc_3:
+		case Code.Ldloc_3:
                     outFrame.PushStack(outFrame.GetLocNullity(3));
                     break;
-                case Ldloc:
+		case Code.Ldloc:
+		case Code.Ldloc_S:
                     outFrame.PushStack(outFrame.GetLocNullity(
                         vars.IndexOf((VariableDefinition)insn.Operand)));
                     break;
-                case Ldloc_S:
-                    outFrame.PushStack(outFrame.GetLocNullity(
-                        vars.IndexOf((VariableDefinition)insn.Operand)));
-                    break;
-                case Ldloca:
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldloca_S:
+		case Code.Ldloca:
+		case Code.Ldloca_S:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                 /* Store local */
-                case Stloc_0:
+		case Code.Stloc_0:
                     outFrame.SetLocNullity(0, outFrame.PopStack());
                     break;
-                case Stloc_1:
+		case Code.Stloc_1:
                     outFrame.SetLocNullity(1, outFrame.PopStack());
                     break;
-                case Stloc_2:
+		case Code.Stloc_2:
                     outFrame.SetLocNullity(2, outFrame.PopStack());
                     break;
-                case Stloc_3:
+		case Code.Stloc_3:
                     outFrame.SetLocNullity(3, outFrame.PopStack());
                     break;
-                case Stloc:
-                    outFrame.SetLocNullity(
-                        vars.IndexOf((VariableDefinition)insn.Operand),
-                        outFrame.PopStack());
-                    break;
-                case Stloc_S:
+		case Code.Stloc:
+		case Code.Stloc_S:
                     outFrame.SetLocNullity(
                         vars.IndexOf((VariableDefinition)insn.Operand),
                         outFrame.PopStack());
                     break;
 
                 /* Load other things */
-                case Ldftn:
+		case Code.Ldftn:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldvirtftn:
+		case Code.Ldvirtftn:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldstr:
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldnull:
+		case Code.Ldstr:
+		case Code.Ldnull:
                     outFrame.PushStack(Nullity.Null);
                     break;
-                case Ldlen:
+		case Code.Ldlen:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldtoken:
+		case Code.Ldtoken:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                  /* Object operations */
-                case Cpobj: outFrame.PopStack(2); break;
-                case Newobj:
+		case Code.Cpobj:
+		    outFrame.PopStack (2);
+		    break;
+		case Code.Newobj:
                     outFrame.PopStack(
                         ((MethodReference)insn.Operand).Parameters.Count);
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldobj:
+		case Code.Ldobj:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Stobj: outFrame.PopStack(2); break;
-                case Initobj: outFrame.PopStack(); break;
+		case Code.Stobj:
+		    outFrame.PopStack (2);
+		    break;
+		case Code.Initobj:
+		    outFrame.PopStack ();
+		    break;
 
                  /* Load field */
-                case Ldfld: {
+		case Code.Ldfld: {
                     Check(insn, warn, outFrame.PopStack(), "field");
                     FieldReference field = (FieldReference)insn.Operand;
                     if(nnaCollector.HasNonNullAttribute(field))
@@ -283,11 +276,11 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                         outFrame.PushStack(Nullity.Unknown);
                     break;
                 }
-                case Ldflda:
+		case Code.Ldflda:
                     Check(insn, warn, outFrame.PopStack(), "field");
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldsfld: {
+		case Code.Ldsfld: {
                     FieldReference field = (FieldReference)insn.Operand;
                     if(nnaCollector.HasNonNullAttribute(field))
                         outFrame.PushStack(Nullity.NonNull);
@@ -295,10 +288,12 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                         outFrame.PushStack(Nullity.Unknown);
                     break;
                 }
-                case Ldsflda: outFrame.PushStack(Nullity.NonNull); break;
+		case Code.Ldsflda:
+			outFrame.PushStack (Nullity.NonNull);
+			break;
 
                 /* Store field */
-                case Stfld: {
+		case Code.Stfld: {
                     /* FIXME: warn if writing null to non-null field */
                     Nullity n = outFrame.PopStack();
                     Check(insn, warn, outFrame.PopStack(), "field");
@@ -320,7 +315,7 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                     }
                     break;
                 }
-                case Stsfld: {
+		case Code.Stsfld: {
                     Nullity n = outFrame.PopStack();
                     FieldReference field = (FieldReference)insn.Operand;
                     if(warn && nnaCollector.HasNonNullAttribute(field)) {
@@ -342,20 +337,22 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 }
 
                 /* Stack operations */
-                case Dup: outFrame.PushStack(outFrame.PeekStack()); break;
-                case Pop: outFrame.PopStack(); break;
+		case Code.Dup:
+			outFrame.PushStack (outFrame.PeekStack ());
+			break;
+		case Code.Pop:
+			outFrame.PopStack ();
+			break;
 
                  /* Method call and return */
-                case Call:
-                    ProcessCall(insn, warn, false, outFrame);
-                    break;
-                case Calli:
+		case Code.Calli:
                     ProcessCall(insn, warn, true, outFrame);
                     break;
-                case Callvirt:
+		case Code.Call:
+		case Code.Callvirt:
                     ProcessCall(insn, warn, false, outFrame);
                     break;
-                case Ret:
+		case Code.Ret:
                     if(!IsVoid(method.ReturnType.ReturnType)) {
                         Nullity n = outFrame.PopStack();
                         if(nnaCollector.HasNonNullAttribute(method) && warn) {
@@ -377,394 +374,271 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                     break;
 
                 /* Indirect load */
-                case Ldind_I1:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_U1:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_I2:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_U2:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_I4:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_U4:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_I8:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_I:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_R4:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_R8:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldind_Ref:
+		case Code.Ldind_I1:
+		case Code.Ldind_U1:
+		case Code.Ldind_I2:
+		case Code.Ldind_U2:
+		case Code.Ldind_I4:
+		case Code.Ldind_U4:
+		case Code.Ldind_I8:
+		case Code.Ldind_I:
+		case Code.Ldind_R4:
+		case Code.Ldind_R8:
+		case Code.Ldind_Ref:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.Unknown);
                     break;
 
                 /* Indirect store */
-                case Stind_Ref: outFrame.PopStack(2); break;
-                case Stind_I: outFrame.PopStack(2); break;
-                case Stind_I1: outFrame.PopStack(2); break;
-                case Stind_I2: outFrame.PopStack(2); break;
-                case Stind_I4: outFrame.PopStack(2); break;
-                case Stind_I8: outFrame.PopStack(2); break;
-                case Stind_R4: outFrame.PopStack(2); break;
-                case Stind_R8: outFrame.PopStack(2); break;
+		case Code.Stind_Ref:
+		case Code.Stind_I:
+		case Code.Stind_I1:
+		case Code.Stind_I2:
+		case Code.Stind_I4:
+		case Code.Stind_I8:
+		case Code.Stind_R4:
+		case Code.Stind_R8:
+		    outFrame.PopStack (2);
+		    break;
 
                 /* Class-related operations */
-                case Box:
+		case Code.Box:
+		case Code.Unbox:
+		case Code.Unbox_Any:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Unbox:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Unbox_Any:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Castclass: break;
-                case Isinst: break;
+		case Code.Castclass:
+		case Code.Isinst:
+		    break;
 
                 /* Exception handling */
-                case Throw: outFrame.EmptyStack(); break;
-                case Rethrow: break;
-                case Leave: outFrame.EmptyStack(); break;
-                case Leave_S: outFrame.EmptyStack(); break;
-                case Endfinally: outFrame.EmptyStack(); break;
-                case Endfilter: outFrame.PopStack(); break;
+		case Code.Rethrow:
+		    break;
+		case Code.Throw:
+		case Code.Leave:
+		case Code.Leave_S:
+		case Code.Endfinally:
+		case Code.Endfilter:
+		    outFrame.PopStack ();
+		    break;
 
                 /* Array operations */
-                case Newarr:
+		case Code.Newarr:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
                 /* Load element */
-                case Ldelema:
+		case Code.Ldelema:
+		case Code.Ldelem_I1:
+		case Code.Ldelem_U1:
+		case Code.Ldelem_I2:
+		case Code.Ldelem_U2:
+		case Code.Ldelem_I4:
+		case Code.Ldelem_U4:
+		case Code.Ldelem_I8:
+		case Code.Ldelem_I:
+		case Code.Ldelem_R4:
+		case Code.Ldelem_R8:
                     outFrame.PopStack(2);
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Ldelem_I1:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_U1:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_I2:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_U2:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_I4:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_U4:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_I8:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_I:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_R4:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_R8:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Ldelem_Ref:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.Unknown);
-                    break;
-                case Ldelem_Any: /* This may or may not be a reference. */
+		case Code.Ldelem_Ref:
+		case Code.Ldelem_Any: /* This may or may not be a reference. */
                     outFrame.PopStack(2);
                     outFrame.PushStack(Nullity.Unknown);
                     break;
                 /* Store element */
                 /* Pop 3 */
-                case Stelem_I: outFrame.PopStack(3); break;
-                case Stelem_I1: outFrame.PopStack(3); break;
-                case Stelem_I2: outFrame.PopStack(3); break;
-                case Stelem_I4: outFrame.PopStack(3); break;
-                case Stelem_I8: outFrame.PopStack(3); break;
-                case Stelem_R4: outFrame.PopStack(3); break;
-                case Stelem_R8: outFrame.PopStack(3); break;
-                case Stelem_Ref: outFrame.PopStack(3); break;
-                case Stelem_Any: outFrame.PopStack(3); break;
+		case Code.Stelem_I:
+		case Code.Stelem_I1:
+		case Code.Stelem_I2:
+		case Code.Stelem_I4:
+		case Code.Stelem_I8:
+		case Code.Stelem_R4:
+		case Code.Stelem_R8:
+		case Code.Stelem_Ref:
+		case Code.Stelem_Any:
+		    outFrame.PopStack (3);
+		    break;
 
-                case Mkrefany:
-                    outFrame.PopStack();
+		case Code.Arglist:
+		case Code.Sizeof:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-                case Arglist:
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Sizeof:
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Refanyval:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Refanytype:
+		case Code.Mkrefany:
+		case Code.Refanyval:
+		case Code.Refanytype:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                 /* Prefixes */
-                case Unaligned: break;
-                case Volatile: break;
-                case Tail: break;
+		case Code.Unaligned:
+		case Code.Volatile:
+		case Code.Tail:
+		    break;
 
                 /* Effect-free instructions */
-                case Nop: break;
-                case Break: break;
+		case Code.Nop:
+		case Code.Break:
+		    break;
 
                 /* Load constant */
                 /* Push non-ref. */
-                case Ldc_I4_M1: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_0: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_1: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_2: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_3: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_4: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_5: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_6: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_7: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_8: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4_S: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I4: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_I8: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_R4: outFrame.PushStack(Nullity.NonNull); break;
-                case Ldc_R8: outFrame.PushStack(Nullity.NonNull); break;
+		case Code.Ldc_I4_M1:
+		case Code.Ldc_I4_0:
+		case Code.Ldc_I4_1:
+		case Code.Ldc_I4_2:
+		case Code.Ldc_I4_3:
+		case Code.Ldc_I4_4:
+		case Code.Ldc_I4_5:
+		case Code.Ldc_I4_6:
+		case Code.Ldc_I4_7:
+		case Code.Ldc_I4_8:
+		case Code.Ldc_I4_S:
+		case Code.Ldc_I4:
+		case Code.Ldc_I8:
+		case Code.Ldc_R4:
+		case Code.Ldc_R8:
+		    outFrame.PushStack (Nullity.NonNull);
+		    break;
 
                 /* Unconditional control flow */
                 /* Do nothing */
-                case Br: break;
-                case Br_S: break;
+		case Code.Br:
+		case Code.Br_S:
+		    break;
 
                 /* Conditional branches */
                 /* Pop 1 */
-                case Brfalse: outFrame.PopStack(); break;
-                case Brtrue: outFrame.PopStack(); break;
-                case Brfalse_S: outFrame.PopStack(); break;
-                case Brtrue_S: outFrame.PopStack(); break;
+		case Code.Brfalse:
+		case Code.Brtrue:
+		case Code.Brfalse_S:
+		case Code.Brtrue_S:
+		    outFrame.PopStack ();
+		    break;
 
                 /* Comparison branches */
                 /* Pop 2. */
-                case Beq: outFrame.PopStack(2); break;
-                case Bge: outFrame.PopStack(2); break;
-                case Bgt: outFrame.PopStack(2); break;
-                case Ble: outFrame.PopStack(2); break;
-                case Blt: outFrame.PopStack(2); break;
-                case Bne_Un: outFrame.PopStack(2); break;
-                case Bge_Un: outFrame.PopStack(2); break;
-                case Bgt_Un: outFrame.PopStack(2); break;
-                case Ble_Un: outFrame.PopStack(2); break;
-                case Blt_Un: outFrame.PopStack(2); break;
-                case Beq_S: outFrame.PopStack(2); break;
-                case Bge_S: outFrame.PopStack(2); break;
-                case Bgt_S: outFrame.PopStack(2); break;
-                case Ble_S: outFrame.PopStack(2); break;
-                case Blt_S: outFrame.PopStack(2); break;
-                case Bne_Un_S: outFrame.PopStack(2); break;
-                case Bge_Un_S: outFrame.PopStack(2); break;
-                case Bgt_Un_S: outFrame.PopStack(2); break;
-                case Ble_Un_S: outFrame.PopStack(2); break;
-                case Blt_Un_S: outFrame.PopStack(2); break;
+		case Code.Beq:
+		case Code.Bge:
+		case Code.Bgt:
+		case Code.Ble:
+		case Code.Blt:
+		case Code.Bne_Un:
+		case Code.Bge_Un:
+		case Code.Bgt_Un:
+		case Code.Ble_Un:
+		case Code.Blt_Un:
+		case Code.Beq_S:
+		case Code.Bge_S:
+		case Code.Bgt_S:
+		case Code.Ble_S:
+		case Code.Blt_S:
+		case Code.Bne_Un_S:
+		case Code.Bge_Un_S:
+		case Code.Bgt_Un_S:
+		case Code.Ble_Un_S:
+		case Code.Blt_Un_S:
+			outFrame.PopStack (2);
+			break;
 
-                case Switch: outFrame.PopStack(); break;
+                case Code.Switch:
+			outFrame.PopStack(); break;
 
                 /* Comparisons */
                 /* Pop 2, push non-ref */
-                case Ceq:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Cgt:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Cgt_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Clt:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Clt_Un:
+		case Code.Ceq:
+		case Code.Cgt:
+		case Code.Cgt_Un:
+		case Code.Clt:
+		case Code.Clt_Un:
                     outFrame.PopStack(2);
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                 /* Arithmetic and logical binary operators */
                 /* Pop 2, push non-ref */
-                case Add:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Sub:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Mul:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Div:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Div_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Rem:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Rem_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case And:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Or:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Xor:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Shl:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Shr:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Shr_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Add_Ovf:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Add_Ovf_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Mul_Ovf:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Mul_Ovf_Un:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Sub_Ovf:
-                    outFrame.PopStack(2);
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Sub_Ovf_Un:
+		case Code.Add:
+		case Code.Sub:
+		case Code.Mul:
+		case Code.Div:
+		case Code.Div_Un:
+		case Code.Rem:
+		case Code.Rem_Un:
+		case Code.And:
+		case Code.Or:
+		case Code.Xor:
+		case Code.Shl:
+		case Code.Shr:
+		case Code.Shr_Un:
+		case Code.Add_Ovf:
+		case Code.Add_Ovf_Un:
+		case Code.Mul_Ovf:
+		case Code.Mul_Ovf_Un:
+		case Code.Sub_Ovf:
+		case Code.Sub_Ovf_Un:
                     outFrame.PopStack(2);
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                 /* Arithmetic and logical unary operators */
                 /* Pop 1, push non-ref */
-                case Neg:
-                    outFrame.PopStack();
-                    outFrame.PushStack(Nullity.NonNull);
-                    break;
-                case Not:
+                case Code.Neg:
+                case Code.Not:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;
 
                 /* Conversions. */
                 /* Do nothing. */
-                case Conv_I1: break;
-                case Conv_I2: break;
-                case Conv_I4: break;
-                case Conv_I8: break;
-                case Conv_R4: break;
-                case Conv_R8: break;
-                case Conv_U4: break;
-                case Conv_U8: break;
-                case Conv_U: break;
-                case Conv_R_Un: break;
-                case Conv_Ovf_I1_Un: break;
-                case Conv_Ovf_I2_Un: break;
-                case Conv_Ovf_I4_Un: break;
-                case Conv_Ovf_I8_Un: break;
-                case Conv_Ovf_U1_Un: break;
-                case Conv_Ovf_U2_Un: break;
-                case Conv_Ovf_U4_Un: break;
-                case Conv_Ovf_U8_Un: break;
-                case Conv_Ovf_I_Un: break;
-                case Conv_Ovf_U_Un: break;
-                case Conv_Ovf_I1: break;
-                case Conv_Ovf_U1: break;
-                case Conv_Ovf_I2: break;
-                case Conv_Ovf_U2: break;
-                case Conv_Ovf_I4: break;
-                case Conv_Ovf_U4: break;
-                case Conv_Ovf_I8: break;
-                case Conv_Ovf_U8: break;
-                case Conv_U2: break;
-                case Conv_U1: break;
-                case Conv_I: break;
-                case Conv_Ovf_I: break;
-                case Conv_Ovf_U: break;
-
-                case Ckfinite: break;
+		case Code.Conv_I1:
+		case Code.Conv_I2:
+		case Code.Conv_I4:
+		case Code.Conv_I8:
+		case Code.Conv_R4:
+		case Code.Conv_R8:
+		case Code.Conv_U4:
+		case Code.Conv_U8:
+		case Code.Conv_U:
+		case Code.Conv_R_Un:
+		case Code.Conv_Ovf_I1_Un:
+		case Code.Conv_Ovf_I2_Un:
+		case Code.Conv_Ovf_I4_Un:
+		case Code.Conv_Ovf_I8_Un:
+		case Code.Conv_Ovf_U1_Un:
+		case Code.Conv_Ovf_U2_Un:
+		case Code.Conv_Ovf_U4_Un:
+		case Code.Conv_Ovf_U8_Un:
+		case Code.Conv_Ovf_I_Un:
+		case Code.Conv_Ovf_U_Un:
+		case Code.Conv_Ovf_I1:
+		case Code.Conv_Ovf_U1:
+		case Code.Conv_Ovf_I2:
+		case Code.Conv_Ovf_U2:
+		case Code.Conv_Ovf_I4:
+		case Code.Conv_Ovf_U4:
+		case Code.Conv_Ovf_I8:
+		case Code.Conv_Ovf_U8:
+		case Code.Conv_U2:
+		case Code.Conv_U1:
+		case Code.Conv_I:
+		case Code.Conv_Ovf_I:
+		case Code.Conv_Ovf_U:
+		case Code.Ckfinite:
+			break;
 
                 /* Unverifiable instructions. */
-                case Jmp: break;
-                case Cpblk: outFrame.PopStack(3); break;
-                case Initblk: outFrame.PopStack(3); break;
-                case Localloc:
+                case Code.Jmp:
+			break;
+		case Code.Cpblk:
+			outFrame.PopStack (3);
+			break;
+		case Code.Initblk:
+			outFrame.PopStack (3);
+			break;
+		case Code.Localloc:
                     outFrame.PopStack();
                     outFrame.PushStack(Nullity.NonNull);
                     break;

@@ -31,8 +31,8 @@ public class BadRecursiveInvocationRule : IMethodRule {
 
         for(int i = 0; i < instructions.Count; i++) {
             Instruction insn = instructions[i];
-            if(insn.OpCode.Value == OpCodeConstants.Call ||
-               insn.OpCode.Value == OpCodeConstants.Callvirt) {
+            if(insn.OpCode.Code == Code.Call ||
+	       insn.OpCode.Code == Code.Callvirt) {
                 MethodReference mref = (MethodReference)insn.Operand;
                 string rName = mref.Name;
                 string rDecl = mref.DeclaringType.Name;
@@ -44,7 +44,7 @@ public class BadRecursiveInvocationRule : IMethodRule {
                 // Don't need to compare declaring types if this is a
                 // virtual call and the recieving object is the same
                 bool typesEqual =
-                    insn.OpCode.Value == OpCodeConstants.Callvirt ||
+                    insn.OpCode.Code == Code.Callvirt ||
                     rDecl.Equals(mDecl);
                 if (argsEqual) {
 			argsEqual = CheckParameters (method, mref);
@@ -100,17 +100,29 @@ public class BadRecursiveInvocationRule : IMethodRule {
 
     private bool IsLoadParam([NonNull] Instruction insn, int paramNum)
     {
-        switch((int)insn.OpCode.Value) {
-            case OpCodeConstants.Ldarg:
+        switch (insn.OpCode.Code) {
+            case Code.Ldarg:
                 if((int)insn.Operand == paramNum) return true; break;
-            case OpCodeConstants.Ldarg_S:
+	    case Code.Ldarg_S:
                 ParameterDefinition param = (ParameterDefinition)insn.Operand;
                 if((param.Sequence - 1) == paramNum) return true;
                 break;
-            case OpCodeConstants.Ldarg_0: if(paramNum == 0) return true; break;
-            case OpCodeConstants.Ldarg_1: if(paramNum == 1) return true; break;
-            case OpCodeConstants.Ldarg_2: if(paramNum == 2) return true; break;
-            case OpCodeConstants.Ldarg_3: if(paramNum == 3) return true; break;
+	    case Code.Ldarg_0:
+		if (paramNum == 0)
+			return true;
+		break;
+	    case Code.Ldarg_1:
+		if (paramNum == 1)
+			return true;
+		break;
+	    case Code.Ldarg_2:
+		if (paramNum == 2)
+			return true;
+		break;
+	    case Code.Ldarg_3:
+		if (paramNum == 3)
+			return true;
+		break;
         }
         return false;
     }

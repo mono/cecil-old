@@ -1,3 +1,11 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* BadRecursiveInvocationRule.cs: Use Cecil definitions, not
+	OpCodeConstants.
+	* NullDerefAnalysis.cs: Use Cecil definitions, not OpCodeConstants.
+	Remove bunch of unneeded code duplication in switch.
+	* pCodeConstants.c: Removed. Cecil provides them.
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* NullDerefAnalysis.cs: Avoid InvalidCastException
