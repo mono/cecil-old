@@ -1,3 +1,9 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidConstructorsInStaticTypesRule.cs: The rule doesn't apply for
+	compiler generated types. Avoid creating MessageCollection if 
+	unneeded (e.g. no error).
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* BadRecursiveInvocationRule.cs: Use Cecil definitions, not

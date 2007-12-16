@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,53 +29,62 @@
 //
 
 using System;
-using System.Text;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.Correctness
-{
-	public class AvoidConstructorsInStaticTypesRule : ITypeRule
-	{
+namespace Gendarme.Rules.Correctness {
+
+	public class AvoidConstructorsInStaticTypesRule : ITypeRule {
+
 		private const string MessageString = "Types with no instance fields or methods should not have public instance constructors";
 
-		public MessageCollection CheckType(TypeDefinition type, Runner runner)
+		private static bool IsCompilerGenerated (TypeDefinition type)
 		{
-			MessageCollection messageCollection = new MessageCollection();
+			foreach (CustomAttribute custom in type.CustomAttributes)
+				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
+					return true;
+			return false;
+		}
 
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
+		{
+			// rule applies only if the type as method or fields
 			if (type.Methods.Count == 0 && type.Fields.Count == 0)
-				return null;
+				return runner.RuleSuccess;
 
-			foreach (MethodDefinition method in type.Methods)
-			{
+			// rule applies only if all methods are static
+			foreach (MethodDefinition method in type.Methods) {
 				if (!method.IsStatic)
-				{
-					return null;
-				}
+					return runner.RuleSuccess;
 			}
 
-			foreach (FieldDefinition field in type.Fields)
-			{
+			// rule applies only if all fields are static
+			foreach (FieldDefinition field in type.Fields) {
 				if (!field.IsStatic)
-				{
-					return null;
-				}
+					return runner.RuleSuccess;
 			}
 
-			foreach (MethodDefinition ctor in type.Constructors)
-			{
-				if (!ctor.IsStatic && (ctor.Attributes & MethodAttributes.Public) == MethodAttributes.Public)
-				{
+			// rule applies only if the type isn't compiler generated
+			if (IsCompilerGenerated (type))
+				return runner.RuleSuccess;
+
+			// rule applies!
+			MessageCollection mc = null;
+			foreach (MethodDefinition ctor in type.Constructors) {
+				if (!ctor.IsStatic && ctor.IsPublic) {
 					Location location = new Location(type.Name, ctor.Name, 0);
 					Message message = new Message(MessageString, location, MessageType.Error);
-					messageCollection.Add(message);
+					if (mc == null)
+						mc = new MessageCollection (message);
+					else
+						mc.Add (message);
 				}
 			}
 
-			return messageCollection.Count > 0 ? messageCollection : null;
-
+			return mc;
 		}
 	}
 }
+
