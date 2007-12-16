@@ -52,21 +52,33 @@ namespace Gendarme.Rules.Correctness {
 			if (method.SemanticsAttributes != MethodSemanticsAttributes.Setter)
 				return runner.RuleSuccess;
 
-			// rule applies, looks instruction for references to value
-			bool valueAccessed = false;
+			// rule applies
+			bool flow = false;
 			foreach (Instruction instruction in method.Body.Instructions) {
-				if (instruction.OpCode.Code == Code.Ldarg_1) {
-					valueAccessed = true;
+				switch (instruction.OpCode.Code) {
+				// check if the IL use value
+				case Code.Ldarg_1:
+					return runner.RuleSuccess;
+				// check if the IL simply throws an exception
+				case Code.Throw:
+					if (!flow)
+						return runner.RuleSuccess;
+					break;
+				default:
+					// lots of thing can occurs before the throw
+					// e.g. loading the string (ldstr)
+					//	or calling a method to translate this string
+					FlowControl fc = instruction.OpCode.FlowControl;
+					flow |= ((fc != FlowControl.Next) && (fc != FlowControl.Call));
+					// but as long as the flow continue uninterruped to the throw
+					// we consider this a simple throw
 					break;
 				}
 			}
 
-			if (!valueAccessed) {
-				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
-				Message message = new Message (MessageString, location, MessageType.Error);
-				return new MessageCollection (message);
-			}
-			return runner.RuleSuccess;
+			Location location = new Location (method.DeclaringType.Name, method.Name, 0);
+			Message message = new Message (MessageString, location, MessageType.Error);
+			return new MessageCollection (message);
 		}
 	}
 }

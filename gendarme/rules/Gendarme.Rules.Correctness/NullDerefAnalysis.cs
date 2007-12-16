@@ -149,8 +149,15 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                     outFrame.PushStack(outFrame.GetArgNullity(3));
                     break;
                 case Ldarg:
-                    outFrame.PushStack(
-                            outFrame.GetArgNullity((int)insn.Operand));
+		    if (insn.Operand is int) {
+			outFrame.PushStack (outFrame.GetArgNullity ((int) insn.Operand));
+		    } else if (insn.Operand is ParameterDefinition) {
+			ParameterDefinition pd = (insn.Operand as ParameterDefinition);
+			outFrame.PushStack ((pd.HasConstant && pd.Constant == null) ? 
+				Nullity.Null : Nullity.NonNull);
+		    } else {
+			outFrame.PushStack(Nullity.NonNull);
+		    }
                     break;
                 case Ldarg_S: {
                     ParameterDefinition param =
@@ -165,7 +172,6 @@ public class NullDerefAnalysis : OpCodeConstants, IDataflowAnalysis {
                 case Ldarga_S:
                     outFrame.PushStack(Nullity.NonNull);
                     break;
-
                 /* Store argument */
                 case Starg:
                     outFrame.SetArgNullity((int)insn.Operand,

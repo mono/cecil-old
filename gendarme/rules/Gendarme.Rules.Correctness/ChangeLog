@@ -1,3 +1,9 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* NullDerefAnalysis.cs: Avoid InvalidCastException
+	* UseValueInPropertySetterRule.cs: Don't report error when a setter
+	is simply throwing an exception.
+
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* FloatComparisonRule.cs: Extract a method for avoid the Long Method
