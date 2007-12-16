@@ -266,7 +266,7 @@ public class CFG : Graph {
             }
 
             if(insn.OpCode.FlowControl == FlowControl.Return) {
-                if(insn.OpCode.Value == OpCodeConstants.Endfinally &&
+                if(insn.OpCode.Code == Code.Endfinally &&
                         insn.Next != null) {
                     AddEdge(new CFGEdge((BasicBlock)insnBB[insn.Offset],
                                 (BasicBlock)insnBB[insn.Next.Offset],
