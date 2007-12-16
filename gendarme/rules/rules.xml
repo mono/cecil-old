@@ -1,5 +1,6 @@
 <gendarme>
 	<ruleset name="self-test">
+		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
 		<rules include="*" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
@@ -14,8 +15,7 @@
 
 	<ruleset name="default">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
-		<!-- Not including, because contains some kind of bug -->
-		<rules exclude="AvoidUninstantiatedInternalClassesRule" from="Gendarme.Rules.Performance.dll" />
+		<rules include="*" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
 		<rules include="*" from="Gendarme.Rules.Portability.dll" />
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
@@ -25,7 +25,7 @@
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
 	</ruleset>
 
-	<ruleset name="monoBCL">
+	<ruleset name="mono-bcl">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll"/>
 		<rules exclude="MethodCanBeMadeStaticRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="DontDestroyStackTraceRule" from="Gendarme.Rules.Exceptions.dll"/>

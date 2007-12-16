@@ -1,3 +1,9 @@
+2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* rules.xml: Added Correctness rules (except NullDeRef) to 
+	"self-test". Renamed monoBCL to mono-bcl to avoid mixed cases.
+	Re-active AvoidUninstantiatedInternalClassesRule in default.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* rules.xml: Add a new "self-test" set used for testing Gendarme 
