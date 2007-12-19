@@ -3,7 +3,7 @@ SUBDIRS=Test
 smells_rulesdir=$(pkglibdir)
 smells_rules_SCRIPTS = ../../bin/Gendarme.Rules.Smells.dll
 EXTRA_DIST = $(smells_rules_sources) $(smells_rules_sources_in) Gendarme.Rules.Smells.xml \
-	Gendarme.Rules.Smells.mdp Gendarme.Rules.Smells.csproj
+	Gendarme.Rules.Smells.mdp 
 CLEANFILES = $(smells_rules_SCRIPTS) $(smells_rules_SCRIPTS).mdb Test.Rules.Smells.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Smells.xml TestResult.xml
 

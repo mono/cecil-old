@@ -3,7 +3,7 @@ SUBDIRS=Test
 naming_rulesdir=$(pkglibdir)
 naming_rules_SCRIPTS = ../../bin/Gendarme.Rules.Naming.dll
 EXTRA_DIST = $(naming_rules_sources) $(naming_rules_sources_in) Gendarme.Rules.Naming.xml \
-	Gendarme.Rules.Naming.mdp Gendarme.Rules.Naming.csproj
+	Gendarme.Rules.Naming.mdp 
 CLEANFILES = $(naming_rules_SCRIPTS)* Test.Rules.Naming.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Naming.xml TestResult.xml
 

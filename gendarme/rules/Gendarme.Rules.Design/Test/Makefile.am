@@ -1,4 +1,4 @@
-EXTRA_DIST = *.cs Test.Rules.Design.mdp Tests.Rules.Design.csproj
+EXTRA_DIST = *.cs Test.Rules.Design.mdp 
 DISTCLEANFILES = Makefile.in
 
 all:

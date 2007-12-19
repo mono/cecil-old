@@ -3,7 +3,7 @@ SUBDIRS=Test
 design_rulesdir=$(pkglibdir)
 design_rules_SCRIPTS = ../../bin/Gendarme.Rules.Design.dll
 EXTRA_DIST = $(design_rules_sources) $(design_rules_sources_in) Gendarme.Rules.Design.xml \
-	Gendarme.Rules.Design.mdp Gendarme.Rules.Design.csproj
+	Gendarme.Rules.Design.mdp 
 CLEANFILES = $(design_rules_SCRIPTS) $(design_rules_SCRIPTS).mdb Test.Rules.Design.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.Design.xml TestResult.xml
 

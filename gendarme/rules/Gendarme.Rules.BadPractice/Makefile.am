@@ -3,7 +3,7 @@ SUBDIRS=Test
 badpractice_rulesdir=$(pkglibdir)
 badpractice_rules_SCRIPTS = ../../bin/Gendarme.Rules.BadPractice.dll
 EXTRA_DIST = $(badpractice_rules_sources) $(badpractice_rules_sources_in) Gendarme.Rules.BadPractice.xml \
-	Gendarme.Rules.BadPractice.mdp Gendarme.Rules.BadPractice.csproj
+	Gendarme.Rules.BadPractice.mdp 
 CLEANFILES = $(badpractice_rules_SCRIPTS) $(badpractice_rules_SCRIPTS).mdb Test.Rules.BadPractice.dll
 DISTCLEANFILES = Makefile.in Gendarme.Rules.BadPractice.xml TestResult.xml
 
