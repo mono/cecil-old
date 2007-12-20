@@ -1,3 +1,7 @@
+2007-12-20  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NEWS: Finally 0.0.4 :)
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Change self-test to use the self-test set of rules

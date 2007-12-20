@@ -1,3 +1,65 @@
+2007-12-20  Version 0.0.4
+
+	After a long time, many fixes, useful features (e.g. inclusion and 
+	exclusion) and hours trimming down false positives, we're proud to
+	announce Gendarme 0.0.4!
+
+	Many of the new rules were contributed during the Google Summer
+	of Code 2007.
+
+	Gendarme.Rules.BadPractice
+	* CloneMethodShouldNotReturnNullRule [Nidhi Rawal]
+	* EqualShouldHandleNullArgRule [Nidhi Rawal]
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule [Nidhi Rawal]
+	* ToStringReturnsNullRule [Nidhi Rawal]
+
+	Gendarme.Rules.Concurrency
+	* WriteStaticFieldFromInstanceMethodRule [Sebastien Pouliot]
+
+	Gendarme.Rules.Correcness
+	* AvoidConstructorsInStaticTypesRule [Lukasz Knop]
+	* CallingEqualsWithNullArgRule [Nidhi Rawal]
+	* FloatComparisonRule [Lukasz Knop]
+	* MethodCanBeMadeStaticRule [JB Evain]
+	* UseValueInPropertySetterRule [Lukasz Knop]
+
+	Gendarme.Rules.Design (new)
+	* DontDeclareProtectedFieldsInSealedClassRule [Nidhi Rawal]
+	* UsingCloneWithoutImplementingICloneableRule [Nidhi Rawal]
+
+	Gendarme.Rules.Exceptions
+	* DontSwallowErrorsCatchingNonspecificExceptionRule [Nestor Salceda]
+
+	Gendarme.Rules.Naming (new)
+	* AttributesEndsWithAttributeSuffixRule [Nestor Salceda]
+	* DetectNonAlphaNumericsInTypeNamesRule [Nidhi Rawal]
+	* EnumsNotEndsWIthEnumOrFlagsSuffixRule [Nestor Salceda]
+	* UsePluralNameInEnumFlagsRule [Nestor Salceda]
+	* UseSingularNameInEnumsUnlessAreFlagsRule [Nestor Salceda]
+
+	Gendarme.Rules.Performance
+	* AvoidToStringOnStringRule [Lukasz Knop]
+	* AvoidUncalledPrivateCodeRule [Nidhi Rawal]
+	* AvoidUninstantiatedInternalClassesRule [Nidhi Rawal]
+	* AvoidUnusedParametersRule [Nestor Salceda]
+	* DontIgnoreMethodResultRule [Lukasz Knop]
+
+	Gendarme.Rules.Smells (new)
+	* AvoidCodeDuplicatedInSameClassRule [Nestor Salceda]
+	* AvoidCodeDuplicatedInSiblingClassesRule [Nestor Salceda]
+	* AvoidLargeClassRule [Nestor Salceda]
+	* AvoidLongMethodsRule [Nestor Salceda]
+	* AvoidLongParameterListsRule [Nestor Salceda]
+	* AvoidSpeculativeGeneralityRule [Nestor Salceda]
+
+	Gendarme.Rules.Ui (new)
+	* GtkSharpExecutableTargetRule [Sebastien Pouliot]
+	* SystemWindowsFormsExecutableTargetRule [Sebastien Pouliot]
+
+	A special thanks to Nestor Salceda for his continuing dedication 
+	to the project including a lot of "not so fun" (but so important)
+	tasks, like merging, rule documentation & bug hunting. You rock!
+
 2006-10-16  Version 0.0.3
 
 	* New rule for String.Empty [Sebastien Pouliot]
