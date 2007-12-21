@@ -50,6 +50,7 @@ namespace Gendarme.Rules.Smells {
 			return instruction.OpCode.FlowControl == FlowControl.Call ||
 				instruction.OpCode.FlowControl == FlowControl.Branch ||
 				instruction.OpCode.FlowControl == FlowControl.Cond_Branch ||
+                		instruction.OpCode.Code == Code.Ceq ||
 				instruction.OpCode.Code == Code.Stfld;
 		}
 

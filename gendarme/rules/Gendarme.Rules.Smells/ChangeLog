@@ -1,5 +1,11 @@
 2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
 
+	* ExpressionFillerVisitor.cs: Add the ceq code to the acceptable
+	instructions set.  With this change, all the bugs in code compiled under
+	csc without optimization flag are fixed.
+
+2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
+
 	* ExpressionFillerVisitor.cs: Avoid creating empty expressions, because
 	the equals method in the Expression class checks for the same size, and
 	if the size is zero, then the equals returns true.  Fixes one of the 
