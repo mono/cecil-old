@@ -1,3 +1,8 @@
+2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* AvoidUnusedParametersTest.cs: Added a testcase for anonymous methods
+	due #350288 bug.
+
 2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUninstantiatedInternalClassesTest.cs: Change the behavior of

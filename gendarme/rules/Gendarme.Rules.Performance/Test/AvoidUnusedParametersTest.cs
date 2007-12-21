@@ -122,6 +122,13 @@ namespace Test.Rules.Performance {
 		{
 		}
 
+		public void AnonymousMethodWithUnusedParameters ()
+		{
+			SimpleCallback callback = delegate (int x) {
+				//Empty	
+			};
+		}
+
 		public delegate void SimpleEventHandler (int x);
 		public event SimpleEventHandler SimpleEvent;
 		public void OnSimpleEvent (int x) 
@@ -248,6 +255,14 @@ namespace Test.Rules.Performance {
 		{
 			SimpleCallback callback = new SimpleCallback (SimpleCallbackImpl);
 			method = GetMethodForTest ("SimpleCallbackImpl");
+			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void AnonymousMethodTest ()
+		{
+			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/<>c__CompilerGenerated0", "<AnonymousMethodWithUnusedParameters>c__2");
 			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
