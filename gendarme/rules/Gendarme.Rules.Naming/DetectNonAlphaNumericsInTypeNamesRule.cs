@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Naming {
 				return runner.RuleSuccess;
 
 			Location location = new Location (type.FullName, type.Name, 0);
-			Message message = new Message ("Type name contains underscore", location, MessageType.Error);
+			Message message = new Message ("Type name should not contain underscore.", location, MessageType.Error);
 			return new MessageCollection (message);
 		}
 
@@ -68,7 +68,7 @@ namespace Gendarme.Rules.Naming {
 				return runner.RuleSuccess;
 
 			Location location = new Location (method.DeclaringType.ToString(), method.Name, 0);
-			Message message = new Message ("Method name contains an underscore.", location, MessageType.Error);
+			Message message = new Message ("Method name should not contain an underscore.", location, MessageType.Error);
 			return new MessageCollection (message);
 		}
 	}

@@ -1,6 +1,7 @@
-2007-12-20  Sebastien Pouliot  <sebastien@ximian.com>
+2007-12-20  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs,
+	* DetectNonAlphaNumericsInTypeNamesRule.cs,
 	* UseSingularNameInEnumsUnlessAreFlagsRule.cs: Update message 
 	strings. Patch from Daniel Abramov <ex@vingrad.ru>
 
