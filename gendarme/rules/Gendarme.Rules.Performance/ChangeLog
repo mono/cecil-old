@@ -1,3 +1,8 @@
+2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidUnusedParameterRule.cs: If the method is anonymous then, gendarme
+	will skip it.
+
 2007-11-30  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Reworked to make the

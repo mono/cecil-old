@@ -99,11 +99,22 @@ namespace Gendarme.Rules.Performance {
 			}
 			return false;
 		}
+		
+		//TODO: Is very important take a decision about the helper
+		//classes, this code is really copy pasted.
+		private bool IsCompilerGenerated (MethodDefinition method)
+		{
+			foreach (CustomAttribute custom in method.CustomAttributes) {
+				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
+					return true;
+			}
+			return false;
+		}
 
 		private bool IsExaminable (MethodDefinition method)
 		{
 			return !(method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0
-				|| method.PInvokeInfo != null || IsReferencedByDelegate (method));
+				|| method.PInvokeInfo != null || IsReferencedByDelegate (method) || IsCompilerGenerated (method));
 		}
 
 		private ICollection GetUnusedParameters (MethodDefinition method)
