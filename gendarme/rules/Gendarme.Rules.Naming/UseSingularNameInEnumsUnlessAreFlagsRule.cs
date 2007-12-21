@@ -59,7 +59,7 @@ namespace Gendarme.Rules.Naming {
 			if (!HasFlagsAttribute (typeDefinition)) {
 				if (IsPlural (typeDefinition.Name)) {
 					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
-					Message message = new Message ("The enum has a plural name.", location, MessageType.Error);
+					Message message = new Message ("The enum should not have a plural name.", location, MessageType.Error);
 					return new MessageCollection (message);
 				}
 			}

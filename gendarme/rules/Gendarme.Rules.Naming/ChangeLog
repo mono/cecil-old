@@ -1,3 +1,9 @@
+2007-12-20  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs,
+	* UseSingularNameInEnumsUnlessAreFlagsRule.cs: Update message 
+	strings. Patch from Daniel Abramov <ex@vingrad.ru>
+
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs: Avoid code duplicated
