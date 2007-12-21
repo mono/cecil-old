@@ -1,3 +1,9 @@
+2007-12-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUncalledPrivateCodeTest.cs, AvoidUnusedParametersTest.cs:
+	Fix anonymous test cases since GMCS and CSC don't compile the types,
+	or methods, using the same names.
+
 2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidUnusedParametersTest.cs: Added a testcase for anonymous methods

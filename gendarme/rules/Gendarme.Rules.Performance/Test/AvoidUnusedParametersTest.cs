@@ -262,9 +262,20 @@ namespace Test.Rules.Performance {
 		[Test]
 		public void AnonymousMethodTest ()
 		{
+			// compiler generated code is compiler dependant, check for [g]mcs (inner type)
 			method = GetMethodForTestFrom ("Test.Rules.Performance.AvoidUnusedParametersTest/<>c__CompilerGenerated0", "<AnonymousMethodWithUnusedParameters>c__2");
-			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			// otherwise try for csc (inside same class)
+			if (method == null) {
+				TypeDefinition type = assembly.MainModule.Types ["Test.Rules.Performance.AvoidUnusedParametersTest"];
+				foreach (MethodDefinition md in type.Methods) {
+					if (md.Name.StartsWith ("<AnonymousMethodWithUnusedParameters>")) {
+						method = md;
+						break;
+					}
+				}
+			}
+			Assert.IsNotNull (method, "method not found!");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()), "rule result");
 		}
 
 		[Test]

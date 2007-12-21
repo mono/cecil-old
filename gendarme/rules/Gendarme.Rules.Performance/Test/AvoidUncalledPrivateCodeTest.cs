@@ -568,9 +568,23 @@ namespace Test.Rules.Performance {
 		[Test]
 		public void AnonymousMethodTest ()
 		{
+			// compiler generated code is compiler dependant, check for [g]mcs (inner type)
 			type = GetTest ("AnonymousMethod/<>c__CompilerGenerated0");
-			foreach (MethodDefinition method in type.Methods)  
-				Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()));
+			// otherwise try for csc (inside same class)
+			if (type == null)
+				type = GetTest ("AnonymousMethod");
+
+			Assert.IsNotNull (type, "type not found");
+			foreach (MethodDefinition method in type.Methods) {
+				switch (method.Name) {
+				case "MethodWithAnonymousMethod":
+					// this isn't part of the test (but included with CSC)
+					break;
+				default:
+					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()));
+					break;
+				}
+			}
 		}
 	}
 }
