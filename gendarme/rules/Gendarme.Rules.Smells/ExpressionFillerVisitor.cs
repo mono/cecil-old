@@ -53,10 +53,18 @@ namespace Gendarme.Rules.Smells {
 				instruction.OpCode.Code == Code.Stfld;
 		}
 
+		private bool CanCreateANewExpression () 
+		{
+			return currentExpression == null || 
+				(currentExpression != null && currentExpression.Count != 0);
+		}
+
 		private void CreateExpressionAndAddToExpressionContainer ()
 		{
-			currentExpression = new Expression ();
-			expressionContainer.Add (currentExpression);
+			if (CanCreateANewExpression ()) {
+				currentExpression = new Expression ();
+				expressionContainer.Add (currentExpression);
+			}
 		}
 
 		private bool IsDelimiter (Instruction instruction)

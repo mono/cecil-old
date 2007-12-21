@@ -1,3 +1,10 @@
+2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* ExpressionFillerVisitor.cs: Avoid creating empty expressions, because
+	the equals method in the Expression class checks for the same size, and
+	if the size is zero, then the equals returns true.  Fixes one of the 
+	bug in code compiled under csc without optimization flag.
+
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidLargeClassesRule.cs: As the rule is only applied to types, then
