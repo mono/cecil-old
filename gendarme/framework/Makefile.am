@@ -15,7 +15,10 @@ framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 		    RuleInformation.cs  RuleInformationManager.cs \
 		    Rules.cs Runner.cs Violation.cs Violations.cs \
 		    Message.cs Location.cs MinimalRunner.cs \
-		    MessageCollection.cs MessageType.cs
+		    MessageCollection.cs MessageType.cs \
+		    Gendarme.Framework.Rocks/CustomAttributeRocks.cs \
+		    Gendarme.Framework.Rocks/MethodRocks.cs \
+		    Gendarme.Framework.Rocks/TypeRocks.cs
 
 framework_build_sources = $(addprefix $(srcdir)/, $(framework_sources))
 framework_build_sources += $(framework_generated_sources)
@@ -24,7 +27,23 @@ framework_build_sources += $(framework_generated_sources)
 	mkdir ../bin
 
 ../bin/Gendarme.Framework.dll: ../bin/ $(framework_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
+
+
+framework_test_sources = Gendarme.Framework.Rocks/CustomAttributeRocksTest.cs \
+		    Gendarme.Framework.Rocks/MethodRocksTest.cs \
+		    Gendarme.Framework.Rocks/TypeRocksTest.cs
+framework_test_build_sources = $(addprefix $(srcdir)/Test/, $(framework_test_sources))
+
+Test.Framework.dll: $(framework_test_build_sources) $(framework_rules_SCRIPTS) ../bin/Gendarme.Framework.dll
+	$(MCS) -target:library -langversion:linq -pkg:mono-cecil -pkg:mono-nunit -r:../bin/Gendarme.Framework.dll \
+		-out:$@ $(framework_test_build_sources)
+
+test: Test.Framework.dll
+
+run-test: test
+	MONO_PATH=../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Framework.dll
+
 
 self-test: $(framework_SCRIPTS)
 	mono --debug ../bin/gendarme.exe $(framework_SCRIPTS)

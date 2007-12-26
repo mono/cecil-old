@@ -1,0 +1,8 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* CustomAttributeRocks.cs: New. Extension methods for Cecil's 
+	CustomAttribute[Collection] classes.
+	* MethodRocks.cs: New. Extension methods for Cecil's 
+	Method[Reference|Definition][Collection] classes.
+	* TypeRocks.cs: New. Extension methods for Cecil's 
+	Type[Reference|Definition][Collection] classes.

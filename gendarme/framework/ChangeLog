@@ -1,3 +1,11 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Makefile.am: Add rocks to the build, switch compiler to linq
+	* framework.mdp: Add rocks to the MonoDevelop project file, switch
+	compiler to linq.
+	* Location.cs: Add new constructors that accept a 
+	[Method|Type]Definition to simplify rules.
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyManager.cs: Make class static since we're now targetting

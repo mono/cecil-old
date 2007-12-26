@@ -1,0 +1,5 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* CustomAttributeRocksTest.cs: New. Unit tests for CustomAttributeRocks
+	* MethodRocksTest.cs: New. Unit tests for MethodRocks
+	* TypeRocksTest.cs: New. Unit tests for TypeRocks

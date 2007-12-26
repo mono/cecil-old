@@ -4,9 +4,10 @@
  *
  * Authors:
  *   Aaron Tomb <atomb@soe.ucsc.edu>
- *
- * Copyright (c) 2005 Aaron Tomb and the contributors listed
- * in the ChangeLog.
+ *   Sebastien Pouliot  <sebastien@ximian.com>
+ * 
+ * Copyright (c) 2005 Aaron Tomb
+ * Copyright (C) 2007 Novell, Inc (http://www.novell.com)
  *
  * This is free software, distributed under the MIT/X11 license.
  * See the included LICENSE.MIT file for details.
@@ -14,6 +15,8 @@
 
 using System;
 using System.Text;
+
+using Mono.Cecil;
 
 namespace Gendarme.Framework {
 
@@ -34,6 +37,26 @@ namespace Gendarme.Framework {
 			this.type = type;
 			this.method = method;
 			this.offset = offset;
+		}
+
+		public Location (TypeDefinition type)
+		{
+			if (type == null)
+				throw new ArgumentNullException ("type");
+
+			this.type = type.FullName;
+			this.method = String.Empty;
+			this.offset = -1;
+		}
+
+		public Location (MethodDefinition method)
+		{
+			if (method == null)
+				throw new ArgumentNullException ("method");
+
+			this.type = method.DeclaringType.FullName;
+			this.method = method.Name;
+			this.offset = -1;
 		}
 
 		public override string ToString ()
