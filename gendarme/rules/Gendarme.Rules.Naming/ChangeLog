@@ -1,3 +1,20 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AttributeEndsWithAttributeSuffixRule.cs: Deleted. The new rule
+	UseCorrectSuffixTest is a superset of this rule.
+	* Gendarme.Rules.Naming.mdp: Updated MonoDevelop project file.
+	* Gendarme.Rules.Naming.xml.in: Updated descriptions.
+	* Makefile.am: Updated Makefile for new rules/tests.
+	* NamingUtils.cs: New. Common methods for naming rules.
+	* UseCorrectCasingRule.cs: New. Rule to check correct casing. 
+	From Daniel Abramov (GHOP).
+	* UseCorrectPrefixRule.cs:New. Rule to check correct prefixes. 
+	From Daniel Abramov (GHOP).
+	* UseCorrectSuffixRule.cs:New. Rule to check correct suffixes. 
+	From Daniel Abramov (GHOP).
+	* UsePreferredTermsRule.cs:New. Rule to check use of preferred terms. 
+	From Daniel Abramov (GHOP).
+
 2007-12-20  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs,
