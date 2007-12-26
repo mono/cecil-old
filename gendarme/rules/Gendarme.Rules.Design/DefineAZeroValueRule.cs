@@ -1,10 +1,10 @@
-//
-// Gendarme.Rules.Dodgy.DontDeclareProtectedFieldsInSealedClassRule
+// 
+// Gendarme.Rules.Design.DefineAZeroValueRule
 //
 // Authors:
-//	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,27 +32,24 @@ using Gendarme.Framework;
 
 namespace Gendarme.Rules.Design {
 
-	public class DontDeclareProtectedFieldsInSealedClassRule: ITypeRule {
+	abstract public class DefineAZeroValueRule {
 
-		public MessageCollection CheckType (TypeDefinition type, Runner runner)
+		protected static bool HasZeroValue (TypeDefinition type)
 		{
-			// rule applies only to sealed types
-			if (!type.IsSealed)
-				return runner.RuleSuccess;
-
-			MessageCollection mc = null;
 			foreach (FieldDefinition field in type.Fields) {
-				if (field.IsFamily) {
-					Location location = new Location (type);
-					Message message = new Message ("This sealed class contains protected field(s)", location, MessageType.Error);
-					if (mc == null)
-						mc = new MessageCollection (message);
-					else
-						mc.Add (message);
+				switch (field.Name) {
+				case "value__":
+					// special case
+					break;
+				default:
+					if (field.Constant is int) {
+						if (((int) (field.Constant)) == 0)
+							return true;
+					}
+					break;
 				}
 			}
-
-			return mc;
+			return false;
 		}
 	}
 }

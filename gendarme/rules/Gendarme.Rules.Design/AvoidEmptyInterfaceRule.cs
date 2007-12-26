@@ -1,11 +1,9 @@
-//
-// Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule
+// 
+// Gendarme.Rules.Design.AvoidEmptyInterfaceRule
 //
 // Authors:
-//	Nidhi Rawal <sonu2404@gmail.com>
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (c) <2007> Nidhi Rawal
 // Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,43 +29,29 @@ using System;
 using Mono.Cecil;
 
 using Gendarme.Framework;
-using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Design {
 
-	public class UsingCloneWithoutImplementingICloneableRule: ITypeRule {
-
-		// copy-pasted from gendarme\rules\Gendarme.Rules.BadPractice\CloneMethodShouldNotReturnNullRule.cs
-		private static bool IsCloneMethod (MethodDefinition method)
-		{
-			return (method.Name == "Clone" && (method.Parameters.Count == 0));
-		}
+	public class AvoidEmptyInterfaceRule : ITypeRule {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			// rule applies to type that doesn't implement System.IClonable
-			if (type.Implements ("System.ICloneable"))
+			// rule only applies to interfaces
+			if (!type.IsInterface)
 				return runner.RuleSuccess;
 
-			MessageCollection mc = null;
-			foreach (MethodDefinition method in type.Methods) {
-				// we check for methods name Clone
-				if (!IsCloneMethod (method))
-					continue;
+			// rule applies!
 
-				// that return System.Object, e.g. public object Clone()
-				// or the current type, e.g. public <type> Clone()
-				if ((method.ReturnType.ReturnType.FullName == "System.Object") || (method.ReturnType.ReturnType == type)) {
-					Location location = new Location (type);
-					Message message = new Message ("A Clone() method is provided but System.ICloneable is not implemented", location, MessageType.Error);
-					if (mc == null)
-						mc = new MessageCollection (message);
-					else
-						mc.Add (message);
-				}
-			}
+			// first check if the interface defines it's own members
+			if (type.Methods.Count > 0)
+				return runner.RuleSuccess;
 
-			return mc;
+			// otherwise it may implement more than one interface itself
+			if (type.Interfaces.Count > 0)
+				return runner.RuleSuccess;
+
+			Message msg = new Message ("Interface is empty.", new Location (type), MessageType.Warning);
+			return new MessageCollection (msg);
 		}
 	}
 }

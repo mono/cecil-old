@@ -1,14 +1,50 @@
 <rules>
-	<rule	Name="UsingCloneWithoutImplementingICloneableRule" 
-		Type="Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
-		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#UsingCloneWithoutImplementingICloneableRule" >
-		<problem>The class '{0}' uses Clone () method but does not implement ICloneable interface.</problem>
-		<solution>Implement the ICloneable interface.</solution>
+	<rule	Name="AbstractTypesShouldNotHavePublicConstructorsRule"
+		Type="Gendarme.Rules.Design.AbstractTypesShouldNotHavePublicConstructorsRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The class '{0}' provides public constructor(s).</problem>
+		<solution>Change constructor visibility to protected.</solution>
+	</rule>
+	<rule	Name="AvoidEmptyInterfaceRule"
+		Type="Gendarme.Rules.Design.AvoidEmptyInterfaceRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The interface '{0}' does not define any members. This is generally a sign that the interface is used as a marker.</problem>
+		<solution>Review interface. If used as a marker then see if it could be replaced by using attributes.</solution>
+	</rule>
+	<rule	Name="AvoidPropertiesWithoutGetAccessorRule"
+		Type="Gendarme.Rules.Design.AvoidPropertiesWithoutGetAccessorRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The property '{0}' does not provide a getter.</problem>
+		<solution>Add a getter to the property or change the property into a method.</solution>
 	</rule>
 	<rule	Name="DontDeclareProtectedFieldsInSealedClassRule" 
 		Type="Gendarme.Rules.Design.DontDeclareProtectedFieldsInSealedClassRule, Gendarme.Rules.Dodgy, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#DontDeclareProtectedFieldsInSealedClassRule" >
 		<problem>The sealed class '{0}' contains protected field(s).</problem>
 		<solution>Change the access specifier to public or private to represent the true use for the field.</solution>
+	</rule>
+	<rule	Name="EnumsShouldDefineAZeroValueRule"
+		Type="Gendarme.Rules.Design.EnumsShouldDefineAZeroValueRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The enum '{0}' should define a member with a value of 0.</problem>
+		<solution>Add a new member in the enum with a value of 0.</solution>
+	</rule>
+	<rule	Name="FlagsShouldNotDefineAZeroValueRule"
+		Type="Gendarme.Rules.Design.FlagsShouldNotDefineAZeroValueRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The enum '{0}' is marked by a [Flag] attribute and should not include a value of 0.</problem>
+		<solution>Review the member that has a value of 0, it is either unneeded or cannot work as expected with binary logic operators.</solution>
+	</rule>
+	<rule	Name="TypesShouldBeInsideNamespacesRule"
+		Type="Gendarme.Rules.Design.TypesShouldBeInsideNamespacesRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' is visible and should be defined inside a namespace.</problem>
+		<solution>Move the type inside a namespace or reduce type visibility (e.g. internal or private).</solution>
+	</rule>
+	<rule	Name="UsingCloneWithoutImplementingICloneableRule" 
+		Type="Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#UsingCloneWithoutImplementingICloneableRule" >
+		<problem>The class '{0}' uses Clone () method but does not implement ICloneable interface.</problem>
+		<solution>Implement the ICloneable interface.</solution>
 	</rule>
 </rules>

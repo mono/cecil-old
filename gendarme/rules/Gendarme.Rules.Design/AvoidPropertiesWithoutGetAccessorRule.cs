@@ -1,11 +1,9 @@
-//
-// Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule
+// 
+// Gendarme.Rules.Design.AvoidPropertiesWithoutGetAccessorRule
 //
 // Authors:
-//	Nidhi Rawal <sonu2404@gmail.com>
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (c) <2007> Nidhi Rawal
 // Copyright (C) 2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,39 +33,31 @@ using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Design {
 
-	public class UsingCloneWithoutImplementingICloneableRule: ITypeRule {
+	public class AvoidPropertiesWithoutGetAccessorRule : IMethodRule {
 
-		// copy-pasted from gendarme\rules\Gendarme.Rules.BadPractice\CloneMethodShouldNotReturnNullRule.cs
-		private static bool IsCloneMethod (MethodDefinition method)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			return (method.Name == "Clone" && (method.Parameters.Count == 0));
-		}
-
-		public MessageCollection CheckType (TypeDefinition type, Runner runner)
-		{
-			// rule applies to type that doesn't implement System.IClonable
-			if (type.Implements ("System.ICloneable"))
+			// rule applies to setters
+			if (!method.IsSetter ())
 				return runner.RuleSuccess;
 
-			MessageCollection mc = null;
-			foreach (MethodDefinition method in type.Methods) {
-				// we check for methods name Clone
-				if (!IsCloneMethod (method))
-					continue;
+			// rule applies
 
-				// that return System.Object, e.g. public object Clone()
-				// or the current type, e.g. public <type> Clone()
-				if ((method.ReturnType.ReturnType.FullName == "System.Object") || (method.ReturnType.ReturnType == type)) {
-					Location location = new Location (type);
-					Message message = new Message ("A Clone() method is provided but System.ICloneable is not implemented", location, MessageType.Error);
-					if (mc == null)
-						mc = new MessageCollection (message);
-					else
-						mc.Add (message);
+			// check if there is a getter for the same property
+			string name = method.Name.Replace ("set_", "get_");
+			TypeDefinition type = method.DeclaringType as TypeDefinition;
+			// inside the declaring type
+			foreach (MethodDefinition md in type.Methods) {
+				// look for the getter name
+				if (md.Name == name) {
+					// and confirm it's getter
+					if (md.IsGetter ())
+						return runner.RuleSuccess;
 				}
 			}
 
-			return mc;
+			Message msg = new Message ("The property only provide a set (and no get)", new Location (method), MessageType.Warning);
+			return new MessageCollection (msg);
 		}
 	}
 }
