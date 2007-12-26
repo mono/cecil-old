@@ -27,6 +27,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Reflection;
 
 using Gendarme.Framework;
@@ -40,7 +41,7 @@ namespace Test.Rules.Design
 	public class UsingCloneWithoutImplementingICloneableTest {
 		public class UsingCloneAndImplementingICloneable: ICloneable
 		{
-			public object Clone ()
+			public virtual object Clone ()
 			{
 				return this.MemberwiseClone ();
 			}
@@ -82,6 +83,32 @@ namespace Test.Rules.Design
 			public CloningType Clone ()
 			{
 				return new CloningType ();
+			}
+		}
+
+		// ArrayList implements ICloneable but it located in another assembly (mscorlib)
+		public class MyArrayList : ArrayList {
+
+			public override object Clone ()
+			{
+				return new MyArrayList ();
+			}
+		}
+
+		public class SecondLevelClone : UsingCloneAndImplementingICloneable {
+
+			// CS0108 on purpose
+			public object Clone ()
+			{
+				return new SecondLevelClone ();
+			}
+		}
+
+		public class SecondLevelCloneWithOverride : UsingCloneAndImplementingICloneable {
+
+			public override object Clone ()
+			{
+				return new SecondLevelCloneWithOverride ();
 			}
 		}
 		
@@ -151,6 +178,28 @@ namespace Test.Rules.Design
 		{
 			type = GetTest ("CloningType");
 			Assert.IsNotNull (typeRule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		[Ignore ("Type located outside this assembly - need AssemblyResolver")]
+		public void InheritFromTypeOutsideAssembly ()
+		{
+			type = GetTest ("MyArrayList");
+			Assert.IsNull (typeRule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void InheritFromTypeImplementingICloneableButWithoutOverride ()
+		{
+			type = GetTest ("SecondLevelClone");
+			Assert.IsNull (typeRule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void InheritFromTypeImplementingICloneable ()
+		{
+			type = GetTest ("SecondLevelCloneWithOverride");
+			Assert.IsNull (typeRule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

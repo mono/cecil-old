@@ -1,3 +1,16 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AbstractTypesShouldNotHavePublicConstructorsTest.cs: New. Unit tests
+	* AvoidEmptyInterfaceTest.cs: New. Unit tests
+	* AvoidPropertiesWithoutGetAccessorTest.cs: New. Unit tests
+	* EnumsShouldDefineAZeroValueTest.cs: New. Unit tests
+	* FlagsShouldNotDefineAZeroValueTest.cs: New. Unit tests
+	* TypesShouldBeInsideNamespacesTest.cs: New. Unit tests
+	* UsingCloneWithoutImplementingICloneableTest.cs: Add test cases 
+	for inheritance.
+	* Test.Rules.Design.mdp: Add new unit test to MonoDevelop project 
+	file.
+
 2007-11-22  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UsingCloneWithoutImplementingICloneableTest.cs: Add a test case
