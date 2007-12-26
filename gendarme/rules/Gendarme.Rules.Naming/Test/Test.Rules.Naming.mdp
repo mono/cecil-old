@@ -14,11 +14,14 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./AttributeEndsWithAttributeSuffixTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./EnumNotEndsWithEnumOrFlagsSuffixTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./UsePluralNameInEnumFlagsTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./UseSingularNameInEnumsUnlessAreFlagsTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./DetectNonAlphaNumericsInTypeNamesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="EnumNotEndsWithEnumOrFlagsSuffixTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UsePluralNameInEnumFlagsTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseSingularNameInEnumsUnlessAreFlagsTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="DetectNonAlphaNumericsInTypeNamesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseCorrectCasingTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseCorrectPrefixTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseCorrectSuffixTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UsePreferredTermsTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="framework" />

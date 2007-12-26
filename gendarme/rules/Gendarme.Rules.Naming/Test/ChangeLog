@@ -1,3 +1,13 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AttributeEndsWithAttributeSuffixTest.cs: Deleted. The new
+	UseCorrectSuffixTest is a superset of the rule/tests.
+	* Test.Rules.Naming.mdp: Update MonoDevelop project file.
+	* UseCorrectPrefixTest.cs: New. Test cases from Daniel Abramov.
+	* UseCorrectCasingTest.cs: New. Test cases from Daniel Abramov.
+	* UseCorrectSuffixTest.cs: New. Test cases from Daniel Abramov.
+	* UsePreferredTermsTest.cs: New. Test cases from Daniel Abramov.
+
 2007-10-08  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DetectNonAlphaNumericsInTypeNamesTest.cs: Add test cases for 

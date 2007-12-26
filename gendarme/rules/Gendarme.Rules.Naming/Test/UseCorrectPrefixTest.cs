@@ -1,10 +1,10 @@
 //
-// Unit Test for AttributeEndsWithAttributeSuffix Rule
+// Unit Test for UseCorrectPrefixRule
 //
 // Authors:
-//	Néstor Salceda <nestor.salceda@gmail.com>
+//      Abramov Daniel <ex@vingrad.ru>
 //
-//  (C) 2007 Néstor Salceda
+//  (C) 2007 Abramov Daniel
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,116 +37,124 @@ using NUnit.Framework;
 
 namespace Test.Rules.Naming {
 
-	public class CorrectAttribute : Attribute {
+	public class CorrectClass {
 	}
 
-	public class Incorrect : Attribute {
+	public class AnotherCorrectClass {
 	}
 
-	public class OtherAttribute : CorrectAttribute {
+	public class CIncorrectClass {
 	}
-	
-	public class Other : CorrectAttribute {
+
+	public interface ICorrectInterface {
 	}
-	
-	public class CorrectContextStaticAttribute : ContextStaticAttribute {
+
+	public interface IncorrectInterface {
 	}
-	
-	public class OtherClass {
+
+	public interface AnotherIncorrectInterface {
 	}
-	
-	public class YetAnotherClass : System.Exception {
+
+	public class CLSAbbreviation { // ok
 	}
-	
+
+	public interface ICLSAbbreviation { // ok too
+	}
+
 	[TestFixture]
-	public class AttributeEndsWithAttributeSuffixTest {
+	public class UseCorrectPrefixTest {
+
 		private ITypeRule rule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
 		private MessageCollection messageCollection;
-	
+
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
-			rule = new AttributeEndsWithAttributeSuffixRule ();
+			rule = new UseCorrectPrefixRule ();
 			messageCollection = null;
 		}
-		
-		private void CheckMessageType (MessageCollection messageCollection, MessageType messageType) 
+
+		private void CheckMessageType (MessageCollection messageCollection, MessageType messageType)
 		{
 			IEnumerator enumerator = messageCollection.GetEnumerator ();
 			if (enumerator.MoveNext ()) {
 				Message message = (Message) enumerator.Current;
-				Assert.AreEqual (message.Type, messageType);
+				Assert.AreEqual (messageType, message.Type);
 			}
 		}
-		
+
 		[Test]
-		public void TestOneLevelInheritanceIncorrectName () 
+		public void TestCorrectClass ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.Incorrect"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.CorrectClass"];
+			messageCollection = rule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void TestAnotherCorrectClass ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Naming.AnotherCorrectClass"];
+			messageCollection = rule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void TestIncorrectClass ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Naming.CIncorrectClass"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (messageCollection.Count, 1);
+			Assert.AreEqual (1, messageCollection.Count);
 			CheckMessageType (messageCollection, MessageType.Error);
 		}
-		
+
 		[Test]
-		public void TestOneLevelInheritanceCorrectName () 
+		public void TestCorrectInterface ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.CorrectAttribute"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.ICorrectInterface"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
-		public void TestVariousLevelInheritanceCorrectName () 
+		public void TestIncorrectInterface ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.OtherAttribute"];
-			messageCollection = rule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-		}
-		
-		[Test]
-		public void TestVariousLevelInheritanceIncorrectName () 
-		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.Other"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.IncorrectInterface"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (messageCollection.Count, 1);
+			Assert.AreEqual (1, messageCollection.Count);
 			CheckMessageType (messageCollection, MessageType.Error);
 		}
-		
+
 		[Test]
-		public void TestVariousLevelInheritanceExternalTypeUndetermined () 
+		public void TestAnotherIncorrectInterface ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.CorrectContextStaticAttribute"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.AnotherIncorrectInterface"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-			//The System.ContextStaticAttribute class inherits from System.Attribute.
-			//But we can retrieve that info from a TypeReference, because now 
-			//Gendarme doesn't support loading assemblies.
+			Assert.IsNotNull (messageCollection);
+			Assert.AreEqual (1, messageCollection.Count);
+			CheckMessageType (messageCollection, MessageType.Error);
 		}
-		
+
 		[Test]
-		public void TestOneLevelInheritanceExternalTypeNoApplyed () 
+		public void TestClassAbbreviation ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.OtherClass"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.CLSAbbreviation"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
-		
+
 		[Test]
-		public void TestVariousLevelInheritanceExternalTypeNoApplyed () 
+		public void TestInterfaceAbbreviation ()
 		{
-			type = assembly.MainModule.Types ["Test.Rules.Naming.YetAnotherClass"];
+			type = assembly.MainModule.Types ["Test.Rules.Naming.ICLSAbbreviation"];
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
-			//The System.Random class doesn't inherit from System.Attribute.
-			//But we can retrieve that info from a TypeReference, because now 
-			//Gendarme doesn't support loading assemblies.
 		}
 	}
 }
