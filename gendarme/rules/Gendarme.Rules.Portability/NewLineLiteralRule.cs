@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +27,6 @@
 //
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -42,26 +41,34 @@ namespace Gendarme.Rules.Portability {
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// methods can be empty (e.g. p/invoke declarations)
-			if ((method.Body == null) || (method.Body.Instructions == null))
-				return null;
+			if (!method.HasBody)
+				return runner.RuleSuccess;
 
-			string fullname = method.DeclaringType.FullName;
-			MessageCollection results = new MessageCollection ();
+			// rule applies
+
+			string fullname = null;
+			MessageCollection results = null;
 			foreach (Instruction ins in method.Body.Instructions) {
-				switch (ins.OpCode.Name) {
-				case "ldstr":
+				switch (ins.OpCode.Code) {
+				case Code.Ldstr:
 					// check the string being referenced by the instruction
 					string s = (ins.Operand as string);
 					if (s == null)
 						continue;
 
 					if (s.IndexOfAny (InvalidChar) >= 0) {
+						if (results == null) {
+							results = new MessageCollection ();
+							fullname = method.DeclaringType.FullName;
+						}
+
 						Location loc = new Location (fullname, method.Name, ins.Offset);
 						// make the invalid char visible on output
 						s = s.Replace ("\n", "\\n");
 						s = s.Replace ("\r", "\\r");
 						Message msg = new Message (String.Format ("Found string: \"{0}\"", s),
 							loc, MessageType.Warning);
+
 						results.Add (msg);
 					}
 					break;
@@ -70,8 +77,9 @@ namespace Gendarme.Rules.Portability {
 				}
 			}
 
-			if (results.Count == 0)
-				return null;
+			if (results == null)
+				return runner.RuleSuccess;
+
 			return results;
 		}
 	}

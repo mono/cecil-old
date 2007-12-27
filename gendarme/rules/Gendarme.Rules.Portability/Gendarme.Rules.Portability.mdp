@@ -14,7 +14,8 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./NewLineLiteralRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="NewLineLiteralRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="FeatureRequiresRootPrivilegeOnUnixRule.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="framework" />

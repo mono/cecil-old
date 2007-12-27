@@ -1,4 +1,10 @@
 <rules>
+	<rule	Name="FeatureRequiresRootPrivilegeOnUnixRule" 
+		Type="Gendarme.Rules.Portability.FeatureRequiresRootPrivilegeOnUnixRule, Gendarme.Rules.Portability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#FeatureRequiresRootPrivilegeOnUnixRule" >
+		<problem>The method '{0}' use some literal values for new lines (e.g. \r\n) which aren't portable across operating systems.</problem>
+		<solution>Replace literals with Environment.NewLine.</solution>
+	</rule>
 	<rule	Name="NewLineLiteralRule" 
 		Type="Gendarme.Rules.Portability.NewLineLiteralRule, Gendarme.Rules.Portability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#NewLineLiteralRule" >

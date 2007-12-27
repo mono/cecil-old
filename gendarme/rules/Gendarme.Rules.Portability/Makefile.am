@@ -9,7 +9,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Portability.xml TestResult.xml
 
 portability_rules_sources_in = ../../AssemblyInfo.cs.in
 portability_rules_generated_sources = $(portability_rules_sources_in:.in=)
-portability_rules_sources = NewLineLiteralRule.cs
+portability_rules_sources = NewLineLiteralRule.cs FeatureRequiresRootPrivilegeOnUnixRule.cs
 
 portability_rules_build_sources = $(addprefix $(srcdir)/, $(portability_rules_sources))
 portability_rules_build_sources += $(portability_rules_generated_sources)
@@ -32,7 +32,7 @@ uninstall-hook:
 		rm -f $(DESTDIR)$(pkglibdir)/`basename $$ASM`; \
 	done;
 
-portability_test_sources = NewLineLiteralTest.cs
+portability_test_sources = NewLineLiteralTest.cs FeatureRequiresRootPrivilegeOnUnixTest.cs
 portability_test_build_sources = $(addprefix $(srcdir)/Test/, $(portability_test_sources))
 
 Test.Rules.Portability.dll: $(portability_rules_build_sources) $(portability_rules_SCRIPTS)
@@ -42,7 +42,7 @@ Test.Rules.Portability.dll: $(portability_rules_build_sources) $(portability_rul
 test: Test.Rules.Portability.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Portability.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Portability.dll
 
 self-test: $(portability_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(portability_rules_SCRIPTS)
