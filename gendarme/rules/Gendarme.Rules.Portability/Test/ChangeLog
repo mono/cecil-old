@@ -1,3 +1,11 @@
+2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* FeatureRequiresRootPrivilegeOnUnixTest.cs: New. Unit tests for 
+	FeatureRequiresRootPrivilegeOnUnixRule.
+	* NewLineLiteralTest.cs: Fix namespace and remove unneeded variable.
+	* Test.Rules.Portability.mdp: Add new rule to the MonoDevelop 
+	project file.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Portability.mdp: Update project file.

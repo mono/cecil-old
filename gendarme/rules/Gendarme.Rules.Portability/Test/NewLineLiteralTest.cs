@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,7 +34,7 @@ using Gendarme.Rules.Portability;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.Interop {
+namespace Test.Rules.Portability {
 
 	[TestFixture]
 	public class NewLineTest {
@@ -79,8 +79,7 @@ namespace Test.Rules.Interop {
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
-			module = assembly.MainModule;
-			type = assembly.MainModule.Types ["Test.Rules.Interop.NewLineTest"];
+			type = assembly.MainModule.Types ["Test.Rules.Portability.NewLineTest"];
 			rule = new NewLineLiteralRule ();
 		}
 

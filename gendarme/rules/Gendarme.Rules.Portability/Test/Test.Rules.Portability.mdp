@@ -14,7 +14,8 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./NewLineLiteralTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="NewLineLiteralTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="FeatureRequiresRootPrivilegeOnUnixTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="Gendarme.Rules.Portability" />
