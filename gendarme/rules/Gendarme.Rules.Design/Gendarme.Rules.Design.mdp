@@ -24,6 +24,7 @@
     <File name="EnumsShouldDefineAZeroValueRule.cs" subtype="Code" buildaction="Compile" />
     <File name="FlagsShouldNotDefineAZeroValueRule.cs" subtype="Code" buildaction="Compile" />
     <File name="TypesShouldBeInsideNamespacesRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="MainShouldNotBePublicRule.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="framework" />

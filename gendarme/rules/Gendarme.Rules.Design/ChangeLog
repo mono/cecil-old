@@ -1,3 +1,11 @@
+2007-12-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MainShouldNotBePublicRule.cs: New. Rule to check that the Main 
+	entry point isn't visible outside it's assembly. By Daniel Abramov.
+	* Gendarme.Rules.Design.xml.in: Added new rule description.
+	* Gendarme.Rules.Design.mdp: Add new file to MonoDevelop project file.
+	* Makefile.am: Add new rule/tests to the build.
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AbstractTypesShouldNotHavePublicConstructorsRule.cs: New. Rule

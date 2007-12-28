@@ -35,6 +35,12 @@
 		<problem>The enum '{0}' is marked by a [Flag] attribute and should not include a value of 0.</problem>
 		<solution>Review the member that has a value of 0, it is either unneeded or cannot work as expected with binary logic operators.</solution>
 	</rule>
+	<rule	Name="MainShouldNotBePublicRule"
+		Type="Gendarme.Rules.Design.MainShouldNotBePublicRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The entry point (Main) of the assembly '{0}' is visible to the outside world (ref: C# Programming Guide).</problem>
+		<solution>Reeduce entry point visibility if your language allows it. It may not be possible in some language, like VB).</solution>
+	</rule>
 	<rule	Name="TypesShouldBeInsideNamespacesRule"
 		Type="Gendarme.Rules.Design.TypesShouldBeInsideNamespacesRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
