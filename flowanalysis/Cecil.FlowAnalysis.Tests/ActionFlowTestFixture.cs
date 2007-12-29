@@ -34,6 +34,12 @@ namespace Cecil.FlowAnalysis.Tests {
 
 	[TestFixture]
 	public class ActionFlowTestFixture : AbstractFlowAnalysisTestFixture {
+		
+		[Test]
+		public void StaticField ()
+		{
+			RunTestCase ("StaticField");
+		}
 
 		[Test]
 		public void StringCast ()

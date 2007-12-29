@@ -1,0 +1,4 @@
+TestCase._field = 42
+local0 = TestCase._field
+goto block4
+block4: return local0
