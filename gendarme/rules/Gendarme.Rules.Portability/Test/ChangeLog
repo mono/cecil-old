@@ -1,3 +1,10 @@
+2007-12-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NewLineLiteralTest.cs: Remove unused variable (compiler warning).
+	* MonoCompatibilityReviewTest.cs: New. Unit tests by Andreas Noever
+	* Test.Rules.Portability.mdp: Add new test to MonoDevelop project 
+	file.
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* FeatureRequiresRootPrivilegeOnUnixTest.cs: New. Unit tests for 

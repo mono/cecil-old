@@ -41,7 +41,6 @@ namespace Test.Rules.Portability {
 
 		private IMethodRule rule;
 		private AssemblyDefinition assembly;
-		private ModuleDefinition module;
 		private TypeDefinition type;
 
 		public string GetNewLineLiteral_13 ()
