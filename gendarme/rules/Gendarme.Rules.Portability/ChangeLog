@@ -1,3 +1,13 @@
+2007-12-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MonoCompatibilityReviewRule.cs: New. Rule that use MoMA definition
+	files to report possible incompatibilities with Mono (Andreas Noever)
+	* MoMAWebService.cs: New. Wrapper for MoMA web service.
+	* Gendarme.Rules.Portability.xml.in: Add new rule definition.
+	* Gendarme.Rules.Portability.mdp: Add new rule to the MonoDevelop 
+	project file.
+	* Makefile.am: Add new rule/tests to the build.
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* FeatureRequiresRootPrivilegeOnUnixRule.cs: New. Rule that check

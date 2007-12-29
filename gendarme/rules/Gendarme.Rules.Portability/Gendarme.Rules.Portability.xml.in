@@ -5,6 +5,12 @@
 		<problem>The method '{0}' use some literal values for new lines (e.g. \r\n) which aren't portable across operating systems.</problem>
 		<solution>Replace literals with Environment.NewLine.</solution>
 	</rule>
+	<rule	Name="MonoCompatibilityReviewRule" 
+		Type="Gendarme.Rules.Portability.MonoCompatibilityReviewRule, Gendarme.Rules.Portability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#MonoCompatibilityReviewRule" >
+		<problem>The method '{0}' has some known limitations with Mono.</problem>
+		<solution>Check if this code is critical to your application. Also make sure your definition files are up to date.</solution>
+	</rule>
 	<rule	Name="NewLineLiteralRule" 
 		Type="Gendarme.Rules.Portability.NewLineLiteralRule, Gendarme.Rules.Portability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#NewLineLiteralRule" >

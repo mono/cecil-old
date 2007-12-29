@@ -9,13 +9,14 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Portability.xml TestResult.xml
 
 portability_rules_sources_in = ../../AssemblyInfo.cs.in
 portability_rules_generated_sources = $(portability_rules_sources_in:.in=)
-portability_rules_sources = NewLineLiteralRule.cs FeatureRequiresRootPrivilegeOnUnixRule.cs
+portability_rules_sources = NewLineLiteralRule.cs FeatureRequiresRootPrivilegeOnUnixRule.cs \
+	MonoCompatibilityReviewRule.cs MoMAWebService.cs
 
 portability_rules_build_sources = $(addprefix $(srcdir)/, $(portability_rules_sources))
 portability_rules_build_sources += $(portability_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Portability.dll: $(portability_rules_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(portability_rules_build_sources)
+	$(MCS) -debug -target:library -pkg:mono-cecil -pkg:dotnet -r:ICSharpCode.SharpZipLib.dll -r:../../bin/Gendarme.Framework.dll -out:$@ $(portability_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
@@ -32,7 +33,8 @@ uninstall-hook:
 		rm -f $(DESTDIR)$(pkglibdir)/`basename $$ASM`; \
 	done;
 
-portability_test_sources = NewLineLiteralTest.cs FeatureRequiresRootPrivilegeOnUnixTest.cs
+portability_test_sources = NewLineLiteralTest.cs FeatureRequiresRootPrivilegeOnUnixTest.cs \
+	MonoCompatibilityReviewTest.cs
 portability_test_build_sources = $(addprefix $(srcdir)/Test/, $(portability_test_sources))
 
 Test.Rules.Portability.dll: $(portability_rules_build_sources) $(portability_rules_SCRIPTS)
