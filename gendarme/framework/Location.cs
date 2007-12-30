@@ -49,7 +49,12 @@ namespace Gendarme.Framework {
 			this.offset = -1;
 		}
 
-		public Location (MethodDefinition method)
+		public Location (MethodDefinition method) :
+			this (method, -1)
+		{
+		}
+
+		public Location (MethodDefinition method, int offset)
 		{
 			if (method == null)
 				throw new ArgumentNullException ("method");

@@ -1,3 +1,8 @@
+2007-12-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Location.cs: Add new constructor that accept a MethodDefinition 
+	and an IL offset.
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Makefile.am: Add rocks to the build, switch compiler to linq
