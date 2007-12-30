@@ -10,7 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Portability.xml TestResult.xml
 portability_rules_sources_in = ../../AssemblyInfo.cs.in
 portability_rules_generated_sources = $(portability_rules_sources_in:.in=)
 portability_rules_sources = NewLineLiteralRule.cs FeatureRequiresRootPrivilegeOnUnixRule.cs \
-	MonoCompatibilityReviewRule.cs MoMAWebService.cs
+	MonoCompatibilityReviewRule.cs MoMAWebService.cs ExitCodeIsLimitedOnUnixRule.cs
 
 portability_rules_build_sources = $(addprefix $(srcdir)/, $(portability_rules_sources))
 portability_rules_build_sources += $(portability_rules_generated_sources)
@@ -34,7 +34,7 @@ uninstall-hook:
 	done;
 
 portability_test_sources = NewLineLiteralTest.cs FeatureRequiresRootPrivilegeOnUnixTest.cs \
-	MonoCompatibilityReviewTest.cs
+	MonoCompatibilityReviewTest.cs ExitCodeIsLimitedOnUnixTest.cs
 portability_test_build_sources = $(addprefix $(srcdir)/Test/, $(portability_test_sources))
 
 Test.Rules.Portability.dll: $(portability_rules_build_sources) $(portability_rules_SCRIPTS)

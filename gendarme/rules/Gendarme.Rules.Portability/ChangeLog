@@ -1,3 +1,11 @@
+2007-12-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* ExitCodeIsLimitedOnUnixRule.cs: New. Rule to detect usage of 
+	ExitCode (from Main or Environment.ExitCode / Exit) with values too
+	big for Unix systems.
+	* Gendarme.Rules.Portability.xml.in: Add new rule definition.
+	* Makefile.am: Add new rule/tests to the build.
+
 2007-12-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MonoCompatibilityReviewRule.cs: New. Rule that use MoMA definition
