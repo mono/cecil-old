@@ -1,0 +1,14 @@
+<rules>
+	<rule	Name="GetLastErrorMustBeCalledRightAfterPInvokeRule" 
+		Type="Gendarme.Rules.Interoperability.GetLastErrorMustBeCalledRightAfterPInvokeRule, Gendarme.Rules.Interoperability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>GetLastError is called too late after the p/invoke call. It's possible it's value could have changed.</problem>
+		<solution>Move the call to GetLastError just after the p/invoke call.</solution>
+	</rule>
+	<rule	Name="PInvokeShouldNotBeVisibleRule" 
+		Type="Gendarme.Rules.Interoperability.PInvokeShouldNotBeVisibleRule, Gendarme.Rules.Interoperability, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>P/Invoke methods should not be visible outside the assembly.</problem>
+		<solution>Don't direcly export p/invoke. Wrap them in a class and provide adequate parameter validations.</solution>
+	</rule>
+</rules>

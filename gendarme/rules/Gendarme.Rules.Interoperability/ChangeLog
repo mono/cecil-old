@@ -1,0 +1,9 @@
+2007-12-30  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* GetLastErrorMustBeCalledRightAfterPInvokeRule.cs: New. Rule to 
+	ensure GetLastError is called soon enough after a p.invoke call.
+	Rule by Andreas Noever
+	* PInvokeShouldNotBeVisibleRule.cs: New. Rule to check that all
+	p/invoke declaration aren't directly visible from assemblies.
+	* Gendarme.Rules.Interoperability.xml.in: Rules descritions.
+	* Makefile.am: New. Build file for rules and tests.
