@@ -89,5 +89,8 @@ rules/Gendarme.Rules.BadPractice/Test/Makefile
 rules/Gendarme.Rules.Design/Makefile
 rules/Gendarme.Rules.Design/Gendarme.Rules.Design.xml
 rules/Gendarme.Rules.Design/Test/Makefile
+rules/Gendarme.Rules.Interoperability/Makefile
+rules/Gendarme.Rules.Interoperability/Gendarme.Rules.Interoperability.xml
+rules/Gendarme.Rules.Interoperability/Test/Makefile
 ])
 
