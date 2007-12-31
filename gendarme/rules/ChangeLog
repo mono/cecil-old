@@ -1,3 +1,7 @@
+2007-12-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Add Gendarme.Rules.Interoperability to the build.
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* rules.xml: Added Correctness rules (except NullDeRef) to 
