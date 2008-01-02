@@ -12,6 +12,7 @@
       <Entry build="True" name="Gendarme.Rules.Design" configuration="Debug" />
       <Entry build="True" name="Gendarme.Rules.BadPractice" configuration="Debug" />
       <Entry build="True" name="Gendarme.Rules.Smells" configuration="Debug" />
+      <Entry build="True" name="Gendarme.Rules.Interoperability" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="Gendarme.Rules.Security" configuration="Release" />
@@ -25,6 +26,7 @@
       <Entry build="True" name="Gendarme.Rules.Design" configuration="Release" />
       <Entry build="True" name="Gendarme.Rules.BadPractice" configuration="Release" />
       <Entry build="True" name="Gendarme.Rules.Smells" configuration="Release" />
+      <Entry build="True" name="Gendarme.Rules.Interoperability" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="Gendarme.Rules.Security" single="True">
@@ -39,19 +41,21 @@
     <Execute type="None" entry="Gendarme.Rules.Design" />
     <Execute type="None" entry="Gendarme.Rules.BadPractice" />
     <Execute type="None" entry="Gendarme.Rules.Smells" />
+    <Execute type="None" entry="Gendarme.Rules.Interoperability" />
   </StartMode>
   <DeployTargets />
   <Entries>
-    <Entry filename="./Gendarme.Rules.Security/Gendarme.Rules.Security.mdp" />
-    <Entry filename="./Gendarme.Rules.Portability/Gendarme.Rules.Portability.mdp" />
-    <Entry filename="./Gendarme.Rules.Performance/Gendarme.Rules.Performance.mdp" />
-    <Entry filename="./Gendarme.Rules.Exceptions/Gendarme.Rules.Exceptions.mdp" />
-    <Entry filename="./Gendarme.Rules.Correctness/Gendarme.Rules.Correctness.mdp" />
-    <Entry filename="./Gendarme.Rules.Concurrency/Gendarme.Rules.Concurrency.mdp" />
-    <Entry filename="./Gendarme.Rules.Ui/Gendarme.Rules.Ui.mdp" />
-    <Entry filename="./Gendarme.Rules.Naming/Gendarme.Rules.Naming.mdp" />
-    <Entry filename="./Gendarme.Rules.Design/Gendarme.Rules.Design.mdp" />
-    <Entry filename="./Gendarme.Rules.BadPractice/Gendarme.Rules.BadPractice.mdp" />
-    <Entry filename="./Gendarme.Rules.Smells/Gendarme.Rules.Smells.mdp" />
+    <Entry filename="Gendarme.Rules.Security/Gendarme.Rules.Security.mdp" />
+    <Entry filename="Gendarme.Rules.Portability/Gendarme.Rules.Portability.mdp" />
+    <Entry filename="Gendarme.Rules.Performance/Gendarme.Rules.Performance.mdp" />
+    <Entry filename="Gendarme.Rules.Exceptions/Gendarme.Rules.Exceptions.mdp" />
+    <Entry filename="Gendarme.Rules.Correctness/Gendarme.Rules.Correctness.mdp" />
+    <Entry filename="Gendarme.Rules.Concurrency/Gendarme.Rules.Concurrency.mdp" />
+    <Entry filename="Gendarme.Rules.Ui/Gendarme.Rules.Ui.mdp" />
+    <Entry filename="Gendarme.Rules.Naming/Gendarme.Rules.Naming.mdp" />
+    <Entry filename="Gendarme.Rules.Design/Gendarme.Rules.Design.mdp" />
+    <Entry filename="Gendarme.Rules.BadPractice/Gendarme.Rules.BadPractice.mdp" />
+    <Entry filename="Gendarme.Rules.Smells/Gendarme.Rules.Smells.mdp" />
+    <Entry filename="Gendarme.Rules.Interoperability/Gendarme.Rules.Interoperability.mdp" />
   </Entries>
 </Combine>
