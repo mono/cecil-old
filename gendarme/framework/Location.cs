@@ -61,7 +61,7 @@ namespace Gendarme.Framework {
 
 			this.type = method.DeclaringType.FullName;
 			this.method = method.Name;
-			this.offset = -1;
+			this.offset = offset;
 		}
 
 		public override string ToString ()

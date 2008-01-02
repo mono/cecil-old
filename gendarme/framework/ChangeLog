@@ -1,3 +1,7 @@
+2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Location.cs: Store the offset (not a constant)
+
 2007-12-29  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Location.cs: Add new constructor that accept a MethodDefinition 
