@@ -49,13 +49,13 @@ namespace Gendarme.Rules.Interoperability {
 			AllowedCalls.Add ("System.Boolean System.IntPtr::op_Equality(System.IntPtr,System.IntPtr)");
 		}
 
-		private void EnsureExists (ref MessageCollection msg)
+		private static void EnsureExists (ref MessageCollection msg)
 		{
 			if (msg == null)
 				msg = new MessageCollection ();
 		}
 
-		private Instruction GetNextCall (Instruction ins)
+		private static Instruction GetNextCall (Instruction ins)
 		{
 			while ((ins = ins.Next) != null) {
 				switch (ins.OpCode.Code) {
