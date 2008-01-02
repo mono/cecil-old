@@ -11,6 +11,7 @@
 		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
 		<rules include="*" from="Gendarme.Rules.Smells.dll"/>
+		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
 	</ruleset>
 
 	<ruleset name="default">
@@ -23,6 +24,7 @@
 		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
 		<rules exclude="ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
+		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
 	</ruleset>
 
 	<ruleset name="mono-bcl">
@@ -37,7 +39,7 @@
 			EqualShouldHandleNullArgRule |
 			ImplementingEqualsButNotGetHashCodeAndViceVersaRule |
 			ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
-		
+		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
 	</ruleset>
 
 	<ruleset name="concurrency">
@@ -72,5 +74,8 @@
 	</ruleset>
 	<ruleset name="design">
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
+	</ruleset>
+	<ruleset name="interoperability">
+		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
 	</ruleset>
 </gendarme>

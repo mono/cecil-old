@@ -1,7 +1,8 @@
-2008-01-02  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* rules.mds, tests.mds: Add Gendarme.Rules.Interoperability to
 	MonoDevelop solution files.
+	* rules.xml: Add Gendarme.Rules.Interoperability rules
 
 2007-12-30  Sebastien Pouliot  <sebastien@ximian.com>
 
