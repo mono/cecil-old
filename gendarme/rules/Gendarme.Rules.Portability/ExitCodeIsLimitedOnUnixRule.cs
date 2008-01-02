@@ -35,7 +35,7 @@ namespace Gendarme.Rules.Portability {
 
 	public class ExitCodeIsLimitedOnUnixRule : IAssemblyRule, IMethodRule {
 
-		private enum InspectionResults {
+		private enum InspectionResult {
 			Good,
 			Bad,
 			Unsure
@@ -67,15 +67,15 @@ namespace Gendarme.Rules.Portability {
 				case Code.Nop:
 					break;
 				case Code.Ret:
-					InspectionResults results = CheckInstruction (previous);
-					if (results == InspectionResults.Good)
+					InspectionResult results = CheckInstruction (previous);
+					if (results == InspectionResult.Good)
 						break;
 
 					Location loc = new Location (body.Method, current.Offset);
 					Message message = null;
-					if (results == InspectionResults.Bad)
+					if (results == InspectionResult.Bad)
 						message = new Message ("In Unix, unlike in Windows, Main () method must return values between 0 and 255 inclusively. Change the exit code or change method return type from 'int' to 'void'.", loc, MessageType.Error);
-					else if (results == InspectionResults.Unsure)
+					else if (results == InspectionResult.Unsure)
 						message = new Message ("In Unix, unlike in Windows, Main () method must return values between 0 and 255 inclusively. Be sure not to return values that are out of range.", loc, MessageType.Warning);
 					if (messages == null)
 						messages = new MessageCollection ();
@@ -89,12 +89,12 @@ namespace Gendarme.Rules.Portability {
 			return messages;
 		}
 
-		private static InspectionResults CheckInstruction (Instruction instruction)
+		private static InspectionResult CheckInstruction (Instruction instruction)
 		{
 			// checks if an instruction loads an inapproriate value onto the stack			
 			switch (instruction.OpCode.Code) {
 			case Code.Ldc_I4_M1: // -1 is pushed onto stack
-				return InspectionResults.Bad;
+				return InspectionResult.Bad;
 			case Code.Ldc_I4_0: // small numbers are pushed onto stack -- all OK
 			case Code.Ldc_I4_1:
 			case Code.Ldc_I4_2:
@@ -104,15 +104,15 @@ namespace Gendarme.Rules.Portability {
 			case Code.Ldc_I4_6:
 			case Code.Ldc_I4_7:
 			case Code.Ldc_I4_8:
-				return InspectionResults.Good;
+				return InspectionResult.Good;
 			case Code.Ldc_I4_S: // sbyte ([-128, 127]) - should check >= 0
 				sbyte b = (sbyte) instruction.Operand;
-				return (b >= 0) ? InspectionResults.Good : InspectionResults.Bad;
+				return (b >= 0) ? InspectionResult.Good : InspectionResult.Bad;
 			case Code.Ldc_I4: // normal int - should check whether is within [0, 255]
 				int a = (int) instruction.Operand;
-				return (a >= 0 && a <= 255) ? InspectionResults.Good : InspectionResults.Bad;
+				return (a >= 0 && a <= 255) ? InspectionResult.Good : InspectionResult.Bad;
 			default:
-				return InspectionResults.Unsure;
+				return InspectionResult.Unsure;
 			}
 
 		}
@@ -149,8 +149,8 @@ namespace Gendarme.Rules.Portability {
 					if (calledMethod.DeclaringType.FullName != "System.Environment")
 						break;
 
-					InspectionResults results = CheckInstruction (previous);
-					if (results == InspectionResults.Good)
+					InspectionResult results = CheckInstruction (previous);
+					if (results == InspectionResult.Good)
 						break;
 
 					if (messages == runner.RuleSuccess)
@@ -158,7 +158,7 @@ namespace Gendarme.Rules.Portability {
 
 					Message message = null;
 					Location loc = new Location (method.DeclaringType.FullName, method.Name, current.Offset);
-					if (results == InspectionResults.Unsure)
+					if (results == InspectionResult.Unsure)
 						message = new Message ("In Unix, unlike in Windows, process exit code can be a value between 0 and 255 inclusively. Be sure not to set it to values that are out of range.", loc, MessageType.Warning);
 					else // bad
 						message = new Message ("In Unix, unlike in Windows, process exit code can be a value between 0 and 255 inclusively. Do not set it to values that are out of range.", loc, MessageType.Error);

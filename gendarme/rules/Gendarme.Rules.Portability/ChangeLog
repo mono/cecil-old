@@ -1,3 +1,8 @@
+2008-01-02  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ExitCodeIsLimitedOnUnixRule.cs: Rename InspectionResult[s]
+	* MonoCompatibilityReviewRule.cs: Change some methods to static.
+
 2007-12-29  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* ExitCodeIsLimitedOnUnixRule.cs: New. Rule to detect usage of 

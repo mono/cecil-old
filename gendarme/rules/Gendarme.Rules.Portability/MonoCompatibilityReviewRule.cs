@@ -114,7 +114,7 @@ namespace Gendarme.Rules.Portability {
 			}
 		}
 
-		private Dictionary<string, string> Read (StreamReader reader, bool split)
+		private static Dictionary<string, string> Read (StreamReader reader, bool split)
 		{
 			Dictionary<string, string> dict = new Dictionary<string, string> ();
 			string line;
@@ -129,7 +129,7 @@ namespace Gendarme.Rules.Portability {
 			return dict;
 		}
 
-		private void Check (Dictionary<string, string> dict, string calledMethod,
+		private static void Check (Dictionary<string, string> dict, string calledMethod,
 				   MethodDefinition method, Instruction ins,
 				   ref MessageCollection results, string error, MessageType type)
 		{
