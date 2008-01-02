@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -141,6 +141,14 @@ namespace Test.Framework.Rocks {
 			Assert.IsTrue (GetMethod ("Test.Framework.Rocks.MethodRocksTest/MainClassVoidStrings", "Main").IsMain (), "MainClassVoidStrings");
 			Assert.IsTrue (GetMethod ("Test.Framework.Rocks.MethodRocksTest/MainClassIntStrings", "Main").IsMain (), "MainClassIntStrings");
 			Assert.IsFalse (GetMethod ("FixtureSetUp").IsMain (), "FixtureSetUp");
+		}
+
+		[Test]
+		public void IsProperty ()
+		{
+			Assert.IsTrue (GetMethod ("get_Value").IsProperty (), "get_Value");
+			Assert.IsTrue (GetMethod ("set_Value").IsProperty (), "set_Value");
+			Assert.IsFalse (GetMethod ("FixtureSetUp").IsProperty (), "FixtureSetUp");
 		}
 
 		[Test]
