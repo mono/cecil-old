@@ -1,3 +1,11 @@
+2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* MethodRocks.cs: Added IsArray extension method (based on code 
+	from Adrian Tsai).
+	* TypeRocks.cs: Added IsAttribute and Inherits extensions methods
+	(based on code from Daniel Abramov) and IsProperty (based on code
+	from Adrian Tsai).
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* CustomAttributeRocks.cs: New. Extension methods for Cecil's 

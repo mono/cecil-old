@@ -3,8 +3,12 @@
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
+//      Daniel Abramov <ex@vingrad.ru>
+//	Adrian Tsai <adrian_tsai@hotmail.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
+// (C) 2007 Daniel Abramov
+// Copyright (c) 2007 Adrian Tsai
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -88,6 +92,54 @@ namespace Gendarme.Framework.Rocks {
 				return parent.Implements (interfaceName);
 
 			return false;
+		}
+
+		/// <summary>
+		/// Check if the type inherits from the specified type. Note that it is possible that
+		/// we might now be able to know the complete inheritance chain since the assembly 
+		/// where the information resides could be unavailable.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <param name="className">Full name of the base class</param>
+		/// <returns>True if the type inherits from specified class, False otherwise</returns>
+		public static bool Inherits (this TypeReference self, string className)
+		{
+			if (className == null)
+				throw new ArgumentNullException ("className");
+
+			TypeReference current = self;
+			while ((current != null) && (current.FullName != "System.Object")) {
+				if (current.FullName == className)
+					return true;
+
+				// FIXME: plugin AssemblyResolver when ready
+				TypeDefinition type = (current as TypeDefinition);
+				current = (type == null) ? null : type.BaseType;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Check if the type represent an array (of any other type).
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <returns>True if the type is an array, False otherwise</returns>
+		public static bool IsArray (this TypeReference self)
+		{
+			return (self is ArrayType);
+		}
+
+		/// <summary>
+		/// Checks if type is attribute. Note that it is possible that
+		/// we might now be able to know all inheritance since the assembly where 
+		/// the information resides could be unavailable.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <returns>True if the type inherits from <c>System.Attribute</c>, 
+		/// False otherwise.</returns>
+		public static bool IsAttribute (this TypeDefinition self)
+		{
+			return self.Inherits ("System.Attribute");
 		}
 
 		/// <summary>
