@@ -1,3 +1,12 @@
+2008-01-03  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidReturningArraysOnPropertiesRule.cs: New. Rule to warn for 
+	properties that returns arrays. By Adrian Tsai.
+	* Gendarme.Rules.Performance.xml.in: Add rule description.
+	* Gendarme.Rules.Performance.mdp: Add rule to MonoDevelop project 
+	file.
+	* Makefile.am: Add rule and tests to the build.
+
 2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidUnusedParameterRule.cs: If the method is anonymous then, gendarme

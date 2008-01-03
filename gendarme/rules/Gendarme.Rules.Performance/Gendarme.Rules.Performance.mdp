@@ -7,23 +7,23 @@
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="./bin/Release" assembly="Gendarme.Rules.Performance" />
+      <Output directory="bin/Release" assembly="Gendarme.Rules.Performance" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="False" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Csc" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./EmptyDestructorRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./IDisposableWithDestructorWithoutSuppressFinalizeRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./UseStringEmptyRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./Gendarme.Rules.Performance.xml.in" subtype="Code" buildaction="Nothing" />
-    <File name="./AvoidUnusedParametersRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidUncalledPrivateCodeRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidUninstantiatedInternalClassesRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./UsingStringLengthInsteadOfCheckingEmptyStringRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidToStringOnStringsRule.cs" subtype="Code" buildaction="Compile" />
-    <File name="./DontIgnoreMethodResultRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="EmptyDestructorRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="IDisposableWithDestructorWithoutSuppressFinalizeRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseStringEmptyRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="Gendarme.Rules.Performance.xml.in" subtype="Code" buildaction="Nothing" />
+    <File name="AvoidUnusedParametersRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidUncalledPrivateCodeRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidUninstantiatedInternalClassesRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="UsingStringLengthInsteadOfCheckingEmptyStringRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidToStringOnStringsRule.cs" subtype="Code" buildaction="Compile" />
+    <File name="DontIgnoreMethodResultRule.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="framework" />

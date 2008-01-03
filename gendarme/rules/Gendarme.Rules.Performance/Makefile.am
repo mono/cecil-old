@@ -12,13 +12,13 @@ performance_rules_generated_sources = $(performance_rules_sources_in:.in=)
 performance_rules_sources = EmptyDestructorRule.cs IDisposableWithDestructorWithoutSuppressFinalizeRule.cs \
 	UseStringEmptyRule.cs AvoidUnusedParametersRule.cs AvoidUninstantiatedInternalClassesRule.cs \
 	AvoidUncalledPrivateCodeRule.cs AvoidToStringOnStringsRule.cs DontIgnoreMethodResultRule.cs \
-	UsingStringLengthInsteadOfCheckingEmptyStringRule.cs
+	UsingStringLengthInsteadOfCheckingEmptyStringRule.cs AvoidReturningArraysOnPropertiesRule.cs
 
 performance_rules_build_sources = $(addprefix $(srcdir)/, $(performance_rules_sources))
 performance_rules_build_sources += $(performance_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Performance.dll: $(performance_rules_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(performance_rules_build_sources)
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(performance_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
@@ -38,7 +38,7 @@ uninstall-hook:
 performance_test_sources = EmptyDestructorTest.cs IDisposableWithDestructorWithoutSuppressFinalizeTest.cs \
 	UseStringEmptyTest.cs AvoidUnusedParametersTest.cs UsingStringLengthInsteadOfCheckingEmptyStringTest.cs \
 	AvoidUncalledPrivateCodeTest.cs AvoidToStringOnStringsTest.cs AvoidUninstantiatedInternalClassesTest.cs \
-	DontIgnoreMethodResultTest.cs
+	DontIgnoreMethodResultTest.cs AvoidReturningArraysOnPropertiesTest.cs
 
 performance_test_build_sources = $(addprefix $(srcdir)/Test/, $(performance_test_sources))
 

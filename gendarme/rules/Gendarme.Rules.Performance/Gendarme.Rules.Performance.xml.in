@@ -1,4 +1,10 @@
 <rules>
+	<rule	Name="AvoidReturningArraysOnPropertiesRule" 
+		Type="Gendarme.Rules.Performance.AvoidReturningArraysOnPropertiesRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#AvoidReturningArraysOnPropertiesRule" >
+		<problem>The property '{0}' returns an array.</problem>
+		<solution>Change the property to a method.</solution>
+	</rule>
 	<rule	Name="EmptyDestructorRule" 
 		Type="Gendarme.Rules.Performance.EmptyDestructorRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#EmptyDestructorRule" >
