@@ -38,8 +38,8 @@ namespace Gendarme.Framework {
 	public abstract class Runner {
 
 		private Rules rules;
-		private Violations violations;
-		private static MessageCollection failure = new MessageCollection();
+		private ViolationCollection violations;
+		private static MessageCollection failure = new MessageCollection ();
 		protected bool debug = false;
 
 		public Rules Rules {
@@ -50,10 +50,10 @@ namespace Gendarme.Framework {
 			}
 		}
 
-		public Violations Violations {
+		public ViolationCollection Violations {
 			get {
 				if (violations == null)
-					violations = new Violations ();
+					violations = new ViolationCollection ();
 				return violations;
 			}
 		}
@@ -76,12 +76,12 @@ namespace Gendarme.Framework {
 			}
 		}
 
-		private IRule CreateRuleFromType (Type type)
+		private static IRule CreateRuleFromType (Type type)
 		{
 			return (IRule) Activator.CreateInstance (type);
 		}
 
-		private bool IsContainedInRuleSet (string rule, string mask)
+		private static bool IsContainedInRuleSet (string rule, string mask)
 		{
 			string[] ruleSet = mask.Split ('|');
 			foreach (string entry in ruleSet) {
@@ -115,7 +115,7 @@ namespace Gendarme.Framework {
 			return total;
 		}
 
-		void LoadRules (Type rule, Type type, RuleCollection rules, ref int count)
+		static void LoadRules (Type rule, Type type, RuleCollection rules, ref int count)
 		{
 			if (!rule.IsAssignableFrom (type))
 				return;

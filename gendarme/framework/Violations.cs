@@ -5,7 +5,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //	Christian Birkl <christian.birkl@gmail.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005, 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,11 +32,11 @@ using System.Collections;
 
 namespace Gendarme.Framework {
 
-	public class Violations : IEnumerable {
+	public class ViolationCollection : IEnumerable {
 
 		private ArrayList list;
 
-		internal Violations ()
+		internal ViolationCollection ()
 		{
 		}
 

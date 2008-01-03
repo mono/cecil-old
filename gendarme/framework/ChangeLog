@@ -1,3 +1,10 @@
+2008-01-03  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Runner.cs: renamed Violation[s|Collection] and change some methods
+	to static (fix warnings)
+	* Violation.cs: Don't expose public fields (fix warning)
+	* Violations.cs: Rename class to ViolationCollection (fix warning)
+
 2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Location.cs: Store the offset (not a constant)
