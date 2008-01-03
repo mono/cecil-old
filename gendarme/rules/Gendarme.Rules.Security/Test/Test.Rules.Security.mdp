@@ -14,13 +14,13 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./MethodCallWithSubsetLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./NonVirtualMethodWithInheritanceDemandTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./SealedTypeWithInheritanceDemandTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./SecureGetObjectDataOverridesTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./TypeExposeFieldsTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./TypeIsNotSubsetOfMethodSecurityTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./TypeLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="MethodCallWithSubsetLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="NonVirtualMethodWithInheritanceDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="SealedTypeWithInheritanceDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="SecureGetObjectDataOverridesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="TypeExposeFieldsTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="TypeIsNotSubsetOfMethodSecurityTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="TypeLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="Gendarme.Rules.Security" />

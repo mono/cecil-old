@@ -1,3 +1,9 @@
+2008-01-03  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodCallWithSubsetLinkDemandRule.cs: Change Check method to 
+	static to fix warning.
+	*.mdp: MonoDevelop removed the . before filenames :|
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodCallWithSubsetLinkDemandRule.cs: Actualize one of the oldest
