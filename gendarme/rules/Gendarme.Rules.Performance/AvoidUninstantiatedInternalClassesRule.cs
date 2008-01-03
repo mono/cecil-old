@@ -104,9 +104,14 @@ namespace Gendarme.Rules.Performance {
 			if (!method.HasBody)
 				return;
 
+			// this is needed in case we return an enum
+			TypeReference t = method.ReturnType.ReturnType;
+			if (!list.Contains (t))
+				list.Add (t);
+
 			foreach (Instruction ins in method.Body.Instructions) {
 				if (ins.OpCode == OpCodes.Newobj) {
-					TypeReference t = ins.Operand as TypeReference;
+					t = ins.Operand as TypeReference;
 					if (t == null) {
 						MethodReference m = ins.Operand as MethodReference;
 						if (m != null)

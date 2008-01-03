@@ -1,3 +1,9 @@
+2008-01-03  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidUncalledPrivateCodeRule.cs: Updated/simplified to use rocks.
+	* AvoidUninstantiatedInternalClassesRule.cs: Fix rule to handle
+	enums correctly.
+
 2008-01-03  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidReturningArraysOnPropertiesRule.cs: New. Rule to warn for 
