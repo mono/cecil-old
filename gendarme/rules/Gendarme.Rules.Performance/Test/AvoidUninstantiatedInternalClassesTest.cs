@@ -100,6 +100,27 @@ namespace Test.Rules.Performance {
 		void display ();
 	}
 
+	public class NestedEnumInstantiated {
+		private enum PrivateEnum {
+			Good,
+			Bad,
+			Unsure
+		}
+
+		private static PrivateEnum GetMe ()
+		{
+			return PrivateEnum.Good;
+		}
+	}
+
+	public class NestedEnumNotInstantiated {
+		private enum PrivateEnum {
+			Good,
+			Bad,
+			Unsure
+		}
+	}
+
 	[TestFixture]
 	public class AvoidUninstantiatedInternalClassesTest {
 		
@@ -184,6 +205,22 @@ namespace Test.Rules.Performance {
 		public void iFaceTest ()
 		{
 			type = GetTest ("IFace");
+			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void NestedEnumInstantiated ()
+		{
+			type = GetTest ("NestedEnumInstantiated");
+			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void NestedEnumNotInstantiated ()
+		{
+			type = GetTest ("NestedEnumNotInstantiated");
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
