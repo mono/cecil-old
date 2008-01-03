@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -212,7 +214,7 @@ namespace Test.Rules.Performance {
 		[Test]
 		public void NestedEnumInstantiated ()
 		{
-			type = GetTest ("NestedEnumInstantiated");
+			type = GetTest ("NestedEnumInstantiated/PrivateEnum");
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
@@ -220,9 +222,9 @@ namespace Test.Rules.Performance {
 		[Test]
 		public void NestedEnumNotInstantiated ()
 		{
-			type = GetTest ("NestedEnumNotInstantiated");
+			type = GetTest ("NestedEnumNotInstantiated/PrivateEnum");
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			Assert.IsNotNull (messageCollection);
 		}
 	}
 }
