@@ -17,6 +17,18 @@
 		<problem>The property '{0}' does not provide a getter.</problem>
 		<solution>Add a getter to the property or change the property into a method.</solution>
 	</rule>
+	<rule	Name="AvoidPublicInstanceFieldsRule"
+		Type="Gendarme.Rules.Design.AvoidPublicInstanceFieldsRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' contains public instance fields.</problem>
+		<solution>If possible change the public fields to properties.</solution>
+	</rule>
+	<rule	Name="ConsiderConvertingMethodToPropertyRule"
+		Type="Gendarme.Rules.Design.ConsiderConvertingMethodToPropertyRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The method '{0}' looks like a candidate to be a property.</problem>
+		<solution>If possible change the method to a property, otherwise you can ignore the rule.</solution>
+	</rule>
 	<rule	Name="DontDeclareProtectedFieldsInSealedClassRule" 
 		Type="Gendarme.Rules.Design.DontDeclareProtectedFieldsInSealedClassRule, Gendarme.Rules.Dodgy, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#DontDeclareProtectedFieldsInSealedClassRule" >

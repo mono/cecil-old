@@ -12,7 +12,8 @@ design_rules_generated_sources = $(design_rules_sources_in:.in=)
 design_rules_sources = DontDeclareProtectedFieldsInSealedClassRule.cs UsingCloneWithoutImplementingICloneableRule.cs \
 	DefineAZeroValueRule.cs EnumsShouldDefineAZeroValueRule.cs FlagsShouldNotDefineAZeroValueRule.cs \
 	AbstractTypesShouldNotHavePublicConstructorsRule.cs AvoidEmptyInterfaceRule.cs TypesShouldBeInsideNamespacesRule.cs \
-	AvoidPropertiesWithoutGetAccessorRule.cs MainShouldNotBePublicRule.cs
+	AvoidPropertiesWithoutGetAccessorRule.cs MainShouldNotBePublicRule.cs ConsiderConvertingMethodToPropertyRule.cs \
+	AvoidPublicInstanceFieldsRule.cs
 
 design_rules_build_sources = $(addprefix $(srcdir)/, $(design_rules_sources))
 design_rules_build_sources += $(design_rules_generated_sources)
@@ -38,7 +39,8 @@ uninstall-hook:
 design_test_sources = DontDeclareProtectedFieldsInSealedClassTest.cs UsingCloneWithoutImplementingICloneableTest.cs \
 	EnumsShouldDefineAZeroValueTest.cs FlagsShouldNotDefineAZeroValueTest.cs \
 	AbstractTypesShouldNotHavePublicConstructorsTest.cs AvoidEmptyInterfaceTest.cs TypesShouldBeInsideNamespacesTest.cs \
-	AvoidPropertiesWithoutGetAccessorTest.cs MainShouldNotBePublicTest.cs
+	AvoidPropertiesWithoutGetAccessorTest.cs MainShouldNotBePublicTest.cs ConsiderConvertingMethodToPropertyTest.cs \
+	AvoidPublicInstanceFieldsTest.cs
 
 design_test_build_sources = $(addprefix $(srcdir)/Test/, $(design_test_sources))
 
@@ -49,7 +51,7 @@ Test.Rules.Design.dll: $(design_rules_build_sources) $(design_rules_SCRIPTS)
 test: Test.Rules.Design.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Design.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Design.dll
 
 self-test: $(design_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(design_rules_SCRIPTS)

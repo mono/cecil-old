@@ -1,3 +1,13 @@
+2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidPublicInstanceFieldsRule.cs: New. Rule to check for public
+	instance fields that could be converted into properties [Adrian Tsai]
+	* ConsiderConvertingMethodToPropertyRule.cs: New. Rule to check
+	for methods that could be converted into properties [Adrian Tsai]
+	* Gendarme.Rules.Design.xml.in: Added new rule descriptions.
+	* Gendarme.Rules.Design.mdp: Added files to MonoDevelop project file.
+	* Makefile.am: Add new rules/tests to the build.
+
 2007-12-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MainShouldNotBePublicRule.cs: New. Rule to check that the Main 
