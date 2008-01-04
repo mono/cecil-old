@@ -1,3 +1,11 @@
+2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidPublicInstanceFieldsTest.cs: New. Unit tests from Adrian Tsai
+	* ConsiderConvertingMethodToPropertyTest.cs: New. Unit tests from 
+	Adrian Tsai
+	* Test.Rules.Design.mdp: Add new unit tests to MonoDevelop 
+	project	file.
+
 2007-12-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MainShouldNotBePublicTest.cs: New. Unit tests from Daniel Abramov.
