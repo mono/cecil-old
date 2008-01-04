@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005,2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,17 +27,17 @@
 //
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Performance {
 
 	public class IDisposableWithDestructorWithoutSuppressFinalizeRule : ITypeRule {
 
-		private bool MethodMatchNameVoidEmpty (MethodDefinition md, string methodName)
+		private static bool MethodMatchNameVoidEmpty (MethodDefinition md, string methodName)
 		{
 			if (md.Name != methodName)
 				return false;
@@ -49,14 +49,14 @@ namespace Gendarme.Rules.Performance {
 		private MessageCollection Recurse (MethodDefinition method, int level, Runner runner)
 		{
 			// some methods have no body (e.g. p/invokes, icalls)
-			if (method.Body == null) {
+			if (!method.HasBody)
 				return runner.RuleFailure;
-			}
 
 			foreach (Instruction ins in method.Body.Instructions) {
-				switch (ins.OpCode.Name) {
-				case "call":
-				case "callvirt":
+				switch (ins.OpCode.Code) {
+				case Code.Call:
+				case Code.Calli:
+				case Code.Callvirt:
 					// are we calling GC.SuppressFinalize ?
 					if (ins.Operand.ToString () == "System.Void System.GC::SuppressFinalize(System.Object)")
 						return runner.RuleSuccess;
@@ -76,14 +76,7 @@ namespace Gendarme.Rules.Performance {
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// #1 - does the type implements System.IDisposable ?
-			bool idisposable = false;
-			foreach (TypeReference i in type.Interfaces) {
-				if (i.ToString () == "System.IDisposable") {
-					idisposable = true;
-					break;
-				}
-			}
-			if (!idisposable)
+			if (!type.Implements ("System.IDisposable"))
 				return runner.RuleSuccess;
 
 			// #2 - look for the Dispose method
@@ -100,14 +93,7 @@ namespace Gendarme.Rules.Performance {
 				return runner.RuleSuccess;
 
 			// #3 - look for a destructor
-			MethodDefinition destructor = null;
-			foreach (MethodDefinition md in type.Methods) {
-				if (MethodMatchNameVoidEmpty (md, "Finalize")) {
-					destructor = md;
-					break;
-				}
-			}
-			if (destructor == null)
+			if (type.GetFinalizer () == null)
 				return runner.RuleSuccess;
 
 			// #4 - look if GC.SuppressFinalize is being called in the

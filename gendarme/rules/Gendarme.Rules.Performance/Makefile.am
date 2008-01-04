@@ -12,7 +12,8 @@ performance_rules_generated_sources = $(performance_rules_sources_in:.in=)
 performance_rules_sources = EmptyDestructorRule.cs IDisposableWithDestructorWithoutSuppressFinalizeRule.cs \
 	UseStringEmptyRule.cs AvoidUnusedParametersRule.cs AvoidUninstantiatedInternalClassesRule.cs \
 	AvoidUncalledPrivateCodeRule.cs AvoidToStringOnStringsRule.cs DontIgnoreMethodResultRule.cs \
-	UsingStringLengthInsteadOfCheckingEmptyStringRule.cs AvoidReturningArraysOnPropertiesRule.cs
+	UsingStringLengthInsteadOfCheckingEmptyStringRule.cs AvoidReturningArraysOnPropertiesRule.cs \
+	AvoidUnsealedConcreteAttributesRule.cs
 
 performance_rules_build_sources = $(addprefix $(srcdir)/, $(performance_rules_sources))
 performance_rules_build_sources += $(performance_rules_generated_sources)
@@ -38,12 +39,12 @@ uninstall-hook:
 performance_test_sources = EmptyDestructorTest.cs IDisposableWithDestructorWithoutSuppressFinalizeTest.cs \
 	UseStringEmptyTest.cs AvoidUnusedParametersTest.cs UsingStringLengthInsteadOfCheckingEmptyStringTest.cs \
 	AvoidUncalledPrivateCodeTest.cs AvoidToStringOnStringsTest.cs AvoidUninstantiatedInternalClassesTest.cs \
-	DontIgnoreMethodResultTest.cs AvoidReturningArraysOnPropertiesTest.cs
+	DontIgnoreMethodResultTest.cs AvoidReturningArraysOnPropertiesTest.cs AvoidUnsealedConcreteAttributesTest.cs
 
 performance_test_build_sources = $(addprefix $(srcdir)/Test/, $(performance_test_sources))
 
 Test.Rules.Performance.dll: $(performance_rules_build_sources) $(performance_rules_SCRIPTS)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+	$(MCS) -target:library -debug -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
 		-r:$(performance_rules_SCRIPTS) -out:$@ $(performance_test_build_sources)
 
 test: Test.Rules.Performance.dll

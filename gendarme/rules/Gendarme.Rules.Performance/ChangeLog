@@ -1,3 +1,19 @@
+2008-01-04  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidToStringOnStringsRule.cs: Simplified to use rocks
+	* AvoidUncalledPrivateCodeRule.cs: Use IsGeneratedCode instead of 
+	the older IsCompilerGenerated to avoid more false-positives.
+	* AvoidUninstantiatedInternalClassesRule.cs: Simplified to use rocks
+	* AvoidUnsealedConcreteAttributesRule.cs: New. Rule to check that 
+	concrete attribute classes are sealed [Daniel Abramov]
+	* AvoidUnusedParametersRule.cs: Simplified to use rocks and to avoid
+	creating (most time) an unneeded MessageCollection.
+	* IDisposableWithDestructorWithoutSuppressFinalizeRule.cs: 
+	Simplified to use rocks
+	* Gendarme.Rules.Performance.mdp: Add rule to MonoDevelop project 
+	file.
+	* Makefile.am: Add rule and tests to the build.
+
 2008-01-03  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUncalledPrivateCodeRule.cs: Updated/simplified to use rocks.

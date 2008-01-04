@@ -31,48 +31,50 @@ using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Performance {
 
 	public class AvoidUnusedParametersRule : IMethodRule {
 
-		private bool UseParameter (MethodDefinition method, ParameterDefinition parameter)
+		private static bool UseParameter (MethodDefinition method, ParameterDefinition parameter)
 		{
 			if (!method.HasBody)
 				return false;
 			foreach (Instruction instruction in method.Body.Instructions) {
 				switch (instruction.OpCode.Code) {
-					case Code.Ldarg_0:
-						if (method.Parameters.IndexOf (parameter) == 0)
-							return true;
-						break;
-					case Code.Ldarg_1:
-						if (method.Parameters.IndexOf (parameter) == (method.IsStatic? 1 : 0))
-							return true;
-						break;
-					case Code.Ldarg_2:
-						if (method.Parameters.IndexOf (parameter) == (method.IsStatic? 2 : 1))
-							return true;
-						break;
-					case Code.Ldarg_3:
-						if (method.Parameters.IndexOf (parameter) == (method.IsStatic? 3 : 2))
-							return true;
-						break;
-					case Code.Ldarg_S:
-					case Code.Ldarga:
-					case Code.Ldarga_S:
-						if (instruction.Operand.Equals (parameter))
-							return true;
-						break;
-					default:
-						break;
+				case Code.Ldarg_0:
+					if (method.Parameters.IndexOf (parameter) == 0)
+						return true;
+					break;
+				case Code.Ldarg_1:
+					if (method.Parameters.IndexOf (parameter) == (method.IsStatic ? 1 : 0))
+						return true;
+					break;
+				case Code.Ldarg_2:
+					if (method.Parameters.IndexOf (parameter) == (method.IsStatic ? 2 : 1))
+						return true;
+					break;
+				case Code.Ldarg_3:
+					if (method.Parameters.IndexOf (parameter) == (method.IsStatic ? 3 : 2))
+						return true;
+					break;
+				case Code.Ldarg_S:
+				case Code.Ldarga:
+				case Code.Ldarga_S:
+					if (instruction.Operand.Equals (parameter))
+						return true;
+					break;
+				default:
+					break;
 				}
 			}
 			return false;
 		}
 
-		private bool ContainsReferenceDelegateInstructionFor (MethodDefinition method, MethodDefinition delegateMethod)
+		private static bool ContainsReferenceDelegateInstructionFor (MethodDefinition method, MethodDefinition delegateMethod)
 		{
 			if (!method.HasBody)
 				return false;
@@ -83,7 +85,7 @@ namespace Gendarme.Rules.Performance {
 			return false;
 		}
 
-		private bool IsReferencedByDelegate (MethodDefinition delegateMethod)
+		private static bool IsReferencedByDelegate (MethodDefinition delegateMethod)
 		{
 			TypeDefinition declaringType = delegateMethod.DeclaringType as TypeDefinition;
 			if (declaringType != null) {
@@ -99,42 +101,29 @@ namespace Gendarme.Rules.Performance {
 			}
 			return false;
 		}
-		
-		//TODO: Is very important take a decision about the helper
-		//classes, this code is really copy pasted.
-		private bool IsCompilerGenerated (MethodDefinition method)
-		{
-			foreach (CustomAttribute custom in method.CustomAttributes) {
-				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
-					return true;
-			}
-			return false;
-		}
 
-		private bool IsExaminable (MethodDefinition method)
-		{
-			return !(method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0
-				|| method.PInvokeInfo != null || IsReferencedByDelegate (method) || IsCompilerGenerated (method));
-		}
-
-		private ICollection GetUnusedParameters (MethodDefinition method)
+		private static ICollection GetUnusedParameters (MethodDefinition method)
 		{
 			ArrayList unusedParameters = new ArrayList ();
-			if (IsExaminable (method)) {
-				foreach (ParameterDefinition parameter in method.Parameters) {
-					if (!UseParameter (method, parameter))
-						unusedParameters.Add (parameter);
-				}
+			foreach (ParameterDefinition parameter in method.Parameters) {
+				if (!UseParameter (method, parameter))
+					unusedParameters.Add (parameter);
 			}
 			return unusedParameters;
 		}
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
+			if (method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0
+				|| method.PInvokeInfo != null || IsReferencedByDelegate (method) || method.IsGeneratedCode ())
+				return runner.RuleSuccess;
+
+			// rule applies
+
 			MessageCollection mc = null;
 			foreach (ParameterDefinition parameter in GetUnusedParameters (method)) {
-				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
-				Message message = new Message (String.Format ("The parameter {0} is never used.", parameter.Name),location, MessageType.Error);
+				Location location = new Location (method);
+				Message message = new Message (String.Format ("The parameter {0} is never used.", parameter.Name), location, MessageType.Error);
 				if (mc == null)
 					mc = new MessageCollection (message);
 				else

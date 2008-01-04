@@ -5,6 +5,12 @@
 		<problem>The property '{0}' returns an array.</problem>
 		<solution>Change the property to a method.</solution>
 	</rule>
+	<rule	Name="AvoidUnsealedConcreteAttributesRule" 
+		Type="Gendarme.Rules.Performance.AvoidUnsealedConcreteAttributesRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#AvoidUnsealedConcreteAttributesRule" >
+		<problem>The attribute '{0}' should be sealed.</problem>
+		<solution>Unless you plan to inherit from this attribute you should consider to seal it's type.</solution>
+	</rule>
 	<rule	Name="EmptyDestructorRule" 
 		Type="Gendarme.Rules.Performance.EmptyDestructorRule, Gendarme.Rules.Performance, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#EmptyDestructorRule" >
