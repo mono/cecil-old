@@ -51,13 +51,31 @@ namespace Gendarme.Framework.Rocks {
 	public static class TypeRocks {
 
 		/// <summary>
-		/// Check if the type contains an attribute of a specified type.
+		/// Return the type finalizer (aka destructor).
 		/// </summary>
 		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <returns>The MethodDefinition of the finalizer or null if the type has no finalizer.</returns>
+		public static MethodDefinition GetFinalizer (this TypeDefinition self)
+		{
+			foreach (MethodDefinition method in self.Methods) {
+				if (method.Name != "Finalize")
+					continue;
+				if (method.Parameters.Count != 0)
+					continue;
+				if (method.ReturnType.ReturnType.ToString () == "System.Void")
+					return method;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Check if the type contains an attribute of a specified type.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
 		/// <param name="attributeName">Full name of the attribute class</param>
 		/// <returns>True if the type contains an attribute of the same name,
 		/// False otherwise.</returns>
-		public static bool HasAttribute (this TypeDefinition self, string attributeName)
+		public static bool HasAttribute (this TypeReference self, string attributeName)
 		{
 			return self.CustomAttributes.Contains (attributeName);
 		}
@@ -153,6 +171,17 @@ namespace Gendarme.Framework.Rocks {
 				return false;
 
 			return self.HasAttribute ("System.FlagsAttribute");
+		}
+
+		/// <summary>
+		/// Check if the type is generated code, either by the compiler or by a tool.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <returns>True if the code is not generated directly by the developer, 
+		/// False otherwise (e.g. compiler or tool generated)</returns>
+		public static bool IsGeneratedCode (this TypeReference self)
+		{
+			return self.CustomAttributes.ContainsAny (CustomAttributeRocks.GeneratedCodeAttributes);
 		}
 	}
 }

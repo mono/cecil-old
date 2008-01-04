@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +43,11 @@ namespace Gendarme.Framework.Rocks {
 	/// </summary>
 	public static class CustomAttributeRocks {
 
+		internal static string [] GeneratedCodeAttributes = {
+			 "System.CodeDom.Compiler.GeneratedCodeAttribute",
+			 "System.Runtime.CompilerServices.CompilerGeneratedAttribute"
+		};
+
 		/// <summary>
 		/// Check if the custom attribute collection contains an attribute of a specified type.
 		/// </summary>
@@ -58,6 +63,28 @@ namespace Gendarme.Framework.Rocks {
 			foreach (CustomAttribute ca in self) {
 				if (ca.Constructor.DeclaringType.FullName == attributeName)
 					return true;
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Check if the custom attribute collection contains any of the specified type.
+		/// </summary>
+		/// <param name="self">The CustomAttributeCollection on which the extension method can be called.</param>
+		/// <param name="attributeNames">An array of fully named attribute strings</param>
+		/// <returns>True if the collection contains any attribute matching one specified,
+		/// False otherwise.</returns>
+		public static bool ContainsAny (this CustomAttributeCollection self, string[] attributeNames)
+		{
+			if (attributeNames == null)
+				throw new ArgumentNullException ("attributeNames");
+
+			foreach (CustomAttribute ca in self) {
+				string fullname = ca.Constructor.DeclaringType.FullName;
+				foreach (string attribute_full_name in attributeNames) {
+					if (fullname == attribute_full_name)
+						return true;
+				}
 			}
 			return false;
 		}
