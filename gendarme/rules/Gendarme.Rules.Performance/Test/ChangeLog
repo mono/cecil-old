@@ -1,3 +1,10 @@
+2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUnsealedConcreteAttributesTest.cs: New. Unit tests by 
+	Daniel Abramov
+	* Test.Rules.Performance.mdp: Add new test for MonoDevelop project 
+	file.
+
 2008-01-03  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidReturningArraysOnPropertiesTest.cs: New. Unit tests by 
