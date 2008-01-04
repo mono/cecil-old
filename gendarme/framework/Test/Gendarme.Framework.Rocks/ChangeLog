@@ -1,3 +1,11 @@
+2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyRocksTest.cs: New. Test cases for HasAttribute
+	* CustomAttributeRocksTest.cs: Added test cases for ContainsAny
+	* MethodRocksTest.cs: Added/converted test cases for IsGeneratedCode
+	* TypeRocksTest.cs: Added test cases for GetFinalizer and 
+	IsGeneratedCode
+
 2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* MethodRocksTest.cs: Added test cases for IsProperty

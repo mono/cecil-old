@@ -1,10 +1,10 @@
 // 
-// Unit tests for CustomAttributeRocks
+// Unit tests for AssemblyRocks
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ using NUnit.Framework;
 namespace Test.Framework.Rocks {
 
 	[TestFixture]
-	public class CustomAttributeRocksTest {
+	public class AssemblyRocksTest {
 
 		private AssemblyDefinition assembly;
 
@@ -49,40 +49,16 @@ namespace Test.Framework.Rocks {
 
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
-		public void Contains_Null ()
+		public void HasAttribute_Null ()
 		{
-			CustomAttributeCollection cac = new CustomAttributeCollection (null);
-			cac.Contains ((string) null);
+			assembly.HasAttribute (null);
 		}
 
 		[Test]
-		public void Contains ()
+		public void HasAttribute ()
 		{
-			TypeDefinition type = assembly.MainModule.Types ["Test.Framework.Rocks.CustomAttributeRocksTest"];
-			CustomAttributeCollection cac = type.CustomAttributes;
-			Assert.IsTrue (cac.Contains ("NUnit.Framework.TestFixtureAttribute"), "NUnit.Framework.TestFixtureAttribute");
-			Assert.IsFalse (cac.Contains ("NUnit.Framework.TestFixture"), "NUnit.Framework.TestFixture");
-		}
-
-		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
-		public void ContainsAny_Null ()
-		{
-			CustomAttributeCollection cac = new CustomAttributeCollection (null);
-			cac.ContainsAny (null);
-		}
-
-		[Test]
-		public void ContainsAny ()
-		{
-			TypeDefinition type = assembly.MainModule.Types ["Test.Framework.Rocks.CustomAttributeRocksTest"];
-			CustomAttributeCollection cac = type.CustomAttributes;
-			Assert.IsTrue (cac.ContainsAny (new string[] {
-				"NUnit.Framework.TestFixtureAttribute",
-				null,
-				"System.ICloneable"
-			}), "NUnit.Framework.TestFixtureAttribute");
-			Assert.IsFalse (cac.ContainsAny (new string[] {}), "NUnit.Framework.TestFixture");
+			Assert.IsTrue (assembly.HasAttribute ("System.Runtime.CompilerServices.RuntimeCompatibilityAttribute"), "System.Runtime.CompilerServices.RuntimeCompatibilityAttribute");
+			Assert.IsFalse (assembly.HasAttribute ("NUnit.Framework.TestFixtureAttribute"), "TestFixtureAttribute");
 		}
 	}
 }

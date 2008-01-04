@@ -26,7 +26,6 @@
 
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 using Gendarme.Framework;
 using Gendarme.Framework.Rocks;
@@ -112,17 +111,25 @@ namespace Test.Framework.Rocks {
 		}
 
 		[Test]
-		[CompilerGenerated]
-		public void IsCompilerGenerated ()
-		{
-			Assert.IsTrue (GetMethod ("IsCompilerGenerated").IsCompilerGenerated (), "IsCompilerGenerated");
-			Assert.IsFalse (GetMethod ("FixtureSetUp").IsCompilerGenerated (), "FixtureSetUp");
-		}
-
-		[Test]
 		public void IsEntryPoint ()
 		{
 			Assert.IsFalse (GetMethod ("FixtureSetUp").IsEntryPoint (), "FixtureSetUp");
+		}
+
+		[Test]
+		[System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+		public void IsGeneratedCode_CompilerGenerated ()
+		{
+			Assert.IsTrue (GetMethod ("IsGeneratedCode_CompilerGenerated").IsGeneratedCode (), "IsCompilerGenerated");
+			Assert.IsFalse (GetMethod ("FixtureSetUp").IsGeneratedCode (), "FixtureSetUp");
+		}
+
+		[Test]
+		[System.CodeDom.Compiler.GeneratedCodeAttribute ("unit test", "1.0")]
+		public void IsGeneratedCode_GeneratedCode ()
+		{
+			Assert.IsTrue (GetMethod ("IsGeneratedCode_GeneratedCode").IsGeneratedCode (), "IsCompilerGenerated");
+			Assert.IsFalse (GetMethod ("FixtureSetUp").IsGeneratedCode (), "FixtureSetUp");
 		}
 
 		[Test]

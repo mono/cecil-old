@@ -40,6 +40,20 @@ namespace Test.Framework.Rocks {
 	[TestFixture]
 	public class TypeRocksTest {
 
+		public class TypeFinalizer {
+			~TypeFinalizer ()
+			{
+			}
+		}
+
+		[System.Runtime.CompilerServices.CompilerGeneratedAttribute]
+		public class TypeCompilerGenerated {
+		}
+
+		[System.CodeDom.Compiler.GeneratedCodeAttribute ("unit test", "1.0")]
+		public class TypeGeneratedCode {
+		}
+
 		public enum Enum {
 			Value
 		}
@@ -108,6 +122,13 @@ namespace Test.Framework.Rocks {
 			}
 			Assert.Fail (name);
 			return null;
+		}
+
+		[Test]
+		public void GetFinalizer ()
+		{
+			Assert.IsNull (GetType (String.Empty).GetFinalizer (), "TypeRocksTest");
+			Assert.IsNotNull (GetType ("/TypeFinalizer").GetFinalizer (), "TypeFinalizer");
 		}
 
 		[Test]
@@ -218,6 +239,20 @@ namespace Test.Framework.Rocks {
 			Assert.IsFalse (GetType (String.Empty).IsFlags (), "Type.IsFlags");
 			Assert.IsFalse (GetType ("/Enum").IsFlags (), "Enum.IsFlags");
 			Assert.IsTrue (GetType ("/Flags").IsFlags (), "Flags.IsFlags");
+		}
+
+		[Test]
+		public void IsGeneratedCode_CompilerGenerated ()
+		{
+			Assert.IsTrue (GetType ("/TypeCompilerGenerated").IsGeneratedCode (), "IsCompilerGenerated");
+			Assert.IsFalse (GetType (String.Empty).IsGeneratedCode (), "TypeRocksTest");
+		}
+
+		[Test]
+		public void IsGeneratedCode_GeneratedCode ()
+		{
+			Assert.IsTrue (GetType ("/TypeGeneratedCode").IsGeneratedCode (), "IsCompilerGenerated");
+			Assert.IsFalse (GetType (String.Empty).IsGeneratedCode (), "TypeRocksTest");
 		}
 	}
 }
