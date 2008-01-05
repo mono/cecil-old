@@ -1,7 +1,9 @@
-2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Don't report this if 
 	the class holds the assembly entry point (i.e. Main method).
+	* DontIgnoreMethodResultRule.cs: Add Directory.CreateDirectory to
+	stuff we can safely ignore. Change some methods to static.
 	* Gendarme.Rules.Performance.mdp: Add linq to compiler options.
 
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com> 

@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -61,12 +61,15 @@ namespace Gendarme.Rules.Performance {
 
 		// some method return stuff that isn't required in most cases
 		// the rule ignores them
-		private bool IsException (MethodReference method)
+		private static bool IsException (MethodReference method)
 		{
 			if (method == null)
 				return true;
 
 			switch (method.DeclaringType.FullName) {
+			case "System.IO.Directory":
+				// the returned DirectoryInfo is optional (since the directory is created)
+				return (method.Name == "CreateDirectory");
 			case "System.Text.StringBuilder":
 				// StringBuilder Append* methods return the StringBuilder itself so
 				// the calls can be chained
@@ -80,7 +83,7 @@ namespace Gendarme.Rules.Performance {
 			}
 		}
 
-		private Message CheckForViolation (Instruction instruction)
+		private static Message CheckForViolation (Instruction instruction)
 		{
 			if ((instruction.OpCode.Code == Code.Newobj || instruction.OpCode.Code == Code.Newarr))
 				return new Message("Unused object created", null, MessageType.Warning);
