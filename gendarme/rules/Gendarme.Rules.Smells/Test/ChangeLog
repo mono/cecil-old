@@ -1,3 +1,8 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidLargeClassesTest.cs: Added test cases for const and readonly 
+	fields. Added test case for auto-implemented properties (C# 3)
+
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 	
 	* AvoidCodeDuplicatedInSameClassTest.cs: Added the test for avoid the

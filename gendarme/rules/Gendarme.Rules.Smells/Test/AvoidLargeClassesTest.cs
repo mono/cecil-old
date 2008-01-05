@@ -3,8 +3,10 @@
 //
 // Authors:
 //      Néstor Salceda <nestor.salceda@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 //      (C) 2007 Néstor Salceda
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -66,7 +68,23 @@ namespace Test.Rules.Smells {
 		int phone_area_code;
 	}
 
+	public class ClassWithSomeConstantsFields {
+		public const string DefaultPath = "path";
+		public const string DefaultConfig = "config";
+	}
+
+	public class ClassWithSomeReadOnlyFields {
+		public readonly int DefaultInteger = 1;
+		public readonly double DefaultDouble = 1.0d;
+	}
+
 	public class NotLargeClass {
+	}
+
+	class AutoImplementedPropertiesClass {
+		public double DoubleProperty { get; set; }
+		public string StringProperty { get; set; }
+		public int Int32ReadOnlyProperty { get; private set; }
 	}
 
 	[TestFixture]
@@ -135,6 +153,27 @@ namespace Test.Rules.Smells {
 			messageCollection = rule.CheckType (type, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (1, messageCollection.Count);
+		}
+
+		[Test]
+		public void ClassWithSomeConstantsFields ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.ClassWithSomeConstantsFields"];
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void ClassWithSomeReadOnlyFields ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.ClassWithSomeReadOnlyFields"];
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void ClassWithAutoImplementedProperties ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.AutoImplementedPropertiesClass"];
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }
