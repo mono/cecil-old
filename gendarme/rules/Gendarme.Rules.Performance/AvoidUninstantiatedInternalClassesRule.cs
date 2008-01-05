@@ -119,6 +119,13 @@ namespace Gendarme.Rules.Performance {
 			if (type.Module.Assembly.HasAttribute ("System.Runtime.CompilerServices.InternalsVisibleToAttribute"))
 				return runner.RuleSuccess;
 
+			// rule applies
+
+			// if the type holds the Main entry point then it is considered useful
+			MethodDefinition entry_point = type.Module.Assembly.EntryPoint;
+			if ((entry_point != null) && (entry_point.DeclaringType == type))
+				return runner.RuleSuccess;
+
 			// create a cache of all type instantiation inside this 
 			AssemblyDefinition assembly = type.Module.Assembly;
 			CacheInstantiationFromAssembly (assembly);

@@ -1,3 +1,9 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesRule.cs: Don't report this if 
+	the class holds the assembly entry point (i.e. Main method).
+	* Gendarme.Rules.Performance.mdp: Add linq to compiler options.
+
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidToStringOnStringsRule.cs: Simplified to use rocks
