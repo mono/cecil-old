@@ -1,3 +1,12 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidConstructorsInStaticTypesTest.cs: line endings
+	* FloatComparisonRuleTest.cs: line endings
+	* UseValueInPropertySetterTest.cs: line endings and new test cases
+	for static properties
+	* Test.Rules.Correctness.mdp: MonoDevelop removed the "./" prefix 
+	before each file.
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UseValueInPropertySetterTest.cs: Add test cases where an exception

@@ -14,12 +14,12 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./BadRecursiveInvocationTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./MethodCanBeMadeStaticTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./CallingEqualsWithNullArgTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidConstructorsInStaticTypesTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./FloatComparisonRuleTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./UseValueInPropertySetterTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="BadRecursiveInvocationTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="MethodCanBeMadeStaticTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="CallingEqualsWithNullArgTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidConstructorsInStaticTypesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="FloatComparisonRuleTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="UseValueInPropertySetterTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="Gendarme.Rules.Correctness" />

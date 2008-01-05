@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,28 +35,19 @@ using Gendarme.Rules.Correctness;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.Correctness
-{
-	[TestFixture]
-	public class UseValueInPropertySetterTest
-	{
-		public class Item
-		{
+namespace Test.Rules.Correctness {
 
-			public bool UsesValue
-			{
-				set
-				{
-					bool val = value;
-				}
+	[TestFixture]
+	public class UseValueInPropertySetterTest {
+
+		public class Item {
+
+			public bool UsesValue {
+				set { bool val = value; }
 			}
 
-			public bool DoesNotUseValue
-			{
-				set
-				{
-					bool val = true;
-				}
+			public bool DoesNotUseValue {
+				set { bool val = true; }
 			}
 
 			public void set_NotAProperty(bool value)
@@ -80,7 +71,18 @@ namespace Test.Rules.Correctness
 			public int Throw3 {
 				set { throw new NotSupportedException (Translate ("value isn't used here")); }
 			}
+
+			private static int maxFields = 25;
+			public static int MaxFields {
+				get { return maxFields; }
+				set { maxFields = value; }
+			}
+			public static int MinFields {
+				get { return 0; }
+				set { maxFields = 0; }
+			}
 		}
+
 
 		private IMethodRule rule;
 		private AssemblyDefinition assembly;
@@ -141,6 +143,20 @@ namespace Test.Rules.Correctness
 			Assert.IsNull (CheckMethod (method), "2");
 			method = GetTest ("set_Throw3");
 			Assert.IsNull (CheckMethod (method), "3");
+		}
+
+		[Test]
+		public void TestStaticUsesValue ()
+		{
+			MethodDefinition method = GetTest ("set_MaxFields");
+			Assert.IsNull (CheckMethod (method));
+		}
+
+		[Test]
+		public void TestStaticDoesNotUseValue ()
+		{
+			MethodDefinition method = GetTest ("set_MinFields");
+			Assert.IsNotNull (CheckMethod (method));
 		}
 	}
 }
