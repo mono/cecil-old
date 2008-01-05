@@ -30,6 +30,7 @@ using System;
 
 using Mono.Cecil;
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Smells {
 	//SUGGESTION: Public / Private ratios.
@@ -123,14 +124,6 @@ namespace Gendarme.Rules.Smells {
 			return String.Empty;
 		}
 
-		private bool IsGeneratedByCompiler (TypeDefinition type)
-		{
-			foreach (CustomAttribute custom in type.CustomAttributes)
-				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
-					return true;
-			return false;
-		}
-		
 		private bool ExitsCommonPrefixes (TypeDefinition type)
 		{
 			foreach (FieldDefinition field in type.Fields) {
@@ -152,7 +145,7 @@ namespace Gendarme.Rules.Smells {
 		{
 			messageCollection = null;
 
-			if (IsGeneratedByCompiler (type))
+			if (type.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			CheckForClassFields (type);

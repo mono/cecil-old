@@ -32,6 +32,7 @@ using System.Collections;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 using Gendarme.Rules.Performance;
 
 namespace Gendarme.Rules.Smells {
@@ -132,17 +133,9 @@ namespace Gendarme.Rules.Smells {
 			CheckMethods (avoidUnusedParameters, type.Constructors, runner);
 		}
 
-		private bool IsCompilerGenerated (TypeDefinition type)
-		{
-			foreach (CustomAttribute custom in type.CustomAttributes)
-				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
-					return true;
-			return false;
-		}
-
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			if (IsCompilerGenerated (type))
+			if (type.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			messageCollection = null;

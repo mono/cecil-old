@@ -1,3 +1,9 @@
+2008-01-05  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* Makefile.am: Compile with -langversion:linq parameter.
+	* AvoidLargeClassesRule.cs, AvoidSpeculativeGeneralityRule.cs: Remove
+	ugly IsCompilerGenerated helper method.  Use rocks instead.
+
 2007-12-21  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* ExpressionFillerVisitor.cs: Add the ceq code to the acceptable

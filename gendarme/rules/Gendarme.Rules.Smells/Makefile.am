@@ -18,7 +18,7 @@ smells_rules_build_sources = $(addprefix $(srcdir)/, $(smells_rules_sources))
 smells_rules_build_sources += $(smells_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Smells.dll: $(smells_rules_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll \
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll \
 	-r:../../bin/Gendarme.Rules.Performance.dll -out:$@ $(smells_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
