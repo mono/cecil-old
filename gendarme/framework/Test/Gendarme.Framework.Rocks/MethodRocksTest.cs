@@ -98,16 +98,16 @@ namespace Test.Framework.Rocks {
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void HasAttribute_Null ()
 		{
-			CustomAttributeCollection cac = new CustomAttributeCollection (null);
-			cac.Contains ((string) null);
+			MethodDefinition method = GetMethod ("FixtureSetUp");
+			method.HasAttribute ((string) null);
 		}
 
 		[Test]
 		public void HasAttribute ()
 		{
-			CustomAttributeCollection cac = GetMethod ("FixtureSetUp").CustomAttributes;
-			Assert.IsTrue (cac.Contains ("NUnit.Framework.TestFixtureSetUpAttribute"), "NUnit.Framework.TestFixtureSetUpAttribute");
-			Assert.IsFalse (cac.Contains ("NUnit.Framework.TestFixtureSetUp"), "NUnit.Framework.TestFixtureSetUp");
+			MethodDefinition method = GetMethod ("FixtureSetUp");
+			Assert.IsTrue (method.HasAttribute ("NUnit.Framework.TestFixtureSetUpAttribute"), "NUnit.Framework.TestFixtureSetUpAttribute");
+			Assert.IsFalse (method.HasAttribute ("NUnit.Framework.TestFixtureSetUp"), "NUnit.Framework.TestFixtureSetUp");
 		}
 
 		[Test]

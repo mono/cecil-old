@@ -1,3 +1,11 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CustomAttributeRocksTest.cs: Rename calls to Contains[Any] to
+	Contains[Any]Type.
+	* FieldRocksTests.cs: New. Test cases for HasAttribute and 
+	IsGeneratedCode methods.
+	* MethodRocksTest.cs: Fix HasAttribute tests
+
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyRocksTest.cs: New. Test cases for HasAttribute
