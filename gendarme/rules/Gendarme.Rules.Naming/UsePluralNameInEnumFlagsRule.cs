@@ -30,40 +30,34 @@ using System;
 using System.Globalization;
 
 using Mono.Cecil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Naming {
+
 	public class UsePluralNameInEnumFlagsRule : ITypeRule {
 
-		private bool HasFlagsAttribute (TypeDefinition typeDefinition)
-		{
-			foreach (CustomAttribute customAttribute in typeDefinition.CustomAttributes) {
-				if (customAttribute.Constructor.DeclaringType.FullName == "System.FlagsAttribute")
-					return true;
-			}
-			return false;
-		}
-
-		private bool IsPlural (string typeName)
+		private static bool IsPlural (string typeName)
 		{
 			int stringComparation = String.Compare (typeName, typeName.Length -1, "s", 0, 1, true, CultureInfo.CurrentCulture);
 			return stringComparation == 0;
 		}
 
-		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			// rule applies only to enums
-			if (!typeDefinition.IsEnum)
+			// rule applies only to enums with [Flags] attribute
+			if (!type.IsFlags ())
 				return runner.RuleSuccess;
 
-			if (HasFlagsAttribute (typeDefinition)) {
-				if (!IsPlural (typeDefinition.Name)) {
-					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
-					Message message = new Message ("The Enum Flags has singular name.", location, MessageType.Error);
-					return new MessageCollection (message);
-				}
-			}
-			return runner.RuleSuccess;
+			// rule applies
+
+			if (IsPlural (type.Name))
+				return runner.RuleSuccess;
+
+			Location location = new Location (type);
+			Message message = new Message ("The Enum Flags has singular name.", location, MessageType.Error);
+			return new MessageCollection (message);
 		}
 	}
 }

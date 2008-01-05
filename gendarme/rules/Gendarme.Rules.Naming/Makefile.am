@@ -18,7 +18,7 @@ naming_rules_build_sources = $(addprefix $(srcdir)/, $(naming_rules_sources))
 naming_rules_build_sources += $(naming_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Naming.dll: $(naming_rules_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(naming_rules_build_sources)
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(naming_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
@@ -43,7 +43,7 @@ naming_test_sources = EnumNotEndsWithEnumOrFlagsSuffixTest.cs \
 naming_test_build_sources = $(addprefix $(srcdir)/Test/, $(naming_test_sources))
 
 Test.Rules.Naming.dll: $(naming_rules_build_sources) $(naming_rules_SCRIPTS)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+	$(MCS) -target:library -debug -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
 		-r:$(naming_rules_SCRIPTS) -out:$@ $(naming_test_build_sources)
 
 test: Test.Rules.Naming.dll

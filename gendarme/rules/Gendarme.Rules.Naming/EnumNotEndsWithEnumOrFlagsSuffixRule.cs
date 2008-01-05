@@ -29,21 +29,15 @@
 using System;
 
 using Mono.Cecil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Naming {
+
 	public class EnumNotEndsWithEnumOrFlagsSuffixRule : ITypeRule {
 
-		private bool HasFlagsAttribute (TypeDefinition typeDefinition)
-		{
-			foreach (CustomAttribute customAttribute in typeDefinition.CustomAttributes) {
-				if (customAttribute.Constructor.DeclaringType.FullName == "System.FlagsAttribute")
-					return true;
-			}
-			return false;
-		}
-
-		private bool EndsWithSuffix (string suffix, string typeName)
+		private static bool EndsWithSuffix (string suffix, string typeName)
 		{
 			return typeName.EndsWith (suffix) || typeName.ToLower ().EndsWith (suffix.ToLower ());
 		}
@@ -54,7 +48,7 @@ namespace Gendarme.Rules.Naming {
 			if (!typeDefinition.IsEnum)
 				return runner.RuleSuccess;
 
-			if (!HasFlagsAttribute (typeDefinition)) {
+			if (!typeDefinition.IsFlags ()) {
 				if (EndsWithSuffix ("Enum", typeDefinition.Name)) {
 					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
 					Message message = new Message ("Enum name should not end with the Enum suffix.", location, MessageType.Error);
