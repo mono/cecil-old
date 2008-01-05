@@ -1,3 +1,9 @@
+2008-01-05  Nestor Salceda  <nestor.salceda@gmail.com>
+	
+	* Makefile.am: Compile with -langversion:linq parameter.
+	* UseValueInPropertySetterRule.cs: Use rocks for check if the method
+	is a setter property.
+
 2007-12-16  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Makefile.am: Remove OpCodeConstants.cs from build.

@@ -34,6 +34,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Correctness {
 
@@ -49,7 +50,7 @@ namespace Gendarme.Rules.Correctness {
 				return runner.RuleSuccess;
 
 			// rule applies to setters methods
-			if (method.SemanticsAttributes != MethodSemanticsAttributes.Setter)
+			if (!method.IsSetter ())
 				return runner.RuleSuccess;
 
 			// rule applies

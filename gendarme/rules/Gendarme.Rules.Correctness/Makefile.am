@@ -19,7 +19,7 @@ correctness_rules_build_sources = $(addprefix $(srcdir)/, $(correctness_rules_so
 correctness_rules_build_sources += $(correctness_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Correctness.dll: $(correctness_rules_build_sources)
-	$(MCS) -debug -target:library -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
