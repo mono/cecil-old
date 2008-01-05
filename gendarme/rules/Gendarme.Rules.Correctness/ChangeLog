@@ -1,3 +1,11 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodCanBeMadeStaticRule.cs: Ignore generated code. Return a 
+	complete message (not just a failure).
+	* NonNullAttribute.cs: seal the attribute (fix warning)
+	* UseValueInPropertySetterRule.cs: Fix rule to work properly with
+	static methods.
+
 2008-01-05  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* AvoidConstructorsInStaticTypesRule.cs: Use rocks for check if a method

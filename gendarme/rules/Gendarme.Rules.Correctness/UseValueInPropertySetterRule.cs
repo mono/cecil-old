@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -58,8 +58,16 @@ namespace Gendarme.Rules.Correctness {
 			foreach (Instruction instruction in method.Body.Instructions) {
 				switch (instruction.OpCode.Code) {
 				// check if the IL use value
+				case Code.Ldarg_0:
+					// first argument if property is static
+					if (method.IsStatic)
+						return runner.RuleSuccess;
+					break;
 				case Code.Ldarg_1:
-					return runner.RuleSuccess;
+					// second argument if property is not static (instance)
+					if (!method.IsStatic)
+						return runner.RuleSuccess;
+					break;
 				// check if the IL simply throws an exception
 				case Code.Throw:
 					if (!flow)
@@ -77,7 +85,7 @@ namespace Gendarme.Rules.Correctness {
 				}
 			}
 
-			Location location = new Location (method.DeclaringType.Name, method.Name, 0);
+			Location location = new Location (method);
 			Message message = new Message (MessageString, location, MessageType.Error);
 			return new MessageCollection (message);
 		}

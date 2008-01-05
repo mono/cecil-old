@@ -17,12 +17,11 @@ using System;
 
 namespace Gendarme.Rules.Correctness {
 
-[AttributeUsage(AttributeTargets.Method | AttributeTargets.Field |
-        AttributeTargets.Property | AttributeTargets.Parameter)]
-public class NonNullAttribute : System.Attribute {
-    public NonNullAttribute()
-    {
-    }
-}
+	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
+	public sealed class NonNullAttribute : Attribute {
 
+		public NonNullAttribute ()
+		{
+		}
+	}
 }
