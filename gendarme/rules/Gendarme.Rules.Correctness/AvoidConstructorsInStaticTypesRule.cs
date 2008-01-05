@@ -33,20 +33,13 @@ using System;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Correctness {
 
 	public class AvoidConstructorsInStaticTypesRule : ITypeRule {
 
 		private const string MessageString = "Types with no instance fields or methods should not have public instance constructors";
-
-		private static bool IsCompilerGenerated (TypeDefinition type)
-		{
-			foreach (CustomAttribute custom in type.CustomAttributes)
-				if (custom.Constructor.DeclaringType.FullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute")
-					return true;
-			return false;
-		}
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
@@ -67,7 +60,7 @@ namespace Gendarme.Rules.Correctness {
 			}
 
 			// rule applies only if the type isn't compiler generated
-			if (IsCompilerGenerated (type))
+			if (type.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			// rule applies!
