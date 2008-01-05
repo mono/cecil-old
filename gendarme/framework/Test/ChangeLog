@@ -1,3 +1,7 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Test.Framework.mdp: Add FieldRocksTest to MD project file
+
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Test.Framework.mdp: Add AssemblyRocksTest to MD project file
