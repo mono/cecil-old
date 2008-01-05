@@ -29,6 +29,7 @@
 using System;
 
 using Mono.Cecil;
+
 using Gendarme.Framework;
 using Gendarme.Framework.Rocks;
 
@@ -39,9 +40,9 @@ namespace Gendarme.Rules.Smells {
 	public class AvoidLargeClassesRule : ITypeRule {
 
 		private MessageCollection messageCollection;
-		private int maxFields = 25;
+		private static int maxFields = 25;
 
-		public int MaxFields {
+		public static int MaxFields {
 			get {
 				return maxFields;
 			}
@@ -50,7 +51,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool IsTooLarge (TypeDefinition type)
+		private static bool IsTooLarge (TypeDefinition type)
 		{
 			return type.Fields.Count >= MaxFields;
 		}
@@ -58,19 +59,19 @@ namespace Gendarme.Rules.Smells {
 		private void CheckForClassFields (TypeDefinition type)
 		{
 			if (IsTooLarge (type))
-				AddMessage (type.Name, "This class contains a lot of fields.  This is a sign for the Large Class Smell", MessageType.Error);
+				AddMessage (type, "This class contains a lot of fields.  This is a sign for the Large Class Smell", MessageType.Error);
 		}
 
-		private void AddMessage (string typeName, string summary, MessageType messageType)
+		private void AddMessage (TypeDefinition type, string summary, MessageType messageType)
 		{
-			Location location = new Location (typeName, String.Empty, 0);
+			Location location = new Location (type);
 			Message message = new Message (summary, location, messageType);
 			if (messageCollection == null)
 				messageCollection = new MessageCollection ();
 			messageCollection.Add (message);
 		}
 
-		private bool HasPrefixedFields (string prefix, TypeDefinition type)
+		private static bool HasPrefixedFields (string prefix, TypeDefinition type)
 		{
 			if (prefix == String.Empty)
 				return false;
@@ -83,7 +84,7 @@ namespace Gendarme.Rules.Smells {
 			return counter > 1;
 		}
 
-		private int GetIndexOfFirst (string value, Predicate<char> predicate)
+		private static int GetIndexOfFirst (string value, Predicate<char> predicate)
 		{
 			foreach (char character in value)
 				if (predicate (character))
@@ -91,7 +92,7 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
-		private int GetIndexOfFirstDash (string value)
+		private static int GetIndexOfFirstDash (string value)
 		{
 			bool valueTruncated = false;
 			if (value.IndexOf ('_') == 1) {
@@ -106,9 +107,8 @@ namespace Gendarme.Rules.Smells {
 			return -1;
 		}
 
-		private string GetFieldPrefix (FieldDefinition field)
+		private static string GetFieldPrefix (FieldDefinition field)
 		{
-
 			int index = GetIndexOfFirst (field.Name, delegate (char character) {return Char.IsNumber (character);});
 			if (index != -1)
 				return field.Name.Substring (0, index);
@@ -124,9 +124,16 @@ namespace Gendarme.Rules.Smells {
 			return String.Empty;
 		}
 
-		private bool ExitsCommonPrefixes (TypeDefinition type)
+		private static bool ExitsCommonPrefixes (TypeDefinition type)
 		{
 			foreach (FieldDefinition field in type.Fields) {
+				// skip special, constant and read-only fields
+				if (field.IsSpecialName || field.HasConstant || field.IsInitOnly)
+					continue;
+				// skip C# 3 fields generated for auto-implemented properties
+				if (field.IsGeneratedCode ())
+					continue;
+
 				string prefix = GetFieldPrefix (field);
 				if (HasPrefixedFields (prefix, type))
 					return true;
@@ -137,9 +144,8 @@ namespace Gendarme.Rules.Smells {
 		private void CheckForCommonPrefixesInFields (TypeDefinition type)
 		{
 			if (ExitsCommonPrefixes (type))
-				AddMessage (type.Name, "This type contains some fields with the same prefix.  Although this isn't bad, it's a sign for extract a class, for avoid the Large Class smell.", MessageType.Warning);
+				AddMessage (type, "This type contains some fields with the same prefix.  Although this isn't bad, it's a sign for extract a class, for avoid the Large Class smell.", MessageType.Warning);
 		}
-
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{

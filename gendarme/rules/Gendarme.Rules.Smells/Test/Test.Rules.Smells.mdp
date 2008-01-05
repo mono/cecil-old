@@ -14,12 +14,12 @@
     </Configuration>
   </Configurations>
   <Contents>
-    <File name="./AvoidCodeDuplicatedInSameClassTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidCodeDuplicatedInSiblingClassesTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidLargeClassesTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidLongMethodsTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidLongParameterListsTest.cs" subtype="Code" buildaction="Compile" />
-    <File name="./AvoidSpeculativeGeneralityTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidCodeDuplicatedInSameClassTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidCodeDuplicatedInSiblingClassesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidLargeClassesTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidLongMethodsTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidLongParameterListsTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="AvoidSpeculativeGeneralityTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="framework" />
