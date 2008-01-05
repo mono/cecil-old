@@ -77,7 +77,7 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise.</returns>
 		public static bool HasAttribute (this TypeReference self, string attributeName)
 		{
-			return self.CustomAttributes.Contains (attributeName);
+			return self.CustomAttributes.ContainsType (attributeName);
 		}
 
 		/// <summary>
@@ -181,7 +181,7 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise (e.g. compiler or tool generated)</returns>
 		public static bool IsGeneratedCode (this TypeReference self)
 		{
-			return self.CustomAttributes.ContainsAny (CustomAttributeRocks.GeneratedCodeAttributes);
+			return self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes);
 		}
 	}
 }

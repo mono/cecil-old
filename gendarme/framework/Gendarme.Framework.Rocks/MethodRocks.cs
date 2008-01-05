@@ -57,7 +57,7 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise.</returns>
 		public static bool HasAttribute (this MethodDefinition self, string attributeName)
 		{
-			return self.CustomAttributes.Contains (attributeName);
+			return self.CustomAttributes.ContainsType (attributeName);
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise (e.g. compiler or tool generated)</returns>
 		public static bool IsGeneratedCode (this MethodDefinition self)
 		{
-			if (self.CustomAttributes.ContainsAny (CustomAttributeRocks.GeneratedCodeAttributes))
+			if (self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes))
 				return true;
 
 			return self.DeclaringType.IsGeneratedCode ();

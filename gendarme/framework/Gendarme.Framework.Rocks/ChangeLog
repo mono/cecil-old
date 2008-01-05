@@ -1,3 +1,14 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AssemblyRocks.cs: Rename calls to Contains[Any] -> Contains[Any]Type
+	* CustomAttributeRocks.cs: Rename Contains to ContainsType (and
+	ContainsAny to ContainsAnyType) to avoid an extension methods that
+	would also be an overload to a Cecil method (revert JB's confusion ;-)
+	* FieldRocks.cs: New. Extension methods for Cecil's FieldDefinition
+	class.
+	* MethodRocks.cs: Rename calls to Contains[Any] -> Contains[Any]Type
+	* TypeRocks.cs: Rename calls to Contains[Any] -> Contains[Any]Type
+
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyRocks.cs: New. Extension methods for Cecil's 

@@ -52,16 +52,16 @@ namespace Gendarme.Framework.Rocks {
 		/// Check if the custom attribute collection contains an attribute of a specified type.
 		/// </summary>
 		/// <param name="self">The CustomAttributeCollection on which the extension method can be called.</param>
-		/// <param name="attributeName">Full name of the attribute class</param>
+		/// <param name="attributeTypeName">Full type name of the attribute class.</param>
 		/// <returns>True if the collection contains an attribute of the same name,
 		/// False otherwise.</returns>
-		public static bool Contains (this CustomAttributeCollection self, string attributeName)
+		public static bool ContainsType (this CustomAttributeCollection self, string attributeTypeName)
 		{
-			if (attributeName == null)
-				throw new ArgumentNullException ("attributeName");
+			if (attributeTypeName == null)
+				throw new ArgumentNullException ("attributeTypeName");
 
 			foreach (CustomAttribute ca in self) {
-				if (ca.Constructor.DeclaringType.FullName == attributeName)
+				if (ca.Constructor.DeclaringType.FullName == attributeTypeName)
 					return true;
 			}
 			return false;
@@ -71,17 +71,17 @@ namespace Gendarme.Framework.Rocks {
 		/// Check if the custom attribute collection contains any of the specified type.
 		/// </summary>
 		/// <param name="self">The CustomAttributeCollection on which the extension method can be called.</param>
-		/// <param name="attributeNames">An array of fully named attribute strings</param>
+		/// <param name="attributeTypeNames">A strings array of full type names of the attributes.</param>
 		/// <returns>True if the collection contains any attribute matching one specified,
 		/// False otherwise.</returns>
-		public static bool ContainsAny (this CustomAttributeCollection self, string[] attributeNames)
+		public static bool ContainsAnyType (this CustomAttributeCollection self, string[] attributeTypeNames)
 		{
-			if (attributeNames == null)
+			if (attributeTypeNames == null)
 				throw new ArgumentNullException ("attributeNames");
 
 			foreach (CustomAttribute ca in self) {
 				string fullname = ca.Constructor.DeclaringType.FullName;
-				foreach (string attribute_full_name in attributeNames) {
+				foreach (string attribute_full_name in attributeTypeNames) {
 					if (fullname == attribute_full_name)
 						return true;
 				}
