@@ -1,3 +1,11 @@
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MissingAttributeUsageOnCustomAttributeRule.cs: New. Rule that checks
+	for attributes without a [AttributeUsage] attribute [Daniel Abramov]
+	* Gendarme.Rules.Design.xml.in: Added new rule descriptions.
+	* Gendarme.Rules.Design.mdp: Added files to MonoDevelop project file.
+	* Makefile.am: Add new rules/tests to the build.
+
 2008-01-04  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidPublicInstanceFieldsRule.cs: New. Rule to check for public

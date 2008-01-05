@@ -51,7 +51,13 @@
 		Type="Gendarme.Rules.Design.MainShouldNotBePublicRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
 		<problem>The entry point (Main) of the assembly '{0}' is visible to the outside world (ref: C# Programming Guide).</problem>
-		<solution>Reeduce entry point visibility if your language allows it. It may not be possible in some language, like VB).</solution>
+		<solution>Reduce entry point visibility if your language allows it. It may not be possible in some language, like VB).</solution>
+	</rule>
+	<rule	Name="MissingAttributeUsageOnCustomAttributeRule"
+		Type="Gendarme.Rules.Design.MissingAttributeUsageOnCustomAttributeRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem></problem>
+		<solution></solution>
 	</rule>
 	<rule	Name="TypesShouldBeInsideNamespacesRule"
 		Type="Gendarme.Rules.Design.TypesShouldBeInsideNamespacesRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
