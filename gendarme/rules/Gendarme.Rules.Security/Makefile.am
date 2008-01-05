@@ -46,7 +46,7 @@ Test.Rules.Security.dll: $(security_rules_build_sources) $(security_rules_SCRIPT
 test: Test.Rules.Security.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Security.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Security.dll
 
 self-test: $(security_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(security_rules_SCRIPTS)

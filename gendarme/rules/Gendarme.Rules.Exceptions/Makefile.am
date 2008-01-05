@@ -47,7 +47,7 @@ Test.Rules.Exceptions.dll: $(exceptions_test_build_sources) $(exceptions_rules_S
 test: Test.Rules.Exceptions.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Exceptions.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Exceptions.dll
 
 self-test: $(exceptions_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(exceptions_rules_SCRIPTS)

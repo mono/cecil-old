@@ -44,7 +44,7 @@ Test.Rules.BadPractice.dll: $(badpractice_rules_build_sources) $(badpractice_rul
 test: Test.Rules.BadPractice.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.BadPractice.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.BadPractice.dll
 
 self-test: $(badpractice_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(badpractice_rules_SCRIPTS)

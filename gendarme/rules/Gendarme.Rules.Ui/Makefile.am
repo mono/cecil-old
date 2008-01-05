@@ -45,7 +45,7 @@ Test.Rules.Ui.dll: $(ui_rules_build_sources) $(ui_rules_SCRIPTS)
 test: Test.Rules.Ui.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Ui.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Ui.dll
 
 self-test: $(ui_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(ui_rules_SCRIPTS)

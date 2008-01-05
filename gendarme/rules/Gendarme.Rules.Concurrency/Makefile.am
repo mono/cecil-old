@@ -42,7 +42,7 @@ Test.Rules.Concurrency.dll: $(concurrency_rules_build_sources) $(concurrency_rul
 test: Test.Rules.Concurrency.dll
 
 run-test: test
-	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console Test.Rules.Concurrency.dll
+	MONO_PATH=../../bin/:$(CECIL_PATH):$(MONO_PATH) nunit-console2 Test.Rules.Concurrency.dll
 
 self-test: $(concurrency_rules_SCRIPTS)
 	mono --debug ../../bin/gendarme.exe $(concurrency_rules_SCRIPTS)
