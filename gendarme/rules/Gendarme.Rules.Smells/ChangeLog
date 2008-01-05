@@ -1,4 +1,4 @@
-2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-05  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidLargeClassesRule.cs: Don't report defect if the fields are 
 	const or readonly or if they were generated (e.g. auto-implemented 
@@ -8,6 +8,7 @@
 	the rule is called.
 	* Gendarme.Rules.Smells.mdp, Test/Test.Rules.Smells.mdp: MonoDevelop
 	removed the "./" prefix before each file.
+	* Makefile.am: Compile unit tests with -langversion:linq parameter.
 
 2008-01-05  Nestor Salceda  <nestor.salceda@gmail.com>
 

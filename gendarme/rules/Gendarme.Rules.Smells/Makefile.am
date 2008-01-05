@@ -43,7 +43,7 @@ AvoidSpeculativeGeneralityTest.cs
 smells_test_build_sources = $(addprefix $(srcdir)/Test/, $(smells_test_sources))
 
 Test.Rules.Smells.dll: $(smells_rules_build_sources) $(smells_rules_SCRIPTS)
-	$(MCS) -target:library -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
+	$(MCS) -target:library -langversion:linq -pkg:mono-cecil -pkg:mono-nunit -r:../../bin/Gendarme.Framework.dll \
 		-r:$(smells_rules_SCRIPTS) -r:System.Windows.Forms.dll -out:$@ $(smells_test_build_sources)
 
 test: Test.Rules.Smells.dll
