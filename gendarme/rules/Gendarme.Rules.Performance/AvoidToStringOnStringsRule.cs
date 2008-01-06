@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -39,9 +41,7 @@ namespace Gendarme.Rules.Performance {
 
 		private const string MessageString = "No need to call ToString on a System.String instance";
 
-		#region IMethodRule Members
-
-		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// rule apply only if the method has a body (e.g. p/invokes, icalls don't)
 			if (!method.HasBody)
@@ -53,77 +53,66 @@ namespace Gendarme.Rules.Performance {
 				case Code.Call:
 				case Code.Calli:
 				case Code.Callvirt:
-					MemberReference member = instruction.Operand as MemberReference;
-					if ((member != null) && (member.Name == "ToString")) {
-						if (messageCollection == null)
-							messageCollection = new MessageCollection ();
-						CheckStack (instruction.Previous, method, messageCollection);
+					if (IsToString (instruction.Operand as MethodReference)) {
+						if (CheckStack (instruction.Previous, method)) {
+							if (messageCollection == null)
+								messageCollection = new MessageCollection ();
+
+							Location location = new Location (method, instruction.Offset);
+							Message message = new Message (MessageString, location, MessageType.Error);
+							messageCollection.Add (message);
+						}
 					}
 					break;
 				}
 			}
 
-			if ((messageCollection == null) || (messageCollection.Count == 0))
-				return runner.RuleSuccess;
-
 			return messageCollection;
 		}
 
-		private static void CheckStack (Instruction instruction, MethodDefinition method, MessageCollection messageCollection)
+		private static bool IsToString (MethodReference method)
+		{
+			if (method == null)
+				return false;
+			return (method.HasThis && (method.Name == "ToString") && (method.Parameters.Count == 0));
+		}
+
+		private static bool CheckStack (Instruction instruction, MethodDefinition method)
 		{
 			switch (instruction.OpCode.Code) {
 			case Code.Ldloc_0:
-				CheckTypeReference (method.Body.Variables[0].VariableType, method, instruction, messageCollection);
-				break;
 			case Code.Ldloc_1:
-				CheckTypeReference (method.Body.Variables[1].VariableType, method, instruction, messageCollection);
-				break;
 			case Code.Ldloc_2:
-				CheckTypeReference (method.Body.Variables[2].VariableType, method, instruction, messageCollection);
-				break;
 			case Code.Ldloc_3:
-				CheckTypeReference (method.Body.Variables[3].VariableType, method, instruction, messageCollection);
-				break;
+				int loc_index = (int) (instruction.OpCode.Code - Code.Ldloc_0);
+				return CheckTypeReference (method.Body.Variables [loc_index].VariableType);
 			case Code.Ldloc_S:
 				VariableReference local = instruction.Operand as VariableReference;
-				CheckTypeReference (local.VariableType, method, instruction, messageCollection);
-				break;
+				return CheckTypeReference (local.VariableType);
 			case Code.Ldarg_1:
-				CheckTypeReference (method.Parameters[0].ParameterType, method, instruction, messageCollection);
-				break;
 			case Code.Ldarg_2:
-				CheckTypeReference (method.Parameters[1].ParameterType, method, instruction, messageCollection);
-				break;
 			case Code.Ldarg_3:
-				CheckTypeReference (method.Parameters[2].ParameterType, method, instruction, messageCollection);
-				break;
+				int arg_index = (int) (instruction.OpCode.Code - Code.Ldarg_1);
+				return CheckTypeReference (method.Parameters [arg_index].ParameterType);
 			case Code.Ldarg:
 				ParameterReference parameter = instruction.Operand as ParameterReference;
-				CheckTypeReference (parameter.ParameterType, method, instruction, messageCollection);
-				break;
+				return CheckTypeReference (parameter.ParameterType);
 			case Code.Call:
 			case Code.Calli:
 			case Code.Callvirt:
 				MethodReference call = instruction.Operand as MethodReference;
-				CheckTypeReference (call.ReturnType.ReturnType, method, instruction, messageCollection);
-				break;
+				return CheckTypeReference (call.ReturnType.ReturnType);
 			case Code.Ldfld:
 			case Code.Ldsfld:
 				FieldReference field = instruction.Operand as FieldReference;
-				CheckTypeReference (field.FieldType, method, instruction, messageCollection);
-				break;
+				return CheckTypeReference (field.FieldType);
 			}
+			return false;
 		}
 
-		private static void CheckTypeReference (TypeReference type, MethodDefinition method, Instruction instruction, MessageCollection messageCollection)
+		private static bool CheckTypeReference (TypeReference type)
 		{
-			if (type.FullName == "System.String") {
-				Location location = new Location (method, instruction.Offset);
-				Message message = new Message (MessageString, location, MessageType.Error);
-				messageCollection.Add (message);
-			}
+			return (type.FullName == "System.String");
 		}
-
-		#endregion
 	}
 }

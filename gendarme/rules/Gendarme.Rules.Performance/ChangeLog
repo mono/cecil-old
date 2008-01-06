@@ -1,3 +1,9 @@
+2008-01-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidToStringOnStringsRule.cs: Fix false positives on corlib (when
+	an overloaded ToString, with parameters, is used).
+	* EmptyDestructorRule.cs: Simplify using rocks.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Don't report this if 

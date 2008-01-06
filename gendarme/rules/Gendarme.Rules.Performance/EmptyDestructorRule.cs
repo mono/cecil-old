@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2005 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2005,2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,11 +27,12 @@
 //
 
 using System;
-using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Performance {
 
@@ -39,33 +40,31 @@ namespace Gendarme.Rules.Performance {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			MethodDefinition destructor = null;
-			// #1 - look for a destructor
-			foreach (MethodDefinition md in type.Methods) {
-				if (md.Name == "Finalize") {
-					destructor = md;
-					break;
-				}
-			}
-			if (destructor == null)
+			// rule applies only to type with a finalizer
+			MethodDefinition finalizer = type.GetFinalizer ();
+			if (finalizer == null)
 				return runner.RuleSuccess;
 
-			// #2 - destructor is present, look if it has any code within it
+			// rule applies
+
+			// finalizer is present, look if it has any code within it
 			// i.e. look if is does anything else than calling it's base class
-			foreach (Instruction ins in destructor.Body.Instructions) {
-				switch (ins.OpCode.Name) {
-				case "call":
+			foreach (Instruction ins in finalizer.Body.Instructions) {
+				switch (ins.OpCode.Code) {
+				case Code.Call:
+				case Code.Calli:
+				case Code.Callvirt:
 					// it's empty if we're calling the base class destructor
 					MethodReference mr = (ins.Operand as MethodReference);
 					if ((mr == null) || (mr.Name != "Finalize"))
 						return runner.RuleSuccess;
 					break;
-				case "nop":
-				case "leave":
-				case "leave.s":
-				case "ldarg.0":
-				case "endfinally":
-				case "ret":
+				case Code.Nop:
+				case Code.Leave:
+				case Code.Leave_S:
+				case Code.Ldarg_0:
+				case Code.Endfinally:
+				case Code.Ret:
 					// ignore
 					break;
 				default:
@@ -73,8 +72,11 @@ namespace Gendarme.Rules.Performance {
 					return runner.RuleSuccess;
 				}
 			}
-			// destructor is empty (bad / useless)
-			return runner.RuleFailure;
+
+			// finalizer is empty (bad / useless)
+			Location loc = new Location (finalizer);
+			Message msg = new Message ("The type finalizer is empty and should be removed.", loc, MessageType.Warning);
+			return new MessageCollection (msg);
 		}
 	}
 }
