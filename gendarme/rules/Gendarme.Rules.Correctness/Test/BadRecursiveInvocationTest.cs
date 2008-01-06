@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2005 Aaron Tomb
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,6 +30,8 @@
 
 using System;
 using System.Reflection;
+using System.Security;
+using System.Security.Permissions;
 
 using Gendarme.Framework;
 using Gendarme.Rules.Correctness;
@@ -46,6 +48,16 @@ namespace Test.Rules.Correctness {
 			/* This should be an error. */
 			public int Foo {
 				get { return Foo; }
+			}
+
+			/* This should be an error. */
+			public int OnePlusFoo {
+				get { return 1 + OnePlusFoo; }
+			}
+
+			/* This should be an error. */
+			public int FooPlusOne {
+				get { return FooPlusOne + 1; }
 			}
 
 			/* correct */
@@ -73,13 +85,60 @@ namespace Test.Rules.Correctness {
 			{
 				return Equals (obzekt);
 			}
+
+			public static int StaticBadFibo (int n)
+			{
+				return StaticBadFibo (n - 1) + StaticBadFibo (n - 2);
+			}
+
+			public int BadFibo (int n)
+			{
+				return BadFibo (n - 1) + BadFibo (n - 2);
+			}
 			
-			public static int Fibonacci (int n)
+			public static int StaticFibonacci (int n)
 			{
 				if (n < 2)
 					return n;
-					
+
+				return StaticFibonacci (n - 1) + StaticFibonacci (n - 2);
+			}
+
+			public int Fibonacci (int n)
+			{
+				if (n < 2)
+					return n;
+
 				return Fibonacci (n - 1) + Fibonacci (n - 2);
+			}
+
+			public void AnotherInstance ()
+			{
+				BadRec rec = new BadRec ();
+				rec.AnotherInstance ();
+			}
+
+			public void Assert ()
+			{
+				new PermissionSet (PermissionState.None).Assert ();
+			}
+
+			static Helper help;
+			public static void Write (bool value)
+			{
+				help.Write (value);
+			}
+
+			public void Unreachable ()
+			{
+				throw new NotImplementedException ();
+				Unreachable ();
+			}
+		}
+
+		class Helper {
+			public void Write (bool value)
+			{
 			}
 		}
 		
@@ -87,6 +146,7 @@ namespace Test.Rules.Correctness {
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
 		private ModuleDefinition module;
+		private Runner runner;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
@@ -96,6 +156,7 @@ namespace Test.Rules.Correctness {
 			module = assembly.MainModule;
 			type = module.Types["Test.Rules.Correctness.BadRecursiveInvocationTest/BadRec"];
 			rule = new BadRecursiveInvocationRule ();
+			runner = new MinimalRunner ();
 		}
 
 		private MethodDefinition GetTest (string name)
@@ -108,45 +169,92 @@ namespace Test.Rules.Correctness {
 		}
 
 		[Test]
-		public void RecursiveProperty ()
+		public void RecursiveProperties ()
 		{
 			MethodDefinition method = GetTest ("get_Foo"); 
-			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
+			Assert.IsNotNull (rule.CheckMethod (method, runner), "Foo");
+
+			method = GetTest ("get_OnePlusFoo");
+			Assert.IsNotNull (rule.CheckMethod (method, runner), "OnePlusFoo");
+
+			method = GetTest ("get_FooPlusOne");
+			Assert.IsNotNull (rule.CheckMethod (method, runner), "FooPlusOne");
 		}
 		
 		[Test]
 		public void Property ()
 		{
-			MethodDefinition method = GetTest ("get_Bar"); 
-			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+			MethodDefinition method = GetTest ("get_Bar");
+			Assert.IsNull (rule.CheckMethod (method, runner));
 		}
 
 		[Test, Ignore ("uncatched by rule")]
 		public void IndirectRecursiveProperty ()
 		{
-			MethodDefinition method = GetTest ("get_FooBar"); 
-			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
+			MethodDefinition method = GetTest ("get_FooBar");
+			Assert.IsNotNull (rule.CheckMethod (method, runner));
 		}
 
 		[Test]
 		public void OverriddenMethod ()
 		{
-			MethodDefinition method = GetTest ("GetHashCode"); 
-			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+			MethodDefinition method = GetTest ("GetHashCode");
+			Assert.IsNull (rule.CheckMethod (method, runner));
 		}
 		
 		[Test]
 		public void BadRecursiveMethod ()
 		{
-			MethodDefinition method = GetTest ("Equals"); 
-			Assert.IsNotNull (rule.CheckMethod (method, new MinimalRunner ()));
+			MethodDefinition method = GetTest ("Equals");
+			Assert.IsNotNull (rule.CheckMethod (method, runner));
+		}
+
+		[Test]
+		public void BadFibo ()
+		{
+			MethodDefinition method = GetTest ("BadFibo");
+			Assert.IsNotNull (rule.CheckMethod (method, runner), "instance");
+
+			method = GetTest ("StaticBadFibo");
+			Assert.IsNotNull (rule.CheckMethod (method, runner), "static");
 		}
 
 		[Test]
 		public void Fibonacci ()
 		{
-			MethodDefinition method = GetTest ("Fibonacci"); 
-			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+			MethodDefinition method = GetTest ("Fibonacci");
+			Assert.IsNull (rule.CheckMethod (method, runner), "instance");
+
+			method = GetTest ("StaticFibonacci");
+			Assert.IsNull (rule.CheckMethod (method, runner), "static");
+		}
+
+		[Test, Ignore ("uncatched by rule")]
+		public void CodeUsingAnInstanceOfItself ()
+		{
+			MethodDefinition method = GetTest ("AnotherInstance");
+			Assert.IsNotNull (rule.CheckMethod (method, runner));
+		}
+
+		[Test]
+		public void TestAssert ()
+		{
+			MethodDefinition method = GetTest ("Assert");
+			Assert.IsNull (rule.CheckMethod (method, runner));
+		}
+
+		[Test]
+		public void TestStaticCallingAnotherClassWithSameMethodName ()
+		{
+			MethodDefinition method = GetTest ("Write");
+			Assert.IsNull (rule.CheckMethod (method, runner));
+		}
+
+		[Test]
+		public void TestUnreachable ()
+		{
+			MethodDefinition method = GetTest ("Unreachable");
+			Assert.IsNull (rule.CheckMethod (method, runner));
 		}
 	}
 }

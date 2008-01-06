@@ -1,5 +1,7 @@
-2008-01-06  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
+	* BadRecursiveInvocationTest.cs: Add more complex test cases to hunt
+	for false positives (detected while scanning corlib).
 	* FloatComparisonRuleTest.cs: Duplicate test cases for Double. Add
 	test cases for FP conversion and FP in arrays.
 	* UseValueInPropertySetterTest.cs: Add test case for empty setter
