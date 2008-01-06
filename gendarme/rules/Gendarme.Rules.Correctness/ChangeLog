@@ -1,5 +1,9 @@
-2008-01-06  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
+	* BadRecursiveInvocationRule.cs: Detect more case of endless 
+	recursion, even where parameters aren't identical. Still not perfect
+	(see ignored unit tests) but can process corlib without false
+	positives.
 	* FloatComparisonRule.cs: Remove object array of special values 
 	(float and double constants). Change OpCode array to static
 	(to reduce memory allocations). Add support to detect Double.Equals
