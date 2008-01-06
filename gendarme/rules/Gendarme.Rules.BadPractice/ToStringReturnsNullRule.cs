@@ -41,7 +41,6 @@ namespace Gendarme.Rules.BadPractice {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
 			Instruction prevIns;
 			int offset = 0;
 			bool nullReturned = false;
@@ -78,12 +77,10 @@ namespace Gendarme.Rules.BadPractice {
 			if (nullReturned) {
 				Location location = new Location (method.DeclaringType.FullName, method.Name, offset);
 				Message message = new Message ("ToString () seems to returns null in some condition", location, MessageType.Error);
-				messageCollection.Add (message);
+				return new MessageCollection (message);
 			}
 
-			if (messageCollection.Count == 0)
-				return runner.RuleSuccess;
-			return messageCollection;
+			return runner.RuleSuccess;
 		}
 
 		public string ReturnSt (MethodDefinition method, Instruction instruc)

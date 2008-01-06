@@ -1,3 +1,8 @@
+2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* ToStringReturnsNullRule.cs: Avoid creating MessageCollection 
+	until/unless it's needed.
+
 2007-11-23  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* EqualShouldHandleNullArgRule.cs: Don't create a MessageCollection
