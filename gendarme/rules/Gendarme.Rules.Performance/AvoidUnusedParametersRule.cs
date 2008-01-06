@@ -114,8 +114,16 @@ namespace Gendarme.Rules.Performance {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			if (method.IsAbstract || method.IsVirtual || method.Overrides.Count != 0
-				|| method.PInvokeInfo != null || IsReferencedByDelegate (method) || method.IsGeneratedCode ())
+			// catch abstract, pinvoke and icalls - where rule does not apply
+			if (!method.HasBody)
+				return runner.RuleSuccess;
+
+			// rule doesn't apply to virtual, overrides or generated code
+			if (method.IsVirtual || method.Overrides.Count != 0 || method.IsGeneratedCode ())
+				return runner.RuleSuccess;
+
+			// doesn't apply to code referenced by delegates (note: more complex check moved last)
+			if (IsReferencedByDelegate (method))
 				return runner.RuleSuccess;
 
 			// rule applies
