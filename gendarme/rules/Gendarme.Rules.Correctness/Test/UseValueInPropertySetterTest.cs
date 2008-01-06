@@ -81,6 +81,15 @@ namespace Test.Rules.Correctness {
 				get { return 0; }
 				set { maxFields = 0; }
 			}
+
+			public long time;
+			public DateTime Time {
+				set { time = value.Ticks; }
+			}
+
+			public string Empty {
+				set { }
+			}
 		}
 
 
@@ -156,6 +165,20 @@ namespace Test.Rules.Correctness {
 		public void TestStaticDoesNotUseValue ()
 		{
 			MethodDefinition method = GetTest ("set_MinFields");
+			Assert.IsNotNull (CheckMethod (method));
+		}
+
+		[Test]
+		public void TestDateValue ()
+		{
+			MethodDefinition method = GetTest ("set_Time");
+			Assert.IsNull (CheckMethod (method));
+		}
+
+		[Test]
+		public void TestEmpty ()
+		{
+			MethodDefinition method = GetTest ("set_Empty");
 			Assert.IsNotNull (CheckMethod (method));
 		}
 	}

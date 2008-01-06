@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,7 +29,6 @@
 //
 
 using System;
-using System.Text;
 
 using System.Reflection;
 
@@ -36,57 +37,164 @@ using Gendarme.Rules.Correctness;
 using Mono.Cecil;
 using NUnit.Framework;
 
+namespace Test.Rules.Correctness {
 
-namespace Test.Rules.Correctness
-{
 	[TestFixture]
-	public class FloatComparisonRuleTest
-	{
+	public class FloatComparisonRuleTest {
 
-		public class Item
-		{
-			public float floatField = 0f;
-			public static float staticFloatField = 0f;
+		public class Double {
+			public double field = 0.0d;
+			public static double staticField = 0.0d;
 
-			public float FloatProperty
-			{
-				get { return floatField; }
+			public double Property {
+				get { return field; }
 			}
 
-			public static float StaticFloatMethod()
+			public static double StaticMethod ()
+			{
+				return 0.0d;
+			}
+
+			public void Fields ()
+			{
+				bool a = field == staticField;
+				bool b = staticField == field;
+			}
+
+			public bool MethodResult ()
+			{
+				bool a = Property == StaticMethod ();
+				bool b = StaticMethod () == Property;
+				return a && b;
+			}
+
+			public void Parameters (double f, double g)
+			{
+				bool a = f == g;
+			}
+
+			public bool StaticParameters (double f, double g)
+			{
+				return f == g;
+			}
+
+			public void Local ()
+			{
+				double d1 = 0.0d;
+				double d2 = 0.0d;
+				if (d1 == d2) {
+					int i = 1;
+					Console.WriteLine (d1 == (double)i);
+				} else if (d2 == d1) {
+					uint i = 1;
+					Console.WriteLine ((double)i == d2);
+				}
+			}
+
+			public void LocalAbove4 ()
+			{
+				string s1 = String.Empty;
+				string s2 = String.Empty;
+				string s3 = String.Empty;
+				string s4 = String.Empty;
+				double d1 = 0.0d;
+				double d2 = 0.0d;
+				if (d1 == d2) {
+					Console.WriteLine (d1 == ((double)1));
+				} else if (d2 == d1) {
+					Console.WriteLine (((double)0) == d2);
+				}
+			}
+
+			public void ComparisonAfterArithmeticOperation ()
+			{
+				double d1 = 0.0d;
+				double d2 = 0.0d;
+				bool a = d1 * 1 == d2 * 1;
+			}
+
+			public void LegalComparisons ()
+			{
+				double d = 0.0d;
+				bool a;
+				bool b;
+
+				//a = float.PositiveInfinity == f;
+				b = d == double.PositiveInfinity;
+
+				//a = float.NegativeInfinity == f;
+				b = d == double.NegativeInfinity;
+			}
+
+			public void EqualsCall ()
+			{
+				double d1 = 0.0d;
+				double d2 = 0.0d;
+				if (d1.Equals (d2)) {
+					d1.Equals (1.0);
+				} else {
+					(1.0d).Equals (d2);
+				}
+			}
+
+			public bool CompareWithArray ()
+			{
+				double [] values = new double [] { 0.0d, 1.0d };
+				return values [0] == values [1];
+			}
+		}
+
+		public class Float {
+
+			public float field = 0f;
+			public static float staticField = 0f;
+
+			public float Property {
+				get { return field; }
+			}
+
+			public static float StaticMethod ()
 			{
 				return 0f;
 			}
 
-			public void FloatFields()
+			public void Fields ()
 			{
-				bool a = floatField == staticFloatField;
-				bool b = staticFloatField == floatField;
-				
+				bool a = field == staticField;
+				bool b = staticField == field;
 			}
 
-			public bool FloatMethodResult()
+			public bool MethodResult ()
 			{
-				bool a = FloatProperty == StaticFloatMethod();
-				bool b = StaticFloatMethod() == FloatProperty;
+				bool a = Property == StaticMethod();
+				bool b = StaticMethod() == Property;
 				return a && b;
 			}
 
-			public void FloatParameters(float f, float g)
+			public void Parameters (float f, float g)
 			{
 				bool a = f == g;
-				
 			}
 
-			public void FloatLocal()
+			public bool StaticParameters (float f, float g)
+			{
+				return f == g;
+			}
+
+			public void Local ()
 			{
 				float f1 = 0f;
 				float f2 = 0f;
-				bool a = f1 == f2;
-				bool b = f2 == f1;
+				if (f1 == f2) {
+					int i = 1;
+					Console.WriteLine (f1 == (float) i);
+				} else if (f2 == f1) {
+					uint i = 1;
+					Console.WriteLine ((float) i == f2);
+				}
 			}
 
-			public void FloatLocalAbove4()
+			public void LocalAbove4 ()
 			{
 				string s1 = String.Empty;
 				string s2 = String.Empty;
@@ -94,18 +202,21 @@ namespace Test.Rules.Correctness
 				string s4 = String.Empty;
 				float f1 = 0f;
 				float f2 = 0f;
-				bool a = f1 == f2;
-				bool b = f2 == f1;
+				if (f1 == f2) {
+					Console.WriteLine (f1 == ((float) 1));
+				} else if (f2 == f1) {
+					Console.WriteLine (((float) 0) == f2);
+				}
 			}
 
-			public void FloatComparisonAfterArithmeticOperation()
+			public void ComparisonAfterArithmeticOperation ()
 			{
 				float f1 = 0f;
 				float f2 = 0f;
 				bool a = f1 * 1 == f2 * 1;
 			}
 
-			public void LegalFloatComparisons()
+			public void LegalComparisons ()
 			{
 				float f = 0f;
 				bool a;
@@ -116,132 +227,181 @@ namespace Test.Rules.Correctness
 				
 				//a = float.NegativeInfinity == f;
 				b = f == float.NegativeInfinity;
-				
 			}
 
-			public void LegalIntegerComparisons()
-			{
-				int i = 0;
-				int j = 1;
-				bool a = i == j;
-				
-			}
-
-
-			public void FloatEqualsCall()
+			public void EqualsCall ()
 			{
 				float f1 = 0f;
 				float f2 = 0f;
 				bool a = f1.Equals(f2);
 			}
 
-			public bool NoFloatComparison()
+			public bool CompareWithArray ()
+			{
+				float [] values = new float [] { 0.0f, 1.0f };
+				return values [0] == values [1];
+			}
+		}
+
+		public class Legal {
+
+			public void IntegerComparisons ()
+			{
+				int i = 0;
+				int j = 1;
+				bool a = i == j;
+			}
+
+			public bool NoComparison ()
 			{
 				return false;
 			}
-
 		}
 
 		private IMethodRule rule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
 		private ModuleDefinition module;
+		private Runner runner;
 
 		[TestFixtureSetUp]
-		public void FixtureSetUp()
+		public void FixtureSetUp ()
 		{
-			string unit = Assembly.GetExecutingAssembly().Location;
-			assembly = AssemblyFactory.GetAssembly(unit);
+			string unit = Assembly.GetExecutingAssembly ().Location;
+			assembly = AssemblyFactory.GetAssembly (unit);
 			module = assembly.MainModule;
-			type = module.Types["Test.Rules.Correctness.FloatComparisonRuleTest/Item"];
-			rule = new FloatComparisonRule();
+			rule = new FloatComparisonRule ();
+			runner = new MinimalRunner ();
 		}
 
-		MethodDefinition GetTest(string name)
+		MethodDefinition GetTest (string typeName, string name)
 		{
-			foreach (MethodDefinition method in type.Methods)
+			type = module.Types ["Test.Rules.Correctness.FloatComparisonRuleTest/" + typeName];
+			foreach (MethodDefinition method in type.Methods) {
 				if (method.Name == name)
 					return method;
-
+			}
+			Assert.Fail ("name '{0}' was not found inside '{1}'.", name, typeName);
 			return null;
 		}
 
-		MessageCollection CheckMethod(MethodDefinition method)
+		MessageCollection CheckMethod (MethodDefinition method)
 		{
-			return rule.CheckMethod(method, new MinimalRunner());
+			return rule.CheckMethod (method, runner);
 		}
 
 		[Test]
-		public void TestFloatFields()
+		public void TestFields ()
 		{
-			MethodDefinition method = GetTest("FloatFields");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "Fields");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "Fields");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestFloatMethodResult()
+		public void TestMethodResult ()
 		{
-			MethodDefinition method = GetTest("FloatMethodResult");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest("Float", "MethodResult");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "MethodResult");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 		
 		[Test]
-		public void TestFloatParameters()
+		public void TestParameters ()
 		{
-			MethodDefinition method = GetTest("FloatParameters");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "Parameters");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "Parameters");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestFloatLocal()
+		public void TestStaticParameters ()
 		{
-			MethodDefinition method = GetTest("FloatLocal");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "StaticParameters");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "StaticParameters");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestFloatLocalAbove4()
+		public void TestLocal ()
 		{
-			MethodDefinition method = GetTest("FloatLocalAbove4");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "Local");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "Local");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestFloatComparisonAfterArithmeticOperation()
+		public void TestLocalAbove4 ()
 		{
-			MethodDefinition method = GetTest("FloatComparisonAfterArithmeticOperation");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "LocalAbove4");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "LocalAbove4");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestLegalFloatComparisons()
+		public void TestComparisonAfterArithmeticOperation ()
 		{
-			MethodDefinition method = GetTest("LegalFloatComparisons");
-			Assert.IsNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Float", "ComparisonAfterArithmeticOperation");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "ComparisonAfterArithmeticOperation");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 
 		[Test]
-		public void TestLegalIntegerComparisons()
+		public void TestLegalComparisons ()
 		{
-			MethodDefinition method = GetTest("LegalIntegerComparisons");
-			Assert.IsNull(CheckMethod(method));
+			MethodDefinition method = GetTest("Float", "LegalComparisons");
+			Assert.IsNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "LegalComparisons");
+			Assert.IsNull (CheckMethod (method), "Double");
 		}
 
+		[Test]
+		public void TestLegalIntegerComparisons ()
+		{
+			MethodDefinition method = GetTest ("Legal", "IntegerComparisons");
+			Assert.IsNull (CheckMethod (method));
+		}
 
 		[Test]
-		public void TestFloatEqualsCall()
+		public void TestEqualsCall ()
 		{
-			MethodDefinition method = GetTest("FloatEqualsCall");
-			Assert.IsNotNull(CheckMethod(method));
+			MethodDefinition method = GetTest("Float", "EqualsCall");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "EqualsCall");
+			Assert.IsNotNull (CheckMethod (method), "Double");
 		}
 		
-
 		[Test]
 		public void TestNoFloatComparison()
 		{
-			MethodDefinition method = GetTest("NoFloatComparison");
-			Assert.IsNull(CheckMethod(method));
+			MethodDefinition method = GetTest ("Legal", "NoComparison");
+			Assert.IsNull (CheckMethod (method));
 		}
 
+		[Test]
+		public void TestCompareWithArray ()
+		{
+			MethodDefinition method = GetTest ("Float", "CompareWithArray");
+			Assert.IsNotNull (CheckMethod (method), "Float");
+
+			method = GetTest ("Double", "CompareWithArray");
+			Assert.IsNotNull (CheckMethod (method), "Double");
+		}
 	}
 }
