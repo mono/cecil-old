@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Lukasz Knop <lukasz.knop@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2007 Lukasz Knop
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,74 +29,85 @@
 //
 
 using System;
-using System.Text;
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using Gendarme.Framework;
 
-namespace Gendarme.Rules.Correctness
-{
-	public class FloatComparisonRule : IMethodRule
-	{
+namespace Gendarme.Rules.Correctness {
+
+	public class FloatComparisonRule : IMethodRule {
+
 		private const string MessageString = "Floating point values should not be compared for equality";
 		private MessageCollection messageCollection = null;
 
 		private void CheckCeqInstruction (Instruction instruction, Instruction precedingInstruction, MethodDefinition method) 
 		{
+			bool problem = false;
 			switch (precedingInstruction.OpCode.Code) {
-				case Code.Conv_R4:
-				case Code.Conv_R8:
-					AddProblem(method, instruction);
-					break;
-				case Code.Ldc_R4:
-				case Code.Ldc_R8:
-					CheckFloatConstants(precedingInstruction.Operand, method, instruction);
-					break;
-				case Code.Ldloc_0:
-					CheckTypeReference(method.Body.Variables[0].VariableType, method, instruction);
-					break;
-				case Code.Ldloc_1:
-					CheckTypeReference(method.Body.Variables[1].VariableType, method, instruction);
-					break;
-				case Code.Ldloc_2:
-					CheckTypeReference(method.Body.Variables[2].VariableType, method, instruction);
-					break;
-				case Code.Ldloc_3:
-					CheckTypeReference(method.Body.Variables[3].VariableType, method, instruction);
-					break;
-				case Code.Ldloc_S:
-					VariableReference local = precedingInstruction.Operand as VariableReference;
-					CheckTypeReference(local.VariableType, method, instruction);
-					break;
-				case Code.Ldarg_1:
-					CheckTypeReference(method.Parameters[0].ParameterType, method, instruction);
-					break;
-				case Code.Ldarg_2:
-					CheckTypeReference(method.Parameters[1].ParameterType, method, instruction);
-					break;
-				case Code.Ldarg_3:
-					CheckTypeReference(method.Parameters[2].ParameterType, method, instruction);
-					break;
-				case Code.Ldarg:
-					ParameterReference parameter = precedingInstruction.Operand as ParameterReference;
-					CheckTypeReference(parameter.ParameterType, method, instruction);
-					break;
-				case Code.Call:
-				case Code.Calli:
-				case Code.Callvirt:
-					MethodReference call = precedingInstruction.Operand as MethodReference;
-					CheckTypeReference(call.ReturnType.ReturnType, method, instruction);
-					break;
-				case Code.Ldfld:
-				case Code.Ldsfld:
-					FieldReference field = precedingInstruction.Operand as FieldReference;
-					CheckTypeReference(field.FieldType, method, instruction);
-					break;
+			case Code.Conv_R_Un:
+			case Code.Conv_R4:
+			case Code.Conv_R8:
+				problem = true;
+				break;
+			case Code.Ldc_R4:
+				problem = !CheckFloatConstants ((float) precedingInstruction.Operand);
+				break;
+			case Code.Ldc_R8:
+				problem = !CheckDoubleConstants ((double) precedingInstruction.Operand);
+				break;
+			case Code.Ldelem_R4:
+			case Code.Ldelem_R8:
+				problem = true;
+				break;
+			case Code.Ldloc_0:
+			case Code.Ldloc_1:
+			case Code.Ldloc_2:
+			case Code.Ldloc_3:
+				int loc_index = (int) (precedingInstruction.OpCode.Code - Code.Ldloc_0);
+				problem = IsFloatingPoint (method.Body.Variables [loc_index].VariableType);
+				break;
+			case Code.Ldloc_S:
+				VariableReference local = precedingInstruction.Operand as VariableReference;
+				problem = IsFloatingPoint (local.VariableType);
+				break;
+			case Code.Ldarg_0:
+			case Code.Ldarg_1:
+			case Code.Ldarg_2:
+			case Code.Ldarg_3:
+				int arg_index = (int) (precedingInstruction.OpCode.Code - Code.Ldarg_0);
+				if (!method.IsStatic)
+					arg_index--;
+				problem = IsFloatingPoint (method.Parameters [arg_index].ParameterType);
+				break;
+			case Code.Ldarg:
+				ParameterReference parameter = precedingInstruction.Operand as ParameterReference;
+				problem = IsFloatingPoint (parameter.ParameterType);
+				break;
+			case Code.Call:
+			case Code.Calli:
+			case Code.Callvirt:
+				MethodReference call = precedingInstruction.Operand as MethodReference;
+				problem = IsFloatingPoint (call.ReturnType.ReturnType);
+				break;
+			case Code.Ldfld:
+			case Code.Ldsfld:
+				FieldReference field = precedingInstruction.Operand as FieldReference;
+				problem = IsFloatingPoint (field.FieldType);
+				break;
 			}
+			if (problem)
+				AddProblem (method, instruction);
 		}
 
-		public MessageCollection CheckMethod(MethodDefinition method, Runner runner)
+		static bool IsFloatingPoint (TypeReference type)
+		{
+			return ((type.FullName == Mono.Cecil.Constants.Single) ||
+				(type.FullName == Mono.Cecil.Constants.Double));
+		}
+
+		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			//For the rule's lifecycle I should initializate the
 			//field to null.
@@ -104,70 +117,68 @@ namespace Gendarme.Rules.Correctness
 				return runner.RuleSuccess;
 
 			foreach (Instruction instruction in method.Body.Instructions) {
-				if (instruction.OpCode == OpCodes.Ceq) {
+				switch (instruction.OpCode.Code) {
+				case Code.Ceq:
 					CheckCeqInstruction (instruction, SkipArithmeticOperations (instruction), method); 
-				}
-				else if (instruction.OpCode.Code == Code.Call)
-				{
+					break;
+				case Code.Call:
+				case Code.Calli:
+				case Code.Callvirt:
 					MemberReference member = instruction.Operand as MemberReference;
-
-					if (member.DeclaringType.FullName.Equals("System.Single") &&
-						member.Name.Equals("Equals"))
+					if (IsFloatingPoint (member.DeclaringType) && member.Name.Equals ("Equals"))
 						AddProblem(method, instruction);
+					break;
 				}
 			}
 
 			return messageCollection == null || messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
 		}
 
-		private Instruction SkipArithmeticOperations(Instruction instruction)
+		static OpCode [] arithOpCodes = new OpCode [] {
+			OpCodes.Mul,
+			OpCodes.Add,
+			OpCodes.Sub,
+			OpCodes.Div
+		};
+
+		private static Instruction SkipArithmeticOperations (Instruction instruction)
 		{
 			Instruction prevInstr = instruction.Previous;
-			OpCode[] arithOpCodes = new OpCode[]
-				{
-					OpCodes.Mul,
-					OpCodes.Add,
-					OpCodes.Sub,
-					OpCodes.Div
-				};
 
-			while (Array.Exists(arithOpCodes, delegate(OpCode code) { return code == prevInstr.OpCode; }))
+			while (Array.Exists (arithOpCodes, 
+				delegate (OpCode code) {
+					return code == prevInstr.OpCode;
+				})) {
 				prevInstr = prevInstr.Previous;
+			}
+
 			return prevInstr;
 		}
 
-		private void AddProblem(MethodDefinition method, Instruction instruction)
+		private void AddProblem (MethodDefinition method, Instruction instruction)
 		{
 			if (messageCollection == null)
 				messageCollection = new MessageCollection ();
-			Location location = new Location(method.DeclaringType.Name, method.Name, instruction.Offset);
+
+			Location location = new Location(method, instruction.Offset);
 			Message message = new Message(MessageString, location, MessageType.Error);
-			messageCollection.Add(message);
+			messageCollection.Add (message);
 		}
 
-		private void CheckTypeReference(TypeReference type, MethodDefinition method, Instruction instruction)
+		private static bool CheckFloatConstants (float value)
 		{
-			if (type.FullName.Equals("System.Single") || type.FullName.Equals("System.Double"))
-				AddProblem(method, instruction);
+			// IsInfinity covers both positive and negative infinity
+			return (Single.IsInfinity (value) || Single.IsNaN (value) ||
+				(Single.MinValue.CompareTo (value) == 0) ||
+				(Single.MaxValue.CompareTo (value) == 0));
 		}
 
-		private void CheckFloatConstants(object operand, MethodDefinition method, Instruction instruction)
+		private static bool CheckDoubleConstants (double value)
 		{
-			object[] specialValues = new object[]
-			{
-				float.PositiveInfinity,
-				float.NegativeInfinity,
-				float.MinValue,
-				float.MaxValue,
-				double.PositiveInfinity,
-				double.NegativeInfinity,
-				double.MinValue,
-				double.MaxValue
-			};
-
-			if (!Array.Exists(specialValues, delegate(object value) { return value.Equals(operand); }))
-				AddProblem(method, instruction);
+			// IsInfinity covers both positive and negative infinity
+			return (Double.IsInfinity (value) || Double.IsNaN (value) ||
+				(Double.MinValue.CompareTo (value) == 0) || 
+				(Double.MaxValue.CompareTo (value) == 0));
 		}
-
 	}
 }

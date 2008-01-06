@@ -1,3 +1,15 @@
+2008-01-06  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* FloatComparisonRule.cs: Remove object array of special values 
+	(float and double constants). Change OpCode array to static
+	(to reduce memory allocations). Add support to detect Double.Equals
+	and support for Conv_R_Un, Ldarg_0 (for static methods), Ldelem_R4
+	and Ldelem_R8 instructions (for arrays).
+	* MethodCanBeMadeStaticRule.cs: Avoid checking constructors.
+	* UseValueInPropertySetterRule.cs: Add support for Ldarga[_S] when
+	checking for value. Report a different message for empty setters (to
+	ease the reviewer job ;-) since it's less likely an error.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodCanBeMadeStaticRule.cs: Ignore generated code. Return a 

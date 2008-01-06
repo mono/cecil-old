@@ -40,8 +40,8 @@ namespace Gendarme.Rules.Correctness {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			// we only check non static and non virtual methods
-			if (method.IsStatic || method.IsVirtual)
+			// we only check non static, non virtual methods and not constructors
+			if (method.IsStatic || method.IsVirtual || method.IsConstructor)
 				return runner.RuleSuccess;
 
 			// we only check methods with a body

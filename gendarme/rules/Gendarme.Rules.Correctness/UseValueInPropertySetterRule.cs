@@ -41,6 +41,7 @@ namespace Gendarme.Rules.Correctness {
 	public class UseValueInPropertySetterRule : IMethodRule {
 
 		private const string MessageString = "Property setter should use the assigned value";
+		private const string MessageEmptyString = "Property setter is empty and doesn't use the assigned value";
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
@@ -55,6 +56,7 @@ namespace Gendarme.Rules.Correctness {
 
 			// rule applies
 			bool flow = false;
+			bool empty = true;
 			foreach (Instruction instruction in method.Body.Instructions) {
 				switch (instruction.OpCode.Code) {
 				// check if the IL use value
@@ -62,18 +64,33 @@ namespace Gendarme.Rules.Correctness {
 					// first argument if property is static
 					if (method.IsStatic)
 						return runner.RuleSuccess;
+					empty = false;
 					break;
 				case Code.Ldarg_1:
 					// second argument if property is not static (instance)
 					if (!method.IsStatic)
 						return runner.RuleSuccess;
+					empty = false;
+					break;
+				case Code.Ldarga:
+				case Code.Ldarga_S:
+					if ((instruction.Operand as ParameterDefinition).Name == "value")
+						return runner.RuleSuccess;
+					empty = false;
 					break;
 				// check if the IL simply throws an exception
 				case Code.Throw:
 					if (!flow)
 						return runner.RuleSuccess;
+					empty = false;
+					break;
+				case Code.Nop:
+					break;
+				case Code.Ret:
+					flow = true;
 					break;
 				default:
+					empty = false;
 					// lots of thing can occurs before the throw
 					// e.g. loading the string (ldstr)
 					//	or calling a method to translate this string
@@ -86,7 +103,9 @@ namespace Gendarme.Rules.Correctness {
 			}
 
 			Location location = new Location (method);
-			Message message = new Message (MessageString, location, MessageType.Error);
+			string msg = empty ? MessageEmptyString : MessageString;
+			MessageType mt = empty ? MessageType.Warning : MessageType.Error;
+			Message message = new Message (msg, location, mt);
 			return new MessageCollection (message);
 		}
 	}
