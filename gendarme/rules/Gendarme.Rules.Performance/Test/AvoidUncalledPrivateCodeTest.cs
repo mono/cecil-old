@@ -6,7 +6,7 @@
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -179,10 +179,37 @@ namespace Test.Rules.Performance {
 			}
 		}
 
-		[SerializableAttribute]
-		public class SerializableConstructorNotCalled {
+		[Serializable]
+		public class PublicSerializableConstructorNotCalled {
 			private int i;
-			public SerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
+			public PublicSerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
+			{
+				i = 0;
+			}
+		}
+
+		[Serializable]
+		public class PrivateSerializableConstructorNotCalled {
+			private int i;
+			private PrivateSerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
+			{
+				i = 0;
+			}
+		}
+
+		[Serializable]
+		public class ProtectedSerializableConstructorNotCalled {
+			private int i;
+			protected ProtectedSerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
+			{
+				i = 0;
+			}
+		}
+
+		[Serializable]
+		public class InternalSerializableConstructorNotCalled {
+			private int i;
+			internal InternalSerializableConstructorNotCalled (SerializationInfo info, StreamingContext context)
 			{
 				i = 0;
 			}
@@ -494,13 +521,21 @@ namespace Test.Rules.Performance {
 		}
 
 		[Test]
-		public void serializableConstructorNotCalledTest ()
+		public void SerializationConstructors ()
 		{
-			type = GetTest ("SerializableConstructorNotCalled");
-			foreach (MethodDefinition method in type.Constructors)
-				if (method.Name == ".ctor")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			Runner runner = new MinimalRunner ();
+			type = GetTest ("PublicSerializableConstructorNotCalled");
+			foreach (MethodDefinition ctor in type.Constructors)
+				Assert.IsNull (methodRule.CheckMethod (ctor, runner), ctor.ToString ());
+			type = GetTest ("PrivateSerializableConstructorNotCalled");
+			foreach (MethodDefinition ctor in type.Constructors)
+				Assert.IsNull (methodRule.CheckMethod (ctor, runner), ctor.ToString ());
+			type = GetTest ("ProtectedSerializableConstructorNotCalled");
+			foreach (MethodDefinition ctor in type.Constructors)
+				Assert.IsNull (methodRule.CheckMethod (ctor, runner), ctor.ToString ());
+			type = GetTest ("InternalSerializableConstructorNotCalled");
+			foreach (MethodDefinition ctor in type.Constructors)
+				Assert.IsNull (methodRule.CheckMethod (ctor, runner), ctor.ToString ());
 		}
 
 		[Test]
