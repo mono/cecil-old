@@ -40,18 +40,19 @@ namespace Gendarme.Rules.Performance {
 		// we should move these methods into an helper class (e.g. MethodHelper)
 		// and reuse them in other rules
 
-		public static bool IsSerializationConstructor (MethodDefinition md)
+		private static bool IsSerializationConstructor (MethodDefinition method)
 		{
-			if (!md.IsConstructor || (md.Parameters.Count != 2))
+			// it must be an instance constructor with 2 parameters
+			if (!method.IsConstructor || method.IsStatic || (method.Parameters.Count != 2))
 				return false;
 
-			if (md.Parameters[0].ParameterType.Name != "System.Runtime.Serialization.SerializationInfo")
+			if (method.Parameters [0].ParameterType.FullName != "System.Runtime.Serialization.SerializationInfo")
 				return false;
 
-			return (md.Parameters[1].ParameterType.Name == "System.Runtime.Serialization.StreamingContext");
+			return (method.Parameters [1].ParameterType.FullName == "System.Runtime.Serialization.StreamingContext");
 		}
 		
-		public static bool IsExplicitImplementationOfInterface (MethodDefinition method)
+		private static bool IsExplicitImplementationOfInterface (MethodDefinition method)
 		{
 			// quick out if the name doesn't include a .
 			if (!method.Name.Contains ("."))
@@ -90,6 +91,7 @@ namespace Gendarme.Rules.Performance {
 			// check if the method is private 
 			if (method.IsPrivate) {
 				// it's ok for have unused private ctor (and common before static class were introduced in 2.0)
+				// this also covers private serialization constructors
 				if (method.IsConstructor)
 					return runner.RuleSuccess;
 
@@ -107,6 +109,10 @@ namespace Gendarme.Rules.Performance {
 
 			// check if method is internal
 			if (method.IsAssembly) {
+				// internal ctor for serialization are ok
+				if (IsSerializationConstructor (method))
+					return runner.RuleSuccess;
+
 				// then we must check if something in the assembly is using this method
 				if (!CheckAssemblyForMethodUsage (method.DeclaringType.Module.Assembly, method)) {
 					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);

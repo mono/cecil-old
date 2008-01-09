@@ -47,7 +47,7 @@ namespace Gendarme.Rules.Performance {
 			MessageCollection mc = null;
 			foreach (Instruction instruction in method.Body.Instructions) {
 				if (instruction.OpCode.Code == Code.Pop) {
-					Message message = CheckForViolation(instruction.Previous);
+					Message message = CheckForViolation (method, instruction.Previous);
 					if (message != null) {
 						if (mc == null)
 							mc = new MessageCollection (message);
@@ -78,25 +78,37 @@ namespace Gendarme.Rules.Performance {
 				// PermissionSet return the permission (modified or unchanged) when
 				// IPermission are added or removed
 				return (method.Name == "AddPermission" || method.Name == "RemovePermission");
-			default:
-				return false;
 			}
+
+			// many types provide a BeginInvoke, which return value (deriving from IAsyncResult)
+			// isn't needed in many cases
+			if (method.Name == "BeginInvoke") {
+				if (method.Parameters.Count > 0) {
+					return (method.Parameters [0].ParameterType.FullName == "System.Delegate");
+				}
+			}
+
+			return false;
 		}
 
-		private static Message CheckForViolation (Instruction instruction)
+		private static Message CheckForViolation (MethodDefinition method, Instruction instruction)
 		{
-			if ((instruction.OpCode.Code == Code.Newobj || instruction.OpCode.Code == Code.Newarr))
-				return new Message("Unused object created", null, MessageType.Warning);
+			if ((instruction.OpCode.Code == Code.Newobj || instruction.OpCode.Code == Code.Newarr)) {
+				string s = String.Format ("Unused object of type {0} created", (instruction.Operand as MemberReference).ToString ());
+				Location loc = new Location (method, instruction.Offset);
+				return new Message (s, null, MessageType.Warning);
+			}
 
 			if (instruction.OpCode.Code == Code.Call || instruction.OpCode.Code == Code.Callvirt) {
-				MethodReference method = instruction.Operand as MethodReference;
-				if (method != null && !method.ReturnType.ReturnType.IsValueType) {
+				MethodReference callee = instruction.Operand as MethodReference;
+				if (callee != null && !callee.ReturnType.ReturnType.IsValueType) {
 					// check for some common exceptions (to reduce false positive)
-					if (!IsException (method)) {
-						Location loc = new Location (method.DeclaringType.Name, method.Name, instruction.Offset);
+					if (!IsException (callee)) {
+						Location loc = new Location (method, instruction.Offset);
 						// most common case is something like: s.ToLower ();
 						MessageType messageType = (method.DeclaringType.FullName == "System.String") ? MessageType.Error : MessageType.Warning;
-						return new Message ("Do not ignore method results", loc, messageType);
+						string s = String.Format ("Do not ignore method results from call to '{0}'.", callee.ToString ());
+						return new Message (s, loc, messageType);
 					}
 				}
 			}
