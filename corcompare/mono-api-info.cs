@@ -85,6 +85,9 @@ namespace Mono.AssemblyInfo
 
 		static AssemblyDefinition LoadAssembly (string assPath)
 		{
+			if (assPath.IndexOf (System.IO.Path.DirectorySeparatorChar) == -1)
+				return new AssemblyResolver (".").Resolve (assPath);
+
 			string pathOnly = assPath.Substring( 0, assPath.LastIndexOf (System.IO.Path.DirectorySeparatorChar) );
 			string name = assPath.Substring (assPath.LastIndexOf (System.IO.Path.DirectorySeparatorChar) + 1);
 			return (new AssemblyResolver (pathOnly)).Resolve (name);
