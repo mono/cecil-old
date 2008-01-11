@@ -64,6 +64,16 @@ namespace Gendarme.Framework {
 			this.offset = offset;
 		}
 
+		public Location (FieldDefinition field)
+		{
+			if (field == null)
+				throw new ArgumentNullException ("field");
+
+			this.type = field.DeclaringType.FullName;
+			this.method = field.Name; // temporary
+			this.offset = -1;
+		}
+
 		public override string ToString ()
 		{
 			StringBuilder sb = new StringBuilder ();
@@ -87,4 +97,3 @@ namespace Gendarme.Framework {
 	        }
 	}
 }
-
