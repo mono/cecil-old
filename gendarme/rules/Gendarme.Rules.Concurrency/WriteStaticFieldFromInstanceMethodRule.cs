@@ -41,7 +41,7 @@ namespace Gendarme.Rules.Concurrency {
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// #1 - rule apply only if the method has a body (e.g. p/invokes, icalls don't)
-			if (method.Body == null)
+			if (!method.HasBody)
 				return runner.RuleSuccess;
 
 			// #2 - rule apply only is the method isn't static (static method can modify static fields)
@@ -50,26 +50,26 @@ namespace Gendarme.Rules.Concurrency {
 
 			// *** ok, the rule applies! ***
 
-			MessageCollection results = new MessageCollection ();
-			string fullname = method.DeclaringType.FullName;
-
+			MessageCollection results = null;
+			
 			// #2 - look for stsfld instructions on static fields
 			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Name) {
 				case "stsfld":
 					FieldDefinition fd = (ins.Operand as FieldDefinition);
 					if ((fd != null) && fd.IsStatic) {
-						Location loc = new Location (fullname, method.Name, ins.Offset);
+						Location loc = new Location (method, ins.Offset);
 						string text = String.Format ("The field '{0}' ({1}) is being set in an instance method.", fd.Name, fd.Attributes);
 						Message msg = new Message (text, loc, MessageType.Warning);
-						results.Add (msg);
+						if (results == null)
+							results = new MessageCollection (msg);
+						else
+							results.Add (msg);
 					}
 					break;
 				}
 			}
 
-			if (results.Count == 0)
-				return runner.RuleSuccess;
 			return results;
 		}
 	}

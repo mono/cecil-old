@@ -23,11 +23,10 @@ namespace Gendarme.Rules.Concurrency {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			Hashtable comparisons = new Hashtable();
-
-			if(method.Body == null)
+			if (!method.HasBody)
 				return runner.RuleSuccess;
 
+			Hashtable comparisons = new Hashtable ();
 			InstructionCollection insns = method.Body.Instructions;
 
 			ArrayList monitorOffsetList = new ArrayList(10);
@@ -51,7 +50,11 @@ namespace Gendarme.Rules.Concurrency {
 								continue;
 							if(insn.Offset >= (int)monitorOffsetList[mcount - 1])
 								continue;
-							return DoubleCheckLockingDetected (method.DeclaringType.FullName, method.Name, insn);
+
+							Location location = new Location (method, insn.Offset);
+							Message message = new Message ("A double check locking detected", 
+								location, MessageType.Warning); 
+							return new MessageCollection (message);
 						}
 					}
 					comparisons[insns[i]] = twoBefore;
@@ -65,15 +68,6 @@ namespace Gendarme.Rules.Concurrency {
 			return runner.RuleSuccess;
 		}
 		
-		private static MessageCollection DoubleCheckLockingDetected (string type, string method, Instruction instruction)
-		{
-			Location location = new Location (type, method, instruction.Offset);
-			Message message = new Message ("A double check locking detected", location, MessageType.Warning); 
-			MessageCollection messages = new MessageCollection (message);
-			return messages;
-		}
-
-
 		private static bool IsMonitorMethod(Instruction insn, string methodName)
 		{
 			if(!insn.OpCode.Name.Equals("call"))

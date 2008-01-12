@@ -1,3 +1,10 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DoubleCheckingLockingRule.cs: Use new Location ctor. Delay 
+	Hashtable creation a bit.
+	* WriteStaticFieldFromInstanceMethodRule.cs: Use new Location ctor.
+	Don't create MessageCollection until needed.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DoubleCheckingLockingRule.cs: Turn some methods to static.
