@@ -77,7 +77,6 @@ namespace Gendarme.Rules.Interoperability {
 				return runner.RuleSuccess;
 
 			MessageCollection results = null;
-			string fullname = method.DeclaringType.FullName;
 
 			foreach (Instruction ins in method.Body.Instructions) {
 
@@ -112,7 +111,7 @@ namespace Gendarme.Rules.Interoperability {
 						break;
 
 					EnsureExists (ref results);
-					Location loc = new Location (fullname, method.Name, ins.Offset);
+					Location loc = new Location (method, ins.Offset);
 					Message msg = new Message ("GetLastError() should be called immediately after this the PInvoke call.", loc, MessageType.Error);
 					results.Add (msg);
 					break;

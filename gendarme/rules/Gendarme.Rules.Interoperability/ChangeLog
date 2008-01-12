@@ -1,3 +1,8 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* GetLastErrorMustBeCalledRightAfterPInvokeRule.cs: Use new 
+	Location ctors.
+
 2008-01-02  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* GetLastErrorMustBeCalledRightAfterPInvokeRule.cs: Change two 
