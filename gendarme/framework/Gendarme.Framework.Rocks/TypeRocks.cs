@@ -174,6 +174,17 @@ namespace Gendarme.Framework.Rocks {
 		}
 
 		/// <summary>
+		/// Check if the type represent a floating-point type.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <returns>True if the type is System.Single (C# float) or System.Double (C3 double), False otherwise.</returns>
+		public static bool IsFloatingPoint (this TypeReference self)
+		{
+			return ((self.FullName == Mono.Cecil.Constants.Single) ||
+				(self.FullName == Mono.Cecil.Constants.Double));
+		}
+
+		/// <summary>
 		/// Check if the type is generated code, either by the compiler or by a tool.
 		/// </summary>
 		/// <param name="self">The TypeReference on which the extension method can be called.</param>
@@ -181,7 +192,26 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise (e.g. compiler or tool generated)</returns>
 		public static bool IsGeneratedCode (this TypeReference self)
 		{
-			return self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes);
+			if (self.Module.Assembly.Runtime >= TargetRuntime.NET_2_0) {
+				if (self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes))
+					return true;
+
+				TypeReference type = self;
+				while (type.IsNested) {
+					if (type.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes))
+						return true;
+					type = type.DeclaringType;
+				}
+				return false;
+			} else {
+				switch (self.Name [0]) {
+				case '<': // e.g. <PrivateImplementationDetails>
+				case '$': // e.g. $ArrayType$1 nested inside <PrivateImplementationDetails>
+					return true;
+				default:
+					return false;
+				}
+			}
 		}
 	}
 }

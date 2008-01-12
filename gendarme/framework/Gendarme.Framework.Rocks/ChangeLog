@@ -1,3 +1,8 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypeRocks.cs: Add IsFloatingPoint rock and update IsGeneratedCode
+	to deal with code compiled before 2.0
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AssemblyRocks.cs: Rename calls to Contains[Any] -> Contains[Any]Type
