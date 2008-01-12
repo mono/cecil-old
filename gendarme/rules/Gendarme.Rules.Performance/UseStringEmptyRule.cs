@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -27,11 +27,10 @@
 //
 
 using System;
-using System.Collections;
-using System.Globalization;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Performance {
@@ -47,7 +46,6 @@ namespace Gendarme.Rules.Performance {
 			// *** ok, the rule applies! ***
 
 			MessageCollection results = null;
-			string fullname = method.DeclaringType.FullName;
 
 			// #2 - look for string references
 			foreach (Instruction ins in method.Body.Instructions) {
@@ -55,7 +53,7 @@ namespace Gendarme.Rules.Performance {
 				case OperandType.InlineString:
 					string s = (ins.Operand as string);
 					if (s.Length == 0) {
-						Location loc = new Location (fullname, method.Name, ins.Offset);
+						Location loc = new Location (method, ins.Offset);
 						Message msg = new Message ("instance of an empty string has been found.",
 							loc, MessageType.Warning);
 						if (results == null)

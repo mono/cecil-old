@@ -101,7 +101,7 @@ namespace Gendarme.Rules.Performance {
 
 				// then we must check if this type use the private method
 				if (!CheckTypeForMethodUsage ((method.DeclaringType as TypeDefinition), method)) {
-					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+					Location location = new Location (method);
 					Message message = new Message ("The private method code is not used in it's declaring type.", location, MessageType.Error);
 					return new MessageCollection (message);
 				}
@@ -115,7 +115,7 @@ namespace Gendarme.Rules.Performance {
 
 				// then we must check if something in the assembly is using this method
 				if (!CheckAssemblyForMethodUsage (method.DeclaringType.Module.Assembly, method)) {
-					Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+					Location location = new Location (method);
 					Message message = new Message ("The internal method code is not used in it's declaring assembly.", location, MessageType.Error);
 					return new MessageCollection (message);
 				}

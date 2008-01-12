@@ -40,23 +40,24 @@ namespace Gendarme.Rules.Performance
 			if (!method.HasBody)
 				return runner.RuleSuccess;
 
- 			MessageCollection messageCollection = new MessageCollection ();
+ 			MessageCollection messageCollection = null;
 
 			foreach (Instruction instruction in method.Body.Instructions) {
 				if (instruction.Operand != null) {
 					if (instruction.Operand.ToString () == "System.Boolean System.String::Equals(System.String)") {
 						Instruction prevInstr = instruction.Previous;
 						if (prevInstr.OpCode.Name == "ldstr" && prevInstr.Operand.ToString().Length == 0) {
-							Location location = new Location (method.DeclaringType.ToString(), method.Name, instruction.Offset);
+							Location location = new Location (method, instruction.Offset);
 							Message message = new Message ("Method uses .Equals (\"\") method to check for empty string instead of using Length property ", location, MessageType.Error);
-							messageCollection.Add (message);
+							if (messageCollection == null)
+								messageCollection = new MessageCollection (message);
+							else
+								messageCollection.Add (message);
 						}
 					}
 				}
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
 			return messageCollection;
 		}
 	}

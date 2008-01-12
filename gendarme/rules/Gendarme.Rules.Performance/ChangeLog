@@ -1,3 +1,11 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidUncalledPrivateCodeRule.cs: Use new Location ctors.
+	* AvoidUninstantiatedInternalClassesRule.cs: Use new Location ctors.
+	* UseStringEmptyRule.cs: Use new Location ctors.
+	* UsingStringLengthInsteadOfCheckingEmptyStringRule.cs: Don't 
+	create MessageCollection until needed. Use new Location ctors.
+
 2008-01-08  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidUncalledPrivateCodeRule.cs: Don't report any serialization

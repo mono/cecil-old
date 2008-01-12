@@ -136,7 +136,7 @@ namespace Gendarme.Rules.Performance {
 
 			// if we can't find the non-public type being used in the assembly then the rule fails
 			if (list == null || !list.Contains (type)) {
-				Location location = new Location (type.FullName, null);
+				Location location = new Location (type);
 				Message message = new Message ("There is no call for any of the types constructor found", location, MessageType.Error);
 				return new MessageCollection (message);
 			}
