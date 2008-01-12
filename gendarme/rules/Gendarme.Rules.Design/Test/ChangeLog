@@ -1,3 +1,8 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AttributeArgumentsShouldHaveAccessorsTest.cs: New. Unit tests from
+	Daniel Abramov.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MissingAttributeUsageOnCustomAttributeTest.cs: New. Unit tests 
