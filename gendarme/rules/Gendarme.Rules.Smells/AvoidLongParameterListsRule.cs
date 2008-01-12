@@ -82,6 +82,11 @@ namespace Gendarme.Rules.Smells {
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
+			// we don't control, nor report, p/invoke declarations - someimes the poor C 
+			// guys don't have a choice to make long parameter lists ;-)
+			if (method.IsPInvokeImpl)
+				return runner.RuleSuccess;
+
 			if (HasLongParameterList (method)) {
 				MessageCollection messageCollection = new MessageCollection ();
 				Location location = new Location (method);
