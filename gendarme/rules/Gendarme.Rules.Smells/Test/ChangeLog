@@ -1,3 +1,7 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidLongParameterListsTest.cs: Don't report defects for p/invokes
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidLargeClassesTest.cs: Added test cases for const and readonly 

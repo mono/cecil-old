@@ -28,6 +28,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 using NUnit.Framework;
@@ -94,6 +95,9 @@ namespace Test.Rules.Smells {
 		{
 		}
 
+		// copy-paste from Mono's System.Drawing, types changed to avoid referencing assembly
+		[DllImport ("gdiplus.dll")]
+		static internal extern int GdipCreateLineBrushFromRectI (object rect, int color1, int color2, int linearGradientMode, int wrapMode, IntPtr brush);
 
 		[Test]
 		public void MethodWithoutParametersTest () 
@@ -160,6 +164,13 @@ namespace Test.Rules.Smells {
 			messageCollection = rule.CheckMethod (method, new MinimalRunner ());
 			Assert.IsNotNull (messageCollection);
 			Assert.AreEqual (1, messageCollection.Count);
+		}
+
+		[Test]
+		public void IgnoreExternalMethods ()
+		{
+			method = GetMethodForTest ("GdipCreateLineBrushFromRectI", new Type[] {typeof (object), typeof (int), typeof (int), typeof (int), typeof (int), typeof (IntPtr) });
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
 }
