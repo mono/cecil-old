@@ -1,3 +1,7 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypeRocksTest.cs: Added test cases for IsFloatingPoint
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* CustomAttributeRocksTest.cs: Rename calls to Contains[Any] to

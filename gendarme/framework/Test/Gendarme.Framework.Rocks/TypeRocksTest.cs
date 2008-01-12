@@ -98,6 +98,9 @@ namespace Test.Framework.Rocks {
 		private Deep [] array_of_classes;
 		private ICloneable [] array_of_interfaces;
 
+		private float SingleValue;
+		private double DoubleValue;
+
 
 		private AssemblyDefinition assembly;
 
@@ -239,6 +242,21 @@ namespace Test.Framework.Rocks {
 			Assert.IsFalse (GetType (String.Empty).IsFlags (), "Type.IsFlags");
 			Assert.IsFalse (GetType ("/Enum").IsFlags (), "Enum.IsFlags");
 			Assert.IsTrue (GetType ("/Flags").IsFlags (), "Flags.IsFlags");
+		}
+
+		[Test]
+		public void IsFloatingPoint ()
+		{
+			TypeDefinition type = GetType (String.Empty);
+			Assert.IsFalse (type.IsFloatingPoint (), "Type.IsFloatingPoint");
+			foreach (FieldDefinition field in type.Fields) {
+				switch (field.Name) {
+				case "SingleValue":
+				case "DoubleValue":
+					Assert.IsTrue (field.FieldType.IsFloatingPoint (), field.Name);
+					break;
+				}
+			}
 		}
 
 		[Test]
