@@ -1,3 +1,11 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AttributeArgumentsShouldHaveAccessorsRule.cs: New. Rule that check 
+	that all attribute's constructors have read-only properties (get) that
+	match their parameters [Daniel Abramov]
+	* Gendarme.Rules.Design.xml.in: Added new rule descriptions.
+	* Makefile.am: Add new rules/tests to the build.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MissingAttributeUsageOnCustomAttributeRule.cs: New. Rule that checks

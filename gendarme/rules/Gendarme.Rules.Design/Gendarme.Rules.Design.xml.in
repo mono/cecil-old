@@ -5,6 +5,12 @@
 		<problem>The class '{0}' provides public constructor(s).</problem>
 		<solution>Change constructor visibility to protected.</solution>
 	</rule>
+	<rule	Name="AttributeArgumentsShouldHaveAccessorsRule"
+		Type="Gendarme.Rules.Design.AttributeArgumentsShouldHaveAccessorsRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>All parameter values passed to '{0}' constructors should be visible through read-only properties.</problem>
+		<solution>Add the missing property getters to the class.</solution>
+	</rule>
 	<rule	Name="AvoidEmptyInterfaceRule"
 		Type="Gendarme.Rules.Design.AvoidEmptyInterfaceRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
