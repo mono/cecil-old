@@ -25,20 +25,6 @@ namespace Gendarme.Framework {
 		private string method;
 		private int offset;	// Offset of instruction into method
 
-		public Location (string type, string method)
-		{
-			this.type = type;
-			this.method = method;
-			this.offset = -1;
-		}
-
-		public Location (string type, string method, int offset)
-		{
-			this.type = type;
-			this.method = method;
-			this.offset = offset;
-		}
-
 		public Location (TypeDefinition type)
 		{
 			if (type == null)

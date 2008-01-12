@@ -1,3 +1,7 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Location.cs: Remove all string-based constructors.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Location.cs: Add a ctor for FieldDefinition.
