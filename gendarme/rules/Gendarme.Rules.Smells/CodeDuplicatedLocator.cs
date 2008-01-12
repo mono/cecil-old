@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool ExistsExpressionsReplied (ICollection currentExpressions, ICollection targetExpressions)
+		private static bool ExistsExpressionsReplied (ICollection currentExpressions, ICollection targetExpressions)
 		{
 			IEnumerator currentEnumerator = currentExpressions.GetEnumerator ();
 			IEnumerator targetEnumerator = targetExpressions.GetEnumerator ();
@@ -72,7 +72,7 @@ namespace Gendarme.Rules.Smells {
 			return false;
 		}
 
-		private ICollection GetExpressionsFrom (MethodBody methodBody)
+		private static ICollection GetExpressionsFrom (MethodBody methodBody)
 		{
 			ExpressionFillerVisitor expressionFillerVisitor = new ExpressionFillerVisitor ();
 			methodBody.Accept (expressionFillerVisitor);
@@ -103,7 +103,7 @@ namespace Gendarme.Rules.Smells {
 			if (!CheckedTypes.Contains (targetTypeDefinition.Name)) {
 				foreach (MethodDefinition targetMethod in targetTypeDefinition.Methods) {
 					if (ContainsDuplicatedCode (currentMethod, targetMethod)) {
-						Location location = new Location (currentMethod.DeclaringType.Name, currentMethod.Name, 0);
+						Location location = new Location (currentMethod);
 						Message message = new Message (String.Format ("Exists code duplicated with {0}.{1}", targetTypeDefinition.Name, targetMethod.Name), location, MessageType.Error);
 						messageCollection.Add (message);
 					}

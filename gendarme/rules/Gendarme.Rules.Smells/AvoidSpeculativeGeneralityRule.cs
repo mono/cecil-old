@@ -45,13 +45,13 @@ namespace Gendarme.Rules.Smells {
 			if (type.IsAbstract) {
 				ICollection inheritedClasses = Utilities.GetInheritedClassesFrom (type);
 				if (inheritedClasses.Count == 1)
-					AddMessage (type.Name, "This abstract class only has one class inheritting from.  The abstract classes without responsability are a sign for the Speculative Generality smell.");
+					AddMessage (type, "This abstract class only has one class inheritting from.  The abstract classes without responsability are a sign for the Speculative Generality smell.");
 			}
 		}
 
-		private void AddMessage (string typeName, string summary)
+		private void AddMessage (TypeDefinition type, string summary)
 		{
-			Location location = new Location (typeName, String.Empty, 0);
+			Location location = new Location (type);
 			Message message = new Message (summary, location, MessageType.Error);
 			if (messageCollection == null)
 				messageCollection = new MessageCollection ();
@@ -59,7 +59,7 @@ namespace Gendarme.Rules.Smells {
 		}
 		
 		//return true if the method only contains only a single call.
-		private bool OnlyDelegatesCall (MethodDefinition method)
+		private static bool OnlyDelegatesCall (MethodDefinition method)
 		{
 			if (!method.HasBody)
 				return false;
@@ -76,12 +76,12 @@ namespace Gendarme.Rules.Smells {
 			return onlyOneCallInstruction;
 		}
 
-		private bool InheritsOnlyFromObject (TypeDefinition type)
+		private static bool InheritsOnlyFromObject (TypeDefinition type)
 		{
 			return type.BaseType.FullName == "System.Object" && type.Interfaces.Count == 0;
 		}
 
-		private bool MostlyMethodsDelegatesCall (TypeDefinition type)
+		private static bool MostlyMethodsDelegatesCall (TypeDefinition type)
 		{
 			int delegationCounter = 0;
 			foreach (MethodDefinition method in type.Methods) {
@@ -95,10 +95,10 @@ namespace Gendarme.Rules.Smells {
 		private void CheckUnnecesaryDelegation (TypeDefinition type)
 		{
 			if (MostlyMethodsDelegatesCall (type) && InheritsOnlyFromObject (type))
-				AddMessage (type.Name, "This class contains a lot of methods that only delgates the call to other.  This kind of Delegation could be a sign for Speculative Generality");
+				AddMessage (type, "This class contains a lot of methods that only delgates the call to other.  This kind of Delegation could be a sign for Speculative Generality");
 		}
 
-		private bool AvoidUnusedParametersRuleScheduled (Runner runner)
+		private static bool AvoidUnusedParametersRuleScheduled (Runner runner)
 		{
 			foreach (IMethodRule rule in runner.Rules.Method) {
 				if (rule is AvoidUnusedParametersRule)

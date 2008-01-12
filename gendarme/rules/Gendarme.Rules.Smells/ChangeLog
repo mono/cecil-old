@@ -1,3 +1,15 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* AvoidLongMethodsRule.cs: Use new Location ctor.
+	* AvoidLongParameterListsRule.cs: Use new Location ctor. Change 
+	two methods to static.
+	* AvoidSpeculativeGeneralityRule.cs: Use new Location ctor. Change
+	four methods to static.
+	* CodeDuplicatedLocator.cs: Use new Location ctor. Change two 
+	methods to static.
+	* Expression.cs: Change a method to static.
+	* ExpressionFillerVisitor.cs: Change two methods to static.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* AvoidLargeClassesRule.cs: Don't report defect if the fields are 

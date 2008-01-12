@@ -97,7 +97,7 @@ namespace Gendarme.Rules.Smells {
 			return equality;
 		}
 
-		private bool CheckEqualityForOpCodes (Instruction currentInstruction, Instruction targetInstruction)
+		private static bool CheckEqualityForOpCodes (Instruction currentInstruction, Instruction targetInstruction)
 		{
 			if (currentInstruction.OpCode.Name == targetInstruction.OpCode.Name)
 				return true;

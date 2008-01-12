@@ -45,7 +45,7 @@ namespace Gendarme.Rules.Smells {
 			currentExpression = null;
 		}
 
-		private bool IsAcceptable (Instruction instruction)
+		private static bool IsAcceptable (Instruction instruction)
 		{
 			return instruction.OpCode.FlowControl == FlowControl.Call ||
 				instruction.OpCode.FlowControl == FlowControl.Branch ||
@@ -68,7 +68,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool IsDelimiter (Instruction instruction)
+		private static bool IsDelimiter (Instruction instruction)
 		{
 			return instruction.OpCode.Code == Code.Ldarg_0 ||
 				instruction.OpCode.FlowControl == FlowControl.Branch;

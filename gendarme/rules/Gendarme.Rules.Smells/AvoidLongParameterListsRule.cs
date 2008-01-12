@@ -49,7 +49,7 @@ namespace Gendarme.Rules.Smells {
 			}
 		}
 
-		private bool IsOverloaded (MethodDefinition method)
+		private static bool IsOverloaded (MethodDefinition method)
 		{
 			if (method.DeclaringType is TypeDefinition) {
 				TypeDefinition type = (TypeDefinition) method.DeclaringType;
@@ -58,7 +58,7 @@ namespace Gendarme.Rules.Smells {
 			return false;
 		}
 
-		private MethodReference GetShortestOverloaded (MethodDefinition method)
+		private static MethodReference GetShortestOverloaded (MethodDefinition method)
 		{
 			if (method.DeclaringType is TypeDefinition) {
 				TypeDefinition type = (TypeDefinition) method.DeclaringType;
@@ -84,7 +84,7 @@ namespace Gendarme.Rules.Smells {
 		{
 			if (HasLongParameterList (method)) {
 				MessageCollection messageCollection = new MessageCollection ();
-				Location location = new Location (method.DeclaringType.Name, method.Name, 0);
+				Location location = new Location (method);
 				Message message = new Message ("The method contains a long parameter list.",location, MessageType.Error);
 				messageCollection.Add (message);
 				return messageCollection;
