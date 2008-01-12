@@ -88,7 +88,7 @@ namespace Gendarme.Rules.Security {
 					}
 					// 4 - and if it has security, ensure we don't reduce it's strength
 					if ((callee.SecurityDeclarations.Count > 0) && !Check (method, callee)) {
-						Location loc = new Location (method.DeclaringType.ToString (), method.Name, ins.Offset);
+						Location loc = new Location (method, ins.Offset);
 						Message msg = new Message ("Method doesn't have a subset of the LinkDemand", loc, MessageType.Warning); 
 						if (mc == null)
 							mc = new MessageCollection (msg);

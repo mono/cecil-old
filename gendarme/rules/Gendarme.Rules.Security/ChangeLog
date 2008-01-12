@@ -1,3 +1,7 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* MethodCallWithSubsetLinkDemandRule.cs: Use new Location ctors.
+
 2008-01-03  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodCallWithSubsetLinkDemandRule.cs: Change Check method to 
