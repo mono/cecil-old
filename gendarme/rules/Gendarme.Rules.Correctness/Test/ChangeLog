@@ -1,3 +1,9 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontCompareWithNaNTest.cs: New. Unit tests for NaN.
+	* UseValueInPropertySetterTest.cs: Fix Empty test case since we 
+	don't report them anymore (too many false positives).
+
 2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* BadRecursiveInvocationTest.cs: Add more complex test cases to hunt

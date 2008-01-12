@@ -179,7 +179,9 @@ namespace Test.Rules.Correctness {
 		public void TestEmpty ()
 		{
 			MethodDefinition method = GetTest ("set_Empty");
-			Assert.IsNotNull (CheckMethod (method));
+			// too many false positive, it seems too common to have empty set to report them
+			// at least for this specific rule
+			Assert.IsNull (CheckMethod (method));
 		}
 	}
 }
