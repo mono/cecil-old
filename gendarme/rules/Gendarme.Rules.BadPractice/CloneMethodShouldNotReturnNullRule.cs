@@ -30,22 +30,15 @@ using System;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.BadPractice {
 
 	public class CloneMethodShouldNotReturnNullRule: ITypeRule {
 
-		private bool ImplementsICloneable (TypeDefinition type)
-		{
-			foreach (TypeReference iface in type.Interfaces) {
-				if (iface.FullName == "System.ICloneable")
-					return true;
-			}
-			return false;
-		}
-
-		private bool IsCloneMethod (MethodDefinition method)
+		private static bool IsCloneMethod (MethodDefinition method)
 		{
 			return (method.Name == "Clone" && (method.Parameters.Count == 0));
 		}
@@ -53,7 +46,7 @@ namespace Gendarme.Rules.BadPractice {
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// rule applies only to types implementing System.ICloneable
-			if (!ImplementsICloneable (type))
+			if (!type.Implements ("System.ICloneable"))
 				return runner.RuleSuccess;
 
 			foreach (MethodDefinition method in type.Methods) {

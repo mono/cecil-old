@@ -36,7 +36,7 @@ namespace Gendarme.Rules.BadPractice {
 	public class EqualShouldHandleNullArgRule: IMethodRule {
 
 		// copy-paste from gendarme\rules\Gendarme.Rules.Correctness\CallingEqualsWithNullArgRule.cs
-		private bool IsEquals (MethodReference md)
+		private static bool IsEquals (MethodReference md)
 		{
 			if ((md == null) || (md.Name != "Equals"))
 				return false;
@@ -68,7 +68,7 @@ namespace Gendarme.Rules.BadPractice {
 
 		// FIXME: this logic seems to work only on mono generated assemblies
 		// and can fail on VS.NET (e.g. debug)
-		public bool HandlesNullArg (MethodDefinition method)
+		private static bool HandlesNullArg (MethodDefinition method)
 		{
 			Instruction prevIns;
 			foreach (Instruction ins in method.Body.Instructions) {

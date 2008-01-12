@@ -1,3 +1,10 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CloneMethodShouldNotReturnNullRule.cs: Use rocks and turn a method
+	to static.
+	* EqualShouldHandleNullArgRule.cs: Turn some methods to static.
+	* ToStringReturnsNullRule.cs: Turn some methods to static.
+
 2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* ToStringReturnsNullRule.cs: Avoid creating MessageCollection 

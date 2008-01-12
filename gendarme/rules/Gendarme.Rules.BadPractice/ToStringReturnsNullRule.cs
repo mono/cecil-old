@@ -32,28 +32,27 @@ using Mono.Cecil.Cil;
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.BadPractice {
-	public class ToStringReturnsNullRule: IMethodRule
-	{
-		private bool IsOverridenToString (MethodDefinition method)
+
+	public class ToStringReturnsNullRule: IMethodRule {
+
+		private static bool IsOverridenToString (MethodDefinition method)
 		{
 			return method.Name == "ToString" && method.IsVirtual;
 		}
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			Instruction prevIns;
-			int offset = 0;
-			bool nullReturned = false;
-
 			if (!method.HasBody)
 				return runner.RuleSuccess;
 
 			if (!IsOverridenToString (method))
 				return runner.RuleSuccess;
 
+			int offset = 0;
+			bool nullReturned = false;
 			foreach (Instruction ins in method.Body.Instructions) {
 				if (ins.OpCode == OpCodes.Ret) {
-					prevIns = ins.Previous;
+					Instruction prevIns = ins.Previous;
 					if (prevIns.OpCode != OpCodes.Ldnull) {
 						string opCodeSt;
 						if (prevIns.OpCode == OpCodes.Call || prevIns.OpCode == OpCodes.Callvirt)
@@ -83,7 +82,7 @@ namespace Gendarme.Rules.BadPractice {
 			return runner.RuleSuccess;
 		}
 
-		public string ReturnSt (MethodDefinition method, Instruction instruc)
+		private static string ReturnSt (MethodDefinition method, Instruction instruc)
 		{
 			Hashtable opCodes = InitializeHashTable (method);
 			string stOpCode = null;
@@ -119,7 +118,7 @@ namespace Gendarme.Rules.BadPractice {
 			return stOpCode;
 		}
 
-		public Hashtable InitializeHashTable (MethodDefinition method)
+		private static Hashtable InitializeHashTable (MethodDefinition method)
 		{
 			int count = 0;
 			Hashtable hash = new Hashtable ();
