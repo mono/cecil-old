@@ -10,9 +10,9 @@
 	<property name="debug" value="true" />
 	<property name="keyfile" value="../../mcs/class/mono.snk" />
 	<property name="csc.defines" value="NO_DEFINE" />
-	
+
 	<!-- allow properties to be customized in external file" -->
-	<include buildfile="build.properties" if="${file::exists('build.properties')}" />	
+	<include buildfile="build.properties" if="${file::exists('build.properties')}" />
 
 	<target name="test" depends="build">
 		<nunit2>
@@ -123,7 +123,7 @@
 			   target="library" debug="${debug}" unsafe="false" optimize="${optimize}"
 			   noconfig="true" nostdlib="true" keyfile="${keyfile}"
 			   define="${compactframework.defines}">
-			   
+			
 			   <sources basedir="Cecil.FlowAnalysis">
 					   <include name="**/*.cs" />
 			   </sources>

@@ -63,8 +63,38 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnStloc_0 (Instruction instruction)
 		{
-			PushVariableReference (0);
-			Push (new AssignExpression (Pop (), Pop ()));
+			PushVariableAssignement (0);
+		}
+
+		public override void OnStloc_1 (Instruction instruction)
+		{
+			PushVariableAssignement (1);
+		}
+
+		public override void OnStloc_2 (Instruction instruction)
+		{
+			PushVariableAssignement (2);
+		}
+
+		public override void OnStloc_3 (Instruction instruction)
+		{
+			PushVariableAssignement (3);
+		}
+
+		public override void OnStloc (Instruction instruction)
+		{
+			PushVariableAssignement ((VariableReference) instruction.Operand);
+		}
+
+		private void PushVariableAssignement (VariableReference variable)
+		{
+			PushVariableAssignement (variable.Index);
+		}
+
+		private void PushVariableAssignement (int index)
+		{
+			PushVariableReference (index);
+			PushAssignment (Pop (), Pop ());
 		}
 
 		public override void OnStsfld (Instruction instruction)
@@ -81,7 +111,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			PushAssignment(new FieldReferenceExpression (target, field), expression);
 		}
 
-		private void PushAssignment(Expression lvalue, Expression rvalue)
+		private void PushAssignment (Expression lvalue, Expression rvalue)
 		{
 			Push (
 				new AssignExpression (
@@ -238,6 +268,26 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		public override void OnLdloc_0 (Instruction instruction)
 		{
 			PushVariableReference (0);
+		}
+
+		public override void OnLdloc_1 (Instruction instruction)
+		{
+			PushVariableReference (1);
+		}
+
+		public override void OnLdloc_2 (Instruction instruction)
+		{
+			PushVariableReference (2);
+		}
+
+		public override void OnLdloc_3 (Instruction instruction)
+		{
+			PushVariableReference (3);
+		}
+
+		public override void OnLdloc (Instruction instruction)
+		{
+			PushVariableReference ((VariableReference) instruction.Operand);
 		}
 
 		public override void OnCeq (Instruction instruction)
@@ -406,6 +456,21 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		public override void OnLdarg_1 (Instruction instruction)
 		{
 			PushArgumentReference (1);
+		}
+
+		public override void OnLdarg_2 (Instruction instruction)
+		{
+			PushArgumentReference (2);
+		}
+
+		public override void OnLdarg_3 (Instruction instruction)
+		{
+			PushArgumentReference (3);
+		}
+
+		public override void OnLdarg (Instruction instruction)
+		{
+			PushArgumentReference (((VariableDefinition)instruction.Operand).Index);
 		}
 
 		public void Negate ()
