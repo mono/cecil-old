@@ -52,7 +52,7 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
-			Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+			Location location = new Location (typeDefinition);
 			if (typeDefinition.IsInterface) {
 				if (!IsCorrectInterfaceName (typeDefinition.Name)) { // interfaces should look like 'ISomething'
 					Message message = new Message (string.Format ("The '{0}' interface name doesn't have the required 'I' prefix. Acoording to existing naming conventions, all interface names should begin with the 'I' letter followed by another capital letter.", typeDefinition.Name), location, MessageType.Error);

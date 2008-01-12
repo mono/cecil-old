@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,8 +36,9 @@ namespace Gendarme.Rules.Naming {
 
 	public class DetectNonAlphaNumericsInTypeNamesRule: IMethodRule, ITypeRule {
 
-		// Compiler generates an error for any other non alpha-numerics than underscore ('_'), so we just need to check the presence of underscore in method names
-		private bool CheckName (string name)
+		// Compiler generates an error for any other non alpha-numerics than underscore ('_'), 
+		// so we just need to check the presence of underscore in method names
+		private static bool CheckName (string name)
 		{
 			return (name.IndexOf ("_") == -1);
 		}
@@ -52,7 +53,7 @@ namespace Gendarme.Rules.Naming {
 			if (CheckName (type.Name))
 				return runner.RuleSuccess;
 
-			Location location = new Location (type.FullName, type.Name, 0);
+			Location location = new Location (type);
 			Message message = new Message ("Type name should not contain underscore.", location, MessageType.Error);
 			return new MessageCollection (message);
 		}
@@ -67,7 +68,7 @@ namespace Gendarme.Rules.Naming {
 			if (CheckName (method.Name))
 				return runner.RuleSuccess;
 
-			Location location = new Location (method.DeclaringType.ToString(), method.Name, 0);
+			Location location = new Location (method);
 			Message message = new Message ("Method name should not contain an underscore.", location, MessageType.Error);
 			return new MessageCollection (message);
 		}

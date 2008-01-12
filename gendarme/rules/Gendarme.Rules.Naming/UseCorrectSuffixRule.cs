@@ -107,7 +107,7 @@ namespace Gendarme.Rules.Naming {
 
 			RemoveDuplicates (ref proposedSuffixes);
 			// there must be some suffixes defined, but type name doesn't end with any of them
-			Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+			Location location = new Location (typeDefinition);
 			string messageText;
 			if (proposedSuffixes.Count > 0) {
 				string joinedSuffixes = proposedSuffixes [0];

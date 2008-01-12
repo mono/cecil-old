@@ -1,3 +1,13 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DetectNonAlphaNumericsInTypeNamesRule.cs: Turn a method to static 
+	and use new Location ctors.
+	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs: Use new Location ctors.
+	* UseCorrectCasingRule.cs: Use new Location ctors.
+	* UseCorrectPrefixRule.cs: Use new Location ctors.
+	* UseCorrectSuffixRule.cs: Use new Location ctors.
+	* UsePreferredTermsRule.cs: Use new Location ctors.
+
 2008-01-05  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EnumNotEndsWithEnumOrFlagsSuffixRule.cs: Use rocks to reduce code

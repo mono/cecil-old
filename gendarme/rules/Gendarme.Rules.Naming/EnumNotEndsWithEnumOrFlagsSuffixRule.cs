@@ -50,13 +50,13 @@ namespace Gendarme.Rules.Naming {
 
 			if (!typeDefinition.IsFlags ()) {
 				if (EndsWithSuffix ("Enum", typeDefinition.Name)) {
-					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+					Location location = new Location (typeDefinition);
 					Message message = new Message ("Enum name should not end with the Enum suffix.", location, MessageType.Error);
 					return new MessageCollection (message);
 				}
 			} else {
 				if (EndsWithSuffix ("Flags", typeDefinition.Name)) {
-					Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+					Location location = new Location (typeDefinition);
 					Message message = new Message ("Enum name should not end with the Flags suffix.", location, MessageType.Error);
 					return new MessageCollection (message);
 				}

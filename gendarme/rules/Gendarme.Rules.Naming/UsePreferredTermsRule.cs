@@ -81,13 +81,13 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
-			Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+			Location location = new Location (typeDefinition);
 			return CheckIdentifier (typeDefinition.Name, location, runner);
 		}
 
 		public MessageCollection CheckMethod (MethodDefinition methodDefinition, Runner runner)
 		{
-			Location location = new Location (methodDefinition.DeclaringType.FullName, methodDefinition.Name, 0);
+			Location location = new Location (methodDefinition);
 			return CheckIdentifier (methodDefinition.Name, location, runner);
 		}
 	}

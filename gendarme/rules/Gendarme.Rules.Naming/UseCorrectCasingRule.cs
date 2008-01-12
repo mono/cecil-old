@@ -94,7 +94,7 @@ namespace Gendarme.Rules.Naming {
 			if (NamingUtils.IsNameGeneratedByCompiler (typeDefinition))
 				return runner.RuleSuccess;
 
-			Location location = new Location (typeDefinition.FullName, typeDefinition.Name, 0);
+			Location location = new Location (typeDefinition);
 			string errorMessage = string.Format ("By existing naming conventions, the type names should all be pascal-cased (e.g. MyClass). Rename '{0}' type to '{1}'.",
 							     typeDefinition.Name, PascalCase (typeDefinition.Name));
 			return new MessageCollection (new Message (errorMessage, location, MessageType.Error));
@@ -116,7 +116,7 @@ namespace Gendarme.Rules.Naming {
 			}
 
 			MessageCollection messages = new MessageCollection ();
-			Location location = new Location (methodDefinition.DeclaringType.FullName, methodDefinition.Name, 0);
+			Location location = new Location (methodDefinition);
 
 			// like types, methods/props should all be PascalCased, too
 			if (!IsPascalCase (name)) {
