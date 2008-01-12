@@ -157,7 +157,7 @@ namespace Gendarme.Rules.Portability {
 						messages = new MessageCollection ();
 
 					Message message = null;
-					Location loc = new Location (method.DeclaringType.FullName, method.Name, current.Offset);
+					Location loc = new Location (method, current.Offset);
 					if (results == InspectionResult.Unsure)
 						message = new Message ("In Unix, unlike in Windows, process exit code can be a value between 0 and 255 inclusively. Be sure not to set it to values that are out of range.", loc, MessageType.Warning);
 					else // bad

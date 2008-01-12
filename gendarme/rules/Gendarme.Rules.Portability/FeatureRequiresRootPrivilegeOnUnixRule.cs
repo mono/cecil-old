@@ -67,7 +67,7 @@ namespace Gendarme.Rules.Portability {
 					if (results == null)
 						results = new MessageCollection ();
 
-					Location loc = new Location (fullname, method.Name, ins.Offset);
+					Location loc = new Location (method, ins.Offset);
 					Message msg = new Message ("Setting Process.PriorityClass to something else than ProcessPriorityClass.Normal requires root privileges.", loc, MessageType.Warning);
 					results.Add (msg);
 					break;
@@ -87,7 +87,7 @@ namespace Gendarme.Rules.Portability {
 					if (results == null)
 						results = new MessageCollection ();
 
-					Location loc = new Location (fullname, method.Name, ins.Offset);
+					Location loc = new Location (method, ins.Offset);
 					Message msg = new Message ("Usage of System.Net.NetworkInformation.Ping requires root privileges.", loc, MessageType.Warning);
 					results.Add (msg);
 					break;

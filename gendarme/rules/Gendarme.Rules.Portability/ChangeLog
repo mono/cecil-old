@@ -1,3 +1,10 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ExitCodeIsLimitedOnUnixRule.cs: Use new Location ctors.
+	* FeatureRequiresRootPrivilegeOnUnixRule.cs: Use new Location ctors.
+	* MonoCompatibilityReviewRule.cs: Use new Location ctors.
+	* NewLineLiteralRule.cs: Use new Location ctors.
+
 2008-01-02  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ExitCodeIsLimitedOnUnixRule.cs: Rename InspectionResult[s]

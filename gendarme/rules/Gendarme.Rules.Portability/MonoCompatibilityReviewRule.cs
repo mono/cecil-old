@@ -142,7 +142,7 @@ namespace Gendarme.Rules.Portability {
 				results = new MessageCollection ();
 
 			error = string.Format (error, calledMethod, dict [calledMethod]);
-			Location loc = new Location (method.DeclaringType.FullName, method.Name, ins.Offset);
+			Location loc = new Location (method, ins.Offset);
 
 			Message msg = new Message (error, loc, type);
 			results.Add (msg);

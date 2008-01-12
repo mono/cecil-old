@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006-2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -30,6 +30,7 @@ using System;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
 
 namespace Gendarme.Rules.Portability {
@@ -46,7 +47,6 @@ namespace Gendarme.Rules.Portability {
 
 			// rule applies
 
-			string fullname = null;
 			MessageCollection results = null;
 			foreach (Instruction ins in method.Body.Instructions) {
 				switch (ins.OpCode.Code) {
@@ -57,28 +57,23 @@ namespace Gendarme.Rules.Portability {
 						continue;
 
 					if (s.IndexOfAny (InvalidChar) >= 0) {
-						if (results == null) {
-							results = new MessageCollection ();
-							fullname = method.DeclaringType.FullName;
-						}
-
-						Location loc = new Location (fullname, method.Name, ins.Offset);
+						Location loc = new Location (method, ins.Offset);
 						// make the invalid char visible on output
 						s = s.Replace ("\n", "\\n");
 						s = s.Replace ("\r", "\\r");
 						Message msg = new Message (String.Format ("Found string: \"{0}\"", s),
 							loc, MessageType.Warning);
 
-						results.Add (msg);
+						if (results == null)
+							results = new MessageCollection (msg);
+						else
+							results.Add (msg);
 					}
 					break;
 				default:
 					break;
 				}
 			}
-
-			if (results == null)
-				return runner.RuleSuccess;
 
 			return results;
 		}
