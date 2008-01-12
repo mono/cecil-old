@@ -74,7 +74,7 @@ namespace Gendarme.Rules.BadPractice {
 			}
 
 			if (nullReturned) {
-				Location location = new Location (method.DeclaringType.FullName, method.Name, offset);
+				Location location = new Location (method, offset);
 				Message message = new Message ("ToString () seems to returns null in some condition", location, MessageType.Error);
 				return new MessageCollection (message);
 			}

@@ -57,7 +57,7 @@ namespace Gendarme.Rules.BadPractice {
 			foreach (ParameterDefinition param in method.Parameters) {
 				if (param.ParameterType.FullName == "System.Object") {
 					if (!HandlesNullArg (method)) {
-						Location location = new Location (method.DeclaringType.FullName, method.Name, 0);
+						Location location = new Location (method);
 						Message message = new Message ("The overridden method Object.Equals (Object) does not return false if null value is found", location, MessageType.Error);
 						return new MessageCollection (message);
 					}

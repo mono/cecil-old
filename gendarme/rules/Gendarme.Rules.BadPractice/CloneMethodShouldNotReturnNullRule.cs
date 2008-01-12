@@ -85,7 +85,7 @@ namespace Gendarme.Rules.BadPractice {
 						break;
 					case Code.Ret:
 						if (return_null) {
-							Location location = new Location (type.FullName, type.Name, instruction.Offset);
+							Location location = new Location (method, instruction.Offset);
 							Message message = new Message ("The ICloneable.Clone () method returns null", location, MessageType.Error);
 							return new MessageCollection (message);
 						}

@@ -1,3 +1,11 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CloneMethodShouldNotReturnNullRule.cs: Use new Location ctor.
+	* EqualShouldHandleNullArgRule.cs: Use new Location ctor.
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule.cs: Use new 
+	Location ctor.
+	* ToStringReturnsNullRule.cs: Use new Location ctor.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* CloneMethodShouldNotReturnNullRule.cs: Use rocks and turn a method

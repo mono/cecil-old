@@ -56,14 +56,14 @@ namespace Gendarme.Rules.BadPractice {
 
 			// if we have Equals but no GetHashCode method
 			if (equals && !getHashCode) {
-				Location location = new Location (type.FullName, type.Name, 0);
+				Location location = new Location (type);
 				Message message = new Message ("Implements Object.Equals (Object) but does not implement Object.GetHashCode ()", location, MessageType.Error);
 				return new MessageCollection (message);
 			}
 
 			// if we have GetHashCode but no Equals method
 			if (!equals && getHashCode) {
-				Location location = new Location (type.FullName, type.Name, 0);
+				Location location = new Location (type);
 				Message message = new Message ("Implements Object.GetHashCode () but does not implement Object.Equals (Object)", location, MessageType.Error);
 				return new MessageCollection (message);
 			}
