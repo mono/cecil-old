@@ -5,13 +5,9 @@ using Mono.Cecil.Cil;
 
 namespace Gendarme.Rules.Exceptions {
 
-	public class ExceptionBlockParser {
+	public static class ExceptionBlockParser {
 	
-		public ExceptionBlockParser ()
-		{
-		}
-		
-		public ISEHGuardedBlock[] GetExceptionBlocks (MethodDefinition method)
+		public static ISEHGuardedBlock[] GetExceptionBlocks (MethodDefinition method)
 		{
 			Hashtable blockStarts = new Hashtable ();
 			ExceptionHandlerCollection ehc = null;
