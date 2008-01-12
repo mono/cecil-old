@@ -1,3 +1,11 @@
+2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* DontDestroyStackTrace.cs: Use new Location ctors. Change some 
+	methods to static.
+	* DontSwallowErrorsCatchingNonspecificExceptionsRule.cs: Don't 
+	create MessageCollection until needed. Use new Location ctors. Change
+	a method to static.
+
 2007-11-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DontDestroyStackTrace.cs: Don't use a static field (it fails a rule)

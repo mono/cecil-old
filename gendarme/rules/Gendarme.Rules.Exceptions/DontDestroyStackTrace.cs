@@ -12,20 +12,18 @@ namespace Gendarme.Rules.Exceptions {
 		private TypeReference void_reference;
 		private ArrayList warned_offsets_in_method;
 
-		public DontDestroyStackTrace ()
-		{
-		}
-
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
+			if (!method.HasBody)
+				return runner.RuleSuccess;
+
 			ModuleDefinition module = method.DeclaringType.Module;
 			if (void_reference == null)
 				void_reference = module.Import (typeof (void));
 
 			ArrayList executionPaths = new ArrayList ();
 			ExecutionPathFactory epf = new ExecutionPathFactory (method);
-			ExceptionBlockParser ebp = new ExceptionBlockParser ();
-			ISEHGuardedBlock[] guardedBlocks = ebp.GetExceptionBlocks (method);
+			ISEHGuardedBlock[] guardedBlocks = ExceptionBlockParser.GetExceptionBlocks (method);
 			foreach (ISEHGuardedBlock guardedBlock in guardedBlocks) {
 				foreach (ISEHHandlerBlock handlerBlock in
 					 guardedBlock.SEHHandlerBlocks) {
@@ -105,8 +103,7 @@ namespace Gendarme.Rules.Exceptions {
 						// we're rethrowing it.This is deemed naughty...
 						if (!warned_offsets_in_method.Contains(cur.Offset)) {
 							Location loc =
-								new Location (method.DeclaringType.FullName,
-										method.Name,cur.Offset);
+								new Location (method, cur.Offset);
 							Message msg = new Message (
 								"Throwing original exception - destroys stack trace!",
 								loc,
@@ -132,7 +129,7 @@ namespace Gendarme.Rules.Exceptions {
 			return;
 		}
 
-		private int GetNumPops (Instruction instr)
+		private static int GetNumPops (Instruction instr)
 		{
 			switch (instr.OpCode.StackBehaviourPop) {
 			case StackBehaviour.Pop0:
@@ -198,7 +195,7 @@ namespace Gendarme.Rules.Exceptions {
 			return 0;
 		}
 
-		private int GetVarIndex (Instruction instr)
+		private static int GetVarIndex (Instruction instr)
 		{
 			if (instr.OpCode == OpCodes.Stloc_0 || instr.OpCode == OpCodes.Ldloc_0)
 				return 0;
@@ -209,7 +206,7 @@ namespace Gendarme.Rules.Exceptions {
 			else if (instr.OpCode == OpCodes.Stloc_3 || instr.OpCode == OpCodes.Ldloc_3)
 				return 3;
 			else if (instr.OpCode == OpCodes.Stloc_S || instr.OpCode == OpCodes.Stloc ||
-				instr.OpCode == OpCodes.Ldloc_S || instr.OpCode == OpCodes.Ldloc_0)
+				instr.OpCode == OpCodes.Ldloc_S || instr.OpCode == OpCodes.Ldloc)
 			{
 				VariableDefinition varDef = (VariableDefinition)instr.Operand;
 				return varDef.Index;

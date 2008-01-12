@@ -53,7 +53,7 @@ namespace Gendarme.Rules.Exceptions {
 			return false;
 		}
 
-		private bool ThrowsGeneralException (ExceptionHandler exceptionHandler)
+		private static bool ThrowsGeneralException (ExceptionHandler exceptionHandler)
 		{
 			for (Instruction currentInstruction = exceptionHandler.HandlerStart; currentInstruction != exceptionHandler.HandlerEnd; currentInstruction = currentInstruction.Next) {
 				if (currentInstruction.OpCode.Code == Code.Rethrow)
@@ -64,25 +64,27 @@ namespace Gendarme.Rules.Exceptions {
 
 		public MessageCollection CheckMethod (MethodDefinition methodDefinition, Runner runner)
 		{
-			MessageCollection messageCollection = new MessageCollection ();
-			if (methodDefinition.HasBody) {
-				ExceptionHandlerCollection exceptionHandlerCollection = methodDefinition.Body.ExceptionHandlers;
-				foreach (ExceptionHandler exceptionHandler in exceptionHandlerCollection) {
-					if (exceptionHandler.Type == ExceptionHandlerType.Catch) {
-						string catchTypeName = exceptionHandler.CatchType.FullName;
-						if (IsForbiddenTypeInCatches (catchTypeName)) {
-							if (!ThrowsGeneralException (exceptionHandler)) {
-								Location location = new Location (methodDefinition.Name, methodDefinition.Name, exceptionHandler.HandlerStart.Offset);
-								Message message = new Message ("Do not swallow errors catching nonspecific exceptions.", location, MessageType.Error);
+			if (!methodDefinition.HasBody)
+				return runner.RuleSuccess;
+
+			MessageCollection messageCollection = null;
+			ExceptionHandlerCollection exceptionHandlerCollection = methodDefinition.Body.ExceptionHandlers;
+			foreach (ExceptionHandler exceptionHandler in exceptionHandlerCollection) {
+				if (exceptionHandler.Type == ExceptionHandlerType.Catch) {
+					string catchTypeName = exceptionHandler.CatchType.FullName;
+					if (IsForbiddenTypeInCatches (catchTypeName)) {
+						if (!ThrowsGeneralException (exceptionHandler)) {
+							Location location = new Location (methodDefinition, exceptionHandler.HandlerStart.Offset);
+							Message message = new Message ("Do not swallow errors catching nonspecific exceptions.", location, MessageType.Error);
+							if (messageCollection == null)
+								messageCollection = new MessageCollection (message);
+							else
 								messageCollection.Add (message);
-							}
 						}
 					}
 				}
 			}
 
-			if (messageCollection.Count == 0)
-				return null;
 			return messageCollection;
 		}
 	}
