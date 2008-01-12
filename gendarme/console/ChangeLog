@@ -1,3 +1,14 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* ConsoleRunner.cs: Start using Gendarme.Console.Writers namespace.
+	Change a method to static. 
+	* HtmlResultWriter.cs: Use 2.0 XslCompiledTransform (XslTransform 
+	being obsolete). Move into Gendarme.Console.Writers namespace.
+	* IResultWriter.cs: Move into Gendarme.Console.Writers namespace.
+	* TextResultWriter.cs: Move into Gendarme.Console.Writers namespace.
+	* XmlResultWriter.cs: Move into Gendarme.Console.Writers namespace.
+	* console.mdp: MD removed the "./" before the filenames
+
 2007-11-30  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* ConsoleRunner.cs: Extracted methods for avoid a long method violation

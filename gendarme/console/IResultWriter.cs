@@ -1,12 +1,12 @@
 //
-// ResultWriter
+// IResultWriter interface
 //
 // Authors:
 //	Christian Birkl <christian.birkl@gmail.com>
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2006 Christian Birkl
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006, 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -33,12 +33,15 @@ using System.Collections;
 
 using Gendarme.Framework;
 
-public interface IResultWriter {
+namespace Gendarme.Console.Writers {
 
-	void Start ();
-	void End ();
+	public interface IResultWriter {
 
-	void Write (IDictionary assemblies);
-	void Write (Rules rules);
-	void Write (Violation v);
+		void Start ();
+		void End ();
+
+		void Write (IDictionary assemblies);
+		void Write (Rules rules);
+		void Write (Violation v);
+	}
 }

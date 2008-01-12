@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006, 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -35,53 +35,56 @@ using System.Xml.Xsl;
 
 using Gendarme.Framework;
 
-public class HtmlResultWriter : IResultWriter {
+namespace Gendarme.Console.Writers {
 
-	private XmlResultWriter writer;
-	private string temp_filename;
-	private string final_filename;
+	public class HtmlResultWriter : IResultWriter {
 
-	public HtmlResultWriter (string output)
-	{
-		final_filename = output;
-		temp_filename = Path.GetTempFileName ();
-		writer = new XmlResultWriter (temp_filename);
-	}
+		private XmlResultWriter writer;
+		private string temp_filename;
+		private string final_filename;
 
-	public void Start ()
-	{
-		writer.Start ();
-	}
+		public HtmlResultWriter (string output)
+		{
+			final_filename = output;
+			temp_filename = Path.GetTempFileName ();
+			writer = new XmlResultWriter (temp_filename);
+		}
 
-	public void End ()
-	{
-		try {
-			writer.End ();
-			// load XSL file from embedded resource
-			using (Stream s = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("gendarme.xsl")) {
-				// process the XML result with the XSL file
-				XslTransform xslt = new XslTransform ();
-				xslt.Load (new XmlTextReader (s), null, null);
-				xslt.Transform (temp_filename, final_filename, null);
+		public void Start ()
+		{
+			writer.Start ();
+		}
+
+		public void End ()
+		{
+			try {
+				writer.End ();
+				// load XSL file from embedded resource
+				using (Stream s = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("gendarme.xsl")) {
+					// process the XML result with the XSL file
+					XslCompiledTransform xslt = new XslCompiledTransform ();
+					xslt.Load (new XmlTextReader (s));
+					xslt.Transform (temp_filename, final_filename);
+				}
+			}
+			finally {
+				File.Delete (temp_filename);
 			}
 		}
-		finally {
-			File.Delete (temp_filename);
+
+		public void Write (IDictionary assemblies)
+		{
+			writer.Write (assemblies);
 		}
-	}
 
-	public void Write (IDictionary assemblies)
-	{
-		writer.Write (assemblies);
-	}
-	
-	public void Write (Rules rules)
-	{
-		writer.Write (rules);
-	}
+		public void Write (Rules rules)
+		{
+			writer.Write (rules);
+		}
 
-	public void Write (Violation v)
-	{
-		writer.Write (v);
+		public void Write (Violation v)
+		{
+			writer.Write (v);
+		}
 	}
 }

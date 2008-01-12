@@ -6,7 +6,7 @@
 //	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (C) 2006 Christian Birkl
-// Copyright (C) 2006 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2006, 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,91 +37,96 @@ using System.Xml.Serialization;
 using Gendarme.Framework;
 using Mono.Cecil;
 
-public class XmlResultWriter : IResultWriter {
+namespace Gendarme.Console.Writers {
 
-	private XmlTextWriter writer;
+	public class XmlResultWriter : IResultWriter {
 
-	public XmlResultWriter (string output)
-	{
-		if ((output == null) || (output.Length == 0))
-			writer = new XmlTextWriter (Console.Out);
-		else
-			writer = new XmlTextWriter (output, Encoding.UTF8);
-	}
-	
-	public void Start ()
-	{
-		writer.Formatting = Formatting.Indented;
-		writer.WriteProcessingInstruction ("xml", "version='1.0'");
-		writer.WriteStartElement ("gendarme-output");
-		writer.WriteAttributeString ("date", DateTime.UtcNow.ToString ());
-	}
+		private XmlTextWriter writer;
 
-	public void End ()
-	{
-		writer.WriteEndElement ();
-		writer.Flush ();
-		writer.Close ();
-		writer = null;
-	}
-
-	public void Write (IDictionary assemblies)
-	{
-		foreach (DictionaryEntry de in assemblies) {
-			writer.WriteStartElement ("input");
-			writer.WriteAttributeString ("Name", (de.Value as AssemblyDefinition).Name.ToString ());
-			writer.WriteString ((string) de.Key);
-			writer.WriteEndElement ();
+		public XmlResultWriter (string output)
+		{
+			if ((output == null) || (output.Length == 0))
+				writer = new XmlTextWriter (System.Console.Out);
+			else
+				writer = new XmlTextWriter (output, Encoding.UTF8);
 		}
-	}
 
-	public void Write (Rules rules)
-	{
-		writer.WriteStartElement ("rules");
-		Rules("Assembly", rules.Assembly);
-		Rules("Module", rules.Module);
-		Rules("Type", rules.Type);
-		Rules("Method", rules.Method);
-		writer.WriteEndElement ();
-	}
-
-	private void Rules (string type, RuleCollection rules)
-	{
-		foreach (IRule rule in rules) {
-			RuleInformation info = RuleInformationManager.GetRuleInformation (rule);
-			writer.WriteStartElement ("rule");
-			writer.WriteAttributeString ("Name", info.Name);
-			writer.WriteAttributeString ("Type", type);
-			writer.WriteAttributeString ("Uri", info.Uri);
-			writer.WriteString (rule.GetType ().FullName);
-			writer.WriteEndElement ();
+		public void Start ()
+		{
+			writer.Formatting = Formatting.Indented;
+			writer.WriteProcessingInstruction ("xml", "version='1.0'");
+			writer.WriteStartElement ("gendarme-output");
+			writer.WriteAttributeString ("date", DateTime.UtcNow.ToString ());
 		}
-	}
 
-	public void Write (Violation v)
-	{
-		RuleInformation ri = RuleInformationManager.GetRuleInformation (v.Rule);
+		public void End ()
+		{
+			writer.WriteEndElement ();
+			writer.Flush ();
+			writer.Close ();
+			writer = null;
+		}
 
-		writer.WriteStartElement ("violation");		
-		writer.WriteAttributeString ("Assembly", v.Assembly.ToString ());
-		writer.WriteAttributeString ("Name", ri.Name);
-		writer.WriteAttributeString ("Uri", ri.Uri);
-		writer.WriteElementString ("problem", String.Format (ri.Problem, v.Violator));
-		writer.WriteElementString ("solution", String.Format (ri.Solution, v.Violator));
-		
-		if ((v.Messages != null) && (v.Messages.Count > 0)) {
-			writer.WriteStartElement ("messages");
-			foreach (Message message in v.Messages) {
-				writer.WriteStartElement ("message");
-				if (message.Location != null)
-					writer.WriteAttributeString ("Location", message.Location.ToString());
-				writer.WriteAttributeString ("Type", message.Type.ToString());
-				writer.WriteString (message.Text);				
+		public void Write (IDictionary assemblies)
+		{
+			foreach (DictionaryEntry de in assemblies) {
+				writer.WriteStartElement ("input");
+				AssemblyDefinition ad = (de.Value as AssemblyDefinition);
+				if (ad != null)
+					writer.WriteAttributeString ("Name", ad.Name.ToString ());
+				writer.WriteString ((string) de.Key);
 				writer.WriteEndElement ();
 			}
+		}
+
+		public void Write (Rules rules)
+		{
+			writer.WriteStartElement ("rules");
+			Rules ("Assembly", rules.Assembly);
+			Rules ("Module", rules.Module);
+			Rules ("Type", rules.Type);
+			Rules ("Method", rules.Method);
 			writer.WriteEndElement ();
 		}
 
-		writer.WriteEndElement ();
+		private void Rules (string type, RuleCollection rules)
+		{
+			foreach (IRule rule in rules) {
+				RuleInformation info = RuleInformationManager.GetRuleInformation (rule);
+				writer.WriteStartElement ("rule");
+				writer.WriteAttributeString ("Name", info.Name);
+				writer.WriteAttributeString ("Type", type);
+				writer.WriteAttributeString ("Uri", info.Uri);
+				writer.WriteString (rule.GetType ().FullName);
+				writer.WriteEndElement ();
+			}
+		}
+
+		public void Write (Violation v)
+		{
+			RuleInformation ri = RuleInformationManager.GetRuleInformation (v.Rule);
+
+			writer.WriteStartElement ("violation");
+			writer.WriteAttributeString ("Assembly", v.Assembly.ToString ());
+			writer.WriteAttributeString ("Name", ri.Name);
+			writer.WriteAttributeString ("Uri", ri.Uri);
+			writer.WriteElementString ("problem", String.Format (ri.Problem, v.Violator));
+			writer.WriteElementString ("solution", String.Format (ri.Solution, v.Violator));
+
+			if ((v.Messages != null) && (v.Messages.Count > 0)) {
+				writer.WriteStartElement ("messages");
+				foreach (Message message in v.Messages) {
+					writer.WriteStartElement ("message");
+					if (message.Location != null)
+						writer.WriteAttributeString ("Location", message.Location.ToString ());
+					writer.WriteAttributeString ("Type", message.Type.ToString ());
+					writer.WriteString (message.Text);
+					writer.WriteEndElement ();
+				}
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
+		}
 	}
 }
