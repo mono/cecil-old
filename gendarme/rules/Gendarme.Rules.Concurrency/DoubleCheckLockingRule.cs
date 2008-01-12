@@ -65,7 +65,7 @@ namespace Gendarme.Rules.Concurrency {
 			return runner.RuleSuccess;
 		}
 		
-		private MessageCollection DoubleCheckLockingDetected (string type, string method, Instruction instruction)
+		private static MessageCollection DoubleCheckLockingDetected (string type, string method, Instruction instruction)
 		{
 			Location location = new Location (type, method, instruction.Offset);
 			Message message = new Message ("A double check locking detected", location, MessageType.Warning); 
@@ -74,7 +74,7 @@ namespace Gendarme.Rules.Concurrency {
 		}
 
 
-		private bool IsMonitorMethod(Instruction insn, string methodName)
+		private static bool IsMonitorMethod(Instruction insn, string methodName)
 		{
 			if(!insn.OpCode.Name.Equals("call"))
 				return false;
@@ -86,7 +86,7 @@ namespace Gendarme.Rules.Concurrency {
 			return true;
 		}
 
-		private Instruction[] TwoBeforeBranch(Instruction insn)
+		private static Instruction[] TwoBeforeBranch(Instruction insn)
 		{
 			if(insn.OpCode.FlowControl != FlowControl.Cond_Branch)
 				return null;
@@ -98,7 +98,7 @@ namespace Gendarme.Rules.Concurrency {
 			return twoInsns;
 		}
 
-		private bool EffectivelyEqual(Instruction insn1, Instruction insn2)
+		private static bool EffectivelyEqual(Instruction insn1, Instruction insn2)
 		{
 			if(!insn1.OpCode.Equals(insn2.OpCode))
 				return false;
