@@ -176,13 +176,21 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			case BinaryOperator.LogicalAnd: return "&&";
 			case BinaryOperator.LogicalOr: return "||";
 			case BinaryOperator.Add: return "+";
+			case BinaryOperator.Subtract: return "-";
 			case BinaryOperator.Multiply: return "*";
+			case BinaryOperator.Divide: return "/";
 			case BinaryOperator.ValueEquality: return "==";
 			case BinaryOperator.ValueInequality: return "!=";
 			case BinaryOperator.LessThan: return "<";
 			case BinaryOperator.LessThanOrEqual: return "<=";
 			case BinaryOperator.GreaterThan: return ">";
 			case BinaryOperator.GreaterThanOrEqual: return ">=";
+			case BinaryOperator.RightShift: return ">>";
+			case BinaryOperator.LeftShift: return "<<";
+			case BinaryOperator.BinaryAnd: return "&";
+			case BinaryOperator.BinaryOr: return "|";
+			case BinaryOperator.BinaryXor: return "^";
+			case BinaryOperator.Modulo: return "%";
 			}
 			throw new ArgumentException (op.ToString (), "op");
 		}

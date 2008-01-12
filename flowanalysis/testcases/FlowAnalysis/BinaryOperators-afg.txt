@@ -1,0 +1,12 @@
+local0 = 1
+local0 = (local0 + 2)
+local0 = (local0 - 3)
+local0 = (local0 * 4)
+local0 = (local0 / 5)
+local0 = (local0 >> 6)
+local0 = (local0 << 7)
+local0 = (local0 | 8)
+local0 = (local0 & 9)
+local0 = (local0 ^ 10)
+local0 = (local0 % 11)
+return

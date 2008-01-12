@@ -29,7 +29,7 @@ namespace Cecil.FlowAnalysis.Tests {
 
 	[TestFixture]
 	public class ControlFlowTestFixture : AbstractControlFlowTestFixture {
-		
+
 		[Test]
 		public void StaticField ()
 		{
@@ -262,6 +262,12 @@ namespace Cecil.FlowAnalysis.Tests {
 		public void InPlaceAdd ()
 		{
 			RunTestCase ("InPlaceAdd");
+		}
+
+		[Test]
+		public void BinaryOperators ()
+		{
+			RunTestCase ("BinaryOperators");
 		}
 	}
 }

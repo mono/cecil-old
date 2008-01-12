@@ -135,14 +135,22 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnAdd (Instruction instruction)
 		{
-			BinaryOperator op = BinaryOperator.Add;
-			PushBinaryExpression (op);
+			PushBinaryExpression (BinaryOperator.Add);
+		}
+
+		public override void OnSub (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.Subtract);
 		}
 
 		public override void OnMul (Instruction instruction)
 		{
-			BinaryOperator op = BinaryOperator.Multiply;
-			PushBinaryExpression (op);
+			PushBinaryExpression (BinaryOperator.Multiply);
+		}
+
+		public override void OnDiv (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.Divide);
 		}
 
 		public void PushBinaryExpression (BinaryOperator op)
@@ -322,6 +330,36 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		public override void OnBlt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.LessThan);
+		}
+
+		public override void OnShr (Instruction instruction)
+		{
+ 			PushBinaryExpression (BinaryOperator.RightShift);
+		}
+
+		public override void OnShl (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.LeftShift);
+		}
+
+		public override void OnOr (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.BinaryOr);
+		}
+
+		public override void OnAnd (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.BinaryAnd);
+		}
+
+		public override void OnXor (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.BinaryXor);
+		}
+
+		public override void OnRem (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.Modulo);
 		}
 
 		public override void OnBrtrue (Instruction instruction)

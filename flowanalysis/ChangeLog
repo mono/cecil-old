@@ -1,7 +1,11 @@
+2008-01-13  Jb Evain  <jbevain@novell.com>
+
+	* Support for div, sub, shr, shl, and, or, xor, rem.
+
 2007-12-29	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 
-	* Support for static fields (ldsfld, stsfld) 
-	  	
+	* Support for static fields (ldsfld, stsfld)
+	
 2007-12-10  Jb Evain  <jbevain@novell.com>
 
 	* Support for dup, add and stfld.

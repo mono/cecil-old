@@ -27,7 +27,9 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 	public enum BinaryOperator {
 		None,
 		Add,
+		Subtract,
 		Multiply,
+		Divide,
 		ValueEquality,
 		ValueInequality,
 		LogicalOr,
@@ -35,6 +37,12 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		LessThan,
 		LessThanOrEqual,
 		GreaterThan,
-		GreaterThanOrEqual
+		GreaterThanOrEqual,
+		LeftShift,
+		RightShift,
+		BinaryOr,
+		BinaryAnd,
+		BinaryXor,
+		Modulo,
 	}
 }
