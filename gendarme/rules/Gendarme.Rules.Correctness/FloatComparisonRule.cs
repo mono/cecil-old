@@ -34,104 +34,99 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Correctness {
 
 	public class FloatComparisonRule : IMethodRule {
 
-		private const string MessageString = "Floating point values should not be compared for equality";
-		private MessageCollection messageCollection = null;
+		private const string EqualityMessage = "Floating point values should not be directly compared for equality (e.g. == or !=).";
+		private const string EqualsMessage = "Floating point values should not be directly compared for equality using [Single|Double].Equals.";
 
-		private void CheckCeqInstruction (Instruction instruction, Instruction precedingInstruction, MethodDefinition method) 
+		private static bool CheckCeqInstruction (Instruction instruction, MethodDefinition method)
 		{
 			bool problem = false;
-			switch (precedingInstruction.OpCode.Code) {
+			switch (instruction.OpCode.Code) {
 			case Code.Conv_R_Un:
 			case Code.Conv_R4:
 			case Code.Conv_R8:
-				problem = true;
-				break;
+				return true;
 			case Code.Ldc_R4:
-				problem = !CheckFloatConstants ((float) precedingInstruction.Operand);
-				break;
+				return !CheckFloatConstants ((float) instruction.Operand);
 			case Code.Ldc_R8:
-				problem = !CheckDoubleConstants ((double) precedingInstruction.Operand);
-				break;
+				return !CheckDoubleConstants ((double) instruction.Operand);
 			case Code.Ldelem_R4:
 			case Code.Ldelem_R8:
-				problem = true;
-				break;
+				return true;
 			case Code.Ldloc_0:
 			case Code.Ldloc_1:
 			case Code.Ldloc_2:
 			case Code.Ldloc_3:
-				int loc_index = (int) (precedingInstruction.OpCode.Code - Code.Ldloc_0);
-				problem = IsFloatingPoint (method.Body.Variables [loc_index].VariableType);
-				break;
+				int loc_index = (int) (instruction.OpCode.Code - Code.Ldloc_0);
+				return method.Body.Variables [loc_index].VariableType.IsFloatingPoint ();
 			case Code.Ldloc_S:
-				VariableReference local = precedingInstruction.Operand as VariableReference;
-				problem = IsFloatingPoint (local.VariableType);
-				break;
+				VariableReference local = instruction.Operand as VariableReference;
+				return local.VariableType.IsFloatingPoint ();
 			case Code.Ldarg_0:
 			case Code.Ldarg_1:
 			case Code.Ldarg_2:
 			case Code.Ldarg_3:
-				int arg_index = (int) (precedingInstruction.OpCode.Code - Code.Ldarg_0);
+				int arg_index = (int) (instruction.OpCode.Code - Code.Ldarg_0);
 				if (!method.IsStatic)
 					arg_index--;
-				problem = IsFloatingPoint (method.Parameters [arg_index].ParameterType);
-				break;
+				return method.Parameters [arg_index].ParameterType.IsFloatingPoint ();
 			case Code.Ldarg:
-				ParameterReference parameter = precedingInstruction.Operand as ParameterReference;
-				problem = IsFloatingPoint (parameter.ParameterType);
-				break;
+				ParameterReference parameter = instruction.Operand as ParameterReference;
+				return parameter.ParameterType.IsFloatingPoint ();
 			case Code.Call:
 			case Code.Calli:
 			case Code.Callvirt:
-				MethodReference call = precedingInstruction.Operand as MethodReference;
-				problem = IsFloatingPoint (call.ReturnType.ReturnType);
-				break;
+				MethodReference call = instruction.Operand as MethodReference;
+				return call.ReturnType.ReturnType.IsFloatingPoint ();
 			case Code.Ldfld:
 			case Code.Ldsfld:
-				FieldReference field = precedingInstruction.Operand as FieldReference;
-				problem = IsFloatingPoint (field.FieldType);
-				break;
+				FieldReference field = instruction.Operand as FieldReference;
+				return field.FieldType.IsFloatingPoint ();
 			}
-			if (problem)
-				AddProblem (method, instruction);
-		}
-
-		static bool IsFloatingPoint (TypeReference type)
-		{
-			return ((type.FullName == Mono.Cecil.Constants.Single) ||
-				(type.FullName == Mono.Cecil.Constants.Double));
+			return problem;
 		}
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
-			//For the rule's lifecycle I should initializate the
-			//field to null.
-			messageCollection = null;
-
+			// we only check methods with a body
 			if (!method.HasBody)
 				return runner.RuleSuccess;
 
+			MessageCollection mc = null;
 			foreach (Instruction instruction in method.Body.Instructions) {
 				switch (instruction.OpCode.Code) {
 				case Code.Ceq:
-					CheckCeqInstruction (instruction, SkipArithmeticOperations (instruction), method); 
+					if (CheckCeqInstruction (SkipArithmeticOperations (instruction), method)) {
+						Location location = new Location (method, instruction.Offset);
+						Message message = new Message (EqualityMessage, location, MessageType.Error);
+						if (mc == null)
+							mc = new MessageCollection (message);
+						else
+							mc.Add (message);
+					}
 					break;
 				case Code.Call:
 				case Code.Calli:
 				case Code.Callvirt:
 					MemberReference member = instruction.Operand as MemberReference;
-					if (IsFloatingPoint (member.DeclaringType) && member.Name.Equals ("Equals"))
-						AddProblem(method, instruction);
+					if (member.Name.Equals ("Equals") && member.DeclaringType.IsFloatingPoint ()) {
+						Location location = new Location (method, instruction.Offset);
+						Message message = new Message (EqualsMessage, location, MessageType.Error);
+						if (mc == null)
+							mc = new MessageCollection (message);
+						else
+							mc.Add (message);
+					}
 					break;
 				}
 			}
 
-			return messageCollection == null || messageCollection.Count == 0 ? runner.RuleSuccess : messageCollection;
+			return mc;
 		}
 
 		static OpCode [] arithOpCodes = new OpCode [] {
@@ -145,7 +140,7 @@ namespace Gendarme.Rules.Correctness {
 		{
 			Instruction prevInstr = instruction.Previous;
 
-			while (Array.Exists (arithOpCodes, 
+			while (Array.Exists (arithOpCodes,
 				delegate (OpCode code) {
 					return code == prevInstr.OpCode;
 				})) {
@@ -155,20 +150,10 @@ namespace Gendarme.Rules.Correctness {
 			return prevInstr;
 		}
 
-		private void AddProblem (MethodDefinition method, Instruction instruction)
-		{
-			if (messageCollection == null)
-				messageCollection = new MessageCollection ();
-
-			Location location = new Location(method, instruction.Offset);
-			Message message = new Message(MessageString, location, MessageType.Error);
-			messageCollection.Add (message);
-		}
-
 		private static bool CheckFloatConstants (float value)
 		{
 			// IsInfinity covers both positive and negative infinity
-			return (Single.IsInfinity (value) || Single.IsNaN (value) ||
+			return (Single.IsInfinity (value) ||
 				(Single.MinValue.CompareTo (value) == 0) ||
 				(Single.MaxValue.CompareTo (value) == 0));
 		}
@@ -176,8 +161,8 @@ namespace Gendarme.Rules.Correctness {
 		private static bool CheckDoubleConstants (double value)
 		{
 			// IsInfinity covers both positive and negative infinity
-			return (Double.IsInfinity (value) || Double.IsNaN (value) ||
-				(Double.MinValue.CompareTo (value) == 0) || 
+			return (Double.IsInfinity (value) ||
+				(Double.MinValue.CompareTo (value) == 0) ||
 				(Double.MaxValue.CompareTo (value) == 0));
 		}
 	}

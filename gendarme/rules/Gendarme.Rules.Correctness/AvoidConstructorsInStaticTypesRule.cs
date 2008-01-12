@@ -67,7 +67,7 @@ namespace Gendarme.Rules.Correctness {
 			MessageCollection mc = null;
 			foreach (MethodDefinition ctor in type.Constructors) {
 				if (!ctor.IsStatic && ctor.IsPublic) {
-					Location location = new Location(type.Name, ctor.Name, 0);
+					Location location = new Location (ctor);
 					Message message = new Message(MessageString, location, MessageType.Error);
 					if (mc == null)
 						mc = new MessageCollection (message);

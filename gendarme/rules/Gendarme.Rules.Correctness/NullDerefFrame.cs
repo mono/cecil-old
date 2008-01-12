@@ -174,7 +174,7 @@ public class NullDerefFrame : ICloneable {
     }
 
     [NonNull]
-    public Nullity MergeNullity(Nullity n1, Nullity n2)
+    public static Nullity MergeNullity(Nullity n1, Nullity n2)
     {
         return lub[(int)n1][(int)n2];
     }

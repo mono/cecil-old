@@ -50,7 +50,7 @@ public class CFG : Graph {
         BuildGraph();
     }
 
-    private bool IsBranch(Instruction instruction)
+    private static bool IsBranch(Instruction instruction)
     {
         if(instruction == null)
             return false;
@@ -67,7 +67,7 @@ public class CFG : Graph {
         return false;
     }
 
-    private bool HasNext([NonNull] Instruction instruction)
+    private static bool HasNext([NonNull] Instruction instruction)
     {
         if(instruction.OpCode.FlowControl == FlowControl.Branch)
             return false;
@@ -79,7 +79,7 @@ public class CFG : Graph {
             return true;
     }
 
-    private int[] BranchTargets([NonNull] Instruction instruction)
+    private static int[] BranchTargets([NonNull] Instruction instruction)
     {
         int[] result = null;
         switch(instruction.OpCode.OperandType) {
@@ -129,7 +129,7 @@ public class CFG : Graph {
         return nearest;
     }
 
-    private bool OffsetsEqual(Instruction insn1, Instruction insn2)
+    private static bool OffsetsEqual(Instruction insn1, Instruction insn2)
     {
         if(insn1 == insn2) return true;
         if(insn1 == null) return false;

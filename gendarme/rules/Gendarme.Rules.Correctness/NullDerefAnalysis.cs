@@ -90,7 +90,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
         original.MergeWith(incoming);
     }
 
-    private bool IsVoid([NonNull] TypeReference type)
+    private static bool IsVoid([NonNull] TypeReference type)
     {
         if(type.FullName.Equals("System.Void"))
             return true;
@@ -299,9 +299,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
                     Check(insn, warn, outFrame.PopStack(), "field");
                     FieldReference field = (FieldReference)insn.Operand;
                     if(warn && nnaCollector.HasNonNullAttribute(field)) {
-                        string etype = method.DeclaringType.FullName;
-                        Location loc = new Location(etype,
-                                method.Name, insn.Offset);
+                        Location loc = new Location(method, insn.Offset);
                         if(n == Nullity.Unknown)
                             messages.Add(new Message(
                                         "storing possibly null value in " +
@@ -319,9 +317,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
                     Nullity n = outFrame.PopStack();
                     FieldReference field = (FieldReference)insn.Operand;
                     if(warn && nnaCollector.HasNonNullAttribute(field)) {
-                        string etype = method.DeclaringType.FullName;
-                        Location loc = new Location(etype,
-                                method.Name, insn.Offset);
+                        Location loc = new Location(method, insn.Offset);
                         if(n == Nullity.Unknown)
                             messages.Add(new Message(
                                         "storing possibly null value in " +
@@ -356,9 +352,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
                     if(!IsVoid(method.ReturnType.ReturnType)) {
                         Nullity n = outFrame.PopStack();
                         if(nnaCollector.HasNonNullAttribute(method) && warn) {
-                            string etype = method.DeclaringType.FullName;
-                            Location loc = new Location(etype,
-                                    method.Name, insn.Offset);
+                            Location loc = new Location (method, insn.Offset);
                             if(n == Nullity.Null)
                                 messages.Add(new Message(
                                             "returning null value from " +
@@ -661,8 +655,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
     {
         if(!warn) return;
 
-        string etype = method.DeclaringType.FullName;
-        Location loc = new Location(etype, method.Name, insn.Offset);
+        Location loc = new Location (method, insn.Offset);
         string name = insn.Operand.ToString();
         int nameOffset = name.LastIndexOf("::");
         if(nameOffset != -1)
@@ -690,8 +683,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
     private void ProcessCall([NonNull] Instruction insn, bool warn,
             bool indirect, [NonNull] NullDerefFrame frame)
     {
-        string etype = method.DeclaringType.FullName;
-        Location loc = new Location(etype, method.Name, insn.Offset);
+        Location loc = new Location (method, insn.Offset);
         IMethodSignature csig = (IMethodSignature)insn.Operand;
         if(indirect)
             frame.PopStack(); /* Function pointer */
@@ -722,7 +714,7 @@ public class NullDerefAnalysis : IDataflowAnalysis {
         }
     }
 
-    private bool Ignoring([NonNull] IMethodSignature msig)
+    private static bool Ignoring([NonNull] IMethodSignature msig)
     {
         /* FIXME: Ignoring is a temporary hack! */
         /* Right now, it always returns false, as it should. */

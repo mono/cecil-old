@@ -37,7 +37,7 @@ namespace Gendarme.Rules.Correctness {
 
 	public class CallingEqualsWithNullArgRule: IMethodRule {
 
-		private bool IsEquals (MethodReference md)
+		private static bool IsEquals (MethodReference md)
 		{
 			if ((md == null) || (md.Name != "Equals"))
 				return false;
@@ -45,13 +45,13 @@ namespace Gendarme.Rules.Correctness {
 			return (md.ReturnType.ReturnType.FullName == "System.Boolean");
 		}
 
-		private bool IsCall (Instruction ins)
+		private static bool IsCall (Instruction ins)
 		{
 			OpCode oc = ins.OpCode;
 			return ((oc == OpCodes.Call) || (oc == OpCodes.Calli) || (oc == OpCodes.Callvirt));
 		}
 
-		private bool IsPreviousLdnull (Instruction ins)
+		private static bool IsPreviousLdnull (Instruction ins)
 		{
 			while (ins.Previous != null) {
 				OpCode oc = ins.Previous.OpCode;
@@ -77,7 +77,7 @@ namespace Gendarme.Rules.Correctness {
 				if (IsCall (ins) && IsEquals (ins.Operand as MethodReference)) {
 					// and that the previous, real, instruction is loading a null value
 					if (IsPreviousLdnull (ins)) {
-						Location location = new Location (method.DeclaringType.FullName, method.Name, ins.Offset);
+						Location location = new Location (method, ins.Offset);
 						Message message = new Message ("You should not call Equals (null), i.e., argument should not be null", location, MessageType.Error);
 
 						if (mc == null)

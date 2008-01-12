@@ -92,7 +92,7 @@ public class NonNullAttributeCollector {
         return false;
     }
 
-    private bool DefHasNonNullAttribute(
+    private static bool DefHasNonNullAttribute(
             [NonNull] ICustomAttributeProvider provider)
     {
         string ctorName = "System.Void NonNullAttribute::.ctor()";

@@ -41,7 +41,6 @@ namespace Gendarme.Rules.Correctness {
 	public class UseValueInPropertySetterRule : IMethodRule {
 
 		private const string MessageString = "Property setter should use the assigned value";
-		private const string MessageEmptyString = "Property setter is empty and doesn't use the assigned value";
 
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
@@ -102,10 +101,10 @@ namespace Gendarme.Rules.Correctness {
 				}
 			}
 
-			Location location = new Location (method);
-			string msg = empty ? MessageEmptyString : MessageString;
-			MessageType mt = empty ? MessageType.Warning : MessageType.Error;
-			Message message = new Message (msg, location, mt);
+			if (empty)
+				return runner.RuleSuccess;
+
+			Message message = new Message (MessageString, new Location (method), MessageType.Error);
 			return new MessageCollection (message);
 		}
 	}

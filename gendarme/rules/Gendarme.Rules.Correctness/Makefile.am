@@ -13,13 +13,14 @@ correctness_rules_sources = BadRecursiveInvocationRule.cs MethodCanBeMadeStaticR
 	CallingEqualsWithNullArgRule.cs NonNullAttribute.cs NonNullAttributeCollector.cs NullDerefAnalysis.cs NullDerefRule.cs \
 	NullDerefFrame.cs Nullity.cs graph/INode.cs graph/Node.cs graph/IEdge.cs graph/Edge.cs graph/IGraph.cs \
 	graph/Graph.cs dataflow/BasicBlock.cs dataflow/CFG.cs dataflow/CFGEdge.cs dataflow/Dataflow.cs graph/DFS.cs \
-	dataflow/IDataflowAnalysis.cs FloatComparisonRule.cs UseValueInPropertySetterRule.cs AvoidConstructorsInStaticTypesRule.cs
+	dataflow/IDataflowAnalysis.cs FloatComparisonRule.cs UseValueInPropertySetterRule.cs \
+	AvoidConstructorsInStaticTypesRule.cs DontCompareWithNaNRule.cs
 
 correctness_rules_build_sources = $(addprefix $(srcdir)/, $(correctness_rules_sources))
 correctness_rules_build_sources += $(correctness_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Correctness.dll: $(correctness_rules_build_sources)
-	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
+	$(MCS) -debug -target:library  -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(correctness_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
@@ -37,7 +38,8 @@ uninstall-hook:
 	done;
 
 correctness_test_sources = BadRecursiveInvocationTest.cs MethodCanBeMadeStaticTest.cs UseValueInPropertySetterTest.cs \
-	AvoidConstructorsInStaticTypesTest.cs CallingEqualsWithNullArgTest.cs FloatComparisonRuleTest.cs
+	AvoidConstructorsInStaticTypesTest.cs CallingEqualsWithNullArgTest.cs FloatComparisonRuleTest.cs \
+	DontCompareWithNaNTest.cs
 
 correctness_test_build_sources = $(addprefix $(srcdir)/Test/, $(correctness_test_sources))
 

@@ -21,13 +21,13 @@ public class BasicBlock : Node {
     [NonNull] private InstructionCollection instructions;
 
     /* Index of the first instruction in this basic block */
-    public int first;
+    internal int first;
 
     /* Index of the last instruction in this basic block */
-    public int last;
+    internal int last;
 
-    public bool isExit = false;
-    public bool isException = false;
+    internal bool isExit = false;
+    internal bool isException = false;
 
     public BasicBlock([NonNull] InstructionCollection instructions)
     {

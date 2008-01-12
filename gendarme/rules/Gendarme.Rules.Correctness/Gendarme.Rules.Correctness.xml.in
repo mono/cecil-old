@@ -5,6 +5,12 @@
 		<problem>Method or property '{0}' invokes itself recursively in a suspcious way.</problem>
 		<solution>Ensure that the parameters vary in such a way that the recursion will terminate.</solution>
 	</rule>
+	<rule	Name="DontCompareWithNaNRule" 
+		Type="Gendarme.Rules.Correctness.DontCompareWithNaNRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="http://www.mono-project.com/Gendarme#DontCompareWithNaNRule" >
+		<problem>Method '{0}' compares a floating point value with NaN (Not a Number) which always return false, even for (NaN == NaN).</problem>
+		<solution>Replace the code with a call to either Single.IsNaN(value) or Double.IsNaN(value).</solution>
+	</rule>
 	<rule	Name="MethodCanBeMadeStaticRule" 
 		Type="Gendarme.Rules.Correctness.MethodCanBeMadeStaticRule, Gendarme.Rules.Correctness, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#MethodCanBeMadeStaticRule" >

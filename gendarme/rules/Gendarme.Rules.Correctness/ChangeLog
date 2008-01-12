@@ -1,3 +1,24 @@
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidConstructorsInStaticTypesRule.cs: Use new Location ctor.
+	* CallingEqualsWithNullArgRule.cs: Change three methods to static.
+	Use new Location ctor.
+	* DontCompareWithNaNRule.cs: New. Rule that reports comparing (with 
+	either ==, != or Equals) a floating-point value with NaN.
+	* FloatComparisonRule.cs: Remove the recently added checks for NaN 
+	(see new rule). Simplify error reporting.
+	* NonNullAttributeCollector.cs: Change one method to static.
+	* NullDerefAnalysis.cs: Change two methods to static. Use new 
+	Location ctor.
+	* NullDerefFrame.cs: Change one method to static.
+	* UseValueInPropertySetterRule.cs: Don't report empty setters. 
+	There's too many of them, mostly on purpose, so it hides the real
+	problems.
+	* dataflow/BasicBlock.cs: Change fields to internal.
+	* dataflow/CFG.cs: Change four methods to static.
+	* Gendarme.Rules.Correctness.xml.in: Add rule description.
+	* Makefile.am: Add new rule and tests to the build.
+
 2008-01-06  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* BadRecursiveInvocationRule.cs: Detect more case of endless 
