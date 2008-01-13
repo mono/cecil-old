@@ -1,3 +1,7 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypeRocksTest.cs: Added test cases for IsNative
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* TypeRocksTest.cs: Added test cases for IsFloatingPoint

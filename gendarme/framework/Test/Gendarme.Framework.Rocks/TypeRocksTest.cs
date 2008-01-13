@@ -28,6 +28,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Gendarme.Framework;
 using Gendarme.Framework.Rocks;
@@ -101,6 +102,9 @@ namespace Test.Framework.Rocks {
 		private float SingleValue;
 		private double DoubleValue;
 
+		private IntPtr IntPtrValue;
+		private UIntPtr UIntPtrValue;
+		private HandleRef HandleRefValue;
 
 		private AssemblyDefinition assembly;
 
@@ -271,6 +275,22 @@ namespace Test.Framework.Rocks {
 		{
 			Assert.IsTrue (GetType ("/TypeGeneratedCode").IsGeneratedCode (), "IsCompilerGenerated");
 			Assert.IsFalse (GetType (String.Empty).IsGeneratedCode (), "TypeRocksTest");
+		}
+
+		[Test]
+		public void IsNative ()
+		{
+			TypeDefinition type = GetType (String.Empty);
+			Assert.IsFalse (type.IsNative (), "Type.IsNative");
+			foreach (FieldDefinition field in type.Fields) {
+				switch (field.Name) {
+				case "IntPtrValue":
+				case "UIntPtrValue":
+				case "HandleRefValue":
+					Assert.IsTrue (field.FieldType.IsNative (), field.Name);
+					break;
+				}
+			}
 		}
 	}
 }
