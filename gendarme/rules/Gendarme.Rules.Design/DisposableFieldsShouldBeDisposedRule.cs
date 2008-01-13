@@ -85,6 +85,9 @@ namespace Gendarme.Rules.Design {
 			//List of disposeableFields
 			List<FieldDefinition> disposeableFields = new List<FieldDefinition> ();
 			foreach (FieldDefinition field in type.Fields) {
+				// we can't dispose static fields in IDisposable
+				if (field.IsStatic)
+					continue;
 				if (field.FieldType.IsArray ())
 					continue;
 				TypeDefinition fieldType = field.FieldType as TypeDefinition;

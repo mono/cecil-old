@@ -43,6 +43,9 @@ namespace Gendarme.Rules.Design {
 				return runner.RuleSuccess;
 
 			foreach (FieldDefinition field in type.Fields) {
+				// we can't dispose static fields in IDisposable
+				if (field.IsStatic)
+					continue;
 				if (field.FieldType.GetOriginalType ().IsNative ()) {
 					Location loc = new Location (type);
 					Message msg = new Message (string.Format ("{0} implements IDisposable and has native fields. It should implement a finalizer to release unmanaged resources.", type.FullName), loc, MessageType.Error);

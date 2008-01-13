@@ -43,7 +43,8 @@ namespace Gendarme.Rules.Design {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			if (type.IsEnum || type.IsInterface)
+			// rule doesn't apply to enums, interfaces or structs
+			if (type.IsEnum || type.IsInterface || type.IsValueType)
 				return runner.RuleSuccess;
 
 			MethodDefinition explicitDisposeMethod = null;
@@ -67,6 +68,9 @@ namespace Gendarme.Rules.Design {
 			MessageCollection results = null;
 
 			foreach (FieldDefinition field in type.Fields) {
+				// we can't dispose static fields in IDisposable
+				if (field.IsStatic)
+					continue;
 				TypeDefinition fieldType = field.FieldType.GetOriginalType () as TypeDefinition;
 				if (fieldType == null)
 					continue; //TODO: Implemts for TypeReference
