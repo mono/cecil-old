@@ -1,3 +1,9 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* StaticConstructorsShouldBePrivateTest.cs: New unit tests by 
+	Daniel Abramov.
+	* Test.Rules.Security.mdp: Add new unit tests to MD project.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Security.mdp: Update project file.

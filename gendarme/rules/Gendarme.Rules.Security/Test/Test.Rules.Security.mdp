@@ -21,6 +21,7 @@
     <File name="TypeExposeFieldsTest.cs" subtype="Code" buildaction="Compile" />
     <File name="TypeIsNotSubsetOfMethodSecurityTest.cs" subtype="Code" buildaction="Compile" />
     <File name="TypeLinkDemandTest.cs" subtype="Code" buildaction="Compile" />
+    <File name="StaticConstructorsShouldBePrivateTest.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Project" localcopy="True" refto="Gendarme.Rules.Security" />
