@@ -1,3 +1,11 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* StaticConstructorsShouldBePrivateRule.cs: New. Rule that checks 
+	for non-private static constructor in classes [Daniel Abramov]
+	* Gendarme.Rules.Security.mdp: Add new rule in MD project.
+	* Gendarme.Rules.Security.xml.in: Add new rule description.
+	* Makefile.am: Add rule/test to the build.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* MethodCallWithSubsetLinkDemandRule.cs: Use new Location ctors.

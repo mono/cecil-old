@@ -23,6 +23,12 @@
 		<problem>The method '{0}' isn't protected correctly against a serialization attack.</problem>
 		<solution>A security Demand for SerializationFormatter should protect this method.</solution>
 	</rule>
+	<rule	Name="StaticConstructorsShouldBePrivateRule" 
+		Type="Gendarme.Rules.Security.StaticConstructorsShouldBePrivateRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' has a static constructor which is not private.</problem>
+		<solution>Change the static constructor to private.</solution>
+	</rule>
 	<rule	Name="TypeExposeFieldsRule" 
 		Type="Gendarme.Rules.Security.TypeExposeFieldsRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#TypeExposeFieldsRule" >
