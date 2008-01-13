@@ -1,3 +1,15 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DisposableFieldsShouldBeDisposedTest.cs: New. Unit tests by 
+	Andreas Noever.
+	* DisposableTypesShouldHaveFinalizerTest.cs: New. Unit tests by 
+	Andreas Noever.
+	* TypesWithDisposableFieldsShouldBeDisposableTest.cs: New. Unit 
+	tests by Andreas Noever.
+	* TypesWithNativeFieldsShouldBeDisposableTest.cs: New. Unit 
+	tests by Andreas Noever.
+	* Test.Rules.Design.mdp: Added new tests to MD project file.
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AttributeArgumentsShouldHaveAccessorsTest.cs: New. Unit tests from
