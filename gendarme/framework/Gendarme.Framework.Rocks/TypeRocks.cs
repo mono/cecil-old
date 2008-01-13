@@ -5,10 +5,12 @@
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //      Daniel Abramov <ex@vingrad.ru>
 //	Adrian Tsai <adrian_tsai@hotmail.com>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 // (C) 2007 Daniel Abramov
 // Copyright (c) 2007 Adrian Tsai
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -211,6 +213,23 @@ namespace Gendarme.Framework.Rocks {
 				default:
 					return false;
 				}
+			}
+		}
+
+		/// <summary>
+		/// Check if the type refers to native code.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <returns>True if the type refers to native code, False otherwise</returns>
+		public static bool IsNative (this TypeReference self)
+		{
+			switch (self.FullName) {
+			case "System.IntPtr":
+			case "System.UIntPtr":
+			case "System.Runtime.InteropServices.HandleRef":
+				return true;
+			default:
+				return false;
 			}
 		}
 	}
