@@ -35,8 +35,20 @@
 		<problem>The method '{0}' looks like a candidate to be a property.</problem>
 		<solution>If possible change the method to a property, otherwise you can ignore the rule.</solution>
 	</rule>
+	<rule	Name="DisposableFieldsShouldBeDisposedRule" 
+		Type="Gendarme.Rules.Design.DisposableFieldsShouldBeDisposedRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The class '{0}' contains disposable field(s) that aren't disposed.</problem>
+		<solution>Ensure that every disposable field(s) are disposed correctly.</solution>
+	</rule>
+	<rule	Name="DisposableTypesShouldHaveFinalizerRule" 
+		Type="Gendarme.Rules.Design.DisposableTypesShouldHaveFinalizerRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The class '{0}' contains disposable field(s) but does not have a finalizer.</problem>
+		<solution>Add a finalizer (destructor in C#) but ensure to suppress its call in Dispose.</solution>
+	</rule>
 	<rule	Name="DontDeclareProtectedFieldsInSealedClassRule" 
-		Type="Gendarme.Rules.Design.DontDeclareProtectedFieldsInSealedClassRule, Gendarme.Rules.Dodgy, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Type="Gendarme.Rules.Design.DontDeclareProtectedFieldsInSealedClassRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/gendarme/web/rules-documentation#DontDeclareProtectedFieldsInSealedClassRule" >
 		<problem>The sealed class '{0}' contains protected field(s).</problem>
 		<solution>Change the access specifier to public or private to represent the true use for the field.</solution>
@@ -70,6 +82,18 @@
 		Uri="" >
 		<problem>The type '{0}' is visible and should be defined inside a namespace.</problem>
 		<solution>Move the type inside a namespace or reduce type visibility (e.g. internal or private).</solution>
+	</rule>
+	<rule	Name="TypesWithDisposableFieldsShouldBeDisposableRule"
+		Type="Gendarme.Rules.Design.TypesWithDisposableFieldsShouldBeDisposableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' contains disposable field(s) but doesn't implement IDisposable.</problem>
+		<solution>Implement IDisposable and free the disposable field(s) in the Dispose method.</solution>
+	</rule>
+	<rule	Name="TypesWithNativeFieldsShouldBeDisposableRule"
+		Type="Gendarme.Rules.Design.TypesWithNativeFieldsShouldBeDisposableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' contains native field(s) but doesn't implement IDisposable.</problem>
+		<solution>Implement IDisposable and free the native field(s) in the Dispose method.</solution>
 	</rule>
 	<rule	Name="UsingCloneWithoutImplementingICloneableRule" 
 		Type="Gendarme.Rules.Design.UsingCloneWithoutImplementingICloneableRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"

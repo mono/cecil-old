@@ -14,7 +14,9 @@ design_rules_sources = DontDeclareProtectedFieldsInSealedClassRule.cs UsingClone
 	AbstractTypesShouldNotHavePublicConstructorsRule.cs AvoidEmptyInterfaceRule.cs TypesShouldBeInsideNamespacesRule.cs \
 	AvoidPropertiesWithoutGetAccessorRule.cs MainShouldNotBePublicRule.cs ConsiderConvertingMethodToPropertyRule.cs \
 	AvoidPublicInstanceFieldsRule.cs MissingAttributeUsageOnCustomAttributeRule.cs \
-	AttributeArgumentsShouldHaveAccessorsRule.cs
+	AttributeArgumentsShouldHaveAccessorsRule.cs DisposableHelper.cs TypesWithNativeFieldsShouldBeDisposableRule.cs \
+	TypesWithDisposableFieldsShouldBeDisposableRule.cs DisposableTypesShouldHaveFinalizerRule.cs \
+	DisposableFieldsShouldBeDisposedRule.cs
 
 design_rules_build_sources = $(addprefix $(srcdir)/, $(design_rules_sources))
 design_rules_build_sources += $(design_rules_generated_sources)
@@ -42,7 +44,9 @@ design_test_sources = DontDeclareProtectedFieldsInSealedClassTest.cs UsingCloneW
 	AbstractTypesShouldNotHavePublicConstructorsTest.cs AvoidEmptyInterfaceTest.cs TypesShouldBeInsideNamespacesTest.cs \
 	AvoidPropertiesWithoutGetAccessorTest.cs MainShouldNotBePublicTest.cs ConsiderConvertingMethodToPropertyTest.cs \
 	AvoidPublicInstanceFieldsTest.cs MissingAttributeUsageOnCustomAttributeTest.cs \
-	AttributeArgumentsShouldHaveAccessorsTest.cs
+	AttributeArgumentsShouldHaveAccessorsTest.cs TypesWithNativeFieldsShouldBeDisposableTest.cs \
+	TypesWithDisposableFieldsShouldBeDisposableTest.cs DisposableTypesShouldHaveFinalizerTest.cs \
+	DisposableFieldsShouldBeDisposedTest.cs
 
 design_test_build_sources = $(addprefix $(srcdir)/Test/, $(design_test_sources))
 

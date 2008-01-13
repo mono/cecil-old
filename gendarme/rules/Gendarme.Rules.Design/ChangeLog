@@ -1,5 +1,22 @@
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* DisposableFieldsShouldBeDisposedRule.cs: New. Rule that check that
+	disposable fields are disposed by the Dispose method. [Andreas Noever]
+	* DisposableHelper.cs: Helper methods for new rules [Andreas Noever]
+	* DisposableTypesShouldHaveFinalizerRule.cs: New. Rule that check
+	that classes with disposable fields have a finalizer. [Andreas Noever]
+	* TypesWithDisposableFieldsShouldBeDisposableRule.cs: New. Rule that
+	check that classes with disposable types implements IDisposable 
+	[Andreas Noever].
+	* TypesWithNativeFieldsShouldBeDisposableRule.cs: New. Rule that 
+	check that classes with native fields implements IDisposable 
+	[Andreas Noever]
+	* Gendarme.Rules.Design.mdp: Add new files to MD project file.
+	* Gendarme.Rules.Design.xml.in: Added new rule descriptions.
+	* Makefile.am: Add new rules/tests to the build.
+
+2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
+
 	* AttributeArgumentsShouldHaveAccessorsRule.cs: New. Rule that check 
 	that all attribute's constructors have read-only properties (get) that
 	match their parameters [Daniel Abramov]
