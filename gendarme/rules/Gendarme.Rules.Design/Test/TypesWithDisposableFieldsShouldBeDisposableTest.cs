@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Andreas Noever <andreas.noever@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 //  (C) 2008 Andreas Noever
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -96,6 +98,15 @@ namespace Test.Rules.Design {
 		}
 	}
 
+	struct StructWithDisposeableFields {
+		Disposable a;
+		object b;
+	}
+
+	class DisposeableStaticFieldsArray {
+		object A;
+		static Disposable [] B;
+	}
 
 	[TestFixture]
 	public class TypesWithDisposableFieldsShouldBeDisposableTest {
@@ -157,6 +168,20 @@ namespace Test.Rules.Design {
 		{
 			TypeDefinition type = GetTest ("Test.Rules.Design.DisposeableFieldsArray");
 			Assert.IsNotNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void TestStructWithDisposeableFields ()
+		{
+			TypeDefinition type = GetTest ("Test.Rules.Design.StructWithDisposeableFields");
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void TestDisposeableStaticFieldsArray ()
+		{
+			TypeDefinition type = GetTest ("Test.Rules.Design.DisposeableStaticFieldsArray");
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Andreas Noever <andreas.noever@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 //  (C) 2008 Andreas Noever
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -28,6 +30,7 @@
 
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 using Gendarme.Framework;
 using Gendarme.Rules.Design;
@@ -122,6 +125,18 @@ namespace Test.Rules.Design {
 		}
 	}
 
+	struct StructWithNativeFields {
+		IntPtr a;
+		UIntPtr b;
+		HandleRef c;
+	}
+
+	class NativeStaticFieldsArray {
+		object A;
+		static UIntPtr [] B;
+	}
+
+
 	[TestFixture]
 	public class TypesWithNativeFieldsShouldBeDisposableTest {
 
@@ -203,6 +218,20 @@ namespace Test.Rules.Design {
 		{
 			TypeDefinition type = GetTest ("Test.Rules.Design.NativeFieldsArray");
 			Assert.IsNotNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void TestStructWithNativeFields ()
+		{
+			TypeDefinition type = GetTest ("Test.Rules.Design.StructWithNativeFields");
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+		
+		[Test]
+		public void TestNativeStaticFieldsArray ()
+		{
+			TypeDefinition type = GetTest ("Test.Rules.Design.NativeStaticFieldsArray");
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}
 }

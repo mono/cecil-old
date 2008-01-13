@@ -1,3 +1,14 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* DisposableFieldsShouldBeDisposedTest.cs: Add test case for static 
+	fields.
+	* DisposableTypesShouldHaveFinalizerTest.cs: Add test case for 
+	static fields.
+	* TypesWithDisposableFieldsShouldBeDisposableTest.cs: Add test 
+	cases for structs and static fields.
+	* TypesWithNativeFieldsShouldBeDisposableTest.cs: Add test cases 
+	for structs and static fields.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DisposableFieldsShouldBeDisposedTest.cs: New. Unit tests by 
