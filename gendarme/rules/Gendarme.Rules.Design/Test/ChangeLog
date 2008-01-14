@@ -1,3 +1,11 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* FinalizersShouldBeProtectedTest.cs: New. Unit tests by Daniel 
+	Abramov
+	* FinalizersShouldCallBaseClassFinalizerTest.cs: New. Unit tests by 
+	Daniel Abramov
+	* Test.Rules.Design.mdp: Added new tests to MD project file.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* DisposableFieldsShouldBeDisposedTest.cs: Add test case for static 
