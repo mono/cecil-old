@@ -16,7 +16,7 @@ design_rules_sources = DontDeclareProtectedFieldsInSealedClassRule.cs UsingClone
 	AvoidPublicInstanceFieldsRule.cs MissingAttributeUsageOnCustomAttributeRule.cs \
 	AttributeArgumentsShouldHaveAccessorsRule.cs DisposableHelper.cs TypesWithNativeFieldsShouldBeDisposableRule.cs \
 	TypesWithDisposableFieldsShouldBeDisposableRule.cs DisposableTypesShouldHaveFinalizerRule.cs \
-	DisposableFieldsShouldBeDisposedRule.cs
+	DisposableFieldsShouldBeDisposedRule.cs FinalizersShouldBeProtectedRule.cs FinalizersShouldCallBaseClassFinalizerRule.cs
 
 design_rules_build_sources = $(addprefix $(srcdir)/, $(design_rules_sources))
 design_rules_build_sources += $(design_rules_generated_sources)
@@ -46,7 +46,7 @@ design_test_sources = DontDeclareProtectedFieldsInSealedClassTest.cs UsingCloneW
 	AvoidPublicInstanceFieldsTest.cs MissingAttributeUsageOnCustomAttributeTest.cs \
 	AttributeArgumentsShouldHaveAccessorsTest.cs TypesWithNativeFieldsShouldBeDisposableTest.cs \
 	TypesWithDisposableFieldsShouldBeDisposableTest.cs DisposableTypesShouldHaveFinalizerTest.cs \
-	DisposableFieldsShouldBeDisposedTest.cs
+	DisposableFieldsShouldBeDisposedTest.cs FinalizersShouldBeProtectedTest.cs FinalizersShouldCallBaseClassFinalizerTest.cs
 
 design_test_build_sources = $(addprefix $(srcdir)/Test/, $(design_test_sources))
 

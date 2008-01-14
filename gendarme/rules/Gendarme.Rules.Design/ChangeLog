@@ -1,3 +1,15 @@
+2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DisposableFieldsShouldBeDisposedRule.cs: Exclude generated code
+	from results (to reduce false positives).
+	* FinalizersShouldBeProtectedRule.cs: New. Rule to ensure that every
+	finalizer is protected.
+	* FinalizersShouldCallBaseClassFinalizerRule.cs: New. Rule to ensure
+	that every finalizer calls it's base class.
+	* Gendarme.Rules.Design.mdp: Add new files to MD project file.
+	* Gendarme.Rules.Design.xml.in: Added new rule descriptions.
+	* Makefile.am: Add new rules/tests to the build.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DisposableFieldsShouldBeDisposedRule.cs: Add check for static 

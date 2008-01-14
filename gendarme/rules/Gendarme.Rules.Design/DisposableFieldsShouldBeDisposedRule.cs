@@ -46,6 +46,10 @@ namespace Gendarme.Rules.Design {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
+			// rule doesn't apply to generated code (out of developer control)
+			if (type.IsGeneratedCode ())
+				return runner.RuleSuccess;
+
 			if (!type.Implements ("System.IDisposable"))
 				return runner.RuleSuccess;
 
