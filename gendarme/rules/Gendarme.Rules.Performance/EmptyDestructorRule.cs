@@ -56,7 +56,7 @@ namespace Gendarme.Rules.Performance {
 				case Code.Callvirt:
 					// it's empty if we're calling the base class destructor
 					MethodReference mr = (ins.Operand as MethodReference);
-					if ((mr == null) || (mr.Name != "Finalize"))
+					if ((mr == null) || !mr.IsFinalizer ())
 						return runner.RuleSuccess;
 					break;
 				case Code.Nop:
