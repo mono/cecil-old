@@ -27,11 +27,17 @@ DISTCLEANFILES = \
 	missing
 
 test: all
+	cd framework;	\
+	make test;	\
+	cd ..;		\
 	cd rules;	\
 	make test;	\
 	cd ..;
 
 run-test: test
+	cd framework;	\
+	make run-test;	\
+	cd ..;		\
 	cd rules;	\
 	make run-test;	\
 	cd ..;
@@ -39,7 +45,7 @@ run-test: test
 self-test: all
 	cp rules/rules.xml bin; \
 	cd bin;	\
-	mono --debug gendarme.exe --set self-test --html self-test.html gendarme.exe *.dll;	\
+	mono --debug gendarme.exe --set self-test --html self-test.html gendarme.exe Gendarme.*.dll;	\
 	cd ..;
 
 dist:

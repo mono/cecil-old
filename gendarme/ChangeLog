@@ -1,3 +1,8 @@
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Makefile.am: Run framework tests on "make run-test" and ignore
+	non-Gendarme assemblies on "make self-test".
+
 2007-12-30  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* configure.ac: Add Gendarme.Rules.Interoperability
