@@ -1,4 +1,9 @@
-2008-01-13 Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* MethodRocks.cs: Add IsFinalizer [Daniel Abramov]
+	* TypeRocks.cs: Rework GetFinalizer to use MethodRocks.IsFinalizer
+
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* TypeRocks.cs: Add IsNative [Andreas Noever]
 

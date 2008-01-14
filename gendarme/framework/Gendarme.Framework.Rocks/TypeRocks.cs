@@ -6,10 +6,12 @@
 //      Daniel Abramov <ex@vingrad.ru>
 //	Adrian Tsai <adrian_tsai@hotmail.com>
 //	Andreas Noever <andreas.noever@gmail.com>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 // (C) 2007 Daniel Abramov
 // Copyright (c) 2007 Adrian Tsai
+// (C) 2008 Andreas Noever
 // (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -60,11 +62,7 @@ namespace Gendarme.Framework.Rocks {
 		public static MethodDefinition GetFinalizer (this TypeDefinition self)
 		{
 			foreach (MethodDefinition method in self.Methods) {
-				if (method.Name != "Finalize")
-					continue;
-				if (method.Parameters.Count != 0)
-					continue;
-				if (method.ReturnType.ReturnType.ToString () == "System.Void")
+				if (method.IsFinalizer ())
 					return method;
 			}
 			return null;
