@@ -1,5 +1,6 @@
-2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
+2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
 
+	* MethodRocksTest.cs: Added test cases for IsFinalizer
 	* TypeRocksTest.cs: Added test cases for IsNative
 
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>

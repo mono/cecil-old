@@ -62,6 +62,10 @@ namespace Test.Framework.Rocks {
 			{
 				return 42;
 			}
+
+			~MainClassIntStrings ()
+			{
+			}
 		}
 
 		public int Value {
@@ -114,6 +118,13 @@ namespace Test.Framework.Rocks {
 		public void IsEntryPoint ()
 		{
 			Assert.IsFalse (GetMethod ("FixtureSetUp").IsEntryPoint (), "FixtureSetUp");
+		}
+
+		[Test]
+		public void IsFinalizer ()
+		{
+			Assert.IsFalse (GetMethod ("FixtureSetUp").IsFinalizer (), "FixtureSetUp");
+			Assert.IsTrue (GetMethod ("Test.Framework.Rocks.MethodRocksTest/MainClassIntStrings", "Finalize").IsFinalizer (), "~MainClassIntStrings");
 		}
 
 		[Test]
