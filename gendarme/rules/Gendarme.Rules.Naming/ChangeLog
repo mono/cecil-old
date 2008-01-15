@@ -1,3 +1,18 @@
+2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DoNotPrefixValuesWithEnumNameRule.cs: New. Rule that checks enums
+	to see if it prefix it's values with the it's own name [Andreas 
+	Noever]
+	* DoNotUseReservedInEnumValueNamesRule.cs: New. Rule that check 
+	enums to see if it has values containing the word "reserved" 
+	[Andreas Noever]
+	* ParameterNamesShouldMatchOverridenMethodRule.cs: New. Rule that
+	check if overriden (or interface implementation) methods use the same
+	parameter names as the original. [Andreas Noever]
+	* Gendarme.Rules.Naming.mdp: Updated MonoDevelop project file.
+	* Gendarme.Rules.Naming.xml.in: Updated descriptions.
+	* Makefile.am: Updated Makefile for new rules/tests.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DetectNonAlphaNumericsInTypeNamesRule.cs: Turn a method to static 

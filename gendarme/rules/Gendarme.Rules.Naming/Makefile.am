@@ -12,7 +12,8 @@ naming_rules_generated_sources = $(naming_rules_sources_in:.in=)
 naming_rules_sources = EnumNotEndsWithEnumOrFlagsSuffixRule.cs \
 	UsePluralNameInEnumFlagsRule.cs UseSingularNameInEnumsUnlessAreFlagsRule.cs \
 	DetectNonAlphaNumericsInTypeNamesRule.cs UseCorrectCasingRule.cs UseCorrectPrefixRule.cs UseCorrectSuffixRule.cs \
-	UsePreferredTermsRule.cs NamingUtils.cs
+	UsePreferredTermsRule.cs NamingUtils.cs DoNotPrefixValuesWithEnumNameRule.cs DoNotUseReservedInEnumValueNamesRule.cs \
+	ParameterNamesShouldMatchOverridenMethodRule.cs
 
 naming_rules_build_sources = $(addprefix $(srcdir)/, $(naming_rules_sources))
 naming_rules_build_sources += $(naming_rules_generated_sources)
@@ -38,7 +39,8 @@ uninstall-hook:
 naming_test_sources = EnumNotEndsWithEnumOrFlagsSuffixTest.cs \
 	UsePluralNameInEnumFlagsTest.cs UseSingularNameInEnumsUnlessAreFlagsTest.cs \
 	DetectNonAlphaNumericsInTypeNamesTest.cs UseCorrectCasingTest.cs UseCorrectPrefixTest.cs UseCorrectSuffixTest.cs \
-	UsePreferredTermsTest.cs
+	UsePreferredTermsTest.cs DoNotPrefixValuesWithEnumNameTest.cs DoNotUseReservedInEnumValueNamesTest.cs \
+	ParameterNamesShouldMatchOverridenMethodTest.cs
 
 naming_test_build_sources = $(addprefix $(srcdir)/Test/, $(naming_test_sources))
 

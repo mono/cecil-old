@@ -5,11 +5,29 @@
 		<problem>The type or method name '{0}' contains underscore in its name.</problem>
 		<solution>Remove the underscore from name.</solution>
 	</rule>
+	<rule 	Name="DoNotUseReservedInEnumValueNamesRule"
+		Type="Gendarme.Rules.Naming.DoNotUseReservedInEnumValueNamesRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="">
+		<problem>The type '{0}' is an enumeration that contains value(s) named 'reserved'.</problem>
+		<solution>'Reserved' value should be removed since there's no need to reserve enums values.</solution>
+	</rule>
+	<rule 	Name="DoNotPrefixValuesWithEnumNameRule"
+		Type="Gendarme.Rules.Naming.DoNotPrefixValuesWithEnumNameRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="">
+		<problem>The type '{0}' is an enumeration that contains value(s) using the enum's name.</problem>
+		<solution>Change the value name(s) not to include the enum's type name.</solution>
+	</rule>
 	<rule 	Name="EnumNotEndsWithEnumOrFlagsSuffixRule"
 		Type="Gendarme.Rules.Naming.EnumNotEndsWithEnumOrFlagsSuffixRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://groups.google.com/group/Gendarme/web/rules-documentation#EnumNotEndsWithEnumOrFlagsSuffixRule">
 		<problem>The type '{0}' is an enumeration and by convention the enums shoud not end with the Enum or Flags suffix.</problem>
 		<solution>Remove the Enum or Flags suffix in enum name.</solution>
+	</rule>
+	<rule 	Name="ParameterNamesShouldMatchOverridenMethodRule"
+		Type="Gendarme.Rules.Naming.ParameterNamesShouldMatchOverridenMethodRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="">
+		<problem>The method '{0}' overrides (or implement) an existing method but does not use the same parameter names.</problem>
+		<solution>Keep parameter names consistent when overriding a class or implementing an interface.</solution>
 	</rule>
 	<rule 	Name="UseCorrectCasingRule"
 		Type="Gendarme.Rules.Naming.UseCorrectCasingRule, Gendarme.Rules.Naming, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
