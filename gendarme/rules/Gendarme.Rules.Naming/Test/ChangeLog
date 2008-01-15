@@ -1,3 +1,13 @@
+2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DoNotPrefixValuesWithEnumNameTest.cs: New. Unit tests from Andreas
+	Noever
+	* DoNotUseReservedInEnumValueNamesTest.cs: : New. Unit tests from
+	Andreas	Noever
+	* ParameterNamesShouldMatchOverridenMethodTest.cs: : New. Unit 
+	tests from Andreas Noever
+	* Test.Rules.Naming.mdp: Update MonoDevelop project file.
+
 2007-12-26  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AttributeEndsWithAttributeSuffixTest.cs: Deleted. The new
