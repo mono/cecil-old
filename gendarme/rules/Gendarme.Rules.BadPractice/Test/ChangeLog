@@ -1,3 +1,11 @@
+2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConstructorShouldNotCallVirtualMethodsTest.cs: New. Unit 
+	tests by Daniel Abramov. 
+	* GetEntryAssemblyMayReturnNullTest.cs: New. Unit tests by	
+	Daniel Abramov. 
+	* Test.Rules.BadPractice.mdp: Update MonoDevelop project file.
+
 2007-11-23  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EqualShouldHandleNullArgTest.cs: Add a test case where Equals 
