@@ -1,3 +1,14 @@
+2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConstructorShouldNotCallVirtualMethodsRule.cs: New. Rule to
+	find every virtual calls made inside constructor of unsealed types.
+	* GetEntryAssemblyMayReturnNullRule.cs: New. Rule to detect usage
+	of Assembly.GetEntryAssembly which returns null when called outside 
+	the root application domain [Daniel Abramov]
+	* Gendarme.Rules.BadPractice.mdp: Update MD project file.
+	* Gendarme.Rules.BadPractice.xml.in: Add rules descriptions.
+	* Makefile.am: Add rules/tests to the build.
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* CloneMethodShouldNotReturnNullRule.cs: Use new Location ctor.
