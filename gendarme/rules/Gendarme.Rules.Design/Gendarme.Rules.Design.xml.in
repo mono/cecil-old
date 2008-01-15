@@ -59,11 +59,23 @@
 		<problem>The enum '{0}' should define a member with a value of 0.</problem>
 		<solution>Add a new member in the enum with a value of 0.</solution>
 	</rule>
-	<rule	Name="FlagsShouldNotDefineAZeroValueRule"
-		Type="Gendarme.Rules.Design.FlagsShouldNotDefineAZeroValueRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+	<rule	Name="FinalizersShouldBeProtectedRule"
+		Type="Gendarme.Rules.Design.FinalizersShouldBeProtectedRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
 		<problem>The enum '{0}' is marked by a [Flag] attribute and should not include a value of 0.</problem>
 		<solution>Review the member that has a value of 0, it is either unneeded or cannot work as expected with binary logic operators.</solution>
+	</rule>
+	<rule	Name="FinalizersShouldBeProtectedRule"
+		Type="Gendarme.Rules.Design.FinalizersShouldBeProtectedRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The finalizer (destructor) for type '{0}' isn't protected (family).</problem>
+		<solution>All finalizer should be declared as protected.</solution>
+	</rule>
+	<rule	Name="FinalizersShouldCallBaseClassFinalizerRule"
+		Type="Gendarme.Rules.Design.FinalizersShouldCallBaseClassFinalizerRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The finalizer (destructor) for type '{0}' does not call it's base class finalizer.</problem>
+		<solution>All finalizer should call it's base class finalizer.</solution>
 	</rule>
 	<rule	Name="MainShouldNotBePublicRule"
 		Type="Gendarme.Rules.Design.MainShouldNotBePublicRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
