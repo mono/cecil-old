@@ -40,9 +40,9 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		GreaterThanOrEqual,
 		LeftShift,
 		RightShift,
-		BinaryOr,
-		BinaryAnd,
-		BinaryXor,
+		BitwiseOr,
+		BitwiseAnd,
+		BitwiseXor,
 		Modulo,
 	}
 }

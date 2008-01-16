@@ -394,17 +394,17 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnOr (Instruction instruction)
 		{
-			PushBinaryExpression (BinaryOperator.BinaryOr);
+			PushBinaryExpression (BinaryOperator.BitwiseOr);
 		}
 
 		public override void OnAnd (Instruction instruction)
 		{
-			PushBinaryExpression (BinaryOperator.BinaryAnd);
+			PushBinaryExpression (BinaryOperator.BitwiseAnd);
 		}
 
 		public override void OnXor (Instruction instruction)
 		{
-			PushBinaryExpression (BinaryOperator.BinaryXor);
+			PushBinaryExpression (BinaryOperator.BitwiseXor);
 		}
 
 		public override void OnRem (Instruction instruction)
@@ -414,7 +414,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnNot (Instruction instruction)
 		{
-			PushUnaryExpression (UnaryOperator.BinaryNot, Pop ());
+			PushUnaryExpression (UnaryOperator.BitwiseNot, Pop ());
 		}
 
 		public override void OnBrtrue (Instruction instruction)

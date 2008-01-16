@@ -165,7 +165,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		static string ToString (UnaryOperator op)
 		{
 			switch (op) {
-			case UnaryOperator.BinaryNot: return "~";
+			case UnaryOperator.BitwiseNot: return "~";
 			case UnaryOperator.Not: return "!";
 			}
 			throw new ArgumentException (op.ToString (), "op");
@@ -188,9 +188,9 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			case BinaryOperator.GreaterThanOrEqual: return ">=";
 			case BinaryOperator.RightShift: return ">>";
 			case BinaryOperator.LeftShift: return "<<";
-			case BinaryOperator.BinaryAnd: return "&";
-			case BinaryOperator.BinaryOr: return "|";
-			case BinaryOperator.BinaryXor: return "^";
+			case BinaryOperator.BitwiseAnd: return "&";
+			case BinaryOperator.BitwiseOr: return "|";
+			case BinaryOperator.BitwiseXor: return "^";
 			case BinaryOperator.Modulo: return "%";
 			}
 			throw new ArgumentException (op.ToString (), "op");
