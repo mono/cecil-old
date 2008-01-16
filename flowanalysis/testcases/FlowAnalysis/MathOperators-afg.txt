@@ -9,4 +9,5 @@ local0 = (local0 | 8)
 local0 = (local0 & 9)
 local0 = (local0 ^ 10)
 local0 = (local0 % 11)
+local0 = (~local0)
 return

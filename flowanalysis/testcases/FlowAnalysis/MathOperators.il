@@ -5,6 +5,7 @@
 {
 	.method public hidebysig static void  Main() cil managed
 	{
+	.entrypoint
 		.locals init (int32 V_0)
 		IL_0000:  nop
 		IL_0001:  ldc.i4.1
@@ -49,6 +50,9 @@
 		IL_002a:  ldc.i4.s   11
 		IL_002c:  rem
 		IL_002d:  stloc.0
-		IL_002e:  ret
+		IL_002e:  ldloc.0
+		IL_002f:  not
+		IL_0030:  stloc.0
+		IL_0031:  ret
 	}
 }

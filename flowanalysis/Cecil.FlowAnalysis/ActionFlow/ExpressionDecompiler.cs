@@ -412,6 +412,11 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			PushBinaryExpression (BinaryOperator.Modulo);
 		}
 
+		public override void OnNot (Instruction instruction)
+		{
+			PushUnaryExpression (UnaryOperator.BinaryNot, Pop ());
+		}
+
 		public override void OnBrtrue (Instruction instruction)
 		{
 		}
@@ -517,7 +522,12 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		void PushNotExpression (Expression expression)
 		{
-			Push (new UnaryExpression (UnaryOperator.Not, expression));
+			PushUnaryExpression (UnaryOperator.Not, expression);
+		}
+
+		void PushUnaryExpression (UnaryOperator op, Expression expression)
+		{
+			Push (new UnaryExpression (op, expression));
 		}
 
 		static BinaryOperator GetInverseOperator (BinaryOperator op)

@@ -1,3 +1,7 @@
+2008-01-16  Jb Evain  <jbevain@novell.com>
+
+	* Support for not.
+
 2008-01-13  Jb Evain  <jbevain@novell.com>
 
 	* Support for more ldloc, stloc, ldarg.

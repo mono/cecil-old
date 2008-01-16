@@ -27,6 +27,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public enum UnaryOperator {
 		None,
-		Not
+		BinaryNot,
+		Not,
 	}
 }
