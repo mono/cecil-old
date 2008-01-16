@@ -201,6 +201,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			default:
 				throw new ArgumentException ("n-way block not supported", "block");
 			}
+
 			MarkProcessed (block);
 		}
 
@@ -232,9 +233,9 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 				if (GetStackAfter (successor.LastInstruction) > 0) return true;
 				if (IsLogicalExpression (visited, successor)) return true;
 			}
+
 			return false;
 		}
-
 
 		void ProcessSimpleBlock (InstructionBlock block)
 		{

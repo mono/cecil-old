@@ -265,9 +265,9 @@ namespace Cecil.FlowAnalysis.Tests {
 		}
 
 		[Test]
-		public void BinaryOperators ()
+		public void MathOperators ()
 		{
-			RunTestCase ("BinaryOperators");
+			RunTestCase ("MathOperators");
 		}
 	}
 }

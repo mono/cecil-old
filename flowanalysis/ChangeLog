@@ -20,6 +20,7 @@
 	* Support for isinst.
 
 2007-11-26	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
 	* codegen/gen-ControlFlowGraphRegression.boo
 	  codegen/CodeStructureModel.boo
 	  Cecil.FlowAnalysis/ActionFlow/ActionFlowGraphBuilder.cs
