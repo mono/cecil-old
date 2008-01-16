@@ -1,3 +1,8 @@
+2008-01-16  Nestor Salceda  <nestor.salceda@gmail.com>
+
+	* AvoidLargeClassesTest.cs: Added tests for skip the enums.  This rule
+	shouldn't be applied to enums.
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidLongParameterListsTest.cs: Don't report defects for p/invokes

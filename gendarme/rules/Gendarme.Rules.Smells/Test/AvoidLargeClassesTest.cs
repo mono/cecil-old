@@ -37,6 +37,17 @@ using Gendarme.Framework;
 using Gendarme.Rules.Smells;
 
 namespace Test.Rules.Smells {
+
+	public enum LargeEnum {
+		X, X1, X2, X3, X4, X5,
+		X6, X7, X8, X9,
+		Y, Y1, Y2, Y3, Y4, Y5,
+		Y6, Y7, Y8, Y9, 
+		Z, Z1, Z2, Z3, Z4, Z5,
+		Z6, Z7, Z8, Z9, 
+		W, W1, W2, W3, W4, W5,
+		W6, W7, W8, W9
+	}
 	
 	public class LargeClass {
 		int x, x1, x2, x3;
@@ -173,6 +184,13 @@ namespace Test.Rules.Smells {
 		public void ClassWithAutoImplementedProperties ()
 		{
 			type = assembly.MainModule.Types ["Test.Rules.Smells.AutoImplementedPropertiesClass"];
+			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
+		}
+
+		[Test]
+		public void EnumsShouldNotBeCheckedTest ()
+		{
+			type = assembly.MainModule.Types ["Test.Rules.Smells.LargeEnum"];
 			Assert.IsNull (rule.CheckType (type, new MinimalRunner ()));
 		}
 	}

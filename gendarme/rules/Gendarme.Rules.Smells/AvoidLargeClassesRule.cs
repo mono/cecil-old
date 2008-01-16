@@ -151,6 +151,9 @@ namespace Gendarme.Rules.Smells {
 		{
 			messageCollection = null;
 
+			if (type.IsEnum)
+				return runner.RuleSuccess;
+
 			if (type.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
