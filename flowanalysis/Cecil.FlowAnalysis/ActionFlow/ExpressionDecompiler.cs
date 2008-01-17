@@ -414,7 +414,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnNot (Instruction instruction)
 		{
-			PushUnaryExpression (UnaryOperator.BitwiseNot, Pop ());
+			PushUnaryExpression (UnaryOperator.BitwiseComplement, Pop ());
 		}
 
 		public override void OnBrtrue (Instruction instruction)

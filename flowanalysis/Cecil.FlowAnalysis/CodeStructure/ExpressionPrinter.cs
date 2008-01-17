@@ -165,7 +165,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 		static string ToString (UnaryOperator op)
 		{
 			switch (op) {
-			case UnaryOperator.BitwiseNot: return "~";
+			case UnaryOperator.BitwiseComplement: return "~";
 			case UnaryOperator.Not: return "!";
 			}
 			throw new ArgumentException (op.ToString (), "op");
