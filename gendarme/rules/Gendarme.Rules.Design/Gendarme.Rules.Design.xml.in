@@ -53,6 +53,12 @@
 		<problem>The sealed class '{0}' contains protected field(s).</problem>
 		<solution>Change the access specifier to public or private to represent the true use for the field.</solution>
 	</rule>
+	<rule	Name="EnsureSymmetryForOverloadedOperatorsRule"
+		Type="Gendarme.Rules.Design.EnsureSymmetryForOverloadedOperatorsRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' should overload operators in symmetry (e.g. == and !=, + and -).</problem>
+		<solution>Add an overloaded for the missing operator and keep the type symmetrical.</solution>
+	</rule>
 	<rule	Name="EnumsShouldDefineAZeroValueRule"
 		Type="Gendarme.Rules.Design.EnumsShouldDefineAZeroValueRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
@@ -77,6 +83,12 @@
 		<problem>The finalizer (destructor) for type '{0}' does not call it's base class finalizer.</problem>
 		<solution>All finalizer should call it's base class finalizer.</solution>
 	</rule>
+	<rule	Name="FlagsShouldNotDefineAZeroValueRule"
+		Type="Gendarme.Rules.Design.FlagsShouldNotDefineAZeroValueRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The enumeration flag '{0}' defines a value of 0, which cannot be used as a real value.</problem>
+		<solution>Remove the 0 value from the flag.</solution>
+	</rule>
 	<rule	Name="MainShouldNotBePublicRule"
 		Type="Gendarme.Rules.Design.MainShouldNotBePublicRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
@@ -88,6 +100,24 @@
 		Uri="" >
 		<problem></problem>
 		<solution></solution>
+	</rule>
+	<rule	Name="OperatorEqualsShouldBeOverloadedRule"
+		Type="Gendarme.Rules.Design.OperatorEqualsShouldBeOverloadedRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' is a value type (struct) that override Equals, or both overloads + and - operators, but doesn't overload == and != operators.</problem>
+		<solution>Add overloads for the missing == and != operators.</solution>
+	</rule>
+	<rule	Name="OverrideEqualsMethodRule"
+		Type="Gendarme.Rules.Design.OverrideEqualsMethodRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' overloads the == operator but doesn't override the Equals method.</problem>
+		<solution>Override the Equals method to match the results of the == operator.</solution>
+	</rule>
+	<rule	Name="ProvideAlternativeNamesForOperatorOverloadsRule"
+		Type="Gendarme.Rules.Design.ProvideAlternativeNamesForOperatorOverloadsRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' contains overloads for some operators but doesn't provide named alternatives.</problem>
+		<solution>Add named methods equivalent to the operators for language that do not support them (e.g. VS.NET).</solution>
 	</rule>
 	<rule	Name="TypesShouldBeInsideNamespacesRule"
 		Type="Gendarme.Rules.Design.TypesShouldBeInsideNamespacesRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"

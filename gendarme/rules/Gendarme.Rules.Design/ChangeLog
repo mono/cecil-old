@@ -1,3 +1,23 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DisposableHelper.cs: Removed.
+	* EnsureSymmetryForOverloadedOperatorsTest.cs: New. Rule that 
+	ensure operators are overloaded in symmetry [Andreas Noever].
+	* DisposableFieldsShouldBeDisposedRule.cs: Adapted to use rocks
+	instead of DisposableHelper.
+	* OperatorEqualsShouldBeOverloadedTest.cs: New. Rule that ensure 
+	that operator == is overloaded when required [Andreas Noever].
+	* OverrideEqualsMethodTest.cs: New. Rule that ensure that method 
+	Equals is overriden when required [Andreas Noever].
+	* ProvideAlternativeNamesForOperatorOverloadsTest.cs: New. Rule
+	that ensure alternate methods are provided for operators [Andreas Noever].
+	* TypesWithDisposableFieldsShouldBeDisposableRule.cs: Adapted to 
+	use rocks instead of DisposableHelper.
+	* TypesWithNativeFieldsShouldBeDisposableRule.cs: Adapted to use 
+	rocks instead of DisposableHelper.
+	* Gendarme.Rules.Design.xml.in: Add new rule descriptions.
+	* Makefile.am: Add new rules/tests to the build.
+
 2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DisposableFieldsShouldBeDisposedRule.cs: Exclude generated code

@@ -53,8 +53,8 @@ namespace Gendarme.Rules.Design {
 			if (!type.Implements ("System.IDisposable"))
 				return runner.RuleSuccess;
 
-			MethodDefinition implicitDisposeMethod = type.GetImplicitDisposeMethod ();
-			MethodDefinition explicitDisposeMethod = type.GetExplicitDisposeMethod ();
+			MethodDefinition implicitDisposeMethod = type.GetMethod (MethodSignatures.Dispose);
+			MethodDefinition explicitDisposeMethod = type.GetMethod (MethodSignatures.DisposeExplicit);
 
 			if (implicitDisposeMethod == null || implicitDisposeMethod.IsAbstract)
 				implicitDisposeMethod = null;
@@ -74,7 +74,7 @@ namespace Gendarme.Rules.Design {
 					break; //TODO Implements for TypeReference
 				if (!baseType.Implements ("System.IDisposable"))
 					break; //also checks parents, so no need to search further
-				MethodDefinition baseDisposeMethod = baseType.GetImplicitDisposeMethod (); //we just check for Dispose() here
+				MethodDefinition baseDisposeMethod = baseType.GetMethod (MethodSignatures.Dispose); //we just check for Dispose() here
 				if (baseDisposeMethod == null)
 					continue; //no dispose method (yet)
 				if (baseDisposeMethod.IsAbstract)

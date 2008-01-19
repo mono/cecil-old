@@ -1,5 +1,5 @@
 //
-// Gendarme.Rules.Design.DisposableHelper
+// Gendarme.Rules.Design.OverrideEqualsMethodRule
 //
 // Authors:
 //	Andreas Noever <andreas.noever@gmail.com>
@@ -27,39 +27,27 @@
 //
 
 using System;
-
 using Mono.Cecil;
+using Gendarme.Framework;
 using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Design {
 
-	public static class DisposableHelper {
+	public class OverrideEqualsMethodRule : ITypeRule {
 
-		public static MethodDefinition GetImplicitDisposeMethod (this TypeDefinition self)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			return self.GetDisposeMethod ("Dispose");
-		}
+			if (type.IsEnum || type.IsInterface)
+				return runner.RuleSuccess;
 
-		public static MethodDefinition GetExplicitDisposeMethod (this TypeDefinition self)
-		{
-			return self.GetDisposeMethod ("System.IDisposable.Dispose");
-		}
-
-		private static MethodDefinition GetDisposeMethod (this TypeDefinition self, string methodName)
-		{
-			if (!self.Implements ("System.IDisposable"))
-				return null;
-
-			foreach (MethodDefinition method in self.Methods) {
-				if (method.Name != methodName)
-					continue;
-				if (method.Parameters.Count != 0)
-					continue;
-				if (method.ReturnType.ReturnType.FullName != "System.Void")
-					continue;
-				return method;
+			if (type.HasMethod (MethodSignatures.op_Equality)) {
+				if (!type.HasMethod (MethodSignatures.Equals)) {
+					Location loc = new Location (type);
+					Message msg = new Message ("This type implements the equality (==) operator. It should also override the Object.Equals method.", loc, MessageType.Warning);
+					return new MessageCollection (msg);
+				}
 			}
-			return null;
+			return runner.RuleSuccess;
 		}
 	}
 }

@@ -14,15 +14,17 @@ design_rules_sources = DontDeclareProtectedFieldsInSealedClassRule.cs UsingClone
 	AbstractTypesShouldNotHavePublicConstructorsRule.cs AvoidEmptyInterfaceRule.cs TypesShouldBeInsideNamespacesRule.cs \
 	AvoidPropertiesWithoutGetAccessorRule.cs MainShouldNotBePublicRule.cs ConsiderConvertingMethodToPropertyRule.cs \
 	AvoidPublicInstanceFieldsRule.cs MissingAttributeUsageOnCustomAttributeRule.cs \
-	AttributeArgumentsShouldHaveAccessorsRule.cs DisposableHelper.cs TypesWithNativeFieldsShouldBeDisposableRule.cs \
+	AttributeArgumentsShouldHaveAccessorsRule.cs TypesWithNativeFieldsShouldBeDisposableRule.cs \
 	TypesWithDisposableFieldsShouldBeDisposableRule.cs DisposableTypesShouldHaveFinalizerRule.cs \
-	DisposableFieldsShouldBeDisposedRule.cs FinalizersShouldBeProtectedRule.cs FinalizersShouldCallBaseClassFinalizerRule.cs
+	DisposableFieldsShouldBeDisposedRule.cs FinalizersShouldBeProtectedRule.cs FinalizersShouldCallBaseClassFinalizerRule.cs \
+	EnsureSymmetryForOverloadedOperatorsRule.cs OperatorEqualsShouldBeOverloadedRule.cs \
+	OverrideEqualsMethodRule.cs ProvideAlternativeNamesForOperatorOverloadsRule.cs
 
 design_rules_build_sources = $(addprefix $(srcdir)/, $(design_rules_sources))
 design_rules_build_sources += $(design_rules_generated_sources)
 
 ../../bin/Gendarme.Rules.Design.dll: $(design_rules_build_sources)
-	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:../../bin/Gendarme.Framework.dll -out:$@ $(design_rules_build_sources)
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:System.Core.dll -r:../../bin/Gendarme.Framework.dll -out:$@ $(design_rules_build_sources)
 	cp Gendarme.Rules.*.xml ../../bin/
 
 # Install Unstable Mono Libraries (see configure.ac)
@@ -46,7 +48,9 @@ design_test_sources = DontDeclareProtectedFieldsInSealedClassTest.cs UsingCloneW
 	AvoidPublicInstanceFieldsTest.cs MissingAttributeUsageOnCustomAttributeTest.cs \
 	AttributeArgumentsShouldHaveAccessorsTest.cs TypesWithNativeFieldsShouldBeDisposableTest.cs \
 	TypesWithDisposableFieldsShouldBeDisposableTest.cs DisposableTypesShouldHaveFinalizerTest.cs \
-	DisposableFieldsShouldBeDisposedTest.cs FinalizersShouldBeProtectedTest.cs FinalizersShouldCallBaseClassFinalizerTest.cs
+	DisposableFieldsShouldBeDisposedTest.cs FinalizersShouldBeProtectedTest.cs FinalizersShouldCallBaseClassFinalizerTest.cs \
+	EnsureSymmetryForOverloadedOperatorsTest.cs OperatorEqualsShouldBeOverloadedTest.cs OverrideEqualsMethodTest.cs \
+	ProvideAlternativeNamesForOperatorOverloadsTest.cs
 
 design_test_build_sources = $(addprefix $(srcdir)/Test/, $(design_test_sources))
 

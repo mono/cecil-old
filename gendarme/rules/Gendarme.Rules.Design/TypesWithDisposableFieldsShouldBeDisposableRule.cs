@@ -53,8 +53,8 @@ namespace Gendarme.Rules.Design {
 			bool abstractWarning = false;
 
 			if (type.Implements ("System.IDisposable")) {
-				implicitDisposeMethod = type.GetImplicitDisposeMethod ();
-				explicitDisposeMethod = type.GetExplicitDisposeMethod ();
+				implicitDisposeMethod = type.GetMethod (MethodSignatures.Dispose);
+				explicitDisposeMethod = type.GetMethod (MethodSignatures.DisposeExplicit);
 
 				if (IsAbstractMethod (implicitDisposeMethod))
 					abstractWarning = true;
