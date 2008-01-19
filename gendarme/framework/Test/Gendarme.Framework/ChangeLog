@@ -1,0 +1,4 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodSignatureTest.cs: Unit tests by Andreas Noever. Some of them
+	are commented until #354928 is fixed.
