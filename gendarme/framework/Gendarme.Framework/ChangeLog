@@ -1,0 +1,6 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodSignature.cs: Allow to find a method using a signature
+	[Andreas Noever]
+	* MethodSignatures.cs: Various method signature to be used, and 
+	shared, by rules [Andreas Noever]
