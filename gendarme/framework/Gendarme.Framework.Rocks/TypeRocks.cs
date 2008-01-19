@@ -6,12 +6,10 @@
 //      Daniel Abramov <ex@vingrad.ru>
 //	Adrian Tsai <adrian_tsai@hotmail.com>
 //	Andreas Noever <andreas.noever@gmail.com>
-//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 // (C) 2007 Daniel Abramov
 // Copyright (c) 2007 Adrian Tsai
-// (C) 2008 Andreas Noever
 // (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -59,13 +57,130 @@ namespace Gendarme.Framework.Rocks {
 		/// </summary>
 		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
 		/// <returns>The MethodDefinition of the finalizer or null if the type has no finalizer.</returns>
+		[Obsolete ("use the more general GetMethod (MethodSignatures.Finalize)")]
 		public static MethodDefinition GetFinalizer (this TypeDefinition self)
 		{
+			return self.GetMethod (MethodSignatures.Finalize);
+		}
+
+		/// <summary>
+		/// Returns the first MethodDefinition that satisfies a given MethodSignature.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="signature">The MethodSignature to match.</param>
+		/// <returns>The first MethodDefinition for wich signature.Matches returns true.</returns>
+		/// <remarks>
+		/// Do not allocate a MethodSignature for only one call. Use one of the other GetMethod overloads instead.
+		/// </remarks>
+		public static MethodDefinition GetMethod (this TypeDefinition self, MethodSignature signature)
+		{
 			foreach (MethodDefinition method in self.Methods) {
-				if (method.IsFinalizer ())
+				if (signature.Matches (method))
 					return method;
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Searches for a method.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="attributes">An attribute mask matched against the attributes of the method.</param>
+		/// <param name="name">The name of the method to match. Ignored if null.</param>
+		/// <param name="returnType">The full name (Namespace.Type) of the return type. Ignored if null.</param>
+		/// <param name="parameters">An array of full names (Namespace.Type) of parameter types. Ignored if null. Null entries act as wildcards.</param>
+		/// <param name="customCondition">A custom condition that is called for each MethodDefinition that satisfies all other conditions. Ignored if null.</param>
+		/// <returns>The first MethodDefinition that satisfies all conditions.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, MethodAttributes attributes, string name, string returnType, string [] parameters, Func<MethodDefinition, bool> customCondition)
+		{
+			foreach (MethodDefinition method in self.Methods) {
+				if (name != null && method.Name != name)
+					continue;
+				if ((method.Attributes & attributes) != attributes)
+					continue;
+				if (returnType != null && method.ReturnType.ReturnType.FullName != returnType)
+					continue;
+				if (parameters != null) {
+					if (parameters.Length != method.Parameters.Count)
+						continue;
+					bool parameterError = false;
+					for (int i = 0; i < parameters.Length; i++) {
+						if (parameters [i] == null)
+							continue;//ignore parameter
+						if (parameters [i] != method.Parameters [i].ParameterType.FullName) {
+							parameterError = true;
+							break;
+						}
+					}
+					if (parameterError)
+						break;
+				}
+				if (customCondition != null && !customCondition (method))
+					continue;
+				return method;
+			}
+			return null;
+		}
+
+		/// <summary>
+		/// Searches for a method by name, returnType, parameters and attributes.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="attributes">An attribute mask matched against the attributes of the method.</param>
+		/// <param name="name">The name of the method to match. Ignored if null.</param>
+		/// <param name="returnType">The full name (Namespace.Type) of the return type. Ignored if null.</param>
+		/// <param name="parameters">An array of full names (Namespace.Type) of parameter types. Ignored if null. Null entries act as wildcard.</param>
+		/// <returns>The first MethodDefinition that satisfies all conditions.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, MethodAttributes attributes, string name, string returnType, string [] parameters)
+		{
+			return self.GetMethod (attributes, name, returnType, parameters, null);
+		}
+
+		/// <summary>
+		/// Searches for a method by attributes and by name.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="attributes">An attribute mask matched against the attributes of the method.</param>
+		/// <param name="name">The name of the method to match. Ignored if null.</param>
+		/// <returns>The first MethodDefinition that satisfies all conditions.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, MethodAttributes attributes, string name)
+		{
+			return self.GetMethod (attributes, name, null, null, null);
+		}
+
+		/// <summary>
+		/// Searches for a method by name, returnType and parameters.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="name">The name of the method to match. Ignored if null.</param>
+		/// <param name="returnType">The full name (Namespace.Type) of the return type. Ignored if null.</param>
+		/// <param name="parameters">An array of full names (Namespace.Type) of parameter types. Ignored if null. Null entries act as wildcards.</param>
+		/// <returns>The first MethodDefinition that satisfies all conditions.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, string name, string returnType, string [] parameters)
+		{
+			return self.GetMethod (0, name, returnType, parameters, null);
+		}
+
+		/// <summary>
+		/// Searches for a method with a specific name.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="name">The name of the method to match.</param>
+		/// <returns>The first MethodDefinition with a specifiy name.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, string name)
+		{
+			return self.GetMethod (0, name, null, null, null);
+		}
+
+		/// <summary>
+		/// Searches for a method using a custom condition.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="customCondition">A custom condition that is called for each MethodDefinition.</param>
+		/// <returns>The first MethodDefinition that satisfies the customCondition.</returns>
+		public static MethodDefinition GetMethod (this TypeDefinition self, Func<MethodDefinition, bool> customCondition)
+		{
+			return self.GetMethod (0, null, null, null, customCondition);
 		}
 
 		/// <summary>
@@ -78,6 +193,17 @@ namespace Gendarme.Framework.Rocks {
 		public static bool HasAttribute (this TypeReference self, string attributeName)
 		{
 			return self.CustomAttributes.ContainsType (attributeName);
+		}
+
+		/// <summary>
+		/// Checks if at least one Method satisfies a given MethodSignature.
+		/// </summary>
+		/// <param name="self">The TypeDefinition on which the extension method can be called.</param>
+		/// <param name="signature">The MethodSignature to match.</param>
+		/// <returns>True if at least one method matches the signature. Otherwise false.</returns>
+		public static bool HasMethod (this TypeDefinition self, MethodSignature signature)
+		{
+			return (self.GetMethod (signature) != null);
 		}
 
 		/// <summary>

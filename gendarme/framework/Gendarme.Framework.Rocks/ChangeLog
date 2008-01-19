@@ -1,3 +1,8 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* TypeRocks.cs: Add [Get|Has]Method rocks from Andreas Noever. Mark
+	GetFinalizer as obsolete (will be removed soon).
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* MethodRocks.cs: Add IsFinalizer [Daniel Abramov]
