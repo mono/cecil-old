@@ -1,3 +1,13 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EnsureSymmetryForOverloadedOperatorsTest.cs: New. Unit tests by 
+	Andreas Noever
+	* OperatorEqualsShouldBeOverloadedTest.cs: New. Unit tests by 
+	Andreas Noever
+	* OverrideEqualsMethodTest.cs: New. Unit tests by Andreas Noever
+	* ProvideAlternativeNamesForOperatorOverloadsTest.cs: New. Unit 
+	tests by Andreas Noever
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* FinalizersShouldBeProtectedTest.cs: New. Unit tests by Daniel 
