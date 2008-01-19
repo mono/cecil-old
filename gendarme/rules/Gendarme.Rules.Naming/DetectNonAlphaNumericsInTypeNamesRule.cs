@@ -30,7 +30,9 @@ using System;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Naming {
 
@@ -46,7 +48,7 @@ namespace Gendarme.Rules.Naming {
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
 			// type must be public and, if nested, public too
-			if (type.IsNotPublic || type.IsNestedPrivate)
+			if (type.IsNotPublic || type.IsNestedPrivate || type.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			// check the type name
@@ -61,7 +63,7 @@ namespace Gendarme.Rules.Naming {
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			// exclude non-public methods and special names (like Getter and Setter)
-			if (!method.IsPublic || method.IsSpecialName)
+			if (!method.IsPublic || method.IsSpecialName || method.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			// check the method name

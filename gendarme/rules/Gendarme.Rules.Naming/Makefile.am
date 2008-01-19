@@ -12,7 +12,7 @@ naming_rules_generated_sources = $(naming_rules_sources_in:.in=)
 naming_rules_sources = EnumNotEndsWithEnumOrFlagsSuffixRule.cs \
 	UsePluralNameInEnumFlagsRule.cs UseSingularNameInEnumsUnlessAreFlagsRule.cs \
 	DetectNonAlphaNumericsInTypeNamesRule.cs UseCorrectCasingRule.cs UseCorrectPrefixRule.cs UseCorrectSuffixRule.cs \
-	UsePreferredTermsRule.cs NamingUtils.cs DoNotPrefixValuesWithEnumNameRule.cs DoNotUseReservedInEnumValueNamesRule.cs \
+	UsePreferredTermsRule.cs DoNotPrefixValuesWithEnumNameRule.cs DoNotUseReservedInEnumValueNamesRule.cs \
 	ParameterNamesShouldMatchOverridenMethodRule.cs
 
 naming_rules_build_sources = $(addprefix $(srcdir)/, $(naming_rules_sources))

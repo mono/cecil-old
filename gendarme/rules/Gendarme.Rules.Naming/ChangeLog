@@ -1,5 +1,16 @@
 2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
 
+	* DetectNonAlphaNumericsInTypeNamesRule.cs: Add checks for generated
+	code (to eliminate a bunch of false-positives).
+	* NamingUtils.cs: Remove - replaced by rocks or changes in rules.
+	* UseCorrectCasingRule.cs: Avoid creating MessageCollection unless 
+	needed. Skip an intermediate string while reporting.
+	* UseCorrectSuffixRule.cs: Add checks for generated code (to 
+	eliminate a bunch of false-positives).
+	* Makefile.am: Remove NamingUtils.cs from build.
+
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
+
 	* ParameterNamesShouldMatchOverridenMethodRule.cs: Change three
 	methods to static (for better self-test results :)
 

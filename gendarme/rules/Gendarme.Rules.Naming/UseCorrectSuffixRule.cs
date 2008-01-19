@@ -33,6 +33,7 @@ using System.Collections.Generic;
 
 using Mono.Cecil;
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Naming {
 
@@ -101,6 +102,12 @@ namespace Gendarme.Rules.Naming {
 
 		public MessageCollection CheckType (TypeDefinition typeDefinition, Runner runner)
 		{
+			// rule does not apply to generated code (outside developer's control)
+			if (typeDefinition.IsGeneratedCode ())
+				return runner.RuleSuccess;
+
+			// ok, rule applies
+
 			List<string> proposedSuffixes;
 			if (HasRequiredSuffix (typeDefinition, out proposedSuffixes))
 				return runner.RuleSuccess;
