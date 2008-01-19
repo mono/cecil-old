@@ -35,7 +35,7 @@ namespace Gendarme.Rules.Naming {
 
 	public class ParameterNamesShouldMatchOverridenMethodRule : IMethodRule {
 
-		private bool SignatureMatches (MethodDefinition method, MethodDefinition baseMethod, bool explicitInterfaceCheck)
+		private static bool SignatureMatches (MethodDefinition method, MethodDefinition baseMethod, bool explicitInterfaceCheck)
 		{
 			if (method.Name != baseMethod.Name) {
 				if (!explicitInterfaceCheck)
@@ -59,7 +59,7 @@ namespace Gendarme.Rules.Naming {
 			return true;
 		}
 
-		private MethodDefinition GetBaseMethod (MethodDefinition method)
+		private static MethodDefinition GetBaseMethod (MethodDefinition method)
 		{
 			TypeDefinition baseType = (TypeDefinition) method.DeclaringType;
 			while (baseType != baseType.BaseType) { //System.Object extends System.Object in cecil
@@ -74,7 +74,7 @@ namespace Gendarme.Rules.Naming {
 			return null;
 		}
 
-		private MethodDefinition GetInterfaceMethod (MethodDefinition method)
+		private static MethodDefinition GetInterfaceMethod (MethodDefinition method)
 		{
 			TypeDefinition type = (TypeDefinition) method.DeclaringType;
 			foreach (TypeReference interfaceReference in type.Interfaces) {
