@@ -318,26 +318,22 @@ namespace Gendarme.Framework.Rocks {
 		/// False otherwise (e.g. compiler or tool generated)</returns>
 		public static bool IsGeneratedCode (this TypeReference self)
 		{
+			// both helpful attributes only exists in 2.0 and more recent frameworks
 			if (self.Module.Assembly.Runtime >= TargetRuntime.NET_2_0) {
 				if (self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes))
 					return true;
-
-				TypeReference type = self;
-				while (type.IsNested) {
-					if (type.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes))
-						return true;
-					type = type.DeclaringType;
-				}
-				return false;
 			} else {
 				switch (self.Name [0]) {
 				case '<': // e.g. <PrivateImplementationDetails>
 				case '$': // e.g. $ArrayType$1 nested inside <PrivateImplementationDetails>
 					return true;
-				default:
-					return false;
 				}
 			}
+
+			// the type could be nested (inside a generated one) and not marked itself
+			if (self.IsNested)
+				return self.DeclaringType.IsGeneratedCode ();
+			return false;
 		}
 
 		/// <summary>
