@@ -1,3 +1,7 @@
+2008-01-18  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* Makefile.am: Added new files and tests to the build.
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* Location.cs: Remove all string-based constructors.

@@ -16,6 +16,8 @@ framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 		    Rules.cs Runner.cs Violation.cs Violations.cs \
 		    Message.cs Location.cs MinimalRunner.cs \
 		    MessageCollection.cs MessageType.cs \
+		    Gendarme.Framework/MethodSignature.cs \
+		    Gendarme.Framework/MethodSignatures.cs \
 		    Gendarme.Framework.Rocks/AssemblyRocks.cs \
 		    Gendarme.Framework.Rocks/CustomAttributeRocks.cs \
 		    Gendarme.Framework.Rocks/FieldRocks.cs \
@@ -32,13 +34,17 @@ framework_build_sources += $(framework_generated_sources)
 	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -r:System.Xml.dll -out:$@ $(framework_build_sources)
 
 
-framework_test_sources = Gendarme.Framework.Rocks/AssemblyRocksTest.cs Gendarme.Framework.Rocks/CustomAttributeRocksTest.cs \
-			Gendarme.Framework.Rocks/MethodRocksTest.cs Gendarme.Framework.Rocks/TypeRocksTest.cs \
-			Gendarme.Framework.Rocks/FieldRocksTest.cs
+framework_test_sources = \
+	Gendarme.Framework/MethodSignatureTest.cs \
+	Gendarme.Framework.Rocks/AssemblyRocksTest.cs \
+	Gendarme.Framework.Rocks/CustomAttributeRocksTest.cs \
+	Gendarme.Framework.Rocks/MethodRocksTest.cs \
+	Gendarme.Framework.Rocks/TypeRocksTest.cs \
+	Gendarme.Framework.Rocks/FieldRocksTest.cs
 framework_test_build_sources = $(addprefix $(srcdir)/Test/, $(framework_test_sources))
 
 Test.Framework.dll: $(framework_test_build_sources) $(framework_rules_SCRIPTS) ../bin/Gendarme.Framework.dll
-	$(MCS) -target:library -langversion:linq -pkg:mono-cecil -pkg:mono-nunit -r:../bin/Gendarme.Framework.dll \
+	$(MCS) -debug -target:library -langversion:linq -pkg:mono-cecil -pkg:mono-nunit -r:../bin/Gendarme.Framework.dll \
 		-out:$@ $(framework_test_build_sources)
 
 test: Test.Framework.dll
