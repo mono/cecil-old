@@ -35,41 +35,19 @@ namespace Cecil.FlowAnalysis.Utilities {
 
 		public static void Dispatch (Instruction instruction, IInstructionVisitor visitor)
 		{
-			InstructionVisitorDelegate handler = (InstructionVisitorDelegate)_handlers[instruction.OpCode.Value];
-			if (null == handler) throw new ArgumentException (Formatter.FormatInstruction (instruction), "instruction");
-			handler (visitor, instruction);
-		}
-
-		delegate void InstructionVisitorDelegate (IInstructionVisitor visitor, Instruction instruction);
-
-		static IDictionary _handlers = new Hashtable ();
-
-		static InstructionDispatcher ()
-		{
+			switch (instruction.OpCode.Code) {
 <%
 	for instr in Instructions:
+		for code in instr.OpCodes:
 		opcodes = join("OpCodes.${code}" for code in instr.OpCodes, ", ")
-%>			Bind (new InstructionVisitorDelegate (Dispatch${instr.OpCodes[0]}), ${opcodes});
+%>			case Code.${code}:
+<%
+		end
+%>				visitor.On${instr.OpCodes[0]} (instruction);
+				return;
 <%
 	end
-%>		}
-
-		static void Bind (InstructionVisitorDelegate handler, params OpCode[] opcodes)
-		{
-			foreach (OpCode op in opcodes)
-			{
-				_handlers.Add (op.Value, handler);
-			}
+%>			}
 		}
-<%
-	for instr in Instructions:
-%>
-		static void Dispatch${instr.OpCodes[0]} (IInstructionVisitor visitor, Instruction instruction)
-		{
-			visitor.On${instr.OpCodes[0]} (instruction);
-		}
-<%
-	end
-%>	}
+	}
 }
-
