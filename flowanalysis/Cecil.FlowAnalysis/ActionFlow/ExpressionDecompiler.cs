@@ -483,7 +483,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnLdsfld (Instruction instruction)
 		{
-			OnLdfld (instruction);
+			Push (new FieldReferenceExpression (null, (FieldReference) instruction.Operand));
 		}
 
 		public override void OnLdnull (Instruction instruction)
