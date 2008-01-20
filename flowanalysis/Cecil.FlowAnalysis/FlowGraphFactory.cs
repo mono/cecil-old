@@ -48,6 +48,11 @@ namespace Cecil.FlowAnalysis {
 			return builder.BuildGraph ();
 		}
 
+		public static ActionFlowGraph CreateActionFlowGraph (MethodDefinition method)
+		{
+			return CreateActionFlowGraph (CreateControlFlowGraph (method));
+		}
+
 		private FlowGraphFactory ()
 		{
 		}
