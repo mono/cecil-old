@@ -347,7 +347,17 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			PushBinaryExpression (BinaryOperator.LessThan);
 		}
 
+		public override void OnClt_Un (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.LessThan);
+		}
+
 		public override void OnCgt (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.GreaterThan);
+		}
+
+		public override void OnCgt_Un (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.GreaterThan);
 		}
@@ -367,7 +377,17 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			PushBinaryExpression (BinaryOperator.LessThanOrEqual);
 		}
 
+		public override void OnBle_Un (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.LessThanOrEqual);
+		}
+
 		public override void OnBgt (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.GreaterThan);
+		}
+
+		public override void OnBgt_Un (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.GreaterThan);
 		}
@@ -377,12 +397,27 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			PushBinaryExpression (BinaryOperator.GreaterThanOrEqual);
 		}
 
+		public override void OnBge_Un (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.GreaterThanOrEqual);
+		}
+
 		public override void OnBlt (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.LessThan);
 		}
 
+		public override void OnBlt_Un (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.LessThan);
+		}
+
 		public override void OnShr (Instruction instruction)
+		{
+ 			PushBinaryExpression (BinaryOperator.RightShift);
+		}
+
+		public override void OnShr_Un (Instruction instruction)
 		{
  			PushBinaryExpression (BinaryOperator.RightShift);
 		}
@@ -408,6 +443,11 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		}
 
 		public override void OnRem (Instruction instruction)
+		{
+			PushBinaryExpression (BinaryOperator.Modulo);
+		}
+
+		public override void OnRem_Un (Instruction instruction)
 		{
 			PushBinaryExpression (BinaryOperator.Modulo);
 		}
@@ -438,14 +478,12 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		public override void OnLdfld (Instruction instruction)
 		{
-			FieldReference field = (FieldReference)instruction.Operand;
-			Push (new FieldReferenceExpression (Pop (), field));
+			Push (new FieldReferenceExpression (Pop (), (FieldReference) instruction.Operand));
 		}
 
 		public override void OnLdsfld (Instruction instruction)
 		{
-			FieldReference field = (FieldReference) instruction.Operand;
-			Push(new FieldReferenceExpression(null, field));
+			OnLdfld (instruction);
 		}
 
 		public override void OnLdnull (Instruction instruction)
