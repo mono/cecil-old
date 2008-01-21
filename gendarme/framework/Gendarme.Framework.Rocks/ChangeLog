@@ -1,3 +1,9 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* FieldRocks.cs: Add IsVisible rock [Andreas Noever]
+	* MethodRocks.cs: Add IsVisible rock [Andreas Noever]
+	* TypeRocks.cs: Add IsVisible rock [Andreas Noever]
+
 2008-01-19  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* TypeRocks.cs: Handle nested types in IsGeneratedCode for all

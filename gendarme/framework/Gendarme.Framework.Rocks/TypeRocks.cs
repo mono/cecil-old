@@ -352,5 +352,21 @@ namespace Gendarme.Framework.Rocks {
 				return false;
 			}
 		}
+
+		/// <summary>
+		/// Check if the type is visible outside of the assembly.
+		/// </summary>
+		/// <param name="self">The TypeReference on which the extension method can be called.</param>
+		/// <returns>True if the type can be used from outside of the assembly, false otherwise.</returns>
+		public static bool IsVisible (this TypeDefinition self)
+		{
+			while (self.IsNested) {
+				if (self.IsNestedPrivate || self.IsNestedAssembly)
+					return false;
+				// Nested classes are always inside the same assembly, so the cast is ok
+				self = (TypeDefinition) self.DeclaringType;
+			}
+			return self.IsPublic;
+		}
 	}
 }

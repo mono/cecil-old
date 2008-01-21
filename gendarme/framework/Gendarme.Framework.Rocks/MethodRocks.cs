@@ -4,9 +4,13 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //	Adrian Tsai <adrian_tsai@hotmail.com>
+//	Daniel Abramov <ex@vingrad.ru>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 // Copyright (c) 2007 Adrian Tsai
+// Copyright (C) 2008 Daniel Abramov
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -164,6 +168,18 @@ namespace Gendarme.Framework.Rocks {
 		public static bool IsSetter (this MethodDefinition self)
 		{
 			return ((self.SemanticsAttributes & MethodSemanticsAttributes.Setter) == MethodSemanticsAttributes.Setter);
+		}
+
+		/// <summary>
+		/// Check if the method is visible outside of the assembly.
+		/// </summary>
+		/// <param name="self">The MethodDefinition on which the extension method can be called.</param>
+		/// <returns>True if the method can be used from outside of the assembly, false otherwise.</returns>
+		public static bool IsVisible (this MethodDefinition self)
+		{
+			if (self.IsPrivate || self.IsAssembly)
+				return false;
+			return ((TypeDefinition) self.DeclaringType).IsVisible ();
 		}
 	}
 }

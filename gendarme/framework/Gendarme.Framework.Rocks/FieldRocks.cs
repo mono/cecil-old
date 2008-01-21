@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2008 Novell, Inc (http://www.novell.com)
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,6 +55,18 @@ namespace Gendarme.Framework.Rocks {
 		public static bool IsGeneratedCode (this FieldDefinition self)
 		{
 			return self.CustomAttributes.ContainsAnyType (CustomAttributeRocks.GeneratedCodeAttributes);
+		}
+
+		/// <summary>
+		/// Check if the field is visible outside of the assembly.
+		/// </summary>
+		/// <param name="self">The FieldDefinition on which the extension method can be called.</param>
+		/// <returns>True if the field can be used from outside of the assembly, false otherwise.</returns>
+		public static bool IsVisible (this FieldDefinition self)
+		{
+			if (self.IsPrivate || self.IsAssembly)
+				return false;
+			return ((TypeDefinition) self.DeclaringType).IsVisible ();
 		}
 	}
 }
