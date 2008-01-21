@@ -1,3 +1,11 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NonConstantStaticFieldsShouldNotBeVisibleRule.cs: New. Rule that
+	warns about non-constant static fields since their access needs to be
+	synchronized in multithreaded applications [Andreas Noever]
+	* Gendarme.Rules.Concurrency.xml.in: Add new rule description.
+	* Makefile.am: Add rule/test to the build.
+
 2008-01-12  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DoubleCheckingLockingRule.cs: Use new Location ctor. Delay 

@@ -9,7 +9,8 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Concurrency.xml TestResult.xml
 
 concurrency_rules_sources_in = ../../AssemblyInfo.cs.in
 concurrency_rules_generated_sources = $(concurrency_rules_sources_in:.in=)
-concurrency_rules_sources = DoubleCheckLockingRule.cs WriteStaticFieldFromInstanceMethodRule.cs
+concurrency_rules_sources = DoubleCheckLockingRule.cs WriteStaticFieldFromInstanceMethodRule.cs \
+	NonConstantStaticFieldsShouldNotBeVisibleRule.cs
 
 concurrency_rules_build_sources = $(addprefix $(srcdir)/, $(concurrency_rules_sources))
 concurrency_rules_build_sources += $(concurrency_rules_generated_sources)
@@ -32,7 +33,9 @@ uninstall-hook:
 		rm -f $(DESTDIR)$(pkglibdir)/`basename $$ASM`; \
 	done;
 
-concurrency_test_sources = DoubleCheckLockingTest.cs WriteStaticFieldFromInstanceMethodTest.cs
+concurrency_test_sources = DoubleCheckLockingTest.cs WriteStaticFieldFromInstanceMethodTest.cs \
+	NonConstantStaticFieldsShouldNotBeVisibleTest.cs
+
 concurrency_test_build_sources = $(addprefix $(srcdir)/Test/, $(concurrency_test_sources))
 
 Test.Rules.Concurrency.dll: $(concurrency_rules_build_sources) $(concurrency_rules_SCRIPTS)
