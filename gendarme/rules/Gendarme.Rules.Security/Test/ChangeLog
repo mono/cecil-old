@@ -1,3 +1,10 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NativeFieldsShouldNotBeVisibleTest.cs: New. Unit tests by 
+	Andreas Noever.
+	* ArrayFieldsShouldNotBeReadOnlyTest.cs: New. Unit tests by 
+	Andreas Noever.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* StaticConstructorsShouldBePrivateTest.cs: New unit tests by 
