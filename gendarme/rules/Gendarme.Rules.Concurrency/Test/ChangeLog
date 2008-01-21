@@ -1,3 +1,8 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* NonConstantStaticFieldsShouldNotBeVisibleTest.cs: New. Unit tests
+	by Andreas Noever.
+
 2007-10-07  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* Test.Rules.Concurrency.mdp: Update project file.
