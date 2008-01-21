@@ -36,6 +36,7 @@ framework_build_sources += $(framework_generated_sources)
 
 framework_test_sources = \
 	Gendarme.Framework/MethodSignatureTest.cs \
+	Gendarme.Framework.Rocks/RocksTest.cs \
 	Gendarme.Framework.Rocks/AssemblyRocksTest.cs \
 	Gendarme.Framework.Rocks/CustomAttributeRocksTest.cs \
 	Gendarme.Framework.Rocks/MethodRocksTest.cs \
