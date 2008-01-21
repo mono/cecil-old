@@ -1,3 +1,14 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ArrayFieldsShouldNotBeReadOnlyRule.cs: New. Rule that warns 
+	about read-only array fields, since the value inside the array are 
+	not read-only [Andreas Noever]
+	* NativeFieldsShouldNotBeVisibleRule.cs: New. Rule that warns
+	about native, non read-only, fields since they can be directly 
+	modified [Andreas Noever].
+	* Gendarme.Rules.Security.xml.in: Add new rules description.
+	* Makefile.am: Add rules/tests to the build.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* StaticConstructorsShouldBePrivateRule.cs: New. Rule that checks 

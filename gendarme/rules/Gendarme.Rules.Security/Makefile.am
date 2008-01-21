@@ -12,7 +12,7 @@ security_rules_generated_sources = $(security_rules_sources_in:.in=)
 security_rules_sources = MethodCallWithSubsetLinkDemandRule.cs NonVirtualMethodWithInheritanceDemandRule.cs \
 	SealedTypeWithInheritanceDemandRule.cs SecureGetObjectDataOverridesRule.cs \
 	TypeExposeFieldsRule.cs TypeIsNotSubsetOfMethodSecurityRule.cs TypeLinkDemandRule.cs \
-	StaticConstructorsShouldBePrivateRule.cs
+	StaticConstructorsShouldBePrivateRule.cs ArrayFieldsShouldNotBeReadOnlyRule.cs NativeFieldsShouldNotBeVisibleRule.cs
 
 security_rules_build_sources = $(addprefix $(srcdir)/, $(security_rules_sources))
 security_rules_build_sources += $(security_rules_generated_sources)
@@ -38,7 +38,7 @@ uninstall-hook:
 security_test_sources = MethodCallWithSubsetLinkDemandTest.cs NonVirtualMethodWithInheritanceDemandTest.cs \
 	SealedTypeWithInheritanceDemandTest.cs SecureGetObjectDataOverridesTest.cs \
 	TypeExposeFieldsTest.cs TypeIsNotSubsetOfMethodSecurityTest.cs TypeLinkDemandTest.cs \
-	StaticConstructorsShouldBePrivateTest.cs
+	StaticConstructorsShouldBePrivateTest.cs ArrayFieldsShouldNotBeReadOnlyTest.cs NativeFieldsShouldNotBeVisibleTest.cs
 
 security_test_build_sources = $(addprefix $(srcdir)/Test/, $(security_test_sources))
 

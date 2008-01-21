@@ -1,9 +1,21 @@
 <rules>
+	<rule	Name="ArrayFieldsShouldNotBeReadOnlyRule" 
+		Type="Gendarme.Rules.Security.ArrayFieldsShouldNotBeReadOnlyRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' contains read-only array, however values inside the array are not read-only.</problem>
+		<solution>Replace the array with a method returning a clone of the array or a read-only collection.</solution>
+	</rule>
 	<rule	Name="MethodCallWithSubsetLinkDemandRule" 
 		Type="Gendarme.Rules.Security.MethodCallWithSubsetLinkDemandRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="http://www.mono-project.com/Gendarme#MethodCallWithSubsetLinkDemandRule" >
 		<problem>The method '{0}' has less protection than some methods it calls.</problem>
 		<solution>Ensure that the LinkDemand on this method is a superset of any LinkDemand present on called methods.</solution>
+	</rule>
+	<rule	Name="NativeFieldsShouldNotBeVisibleRule" 
+		Type="Gendarme.Rules.Security.NativeFieldsShouldNotBeVisibleRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>The type '{0}' expose native fields that aren't read-only.</problem>
+		<solution>Native fields are best hidden or, if required, read-only.</solution>
 	</rule>
 	<rule	Name="NonVirtualMethodWithInheritanceDemandRule" 
 		Type="Gendarme.Rules.Security.NonVirtualMethodWithInheritanceDemandRule, Gendarme.Rules.Security, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
