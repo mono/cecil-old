@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -175,6 +177,30 @@ namespace Test.Framework.Rocks {
 			Assert.IsFalse (GetMethod ("get_Value").IsSetter (), "get_Value");
 			Assert.IsTrue (GetMethod ("set_Value").IsSetter (), "set_Value");
 			Assert.IsFalse (GetMethod ("FixtureSetUp").IsSetter (), "FixtureSetUp");
+		}
+
+		[Test]
+		public void IsVisible ()
+		{
+			TypeDefinition type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType"];
+			Assert.IsTrue (type.GetMethod ("PublicMethod").IsVisible (), "PublicType.PublicMethod");
+			Assert.IsTrue (type.GetMethod ("ProtectedMethod").IsVisible (), "PublicType.ProtectedMethod");
+			Assert.IsFalse (type.GetMethod ("InternalMethod").IsVisible (), "PublicType.InternalMethod");
+			Assert.IsFalse (type.GetMethod ("PrivateMethod").IsVisible (), "PublicType.PrivateMethod");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedPublicType"];
+			Assert.IsTrue (type.GetMethod ("PublicMethod").IsVisible (), "NestedPublicType.PublicMethod");
+			Assert.IsTrue (type.GetMethod ("ProtectedMethod").IsVisible (), "NestedPublicType.ProtectedMethod");
+			Assert.IsFalse (type.GetMethod ("PrivateMethod").IsVisible (), "NestedPublicType.PrivateMethod");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedProtectedType"];
+			Assert.IsTrue (type.GetMethod ("PublicMethod").IsVisible (), "NestedProtectedType.PublicMethod");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedPrivateType"];
+			Assert.IsFalse (type.GetMethod ("PublicMethod").IsVisible (), "NestedPrivateType.PublicMethod");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.InternalType"];
+			Assert.IsFalse (type.GetMethod ("PublicMethod").IsVisible (), "InternalType.PublicMethod");
 		}
 	}
 }

@@ -1,3 +1,11 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* FieldRocksTest.cs: Add test cases for IsVisible [Andreas Noever]
+	* MethodRocksTest.cs: Add test cases for [Get|Has]Method and 
+	IsVisible [Andreas Noever]
+	* RocksTest.cs: Common definitions for IsVisible tests.
+	* TypeRocksTest.cs: Add test cases for IsVisible [Andreas Noever]
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* MethodRocksTest.cs: Added test cases for IsFinalizer

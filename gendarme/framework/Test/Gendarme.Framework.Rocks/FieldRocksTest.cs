@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2008 Novell, Inc (http://www.novell.com)
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -92,6 +94,40 @@ namespace Test.Framework.Rocks {
 		{
 			Assert.IsTrue (GetField ("gca").IsGeneratedCode (), "IsCompilerGenerated");
 			Assert.IsFalse (GetField ("assembly").IsGeneratedCode (), "FixtureSetUp");
+		}
+
+		static FieldDefinition GetField (TypeDefinition type, string name)
+		{
+			foreach (FieldDefinition field in type.Fields) {
+				if (field.Name == name)
+					return field;
+			}
+			Assert.Fail ("Field '{0}' not found!", name);
+			return null;
+		}
+
+		[Test]
+		public void IsVisible ()
+		{
+			TypeDefinition type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType"];
+			Assert.IsTrue (GetField (type, "PublicField").IsVisible (), "PublicType.PublicField");
+			Assert.IsTrue (GetField (type, "ProtectedField").IsVisible (), "PublicType.ProtectedField");
+			Assert.IsFalse (GetField (type, "InternalField").IsVisible (), "PublicType.InternalField");
+			Assert.IsFalse (GetField (type, "PrivateField").IsVisible (), "PublicType.PrivateField");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedPublicType"];
+			Assert.IsTrue (GetField (type, "PublicField").IsVisible (), "NestedPublicType.PublicField");
+			Assert.IsTrue (GetField (type, "ProtectedField").IsVisible (), "NestedPublicType.ProtectedField");
+			Assert.IsFalse (GetField (type, "PrivateField").IsVisible (), "NestedPublicType.PrivateField");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedProtectedType"];
+			Assert.IsTrue (GetField (type, "PublicField").IsVisible (), "NestedProtectedType.PublicField");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.PublicType/NestedPrivateType"];
+			Assert.IsFalse (GetField (type, "PublicField").IsVisible (), "NestedPrivateType.PublicField");
+
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.InternalType"];
+			Assert.IsFalse (GetField (type, "PublicField").IsVisible (), "InternalType.PublicField");
 		}
 	}
 }

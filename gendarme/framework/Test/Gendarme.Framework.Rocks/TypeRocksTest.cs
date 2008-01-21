@@ -4,9 +4,11 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //      Daniel Abramov <ex@vingrad.ru>
+//	Andreas Noever <andreas.noever@gmail.com>
 //
 // Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 // (C) 2007 Daniel Abramov
+// (C) 2008 Andreas Noever
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +29,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Gendarme.Framework;
@@ -106,13 +107,18 @@ namespace Test.Framework.Rocks {
 		private UIntPtr UIntPtrValue;
 		private HandleRef HandleRefValue;
 
+		public void MethodA (bool parameter) { }
+
+
 		private AssemblyDefinition assembly;
+		private TypeDefinition type;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
 		{
-			string unit = Assembly.GetExecutingAssembly ().Location;
+			string unit = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
+			type = assembly.MainModule.Types ["Test.Framework.Rocks.TypeRocksTest"];
 		}
 
 		private TypeDefinition GetType (string name)
@@ -131,11 +137,40 @@ namespace Test.Framework.Rocks {
 			return null;
 		}
 
+		private MethodDefinition GetMethod (string name)
+		{
+			foreach (MethodDefinition method in type.Methods)
+				if (method.Name == name)
+					return method;
+			Assert.Fail (name);
+			return null;
+		}
+
 		[Test]
 		public void GetFinalizer ()
 		{
 			Assert.IsNull (GetType (String.Empty).GetFinalizer (), "TypeRocksTest");
 			Assert.IsNotNull (GetType ("/TypeFinalizer").GetFinalizer (), "TypeFinalizer");
+		}
+
+		[Test]
+		public void GetMethod ()
+		{
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod (new MethodSignature () { Name = "MethodA" }));
+
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod ("MethodA"));
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod (x => x.Name == "MethodA"));
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod (MethodAttributes.Public, "MethodA"));
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod ("MethodA", "System.Void", new string [1]));
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod (MethodAttributes.Public, "MethodA", "System.Void", new string [1]));
+			Assert.AreSame (GetMethod ("MethodA"), type.GetMethod (MethodAttributes.Public, "MethodA", "System.Void", new string [1] { "System.Boolean" }, x => x.HasBody));
+
+			Assert.IsNull (type.GetMethod ("MethodB"));
+			Assert.IsNull (type.GetMethod (new MethodSignature () { Name = "MethodB" }));
+			Assert.IsNull (type.GetMethod (MethodAttributes.Static, "MethodA"));
+			Assert.IsNull (type.GetMethod ("MethodA", null, new string [0]));
+			Assert.IsNull (type.GetMethod ("MethodA", "System.Int32", null));
+			Assert.IsNull (type.GetMethod ("MethodA", null, new string [1] { "System.Int32" }));
 		}
 
 		[Test]
@@ -154,6 +189,13 @@ namespace Test.Framework.Rocks {
 			// fullname is required
 			Assert.IsFalse (GetType ("/Flags").HasAttribute ("System.Flags"), "Flags/System.Flags");
 			Assert.IsFalse (GetType ("/Flags").HasAttribute ("FlagsAttribute"), "Flags/FlagsAttribute");
+		}
+
+		[Test]
+		public void HasMethod ()
+		{
+			Assert.IsTrue (type.HasMethod (new MethodSignature () { Name = "MethodA" }));
+			Assert.IsFalse (type.HasMethod (new MethodSignature () { Name = "MethodB" }));
 		}
 
 		[Test]
@@ -291,6 +333,40 @@ namespace Test.Framework.Rocks {
 					break;
 				}
 			}
+		}
+
+		[Test]
+		public void IsVisible ()
+		{
+			string name = "Test.Framework.Rocks.PublicType";
+			TypeDefinition type = assembly.MainModule.Types [name];
+			Assert.IsTrue (type.IsVisible (), name);
+//			Assert.IsTrue (assembly.MainModule.Types [name].IsVisible (), name);
+
+			name = "Test.Framework.Rocks.PublicType/NestedPublicType";
+			type = assembly.MainModule.Types [name];
+			Assert.IsTrue (type.IsVisible (), name);
+//			Assert.IsTrue (assembly.MainModule.Types [name].IsVisible (), name);
+
+			name = "Test.Framework.Rocks.PublicType/NestedProtectedType";
+			type = assembly.MainModule.Types [name];
+			Assert.IsTrue (type.IsVisible (), name);
+//			Assert.IsTrue (assembly.MainModule.Types [name].IsVisible (), name);
+
+			name = "Test.Framework.Rocks.PublicType/NestedPrivateType";
+			type = assembly.MainModule.Types [name];
+			Assert.IsFalse (type.IsVisible (), name);
+//			Assert.IsFalse (assembly.MainModule.Types [name].IsVisible (), name);
+
+			name = "Test.Framework.Rocks.PublicType/NestedInternalType";
+			type = assembly.MainModule.Types [name];
+			Assert.IsFalse (type.IsVisible (), name);
+//			Assert.IsFalse (assembly.MainModule.Types [name].IsVisible (), name);
+
+			name = "Test.Framework.Rocks.InternalType";
+			type = assembly.MainModule.Types [name];
+			Assert.IsFalse (type.IsVisible (), name);
+//			Assert.IsFalse (assembly.MainModule.Types [name].IsVisible (), name);
 		}
 	}
 }
