@@ -1,3 +1,11 @@
+2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UseManagedAlternativesToPInvokeRule.cs: New. Rule to check if
+	p/invoke calls can be replaced with managed alternatives 
+	[Daniel Abramov]. Removed dead code and simplified GetHashCode (sp)
+	* Makefile.am: Add rule and test to the build.
+	* Gendarme.Rules.Interoperability.xml.in: Add rule description.
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* GetLastErrorMustBeCalledRightAfterPInvokeRule.cs: Use new 
