@@ -10,7 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Ui.xml TestResult.xml
 ui_rules_sources_in = ../../AssemblyInfo.cs.in
 ui_rules_generated_sources = $(ui_rules_sources_in:.in=)
 ui_rules_sources = ExecutableTargetRule.cs GtkSharpExecutableTargetRule.cs \
-	SystemWindowsFormsExecutableTargetRule.cs
+	SystemWindowsFormsExecutableTargetRule.cs UseSTAThreadAttributeOnSWFEntryPointsRule.cs
 
 ui_rules_build_sources = $(addprefix $(srcdir)/, $(ui_rules_sources))
 ui_rules_build_sources += $(ui_rules_generated_sources)
@@ -34,7 +34,7 @@ uninstall-hook:
 	done;
 
 ui_test_sources = ExecutableTargetTest.cs GtkSharpExecutableTargetTest.cs \
-	SystemWindowsFormsExecutableTargetTest.cs
+	SystemWindowsFormsExecutableTargetTest.cs UseSTAThreadAttributeOnSWFEntryPointsTest.cs
 
 ui_test_build_sources = $(addprefix $(srcdir)/Test/, $(ui_test_sources))
 
