@@ -39,9 +39,9 @@ namespace Gendarme.Framework {
 	/// </summary>
 	/// <see cref="Gendarme.Framework.MethodSignature"/>
 	public static class MethodSignatures {
-		public static readonly string [] NoParameter = new string [0];
-		public static readonly string [] OneParameter = new string [1];
-		public static readonly string [] TwoParameters = new string [2];
+		private static readonly string [] NoParameter = new string [0];
+		private static readonly string [] OneParameter = new string [1];
+		private static readonly string [] TwoParameters = new string [2];
 
 		//System.Object
 		public static readonly new MethodSignature Equals = new MethodSignature () { Name = "Equals", ReturnType = "System.Boolean", Parameters = new string [] { "System.Object" }, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };

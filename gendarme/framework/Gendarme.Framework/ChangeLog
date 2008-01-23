@@ -1,3 +1,8 @@
+2008-01-23  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodSignatures.cs: Change [No|One|Two]Parameter[s] to private
+	to avoid ArrayFieldsShouldNotBeReadOnlyRule on self-test.
+
 2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodSignature.cs: Allow to find a method using a signature
