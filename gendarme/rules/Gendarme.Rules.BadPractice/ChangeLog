@@ -1,3 +1,14 @@
+2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule.cs: Rule
+	moves (with tests) into Design since it affects the API.
+	* ToStringReturnsNullRule.cs: Simplification to avoid uncommon cases
+	that added *LOTS* of false positives while still missing some 
+	real defects. Now a rock-ified ITypeRule with much lower memory 
+	requirements.
+	* Gendarme.Rules.BadPractice.xml.in: Remove (moved) definition.
+	* Makefile.am: Remove (moved) rule and tests
+
 2008-01-23  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConstructorShouldNotCallVirtualMethodsRule.cs: Add recursive 

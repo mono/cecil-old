@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,134 +31,74 @@ using System.Collections;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.BadPractice {
 
-	public class ToStringReturnsNullRule: IMethodRule {
+	public class ToStringReturnsNullRule: ITypeRule {
 
-		private static bool IsOverridenToString (MethodDefinition method)
+		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			return method.Name == "ToString" && method.IsVirtual;
-		}
-
-		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
-		{
-			if (!method.HasBody)
+			// rules applies to types that overrides System.Object.Equals(object)
+			MethodDefinition method = type.GetMethod (MethodSignatures.ToString);
+			if ((method == null) || !method.HasBody)
 				return runner.RuleSuccess;
 
-			if (!IsOverridenToString (method))
+			// rule applies
+
+			if (!CheckIfMethodReturnsNull (method))
 				return runner.RuleSuccess;
 
-			int offset = 0;
-			bool nullReturned = false;
+			// FIXME: location
+			Location location = new Location (method, -1);
+			Message message = new Message ("Method 'ToString()' seems to returns null under some conditions.", location, MessageType.Error);
+			return new MessageCollection (message);
+		}
+
+		private static bool CheckIfMethodReturnsNull (MethodDefinition method)
+		{
 			foreach (Instruction ins in method.Body.Instructions) {
-				if (ins.OpCode == OpCodes.Ret) {
-					Instruction prevIns = ins.Previous;
-					if (prevIns.OpCode != OpCodes.Ldnull) {
-						string opCodeSt;
-						if (prevIns.OpCode == OpCodes.Call || prevIns.OpCode == OpCodes.Callvirt)
-							opCodeSt = ReturnSt (method, prevIns.Previous);
-						else
-							opCodeSt = ReturnSt (method, prevIns);
-						if (opCodeSt == null && (prevIns.Operand == null || prevIns.Operand.ToString () != "System.String System.Convert::ToString(System.Object)"))
-							nullReturned = true;
-						if (MethodReturnsNull (method, opCodeSt)) {
-							nullReturned = true;
-							offset = ins.Offset;
-						}
+				switch (ins.OpCode.Code) {
+				case Code.Ret:
+					switch (ins.Previous.OpCode.Code) {
+					case Code.Ldarg_0:
+						// very special case where String.ToString() return "this"
+						return false;
+					case Code.Ldloc_0:
+					case Code.Ldloc_1:
+					case Code.Ldloc_2:
+					case Code.Ldloc_S:
+						// FIXME: we could detect some NULL in there
+						break;
+					case Code.Newobj:
+						// we're sure it's not null, e.g. new string ('!', 2)
+						return false;
+					case Code.Ldnull:
+						// we're sure it's null
+						return true;
+					case Code.Ldstr:
+						return (ins.Previous.Operand == null);
+					case Code.Ldfld:
+					case Code.Ldsfld:
+						// we could be sure for read-only fields with
+						//	if ((ins.Previous.Operand as FieldDefinition).IsInitOnly)
+						// but since it's unlikely we can track null in them...
+						// ...better not return false positives
+						return false;
+					case Code.Call:
+					case Code.Callvirt:
+						// note: calling other ToString() is safe since the rule applies to them too
+						// FIXME: we could check if the method can possibly return a null string
+						break;
+					default:
+						throw new NotSupportedException (String.Format ("{0} inside {1}", ins.Previous.OpCode.Code, method));
 					}
-					else {
-						nullReturned = true;
-						offset = ins.Offset;
-					}
+					break;
 				}
 			}
-
-			if (nullReturned) {
-				Location location = new Location (method, offset);
-				Message message = new Message ("ToString () seems to returns null in some condition", location, MessageType.Error);
-				return new MessageCollection (message);
-			}
-
-			return runner.RuleSuccess;
+			return false;
 		}
-
-		private static string ReturnSt (MethodDefinition method, Instruction instruc)
-		{
-			Hashtable opCodes = InitializeHashTable (method);
-			string stOpCode = null;
-			switch (instruc.OpCode.Code) {
-			case Code.Ldloc_0:
-				stOpCode = opCodes.ContainsKey (0)? opCodes [0].ToString () : null;
-				break;
-			case Code.Ldloc_1:
-				stOpCode = opCodes.ContainsKey (1)? opCodes [1].ToString () : null;
-				break;
-			case Code.Ldloc_2:
-				stOpCode = opCodes.ContainsKey (2)? opCodes [2].ToString () : null;
-				break;
-			case Code.Ldloc_3:
-				stOpCode = opCodes.ContainsKey (3)? opCodes [3].ToString () : null;
-				break;
-			case Code.Ldloc_S:
-				string [] s = instruc.Operand.ToString ().Split ('_');
-				int i = Convert.ToInt32 (s [1]);
-				stOpCode = opCodes.ContainsKey (i) ? opCodes [i].ToString () : null;
-				break;
-			case Code.Ldfld:
-				TypeDefinition type = (TypeDefinition) method.DeclaringType;
-				foreach (MethodDefinition ctor in type.Constructors)
-					foreach (Instruction ctorins in ctor.Body.Instructions)
-						if (ctorins.Operand !=null && ctorins.Operand.ToString () == instruc.Operand.ToString ())
-							stOpCode = ctorins.Operand.ToString ();
-				break;
-			case Code.Ldsfld:
-				stOpCode = String.Empty;
-				break;
-			}
-			return stOpCode;
-		}
-
-		private static Hashtable InitializeHashTable (MethodDefinition method)
-		{
-			int count = 0;
-			Hashtable hash = new Hashtable ();
-
-			foreach (Instruction ins in method.Body.Instructions) {
-				if (ins.OpCode.Code.ToString().Substring(0,2) == "St") {
-					if (ins.OpCode.Code == Code.Stloc_S) {
-						hash.Add (count, ins.Operand.ToString ());
-						count ++;
-					}
-					else {
-						hash.Add (count, ins.OpCode.Code.ToString ());
-						count ++;
-					}
-				}
-			}
-			return hash;
-		}
-
-		public bool MethodReturnsNull (MethodDefinition method, string code)
-		{
-			bool isNull = false;
-			Instruction prevInstruc;
-			foreach (Instruction ins in method.Body.Instructions) {
-				prevInstruc = ins.Previous;
-				if (ins.Operand != null && ins.Operand.ToString () == null && ins.OpCode == OpCodes.Stfld)
-					isNull = false;
-				else if (ins.OpCode.Code.ToString () == code || (ins.OpCode.ToString ().StartsWith ("st") && ins.Operand !=null && ins.Operand.ToString () == code)) {
-					if (prevInstruc.OpCode.Code == Code.Ldnull)
-						isNull = true;
-					else if (prevInstruc.OpCode.Code == Code.Call || prevInstruc.OpCode.Code == Code.Callvirt) {
-						code = ReturnSt (method, prevInstruc.Previous);
-						isNull = MethodReturnsNull (method, code);
-					}
-				}
-			}
-			return isNull;
-		}
-
 	}
 }
