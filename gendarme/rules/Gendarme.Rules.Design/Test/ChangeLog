@@ -1,3 +1,8 @@
+2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ImplementEqualsAndGetHashCodeInPairTest.cs: Tests (updated and) 
+	moved from BadPractice.
+
 2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EnsureSymmetryForOverloadedOperatorsTest.cs: New. Unit tests by 
