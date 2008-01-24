@@ -1,3 +1,11 @@
+2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ImplementEqualsAndGetHashCodeInPairRule.cs: This replace Gendarme.
+	Rule.BadPractice.ImplementingEqualsButNotGetHashCodeAndViceVersaRule.
+	Renamed, moved & rockified.
+	* Gendarme.Rules.Design.xml.in: Moved description.
+	* Makefile.am: Added (moved) rule and tests.
+
 2008-01-18  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* DisposableHelper.cs: Removed.

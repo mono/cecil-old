@@ -89,6 +89,12 @@
 		<problem>The enumeration flag '{0}' defines a value of 0, which cannot be used as a real value.</problem>
 		<solution>Remove the 0 value from the flag.</solution>
 	</rule>
+	<rule	Name="ImplementEqualsAndGetHashCodeInPairRule" 
+		Type="Gendarme.Rules.Design.ImplementEqualsAndGetHashCodeInPairRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
+		Uri="" >
+		<problem>Only one method of Equals(Object) or GetHashCode() is implemented in '{0}'.</problem>
+		<solution>Implement the missing method.</solution>
+	</rule>
 	<rule	Name="MainShouldNotBePublicRule"
 		Type="Gendarme.Rules.Design.MainShouldNotBePublicRule, Gendarme.Rules.Design, Version=@VERSION@, Culture=neutral, PublicKeyToken=null"
 		Uri="" >
