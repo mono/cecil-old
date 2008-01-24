@@ -27,6 +27,7 @@
 //
 
 using System;
+using System.Text;
 
 using Mono.Cecil;
 
@@ -112,6 +113,28 @@ namespace Gendarme.Framework {
 				}
 			}
 			return true;
+		}
+
+		public override string ToString ()
+		{
+			StringBuilder sb = new StringBuilder ();
+			if (ReturnType != null) {
+				sb.Append (ReturnType);
+				sb.Append (' ');
+			}
+			if (Name != null) {
+				sb.Append (Name);
+				sb.Append ('(');
+				if (Parameters != null) {
+					for (int i = 0; i < Parameters.Length; i++) {
+						sb.Append (Parameters [i]);
+						if (i < Parameters.Length - 1)
+							sb.Append (',');
+					}
+				}
+				sb.Append (')');
+			}
+			return sb.ToString ();
 		}
 	}
 }

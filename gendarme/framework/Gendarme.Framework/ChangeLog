@@ -1,3 +1,10 @@
+2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodSignature.cs: Override ToString as this can be useful when 
+	reporting errors/warning.
+	* MethodSignatures.cs: Add GetHashCode and ToString, remove virtual 
+	from Equals (since it should happen to any of them, even "new" ones).
+
 2008-01-23  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodSignatures.cs: Change [No|One|Two]Parameter[s] to private

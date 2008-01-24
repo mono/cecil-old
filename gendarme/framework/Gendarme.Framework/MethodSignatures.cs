@@ -44,8 +44,10 @@ namespace Gendarme.Framework {
 		private static readonly string [] TwoParameters = new string [2];
 
 		//System.Object
-		public static readonly new MethodSignature Equals = new MethodSignature () { Name = "Equals", ReturnType = "System.Boolean", Parameters = new string [] { "System.Object" }, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };
+		public static readonly new MethodSignature Equals = new MethodSignature () { Name = "Equals", ReturnType = "System.Boolean", Parameters = new string [] { "System.Object" }, Attributes = MethodAttributes.Public };
 		public static readonly MethodSignature Finalize = new MethodSignature () { Name = "Finalize", ReturnType = "System.Void", Parameters = NoParameter, Attributes = MethodAttributes.Family };
+		public static readonly new MethodSignature GetHashCode = new MethodSignature () { Name = "GetHashCode", ReturnType = "System.Int32", Parameters = NoParameter, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };
+		public static readonly new MethodSignature ToString = new MethodSignature () { Name = "ToString", ReturnType = "System.String", Parameters = NoParameter, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };
 
 		// IDisposable
 		public static readonly MethodSignature Dispose = new MethodSignature () { Name = "Dispose", ReturnType = "System.Void", Parameters = NoParameter };
