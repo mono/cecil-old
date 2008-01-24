@@ -1,3 +1,13 @@
+2008-01-23  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ConstructorShouldNotCallVirtualMethodsRule.cs: Add recursive 
+	checks for non-virtual calls (as they can lead to virtual calls). Add
+	check for final methods. Add check for calling 'this' sub-classes 
+	(versus calling them on other instances, other types)
+	* EqualShouldHandleNullArgRule.cs: Change to ITypeRule (and locate
+	Equals) and to use rocks. Reimplemented HandlesNullArg based on more
+	extensive unit tests. False positives are mostly history :)
+
 2008-01-14  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConstructorShouldNotCallVirtualMethodsRule.cs: New. Rule to
