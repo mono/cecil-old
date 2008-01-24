@@ -222,7 +222,7 @@ namespace Test.Rules.BadPractice {
 		public void equalsNotOverriddenNotReturningFalseForNullTest ()
 		{
 			type = GetTest ("EqualsNotOverriddenNotReturningFalseForNull");
-			Assert.IsNull (rule.CheckType (type, runner));
+			Assert.IsNotNull (rule.CheckType (type, runner));
 		}
 
 		[Test]

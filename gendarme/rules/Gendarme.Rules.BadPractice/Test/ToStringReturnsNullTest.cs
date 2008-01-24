@@ -2,9 +2,10 @@
 // Unit tests for ToStringReturnsNullRule
 //
 // Authors:
-//	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,66 +33,102 @@ using Gendarme.Rules.BadPractice;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.BadPractice
-{
+namespace Test.Rules.BadPractice {
+
 	[TestFixture]
 	public class ToStringReturnsNullTest {
-		
-		public class ToStringReturningNull
-		{
+
+		public class ToStringReturningNull {
 			public override string ToString ()
 			{
+				// this is bad
 				return null;
 			}
 		}
 		
-		public class ToStringReturningEmptyString
-		{
+		public class ToStringReturningEmptyString {
 			public override string ToString ()
 			{
+				// this is Ok
 				return String.Empty;
 			}
 		} 
 		
-		public class ToStringNotReturningNull
-		{
+		public class ToStringReturningField {
 			string s = "ab";
 			public override string ToString ()
 			{
+				// this is Ok (even if we're not sure) ???
 				return s;
 			}
-		} 
-		
-		public class ConvertToStringReturningEmptyString
-		{
-			object obj = null;
+		}
+
+		public class ToStringReturningConstField {
+			const string s = "ab";
 			public override string ToString ()
 			{
-				return Convert.ToString (obj);
+				// this is Ok
+				return s;
 			}
-		} 
+		}
+
+		public class ToStringReturningReadOnlyField {
+			readonly string s = "ab";
+			public override string ToString ()
+			{
+				// this is Ok
+				return s;
+			}
+		}
+
+		public class ToStringReturningNewString {
+			public override string ToString ()
+			{
+				// this is Ok
+				return new string ('!', 2);
+			}
+		}
 		
-		public class ConvertToStringReturningNull
-		{
-			string s = null;
+		public class ToStringReturningStringFormat {
+			public override string ToString ()
+			{
+				return String.Format ("{0}-{1}", 1, 2);
+			}
+		}
+
+		public class ToStringReturningConvertToStringObject {
+			public override string ToString ()
+			{
+				return Convert.ToString ((object)null);
+			}
+		}
+
+		public class ToStringReturningConvertToStringString {
 			public override string ToString ()
 			{ 
-				return Convert.ToString (s);
+				return Convert.ToString ((string)null);
 			}
-		} 
+		}
+
+		public class ToStringReturningTypeName {
+			public override string ToString ()
+			{
+				return GetType ().FullName;
+			}
+		}
 		
-		private IMethodRule methodRule;
+		private ITypeRule rule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
-		MessageCollection messageCollection;
+		private MinimalRunner runner;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
-			methodRule = new ToStringReturnsNullRule();
-			messageCollection = null;
+			rule = new ToStringReturnsNullRule ();
+			runner = new MinimalRunner ();
 		}
 		
 		private TypeDefinition GetTest (string name)
@@ -101,54 +138,80 @@ namespace Test.Rules.BadPractice
 		}
 		
 		[Test]
-		public void toStringReturningNullTest ()
+		public void ReturningNullTest ()
 		{
 			type = GetTest ("ToStringReturningNull");
-			foreach (MethodDefinition method in type.Methods) {
-				messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			}
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.IsNotNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
-		public void toStringReturningEmptyStringTest ()
+		public void ReturningEmptyStringTest ()
 		{
 			type = GetTest ("ToStringReturningEmptyString");
-			foreach (MethodDefinition method in type.Methods) {
-				messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			}
-			Assert.IsNull (messageCollection);
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
-		public void toStringNotReturningNullTest ()
+		public void ReturningField ()
 		{
-			type = GetTest ("ToStringNotReturningNull");
-			foreach (MethodDefinition method in type.Methods) {
-				messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			}
-			Assert.IsNull (messageCollection);
+			type = GetTest ("ToStringReturningField");
+			// there's doubt but it's not easy (i.e. false positives) to be sure
+			Assert.IsNull (rule.CheckType (type, runner));
+		}
+
+		[Test]
+		public void ReturningConstField ()
+		{
+			type = GetTest ("ToStringReturningConstField");
+			Assert.IsNull (rule.CheckType (type, runner));
+		}
+
+		[Test]
+		public void ReturningReadOnlyField ()
+		{
+			type = GetTest ("ToStringReturningReadOnlyField");
+			Assert.IsNull (rule.CheckType (type, runner));
+		}
+
+		[Test]
+		public void ReturningNewString ()
+		{
+			type = GetTest ("ToStringReturningNewString");
+			Assert.IsNull (rule.CheckType (type, runner));
+		}
+
+		[Test]
+		public void ReturningStringFormat ()
+		{
+			type = GetTest ("ToStringReturningStringFormat");
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
-		public void convertToStringReturningEmptyStringTest ()
+		public void ReturningConvertToStringObject ()
 		{
-			type = GetTest ("ConvertToStringReturningEmptyString");
-			foreach (MethodDefinition method in type.Methods) {
-				messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			}
-			Assert.IsNull (messageCollection);
+			Assert.AreEqual (String.Empty, Convert.ToString ((object) null), "Convert.ToString(object)");
+			type = GetTest ("ToStringReturningConvertToStringObject");
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
-		public void convertToStringReturningNullTest ()
+		[Ignore ("requires to analyze what called methods returns")]
+		public void ReturningConvertToStringString ()
 		{
-			type = GetTest ("ConvertToStringReturningNull");
-			foreach (MethodDefinition method in type.Methods) {
-				messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			}
-			Assert.IsNotNull (messageCollection);
+			// converting a null string to a string return null
+			// however this is a special case since, most times, we won't know 
+			// if the value passed to Convert.ToString is null or not
+			Assert.IsNull (Convert.ToString ((string) null), "Convert.ToString((string)null)");
+			type = GetTest ("ToStringReturningConvertToStringString");
+			Assert.IsNotNull (rule.CheckType (type, runner));
+		}
+
+		[Test]
+		public void ReturningTypeName ()
+		{
+			type = GetTest ("ToStringReturningTypeName");
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 	}
 }

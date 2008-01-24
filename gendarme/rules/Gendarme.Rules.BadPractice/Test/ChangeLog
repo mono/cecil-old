@@ -1,3 +1,10 @@
+2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* EqualShouldHandleNullArgTest.cs: Changed my mind about "new" ;-)
+	* ImplementingEqualsButNotGetHashCodeAndViceVersaTest.cs: Tests
+	move (with rules) into Design since it affects the API.
+	* ToStringReturnsNullTest.cs: Add a bunch of new test cases.
+
 2008-01-23  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ConstructorShouldNotCallVirtualMethodsTest.cs: Add a bunch
