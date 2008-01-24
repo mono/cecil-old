@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Nidhi Rawal <sonu2404@gmail.com>
+//	Sebastien Pouliot <sebastien@ximian.com>
 //
 // Copyright (c) <2007> Nidhi Rawal
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,13 +34,13 @@ using Gendarme.Rules.BadPractice;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Test.Rules.BadPractice
-{
+namespace Test.Rules.BadPractice {
+
 	[TestFixture]
 	public class EqualShouldHandleNullArgTest {
-		public class EqualsChecksForNullArg
-		{
-			public override bool Equals (System.Object obj)
+
+		public class EqualsChecksForNullArg {
+			public override bool Equals (object obj)
 			{
 				if (obj == null)
 					return false;
@@ -51,21 +53,8 @@ namespace Test.Rules.BadPractice
 			}
 		}
 		
-		public class EqualsDoesNotCheckForNullArg
-		{
-			public override bool Equals (System.Object obj)
-			{
-				return this == obj;
-			}
-			public override int GetHashCode ()
-			{
-				return 1;
-			}
-		}
-		
-		public class EqualsDoesNotReturnFalseForNullArg
-		{
-			public override bool Equals (System.Object obj)
+		public class EqualsDoesNotReturnFalseForNullArg {
+			public override bool Equals (object obj)
 			{
 				if (obj == null)
 					return true;
@@ -78,9 +67,8 @@ namespace Test.Rules.BadPractice
 			}
 		}
 		
-		public class EqualsNotOverriddenNotCheckingNull
-		{
-			public bool Equals (System.Object obj)
+		public class EqualsNotOverriddenNotCheckingNull {
+			public bool Equals (object obj)
 			{
 				return this == obj;
 			}
@@ -90,9 +78,8 @@ namespace Test.Rules.BadPractice
 			}
 		}
 		
-		public class EqualsNotOverriddenNotReturningFalseForNull
-		{
-			public new bool Equals (System.Object obj)
+		public class EqualsNotOverriddenNotReturningFalseForNull {
+			public new bool Equals (object obj)
 			{
 				if (obj != null)
 					return this == obj;
@@ -115,19 +102,93 @@ namespace Test.Rules.BadPractice
 				return 1;
 			}
 		}
+
+		public class EqualsReturnsTrue {
+			public override bool Equals (object obj)
+			{
+				return true;
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
+
+		public struct EqualsUsingIsReturnFalse {
+			public override bool Equals (object obj)
+			{
+				if (obj is EqualsUsingIsReturnFalse)
+					return Object.ReferenceEquals (this, obj);
+				return false;
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
+
+		public struct EqualsUsingIsReturnTrue {
+			public override bool Equals (object obj)
+			{
+				if (obj is EqualsUsingIsReturnTrue)
+					return Object.ReferenceEquals (this, obj);
+				return true;
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
+
+		public class EqualsCallBase : EqualsReturnsTrue {
+			public override bool Equals (object obj)
+			{
+				return base.Equals (obj);
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
+
+		public class EqualsCheckThis {
+			// System.Object does this
+			public override bool Equals (object obj)
+			{
+				return (this == obj);
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
+
+		public class EqualsCheckType {
+			// common pattern in corlib
+			public override bool Equals (object obj)
+			{
+				if (obj == null || GetType () != obj.GetType ())
+					return false;
+				return true;
+			}
+			public override int GetHashCode ()
+			{
+				return 1;
+			}
+		}
 		
-		private IMethodRule methodRule;
+		private ITypeRule rule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
-		MessageCollection messageCollection;
+		private Runner runner;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp ()
 		{
 			string unit = Assembly.GetExecutingAssembly ().Location;
 			assembly = AssemblyFactory.GetAssembly (unit);
-			methodRule = new EqualShouldHandleNullArgRule ();
-			messageCollection = null;
+			rule = new EqualShouldHandleNullArgRule ();
+			runner = new MinimalRunner ();
 		}
 		
 		private TypeDefinition GetTest (string name)
@@ -140,69 +201,70 @@ namespace Test.Rules.BadPractice
 		public void equalsChecksForNullArgTest ()
 		{
 			type = GetTest ("EqualsChecksForNullArg");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Equals")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
-		}
-		
-		[Test]
-		public void equalsDoesNotCheckForNullArgTest ()
-		{
-			type = GetTest ("EqualsDoesNotCheckForNullArg");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Equals")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
 		public void equalsDoesNotReturnFalseForNullArgTest ()
 		{
 			type = GetTest ("EqualsDoesNotReturnFalseForNullArg");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Equals")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNotNull (messageCollection);
-			Assert.AreEqual (1, messageCollection.Count);
+			Assert.IsNotNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
 		public void equalsNotOverriddenNotCheckingNullTest ()
 		{
 			type = GetTest ("EqualsNotOverriddenNotCheckingNull");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Equals")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 		
 		[Test]
 		public void equalsNotOverriddenNotReturningFalseForNullTest ()
 		{
 			type = GetTest ("EqualsNotOverriddenNotReturningFalseForNull");
-			foreach (MethodDefinition method in type.Methods)
-				if (method.Name == "Equals")
-					messageCollection = methodRule.CheckMethod (method, new MinimalRunner ());
-			Assert.IsNull (messageCollection);
+			Assert.IsNull (rule.CheckType (type, runner));
 		}
 
 		[Test]
 		public void EqualsReturnConstant ()
 		{
 			type = GetTest ("EqualsReturnsFalse");
-			foreach (MethodDefinition method in type.Methods) {
-				switch (method.Name) {
-				case "Equals":
-					Assert.IsNotNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
-					break;
-				default:
-					// otherwise rule does not apply
-					Assert.IsNull (methodRule.CheckMethod (method, new MinimalRunner ()), method.Name);
-					break;
-				}
-			}
+			Assert.IsNull (rule.CheckType (type, runner), "EqualsReturnsFalse");
+
+			type = GetTest ("EqualsReturnsTrue");
+			Assert.IsNotNull (rule.CheckType (type, runner), "EqualsReturnsTrue");
+		}
+
+		[Test]
+		public void EqualsUsingIs ()
+		{
+			type = GetTest ("EqualsUsingIsReturnFalse");
+			Assert.IsNull (rule.CheckType (type, runner), "EqualsUsingIsReturnFalse");
+
+			type = GetTest ("EqualsUsingIsReturnTrue");
+			Assert.IsNotNull (rule.CheckType (type, runner), "EqualsUsingIsReturnTrue");
+		}
+
+		[Test]
+		public void EqualsCallBaseClass ()
+		{
+			type = GetTest ("EqualsCallBase");
+			// we can't be sure so we shut up (else false positives gets really bad)
+			Assert.IsNull (rule.CheckType (type, runner), "EqualsCallBase");
+		}
+
+		[Test]
+		public void EqualsCheckThisTest ()
+		{
+			type = GetTest ("EqualsCheckThis");
+			Assert.IsNull (rule.CheckType (type, runner), "EqualsCheckThis");
+		}
+
+		[Test]
+		public void EqualsCheckTypeTest ()
+		{
+			type = GetTest ("EqualsCheckType");
+			Assert.IsNull (rule.CheckType (type, runner), "EqualsCheckType");
 		}
 	}
 }
