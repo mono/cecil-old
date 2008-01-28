@@ -1,3 +1,8 @@
+2008-01-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypesShouldBeInsideNamespacesTest.cs: Adapt nested types test 
+	cases because we don't report them anymore.
+
 2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ImplementEqualsAndGetHashCodeInPairTest.cs: Tests (updated and) 

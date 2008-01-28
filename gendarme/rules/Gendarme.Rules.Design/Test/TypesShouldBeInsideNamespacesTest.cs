@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -114,10 +114,10 @@ namespace Test.Rules.Design {
 		public void NestedOutsideNamespace ()
 		{
 			TypeDefinition type = GetType ("PublicTypeOutsideNamescape/NestedPublicTypeOutsideNamescape");
-			Assert.IsNotNull (rule.CheckType (type, runner), "NestedPublicTypeInsideNamescape");
+			Assert.IsNull (rule.CheckType (type, runner), "NestedPublicTypeOutsideNamescape");
 
 			type = GetType ("PublicTypeOutsideNamescape/NestedProtectedTypeOutsideNamespace");
-			Assert.IsNotNull (rule.CheckType (type, runner), "NestedProtectedTypeOutsideNamespace");
+			Assert.IsNull (rule.CheckType (type, runner), "NestedProtectedTypeOutsideNamespace");
 
 			type = GetType ("PublicTypeOutsideNamescape/NestedInternalTypeOutsideNamespace");
 			Assert.IsNull (rule.CheckType (type, runner), "NestedInternalTypeInsideNamespace");
