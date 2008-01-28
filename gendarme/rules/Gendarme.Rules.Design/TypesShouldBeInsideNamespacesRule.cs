@@ -4,7 +4,7 @@
 // Authors:
 //	Sebastien Pouliot  <sebastien@ximian.com>
 //
-// Copyright (C) 2007 Novell, Inc (http://www.novell.com)
+// Copyright (C) 2007-2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ using System;
 using Mono.Cecil;
 
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Design {
 
@@ -36,17 +37,18 @@ namespace Gendarme.Rules.Design {
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
 		{
-			// rule applies to public types
-			if (!type.IsPublic && !(type.IsNestedPublic || type.IsNestedFamily))
+			// rule doesn't apply to nested types, since the declaring type will already be reported
+			if (type.IsNested)
+				return runner.RuleSuccess;
+			
+			// rule applies to only to types visible outside the assembly
+			if (!type.IsVisible ())
 				return runner.RuleSuccess;
 
 			// rule applies!
 
-			// if the type is nested then check our declaring type namespace
-			string ns = type.IsNested ? (type.DeclaringType as TypeDefinition).Namespace : type.Namespace;
-
 			// check if the type resides inside a namespace
-			if (ns.Length > 0)
+			if (!String.IsNullOrEmpty (type.Namespace))
 				return runner.RuleSuccess;
 
 			Message msg = new Message ("Type is not declared inside a namespace.", new Location (type), MessageType.Warning);

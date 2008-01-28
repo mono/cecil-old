@@ -1,3 +1,10 @@
+2008-01-27  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* TypesShouldBeInsideNamespacesRule.cs: Don't report nested types 
+	since the declaring type will already be reported and a single *fix*
+	is required (and more related to the declaring type than then nested
+	one).
+
 2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ImplementEqualsAndGetHashCodeInPairRule.cs: This replace Gendarme.
