@@ -3,8 +3,10 @@
 //
 // Authors:
 //	Andreas Noever <andreas.noever@gmail.com>
+//	Sebastien Pouliot  <sebastien@ximian.com>
 //
 //  (C) 2008 Andreas Noever
+// Copyright (C) 2008 Novell, Inc (http://www.novell.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -59,52 +61,56 @@ namespace Test.Framework {
 		public void TestDefaultConstructor ()
 		{
 			MethodSignature sig = new MethodSignature ();
-			Assert.IsNull (sig.Name);
-			Assert.IsNull (sig.Parameters);
-			Assert.IsNull (sig.ReturnType);
-			Assert.AreEqual ((MethodAttributes) 0, sig.Attributes);
+			Assert.IsNull (sig.Name, "Name");
+			Assert.IsNull (sig.Parameters, "Parameters");
+			Assert.IsNull (sig.ReturnType, "ReturnType");
+			Assert.AreEqual ((MethodAttributes) 0, sig.Attributes, "Attributes");
+			Assert.AreEqual (String.Empty, sig.ToString (), "ToString");
 		}
 
 		[Test]
-		public void TestCopyConstructor ()
+		[ExpectedException (typeof (ArgumentNullException))]
+		public void MatchNull ()
 		{
-			MethodSignature sig1 = new MethodSignature () {
-				Name = "name",
-				ReturnType = "ret",
-				Attributes = MethodAttributes.FamORAssem,
-				Parameters = new string [] { "1", "2" }
-			};
-			MethodSignature sig2 = new MethodSignature (sig1);
-			Assert.AreEqual (sig1.Name, sig2.Name, "Name");
-			Assert.AreEqual (sig1.ReturnType, sig2.ReturnType, "ReturnType");
-			Assert.AreEqual (sig1.Attributes, sig2.Attributes, "Attributes");
-
-			Assert.IsFalse (Object.ReferenceEquals (sig1.Parameters, sig2.Parameters), "copy array");
-			Assert.AreEqual (sig1.Parameters, sig2.Parameters, "AreEqual compares members");
+			new MethodSignature ().Matches (null);
 		}
 
-		public void Method (bool parameter) { }
+		public void Method (bool parameter)
+		{
+		}
 
 		[Test]
 		public void TestMatch ()
 		{
 			Assert.IsTrue (new MethodSignature ().Matches (GetMethod ("TestMatch")));
-/* commented until #354928 is fixed
-			Assert.IsTrue (new MethodSignature () { Name = "TestMatch" }.Matches (GetMethod ("TestMatch")));
-			Assert.IsFalse (new MethodSignature () { Name = "TestMatch_" }.Matches (GetMethod ("TestMatch")));
 
-			Assert.IsTrue (new MethodSignature () { ReturnType = "System.Void" }.Matches (GetMethod ("TestMatch")));
-			Assert.IsFalse (new MethodSignature () { ReturnType = "System.Void_" }.Matches (GetMethod ("TestMatch")));
+			Assert.IsTrue (new MethodSignature ("TestMatch").Matches (GetMethod ("TestMatch")));
+			Assert.IsFalse (new MethodSignature ("TestMatch_").Matches (GetMethod ("TestMatch")));
 
-			Assert.IsFalse (new MethodSignature () { Parameters = new string [1] }.Matches (GetMethod ("TestMatch")));
+			Assert.IsTrue (new MethodSignature (null, "System.Void").Matches (GetMethod ("TestMatch")));
+			Assert.IsFalse (new MethodSignature (null, "System.Void_").Matches (GetMethod ("TestMatch")));
 
-			Assert.IsTrue (new MethodSignature () { Parameters = new string [] { "System.Boolean" } }.Matches (GetMethod ("Method")));
-			Assert.IsTrue (new MethodSignature () { Parameters = new string [] { null } }.Matches (GetMethod ("Method")));
-			Assert.IsFalse (new MethodSignature () { Parameters = new string [] { "System.Object" } }.Matches (GetMethod ("Method")));
+			Assert.IsFalse (new MethodSignature (null, null, new string [1]).Matches (GetMethod ("TestMatch")));
+			Assert.IsTrue (new MethodSignature (null, null, new string [] { "System.Boolean" }).Matches (GetMethod ("Method")));
+			Assert.IsTrue (new MethodSignature (null, null, new string [] { null }).Matches (GetMethod ("Method")));
+			Assert.IsFalse (new MethodSignature (null, null, new string [] { "System.Object" }).Matches (GetMethod ("Method")));
 
-			Assert.IsTrue (new MethodSignature () { Attributes = MethodAttributes.Public }.Matches (GetMethod ("TestMatch")));
-			Assert.IsFalse (new MethodSignature () { Attributes = MethodAttributes.Virtual }.Matches (GetMethod ("TestMatch")));
-*/
+			Assert.IsTrue (new MethodSignature (null, null, null, MethodAttributes.Public).Matches (GetMethod ("TestMatch")));
+			Assert.IsFalse (new MethodSignature (null, null, null, MethodAttributes.Virtual).Matches (GetMethod ("TestMatch")));
+		}
+
+		[Test]
+		public void TestToString ()
+		{
+			Assert.AreEqual (String.Empty, new MethodSignature ().ToString (), "empty");
+			Assert.AreEqual (String.Empty, new MethodSignature (null, "System.Void").ToString (), "return value");
+			Assert.AreEqual (String.Empty, new MethodSignature (null, "System.Void", new string [] { "System.Object" }).ToString (), "return value + one param");
+
+			Assert.AreEqual ("Equals()", new MethodSignature ("Equals").ToString (), "name");
+			Assert.AreEqual ("System.Boolean Equals()", new MethodSignature ("Equals", "System.Boolean").ToString (), "name + return value");
+			Assert.AreEqual ("System.Boolean Equals(System.Object)", new MethodSignature ("Equals", "System.Boolean", new string[] { "System.Object" }).ToString (), "name + return value + one param");
+
+			Assert.AreEqual ("System.Boolean Equals(A,B)", new MethodSignature ("Equals", "System.Boolean", new string [] { "A", "B" }).ToString (), "name + return value + two param");
 		}
 	}
 }
