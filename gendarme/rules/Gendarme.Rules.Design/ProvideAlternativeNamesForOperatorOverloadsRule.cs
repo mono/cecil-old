@@ -40,40 +40,40 @@ namespace Gendarme.Rules.Design {
 		static string [] OneParameter = new string [] { null }; //new string [1] = one parameter of any type
 
 
-		static MethodSignature Compare = new MethodSignature () { Name = "Compare", Parameters = OneParameter };
+		static MethodSignature Compare = new MethodSignature ("Compare", null, OneParameter);
 
 		static KeyValuePair<MethodSignature, MethodSignature> [] AlternativeMethodNames = new KeyValuePair<MethodSignature, MethodSignature> [] { 
 			//unary
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_UnaryPlus,  new MethodSignature() { Name = "Plus", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_UnaryNegation,  new MethodSignature() { Name = "Negate", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LogicalNot,  new MethodSignature() { Name = "LogicalNot", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_OnesComplement,  new MethodSignature() { Name = "OnesComplement", Parameters = NoParameter }),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_UnaryPlus, new MethodSignature ("Plus", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_UnaryNegation, new MethodSignature ("Negate", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LogicalNot, new MethodSignature ("LogicalNot", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_OnesComplement, new MethodSignature ("OnesComplement", null, NoParameter)),
 			
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Increment,  new MethodSignature() { Name = "Increment", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Decrement,  new MethodSignature() { Name = "Decrement", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_True,  new MethodSignature() { Name = "IsTrue", Parameters = NoParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_False,  new MethodSignature() { Name = "IsFalse", Parameters = NoParameter }),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Increment, new MethodSignature ("Increment", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Decrement, new MethodSignature ("Decrement", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_True, new MethodSignature ("IsTrue", null, NoParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_False, new MethodSignature ("IsFalse", null, NoParameter)),
 
 			//binary
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Addition, new MethodSignature() { Name = "Add", Parameters = OneParameter }), 
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Subtraction, new MethodSignature() { Name = "Subtract", Parameters = OneParameter } ),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Multiply, new MethodSignature() { Name = "Multiply", Parameters = OneParameter } ),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Division, new MethodSignature() { Name = "Divide", Parameters = OneParameter } ),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Modulus,  new MethodSignature() { Name = "Modulus", Parameters = OneParameter }),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Addition, new MethodSignature ("Add", null, OneParameter)), 
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Subtraction, new MethodSignature ("Subtract", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Multiply, new MethodSignature ("Multiply", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Division, new MethodSignature ("Divide", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Modulus, new MethodSignature ("Modulus", null, OneParameter)),
 
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_BitwiseAnd,  new MethodSignature() { Name = "BitwiseAnd", Parameters = OneParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_BitwiseOr,  new MethodSignature() { Name = "BitwiseOr", Parameters = OneParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_ExclusiveOr,  new MethodSignature() { Name = "ExclusiveOr", Parameters = OneParameter }),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_BitwiseAnd, new MethodSignature ("BitwiseAnd", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_BitwiseOr, new MethodSignature ("BitwiseOr", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_ExclusiveOr, new MethodSignature ("ExclusiveOr", null, OneParameter)),
 			
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LeftShift,  new MethodSignature() { Name = "LeftShift", Parameters = OneParameter }),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_RightShift,  new MethodSignature() { Name = "RightShift", Parameters = OneParameter }),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LeftShift, new MethodSignature ("LeftShift", null, OneParameter)),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_RightShift, new MethodSignature ("RightShift", null, OneParameter)),
 		
 			// new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Equality, Compare), //handled by OverrideEqualsMethodRule
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Inequality, Compare),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThan,  Compare),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LessThan,  Compare),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThanOrEqual,  Compare),
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LessThanOrEqual,Compare),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThan, Compare),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LessThan, Compare),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThanOrEqual, Compare),
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LessThanOrEqual, Compare),
 		};
 
 		public MessageCollection CheckType (TypeDefinition type, Runner runner)
