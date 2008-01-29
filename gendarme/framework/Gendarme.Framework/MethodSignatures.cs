@@ -43,50 +43,50 @@ namespace Gendarme.Framework {
 		private static readonly string [] OneParameter = new string [1];
 		private static readonly string [] TwoParameters = new string [2];
 
-		//System.Object
-		public static readonly new MethodSignature Equals = new MethodSignature () { Name = "Equals", ReturnType = "System.Boolean", Parameters = new string [] { "System.Object" }, Attributes = MethodAttributes.Public };
-		public static readonly MethodSignature Finalize = new MethodSignature () { Name = "Finalize", ReturnType = "System.Void", Parameters = NoParameter, Attributes = MethodAttributes.Family };
-		public static readonly new MethodSignature GetHashCode = new MethodSignature () { Name = "GetHashCode", ReturnType = "System.Int32", Parameters = NoParameter, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };
-		public static readonly new MethodSignature ToString = new MethodSignature () { Name = "ToString", ReturnType = "System.String", Parameters = NoParameter, Attributes = MethodAttributes.Public | MethodAttributes.Virtual };
+		// System.Object
+		public static readonly new MethodSignature Equals = new MethodSignature ("Equals", "System.Boolean", new string [] { "System.Object" },  MethodAttributes.Public);
+		public static readonly MethodSignature Finalize = new MethodSignature ("Finalize", "System.Void", NoParameter, MethodAttributes.Family);
+		public static readonly new MethodSignature GetHashCode = new MethodSignature ("GetHashCode", "System.Int32", NoParameter, MethodAttributes.Public | MethodAttributes.Virtual);
+		public static readonly new MethodSignature ToString = new MethodSignature ("ToString", "System.String", NoParameter, MethodAttributes.Public | MethodAttributes.Virtual);
 
 		// IDisposable
-		public static readonly MethodSignature Dispose = new MethodSignature () { Name = "Dispose", ReturnType = "System.Void", Parameters = NoParameter };
-		public static readonly MethodSignature DisposeExplicit = new MethodSignature () { Name = "System.IDisposable.Dispose", ReturnType = "System.Void", Parameters = NoParameter };
+		public static readonly MethodSignature Dispose = new MethodSignature ("Dispose", "System.Void", NoParameter);
+		public static readonly MethodSignature DisposeExplicit = new MethodSignature ("System.IDisposable.Dispose", "System.Void", NoParameter);
 
-		//operators
-		public static readonly MethodSignature op = new MethodSignature () { Attributes = MethodAttributes.Static | MethodAttributes.SpecialName };
+		// operators
+		private static readonly MethodAttributes OperatorAttributes = MethodAttributes.Static | MethodAttributes.SpecialName;
+		
+		// unary
+		public static readonly MethodSignature op_UnaryPlus = new MethodSignature ("op_UnaryPlus", null, OneParameter, OperatorAttributes);		// +5
+		public static readonly MethodSignature op_UnaryNegation = new MethodSignature ("op_UnaryNegation", null, OneParameter, OperatorAttributes);	// -5
+		public static readonly MethodSignature op_LogicalNot = new MethodSignature ("op_LogicalNot", null, OneParameter, OperatorAttributes);		// !true
+		public static readonly MethodSignature op_OnesComplement = new MethodSignature ("op_OnesComplement", null, OneParameter, OperatorAttributes);	// ~5
 
-		//unary
-		public static readonly MethodSignature op_UnaryPlus = new MethodSignature (op) { Name = "op_UnaryPlus", Parameters = OneParameter };			// +5
-		public static readonly MethodSignature op_UnaryNegation = new MethodSignature (op) { Name = "op_UnaryNegation", Parameters = OneParameter };	// -5
-		public static readonly MethodSignature op_LogicalNot = new MethodSignature (op) { Name = "op_LogicalNot", Parameters = OneParameter };			// !true
-		public static readonly MethodSignature op_OnesComplement = new MethodSignature (op) { Name = "op_OnesComplement", Parameters = OneParameter }; // ~5
+		public static readonly MethodSignature op_Increment = new MethodSignature ("op_Increment", null, OneParameter, OperatorAttributes);		// 5++
+		public static readonly MethodSignature op_Decrement = new MethodSignature ("op_Decrement", null, OneParameter, OperatorAttributes);		// 5--
+		public static readonly MethodSignature op_True = new MethodSignature ("op_True", "System.Boolean", OneParameter, OperatorAttributes);		// if (object)		
+		public static readonly MethodSignature op_False = new MethodSignature ("op_False", "System.Boolean", OneParameter, OperatorAttributes);		// if (object)
 
-		public static readonly MethodSignature op_Increment = new MethodSignature (op) { Name = "op_Increment", Parameters = OneParameter };			// 5++
-		public static readonly MethodSignature op_Decrement = new MethodSignature (op) { Name = "op_Decrement", Parameters = OneParameter };			// 5--
-		public static readonly MethodSignature op_True = new MethodSignature (op) { Name = "op_True", Parameters = OneParameter, ReturnType = "System.Boolean" }; // if (object)		
-		public static readonly MethodSignature op_False = new MethodSignature (op) { Name = "op_False", Parameters = OneParameter, ReturnType = "System.Boolean" };	// if (object)
+		// binary
+		public static readonly MethodSignature op_Addition = new MethodSignature ("op_Addition", null, TwoParameters, OperatorAttributes);		// 5 + 5
+		public static readonly MethodSignature op_Subtraction = new MethodSignature ("op_Subtraction", null, TwoParameters, OperatorAttributes);	// 5 - 5 
+		public static readonly MethodSignature op_Multiply = new MethodSignature ("op_Multiply", null, TwoParameters, OperatorAttributes);		// 5 * 5
+		public static readonly MethodSignature op_Division = new MethodSignature ("op_Division", null, TwoParameters, OperatorAttributes);		// 5 / 5
+		public static readonly MethodSignature op_Modulus = new MethodSignature ("op_Modulus", null, TwoParameters, OperatorAttributes);		// 5 % 5
 
-		//binary
-		public static readonly MethodSignature op_Addition = new MethodSignature (op) { Name = "op_Addition", Parameters = TwoParameters };				// 5 + 5
-		public static readonly MethodSignature op_Subtraction = new MethodSignature (op) { Name = "op_Subtraction", Parameters = TwoParameters };		// 5 - 5 
-		public static readonly MethodSignature op_Multiply = new MethodSignature (op) { Name = "op_Multiply", Parameters = TwoParameters };				// 5 * 5
-		public static readonly MethodSignature op_Division = new MethodSignature (op) { Name = "op_Division", Parameters = TwoParameters };				// 5 / 5
-		public static readonly MethodSignature op_Modulus = new MethodSignature (op) { Name = "op_Modulus", Parameters = TwoParameters };				// 5 % 5
+		public static readonly MethodSignature op_BitwiseAnd = new MethodSignature ("op_BitwiseAnd", null, TwoParameters, OperatorAttributes);		// 5 & 5
+		public static readonly MethodSignature op_BitwiseOr = new MethodSignature ("op_BitwiseOr", null, TwoParameters, OperatorAttributes);		// 5 | 5
+		public static readonly MethodSignature op_ExclusiveOr = new MethodSignature ("op_ExclusiveOr", null, TwoParameters, OperatorAttributes);	// 5 ^ 5
 
-		public static readonly MethodSignature op_BitwiseAnd = new MethodSignature (op) { Name = "op_BitwiseAnd", Parameters = TwoParameters };			// 5 & 5
-		public static readonly MethodSignature op_BitwiseOr = new MethodSignature (op) { Name = "op_BitwiseOr", Parameters = TwoParameters };			// 5 | 5
-		public static readonly MethodSignature op_ExclusiveOr = new MethodSignature (op) { Name = "op_ExclusiveOr", Parameters = TwoParameters };		// 5 ^ 5
+		public static readonly MethodSignature op_LeftShift = new MethodSignature ("op_LeftShift", null, TwoParameters, OperatorAttributes);		// 5 << 5
+		public static readonly MethodSignature op_RightShift = new MethodSignature ("op_RightShift", null, TwoParameters, OperatorAttributes);		// 5 >> 5
 
-		public static readonly MethodSignature op_LeftShift = new MethodSignature (op) { Name = "op_LeftShift", Parameters = TwoParameters };			// 5 << 5
-		public static readonly MethodSignature op_RightShift = new MethodSignature (op) { Name = "op_RightShift", Parameters = TwoParameters };			// 5 >> 5
-
-		//comparison
-		public static readonly MethodSignature op_Equality = new MethodSignature (op) { Name = "op_Equality", Parameters = TwoParameters };				// 5 == 5
-		public static readonly MethodSignature op_Inequality = new MethodSignature (op) { Name = "op_Inequality", Parameters = TwoParameters };			// 5 != 5
-		public static readonly MethodSignature op_GreaterThan = new MethodSignature (op) { Name = "op_GreaterThan", Parameters = TwoParameters };		// 5 > 5
-		public static readonly MethodSignature op_LessThan = new MethodSignature (op) { Name = "op_LessThan", Parameters = TwoParameters };				// 5 < 5
-		public static readonly MethodSignature op_GreaterThanOrEqual = new MethodSignature (op) { Name = "op_GreaterThanOrEqual", Parameters = TwoParameters }; // 5 >= 5
-		public static readonly MethodSignature op_LessThanOrEqual = new MethodSignature (op) { Name = "op_LessThanOrEqual", Parameters = TwoParameters };// 5 <= 5
+		// comparison
+		public static readonly MethodSignature op_Equality = new MethodSignature ("op_Equality", null, TwoParameters, OperatorAttributes);			// 5 == 5
+		public static readonly MethodSignature op_Inequality = new MethodSignature ("op_Inequality", null, TwoParameters, OperatorAttributes);			// 5 != 5
+		public static readonly MethodSignature op_GreaterThan = new MethodSignature ("op_GreaterThan", null, TwoParameters, OperatorAttributes);		// 5 > 5
+		public static readonly MethodSignature op_LessThan = new MethodSignature ("op_LessThan", null, TwoParameters, OperatorAttributes);			// 5 < 5
+		public static readonly MethodSignature op_GreaterThanOrEqual = new MethodSignature ("op_GreaterThanOrEqual", null, TwoParameters, OperatorAttributes);	// 5 >= 5
+		public static readonly MethodSignature op_LessThanOrEqual = new MethodSignature ("op_LessThanOrEqual", null, TwoParameters, OperatorAttributes);	// 5 <= 5
 	}
 }

@@ -1,3 +1,9 @@
+2008-01-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MethodSignature.cs: Modify API to ensure objects are immutable 
+	once created since we expose them as read-only in MethodSignatures.
+	Note: we need to rule to automate this check!
+
 2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MethodSignature.cs: Override ToString as this can be useful when 
