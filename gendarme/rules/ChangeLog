@@ -1,3 +1,11 @@
+2008-01-28  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* rules.xml: In default only exclude NullDerefRule from Correctness
+	and stop excluding ToStringReturnsNullRule from BadPractice. In 
+	mono-bcl include everything except MethodCanBeMadeStaticRule and 
+	NullDerefRule from Correctness and exclude MonoCompatibilityReviewRule
+	from Portability.
+
 2008-01-02  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* rules.mds, tests.mds: Add Gendarme.Rules.Interoperability to

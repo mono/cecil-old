@@ -15,6 +15,7 @@
 	</ruleset>
 
 	<ruleset name="default">
+		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
 		<rules include="*" from="Gendarme.Rules.Performance.dll" />
 		<rules include="*" from="Gendarme.Rules.Security.dll" />
@@ -22,19 +23,19 @@
 		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
 		<rules include="*" from="Gendarme.Rules.Ui.dll" />
 		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
-		<rules exclude="ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
+		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
 		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
 	</ruleset>
 
 	<ruleset name="mono-bcl">
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll"/>
-		<rules exclude="MethodCanBeMadeStaticRule" from="Gendarme.Rules.Correctness.dll"/>
+		<rules include="*" exclude="MethodCanBeMadeStaticRule | NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="DontDestroyStackTraceRule" from="Gendarme.Rules.Exceptions.dll"/>
 		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | 
 			UseStringEmptyRule | AvoidToStringOnStringsRule |
 			UseValueInPropertySetterValue" from="Gendarme.Rules.Performance.dll"/>
-		<rules include="*" from="Gendarme.Rules.Portability.dll"/>
+		<rules include="*" exclude="MonoCompatibilityReviewRule" from="Gendarme.Rules.Portability.dll"/>
 		<rules include="CloneMethodShouldNotReturnNullRule |
 			EqualShouldHandleNullArgRule |
 			ImplementingEqualsButNotGetHashCodeAndViceVersaRule |
