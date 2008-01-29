@@ -67,11 +67,20 @@ namespace Gendarme.Rules.Interoperability {
 
 			public override bool Equals (object obj)
 			{
-				if (obj is PInvokeCall) {
-					PInvokeCall that = (PInvokeCall) obj;
-					return this.module == that.module && this.MethodName == that.MethodName;
-				}
+				if (obj is PInvokeCall)
+					return (this == (PInvokeCall) obj);
+
 				return false;
+			}
+
+			public static bool operator == (PInvokeCall call1, PInvokeCall call2)
+			{
+				return ((call1.module == call2.module) && (call1.MethodName == call2.MethodName));
+			}
+
+			public static bool operator != (PInvokeCall call1, PInvokeCall call2)
+			{
+				return ((call1.module != call2.module) || (call1.MethodName != call2.MethodName));
 			}
 
 			public override int GetHashCode ()

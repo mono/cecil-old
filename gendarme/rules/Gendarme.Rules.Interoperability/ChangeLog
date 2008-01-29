@@ -1,3 +1,8 @@
+2008-01-28  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* UseManagedAlternativesToPInvokeRule.cs: Override operators == and
+	!= since the struct PInvokeCall overrides Equals (Gendarme rule).
+
 2008-01-21  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UseManagedAlternativesToPInvokeRule.cs: New. Rule to check if
