@@ -1,3 +1,7 @@
+2008-01-28  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* TypeRocksTest.cs: Adapt unit tests for API changes.
+
 2008-01-21  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* FieldRocksTest.cs: Add test cases for IsVisible [Andreas Noever]
