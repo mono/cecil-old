@@ -1,3 +1,9 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* FeatureRequiresRootPrivilegeOnUnixRule.cs: Don't report when 
+	analysis the Ping class itself (very special case but useful for 
+	Mono itself :)
+
 2008-01-11  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ExitCodeIsLimitedOnUnixRule.cs: Use new Location ctors.

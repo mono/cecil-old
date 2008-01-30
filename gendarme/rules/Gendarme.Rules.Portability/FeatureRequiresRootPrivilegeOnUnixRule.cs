@@ -38,12 +38,17 @@ namespace Gendarme.Rules.Portability {
 
 	public class FeatureRequiresRootPrivilegeOnUnixRule : IMethodRule {
 
+		private const string Ping = "System.Net.NetworkInformation.Ping";
+
 		public MessageCollection CheckMethod (MethodDefinition method, Runner runner)
 		{
 			if (!method.HasBody)
 				return runner.RuleSuccess;
 
-			string fullname = method.DeclaringType.FullName;
+			// do not apply the rule to the Ping class itself (i.e. when running Gendarme on System.dll 2.0+)
+			bool is_ping = (method.DeclaringType.FullName == Ping || 
+				(method.DeclaringType.IsNested && method.DeclaringType.DeclaringType.FullName == Ping));
+
 			MessageCollection results = null;
 
 			foreach (Instruction ins in method.Body.Instructions) {
@@ -75,6 +80,10 @@ namespace Gendarme.Rules.Portability {
 					break;
 				}
 
+				// short-circuit
+				if (is_ping)
+					continue;
+
 				switch (ins.OpCode.Name) {
 				case "newobj": //new Ping ()
 				case "call": //MyPing () : base () ! (automatic parent constructor call)
@@ -88,7 +97,8 @@ namespace Gendarme.Rules.Portability {
 						results = new MessageCollection ();
 
 					Location loc = new Location (method, ins.Offset);
-					Message msg = new Message ("Usage of System.Net.NetworkInformation.Ping requires root privileges.", loc, MessageType.Warning);
+					string s = String.Format ("Usage of {0} requires root privileges.", Ping);
+					Message msg = new Message (s, loc, MessageType.Warning);
 					results.Add (msg);
 					break;
 				}
