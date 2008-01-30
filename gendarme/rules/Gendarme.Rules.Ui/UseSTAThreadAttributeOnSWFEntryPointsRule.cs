@@ -32,7 +32,7 @@ using Gendarme.Framework.Rocks;
 
 using Mono.Cecil;
 
-namespace Gendarme.Rules.UI {
+namespace Gendarme.Rules.Ui {
 
 	public class UseSTAThreadAttributeOnSWFEntryPointsRule : IAssemblyRule {
 		private const string SystemWindowsForms = "System.Windows.Forms";
