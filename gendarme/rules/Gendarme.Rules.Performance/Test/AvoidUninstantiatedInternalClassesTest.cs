@@ -29,6 +29,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using Gendarme.Framework;
 using Gendarme.Rules.Performance;
@@ -102,7 +103,7 @@ namespace Test.Rules.Performance {
 		void display ();
 	}
 
-	public class NestedEnumInstantiated {
+	public class NestedEnumReturnInstantiated {
 		private enum PrivateEnum {
 			Good,
 			Bad,
@@ -115,12 +116,52 @@ namespace Test.Rules.Performance {
 		}
 	}
 
+	public class NestedEnumUsingInstantiated {
+		private enum PrivateEnum {
+			Good,
+			Bad,
+			Unsure
+		}
+
+		private static bool GetMe ()
+		{
+			PrivateEnum pe = PrivateEnum.Bad;
+			return (pe == PrivateEnum.Good);
+		}
+	}
+
+	public class NestedEnumExternInstantiated {
+		private enum PrivateEnum {
+			Good,
+			Bad,
+			Unsure
+		}
+
+		[DllImport ("outofhere.dll")]
+		private static extern PrivateEnum GetMe ();
+	}
+
+	public class NestedEnumExternOutInstantiated {
+		private enum PrivateEnum {
+			Good,
+			Bad,
+			Unsure
+		}
+
+		[DllImport ("outofhere.dll")]
+		private static extern void GetMe (out PrivateEnum me);
+	}
+
 	public class NestedEnumNotInstantiated {
 		private enum PrivateEnum {
 			Good,
 			Bad,
 			Unsure
 		}
+	}
+
+	public class ClassWithDelegate {
+		delegate void MyOwnDelegate (int x);
 	}
 
 	[TestFixture]
@@ -212,9 +253,33 @@ namespace Test.Rules.Performance {
 		}
 
 		[Test]
-		public void NestedEnumInstantiated ()
+		public void NestedEnumReturnInstantiated ()
 		{
-			type = GetTest ("NestedEnumInstantiated/PrivateEnum");
+			type = GetTest ("NestedEnumReturnInstantiated/PrivateEnum");
+			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void NestedEnumUsingInstantiated ()
+		{
+			type = GetTest ("NestedEnumUsingInstantiated/PrivateEnum");
+			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void NestedEnumExternInstantiated ()
+		{
+			type = GetTest ("NestedEnumExternInstantiated/PrivateEnum");
+			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
+			Assert.IsNull (messageCollection);
+		}
+
+		[Test]
+		public void NestedEnumExternOutInstantiated ()
+		{
+			type = GetTest ("NestedEnumExternOutInstantiated/PrivateEnum");
 			messageCollection = typeRule.CheckType (type, new MinimalRunner ());
 			Assert.IsNull (messageCollection);
 		}
