@@ -68,8 +68,8 @@ namespace Gendarme.Rules.Design {
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LeftShift, new MethodSignature ("LeftShift", null, OneParameter)),
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_RightShift, new MethodSignature ("RightShift", null, OneParameter)),
 		
-			// new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Equality, Compare), //handled by OverrideEqualsMethodRule
-			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Inequality, Compare),
+			// new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Equality, MethodSignatures.Equals), //handled by OverrideEqualsMethodRule
+			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_Inequality, MethodSignatures.Equals),
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThan, Compare),
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_LessThan, Compare),
 			new KeyValuePair<MethodSignature,MethodSignature> (MethodSignatures.op_GreaterThanOrEqual, Compare),

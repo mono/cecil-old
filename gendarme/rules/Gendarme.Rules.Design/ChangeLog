@@ -1,6 +1,11 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* ProvideAlternativeNamesForOperatorOverloadsRule.cs: Change
+	op_Inequality alternative to (not) Equals instead of Compare.
+
 2008-01-28  Sebastien Pouliot  <sebastien@ximian.com>
 
-	* ProvideAlternativeNamesForOperatorOverloadsTest.cs: Adapt for
+	* ProvideAlternativeNamesForOperatorOverloadsRule.cs: Adapt for
 	API changes in MethodSignature.
 
 2008-01-27  Sebastien Pouliot  <sebastien@ximian.com>
