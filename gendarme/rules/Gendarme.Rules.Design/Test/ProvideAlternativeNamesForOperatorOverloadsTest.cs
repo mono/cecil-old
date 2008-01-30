@@ -127,6 +127,11 @@ namespace Test.Rules.Design {
 			public EverythingIsThere RightShift (EverythingIsThere other) { return null; }
 
 			public int Compare (EverythingIsThere other) { return 0; }
+
+			public override bool Equals (object obj)
+			{
+				return base.Equals (obj);
+			}
 		}
 
 		[Test]
