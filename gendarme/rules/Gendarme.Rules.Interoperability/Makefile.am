@@ -10,7 +10,7 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.Interoperability.xml TestResult.xml
 interoperability_rules_sources_in = ../../AssemblyInfo.cs.in
 interoperability_rules_generated_sources = $(interoperability_rules_sources_in:.in=)
 interoperability_rules_sources = PInvokeShouldNotBeVisibleRule.cs GetLastErrorMustBeCalledRightAfterPInvokeRule.cs \
-	UseManagedAlternativesToPInvokeRule.cs
+	UseManagedAlternativesToPInvokeRule.cs MarshalStringsInPInvokeDeclarationsRule.cs
 
 interoperability_rules_build_sources = $(addprefix $(srcdir)/, $(interoperability_rules_sources))
 interoperability_rules_build_sources += $(interoperability_rules_generated_sources)
@@ -34,7 +34,7 @@ uninstall-hook:
 	done;
 
 interoperability_test_sources = PInvokeShouldNotBeVisibleTest.cs GetLastErrorMustBeCalledRightAfterPInvokeTest.cs \
-	UseManagedAlternativesToPInvokeTest.cs
+	UseManagedAlternativesToPInvokeTest.cs MarshalStringsInPInvokeDeclarationsTest.cs
 
 interoperability_test_build_sources = $(addprefix $(srcdir)/Test/, $(interoperability_test_sources))
 

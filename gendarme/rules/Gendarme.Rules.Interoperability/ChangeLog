@@ -1,3 +1,12 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* MarshalStringsInPInvokeDeclarationsRule.cs: New. Rule to ensure 
+	all string and StringBuilder have marshalling information 
+	[Daniel Abramov]
+	* Gendarme.Rules.Interoperability.xml.in: Add rule description and
+	update Uri for all of them.
+	* Makefile.am: Add rule and test to the build.
+
 2008-01-28  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* UseManagedAlternativesToPInvokeRule.cs: Override operators == and
