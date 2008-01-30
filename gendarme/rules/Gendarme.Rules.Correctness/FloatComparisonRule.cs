@@ -74,6 +74,9 @@ namespace Gendarme.Rules.Correctness {
 				int arg_index = (int) (instruction.OpCode.Code - Code.Ldarg_0);
 				if (!method.IsStatic)
 					arg_index--;
+				// handle 'this'
+				if (arg_index < 0)
+					return method.DeclaringType.IsFloatingPoint ();
 				return method.Parameters [arg_index].ParameterType.IsFloatingPoint ();
 			case Code.Ldarg:
 				ParameterReference parameter = instruction.Operand as ParameterReference;
@@ -95,6 +98,11 @@ namespace Gendarme.Rules.Correctness {
 		{
 			// we only check methods with a body
 			if (!method.HasBody)
+				return runner.RuleSuccess;
+
+			// we don't check System.Single and System.Double
+			// special case for handling mscorlib.dll
+			if (method.DeclaringType.IsFloatingPoint ())
 				return runner.RuleSuccess;
 
 			MessageCollection mc = null;

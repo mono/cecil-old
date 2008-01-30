@@ -71,6 +71,14 @@ namespace Gendarme.Rules.Correctness {
 						return runner.RuleSuccess;
 					empty = false;
 					break;
+				case Code.Ldarg_2:
+				case Code.Ldarg_3:
+					// this[] properties have multiple parameters
+					int index = instruction.OpCode.Code - Code.Ldarg_1;
+					if (method.Parameters [index].Name == "value")
+						return runner.RuleSuccess;
+					empty = false;
+					break;
 				case Code.Ldarga:
 				case Code.Ldarga_S:
 					if ((instruction.Operand as ParameterDefinition).Name == "value")

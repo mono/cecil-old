@@ -1,3 +1,10 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* FloatComparisonRule.cs: Handle "this" and don't report defects on
+	System.Single or System.Double (useful for mono itself :)
+	* UseValueInPropertySetterRule.cs: Handle this[] with multiple
+	parameters.
+
 2008-01-16  Nestor Salceda  <nestor.salceda@gmail.com>
 
 	* Makefile.am: Compile the rules with -langversion:linq flag.  This
