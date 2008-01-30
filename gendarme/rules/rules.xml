@@ -1,46 +1,50 @@
 <gendarme>
 	<ruleset name="self-test">
-		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
-		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
-		<rules include="*" from="Gendarme.Rules.Performance.dll" />
-		<rules include="*" from="Gendarme.Rules.Security.dll" />
-		<rules include="*" from="Gendarme.Rules.Portability.dll" />
-		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
-		<rules include="*" from="Gendarme.Rules.Ui.dll" />
-		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
 		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
+		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
+		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
-		<rules include="*" from="Gendarme.Rules.Smells.dll"/>
+		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
 		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
+		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
+		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+		<rules include="*" from="Gendarme.Rules.Portability.dll" />
+		<rules include="*" from="Gendarme.Rules.Security.dll" />
+		<rules include="*" from="Gendarme.Rules.Smells.dll"/>
+		<rules include="*" from="Gendarme.Rules.Ui.dll" />
 	</ruleset>
 
 	<ruleset name="default">
-		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
-		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
-		<rules include="*" from="Gendarme.Rules.Performance.dll" />
-		<rules include="*" from="Gendarme.Rules.Security.dll" />
-		<rules include="*" from="Gendarme.Rules.Portability.dll" />
-		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
-		<rules include="*" from="Gendarme.Rules.Ui.dll" />
-		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
 		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
+		<rules include="*" from="Gendarme.Rules.Concurrency.dll" />
+		<rules include="*" exclude="NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
 		<rules include="*" from="Gendarme.Rules.Design.dll"/>
+		<rules include="*" from="Gendarme.Rules.Exceptions.dll" />
 		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
+		<rules include="*" from="Gendarme.Rules.Naming.dll"/>
+		<rules include="*" from="Gendarme.Rules.Performance.dll" />
+		<rules include="*" from="Gendarme.Rules.Portability.dll" />
+		<rules include="*" from="Gendarme.Rules.Security.dll" />
+		<rules include="*" from="Gendarme.Rules.Ui.dll" />
+		<!-- no rule from Smells is included in this set -->
 	</ruleset>
 
 	<ruleset name="mono-bcl">
+		<rules include="*" from="Gendarme.Rules.BadPractice.dll"/>
 		<rules include="*" from="Gendarme.Rules.Concurrency.dll"/>
-		<rules include="*" exclude="MethodCanBeMadeStaticRule | NullDerefRule" from="Gendarme.Rules.Correctness.dll"/>
+		<rules include="*" exclude="AvoidConstructorsInStaticTypesRule | MethodCanBeMadeStaticRule | NullDerefRule" 
+			from="Gendarme.Rules.Correctness.dll"/>
+		<!-- no rule from Design is included in this set -->
 		<rules include="DontDestroyStackTraceRule" from="Gendarme.Rules.Exceptions.dll"/>
-		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | 
-			UseStringEmptyRule | AvoidToStringOnStringsRule |
-			UseValueInPropertySetterValue" from="Gendarme.Rules.Performance.dll"/>
-		<rules include="*" exclude="MonoCompatibilityReviewRule" from="Gendarme.Rules.Portability.dll"/>
-		<rules include="CloneMethodShouldNotReturnNullRule |
-			EqualShouldHandleNullArgRule |
-			ImplementingEqualsButNotGetHashCodeAndViceVersaRule |
-			ToStringReturnsNullRule" from="Gendarme.Rules.BadPractice.dll"/>
 		<rules include="*" from="Gendarme.Rules.Interoperability.dll"/>
+		<!-- no rule from Naming is included in this set -->
+		<rules include="IDisposableWithDesctuctorWithoutSupressFinalizeRule | DontIgnoreMethodResultRule |
+			UseStringEmptyRule | AvoidToStringOnStringsRule | UsingStringLengthInsteadOfCheckingEmptyStringRule"
+			from="Gendarme.Rules.Performance.dll"/>
+		<rules include="*" exclude="MonoCompatibilityReviewRule" from="Gendarme.Rules.Portability.dll"/>
+		<rules include="*" exclude="ArrayFieldsShouldNotBeReadOnlyRule | NativeFieldsShouldNotBeVisibleRule" 
+			from="Gendarme.Rules.Security.dll"/>
+		<!-- no rule from Ui is included in this set -->
 	</ruleset>
 
 	<ruleset name="concurrency">

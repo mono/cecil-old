@@ -1,3 +1,8 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com> 
+
+	* rules.xml: Order rules alphabetically. Update mono-bcl rule set 
+	with newer rules.
+
 2008-01-28  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* rules.xml: In default only exclude NullDerefRule from Correctness
