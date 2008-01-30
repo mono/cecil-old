@@ -29,6 +29,7 @@
 //
 
 using System;
+using System.Collections.Specialized;
 using System.Reflection;
 using Gendarme.Framework;
 using Gendarme.Rules.Correctness;
@@ -92,11 +93,49 @@ namespace Test.Rules.Correctness {
 			}
 		}
 
+		public class BitVector32 {
+			int bits;
+
+			public struct Section {
+				private short mask;
+				private short offset;
+				
+				internal Section (short mask, short offset)
+				{
+					this.mask = mask;
+					this.offset = offset;
+				}
+				
+				public short Mask {
+					get { return mask; }
+				}
+				
+				public short Offset {
+					get { return offset; }
+				}
+			}
+
+			public int this [BitVector32.Section section] {
+				get {
+					return ((bits >> section.Offset) & section.Mask);
+				}
+				set {
+					if (value < 0)
+						throw new ArgumentException ();
+					if (value > section.Mask)
+						throw new ArgumentException ();
+					bits &= ~(section.Mask << section.Offset);
+					bits |= (value << section.Offset);
+				}
+			}
+		}
+
 
 		private IMethodRule rule;
 		private AssemblyDefinition assembly;
 		private TypeDefinition type;
 		private ModuleDefinition module;
+		private Runner runner;
 
 		[TestFixtureSetUp]
 		public void FixtureSetUp()
@@ -105,7 +144,8 @@ namespace Test.Rules.Correctness {
 			assembly = AssemblyFactory.GetAssembly(unit);
 			module = assembly.MainModule;
 			type = module.Types["Test.Rules.Correctness.UseValueInPropertySetterTest/Item"];
-			rule = new UseValueInPropertySetterRule();
+			rule = new UseValueInPropertySetterRule ();
+			runner = new MinimalRunner ();
 		}
 
 		MethodDefinition GetTest(string name)
@@ -117,9 +157,9 @@ namespace Test.Rules.Correctness {
 			return null;
 		}
 
-		MessageCollection CheckMethod(MethodDefinition method)
+		MessageCollection CheckMethod (MethodDefinition method)
 		{
-			return rule.CheckMethod(method, new MinimalRunner());
+			return rule.CheckMethod (method, runner);
 		}
 
 		[Test]
@@ -182,6 +222,16 @@ namespace Test.Rules.Correctness {
 			// too many false positive, it seems too common to have empty set to report them
 			// at least for this specific rule
 			Assert.IsNull (CheckMethod (method));
+		}
+
+		[Test]
+		public void TestThisProperty ()
+		{
+			TypeDefinition type = module.Types ["Test.Rules.Correctness.UseValueInPropertySetterTest/BitVector32"];
+			foreach (MethodDefinition method in type.Methods) {
+				if (method.Name == "set_Item")
+					Assert.IsNull (CheckMethod (method));
+			}
 		}
 	}
 }

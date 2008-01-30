@@ -245,6 +245,8 @@ namespace Test.Rules.Correctness {
 
 		public class Legal {
 
+			object o = null;
+
 			public void IntegerComparisons ()
 			{
 				int i = 0;
@@ -255,6 +257,15 @@ namespace Test.Rules.Correctness {
 			public bool NoComparison ()
 			{
 				return false;
+			}
+
+			public bool Property {
+				get {
+					if (o != null)
+						return ((object)o.ToString () == this);
+					else
+						return false;
+				}
 			}
 		}
 
@@ -402,6 +413,13 @@ namespace Test.Rules.Correctness {
 
 			method = GetTest ("Double", "CompareWithArray");
 			Assert.IsNotNull (CheckMethod (method), "Double");
+		}
+
+		[Test]
+		public void TestLegalStuff ()
+		{
+			MethodDefinition method = GetTest ("Legal", "get_Property");
+			Assert.IsNull (CheckMethod (method), "get_Property");
 		}
 	}
 }
