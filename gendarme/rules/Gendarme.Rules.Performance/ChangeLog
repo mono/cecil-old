@@ -1,3 +1,8 @@
+2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* AvoidUninstantiatedInternalClassesRule.cs: Reduce false positives
+	a bit more by handling "out" and variable types.
+
 2008-01-13  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EmptyDestructorRule.cs: Use new IsFinalizer rock.

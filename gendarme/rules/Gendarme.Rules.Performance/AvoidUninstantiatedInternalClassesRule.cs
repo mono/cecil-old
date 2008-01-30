@@ -37,7 +37,7 @@ using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Performance {
 
-	public class AvoidUninstantiatedInternalClassesRule: ITypeRule {
+	public class AvoidUninstantiatedInternalClassesRule : ITypeRule {
 
 		private static bool CheckSpecialTypes (TypeDefinition type)
 		{
@@ -54,12 +54,12 @@ namespace Gendarme.Rules.Performance {
 
 		// we use this to cache the information about the assembly
 		// i.e. all types instantiated by the assembly
-		private Dictionary<AssemblyDefinition,List<TypeReference>> cache;
+		private Dictionary<AssemblyDefinition, List<TypeReference>> cache;
 
 		public void CacheInstantiationFromAssembly (AssemblyDefinition assembly)
 		{
 			if (cache == null)
-				cache = new Dictionary<AssemblyDefinition,List<TypeReference>> ();
+				cache = new Dictionary<AssemblyDefinition, List<TypeReference>> ();
 			else if (cache.ContainsKey (assembly))
 				return;
 
@@ -81,13 +81,29 @@ namespace Gendarme.Rules.Performance {
 
 		private static void ProcessMethod (MethodDefinition method, List<TypeReference> list)
 		{
-			if (!method.HasBody)
-				return;
-
-			// this is needed in case we return an enum
+			// this is needed in case we return an enum (or something mapped to p/invoke)
 			TypeReference t = method.ReturnType.ReturnType;
 			if (!list.Contains (t))
 				list.Add (t);
+
+			// an "out" from a p/invoke must be flagged
+			foreach (ParameterDefinition parameter in method.Parameters) {
+				if (parameter.IsOut) {
+					// we don't want the reference (&) on the type
+					t = parameter.ParameterType.GetOriginalType ();
+					if (!list.Contains (t))
+						list.Add (t);
+				}
+			}
+
+			if (!method.HasBody)
+				return;
+
+			foreach (VariableDefinition variable in method.Body.Variables) {
+				t = variable.VariableType;
+				if (!list.Contains (t))
+					list.Add (t);
+			}
 
 			foreach (Instruction ins in method.Body.Instructions) {
 				if (ins.OpCode == OpCodes.Newobj) {
@@ -98,7 +114,7 @@ namespace Gendarme.Rules.Performance {
 							t = m.DeclaringType;
 					}
 
-					if ((t != null) &&  !list.Contains (t))
+					if ((t != null) && !list.Contains (t))
 						list.Add (t);
 				}
 			}
