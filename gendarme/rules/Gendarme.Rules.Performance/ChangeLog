@@ -1,3 +1,8 @@
+2008-01-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* DontIgnoreMethodResultRule.cs: Don't report on compiler/tools 
+	generated code since this is out of the developer's control.
+
 2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* AvoidUninstantiatedInternalClassesRule.cs: Reduce false positives

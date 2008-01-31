@@ -32,7 +32,9 @@ using System;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using Gendarme.Framework;
+using Gendarme.Framework.Rocks;
 
 namespace Gendarme.Rules.Performance {
 
@@ -42,6 +44,10 @@ namespace Gendarme.Rules.Performance {
 		{
 			// rule only applies if the method has a body
 			if (!method.HasBody)
+				return runner.RuleSuccess;
+
+			// rule doesn't not apply to generated code (out of developer's control)
+			if (method.IsGeneratedCode ())
 				return runner.RuleSuccess;
 
 			MessageCollection mc = null;
