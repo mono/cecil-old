@@ -1,3 +1,8 @@
+2008-01-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CommonRocks.cs: New. Shared but not Gendarme/Cecil specific rocks.
+	ListRocks by Andreas Noever.
+
 2008-01-21  Sebastien Pouliot  <sebastien@ximian.com> 
 
 	* FieldRocks.cs: Add IsVisible rock [Andreas Noever]
