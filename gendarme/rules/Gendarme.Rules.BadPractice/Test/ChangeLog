@@ -1,3 +1,10 @@
+2008-01-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CheckNewExceptionWithoutThrowingTest.cs: New. Unit tests by 
+	Andreas Noever.
+	* CheckNewThreadWithoutStartTest.cs: New. Unit tests by Andreas 
+	Noever.
+
 2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* EqualShouldHandleNullArgTest.cs: Changed my mind about "new" ;-)
