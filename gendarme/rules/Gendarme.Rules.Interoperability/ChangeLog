@@ -1,3 +1,9 @@
+2008-01-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* GetLastErrorMustBeCalledRightAfterPInvokeRule.cs: Changed to
+	use the new shared StackEntryAnalysis by Andreas Noever. Refactored
+	(split) by me to reduce self-test complaints ;-)
+
 2008-01-29  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* MarshalStringsInPInvokeDeclarationsRule.cs: New. Rule to ensure 
