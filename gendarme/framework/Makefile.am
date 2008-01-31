@@ -18,7 +18,9 @@ framework_sources = AssemblyManager.cs IRule.cs RuleCollection.cs \
 		    MessageCollection.cs MessageType.cs \
 		    Gendarme.Framework/MethodSignature.cs \
 		    Gendarme.Framework/MethodSignatures.cs \
+		    Gendarme.Framework/StackEntryAnalysis.cs \
 		    Gendarme.Framework.Rocks/AssemblyRocks.cs \
+		    Gendarme.Framework.Rocks/CommonRocks.cs \
 		    Gendarme.Framework.Rocks/CustomAttributeRocks.cs \
 		    Gendarme.Framework.Rocks/FieldRocks.cs \
 		    Gendarme.Framework.Rocks/MethodRocks.cs \
@@ -36,6 +38,7 @@ framework_build_sources += $(framework_generated_sources)
 
 framework_test_sources = \
 	Gendarme.Framework/MethodSignatureTest.cs \
+	Gendarme.Framework/StackEntryAnalysisTest.cs \
 	Gendarme.Framework.Rocks/RocksTest.cs \
 	Gendarme.Framework.Rocks/AssemblyRocksTest.cs \
 	Gendarme.Framework.Rocks/CustomAttributeRocksTest.cs \
