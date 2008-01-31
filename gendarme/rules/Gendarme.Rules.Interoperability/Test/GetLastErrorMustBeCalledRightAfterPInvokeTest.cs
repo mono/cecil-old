@@ -170,7 +170,6 @@ namespace Test.Rules.Interoperability {
 			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 		
-		
 		[Test]
 		public void TestPInvoke_GetError_invalid ()
 		{
@@ -203,6 +202,73 @@ namespace Test.Rules.Interoperability {
 		public void TestGetError ()
 		{
 			MethodDefinition method = GetTest ("CallGetError");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+		}
+
+		public void CallPInvoke_Branch ()
+		{
+			bool a = MessageBeep (5);
+			if (a) {
+				Console.WriteLine ();
+			} else {
+				Marshal.GetLastWin32Error ();
+			}
+		}
+
+		[Test]
+		public void TestPInvoke_Branch ()
+		{
+			MethodDefinition method = GetTest ("CallPInvoke_Branch");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+		}
+
+		public void CallPInvoke_Switch ()
+		{
+			bool a = MessageBeep (5);
+			switch (a) {
+			case true:
+				Console.WriteLine ();
+				break;
+			case false:
+				Marshal.GetLastWin32Error ();
+				break;
+			}
+			return;
+		}
+
+		[Test]
+		public void TestPInvoke_Switch ()
+		{
+			MethodDefinition method = GetTest ("CallPInvoke_Switch");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+		}
+
+		public void CallPInvoke_Endless ()
+		{
+			bool a = MessageBeep (5);
+		loop:
+			Console.WriteLine ();
+			goto loop;
+		}
+
+		[Test]
+		public void TestPInvoke_Endless ()
+		{
+			MethodDefinition method = GetTest ("CallPInvoke_Endless");
+			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
+		}
+
+		public void TwoPInvokes ()
+		{
+			MessageBeep (5);
+			MessageBeep (5);
+			Marshal.GetLastWin32Error ();
+		}
+
+		[Test]
+		public void TestTwoPInvokes ()
+		{
+			MethodDefinition method = GetTest ("TwoPInvokes");
 			Assert.IsNull (rule.CheckMethod (method, new MinimalRunner ()));
 		}
 	}
