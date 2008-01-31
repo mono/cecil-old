@@ -1,3 +1,14 @@
+2008-01-30  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* CheckNewExceptionWithoutThrowingRule.cs: New. Rule to check that
+	all exception we create are thrown (or returned) from all methods. 
+	[Andreas Noever]
+	* CheckNewThreadWithoutStartRule.cs: New. Rule to check that all
+	threads we create are started (or returned) from all methods.
+	[Andreas Noever]
+	* Gendarme.Rules.BadPractice.xml.in: Add rules descriptions.
+	* Makefile.am: Add rules/tests to the build.
+
 2008-01-24  Sebastien Pouliot  <sebastien@ximian.com>
 
 	* ImplementingEqualsButNotGetHashCodeAndViceVersaRule.cs: Rule

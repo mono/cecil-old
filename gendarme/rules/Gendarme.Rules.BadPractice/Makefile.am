@@ -10,7 +10,8 @@ DISTCLEANFILES = Makefile.in Gendarme.Rules.BadPractice.xml TestResult.xml
 badpractice_rules_sources_in = ../../AssemblyInfo.cs.in
 badpractice_rules_generated_sources = $(badpractice_rules_sources_in:.in=)
 badpractice_rules_sources = CloneMethodShouldNotReturnNullRule.cs EqualShouldHandleNullArgRule.cs \
-	ToStringReturnsNullRule.cs GetEntryAssemblyMayReturnNullRule.cs ConstructorShouldNotCallVirtualMethodsRule.cs
+	ToStringReturnsNullRule.cs GetEntryAssemblyMayReturnNullRule.cs ConstructorShouldNotCallVirtualMethodsRule.cs \
+	CheckNewExceptionWithoutThrowingRule.cs CheckNewThreadWithoutStartRule.cs
 
 badpractice_rules_build_sources = $(addprefix $(srcdir)/, $(badpractice_rules_sources))
 badpractice_rules_build_sources += $(badpractice_rules_generated_sources)
@@ -34,7 +35,8 @@ uninstall-hook:
 	done;
 
 badpractice_test_sources = CloneMethodShouldNotReturnNullTest.cs EqualShouldHandleNullArgTest.cs \
-	ToStringReturnsNullTest.cs GetEntryAssemblyMayReturnNullTest.cs ConstructorShouldNotCallVirtualMethodsTest.cs
+	ToStringReturnsNullTest.cs GetEntryAssemblyMayReturnNullTest.cs ConstructorShouldNotCallVirtualMethodsTest.cs \
+	CheckNewExceptionWithoutThrowingTest.cs CheckNewThreadWithoutStartTest.cs
 
 badpractice_test_build_sources = $(addprefix $(srcdir)/Test/, $(badpractice_test_sources))
 
