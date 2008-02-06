@@ -34,7 +34,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 	/// <summary>
 	/// </summary>
-	internal class ControlFlowGraphBuilder {
+	class ControlFlowGraphBuilder {
 
 		MethodBody _body;
 		Hashtable _instructionData;
@@ -77,14 +77,15 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			MarkBlockStart (instruction);
 			for (int i = 1; i < instructions.Count; ++i) {
 				instruction = instructions [i];
-				if (IsBlockDelimiter (instruction)) {
-					// the target of a branch starts a block
-					Instruction target = GetBranchTarget (instruction);
-					if (null != target) MarkBlockStart (target);
+				if (!IsBlockDelimiter (instruction))
+					continue;
 
-					// the next instruction after a branch starts a block
-					if (null != instruction.Next) MarkBlockStart (instruction.Next);
-				}
+				// the target of a branch starts a block
+				Instruction target = GetBranchTarget (instruction);
+				if (null != target) MarkBlockStart (target);
+
+				// the next instruction after a branch starts a block
+				if (null != instruction.Next) MarkBlockStart (instruction.Next);
 			}
 		}
 
@@ -184,10 +185,9 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			case StackBehaviour.Varpush:
 				if (code.FlowControl == FlowControl.Call) {
 					MethodReference method = (MethodReference)instruction.Operand;
-					return IsVoid (method.ReturnType.ReturnType)
-						? 0
-						: 1;
+					return IsVoid (method.ReturnType.ReturnType) ? 0 : 1;
 				}
+
 				break;
 			}
 			throw new ArgumentException (Formatter.FormatInstruction (instruction));
@@ -229,16 +229,15 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 				if (code.FlowControl == FlowControl.Call) {
 					MethodReference method = (MethodReference)instruction.Operand;
 					int count = method.Parameters.Count;
-					if (method.HasThis && OpCodes.Newobj.Value != code.Value) {
+					if (method.HasThis && OpCodes.Newobj.Value != code.Value)
 						++count;
-					}
+
 					return count;
 				}
-				if (code.Value == OpCodes.Ret.Value) {
-					return IsVoidMethod ()
-						? 0
-						: 1;
-				}
+
+				if (code.Value == OpCodes.Ret.Value)
+					return IsVoidMethod () ? 0 : 1;
+
 				break;
 			}
 			throw new ArgumentException (Formatter.FormatInstruction (instruction));
@@ -246,8 +245,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		bool IsVoidMethod ()
 		{
-			TypeReference type = _body.Method.ReturnType.ReturnType;
-			return IsVoid (type);
+			return IsVoid (_body.Method.ReturnType.ReturnType);
 		}
 
 		static bool IsVoid (TypeReference type)
@@ -264,35 +262,39 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		void ConnectBlocks ()
 		{
-			foreach (InstructionBlock block in _blocks.Values) {
-				if (block.LastInstruction == null) {
-					throw new ApplicationException ("Undelimited block at offset " + block.FirstInstruction.Offset);
-				}
-				Instruction instruction = block.LastInstruction;
-				switch (instruction.OpCode.FlowControl) {
-				case FlowControl.Branch:
-				case FlowControl.Cond_Branch: {
-					InstructionBlock target = GetBranchTargetBlock (instruction);
-					if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch && instruction.Next != null)
-						block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
-					else
-						block.SetSuccessors (new InstructionBlock [] { target });
-					break;
-				}
-				case FlowControl.Call:
-				case FlowControl.Next:
-					if (null != instruction.Next)
-						block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
+			foreach (InstructionBlock block in _blocks.Values)
+				ConnectBlock (block);
+		}
 
-					break;
-				case FlowControl.Return:
-					break;
-				default:
-						throw new ApplicationException (
-							string.Format ("Unhandled instruction flow behavior {0}: {1}",
-								instruction.OpCode.FlowControl,
-								Formatter.FormatInstruction (instruction)));
-				}
+		void ConnectBlock (InstructionBlock block)
+		{
+			if (block.LastInstruction == null)
+				throw new ApplicationException ("Undelimited block at offset " + block.FirstInstruction.Offset);
+
+			Instruction instruction = block.LastInstruction;
+			switch (instruction.OpCode.FlowControl) {
+			case FlowControl.Branch:
+			case FlowControl.Cond_Branch: {
+				InstructionBlock target = GetBranchTargetBlock (instruction);
+				if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch && instruction.Next != null)
+					block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
+				else
+					block.SetSuccessors (new InstructionBlock [] { target });
+				break;
+			}
+			case FlowControl.Call:
+			case FlowControl.Next:
+				if (null != instruction.Next)
+					block.SetSuccessors (new InstructionBlock [] { GetBlock (instruction.Next) });
+
+				break;
+			case FlowControl.Return:
+				break;
+			default:
+				throw new ApplicationException (
+					string.Format ("Unhandled instruction flow behavior {0}: {1}",
+					               instruction.OpCode.FlowControl,
+					               Formatter.FormatInstruction (instruction)));
 			}
 		}
 
