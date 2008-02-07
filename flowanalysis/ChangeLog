@@ -1,3 +1,12 @@
+2008-02-07  Jb Evain  <jbevain@novell.com>
+
+	* Cecil.FlowAnalysis/ControlFlow/ControlFlowGraphBuilder.cs
+	* Cecil.FlowAnalysis/Utilities/Formatter.cs
+	* Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	* testcases/FlowAnalysis/Switch-cfg.txt
+	* testcases/FlowAnalysis/Switch.il
+		Add support for switch in control flow graphs.
+
 2008-01-16  Jb Evain  <jbevain@novell.com>
 
 	* Support for not.

@@ -80,9 +80,16 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 				if (!IsBlockDelimiter (instruction))
 					continue;
 
-				// the target of a branch starts a block
-				Instruction target = GetBranchTarget (instruction);
-				if (null != target) MarkBlockStart (target);
+				if (HasMultipleBranches (instruction)) {
+					// each switch case first instruction starts a block
+					foreach (Instruction target in GetBranchTargets (instruction))
+						if (target != null)
+							MarkBlockStart (target);
+				} else {
+					// the target of a branch starts a block
+					Instruction target = GetBranchTarget (instruction);
+					if (null != target) MarkBlockStart (target);
+				}
 
 				// the next instruction after a branch starts a block
 				if (null != instruction.Next) MarkBlockStart (instruction.Next);
@@ -275,6 +282,15 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			switch (instruction.OpCode.FlowControl) {
 			case FlowControl.Branch:
 			case FlowControl.Cond_Branch: {
+				if (HasMultipleBranches (instruction)) {
+					InstructionBlock [] blocks = GetBranchTargetsBlocks (instruction);
+					if (instruction.Next != null)
+						blocks = AddBlock (GetBlock (instruction.Next), blocks);
+
+					block.SetSuccessors (blocks);
+					break;
+				}
+
 				InstructionBlock target = GetBranchTargetBlock (instruction);
 				if (instruction.OpCode.FlowControl == FlowControl.Cond_Branch && instruction.Next != null)
 					block.SetSuccessors (new InstructionBlock [] { target, GetBlock (instruction.Next) });
@@ -298,12 +314,41 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			}
 		}
 
+		static InstructionBlock [] AddBlock (InstructionBlock block, InstructionBlock [] blocks)
+		{
+			InstructionBlock [] result = new InstructionBlock [blocks.Length + 1];
+			Array.Copy (blocks, result, blocks.Length);
+			result [result.Length - 1] = block;
+
+			return result;
+		}
+
+		static bool HasMultipleBranches (Instruction instruction)
+		{
+			return instruction.OpCode.Code == Code.Switch;
+		}
+
+		InstructionBlock [] GetBranchTargetsBlocks (Instruction instruction)
+		{
+			Instruction [] targets = GetBranchTargets (instruction);
+			InstructionBlock [] blocks = new InstructionBlock [targets.Length];
+			for (int i = 0; i < targets.Length; i++)
+				blocks [i] = GetBlock (targets [i]);
+
+			return blocks;
+		}
+
+		static Instruction [] GetBranchTargets (Instruction instruction)
+		{
+			return (Instruction []) instruction.Operand;
+		}
+
 		InstructionBlock GetBranchTargetBlock (Instruction instruction)
 		{
 			return GetBlock (GetBranchTarget (instruction));
 		}
 
-		Instruction GetBranchTarget (Instruction instruction)
+		static Instruction GetBranchTarget (Instruction instruction)
 		{
 			return (Instruction) instruction.Operand;
 		}

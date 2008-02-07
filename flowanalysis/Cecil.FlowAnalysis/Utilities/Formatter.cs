@@ -85,6 +85,12 @@ namespace Cecil.FlowAnalysis.Utilities {
 				return;
 			}
 
+			Instruction [] targetInstructions = operand as Instruction [];
+			if (null != targetInstructions) {
+				WriteLabelList (writer, targetInstructions);
+				return;
+			}
+
 			VariableReference variableRef = operand as VariableReference;
 			if (null != variableRef) {
 				writer.Write (variableRef.Index.ToString ());
@@ -105,6 +111,18 @@ namespace Cecil.FlowAnalysis.Utilities {
 
 			s = ToInvariantCultureString (operand);
 			writer.Write (s);
+		}
+
+		static void WriteLabelList (TextWriter writer, Instruction [] instructions)
+		{
+			writer.Write ("(");
+
+			for (int i = 0; i < instructions.Length; i++) {
+				if (i != 0) writer.Write (", ");
+				writer.Write (FormatLabel (instructions [i].Offset));
+			}
+
+			writer.Write (")");
 		}
 
 		public static string ToInvariantCultureString (object value)
