@@ -6,7 +6,6 @@
 	<xsl:strip-space elements="*"/>
 
 	<xsl:template match="/">
-<!--
 		<HTML>
 			<HEAD>
 				<TITLE>
@@ -19,7 +18,6 @@
 				<P>
 					<H1>Mono Class Library Status</H1>
 				</P>
--->
 
 				<table>
 					<tr>
@@ -113,10 +111,8 @@
 					</table>
 
 				</p>
-<!--
 			</BODY>
 		</HTML>
--->
 	</xsl:template>
 
 

@@ -46,6 +46,26 @@ namespace Mono.AssemblyInfo
 		}
 	}
 
+	public class Utils {
+
+		// Turns a Cecil ToString type representation into a Reflection toString represetation
+		// This is not quite correct, as in the case of nested types, it only fixes the
+		// first nested type, it wont fix nested type inside expressions
+		//
+		// It seems like it would be best if Cecil rendered types in the same way
+		// as Reflection, to be able to use both at the same time
+		//
+		static public string CleanupType (string t)
+		{
+			string j = t.Replace ('<', '[').Replace ('>', ']');
+			int p = j.IndexOf ('/');
+			if (p == -1)
+				return j;
+					
+			return j.Substring (0, p) + "+" + j.Substring (p+1);
+		}
+	}
+	
 	class AssemblyCollection
 	{
 		XmlDocument document;
@@ -261,7 +281,7 @@ namespace Mono.AssemblyInfo
 			AddAttribute (nclass, "type", classType);
 
 			if (type.BaseType != null)
-				AddAttribute (nclass, "base", type.BaseType.ToString ());
+				AddAttribute (nclass, "base", Utils.CleanupType (type.BaseType.ToString ()));
 
 			if (type.IsSealed)
 				AddAttribute (nclass, "sealed", "true");
@@ -296,7 +316,7 @@ namespace Mono.AssemblyInfo
 					}
 					catch { }//TODO bug: t.Module is sometimes null.
 					XmlNode iface = document.CreateElement ("interface", null);
-					AddAttribute (iface, "name", t.ToString ());
+					AddAttribute (iface, "name", Utils.CleanupType (t.ToString ()));
 					ifaces.AppendChild (iface);
 				}
 			}
@@ -317,7 +337,7 @@ namespace Mono.AssemblyInfo
 				ngeneric.AppendChild (el);
 				foreach (Type ct in csts) {
 					XmlElement cel = document.CreateElement ("type");
-					cel.AppendChild (document.CreateTextNode (ct.FullName));
+					cel.AppendChild (document.CreateTextNode (Utils.CleanupType (ct.FullName)));
 					el.AppendChild (cel);
 				}
 			}
@@ -578,7 +598,7 @@ namespace Mono.AssemblyInfo
 		{
 			base.AddExtraData (p, memberDefenition);
 			FieldDefinition field = (FieldDefinition) memberDefenition;
-			AddAttribute (p, "fieldtype", field.FieldType.ToString ());
+			AddAttribute (p, "fieldtype", Utils.CleanupType (field.FieldType.ToString ()));
 
 			if (field.IsLiteral) {
 				object value = field.Constant;//object value = field.GetValue (null);
@@ -629,7 +649,7 @@ namespace Mono.AssemblyInfo
 			base.AddExtraData (p, memberDefenition);
 			PropertyDefinition prop = (PropertyDefinition) memberDefenition;
 			TypeReference t = prop.PropertyType;
-			AddAttribute (p, "ptype", prop.PropertyType.ToString ());
+			AddAttribute (p, "ptype", Utils.CleanupType (prop.PropertyType.ToString ()));
 			MethodDefinition _get = prop.GetMethod;
 			MethodDefinition _set = prop.SetMethod;
 			bool haveGet = (_get != null && TypeData.MustDocumentMethod(_get));
@@ -697,7 +717,7 @@ namespace Mono.AssemblyInfo
 		{
 			base.AddExtraData (p, memberDefenition);
 			EventDefinition evt = (EventDefinition) memberDefenition;
-			AddAttribute (p, "eventtype", evt.EventType.FullName);
+			AddAttribute (p, "eventtype", Utils.CleanupType (evt.EventType.FullName));
 		}
 
 		public override string ParentTag {
@@ -740,7 +760,7 @@ namespace Mono.AssemblyInfo
 					if (gcs.Length > 0) {
 						string [] gcNames = new string [gcs.Length];
 						for (int g = 0; g < gcs.Length; g++)
-							gcNames [g] = gcs [g].FullName;
+							gcNames [g] = Utils.CleanupType (gcs [g].FullName);
 						genArgCsts = String.Concat (
 							"(",
 							string.Join (", ", gcNames),
@@ -793,7 +813,7 @@ namespace Mono.AssemblyInfo
 			//    return;
 
 			//MethodInfo method = (MethodInfo) member;
-			string rettype = mbase.ReturnType.ReturnType.FullName;
+			string rettype = Utils.CleanupType (mbase.ReturnType.ReturnType.FullName);
 			if (rettype != "System.Void" || !mbase.IsConstructor)
 				AddAttribute (p, "returntype", (rettype));
 
@@ -814,7 +834,7 @@ namespace Mono.AssemblyInfo
 				ngeneric.AppendChild (el);
 				foreach (Type ct in csts) {
 					XmlElement cel = document.CreateElement ("type");
-					cel.AppendChild (document.CreateTextNode (ct.FullName));
+					cel.AppendChild (document.CreateTextNode (Utils.CleanupType (ct.FullName)));
 					el.AppendChild (cel);
 				}
 			}
@@ -884,7 +904,7 @@ namespace Mono.AssemblyInfo
 				}
 
 				TypeReference t = parameter.ParameterType;
-				AddAttribute (paramNode, "type", t.FullName);
+				AddAttribute (paramNode, "type", Utils.CleanupType (t.FullName));
 
 				if ((parameter.Attributes & ParameterAttributes.Optional) != 0) {
 					AddAttribute (paramNode, "optional", "true");
@@ -930,7 +950,7 @@ namespace Mono.AssemblyInfo
 					att.Resolve ();
 				}
 				catch { }//TODO: fix this bug - exception is thrown when running on our System.Web.dll
-				string attName = TypeHelper.GetFullName (att);
+				string attName = Utils.CleanupType (TypeHelper.GetFullName (att));
 				bool attIsPublic = TypeHelper.IsPublic(att);
 				if (!attIsPublic || attName.EndsWith ("TODOAttribute"))
 					continue;
@@ -1009,7 +1029,7 @@ namespace Mono.AssemblyInfo
 				else
 					modifier = "";
 
-				string type_name = info.ParameterType.ToString ().Replace ('<', '[').Replace ('>', ']');
+				string type_name = Utils.CleanupType (info.ParameterType.ToString ());
 				sb.AppendFormat ("{0}{1}, ", modifier, type_name);
 			}
 

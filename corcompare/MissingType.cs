@@ -65,7 +65,16 @@ namespace Mono.Util.CorCompare
 		{
 			get
 			{
+				Console.WriteLine ("For: {0} -> {1}", Name, r);
+				return r;
+			}
+
+		}
+
+		string r {
+			get {
 				TypeDefinition type = TypeInfo;
+
 				if (type.IsEnum)
 					return "enum";
 				else if (type.IsInterface)
