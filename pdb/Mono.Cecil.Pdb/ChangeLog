@@ -1,3 +1,11 @@
+2008-04-19  Sebastien Pouliot  <sebastien@ximian.com>
+
+	* Mono.Cecil.Pdb/PdbFactory.cs: Use the same parameter names as the
+	ISymbolStoreFactory uses (this pleases Gendarme)
+	* Mono.Cecil.Pdb/PdbReader.cs: Update wrt interface change (i.e. 
+	Read now provide a Dictionary to reuse the existing Hashtable 
+	between	offsets and instructions).
+
 2007-11-15	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 
 	* Mono.Cecil.Pdb/default.build: fixed relative paths
