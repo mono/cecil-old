@@ -122,7 +122,7 @@ namespace Mono.Cecil.Pdb {
 					0,
 					variables [i],
 					SymAddressKind.ILOffset,
-					i,
+					var.Index,
 					0,
 					0,
 					startOffset,
