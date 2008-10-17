@@ -31,24 +31,23 @@ using System.Diagnostics.SymbolStore;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Mono.Cecil.Pdb
-{
+namespace Mono.Cecil.Pdb {
+
 	[Guid ("0B97726E-9E6D-4f05-9A26-424022093CAA")]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
 	[ComImport]
-	internal interface ISymUnmanagedWriter2 : ISymUnmanagedWriter
-	{
+	interface ISymUnmanagedWriter2 : ISymUnmanagedWriter {
 		// ISymUnmanagedWriter
-		new void DefineDocument ([In, MarshalAs (UnmanagedType.LPWStr)] string url,
-								 [In] ref Guid langauge,
-								 [In] ref Guid languageVendor,
-								 [In] ref Guid documentType,
-								 [Out, MarshalAs (UnmanagedType.Interface)] out ISymUnmanagedDocumentWriter pRetVal);
+		new void DefineDocument (
+			[In, MarshalAs (UnmanagedType.LPWStr)] string url,
+			[In] ref Guid langauge,
+			[In] ref Guid languageVendor,
+			[In] ref Guid documentType,
+			[Out, MarshalAs (UnmanagedType.Interface)] out ISymUnmanagedDocumentWriter pRetVal);
 		new void SetUserEntryPoint_Placeholder ();
 		new void OpenMethod ([In] SymbolToken method);
 		new void CloseMethod ();
-		new void OpenScope ([In] int startOffset,
-						    [Out] out int pRetVal);
+		new void OpenScope ([In] int startOffset, [Out] out int pRetVal);
 		new void CloseScope ([In] int endOffset);
 		new void SetScopeRange_Placeholder ();
 		new void DefineLocalVariable_Placeholder ();
@@ -61,35 +60,39 @@ namespace Mono.Cecil.Pdb
 		new void CloseNamespace ();
 		new void UsingNamespace ([In, MarshalAs (UnmanagedType.LPWStr)] string fullName);
 		new void SetMethodSourceRange_Placeholder ();
-		new void Initialize ([In] IntPtr emitter,
-							 [In, MarshalAs (UnmanagedType.LPWStr)] string filename,
-							 [In] IStream pIStream,
-							 [In] bool fFullBuild);
-		new void GetDebugInfo ([Out] out ImageDebugDirectory pIDD,
-							   [In] int cData,
-							   [Out] out int pcData,
-							   [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] byte[] data);
-		new void DefineSequencePoints ([In, MarshalAs (UnmanagedType.Interface)] ISymUnmanagedDocumentWriter document,
-									   [In] int spCount,
-									   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] offsets,
-									   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] lines,
-									   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] columns,
-									   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] endLines,
-									   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] endColumns);
+		new void Initialize (
+			[In] IntPtr emitter,
+			[In, MarshalAs (UnmanagedType.LPWStr)] string filename,
+			[In] IStream pIStream,
+			[In] bool fFullBuild);
+		new void GetDebugInfo (
+			[Out] out ImageDebugDirectory pIDD,
+			[In] int cData,
+			[Out] out int pcData,
+			[In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] byte [] data);
+		new void DefineSequencePoints (
+			[In, MarshalAs (UnmanagedType.Interface)] ISymUnmanagedDocumentWriter document,
+			[In] int spCount,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] offsets,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] lines,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] columns,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] endLines,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] endColumns);
 		new void RemapToken_Placeholder ();
 		new void Initialize2_Placeholder ();
 		new void DefineConstant_Placeholder ();
 		new void Abort_Placeholder ();
 
 		// ISymUnmanagedWriter2
-		void DefineLocalVariable2 ([In, MarshalAs (UnmanagedType.LPWStr)] string name,
-							 	   [In] int attributes,
-								   [In] SymbolToken sigToken,
-								   [In] int addrKind,
-								   [In] int addr1,
-								   [In] int addr2,
-								   [In] int addr3,
-								   [In] int startOffset,
-								   [In] int endOffset);
+		void DefineLocalVariable2 (
+			[In, MarshalAs (UnmanagedType.LPWStr)] string name,
+			[In] int attributes,
+			[In] SymbolToken sigToken,
+			[In] int addrKind,
+			[In] int addr1,
+			[In] int addr2,
+			[In] int addr3,
+			[In] int startOffset,
+			[In] int endOffset);
 	}
 }

@@ -11,7 +11,7 @@
 	* Mono.Cecil.Pdb/SymWriter.cs
 	* Mono.Cecil.Pdb/PdbFactory.cs
 	* Mono.Cecil.Pdb/PdbWriter.cs
-	* Mono.Cecil.Pdb/PdbHelper.cs: 
+	* Mono.Cecil.Pdb/PdbHelper.cs:
 		Patch by Juerg Billeter fixing PDB patching
 		(http://groups.google.com/group/mono-cecil/browse_thread/thread/c714ae6ad2a9d092/f8b0f92caefeca14).
 

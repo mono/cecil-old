@@ -51,7 +51,7 @@ namespace Mono.Cecil.Pdb {
 			m_assembly = assembly;
 		}
 
-		public void Write (MethodBody body, byte [][] variables)
+		public void Write (MethodBody body)
 		{
 			CreateDocuments (body);
 			m_writer.OpenMethod (new SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));

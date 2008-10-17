@@ -10,7 +10,7 @@
 	<property name="debug" value="true" />
 	<property name="keyfile" value="../../../mcs/class/mono.snk" />
 	<property name="csc.defines" value="NO_DEFINE" />
-	
+
 	<target name="release" depends="clean, set-release, build">
 	</target>
 

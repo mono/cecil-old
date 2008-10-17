@@ -35,7 +35,7 @@ namespace Mono.Cecil.Pdb {
 	using System.IO;
 	using System.Runtime.InteropServices;
 
-	internal class PdbHelper {
+	class PdbHelper {
 
 		[DllImport("ole32.dll")]
 		static extern int CoCreateInstance (

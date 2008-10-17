@@ -25,15 +25,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using System.Runtime.InteropServices;
 
-namespace Mono.Cecil.Pdb
-{
+namespace Mono.Cecil.Pdb {
+
 	// IMAGE_DEBUG_DIRECTORY structure
 	[StructLayout (LayoutKind.Sequential)]
-	internal struct ImageDebugDirectory
-	{
+	struct ImageDebugDirectory {
 		public uint Characteristics;
 		public uint TimeDateStamp;
 		public ushort MajorVersion;

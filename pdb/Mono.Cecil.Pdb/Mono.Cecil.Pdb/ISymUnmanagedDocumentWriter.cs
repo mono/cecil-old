@@ -25,16 +25,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
 using System.Runtime.InteropServices;
 
-namespace Mono.Cecil.Pdb
-{
+namespace Mono.Cecil.Pdb {
+
 	[Guid ("B01FAFEB-C450-3A4D-BEEC-B4CEEC01E006")]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
 	[ComImport]
-	internal interface ISymUnmanagedDocumentWriter
-	{
-		// ISymUnmanagedDocumentWriter
+	interface ISymUnmanagedDocumentWriter {
 	}
 }

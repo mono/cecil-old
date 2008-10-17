@@ -87,7 +87,7 @@ namespace Mono.Cecil.Pdb {
 		}
 
 		// note: sadly it's not possible to cache all the [count] allocations and reuse them.
-		// a NRE is throw if the size of the arrays does not match SequencePointCount :( 
+		// a NRE is throw if the size of the arrays does not match SequencePointCount :(
 		void ReadSequencePoints (ISymbolMethod method, IDictionary instructions)
 		{
 			int count = method.SequencePointCount;

@@ -31,24 +31,23 @@ using System.Diagnostics.SymbolStore;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Mono.Cecil.Pdb
-{
+namespace Mono.Cecil.Pdb {
+
 	[Guid ("ED14AA72-78E2-4884-84E2-334293AE5214")]
 	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
 	[ComImport]
-	internal interface ISymUnmanagedWriter
-	{
-		// ISymUnmanagedWriter
-		void DefineDocument ([In, MarshalAs (UnmanagedType.LPWStr)] string url,
-							 [In] ref Guid langauge,
-							 [In] ref Guid languageVendor,
-							 [In] ref Guid documentType,
-							 [Out, MarshalAs (UnmanagedType.Interface)] out ISymUnmanagedDocumentWriter pRetVal);
+	interface ISymUnmanagedWriter {
+
+		void DefineDocument (
+			[In, MarshalAs (UnmanagedType.LPWStr)] string url,
+			[In] ref Guid langauge,
+			[In] ref Guid languageVendor,
+			[In] ref Guid documentType,
+			[Out, MarshalAs (UnmanagedType.Interface)] out ISymUnmanagedDocumentWriter pRetVal);
 		void SetUserEntryPoint_Placeholder ();
 		void OpenMethod ([In] SymbolToken method);
 		void CloseMethod ();
-		void OpenScope ([In] int startOffset,
-					    [Out] out int pRetVal);
+		void OpenScope ([In] int startOffset, [Out] out int pRetVal);
 		void CloseScope ([In] int endOffset);
 		void SetScopeRange_Placeholder ();
 		void DefineLocalVariable_Placeholder ();
@@ -61,21 +60,24 @@ namespace Mono.Cecil.Pdb
 		void CloseNamespace ();
 		void UsingNamespace ([In, MarshalAs (UnmanagedType.LPWStr)] string fullName);
 		void SetMethodSourceRange_Placeholder ();
-		void Initialize ([In] IntPtr emitter,
-						 [In, MarshalAs (UnmanagedType.LPWStr)] string filename,
-						 [In] IStream pIStream,
-						 [In] bool fFullBuild);
-		void GetDebugInfo ([Out] out ImageDebugDirectory pIDD,
-						   [In] int cData,
-						   [Out] out int pcData,
-						   [In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] byte[] data);
-		void DefineSequencePoints ([In, MarshalAs (UnmanagedType.Interface)] ISymUnmanagedDocumentWriter document,
-								   [In] int spCount,
-								   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] offsets,
-								   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] lines,
-								   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] columns,
-								   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] endLines,
-								   [In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int[] endColumns);
+		void Initialize (
+			[In] IntPtr emitter,
+			[In, MarshalAs (UnmanagedType.LPWStr)] string filename,
+			[In] IStream pIStream,
+			[In] bool fFullBuild);
+		void GetDebugInfo (
+			[Out] out ImageDebugDirectory pIDD,
+			[In] int cData,
+			[Out] out int pcData,
+			[In, Out, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] byte [] data);
+		void DefineSequencePoints (
+			[In, MarshalAs (UnmanagedType.Interface)] ISymUnmanagedDocumentWriter document,
+			[In] int spCount,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] offsets,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] lines,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] columns,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] endLines,
+			[In, MarshalAs (UnmanagedType.LPArray, SizeParamIndex = 1)] int [] endColumns);
 		void RemapToken_Placeholder ();
 		void Initialize2_Placeholder ();
 		void DefineConstant_Placeholder ();
