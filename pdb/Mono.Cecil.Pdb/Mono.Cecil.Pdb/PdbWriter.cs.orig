@@ -26,7 +26,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Mono.Cecil.Binary;
 using Mono.Cecil.Cil;
 
 namespace Mono.Cecil.Pdb {
@@ -39,27 +38,27 @@ namespace Mono.Cecil.Pdb {
 	public class PdbWriter : Cil.ISymbolWriter {
 
 		ModuleDefinition m_module;
-		SymWriter m_writer;
+		ISymbolWriter m_writer;
 		Hashtable m_documents;
-		string m_assembly;
+		string m_pdb;
 
-		internal PdbWriter (SymWriter writer, ModuleDefinition module, string assembly)
+		internal PdbWriter (ISymbolWriter writer, ModuleDefinition module, string pdb)
 		{
 			m_writer = writer;
 			m_module = module;
 			m_documents = new Hashtable ();
-			m_assembly = assembly;
+			m_pdb = pdb;
 		}
 
 		public void Write (MethodBody body, byte [][] variables)
 		{
 			CreateDocuments (body);
 			m_writer.OpenMethod (new SymbolToken ((int) body.Method.MetadataToken.ToUInt ()));
-			CreateScopes (body, body.Scopes, new SymbolToken (body.LocalVarToken));
+			CreateScopes (body, body.Scopes, variables);
 			m_writer.CloseMethod ();
 		}
 
-		void CreateScopes (MethodBody body, ScopeCollection scopes, SymbolToken localVarToken)
+		void CreateScopes (MethodBody body, ScopeCollection scopes, byte [][] variables)
 		{
 			foreach (Scope s in scopes) {
 				int startOffset = s.Start.Offset;
@@ -105,28 +104,28 @@ namespace Mono.Cecil.Pdb {
 				m_writer.DefineSequencePoints (GetDocument (doc),
 					offsets, startRows, startCols, endRows, endCols);
 
-				CreateLocalVariable (s, startOffset, endOffset, localVarToken);
+				CreateLocalVariable (s, startOffset, endOffset, variables);
 
-				CreateScopes (body, s.Scopes, localVarToken);
+				CreateScopes (body, s.Scopes, variables);
 				m_writer.CloseNamespace ();
 
 				m_writer.CloseScope (endOffset);
 			}
 		}
 
-		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset, SymbolToken localVarToken)
+		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset, byte [][] variables)
 		{
 			for (int i = 0; i < provider.Variables.Count; i++) {
 				VariableDefinition var = provider.Variables [i];
- 				m_writer.DefineLocalVariable2(
-  					var.Name,
-  					0,
- 					localVarToken,
-  					SymAddressKind.ILOffset,
- 					var.Index,
-  					0,
-  					0,
-  					startOffset,
+				m_writer.DefineLocalVariable (
+					var.Name,
+					0,
+					variables [i],
+					SymAddressKind.ILOffset,
+					var.Index,
+					0,
+					0,
+					startOffset,
 					endOffset);
 			}
 		}
@@ -141,12 +140,12 @@ namespace Mono.Cecil.Pdb {
 			}
 		}
 
-		SymDocumentWriter GetDocument (Document document)
+		ISymbolDocumentWriter GetDocument (Document document)
 		{
 			if (document == null)
 				return null;
 
-			SymDocumentWriter docWriter = m_documents[document.Url] as SymDocumentWriter;
+			ISymbolDocumentWriter docWriter = m_documents [document.Url] as ISymbolDocumentWriter;
 			if (docWriter != null)
 				return docWriter;
 
@@ -162,25 +161,41 @@ namespace Mono.Cecil.Pdb {
 
 		public void Dispose ()
 		{
-			Patch ();
 			m_writer.Close ();
+			Patch ();
 		}
 
 		void Patch ()
 		{
-			// patch debug info in PE file to match PDB
+			FileStream fs = new FileStream (m_pdb, FileMode.Open, FileAccess.ReadWrite);
+			uint age = m_module.Image.DebugHeader.Age;
+			Guid g = m_module.Image.DebugHeader.Signature;
 
-			byte[] DebugInfo = m_writer.GetDebugInfo ();
+			BinaryReader reader = new BinaryReader (fs);
+			reader.BaseStream.Position = 32;
 
-			RVA debugHeaderRVA = m_module.Image.PEOptionalHeader.DataDirectories.Debug.VirtualAddress;
-			long debugHeaderPos = m_module.Image.ResolveVirtualAddress (debugHeaderRVA);
-			uint sizeUntilData = 0x1c; // copied from ImageWriter
-			long debugDataPos = debugHeaderPos + sizeUntilData;
+			uint pageSize = reader.ReadUInt32 ();
+			reader.BaseStream.Position += 4;
 
-			FileStream fs = new FileStream (m_assembly, FileMode.Open, FileAccess.ReadWrite);
+			uint pageCount = reader.ReadUInt32 ();
+			reader.BaseStream.Position += pageSize - 44;
+
+			uint magic = 0x1312e94;
+			int page = 0;
+			for (int i = 1; i < pageCount; i++) {
+				if (magic == reader.ReadUInt32 ()) {
+					page = i;
+					break;
+				}
+				reader.BaseStream.Position += pageSize - 4;
+			}
+
 			BinaryWriter writer = new BinaryWriter (fs);
-			writer.BaseStream.Position = debugDataPos;
-			writer.Write (DebugInfo);
+			writer.BaseStream.Position = page * pageSize + 8;
+
+			writer.Write (age);
+			writer.Write (g.ToByteArray ());
+
 			fs.Close ();
 		}
 	}

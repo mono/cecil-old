@@ -1,10 +1,10 @@
 //
-// PdbFactory.cs
+// SymDocumentWriter.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Juerg Billeter (j@bitron.ch)
 //
-// (C) 2006 Jb Evain
+// (C) 2008 Juerg Billeter
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,21 +26,22 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.Pdb {
+using System;
 
-	using Mono.Cecil.Cil;
+namespace Mono.Cecil.Pdb
+{
+	internal class SymDocumentWriter
+	{
+		ISymUnmanagedDocumentWriter m_unmanagedDocumentWriter;
 
-	public class PdbFactory : ISymbolStoreFactory {
-
-		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFileName)
+		public SymDocumentWriter (ISymUnmanagedDocumentWriter unmanagedDocumentWriter)
 		{
-			return new PdbReader (PdbHelper.CreateReader (assemblyFileName));
+			m_unmanagedDocumentWriter = unmanagedDocumentWriter;
 		}
 
-		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFileName)
+		public ISymUnmanagedDocumentWriter GetUnmanaged ()
 		{
-			string pdb = string.Concat (assemblyFileName.Substring (0, assemblyFileName.LastIndexOf (".")), ".pdb");
-			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, pdb), module, assemblyFileName);
+			return m_unmanagedDocumentWriter;
 		}
 	}
 }

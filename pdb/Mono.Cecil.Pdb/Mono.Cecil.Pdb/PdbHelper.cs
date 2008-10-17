@@ -98,9 +98,9 @@ namespace Mono.Cecil.Pdb {
 			return reader;
 		}
 
-		public static ISymbolWriter CreateWriter (string assembly, string pdb)
+		public static SymWriter CreateWriter (string assembly, string pdb)
 		{
-			SymWriter writer = new SymWriter (false);
+			SymWriter writer = new SymWriter ();
 
 			object objDispenser, objImporter;
 			CoCreateInstance (ref s_dispenserClassID, null, 1, ref s_dispenserIID, out objDispenser);

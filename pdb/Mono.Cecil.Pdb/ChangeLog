@@ -1,3 +1,20 @@
+2008-10-17	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* Mono.Cecil.Pdb.csproj
+	* Mono.Cecil.Pdb/ImageDebugDirectory.cs
+	* Mono.Cecil.Pdb/ISymUnmanagedWriter2.cs
+	* Mono.Cecil.Pdb/PdbFactory.cs.orig
+	* Mono.Cecil.Pdb/ISymUnmanagedDocumentWriter.cs
+	* Mono.Cecil.Pdb/ISymUnmanagedWriter.cs
+	* Mono.Cecil.Pdb/PdbWriter.cs.orig
+	* Mono.Cecil.Pdb/SymDocumentWriter.cs
+	* Mono.Cecil.Pdb/SymWriter.cs
+	* Mono.Cecil.Pdb/PdbFactory.cs
+	* Mono.Cecil.Pdb/PdbWriter.cs
+	* Mono.Cecil.Pdb/PdbHelper.cs: 
+		Patch by Juerg Billeter fixing PDB patching
+		(http://groups.google.com/group/mono-cecil/browse_thread/thread/c714ae6ad2a9d092/f8b0f92caefeca14).
+
 2008-10-07  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil.Pdb/PdbWriter.cs: use variable's index

@@ -40,7 +40,7 @@ namespace Mono.Cecil.Pdb {
 		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFileName)
 		{
 			string pdb = string.Concat (assemblyFileName.Substring (0, assemblyFileName.LastIndexOf (".")), ".pdb");
-			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, pdb), module, assemblyFileName);
+			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, pdb), module, pdb);
 		}
 	}
 }

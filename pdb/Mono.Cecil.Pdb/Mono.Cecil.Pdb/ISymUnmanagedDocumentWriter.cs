@@ -1,10 +1,9 @@
-//
-// PdbFactory.cs
+// ISymUnmanagedDocumentWriter.cs
 //
 // Author:
-//   Jb Evain (jbevain@gmail.com)
+//   Juerg Billeter (j@bitron.ch)
 //
-// (C) 2006 Jb Evain
+// (C) 2008 Juerg Billeter
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,21 +25,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Mono.Cecil.Pdb {
+using System;
+using System.Runtime.InteropServices;
 
-	using Mono.Cecil.Cil;
-
-	public class PdbFactory : ISymbolStoreFactory {
-
-		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFileName)
-		{
-			return new PdbReader (PdbHelper.CreateReader (assemblyFileName));
-		}
-
-		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFileName)
-		{
-			string pdb = string.Concat (assemblyFileName.Substring (0, assemblyFileName.LastIndexOf (".")), ".pdb");
-			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, pdb), module, assemblyFileName);
-		}
+namespace Mono.Cecil.Pdb
+{
+	[Guid ("B01FAFEB-C450-3A4D-BEEC-B4CEEC01E006")]
+	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+	[ComImport]
+	internal interface ISymUnmanagedDocumentWriter
+	{
+		// ISymUnmanagedDocumentWriter
 	}
 }

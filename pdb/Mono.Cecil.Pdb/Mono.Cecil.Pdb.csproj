@@ -40,13 +40,19 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Mono.Cecil.Pdb\ImageDebugDirectory.cs" />
+    <Compile Include="Mono.Cecil.Pdb\ISymUnmanagedDocumentWriter.cs" />
+    <Compile Include="Mono.Cecil.Pdb\ISymUnmanagedWriter2.cs" />
     <Compile Include="Mono.Cecil.Pdb\AssemblyInfo.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataDispenser.cs" />
     <Compile Include="Mono.Cecil.Pdb\IMetadataImport.cs" />
+    <Compile Include="Mono.Cecil.Pdb\ISymUnmanagedWriter.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbFactory.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbReader.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbWriter.cs" />
     <Compile Include="Mono.Cecil.Pdb\PdbHelper.cs" />
+    <Compile Include="Mono.Cecil.Pdb\SymDocumentWriter.cs" />
+    <Compile Include="Mono.Cecil.Pdb\SymWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ISymWrapper" />
