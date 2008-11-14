@@ -1069,13 +1069,66 @@ namespace Mono.AssemblyInfo
 				return value;
 
 			if (type.IsEnum) {
-				foreach (FieldDefinition field in type.Fields) {
-					if (!field.HasConstant)
-						continue;
+				if (IsFlagedEnum (type))
+					return GetFlaggedEnumValue (type, value);
 
-					if (Comparer.Default.Compare (field.Constant, value) == 0)
-						return field.Name;
+				return GetEnumValue (type, value);
+			}
+
+			return value;
+		}
+
+		static bool IsFlagedEnum (TypeDefinition type)
+		{
+			if (!type.IsEnum)
+				return false;
+
+			if (type.CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in type.CustomAttributes)
+				if (attribute.Constructor.DeclaringType.FullName == "System.FlagsAttribute")
+					return true;
+
+			return false;
+		}
+
+		static object GetFlaggedEnumValue (TypeDefinition type, object value)
+		{
+			long flags = Convert.ToInt64 (value);
+			var signature = new StringBuilder ();
+
+			for (int i = type.Fields.Count - 1; i >= 0; i--) {
+				FieldDefinition field = type.Fields [i];
+
+				if (!field.HasConstant)
+					continue;
+
+				long flag = Convert.ToInt64 (field.Constant);
+
+				if (flag == 0)
+					continue;
+
+				if ((flags & flag) == flag) {
+					if (signature.Length != 0)
+						signature.Append (", ");
+
+					signature.Append (field.Name);
+					flags -= flag;
 				}
+			}
+
+			return signature.ToString ();
+		}
+
+		static object GetEnumValue (TypeDefinition type, object value)
+		{
+			foreach (FieldDefinition field in type.Fields) {
+				if (!field.HasConstant)
+					continue;
+
+				if (Comparer.Default.Compare (field.Constant, value) == 0)
+					return field.Name;
 			}
 
 			return value;
