@@ -4,6 +4,7 @@
 //   Piers Haken (piersh@friskit.com)
 //
 // (C) 2001-2002 Piers Haken
+
 using System;
 using System.Xml;
 using System.Collections;
@@ -35,6 +36,7 @@ namespace Mono.Util.CorCompare
 			htIgnore.Add ("System.Runtime.InteropServices.GuidAttribute", null);
 			htIgnore.Add ("System.Runtime.InteropServices.InterfaceTypeAttribute", null);
 			htIgnore.Add ("System.Runtime.InteropServices.ComVisibleAttribute", null);
+			htIgnore.Add ("System.Runtime.CompilerServices.InternalsVisibleToAttribute", null);
 		}
 
 		public MissingAttribute (Object _attributeMono, Object _attributeMS)
@@ -78,7 +80,7 @@ namespace Mono.Util.CorCompare
 			{
 				if (attribute != null)
 				{
-					string strName = attribute.Constructor.Name;
+					string strName = attribute.Constructor.DeclaringType.FullName;
 					if (!map.Contains (strName) && !htIgnore.Contains (strName))
 						map.Add (strName, attribute);
 				}

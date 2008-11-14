@@ -4,56 +4,73 @@ using System.Text;
 using Mono.Cecil;
 
 namespace Mono.Util.CorCompare.Cecil {
+
 	static class TypeHelper {
 
-		internal static bool IsPublic (TypeReference typeref) {
-			if (typeref == null) {
+		public static AssemblyResolver Resolver = new AssemblyResolver ();
+
+		internal static bool IsPublic (TypeReference typeref)
+		{
+			if (typeref == null)
 				throw new ArgumentException ("typeref must not be null");
-			}
-			TypeDefinition td = GetTypeDefinition (typeref);
-			return (td.Attributes & TypeAttributes.Public) != 0;
+
+			TypeDefinition td = Resolve (typeref);
+			return td.IsPublic;
 		}
 
-		internal static TypeDefinition GetTypeDefinition (TypeReference typeref) {
-			if (typeref is TypeDefinition)
-				return (TypeDefinition)typeref;
-			if (typeref.Module == null)
-				return null;
-			return typeref.Module.Assembly.Resolver.Resolve (typeref.Scope.Name).MainModule.Types [typeref.FullName];
-		}
-
-		internal static bool IsDelegate (TypeReference typeref) {
+		internal static bool IsDelegate (TypeReference typeref)
+		{
 			return IsDerivedFrom (typeref, "System.MulticastDelegate");
 		}
 
-		internal static bool IsDerivedFrom (TypeReference type, string derivedFrom) {
+		static TypeDefinition Resolve (TypeReference reference)
+		{
+			return Resolver.Resolve (reference);
+		}
 
-			for (TypeDefinition t = GetTypeDefinition (type); t != null; t = GetBaseType(t)) {
-				if (t.FullName == derivedFrom)
+		internal static bool IsDerivedFrom (TypeReference type, string derivedFrom)
+		{
+			foreach (var def in WalkHierarchy (type))
+				if (def.FullName == derivedFrom)
 					return true;
-			}
+
 			return false;
 		}
 
-		internal static TypeDefinition GetBaseType (TypeDefinition child) {
+		internal static IEnumerable<TypeDefinition> WalkHierarchy (TypeReference type)
+		{
+			for (var def = Resolve (type); def != null; def = GetBaseType (def))
+				yield return def;
+		}
+
+		internal static IEnumerable<TypeReference> GetInterfaces (TypeReference type)
+		{
+			foreach (var def in WalkHierarchy (type))
+				foreach (TypeReference iface in def.Interfaces)
+					yield return iface;
+		}
+
+		internal static TypeDefinition GetBaseType (TypeDefinition child)
+		{
 			if (child.BaseType == null)
 				return null;
-			return GetTypeDefinition (child.BaseType);
+
+			return Resolve (child.BaseType);
 		}
 
-		internal static bool IsPublic (CustomAttribute att) {
-			TypeDefinition td = GetTypeDefinition (att);
-			return (td.Attributes & TypeAttributes.VisibilityMask) == TypeAttributes.Public;
+		internal static bool IsPublic (CustomAttribute att)
+		{
+			return IsPublic (att.Constructor.DeclaringType);
 		}
 
-		internal static string GetFullName (CustomAttribute att) {
+		internal static string GetFullName (CustomAttribute att)
+		{
 			return att.Constructor.DeclaringType.FullName;
 		}
 
-		internal static TypeDefinition GetTypeDefinition (CustomAttribute att) {
-
-			return att.Constructor.DeclaringType.Module.Assembly.Resolver.Resolve (att.Constructor.DeclaringType.Scope.Name).MainModule.Types [GetFullName (att)];
+		internal static TypeDefinition GetTypeDefinition (CustomAttribute att)
+		{
+			return Resolve (att.Constructor.DeclaringType);
 		}
-
 	}
 }
