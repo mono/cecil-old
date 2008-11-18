@@ -172,41 +172,57 @@ def locate(assembly, fxs = nil)
 	return glob.first if glob and glob.length > 0
 end
 
-def clean(profile)
-	if not File.directory? profile
-		Dir.mkdir(profile)
-		return
-	end
-
-	files = File.join profile, "*"
-	Dir.glob(files).each do |file|
+def delete(glob)
+	Dir.glob(glob).each do |file|
 		File.delete file
 	end
 end
 
-def generate(profile, assembly)
-	asm = File.join profile, assembly + ".dll"
-	out = File.join profile, assembly + ".xml"
+def clean(pattern, allow_create = false)
+	if allow_create and not File.directory? "masterinfos"
+		Dir.mkdir("masterinfos")
+		return
+	end
+
+	delete(File.join("masterinfos", pattern))
+end
+
+def generate(assembly)
+	asm = File.join "masterinfos", assembly + ".dll"
+	out = File.join "masterinfos", assembly + ".xml"
 	system("./mono-api-info.exe #{asm} > #{out}")
 end
 
 def process(profile, assemblies, fxs = nil)
-	clean(profile)
+	clean("*", true)
 
 	assemblies.each do |assembly|
 		if assembly != nil and assembly.length > 0
 			#puts assembly 
 			location = locate(assembly, fxs)
 			if location
-				File.copy(location, profile)
-				generate(profile, assembly)
+				File.copy(location, "masterinfos")
+				generate(assembly)
 			else
 				puts "fail to locate " + assembly
 			end
 			#puts "   " + location if location
 		end
 	end
+
+	clean("*.dll")
+
+	file = "masterinfos-#{profile}.tar"
+
+	system("tar -cf #{file} masterinfos")
+	system("gzip #{file}")
+
+	clean("*")
+
+	Dir.delete("masterinfos")
 end
+
+delete("*.tar.gz")
 
 process("1.1", $net_1_1, [$fx1])
 #process("2.0", $net_2_0, [$fx2])
