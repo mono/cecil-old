@@ -916,8 +916,7 @@ namespace Mono.AssemblyInfo
 					continue;
 
 				string attName = Utils.CleanupTypeName (att.Constructor.DeclaringType);
-				bool attIsPublic = TypeHelper.IsPublic (att);
-				if (!attIsPublic || attName.EndsWith ("TODOAttribute"))
+				if (SkipAttribute (att))
 					continue;
 
 				XmlNode node = document.CreateElement ("attribute");
@@ -1069,7 +1068,7 @@ namespace Mono.AssemblyInfo
 				return value;
 
 			if (type.IsEnum) {
-				if (IsFlagedEnum (type))
+				if (IsFlaggedEnum (type))
 					return GetFlaggedEnumValue (type, value);
 
 				return GetEnumValue (type, value);
@@ -1078,7 +1077,7 @@ namespace Mono.AssemblyInfo
 			return value;
 		}
 
-		static bool IsFlagedEnum (TypeDefinition type)
+		static bool IsFlaggedEnum (TypeDefinition type)
 		{
 			if (!type.IsEnum)
 				return false;
@@ -1132,6 +1131,14 @@ namespace Mono.AssemblyInfo
 			}
 
 			return value;
+		}
+
+		static bool SkipAttribute (CustomAttribute attribute)
+		{
+			var type_name = Utils.CleanupTypeName (attribute.Constructor.DeclaringType);
+
+			return !TypeHelper.IsPublic (attribute)
+				|| type_name.EndsWith ("TODOAttribute");
 		}
 
 		public static void OutputAttributes (XmlDocument doc, XmlNode parent, CustomAttributeCollection attributes)
