@@ -48,6 +48,7 @@ namespace Mono.Util.CorCompare.Cecil {
 
 		AssemblyDefinition ProcessFile (string file)
 		{
+			resolver.AddSearchDirectory (Path.GetDirectoryName (file));
 			return AssemblyFactory.GetAssembly (file);
 		}
 
