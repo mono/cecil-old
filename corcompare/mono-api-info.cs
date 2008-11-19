@@ -41,7 +41,7 @@ namespace Mono.AssemblyInfo
 
 			XmlTextWriter writer = new XmlTextWriter (Console.Out);
 			writer.Formatting = Formatting.Indented;
-			XmlNode decl = doc.CreateXmlDeclaration ("1.0", null, null);
+			XmlNode decl = doc.CreateXmlDeclaration ("1.0", "utf-8", null);
 			doc.InsertBefore (decl, doc.DocumentElement);
 			doc.WriteTo (writer);
 			return 0;
