@@ -81,6 +81,9 @@ namespace Mono.Cecil.Pdb {
 					if (body.Instructions [i].SequencePoint != null)
 						instructions.Add (body.Instructions [i]);
 
+				if (instructions.Count == 0)
+					continue;
+
 				Document doc = null;
 
 				int [] offsets = new int [instructions.Count];
