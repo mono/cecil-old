@@ -45,9 +45,13 @@ namespace Mono.Util.CorCompare.Cecil {
 
 		internal static IEnumerable<TypeReference> GetInterfaces (TypeReference type)
 		{
+			var ifaces = new Dictionary<string, TypeReference> ();
+
 			foreach (var def in WalkHierarchy (type))
 				foreach (TypeReference iface in def.Interfaces)
-					yield return iface;
+					ifaces [iface.FullName] = iface;
+
+			return ifaces.Values;
 		}
 
 		internal static TypeDefinition GetBaseType (TypeDefinition child)

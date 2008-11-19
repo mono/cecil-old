@@ -252,29 +252,31 @@ namespace Mono.AssemblyInfo
 			if (provider.GenericParameters.Count == 0)
 				return;
 
-			var kind = provider is TypeDefinition ? "type" : "method";
-
 			var gparameters = provider.GenericParameters;
 
-			XmlElement ngeneric = document.CreateElement (string.Format ("generic-{0}-constraints", kind));
+			XmlElement ngeneric = document.CreateElement (string.Format ("generic-parameters"));
 			nclass.AppendChild (ngeneric);
 
 			foreach (GenericParameter gp in gparameters) {
-				XmlElement nconstraint = document.CreateElement (string.Format ("generic-{0}-constraint", kind));
-				nconstraint.SetAttribute ("name", gp.Name);
-				nconstraint.SetAttribute ("generic-attribute", ((int) gp.Attributes).ToString ());
+				XmlElement nparam = document.CreateElement (string.Format ("generic-parameter"));
+				nparam.SetAttribute ("name", gp.Name);
+				nparam.SetAttribute ("attributes", ((int) gp.Attributes).ToString ());
 
-				ngeneric.AppendChild (nconstraint);
+				ngeneric.AppendChild (nparam);
 
 				var constraints = gp.Constraints;
 				if (constraints.Count == 0)
 					continue;
 
+				XmlElement nconstraint = document.CreateElement ("generic-parameter-constraints");
+
 				foreach (TypeReference constraint in constraints) {
-					XmlElement ncons = document.CreateElement ("type");
-					ncons.AppendChild (document.CreateTextNode (Utils.CleanupTypeName (constraint)));
-					ngeneric.AppendChild (ncons);
+					XmlElement ncons = document.CreateElement ("generic-parameter-constraint");
+					ncons.SetAttribute ("name", Utils.CleanupTypeName (constraint));
+					nconstraint.AppendChild (ncons);
 				}
+
+				nparam.AppendChild (nconstraint);
 			}
 		}
 	}
