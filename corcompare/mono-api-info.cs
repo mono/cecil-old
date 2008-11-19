@@ -751,12 +751,7 @@ namespace Mono.AssemblyInfo
 			string name = method.Name;
 			string parms = Parameters.GetSignature (method.Parameters);
 
-			if (method.GenericParameters.Count == 0)
-				return string.Format ("{0}({1})", name, parms);
-
-			string gen_params = GetGenericParametersSignature (method);
-
-			return string.Format ("{0}[{2}]({1})", name, parms, gen_params);
+			return string.Format ("{0}({1})", name, parms);
 		}
 
 		static string GetGenericParametersSignature (IGenericParameterProvider provider)
