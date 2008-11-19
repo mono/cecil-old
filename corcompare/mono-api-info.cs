@@ -754,7 +754,7 @@ namespace Mono.AssemblyInfo
 
 			string gen_params = GetGenericParametersSignature (method);
 
-			return string.Format ("{0}<{2}>({1})", name, parms, gen_params);
+			return string.Format ("{0}[{2}]({1})", name, parms, gen_params);
 		}
 
 		static string GetGenericParametersSignature (IGenericParameterProvider provider)
