@@ -1,9 +1,0 @@
-2008-10-23  Jb Evain  <jbevain@novell.com>
-
-	* mono-api.xsl: merge r97270.
-
-2008-01-11  Jb Evain  <jbevain@novell.com>
-
-	* mono-api-info.cs: fix the case where the assembly
-	is in the same directory as mono-api-info.exe
-
