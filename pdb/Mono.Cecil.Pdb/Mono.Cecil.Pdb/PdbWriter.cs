@@ -76,37 +76,8 @@ namespace Mono.Cecil.Pdb {
 					body.Instructions.Count - 1 :
 					body.Instructions.IndexOf (s.End);
 
-				ArrayList instructions = new ArrayList();
-				for (int i = start; i <= end; i++)
-					if (body.Instructions [i].SequencePoint != null)
-						instructions.Add (body.Instructions [i]);
-
-				if (instructions.Count == 0)
-					continue;
-
-				Document doc = null;
-
-				int [] offsets = new int [instructions.Count];
-				int [] startRows = new int [instructions.Count];
-				int [] startCols = new int [instructions.Count];
-				int [] endRows = new int [instructions.Count];
-				int [] endCols = new int [instructions.Count];
-
-				for (int i = 0; i < instructions.Count; i++) {
-					Instruction instr = (Instruction) instructions [i];
-					offsets [i] = instr.Offset;
-
-					if (doc == null)
-						doc = instr.SequencePoint.Document;
-
-					startRows [i] = instr.SequencePoint.StartLine;
-					startCols [i] = instr.SequencePoint.StartColumn;
-					endRows [i] = instr.SequencePoint.EndLine;
-					endCols [i] = instr.SequencePoint.EndColumn;
-				}
-
-				m_writer.DefineSequencePoints (GetDocument (doc),
-					offsets, startRows, startCols, endRows, endCols);
+				ArrayList instructions = CollectSequencePoints (body, start, end);
+				DefineSequencePoints (instructions);
 
 				CreateLocalVariable (s, startOffset, endOffset, localVarToken);
 
@@ -115,6 +86,45 @@ namespace Mono.Cecil.Pdb {
 
 				m_writer.CloseScope (endOffset);
 			}
+		}
+
+		private ArrayList CollectSequencePoints (MethodBody body, int start, int end)
+		{
+			ArrayList instructions = new ArrayList();
+			for (int i = start; i <= end; i++)
+				if (body.Instructions [i].SequencePoint != null)
+					instructions.Add (body.Instructions [i]);
+			return instructions;
+		}
+
+		private void DefineSequencePoints (ArrayList instructions)
+		{
+			if (instructions.Count == 0)
+				return;
+
+			Document doc = null;
+
+			int [] offsets = new int [instructions.Count];
+			int [] startRows = new int [instructions.Count];
+			int [] startCols = new int [instructions.Count];
+			int [] endRows = new int [instructions.Count];
+			int [] endCols = new int [instructions.Count];
+
+			for (int i = 0; i < instructions.Count; i++) {
+				Instruction instr = (Instruction) instructions [i];
+				offsets [i] = instr.Offset;
+
+				if (doc == null)
+					doc = instr.SequencePoint.Document;
+
+				startRows [i] = instr.SequencePoint.StartLine;
+				startCols [i] = instr.SequencePoint.StartColumn;
+				endRows [i] = instr.SequencePoint.EndLine;
+				endCols [i] = instr.SequencePoint.EndColumn;
+			}
+
+			m_writer.DefineSequencePoints (GetDocument (doc),
+			                               offsets, startRows, startCols, endRows, endCols);
 		}
 
 		void CreateLocalVariable (IVariableDefinitionProvider provider, int startOffset, int endOffset, SymbolToken localVarToken)
