@@ -176,7 +176,6 @@ namespace Mono.Cecil.Pdb {
 		public void Dispose ()
 		{
 			Patch ();
-			m_writer.Close ();
 		}
 
 		void Patch ()
@@ -184,17 +183,19 @@ namespace Mono.Cecil.Pdb {
 			// patch debug info in PE file to match PDB
 
 			byte[] DebugInfo = m_writer.GetDebugInfo ();
+			m_writer.Close();
 
 			RVA debugHeaderRVA = m_module.Image.PEOptionalHeader.DataDirectories.Debug.VirtualAddress;
 			long debugHeaderPos = m_module.Image.ResolveVirtualAddress (debugHeaderRVA);
 			uint sizeUntilData = 0x1c; // copied from ImageWriter
 			long debugDataPos = debugHeaderPos + sizeUntilData;
 
-			FileStream fs = new FileStream (m_assembly, FileMode.Open, FileAccess.ReadWrite);
-			BinaryWriter writer = new BinaryWriter (fs);
-			writer.BaseStream.Position = debugDataPos;
-			writer.Write (DebugInfo);
-			fs.Close ();
+			using (FileStream fs = new FileStream(m_assembly, FileMode.Open, FileAccess.Write))
+			{
+				BinaryWriter writer = new BinaryWriter(fs);
+				writer.BaseStream.Position = debugDataPos;
+				writer.Write(DebugInfo);
+			}
 		}
 	}
 }
