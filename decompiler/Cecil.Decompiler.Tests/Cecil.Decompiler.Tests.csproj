@@ -1,0 +1,260 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A2D41337-2817-453A-B299-E4DF957CEE7B}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>Cecil.Decompiler.Tests</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cecil.Decompiler.Tests</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MatchForeach, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Documents and Settings\training\Bureau\MatchForeach.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.core.interfaces, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
+      <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cecil.Decompiler\Cecil.Decompiler.csproj">
+      <Project>{ED1BE103-1699-4116-A732-616BEB142EB2}</Project>
+      <Name>Cecil.Decompiler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestCases\ControlFlow\BoolAndGreaterOrEqualThan.il" />
+    <None Include="TestCases\ControlFlow\BoolOrLessOrEqualThan.il" />
+    <None Include="TestCases\ControlFlow\Empty.il" />
+    <None Include="TestCases\ControlFlow\FalseIf.il" />
+    <None Include="TestCases\ControlFlow\FieldAccessor.il" />
+    <None Include="TestCases\ControlFlow\FloatEquals.il" />
+    <None Include="TestCases\ControlFlow\FloatGreaterThan.il" />
+    <None Include="TestCases\ControlFlow\FlowTest.il" />
+    <None Include="TestCases\ControlFlow\GreaterThanOrEqual.il" />
+    <None Include="TestCases\ControlFlow\IfNestedCondition.il" />
+    <None Include="TestCases\ControlFlow\InPlaceAdd.il" />
+    <None Include="TestCases\ControlFlow\InRange.il" />
+    <None Include="TestCases\ControlFlow\IntPropertyEquals1.il" />
+    <None Include="TestCases\ControlFlow\IntPropertyEquals2.il" />
+    <None Include="TestCases\ControlFlow\IsNull.il" />
+    <None Include="TestCases\ControlFlow\LessThanOrEqual.il" />
+    <None Include="TestCases\ControlFlow\MathOperators.il" />
+    <None Include="TestCases\ControlFlow\MixedAndOr.il" />
+    <None Include="TestCases\ControlFlow\MultipleAndOr.il" />
+    <None Include="TestCases\ControlFlow\MultipleOr.il" />
+    <None Include="TestCases\ControlFlow\NestedOrGreaterThan.il" />
+    <None Include="TestCases\ControlFlow\NotEqual.il" />
+    <None Include="TestCases\ControlFlow\NotStringEquality.il" />
+    <None Include="TestCases\ControlFlow\OptimizedAnd.il" />
+    <None Include="TestCases\ControlFlow\OptimizedNestedOr.il" />
+    <None Include="TestCases\ControlFlow\OptimizedOr.il" />
+    <None Include="TestCases\ControlFlow\PropertyPredicate.il" />
+    <None Include="TestCases\ControlFlow\SideEffectExpression.il" />
+    <None Include="TestCases\ControlFlow\SimpleCalculation.il" />
+    <None Include="TestCases\ControlFlow\SimpleCondition.il" />
+    <None Include="TestCases\ControlFlow\SimpleIf.il" />
+    <None Include="TestCases\ControlFlow\SimpleReturn.il" />
+    <None Include="TestCases\ControlFlow\SimpleWhile.il" />
+    <None Include="TestCases\ControlFlow\SingleAnd.il" />
+    <None Include="TestCases\ControlFlow\SingleOr.il" />
+    <None Include="TestCases\ControlFlow\StaticField.il" />
+    <None Include="TestCases\ControlFlow\StringCast.il" />
+    <None Include="TestCases\ControlFlow\StringPredicate.il" />
+    <None Include="TestCases\ControlFlow\StringTryCast.il" />
+    <None Include="TestCases\ControlFlow\Switch.il" />
+    <None Include="TestCases\ControlFlow\TernaryExpression.il" />
+    <None Include="TestCases\ControlFlow\ThreeReturns.il" />
+    <None Include="TestCases\ControlFlow\TwoIfs.il" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestCases\ControlFlow\BoolAndGreaterOrEqualThan-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\BoolOrLessOrEqualThan-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\Empty-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\FalseIf-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\FieldAccessor-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\FloatEquals-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\FloatGreaterThan-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\FlowTest-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\GreaterThanOrEqual-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\IfNestedCondition-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\InPlaceAdd-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\InRange-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\IsNull-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\LessThanOrEqual-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\MathOperators-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\MixedAndOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\MultipleAndOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\MultipleOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\NestedOrGreaterThan-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\NotEqual-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\NotStringEquality-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\OptimizedAnd-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\OptimizedNestedOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\OptimizedOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\PropertyPredicate-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SideEffectExpression-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SimpleCalculation-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SimpleCondition-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SimpleIf-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SimpleReturn-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SimpleWhile-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SingleAnd-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\SingleOr-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\StaticField-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\StringCast-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\StringPredicate-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\StringTryCast-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\Switch-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\TernaryExpression-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\ThreeReturns-cfg.txt" />
+    <Content Include="TestCases\ControlFlow\TwoIfs-cfg.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cecil.Decompilation\Addin.cs" />
+    <Compile Include="Cecil.Decompilation\DecompilationTestAttribute.cs" />
+    <Compile Include="Cecil.Decompilation\DecompilationTestCase.cs" />
+    <Compile Include="Cecil.Decompilation\DecompilationTestFactory.cs" />
+    <Compile Include="Cecil.Decompilation\DecompilationTestFixture.cs" />
+    <Compile Include="Cecil.Decompilation\DecompilationTestSuite.cs" />
+    <Compile Include="Cecil.Decompilation\Tests\MethodDefinitionTests.cs" />
+    <Compile Include="Cecil.Decompiler.ControlFlow\BaseControlFlowTestFixture.cs" />
+    <Compile Include="Cecil.Decompiler.ControlFlow\ControlFlowTestFixture.cs" />
+    <Compile Include="Cecil.Decompiler\Conditions.cs" />
+    <Compile Include="Cecil.Decompiler\Casts.cs" />
+    <Compile Include="Cecil.Decompiler\ForeachStep.cs" />
+    <Compile Include="Cecil.Decompiler\OperatorStep.cs" />
+    <Compile Include="Cecil.Decompiler\Switches.cs" />
+    <Compile Include="Cecil.Decompiler\Exceptions.cs" />
+    <Compile Include="Cecil.Decompiler\DecompilationTestFixture.cs" />
+    <Compile Include="Cecil.Decompiler\DecompilerTestFixture.cs" />
+    <Compile Include="Cecil.Decompiler\Loops.cs" />
+    <Compile Include="Cecil.Decompiler\MethodCalls.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Cecil.Decompilation\TestCases\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,14 @@
+block 1:
+	body:
+		IL_0000: nop
+		IL_0001: ldc.i4.s 42
+		IL_0003: stsfld System.Int32 TestCase::_field
+		IL_0008: ldsfld System.Int32 TestCase::_field
+		IL_000d: stloc.0
+		IL_000e: br.s IL_0010
+	successors:
+		block 2
+block 2:
+	body:
+		IL_0010: ldloc.0
+		IL_0011: ret

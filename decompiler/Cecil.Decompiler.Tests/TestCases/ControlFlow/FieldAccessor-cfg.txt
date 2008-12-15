@@ -1,0 +1,12 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldfld System.Int32 TestCase::_field
+		IL_0006: stloc.0
+		IL_0007: br.s IL_0009
+	successors:
+		block 2
+block 2:
+	body:
+		IL_0009: ldloc.0
+		IL_000a: ret

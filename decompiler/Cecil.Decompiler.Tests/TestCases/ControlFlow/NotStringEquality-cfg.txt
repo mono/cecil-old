@@ -1,0 +1,15 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldstr "foo"
+		IL_0006: call bool string::op_Equality(string, string)
+		IL_000b: ldc.i4.0
+		IL_000c: ceq
+		IL_000e: stloc.0
+		IL_000f: br.s IL_0011
+	successors:
+		block 2
+block 2:
+	body:
+		IL_0011: ldloc.0
+		IL_0012: ret

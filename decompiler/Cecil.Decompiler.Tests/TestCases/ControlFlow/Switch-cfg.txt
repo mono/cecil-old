@@ -1,0 +1,59 @@
+block 1:
+	body:
+		IL_0000: nop
+		IL_0001: ldarg.0
+		IL_0002: stloc.1
+		IL_0003: ldloc.1
+		IL_0004: ldc.i4.1
+		IL_0005: sub
+		IL_0006: switch (IL_001d, IL_0021, IL_0025, IL_0029)
+	successors:
+		block 3
+		block 4
+		block 5
+		block 6
+		block 2
+block 2:
+	body:
+		IL_001b: br.s IL_002d
+	successors:
+		block 7
+block 3:
+	body:
+		IL_001d: ldc.i4.1
+		IL_001e: stloc.0
+		IL_001f: br.s IL_0031
+	successors:
+		block 8
+block 4:
+	body:
+		IL_0021: ldc.i4.2
+		IL_0022: stloc.0
+		IL_0023: br.s IL_0031
+	successors:
+		block 8
+block 5:
+	body:
+		IL_0025: ldc.i4.3
+		IL_0026: stloc.0
+		IL_0027: br.s IL_0031
+	successors:
+		block 8
+block 6:
+	body:
+		IL_0029: ldc.i4.4
+		IL_002a: stloc.0
+		IL_002b: br.s IL_0031
+	successors:
+		block 8
+block 7:
+	body:
+		IL_002d: ldc.i4.m1
+		IL_002e: stloc.0
+		IL_002f: br.s IL_0031
+	successors:
+		block 8
+block 8:
+	body:
+		IL_0031: ldloc.0
+		IL_0032: ret

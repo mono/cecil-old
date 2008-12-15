@@ -1,0 +1,27 @@
+block 1:
+	body:
+		IL_0000: newobj void System.Random::.ctor()
+		IL_0005: stloc.0
+		IL_0006: br.s IL_0012
+	successors:
+		block 3
+block 2:
+	body:
+		IL_0008: ldstr "funny..."
+		IL_000d: call void System.Console::WriteLine(string)
+	successors:
+		block 3
+block 3:
+	body:
+		IL_0012: ldloc.0
+		IL_0013: ldc.i4.0
+		IL_0014: ldc.i4.s 10
+		IL_0016: callvirt int32 System.Random::Next(int32, int32)
+		IL_001b: ldc.i4.5
+		IL_001c: blt.s IL_0008
+	successors:
+		block 2
+		block 4
+block 4:
+	body:
+		IL_001e: ret

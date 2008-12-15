@@ -1,0 +1,15 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldc.i4.s 42
+		IL_0003: clt
+		IL_0005: ldc.i4.0
+		IL_0006: ceq
+		IL_0008: stloc.0
+		IL_0009: br.s IL_000b
+	successors:
+		block 2
+block 2:
+	body:
+		IL_000b: ldloc.0
+		IL_000c: ret

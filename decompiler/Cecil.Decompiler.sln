@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cecil.Decompiler.Tests", "Cecil.Decompiler.Tests\Cecil.Decompiler.Tests.csproj", "{A2D41337-2817-453A-B299-E4DF957CEE7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cecil.Decompiler", "Cecil.Decompiler\Cecil.Decompiler.csproj", "{ED1BE103-1699-4116-A732-616BEB142EB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj", "{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}"
+EndProject
+Global
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED1BE103-1699-4116-A732-616BEB142EB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED1BE103-1699-4116-A732-616BEB142EB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED1BE103-1699-4116-A732-616BEB142EB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED1BE103-1699-4116-A732-616BEB142EB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

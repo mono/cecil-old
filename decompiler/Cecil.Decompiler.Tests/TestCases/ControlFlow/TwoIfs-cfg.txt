@@ -1,0 +1,31 @@
+block 1:
+	body:
+		IL_0000: ldarg.0
+		IL_0001: ldarg.1
+		IL_0002: ble.s IL_000e
+	successors:
+		block 3
+		block 2
+block 2:
+	body:
+		IL_0004: ldstr "x > y"
+		IL_0009: call void System.Console::WriteLine(string)
+	successors:
+		block 3
+block 3:
+	body:
+		IL_000e: ldarg.0
+		IL_000f: ldarg.1
+		IL_0010: bge.s IL_001c
+	successors:
+		block 5
+		block 4
+block 4:
+	body:
+		IL_0012: ldstr "x < y"
+		IL_0017: call void System.Console::WriteLine(string)
+	successors:
+		block 5
+block 5:
+	body:
+		IL_001c: ret

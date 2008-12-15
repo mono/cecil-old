@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="Cecil.Decompiler" default="codegen">
+
+	<property name="booi" value="booi" />
+
+	<target name="codegen" description="generates CodeStructure and Utilities classes">
+		<exec program="${booi}" workingdir=".">
+			<arg value="codegen/gen-Utilities.boo" />
+		</exec>
+
+		<exec program="${booi}" workingdir=".">
+			<arg value="codegen/gen-CodeStructure.boo" />
+		</exec>
+	</target>
+
+	<target name="cfgtestgen" description="generates control flow graph regression tests">
+		<exec program="${booi}">
+			<arg value="-r:${build.dir}/Mono.Cecil.dll" />
+			<arg value="-r:${build.dir}/Cecil.Decompiler.dll" />
+			<arg value="-r:${build.dir}/Cecil.Decompiler.Tests.dll" />
+			<arg value="codegen/gen-ControlFlowGraphRegression.boo" />
+			<arg value="${cfg.assembly}" />
+			<arg value="${cfg.class}" />
+		</exec>
+	</target>
+
+</project>
