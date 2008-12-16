@@ -42,7 +42,10 @@ namespace Cecil.Decompiler.Steps {
 			if (method_ref == null)
 				return base.VisitMethodInvocationExpression (node);
 
-			// FIXME: need a Resolver
+			if (!HasPropertyPrefix (method_ref.Method))
+				return base.VisitMethodInvocationExpression (node);
+
+			//var method = method_ref.Method.Resolve ();
 			var method = method_ref.Method as MethodDefinition;
 			if (method == null)
 				return base.VisitMethodInvocationExpression (node);
@@ -55,35 +58,50 @@ namespace Cecil.Decompiler.Steps {
 				return base.VisitMethodInvocationExpression (node);
 		}
 
-		PropertyReferenceExpression ProcessGetter (MethodReferenceExpression method_ref, MethodDefinition method)
+		static bool HasPropertyPrefix (MethodReference method)
+		{
+			return method.Name.StartsWith ("get_", StringComparison.InvariantCulture)
+				|| method.Name.StartsWith ("set_", StringComparison.InvariantCulture);
+		}
+
+		static PropertyReferenceExpression ProcessGetter (MethodReferenceExpression method_ref, MethodDefinition method)
 		{
 			return CreatePropertyReferenceFromMethod (method_ref, method);
 		}
 
-		AssignExpression ProcessSetter (MethodInvocationExpression invoke, MethodReferenceExpression method_ref, MethodDefinition method)
+		static AssignExpression ProcessSetter (MethodInvocationExpression invoke, MethodReferenceExpression method_ref, MethodDefinition method)
 		{
 			return new AssignExpression (
 				CreatePropertyReferenceFromMethod (method_ref, method),
 				invoke.Arguments [0]);
 		}
 
-		PropertyReferenceExpression CreatePropertyReferenceFromMethod (MethodReferenceExpression method_ref, MethodDefinition method)
+		static PropertyReferenceExpression CreatePropertyReferenceFromMethod (MethodReferenceExpression method_ref, MethodDefinition method)
 		{
-			return new PropertyReferenceExpression (method_ref.Target, GetCorrespondingProperty (method));
+			return new PropertyReferenceExpression (method_ref.Target, GetProperty (method));
 		}
 
-		PropertyDefinition GetCorrespondingProperty (MethodDefinition method)
+		static PropertyDefinition GetProperty (MethodDefinition accessor)
 		{
-			var type = (TypeDefinition) method.DeclaringType;
+			return GetProperty ((TypeDefinition) accessor.DeclaringType, accessor);
+		}
+
+		static PropertyDefinition GetProperty (TypeDefinition type, MethodDefinition accessor)
+		{
+			if (type == null)
+				return null;
 
 			foreach (PropertyDefinition property in type.Properties) {
-				if (property.GetMethod == method)
+				if (property.GetMethod == accessor)
 					return property;
-				if (property.SetMethod == method)
+				if (property.SetMethod == accessor)
 					return property;
 			}
 
-			return null;
+			if (type.BaseType == null)
+				return null;
+
+			return GetProperty (type.BaseType.Resolve (), accessor);
 		}
 
 		public void Process (DecompilationContext context, BlockStatement body)
