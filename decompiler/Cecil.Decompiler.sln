@@ -6,7 +6,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cecil.Decompiler", "Cecil.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj", "{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbg", "dbg\dbg.csproj", "{07809FA3-0BD8-4EE3-B669-923CF04EEF80}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2D41337-2817-453A-B299-E4DF957CEE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -20,5 +26,12 @@ Global
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07809FA3-0BD8-4EE3-B669-923CF04EEF80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07809FA3-0BD8-4EE3-B669-923CF04EEF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07809FA3-0BD8-4EE3-B669-923CF04EEF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07809FA3-0BD8-4EE3-B669-923CF04EEF80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

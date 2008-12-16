@@ -378,7 +378,7 @@ namespace Cecil.Decompiler.Debug {
 
 		static void Main (string [] args)
 		{
-			var method = GetProgramMethod("Foreachy");
+			var method = GetProgramMethod ("Main");
 
 			var cfg = ControlFlowGraph.Create (method);
 
@@ -394,8 +394,8 @@ namespace Cecil.Decompiler.Debug {
 			var body = method.Body.Decompile (language);
 
 			var writer = language.GetWriter (new PlainTextFormatter (Console.Out));
-		    
-            writer.Write(method);
+
+			writer.Write (method);
 		}
 
 		public static void PrintAnnotations (MethodDefinition method, AnnotationStore store)
@@ -454,9 +454,13 @@ namespace Cecil.Decompiler.Debug {
 			return GetProgramAssembly ().MainModule.Types ["Cecil.Decompiler.Debug.Program"].Methods.GetMethod (name) [0];
 		}
 
+		static IAssemblyResolver resolver = new DefaultAssemblyResolver ();
+
 		static AssemblyDefinition GetProgramAssembly ()
 		{
-			return AssemblyFactory.GetAssembly (typeof (Program).Module.FullyQualifiedName);
+			var assembly = AssemblyFactory.GetAssembly (typeof (Program).Module.FullyQualifiedName);
+			assembly.Resolver = resolver;
+			return assembly;
 		}
 
 		public static string ToString (ControlFlowGraph cfg)
