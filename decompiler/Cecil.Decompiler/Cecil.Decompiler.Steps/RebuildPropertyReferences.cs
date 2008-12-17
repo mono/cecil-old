@@ -42,9 +42,6 @@ namespace Cecil.Decompiler.Steps {
 			if (method_ref == null)
 				return base.VisitMethodInvocationExpression (node);
 
-			if (!HasPropertyPrefix (method_ref.Method))
-				return base.VisitMethodInvocationExpression (node);
-
 			//var method = method_ref.Method.Resolve ();
 			var method = method_ref.Method as MethodDefinition;
 			if (method == null)
@@ -56,12 +53,6 @@ namespace Cecil.Decompiler.Steps {
 				return ProcessSetter (node, method_ref, method);
 			else
 				return base.VisitMethodInvocationExpression (node);
-		}
-
-		static bool HasPropertyPrefix (MethodReference method)
-		{
-			return method.Name.StartsWith ("get_", StringComparison.InvariantCulture)
-				|| method.Name.StartsWith ("set_", StringComparison.InvariantCulture);
 		}
 
 		static PropertyReferenceExpression ProcessGetter (MethodReferenceExpression method_ref, MethodDefinition method)
@@ -88,9 +79,6 @@ namespace Cecil.Decompiler.Steps {
 
 		static PropertyDefinition GetProperty (TypeDefinition type, MethodDefinition accessor)
 		{
-			if (type == null)
-				return null;
-
 			foreach (PropertyDefinition property in type.Properties) {
 				if (property.GetMethod == accessor)
 					return property;
@@ -98,10 +86,7 @@ namespace Cecil.Decompiler.Steps {
 					return property;
 			}
 
-			if (type.BaseType == null)
-				return null;
-
-			return GetProperty (type.BaseType.Resolve (), accessor);
+			return null;
 		}
 
 		public void Process (DecompilationContext context, BlockStatement body)
