@@ -62,7 +62,9 @@ namespace Cecil.Decompiler.Ast {
 				var element = (TElement) Visit (original [i]);
 
 				if (collection != null) {
-					collection.Add (element);
+					if (element != null)
+						collection.Add (element);
+
 					continue;
 				}
 
