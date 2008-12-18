@@ -59,7 +59,7 @@ namespace Cecil.Decompiler {
 			this.optimization = optimization;
 		}
 
-		public void Process (DecompilationContext context, BlockStatement body)
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
 		{
 			this.cfg = context.ControlFlowGraph;
 			this.annotations = AnnotationStore.CreateStore (cfg, optimization);
@@ -74,6 +74,8 @@ namespace Cecil.Decompiler {
 			Run ();
 
 			PopulateBodyBlock (body);
+
+			return body;
 		}
 
 		void Run ()

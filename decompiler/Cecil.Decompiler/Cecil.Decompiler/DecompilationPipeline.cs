@@ -64,10 +64,12 @@ namespace Cecil.Decompiler {
 		public void Run (MethodBody body)
 		{
 			this.context = new DecompilationContext (body, ControlFlowGraph.Create (body.Method));
-			this.body_block = new BlockStatement ();
+			var block = new BlockStatement ();
 
 			foreach (var step in steps)
-				step.Process (context, body_block);
+				block = step.Process (context, block);
+
+			body_block = block;
 		}
 	}
 }

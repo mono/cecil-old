@@ -72,11 +72,11 @@ namespace Cecil.Decompiler.Steps {
 			not_assigned.Remove (variable);
 		}
 
-		public void Process (DecompilationContext context, BlockStatement block)
+		public BlockStatement Process (DecompilationContext context, BlockStatement block)
 		{
 			this.context = context;
 			PopulateNotAssigned ();
-			Visit (block);
+			return (BlockStatement) VisitBlockStatement (block);
 		}
 
 		void PopulateNotAssigned ()

@@ -29,6 +29,6 @@ using Cecil.Decompiler.Ast;
 namespace Cecil.Decompiler.Steps {
 
 	public interface IDecompilationStep {
-		void Process (DecompilationContext context, BlockStatement body);
+		BlockStatement Process (DecompilationContext context, BlockStatement body);
 	}
 }

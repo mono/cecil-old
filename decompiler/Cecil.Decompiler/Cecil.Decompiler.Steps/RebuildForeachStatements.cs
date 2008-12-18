@@ -34,10 +34,11 @@ namespace Cecil.Decompiler.Steps {
 			}
 		}
 
-		public void Process (DecompilationContext context, BlockStatement body)
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
 		{
 			this.context = context;
 			Visit (body);
+			return body;
 		}
 
 		class ForeachMatcher {

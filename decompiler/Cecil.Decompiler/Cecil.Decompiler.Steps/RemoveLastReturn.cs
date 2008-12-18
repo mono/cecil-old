@@ -34,17 +34,19 @@ namespace Cecil.Decompiler.Steps {
 
 		public static readonly IDecompilationStep Instance = new RemoveLastReturn ();
 
-		public void Process (DecompilationContext context, BlockStatement block)
+		public BlockStatement Process (DecompilationContext context, BlockStatement block)
 		{
 			var index = block.Statements.Count - 1;
 			var ret = block.Statements [index] as ReturnStatement;
 			if (ret == null)
-				return;
+				return block;
 
 			if (ret.Expression != null)
-				return;
+				return block;
 
 			block.Statements.RemoveAt (index);
+
+			return block;
 		}
 	}
 }

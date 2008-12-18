@@ -53,9 +53,9 @@ namespace Cecil.Decompiler.Steps {
 			return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
 		}
 
-		public void Process (DecompilationContext context, BlockStatement body)
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
 		{
-			Visit (body);
+			return (BlockStatement) VisitBlockStatement (body);
 		}
 	}
 }

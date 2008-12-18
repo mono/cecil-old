@@ -34,7 +34,7 @@ namespace Cecil.Decompiler.Steps {
 
 		public static readonly IDecompilationStep Instance = new DeclareTopLevelVariables ();
 
-		public void Process (DecompilationContext context, BlockStatement block)
+		public BlockStatement Process (DecompilationContext context, BlockStatement block)
 		{
 			for (int i = 0; i < context.Variables.Count; i++) {
 				block.Statements.Insert (
@@ -42,6 +42,8 @@ namespace Cecil.Decompiler.Steps {
 					new ExpressionStatement (
 						new VariableDeclarationExpression (context.Variables [i])));
 			}
+
+			return block;
 		}
 	}
 }

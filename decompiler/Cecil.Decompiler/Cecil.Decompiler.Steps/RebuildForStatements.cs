@@ -169,9 +169,10 @@ namespace Cecil.Decompiler.Steps {
 			}
 		}
 
-		public void Process (DecompilationContext context, BlockStatement body)
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
 		{
 			Visit (body);
+			return body;
 		}
 	}
 }

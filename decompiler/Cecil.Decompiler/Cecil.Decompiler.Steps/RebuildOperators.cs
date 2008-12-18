@@ -51,9 +51,9 @@ namespace Cecil.Decompiler.Steps {
 			binary_operators.Add ("op_LeftShift", BinaryOperator.LeftShift);
 		}
 
-		public void Process (DecompilationContext context, BlockStatement body)
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
 		{
-			Visit (body);
+			return (BlockStatement) VisitBlockStatement (body);
 		}
 
 		public override ICodeNode VisitMethodInvocationExpression (MethodInvocationExpression node)
