@@ -52,15 +52,43 @@ namespace Cecil.Decompiler.Ast {
 			}
 		}
 
-		public virtual IList<TElement> Visit<TElement> (IList<TElement> list)
-			where TElement : ICodeNode
+		protected virtual TCollection Visit<TCollection, TElement> (TCollection original)
+			where TCollection : class, IList<TElement>, new ()
+			where TElement : class, ICodeNode
 		{
-			for (int i = 0; i < list.Count; i++) {
-				list [i] = (TElement) Visit (list [i]);
+			TCollection collection = null;
+
+			for (int i = 0; i < original.Count; i++) {
+				var element = (TElement) Visit (original [i]);
+
+				if (collection != null) {
+					collection.Add (element);
+					continue;
+				}
+
+				if (!EqualityComparer<TElement>.Default.Equals (element, original [i])) {
+					collection = new TCollection ();
+					for (int j = 0; j < i; j++)
+						collection.Add (original [j]);
+
+					if (element != null)
+						collection.Add (element);
+				}
 			}
-			return list;
+
+			return collection ?? original;
 		}
 <%
+	for node in model.GetCollections():
+		itemType = model.GetCollectionItemType(node)
+%>
+		public virtual ICollection<${itemType}> Visit (${node.Name} node)
+		{
+			return Visit<${node.Name}, ${itemType}> (node); 
+		}
+<%
+	end
+
 	for node in model.GetVisitableNodes():
 %>
 		public virtual ICodeNode Visit${node.Name} (${node.Name} node)

@@ -70,6 +70,13 @@ class Model:
 			continue if IsCollection(node)
 			yield node
 
+	def GetCollections():
+		for node in _module.Members:
+			continue if node.NodeType != NodeType.ClassDefinition
+			continue if node.IsAbstract
+			continue if not IsCollection(node)
+			yield node
+
 	def GetClasses():
 		return array(ClassDefinition, GetMembers(_module, NodeType.ClassDefinition))
 

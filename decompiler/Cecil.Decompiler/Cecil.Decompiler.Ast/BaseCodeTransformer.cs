@@ -138,13 +138,51 @@ namespace Cecil.Decompiler.Ast {
 			}
 		}
 
-		public virtual IList<TElement> Visit<TElement> (IList<TElement> list)
-			where TElement : ICodeNode
+		protected virtual TCollection Visit<TCollection, TElement> (TCollection original)
+			where TCollection : class, IList<TElement>, new ()
+			where TElement : class, ICodeNode
 		{
-			for (int i = 0; i < list.Count; i++) {
-				list [i] = (TElement) Visit (list [i]);
+			TCollection collection = null;
+
+			for (int i = 0; i < original.Count; i++) {
+				var element = (TElement) Visit (original [i]);
+
+				if (collection != null) {
+					collection.Add (element);
+					continue;
+				}
+
+				if (!EqualityComparer<TElement>.Default.Equals (element, original [i])) {
+					collection = new TCollection ();
+					for (int j = 0; j < i; j++)
+						collection.Add (original [j]);
+
+					if (element != null)
+						collection.Add (element);
+				}
 			}
-			return list;
+
+			return collection ?? original;
+		}
+
+		public virtual ICollection<Statement> Visit (StatementCollection node)
+		{
+			return Visit<StatementCollection, Statement> (node); 
+		}
+
+		public virtual ICollection<Expression> Visit (ExpressionCollection node)
+		{
+			return Visit<ExpressionCollection, Expression> (node); 
+		}
+
+		public virtual ICollection<SwitchCase> Visit (SwitchCaseCollection node)
+		{
+			return Visit<SwitchCaseCollection, SwitchCase> (node); 
+		}
+
+		public virtual ICollection<CatchClause> Visit (CatchClauseCollection node)
+		{
+			return Visit<CatchClauseCollection, CatchClause> (node); 
 		}
 
 		public virtual ICodeNode VisitBlockStatement (BlockStatement node)
