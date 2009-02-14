@@ -350,6 +350,7 @@ namespace Cecil.Decompiler.Languages {
 			case "UInt64": return "ulong";
 			case "String": return "string";
 			case "Void": return "void";
+			case "Object": return "object";
 			default: return type.Name;
 			}
 		}
