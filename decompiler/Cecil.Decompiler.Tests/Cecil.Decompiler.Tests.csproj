@@ -223,6 +223,13 @@
     <Content Include="TestCases\CSharp\Casts.ToBar.txt" />
     <Content Include="TestCases\CSharp\Casts.AsBar.txt" />
     <Content Include="TestCases\CSharp\Casts.IsBar.txt" />
+    <Content Include="TestCases\CSharp\Conditions.ReturnTernary.txt" />
+    <Content Include="TestCases\CSharp\Conditions.ReturnNestedTernary.txt" />
+    <Content Include="TestCases\CSharp\Conditions.SimpleIf.txt" />
+    <Content Include="TestCases\CSharp\Conditions.SimpleIfElse.txt" />
+    <Content Include="TestCases\CSharp\Conditions.SimpleIfOr.txt" />
+    <Content Include="TestCases\CSharp\Conditions.SimpleIfAnd.txt" />
+    <Content Include="TestCases\CSharp\Conditions.NullCoalesce.txt" />
     <Content Include="TestCases\CSharp\Exceptions.NestedTryCatch.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.ArrayLength.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.CallIgnoreReturnValue.txt" />
@@ -236,6 +243,7 @@
     <Content Include="TestCases\CSharp\Loops.SimpleFor.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cecil.Decompiler.CSharp\Conditions.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\MethodCalls.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Exceptions.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Loops.cs" />
@@ -249,6 +257,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="TestCases\CSharp\Conditions.cs" />
     <None Include="TestCases\CSharp\MethodCalls.cs" />
     <None Include="TestCases\CSharp\Exceptions.cs" />
     <None Include="TestCases\CSharp\Loops.cs" />

@@ -32,8 +32,6 @@ using Mono.Cecil.Cil;
 
 namespace Cecil.Decompiler.Cil {
 
-	/// <summary>
-	/// </summary>
 	public static class Formatter {
 
 		public static string FormatInstruction (Instruction instruction)

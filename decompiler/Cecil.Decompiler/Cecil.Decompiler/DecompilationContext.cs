@@ -66,7 +66,7 @@ namespace Cecil.Decompiler {
 
 		public void RemoveVariable (VariableReference reference)
 		{
-			RemoveVariable ((VariableDefinition) reference);
+			RemoveVariable (reference.Resolve ());
 		}
 
 		public void RemoveVariable (VariableDefinition variable)

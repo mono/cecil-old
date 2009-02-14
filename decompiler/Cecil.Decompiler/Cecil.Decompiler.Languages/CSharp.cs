@@ -95,10 +95,16 @@ namespace Cecil.Decompiler.Languages {
 		public override string Name { get { return "C#3"; } }
 	}
 
+	public class CSharpV4 : CSharpV3 {
+
+		public override string Name { get { return "C#4"; } }
+	}
+
 	public enum CSharpVersion {
 		None,
 		V1,
 		V2,
 		V3,
+		V4,
 	}
 }

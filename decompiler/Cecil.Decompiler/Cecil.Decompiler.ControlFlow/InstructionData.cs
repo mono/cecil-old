@@ -29,21 +29,13 @@ namespace Cecil.Decompiler.ControlFlow {
 
 	public class InstructionData {
 
-		int before;
-		int after;
-
-		public int StackBefore {
-			get { return before; }
-		}
-
-		public int StackAfter {
-			get { return after; }
-		}
+		public readonly int StackBefore;
+		public readonly int StackAfter;
 
 		public InstructionData (int before, int after)
 		{
-			this.before = before;
-			this.after = after;
+			this.StackBefore = before;
+			this.StackAfter = after;
 		}
 	}
 }

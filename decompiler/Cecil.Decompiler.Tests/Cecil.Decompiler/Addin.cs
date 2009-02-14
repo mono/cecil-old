@@ -82,12 +82,14 @@ namespace Cecil.Decompiler {
 
 			if (mode == CompilationMode.Release)
 				test_case.CompilerParameters.CompilerOptions = "/optimize+";
+			else
+				test_case.CompilerParameters.CompilerOptions = "/debug+ /optimize-";
 
 			test_case.SourceFile = GetTestCaseFile (attribute.SourceFile ?? GetDefaultSourceFile (method, attribute));
 			test_case.ExpectedResultFile = GetTestCaseFile (attribute.ExpectedResultFile ?? GetDefaultExpectedResultFile (method, attribute));
 			test_case.MethodName = attribute.MethodName ?? GetDefaultMethodName (method);
 
-			test_case.CompilerParameters.OutputAssembly = test_case.ExpectedResultFile + ".dll";
+			test_case.CompilerParameters.OutputAssembly = test_case.ExpectedResultFile + "." + mode + ".dll";
 
 			return test_case;
 		}
@@ -219,6 +221,8 @@ namespace Cecil.Decompiler {
 			var assembly = GetAssembly (result);
 
 			var method = GetMethod (assembly);
+
+			Assert.IsNotNull (method);
 
 			var decompiled = Normalize (DecompileMethod (method));
 			var expected = Normalize (File.ReadAllText (expected_result_file));

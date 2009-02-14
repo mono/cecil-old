@@ -1,0 +1,12 @@
+﻿public void SimpleIfElse(int a)
+{
+	if (a == 12)
+	{
+		a = 42;
+	}
+	else
+	{
+		a = 128;
+	}
+	Console.WriteLine(1);
+}

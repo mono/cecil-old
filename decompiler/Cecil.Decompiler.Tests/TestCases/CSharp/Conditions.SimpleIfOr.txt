@@ -1,0 +1,7 @@
+﻿public void SimpleIfOr(int a)
+{
+	if ((a == 12) || (a == 14))
+	{
+		a = 42;
+	}
+}

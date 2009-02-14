@@ -1,0 +1,4 @@
+﻿public int ReturnNestedTernary(int a)
+{
+	return (a < 0 ? (a < 100 ? 12 : 24) : (a > 0 ? 10 : 42));
+}

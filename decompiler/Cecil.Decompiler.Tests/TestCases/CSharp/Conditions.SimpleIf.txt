@@ -1,0 +1,7 @@
+﻿public void SimpleIf(int a)
+{
+	if (a == 12)
+	{
+		a = 14;
+	}
+}

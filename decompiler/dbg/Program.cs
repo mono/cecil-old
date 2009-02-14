@@ -378,7 +378,7 @@ namespace Cecil.Decompiler.Debug {
 
 		static void Main (string [] args)
 		{
-			var method = GetProgramMethod ("Main");
+			var method = GetProgramMethod ("CondExp");
 
 			var cfg = ControlFlowGraph.Create (method);
 

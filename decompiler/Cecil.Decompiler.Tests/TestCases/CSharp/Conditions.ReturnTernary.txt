@@ -1,0 +1,4 @@
+﻿public int ReturnTernary(int a)
+{
+	return (a > 10 ? 12 : 42);
+}
