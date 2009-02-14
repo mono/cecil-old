@@ -223,6 +223,7 @@
     <Content Include="TestCases\CSharp\Casts.ToBar.txt" />
     <Content Include="TestCases\CSharp\Casts.AsBar.txt" />
     <Content Include="TestCases\CSharp\Casts.IsBar.txt" />
+    <Content Include="TestCases\CSharp\Exceptions.NestedTryCatch.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.ArrayLength.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.CallIgnoreReturnValue.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.CallMultipleArguments.txt" />

@@ -13,5 +13,10 @@ namespace Cecil.Decompiler.CSharp {
 		public void TryCatchFinally ()
 		{
 		}
+
+		[CSharp (Version = CSharpVersion.V1)]
+		public void NestedTryCatch ()
+		{
+		}
 	}
 }
