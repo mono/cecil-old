@@ -105,7 +105,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">
       <Project>{D8F63DFF-5230-43E4-9AB2-DA6E721A1FAE}</Project>
@@ -228,7 +227,6 @@
     <Compile Include="Cecil.Decompilation\DecompilationTestFactory.cs" />
     <Compile Include="Cecil.Decompilation\DecompilationTestFixture.cs" />
     <Compile Include="Cecil.Decompilation\DecompilationTestSuite.cs" />
-    <Compile Include="Cecil.Decompilation\Tests\MethodDefinitionTests.cs" />
     <Compile Include="Cecil.Decompiler.ControlFlow\BaseControlFlowTestFixture.cs" />
     <Compile Include="Cecil.Decompiler.ControlFlow\ControlFlowTestFixture.cs" />
     <Compile Include="Cecil.Decompiler\Conditions.cs" />
@@ -242,9 +240,6 @@
     <Compile Include="Cecil.Decompiler\Loops.cs" />
     <Compile Include="Cecil.Decompiler\MethodCalls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cecil.Decompilation\TestCases\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
