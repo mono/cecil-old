@@ -42,12 +42,8 @@ namespace Cecil.Decompiler.Steps {
 			},
 			Expression = new Pattern.Binary {
 				Bind = binary => new Pattern.MatchData ("Operator", binary.Operator),
-				Left = new Pattern.VariableReference {
-					Variable = new Pattern.ContextData { Name = "Variable" }
-				},
-				Right = new Pattern.Literal {
-					Value = 1
-				}
+				Left = new Pattern.ContextVariableReference { Name = "Variable" },
+				Right = new Pattern.Literal { Value = 1 }
 			}
 		};
 
@@ -58,18 +54,28 @@ namespace Cecil.Decompiler.Steps {
 				return base.VisitAssignExpression (node);
 
 			var variable = (VariableReference) result ["Variable"];
+			var @operator = (BinaryOperator) result ["Operator"];
 
-			switch ((BinaryOperator) result ["Operator"]) {
+			switch (@operator) {
 			case BinaryOperator.Add:
-				return new UnaryExpression (
-					UnaryOperator.PostIncrement,
-					new VariableReferenceExpression (variable));
 			case BinaryOperator.Subtract:
 				return new UnaryExpression (
-					UnaryOperator.PostDecrement,
+					GetCorrespondingOperator (@operator),
 					new VariableReferenceExpression (variable));
 			default:
 				return base.VisitAssignExpression (node);
+			}
+		}
+
+		static UnaryOperator GetCorrespondingOperator (BinaryOperator @operator)
+		{
+			switch (@operator) {
+			case BinaryOperator.Add:
+				return UnaryOperator.PostIncrement;
+			case BinaryOperator.Subtract:
+				return UnaryOperator.PostDecrement;
+			default:
+				throw new ArgumentException ();
 			}
 		}
 

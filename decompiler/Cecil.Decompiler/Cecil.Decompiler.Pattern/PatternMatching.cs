@@ -112,6 +112,22 @@ namespace Cecil.Decompiler.Pattern {
 		}
 	}
 
+	public class ContextVariableReference : CodePattern<Ast.VariableReferenceExpression> {
+
+		public string Name { get; set; }
+
+		protected override void OnMatch (MatchContext context, VariableReferenceExpression node)
+		{
+			object data;
+			if (!context.TryGetData (Name, out data)) {
+				context.Success = false;
+				return;
+			}
+
+			context.Success = node.Variable == data;
+		}
+	}
+
 	public class Binary : CodePattern<Ast.BinaryExpression> {
 
 		public ICodePattern Left { get; set; }
