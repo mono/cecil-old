@@ -1,0 +1,5 @@
+﻿public void CallMultipleArguments()
+{
+	this.Foo("a", "b", "c");
+	return;
+}

@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
+using System.Text;
 
 using NUnit.Core;
 using NUnit.Core.Extensibility;
@@ -212,6 +213,9 @@ namespace Cecil.Decompiler {
 		public override void RunTestMethod (TestCaseResult testResult)
 		{
 			var result = provider.CompileAssemblyFromFile (parameters, SourceFile);
+
+			AssertCompilerResults (result);
+
 			var assembly = GetAssembly (result);
 
 			var method = GetMethod (assembly);
@@ -220,6 +224,22 @@ namespace Cecil.Decompiler {
 			var expected = Normalize (File.ReadAllText (expected_result_file));
 
 			Assert.AreEqual (expected, decompiled);
+		}
+
+		static void AssertCompilerResults (CompilerResults results)
+		{
+			Assert.IsFalse (results.Errors.HasErrors, GetErrorMessage (results));
+		}
+
+		static string GetErrorMessage (CompilerResults results)
+		{
+			if (!results.Errors.HasErrors)
+				return string.Empty;
+
+			var builder = new StringBuilder ();
+			foreach (CompilerError error in results.Errors)
+				builder.AppendLine (error.ToString ());
+			return builder.ToString ();
 		}
 
 		static string Normalize (string s)
@@ -239,7 +259,7 @@ namespace Cecil.Decompiler {
 
 		AssemblyDefinition GetAssembly (CompilerResults result)
 		{
-			return AssemblyFactory.GetAssembly (result.CompiledAssembly.ManifestModule.FullyQualifiedName);
+			return AssemblyFactory.GetAssembly (result.PathToAssembly);
 		}
 
 		MethodDefinition GetMethod (AssemblyDefinition assembly)

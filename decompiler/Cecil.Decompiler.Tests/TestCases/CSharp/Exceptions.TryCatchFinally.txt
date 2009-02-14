@@ -1,0 +1,21 @@
+﻿public void TryCatchFinally()
+{
+	Console.WriteLine("1");
+	try
+	{
+		Console.WriteLine("2");
+	}
+	catch (ArgumentException V_0)
+	{
+		Console.WriteLine("3 {0}", V_0);
+	}
+	catch
+	{
+		Console.WriteLine("4");
+	}
+	finally
+	{
+		Console.WriteLine("5");
+	}
+	Console.WriteLine("6");
+}

@@ -223,6 +223,11 @@
     <Content Include="TestCases\CSharp\Casts.ToBar.txt" />
     <Content Include="TestCases\CSharp\Casts.AsBar.txt" />
     <Content Include="TestCases\CSharp\Casts.IsBar.txt" />
+    <Content Include="TestCases\CSharp\MethodCalls.ArrayLength.txt" />
+    <Content Include="TestCases\CSharp\MethodCalls.CallIgnoreReturnValue.txt" />
+    <Content Include="TestCases\CSharp\MethodCalls.CallMultipleArguments.txt" />
+    <Content Include="TestCases\CSharp\MethodCalls.VoidMethodCall.txt" />
+    <Content Include="TestCases\CSharp\Exceptions.TryCatchFinally.txt" />
     <Content Include="TestCases\CSharp\Loops.NestedDoWhile.txt" />
     <Content Include="TestCases\CSharp\Loops.BreakInWhile.txt" />
     <Content Include="TestCases\CSharp\Loops.SimpleWhile.txt" />
@@ -230,6 +235,8 @@
     <Content Include="TestCases\CSharp\Loops.SimpleFor.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cecil.Decompiler.CSharp\MethodCalls.cs" />
+    <Compile Include="Cecil.Decompiler.CSharp\Exceptions.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Loops.cs" />
     <Compile Include="Cecil.Decompiler\Addin.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Casts.cs" />
@@ -241,6 +248,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="TestCases\CSharp\MethodCalls.cs" />
+    <None Include="TestCases\CSharp\Exceptions.cs" />
     <None Include="TestCases\CSharp\Loops.cs" />
     <None Include="TestCases\CSharp\Casts.cs" />
   </ItemGroup>
