@@ -1,0 +1,7 @@
+﻿public void SimpleFor(int a)
+{
+	for (int V_0 = 0; V_0 < 10; V_0 = V_0 + 1)
+	{
+		a = a + 1;
+	}
+}

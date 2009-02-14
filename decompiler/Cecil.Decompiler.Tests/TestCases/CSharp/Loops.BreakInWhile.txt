@@ -1,0 +1,14 @@
+﻿public void BreakInWhile(int a)
+{
+	while (a < 100)
+	{
+		if (a == 12)
+		{
+			Console.WriteLine(a);
+			break;
+		}
+		Console.WriteLine(a);
+		a = a - 1;
+	}
+	Console.WriteLine(a);
+}

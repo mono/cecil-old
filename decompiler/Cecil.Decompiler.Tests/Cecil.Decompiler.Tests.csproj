@@ -223,8 +223,14 @@
     <Content Include="TestCases\CSharp\Casts.ToBar.txt" />
     <Content Include="TestCases\CSharp\Casts.AsBar.txt" />
     <Content Include="TestCases\CSharp\Casts.IsBar.txt" />
+    <Content Include="TestCases\CSharp\Loops.NestedDoWhile.txt" />
+    <Content Include="TestCases\CSharp\Loops.BreakInWhile.txt" />
+    <Content Include="TestCases\CSharp\Loops.SimpleWhile.txt" />
+    <Content Include="TestCases\CSharp\Loops.SimpleDoWhile.txt" />
+    <Content Include="TestCases\CSharp\Loops.SimpleFor.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cecil.Decompiler.CSharp\Loops.cs" />
     <Compile Include="Cecil.Decompiler\Addin.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Casts.cs" />
     <Compile Include="Cecil.Decompiler.ControlFlow\BaseControlFlowTestFixture.cs" />
@@ -235,6 +241,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="TestCases\CSharp\Loops.cs" />
     <None Include="TestCases\CSharp\Casts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

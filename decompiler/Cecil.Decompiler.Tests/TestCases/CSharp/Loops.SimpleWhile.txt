@@ -1,0 +1,10 @@
+﻿public void SimpleWhile(int a)
+{
+	Console.WriteLine(a);
+	while (a < 100)
+	{
+		a = a + 1;
+		Console.WriteLine(a);
+	}
+	Console.WriteLine(a);
+}
