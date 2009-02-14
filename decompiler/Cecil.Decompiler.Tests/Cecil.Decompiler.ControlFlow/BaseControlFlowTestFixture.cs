@@ -25,13 +25,16 @@
 
 using System.Collections.Generic;
 using System.IO;
+
 using Cecil.Decompiler.Cil;
 using Cecil.Decompiler.ControlFlow;
+
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+
 using NUnit.Framework;
 
-namespace Cecil.Decompiler.Tests {
+namespace Cecil.Decompiler.ControlFlow {
 
 	public class BaseControlFlowTestFixture : DecompilerTestFixture {
 

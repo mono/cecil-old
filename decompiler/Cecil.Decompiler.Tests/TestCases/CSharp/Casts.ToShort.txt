@@ -1,0 +1,4 @@
+﻿public short ToShort(int a)
+{
+	return (short)a;
+}

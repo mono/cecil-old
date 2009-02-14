@@ -29,7 +29,7 @@ using System.IO;
 using Mono.Cecil;
 using NUnit.Framework;
 
-namespace Cecil.Decompiler.Tests {
+namespace Cecil.Decompiler {
 
 	public abstract class DecompilerTestFixture {
 

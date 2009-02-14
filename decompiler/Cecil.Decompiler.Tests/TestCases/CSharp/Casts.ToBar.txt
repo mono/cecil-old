@@ -1,0 +1,4 @@
+﻿public Bar ToBar(object o)
+{
+	return (Bar)o;
+}

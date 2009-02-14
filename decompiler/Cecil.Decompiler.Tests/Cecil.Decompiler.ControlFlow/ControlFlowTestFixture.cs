@@ -25,7 +25,7 @@
 
 using NUnit.Framework;
 
-namespace Cecil.Decompiler.Tests.ControlFlow {
+namespace Cecil.Decompiler.ControlFlow {
 
 	[TestFixture]
 	public class ControlFlowTestFixture : BaseControlFlowTestFixture {

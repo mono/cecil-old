@@ -219,27 +219,23 @@
     <Content Include="TestCases\ControlFlow\TernaryExpression-cfg.txt" />
     <Content Include="TestCases\ControlFlow\ThreeReturns-cfg.txt" />
     <Content Include="TestCases\ControlFlow\TwoIfs-cfg.txt" />
+    <Content Include="TestCases\CSharp\Casts.ToShort.txt" />
+    <Content Include="TestCases\CSharp\Casts.ToBar.txt" />
+    <Content Include="TestCases\CSharp\Casts.AsBar.txt" />
+    <Content Include="TestCases\CSharp\Casts.IsBar.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cecil.Decompilation\Addin.cs" />
-    <Compile Include="Cecil.Decompilation\DecompilationTestAttribute.cs" />
-    <Compile Include="Cecil.Decompilation\DecompilationTestCase.cs" />
-    <Compile Include="Cecil.Decompilation\DecompilationTestFactory.cs" />
-    <Compile Include="Cecil.Decompilation\DecompilationTestFixture.cs" />
-    <Compile Include="Cecil.Decompilation\DecompilationTestSuite.cs" />
+    <Compile Include="Cecil.Decompiler\Addin.cs" />
+    <Compile Include="Cecil.Decompiler.CSharp\Casts.cs" />
     <Compile Include="Cecil.Decompiler.ControlFlow\BaseControlFlowTestFixture.cs" />
     <Compile Include="Cecil.Decompiler.ControlFlow\ControlFlowTestFixture.cs" />
-    <Compile Include="Cecil.Decompiler\Conditions.cs" />
-    <Compile Include="Cecil.Decompiler\Casts.cs" />
-    <Compile Include="Cecil.Decompiler\ForeachStep.cs" />
-    <Compile Include="Cecil.Decompiler\OperatorStep.cs" />
-    <Compile Include="Cecil.Decompiler\Switches.cs" />
-    <Compile Include="Cecil.Decompiler\Exceptions.cs" />
-    <Compile Include="Cecil.Decompiler\DecompilationTestFixture.cs" />
-    <Compile Include="Cecil.Decompiler\DecompilerTestFixture.cs" />
-    <Compile Include="Cecil.Decompiler\Loops.cs" />
-    <Compile Include="Cecil.Decompiler\MethodCalls.cs" />
+    <Compile Include="Cecil.Decompiler.CSharp\CSharpAttribute.cs" />
+    <Compile Include="Cecil.Decompiler\CompiledTestCaseAttribute.cs" />
+    <Compile Include="Cecil.Decompiler\DecompilerTestFixture.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="TestCases\CSharp\Casts.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
