@@ -26,6 +26,8 @@
 
 using System;
 
+using Mono.Cecil.Cil;
+
 using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
@@ -34,36 +36,41 @@ namespace Cecil.Decompiler.Steps {
 
 		public static readonly IDecompilationStep Instance = new SelfAssignement ();
 
+		static readonly Pattern.ICodePattern SelfAssignmentPattern = new Pattern.Assignment {
+			Target = new Pattern.VariableReference {
+				Bind = var => new Pattern.MatchData ("Variable", var.Variable)
+			},
+			Expression = new Pattern.Binary {
+				Bind = binary => new Pattern.MatchData ("Operator", binary.Operator),
+				Left = new Pattern.VariableReference {
+					Variable = new Pattern.ContextData { Name = "Variable" }
+				},
+				Right = new Pattern.Literal {
+					Value = 1
+				}
+			}
+		};
+
 		public override ICodeNode VisitAssignExpression (AssignExpression node)
 		{
-			var variable = node.Target as VariableReferenceExpression;
-			if (variable == null)
+			var result = Pattern.CodePattern.Match (SelfAssignmentPattern, node);
+			if (!result.Success)
 				return base.VisitAssignExpression (node);
 
-			var binary = node.Expression as BinaryExpression;
-			if (binary == null)
+			var variable = (VariableReference) result ["Variable"];
+
+			switch ((BinaryOperator) result ["Operator"]) {
+			case BinaryOperator.Add:
+				return new UnaryExpression (
+					UnaryOperator.PostIncrement,
+					new VariableReferenceExpression (variable));
+			case BinaryOperator.Subtract:
+				return new UnaryExpression (
+					UnaryOperator.PostDecrement,
+					new VariableReferenceExpression (variable));
+			default:
 				return base.VisitAssignExpression (node);
-
-			var left = binary.Left as VariableReferenceExpression;
-			if (left == null)
-				return base.VisitAssignExpression (node);
-
-			if (variable.Variable != left.Variable)
-				return base.VisitAssignExpression (node);
-
-			var literal = binary.Right as LiteralExpression;
-			if (literal == null)
-				return base.VisitAssignExpression (node);
-
-			if (literal.Value != null && !literal.Value.Equals (1))
-				return base.VisitAssignExpression (node);
-
-			if (binary.Operator == BinaryOperator.Add)
-				return new UnaryExpression (UnaryOperator.PostIncrement, variable);
-			else if (binary.Operator == BinaryOperator.Subtract)
-				return new UnaryExpression (UnaryOperator.PostDecrement, variable);
-
-			return base.VisitAssignExpression (node);
+			}
 		}
 
 		public BlockStatement Process (DecompilationContext context, BlockStatement body)
