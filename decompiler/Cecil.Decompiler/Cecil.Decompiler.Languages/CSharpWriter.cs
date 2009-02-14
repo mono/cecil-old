@@ -310,9 +310,7 @@ namespace Cecil.Decompiler.Languages {
 			if (!is_post_op)
 				Write (ToString (node.Operator));
 			
-			WriteToken ("(");
 			Visit (node.Operand);
-			WriteToken (")");
 
 			if (is_post_op)
 				Write (ToString (node.Operator));

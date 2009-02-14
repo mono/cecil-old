@@ -157,6 +157,7 @@
     <Compile Include="Cecil.Decompiler.Languages\ILanguage.cs" />
     <Compile Include="Cecil.Decompiler.Languages\ILanguageWriter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\PlainTextFormatter.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\SelfAssignment.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareTopLevelVariables.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareVariablesOnFirstAssignment.cs" />
     <Compile Include="Cecil.Decompiler.Steps\IDecompilationStep.cs" />
