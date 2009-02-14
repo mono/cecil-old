@@ -92,11 +92,11 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.core">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.core.interfaces, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.core.interfaces">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.interfaces.dll</HintPath>
     </Reference>
