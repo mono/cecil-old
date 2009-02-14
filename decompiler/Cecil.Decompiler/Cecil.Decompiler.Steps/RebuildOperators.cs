@@ -23,12 +23,11 @@ namespace Cecil.Decompiler.Steps {
 		static void RegisterUnaryOperators ()
 		{
 			unary_operators.Add ("op_UnaryNegation", UnaryOperator.Negate);
-			unary_operators.Add ("op_LogicalNot", UnaryOperator.Not);
+			unary_operators.Add ("op_LogicalNot", UnaryOperator.LogicalNot);
+			unary_operators.Add ("op_OnesComplement", UnaryOperator.BitwiseNot);
 
-			//todo : handle theses cases
-			// unary_operators.Add("op_Decrement", UnaryOperator.??);
-			// unary_operators.Add("op_Increment", UnaryOperator.??);
-			// unary_operators.Add("op_OnesComplement", UnaryOperator.??);
+			unary_operators.Add("op_Decrement", UnaryOperator.PostDecrement);
+			unary_operators.Add("op_Increment", UnaryOperator.PostIncrement);
 		}
 
 		static void RegisterBinaryOperators ()

@@ -127,7 +127,12 @@ class LiteralExpression (Expression):
 
 enum UnaryOperator:
 	Negate
-	Not
+	LogicalNot
+	BitwiseNot
+	PostDecrement
+	PostIncrement
+	PreDecrement
+	PreIncrement
 
 class UnaryExpression (Expression):
 	Operator as UnaryOperator

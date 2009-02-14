@@ -799,7 +799,7 @@ namespace Cecil.Decompiler {
 
 		public override void OnNot (Instruction instruction)
 		{
-			PushUnaryExpression (UnaryOperator.Negate, Pop ());
+			PushUnaryExpression (UnaryOperator.BitwiseNot, Pop ());
 		}
 
 		public override void OnBrtrue (Instruction instruction)
@@ -901,7 +901,7 @@ namespace Cecil.Decompiler {
 			case CodeNodeType.UnaryExpression:
 				var unary = (UnaryExpression) expression;
 				switch (unary.Operator) {
-				case UnaryOperator.Not:
+				case UnaryOperator.LogicalNot:
 					Push (unary.Operand);
 					break;
 				default:
@@ -931,7 +931,7 @@ namespace Cecil.Decompiler {
 
 		void PushNotExpression (Expression expression)
 		{
-			PushUnaryExpression (UnaryOperator.Not, expression);
+			PushUnaryExpression (UnaryOperator.LogicalNot, expression);
 		}
 
 		void PushUnaryExpression (UnaryOperator op, Expression expression)

@@ -305,17 +305,45 @@ namespace Cecil.Decompiler.Languages {
 
 		public override void VisitUnaryExpression (UnaryExpression node)
 		{
-			Write (ToString (node.Operator));
+			bool is_post_op = IsPostUnaryOperator (node.Operator);
+
+			if (!is_post_op)
+				Write (ToString (node.Operator));
+			
 			WriteToken ("(");
 			Visit (node.Operand);
 			WriteToken (")");
+
+			if (is_post_op)
+				Write (ToString (node.Operator));
+		}
+
+		static bool IsPostUnaryOperator (UnaryOperator op)
+		{
+			switch (op) {
+			case UnaryOperator.PostIncrement:
+			case UnaryOperator.PreDecrement:
+				return true;
+			default:
+				return false;
+			}
 		}
 
 		static string ToString (UnaryOperator op)
 		{
 			switch (op) {
-			case UnaryOperator.Negate: return "~";
-			case UnaryOperator.Not: return "!";
+			case UnaryOperator.BitwiseNot:
+				return "~";
+			case UnaryOperator.LogicalNot:
+				return "!";
+			case UnaryOperator.Negate:
+				return "-";
+			case UnaryOperator.PostDecrement:
+			case UnaryOperator.PreDecrement:
+				return "--";
+			case UnaryOperator.PostIncrement:
+			case UnaryOperator.PreIncrement:
+				return "++";
 			default: throw new ArgumentException ();
 			}
 		}

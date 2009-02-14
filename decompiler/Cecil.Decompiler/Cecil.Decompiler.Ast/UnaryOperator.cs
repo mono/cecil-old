@@ -32,6 +32,11 @@ namespace Cecil.Decompiler.Ast {
 
 	public enum UnaryOperator {
 		Negate,
-		Not,
+		LogicalNot,
+		BitwiseNot,
+		PostDecrement,
+		PostIncrement,
+		PreDecrement,
+		PreIncrement,
 	}
 }

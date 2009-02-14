@@ -41,7 +41,7 @@ namespace Cecil.Decompiler {
 		DecompilationContext context;
 		BlockStatement body_block;
 
-		List<IDecompilationStep> steps;
+		IEnumerable<IDecompilationStep> steps;
 
 		public DecompilationContext Context {
 			get { return context; }
@@ -58,7 +58,7 @@ namespace Cecil.Decompiler {
 
 		public DecompilationPipeline (IEnumerable<IDecompilationStep> steps)
 		{
-			this.steps = new List<IDecompilationStep> (steps);
+			this.steps = steps;
 		}
 
 		public void Run (MethodBody body)
