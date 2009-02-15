@@ -237,3 +237,6 @@ class ObjectCreationExpression (Expression):
 class PropertyReferenceExpression (Expression):
 	Target as Expression
 	Property as PropertyReference
+
+class TypeReferenceExpression (Expression):
+	Type as TypeReference

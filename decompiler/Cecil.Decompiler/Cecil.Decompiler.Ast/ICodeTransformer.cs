@@ -76,5 +76,6 @@ namespace Cecil.Decompiler.Ast {
 		ICodeNode VisitArrayIndexerExpression (ArrayIndexerExpression node);
 		ICodeNode VisitObjectCreationExpression (ObjectCreationExpression node);
 		ICodeNode VisitPropertyReferenceExpression (PropertyReferenceExpression node);
+		ICodeNode VisitTypeReferenceExpression (TypeReferenceExpression node);
 	}
 }

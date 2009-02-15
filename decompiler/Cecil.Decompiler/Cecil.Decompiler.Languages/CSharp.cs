@@ -82,6 +82,7 @@ namespace Cecil.Decompiler.Languages {
 				DeclareVariablesOnFirstAssignment.Instance,
 				DeclareTopLevelVariables.Instance,
 				SelfAssignement.Instance,
+				TypeOfStep.Instance,
 				RebuildOperators.Instance);
 		}
 	}

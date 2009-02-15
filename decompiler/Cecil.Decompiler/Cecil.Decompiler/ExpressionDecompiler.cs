@@ -866,6 +866,29 @@ namespace Cecil.Decompiler {
 			PushAddressOf ();
 		}
 
+		public override void OnLdtoken (Instruction instruction)
+		{
+			var type = instruction.Operand as TypeReference;
+			if (type != null) {
+				Push (new TypeReferenceExpression (type));
+				return;
+			}
+
+			var method = instruction.Operand as MethodReference;
+			if (method != null) {
+				Push (new MethodReferenceExpression (null, method));
+				return;
+			}
+
+			var field = instruction.Operand as FieldReference;
+			if (field != null) {
+				Push (new FieldReferenceExpression (null, field));
+				return;
+			}
+
+			throw new NotSupportedException ();
+		}
+
 		public void Negate ()
 		{
 			Negate (Pop ());

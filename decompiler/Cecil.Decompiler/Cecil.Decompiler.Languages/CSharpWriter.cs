@@ -725,5 +725,18 @@ namespace Cecil.Decompiler.Languages {
 			WriteToken (".");
 			Write (node.Property.Name);
 		}
+
+		public override void VisitTypeReferenceExpression (TypeReferenceExpression node)
+		{
+			WriteReference (node.Type);
+		}
+
+		public override void VisitTypeOfExpression (TypeOfExpression node)
+		{
+			WriteKeyword ("typeof");
+			WriteToken ("(");
+			WriteReference (node.Type);
+			WriteToken (")");
+		}
 	}
 }

@@ -178,6 +178,9 @@ namespace Cecil.Decompiler.Ast {
 			case CodeNodeType.PropertyReferenceExpression:
 				VisitPropertyReferenceExpression ((PropertyReferenceExpression) node);
 				break;
+			case CodeNodeType.TypeReferenceExpression:
+				VisitTypeReferenceExpression ((TypeReferenceExpression) node);
+				break;
 			default:
 				throw new ArgumentException ();
 			}
@@ -429,6 +432,10 @@ namespace Cecil.Decompiler.Ast {
 		public virtual void VisitPropertyReferenceExpression (PropertyReferenceExpression node)
 		{
 			Visit (node.Target);
+		}
+
+		public virtual void VisitTypeReferenceExpression (TypeReferenceExpression node)
+		{
 		}
 	}
 }

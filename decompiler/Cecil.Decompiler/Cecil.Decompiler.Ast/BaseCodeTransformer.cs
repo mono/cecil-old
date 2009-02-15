@@ -133,6 +133,8 @@ namespace Cecil.Decompiler.Ast {
 				return VisitObjectCreationExpression ((ObjectCreationExpression) node);
 			case CodeNodeType.PropertyReferenceExpression:
 				return VisitPropertyReferenceExpression ((PropertyReferenceExpression) node);
+			case CodeNodeType.TypeReferenceExpression:
+				return VisitTypeReferenceExpression ((TypeReferenceExpression) node);
 			default:
 				throw new ArgumentException ();
 			}
@@ -472,6 +474,11 @@ namespace Cecil.Decompiler.Ast {
 		public virtual ICodeNode VisitPropertyReferenceExpression (PropertyReferenceExpression node)
 		{
 			node.Target = (Expression) Visit (node.Target);
+			return node;
+		}
+
+		public virtual ICodeNode VisitTypeReferenceExpression (TypeReferenceExpression node)
+		{
 			return node;
 		}
 	}

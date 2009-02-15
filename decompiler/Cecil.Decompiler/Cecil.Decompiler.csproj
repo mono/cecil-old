@@ -135,6 +135,7 @@
     <Compile Include="Cecil.Decompiler.Ast\ThrowStatement.cs" />
     <Compile Include="Cecil.Decompiler.Ast\TryStatement.cs" />
     <Compile Include="Cecil.Decompiler.Ast\TypeOfExpression.cs" />
+    <Compile Include="Cecil.Decompiler.Ast\TypeReferenceExpression.cs" />
     <Compile Include="Cecil.Decompiler.Ast\UnaryExpression.cs" />
     <Compile Include="Cecil.Decompiler.Ast\UnaryOperator.cs" />
     <Compile Include="Cecil.Decompiler.Ast\VariableDeclarationExpression.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Cecil.Decompiler.Languages\ILanguageWriter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\PlainTextFormatter.cs" />
     <Compile Include="Cecil.Decompiler.Pattern\PatternMatching.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\TypeOfStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\SelfAssignment.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareTopLevelVariables.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareVariablesOnFirstAssignment.cs" />

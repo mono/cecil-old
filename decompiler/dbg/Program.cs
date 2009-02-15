@@ -376,9 +376,38 @@ namespace Cecil.Decompiler.Debug {
 			}
 		}
 
+		class Bonbon : IDisposable {
+
+			public void Dispose ()
+			{
+				Console.WriteLine ("spose ? ahahha");
+			}
+		}
+
+		static void Mange (Bonbon b)
+		{
+			using (b) {
+				Console.WriteLine ("cronch {0}", b);
+			}
+		}
+
+		static object john = new object ();
+
+		static void Lost ()
+		{
+			lock (john) {
+				Console.WriteLine ("couteau");
+			}
+		}
+
+		static Type GetTypeOfObject ()
+		{
+			return typeof (object);
+		}
+
 		static void Main (string [] args)
 		{
-			var method = GetProgramMethod ("CondExp");
+			var method = GetProgramMethod ("GetTypeOfObject");
 
 			var cfg = ControlFlowGraph.Create (method);
 

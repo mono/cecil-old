@@ -27,56 +27,40 @@
 
 // Warning: generated do not edit
 
+using System;
+using System.Collections.Generic;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace Cecil.Decompiler.Ast {
 
-	public enum CodeNodeType {
-		BlockStatement,
-		ReturnStatement,
-		GotoStatement,
-		LabeledStatement,
-		IfStatement,
-		ExpressionStatement,
-		ThrowStatement,
-		WhileStatement,
-		DoWhileStatement,
-		BreakStatement,
-		ContinueStatement,
-		ForStatement,
-		ForEachStatement,
-		ConditionCase,
-		DefaultCase,
-		SwitchStatement,
-		CatchClause,
-		TryStatement,
-		BlockExpression,
-		MethodInvocationExpression,
-		MethodReferenceExpression,
-		DelegateCreationExpression,
-		DelegateInvocationExpression,
-		LiteralExpression,
-		UnaryExpression,
-		BinaryExpression,
-		AssignExpression,
-		ArgumentReferenceExpression,
-		VariableReferenceExpression,
-		VariableDeclarationExpression,
-		ThisReferenceExpression,
-		BaseReferenceExpression,
-		FieldReferenceExpression,
-		CastExpression,
-		SafeCastExpression,
-		CanCastExpression,
-		TypeOfExpression,
-		ConditionExpression,
-		NullCoalesceExpression,
-		AddressDereferenceExpression,
-		AddressReferenceExpression,
-		AddressOfExpression,
-		ArrayCreationExpression,
-		ArrayIndexerExpression,
-		ObjectCreationExpression,
-		PropertyReferenceExpression,
-		TypeReferenceExpression
+	public class TypeReferenceExpression : Expression {
+
+		TypeReference type;
+
+		public TypeReferenceExpression ()
+		{
+		}
+
+		public TypeReferenceExpression (TypeReference type)
+		{
+			this.type = type;
+		}
+
+		public TypeReference Type
+		{
+			get { return type; }
+			set { this.type = value; }
+		}
+
+		public override CodeNodeType CodeNodeType
+		{
+			get { return CodeNodeType.TypeReferenceExpression; }
+		}
+	}
+
+	public static partial class CodeNode {
+
 	}
 }
-
