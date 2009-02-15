@@ -320,7 +320,7 @@ namespace Cecil.Decompiler.Languages {
 		{
 			switch (op) {
 			case UnaryOperator.PostIncrement:
-			case UnaryOperator.PreDecrement:
+			case UnaryOperator.PostDecrement:
 				return true;
 			default:
 				return false;

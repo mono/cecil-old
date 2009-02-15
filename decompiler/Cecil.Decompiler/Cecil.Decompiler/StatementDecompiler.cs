@@ -81,8 +81,7 @@ namespace Cecil.Decompiler {
 		void Run ()
 		{
 			ProcessBlocks ();
-			ProcessExceptionData ();
-			ProcessRegisters ();
+			RemoveRegisterVariables ();
 		}
 
 		IEnumerable<Statement> GetStatements ()
@@ -124,8 +123,20 @@ namespace Cecil.Decompiler {
 			MarkProcessed (block);
 
 			ProcessInstructions (block);
+			ProcessBlockExceptionHandlers (block);
 
 			current_block = previous_block;
+		}
+
+		void ProcessBlockExceptionHandlers (InstructionBlock block)
+		{
+			// optimizable
+			if (!body.HasExceptionHandlers)
+				return;
+
+			foreach (var data in cfg.GetExceptionData ())
+				if (block.Index + 1 == data.TryRange.End.Index)
+					ProcessExceptionData (data);
 		}
 
 		void ProcessInstructions (InstructionBlock block)
@@ -202,10 +213,10 @@ namespace Cecil.Decompiler {
 			current_block = current;
 		}
 
-		void ProcessRegisters ()
+		void RemoveRegisterVariables ()
 		{
 			foreach (var register in expression_decompiler.GetRegisters ())
-				variables.Remove ((VariableDefinition) register);
+				variables.Remove (register.Resolve ());
 		}
 
 		void CheckLabel (Instruction instruction)
@@ -785,22 +796,12 @@ namespace Cecil.Decompiler {
 			Add (new ExpressionStatement (Pop ()));
 		}
 
-		void ProcessExceptionData ()
-		{
-			if (body.ExceptionHandlers.Count == 0)
-				return;
-
-			var data = cfg.GetExceptionData ();
-
-			for (int i = data.Length - 1; i >= 0; i--)
-				ProcessExceptionData (data [i]);
-		}
-
 		void ProcessExceptionData (ExceptionHandlerData data)
 		{
 			var list = GetOrCreateStatementListAt (data.TryRange.Start.Index);
 
-			var @try = new TryStatement (new BlockStatement (), null, null);
+			var @try = new TryStatement ();
+			@try.Try = new BlockStatement ();
 
 			MoveStatementsToBlock (data.TryRange.Start, data.TryRange.End, @try.Try);
 

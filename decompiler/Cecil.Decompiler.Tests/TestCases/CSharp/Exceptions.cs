@@ -36,4 +36,19 @@ class Program {
 		}
 		Console.WriteLine (7);
 	}
+
+	public void TryInWhileInTry (int a)
+	{
+		try {
+			while (a > 10) {
+				try {
+					a--;
+				} catch (Exception e2) {
+					Console.WriteLine (e2);
+				}
+			}
+		} catch (Exception e) {
+			Console.WriteLine (e);
+		}
+	}
 }

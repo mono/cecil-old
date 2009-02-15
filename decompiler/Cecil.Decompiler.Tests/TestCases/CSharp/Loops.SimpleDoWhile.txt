@@ -3,7 +3,7 @@
 	Console.WriteLine(a);
 	do
 	{
-		a = a + 1;
+		a++;
 		Console.WriteLine(a);
 	}
 	while (a < 100);

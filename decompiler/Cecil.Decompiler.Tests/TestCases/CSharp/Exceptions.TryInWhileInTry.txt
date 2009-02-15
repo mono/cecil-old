@@ -1,0 +1,21 @@
+﻿public void TryInWhileInTry(int a)
+{
+	try
+	{
+		while (a > 10)
+		{
+			try
+			{
+				a--;
+			}
+			catch (Exception V_0)
+			{
+				Console.WriteLine(V_0);
+			}
+		}
+	}
+	catch (Exception V_1)
+	{
+		Console.WriteLine(V_1);
+	}
+}

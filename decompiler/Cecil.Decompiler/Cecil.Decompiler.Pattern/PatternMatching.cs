@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using Mono.Cecil;
@@ -173,16 +174,19 @@ namespace Cecil.Decompiler.Pattern {
 	public class Constant : CodePattern {
 
 		public object Value { get; set; }
+		public IEqualityComparer Comparer { get; set; }
 
 		public override bool Match (MatchContext context, object @object)
 		{
-			return Object.Equals (Value, @object);
+			var comparer = Comparer ?? EqualityComparer<object>.Default;
+			return comparer.Equals (Value, @object);
 		}
 	}
 
 	public class ContextData : CodePattern {
 
 		public string Name { get; set; }
+		public IEqualityComparer Comparer { get; set; }
 
 		public override bool Match (MatchContext context, object @object)
 		{
@@ -190,7 +194,8 @@ namespace Cecil.Decompiler.Pattern {
 			if (!context.TryGetData (Name, out data))
 				return false;
 
-			return Object.Equals (data, @object);
+			var comparer = Comparer ?? EqualityComparer<object>.Default;
+			return comparer.Equals (data, @object);
 		}
 	}
 

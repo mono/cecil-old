@@ -8,7 +8,7 @@
 			break;
 		}
 		Console.WriteLine(a);
-		a = a - 1;
+		a--;
 	}
 	Console.WriteLine(a);
 }

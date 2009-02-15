@@ -25,6 +25,8 @@
 #endregion
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 using Mono.Cecil.Cil;
 
@@ -32,19 +34,51 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
+	class VariableComparer : IEqualityComparer {
+
+		public static readonly IEqualityComparer Instance = new VariableComparer ();
+
+		public bool Equals (object x, object y)
+		{
+			if (x == y)
+				return true;
+
+			if (x == null)
+				return y == null;
+
+			var x_arg_ref = x as ArgumentReferenceExpression;
+			var y_arg_ref = y as ArgumentReferenceExpression;
+
+			if (x_arg_ref != null && y_arg_ref != null)
+				return x_arg_ref.Parameter == y_arg_ref.Parameter;
+
+			var x_var_ref = x as VariableReferenceExpression;
+			var y_var_ref = y as VariableReferenceExpression;
+
+			if (x_var_ref != null && y_var_ref != null)
+				return x_var_ref.Variable == y_var_ref.Variable;
+
+			return false;
+		}
+
+		public int GetHashCode (object obj)
+		{
+			return obj.GetHashCode ();
+		}
+	}
+
 	class SelfAssignement : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new SelfAssignement ();
-		const string VariableKey = "Variable";
+
+		const string TargetKey = "Target";
 		const string OperatorKey = "Operator";
 
 		static readonly Pattern.ICodePattern SelfAssignmentPattern = new Pattern.Assignment {
-			Target = new Pattern.VariableReference {
-				Bind = var => new Pattern.MatchData (VariableKey, var.Variable)
-			},
+			Bind = assign => new Pattern.MatchData (TargetKey, assign.Target),
 			Expression = new Pattern.Binary {
 				Bind = binary => new Pattern.MatchData (OperatorKey, binary.Operator),
-				Left = new Pattern.ContextVariableReference { Name = VariableKey },
+				Left = new Pattern.ContextData { Name = TargetKey, Comparer = VariableComparer.Instance },
 				Right = new Pattern.Literal { Value = 1 }
 			}
 		};
@@ -55,15 +89,14 @@ namespace Cecil.Decompiler.Steps {
 			if (!result.Success)
 				return base.VisitAssignExpression (node);
 
-			var variable = (VariableReference) result [VariableKey];
+			var target = (Expression) result [TargetKey];
 			var @operator = (BinaryOperator) result [OperatorKey];
 
 			switch (@operator) {
 			case BinaryOperator.Add:
 			case BinaryOperator.Subtract:
 				return new UnaryExpression (
-					GetCorrespondingOperator (@operator),
-					new VariableReferenceExpression (variable));
+					GetCorrespondingOperator (@operator), target);
 			default:
 				return base.VisitAssignExpression (node);
 			}

@@ -18,5 +18,10 @@ namespace Cecil.Decompiler.CSharp {
 		public void NestedTryCatch ()
 		{
 		}
+
+		[CSharp (Version = CSharpVersion.V1)]
+		public void TryInWhileInTry ()
+		{
+		}
 	}
 }

@@ -357,6 +357,13 @@ namespace Cecil.Decompiler.Debug {
 				Console.WriteLine (stream);
 		}
 
+		static void ForeachForeach (IEnumerable<IEnumerable<string>> lilisty)
+		{
+			foreach (var stream in lilisty)
+				foreach (var str in stream)
+					Console.WriteLine (str);
+		}
+
 		static void ForFor (int [] [] integers)
 		{
 			for (int i = 0; i < integers.Length; i++)
@@ -405,9 +412,24 @@ namespace Cecil.Decompiler.Debug {
 			return typeof (object);
 		}
 
+		public void TryInWhileInTry (int a)
+		{
+			try {
+				while (a > 10) {
+					try {
+						a--;
+					} catch (Exception e2) {
+						Console.WriteLine (e2);
+					}
+				}
+			} catch (Exception e) {
+				Console.WriteLine (e);
+			}
+		}
+
 		static void Main (string [] args)
 		{
-			var method = GetProgramMethod ("GetTypeOfObject");
+			var method = GetProgramMethod ("ForeachForeach");
 
 			var cfg = ControlFlowGraph.Create (method);
 
@@ -420,7 +442,7 @@ namespace Cecil.Decompiler.Debug {
 
 			var language = CSharp.GetLanguage (CSharpVersion.V1);
 
-			var body = method.Body.Decompile (language);
+			//var body = method.Body.Decompile (language);
 
 			var writer = language.GetWriter (new PlainTextFormatter (Console.Out));
 

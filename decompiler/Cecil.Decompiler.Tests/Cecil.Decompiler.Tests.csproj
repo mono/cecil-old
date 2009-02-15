@@ -231,6 +231,7 @@
     <Content Include="TestCases\CSharp\Conditions.SimpleIfAnd.txt" />
     <Content Include="TestCases\CSharp\Conditions.NullCoalesce.txt" />
     <Content Include="TestCases\CSharp\Builtins.TypeOf.txt" />
+    <Content Include="TestCases\CSharp\Exceptions.TryInWhileInTry.txt" />
     <Content Include="TestCases\CSharp\Exceptions.NestedTryCatch.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.ArrayLength.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.CallIgnoreReturnValue.txt" />
