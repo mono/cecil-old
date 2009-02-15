@@ -230,6 +230,7 @@
     <Content Include="TestCases\CSharp\Conditions.SimpleIfOr.txt" />
     <Content Include="TestCases\CSharp\Conditions.SimpleIfAnd.txt" />
     <Content Include="TestCases\CSharp\Conditions.NullCoalesce.txt" />
+    <Content Include="TestCases\CSharp\Builtins.TypeOf.txt" />
     <Content Include="TestCases\CSharp\Exceptions.NestedTryCatch.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.ArrayLength.txt" />
     <Content Include="TestCases\CSharp\MethodCalls.CallIgnoreReturnValue.txt" />
@@ -244,6 +245,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cecil.Decompiler.CSharp\Conditions.cs" />
+    <Compile Include="Cecil.Decompiler.CSharp\Builtins.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\MethodCalls.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Exceptions.cs" />
     <Compile Include="Cecil.Decompiler.CSharp\Loops.cs" />
@@ -257,6 +259,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="TestCases\CSharp\Builtins.cs" />
     <None Include="TestCases\CSharp\Conditions.cs" />
     <None Include="TestCases\CSharp\MethodCalls.cs" />
     <None Include="TestCases\CSharp\Exceptions.cs" />

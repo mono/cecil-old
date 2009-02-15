@@ -46,6 +46,7 @@ namespace Cecil.Decompiler.Languages {
 		{
 			return new DecompilationPipeline (
 				new StatementDecompiler (BlockOptimization.Basic),
+				TypeOfStep.Instance,
 				DeclareTopLevelVariables.Instance);
 		}
 
@@ -82,7 +83,6 @@ namespace Cecil.Decompiler.Languages {
 				DeclareVariablesOnFirstAssignment.Instance,
 				DeclareTopLevelVariables.Instance,
 				SelfAssignement.Instance,
-				TypeOfStep.Instance,
 				RebuildOperators.Instance);
 		}
 	}
