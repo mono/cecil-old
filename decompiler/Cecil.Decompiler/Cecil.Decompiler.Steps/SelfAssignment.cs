@@ -35,14 +35,16 @@ namespace Cecil.Decompiler.Steps {
 	class SelfAssignement : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new SelfAssignement ();
+		const string VariableKey = "Variable";
+		const string OperatorKey = "Operator";
 
 		static readonly Pattern.ICodePattern SelfAssignmentPattern = new Pattern.Assignment {
 			Target = new Pattern.VariableReference {
-				Bind = var => new Pattern.MatchData ("Variable", var.Variable)
+				Bind = var => new Pattern.MatchData (VariableKey, var.Variable)
 			},
 			Expression = new Pattern.Binary {
-				Bind = binary => new Pattern.MatchData ("Operator", binary.Operator),
-				Left = new Pattern.ContextVariableReference { Name = "Variable" },
+				Bind = binary => new Pattern.MatchData (OperatorKey, binary.Operator),
+				Left = new Pattern.ContextVariableReference { Name = VariableKey },
 				Right = new Pattern.Literal { Value = 1 }
 			}
 		};
@@ -53,8 +55,8 @@ namespace Cecil.Decompiler.Steps {
 			if (!result.Success)
 				return base.VisitAssignExpression (node);
 
-			var variable = (VariableReference) result ["Variable"];
-			var @operator = (BinaryOperator) result ["Operator"];
+			var variable = (VariableReference) result [VariableKey];
+			var @operator = (BinaryOperator) result [OperatorKey];
 
 			switch (@operator) {
 			case BinaryOperator.Add:

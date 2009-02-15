@@ -28,12 +28,12 @@ namespace Cecil.Decompiler.Pattern {
 
 	public static class Extensions {
 
-		public static bool TryMatch (this ICodePattern pattern, MatchContext context, object @object)
+		public static bool TryMatch (this ICodePattern self, MatchContext context, object @object)
 		{
-			if (pattern == null)
+			if (self == null)
 				return true;
 
-			return pattern.Match (context, @object);
+			return self.Match (context, @object);
 		}
 	}
 
@@ -153,6 +153,30 @@ namespace Cecil.Decompiler.Pattern {
 		}
 	}
 
+	public class SafeCast : CodePattern<Ast.SafeCastExpression> {
+
+		public ICodePattern TargetType { get; set; }
+		public ICodePattern Expression { get; set; }
+
+		protected override bool OnMatch (MatchContext context, SafeCastExpression node)
+		{
+			if (!TargetType.TryMatch (context, node.TargetType))
+				return false;
+
+			return Expression.TryMatch (context, node.Expression);
+		}
+	}
+
+	public class Constant : CodePattern {
+
+		public object Value { get; set; }
+
+		public override bool Match (MatchContext context, object @object)
+		{
+			return Value == null ? @object == null : Value.Equals (@object);
+		}
+	}
+
 	public class ContextData : CodePattern {
 
 		public string Name { get; set; }
@@ -178,7 +202,9 @@ namespace Cecil.Decompiler.Pattern {
 		}
 
 		public object this [string name] {
-			get { return Store [name]; }
+			get {
+				return Store [name];
+			}
 		}
 
 		Dictionary<string, object> Store {
@@ -192,6 +218,11 @@ namespace Cecil.Decompiler.Pattern {
 
 		public bool TryGetData (string name, out object value)
 		{
+			if (datas == null) {
+				value = null;
+				return false;
+			}
+
 			return Store.TryGetValue (name, out value);
 		}
 

@@ -33,24 +33,23 @@ namespace Cecil.Decompiler.Steps {
 	class RebuildCanCastExpressions : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new RebuildCanCastExpressions ();
+		const string SafeCastKey = "SafeCast";
+
+		static Pattern.ICodePattern CanCastPattern = new Pattern.Binary {
+			Left = new Pattern.SafeCast { Bind = sc => new Pattern.MatchData (SafeCastKey, sc) },
+			Operator = new Pattern.Constant { Value = BinaryOperator.GreaterThan },
+			Right = new Pattern.Literal { Value = null }
+		};
 
 		public override ICodeNode VisitBinaryExpression (BinaryExpression node)
 		{
-			if (node.Operator != BinaryOperator.GreaterThan)
-				return base.VisitBinaryExpression (node);
+			var result = Pattern.CodePattern.Match (CanCastPattern, node);
+			if (result.Success) {
+				var safe_cast = (SafeCastExpression) result [SafeCastKey];
+				return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
+			}
 
-			var literal = node.Right as LiteralExpression;
-			if (literal == null)
-				return base.VisitBinaryExpression (node);
-
-			if (literal.Value != null)
-				return base.VisitBinaryExpression (node);
-
-			var safe_cast = node.Left as SafeCastExpression;
-			if (safe_cast == null)
-				return base.VisitBinaryExpression (node);
-
-			return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
+			return base.VisitBinaryExpression (node);
 		}
 
 		public BlockStatement Process (DecompilationContext context, BlockStatement body)
