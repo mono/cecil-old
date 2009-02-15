@@ -159,6 +159,7 @@
     <Compile Include="Cecil.Decompiler.Languages\ILanguageWriter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\PlainTextFormatter.cs" />
     <Compile Include="Cecil.Decompiler.Pattern\PatternMatching.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\CanCastStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\TypeOfStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\SelfAssignment.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareTopLevelVariables.cs" />
@@ -166,7 +167,6 @@
     <Compile Include="Cecil.Decompiler.Steps\IDecompilationStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\Matcher.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildOperators.cs" />
-    <Compile Include="Cecil.Decompiler.Steps\RebuildCanCastExpressions.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildForeachStatements.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildForStatements.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildPropertyReferences.cs" />

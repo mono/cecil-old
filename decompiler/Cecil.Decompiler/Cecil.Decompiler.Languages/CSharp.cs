@@ -76,7 +76,7 @@ namespace Cecil.Decompiler.Languages {
 				new StatementDecompiler (BlockOptimization.Detailed),
 				RemoveLastReturn.Instance,
 				RebuildPropertyReferences.Instance,
-				RebuildCanCastExpressions.Instance,
+				CanCastStep.Instance,
 				RebuildForStatements.Instance,
 				RebuildForeachStatements.Instance,
 				DeclareVariablesOnFirstAssignment.Instance,

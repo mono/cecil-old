@@ -30,9 +30,10 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	class RebuildCanCastExpressions : BaseCodeTransformer, IDecompilationStep {
+	class CanCastStep : BaseCodeTransformer, IDecompilationStep {
 
-		public static readonly IDecompilationStep Instance = new RebuildCanCastExpressions ();
+		public static readonly IDecompilationStep Instance = new CanCastStep ();
+
 		const string SafeCastKey = "SafeCast";
 
 		static Pattern.ICodePattern CanCastPattern = new Pattern.Binary {
@@ -44,12 +45,11 @@ namespace Cecil.Decompiler.Steps {
 		public override ICodeNode VisitBinaryExpression (BinaryExpression node)
 		{
 			var result = Pattern.CodePattern.Match (CanCastPattern, node);
-			if (result.Success) {
-				var safe_cast = (SafeCastExpression) result [SafeCastKey];
-				return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
-			}
+			if (!result.Success)
+				return base.VisitBinaryExpression (node);
 
-			return base.VisitBinaryExpression (node);
+			var safe_cast = (SafeCastExpression) result [SafeCastKey];
+			return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
 		}
 
 		public BlockStatement Process (DecompilationContext context, BlockStatement body)
