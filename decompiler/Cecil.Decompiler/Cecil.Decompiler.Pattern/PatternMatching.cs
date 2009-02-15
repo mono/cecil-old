@@ -23,7 +23,18 @@ namespace Cecil.Decompiler.Pattern {
 	}
 
 	public interface ICodePattern {
-		void Match (MatchContext context, object @object);
+		bool Match (MatchContext context, object @object);
+	}
+
+	public static class Extensions {
+
+		public static bool TryMatch (this ICodePattern pattern, MatchContext context, object @object)
+		{
+			if (pattern == null)
+				return true;
+
+			return pattern.Match (context, @object);
+		}
 	}
 
 	public abstract class CodePattern : ICodePattern {
@@ -31,55 +42,39 @@ namespace Cecil.Decompiler.Pattern {
 		public static MatchContext Match (ICodePattern pattern, object @object)
 		{
 			var context = new MatchContext ();
-			pattern.Match (context, @object);
+			context.Success = pattern.Match (context, @object);
 			return context;
 		}
 
-		public abstract void Match (MatchContext context, object @object);
+		public abstract bool Match (MatchContext context, object @object);
 	}
 
 	public abstract class CodePattern<TNode> : CodePattern where TNode : class, Ast.ICodeNode {
 
 		public Func<TNode, MatchData> Bind { get; set; }
 
-		public override void Match (MatchContext context, object node)
+		public override bool Match (MatchContext context, object node)
 		{
 			var current = node as TNode;
-			if (current == null) {
-				context.Success = false;
-				return;
-			}
+			if (current == null)
+				return false;
 
 			if (Bind != null)
 				context.AddData (Bind (current));
 
-			OnMatch (context, current);
+			return OnMatch (context, current);
 		}
 
-		protected abstract void OnMatch (MatchContext context, TNode node);
-	}
-
-	public class Statement : CodePattern<Ast.Statement> {
-
-		public ICodePattern Pattern { get; set; }
-
-		protected override void OnMatch (MatchContext context, Ast.Statement node)
-		{
-			if (Pattern != null)
-				Pattern.Match (context, node);
-		}
+		protected abstract bool OnMatch (MatchContext context, TNode node);
 	}
 
 	public class ExpressionStatement : CodePattern<Ast.ExpressionStatement> {
 
 		public ICodePattern Expression { get; set; }
 
-		protected override void OnMatch (MatchContext context, Ast.ExpressionStatement node)
+		protected override bool OnMatch (MatchContext context, Ast.ExpressionStatement node)
 		{
-			if (Expression == null)
-				return;
-
-			Expression.Match (context, node.Expression);
+			return Expression.TryMatch (context, node.Expression);
 		}
 	}
 
@@ -88,16 +83,12 @@ namespace Cecil.Decompiler.Pattern {
 		public ICodePattern Target { get; set; }
 		public ICodePattern Expression { get; set; }
 
-		protected override void OnMatch (MatchContext context, Ast.AssignExpression node)
+		protected override bool OnMatch (MatchContext context, Ast.AssignExpression node)
 		{
-			if (Target != null)
-				Target.Match (context, node.Target);
+			if (!Target.TryMatch (context, node.Target))
+				return false;
 
-			if (!context.Success)
-				return;
-
-			if (Expression != null)
-				Expression.Match (context, node.Expression);
+			return Expression.TryMatch (context, node.Expression);
 		}
 	}
 
@@ -105,10 +96,9 @@ namespace Cecil.Decompiler.Pattern {
 
 		public ICodePattern Variable { get; set; }
 
-		protected override void OnMatch (MatchContext context, Ast.VariableReferenceExpression node)
+		protected override bool OnMatch (MatchContext context, Ast.VariableReferenceExpression node)
 		{
-			if (Variable != null)
-				Variable.Match (context, node.Variable);
+			return Variable.TryMatch (context, node.Variable);
 		}
 	}
 
@@ -116,15 +106,13 @@ namespace Cecil.Decompiler.Pattern {
 
 		public string Name { get; set; }
 
-		protected override void OnMatch (MatchContext context, VariableReferenceExpression node)
+		protected override bool OnMatch (MatchContext context, VariableReferenceExpression node)
 		{
 			object data;
-			if (!context.TryGetData (Name, out data)) {
-				context.Success = false;
-				return;
-			}
+			if (!context.TryGetData (Name, out data))
+				return false;
 
-			context.Success = node.Variable == data;
+			return node.Variable == data;
 		}
 	}
 
@@ -134,22 +122,15 @@ namespace Cecil.Decompiler.Pattern {
 		public ICodePattern Operator { get; set; }
 		public ICodePattern Right { get; set; }
 
-		protected override void OnMatch (MatchContext context, BinaryExpression node)
+		protected override bool OnMatch (MatchContext context, BinaryExpression node)
 		{
-			if (Left != null)
-				Left.Match (context, node.Left);
+			if (!Left.TryMatch (context, node.Left))
+				return false;
 
-			if (!context.Success)
-				return;
+			if (!Operator.TryMatch (context, node.Operator))
+				return false;
 
-			if (Operator != null)
-				Operator.Match (context, node.Operator);
-
-			if (!context.Success)
-				return;
-
-			if (Right != null)
-				Right.Match (context, node.Right);
+			return Right.TryMatch (context, node.Right);
 		}
 	}
 
@@ -163,12 +144,12 @@ namespace Cecil.Decompiler.Pattern {
 			set { this.value = value; check_value = true; }
 		}
 
-		protected override void OnMatch (MatchContext context, Ast.LiteralExpression node)
+		protected override bool OnMatch (MatchContext context, Ast.LiteralExpression node)
 		{
 			if (!check_value)
-				return;
+				return true;
 
-			context.Success = Value == null ? node.Value == null : Value.Equals (node.Value);
+			return value == null ? node.Value == null : value.Equals (node.Value);
 		}
 	}
 
@@ -176,16 +157,13 @@ namespace Cecil.Decompiler.Pattern {
 
 		public string Name { get; set; }
 
-		public override void Match (MatchContext context, object @object)
+		public override bool Match (MatchContext context, object @object)
 		{
 			object data;
+			if (!context.TryGetData (Name, out data))
+				return false;
 
-			if (!context.TryGetData (Name, out data)) {
-				context.Success = false;
-				return;
-			}
-
-			context.Success = data == null ? @object == null : data.Equals (@object);
+			return data == null ? @object == null : data.Equals (@object);
 		}
 	}
 
