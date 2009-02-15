@@ -89,6 +89,14 @@ namespace Cecil.Decompiler {
 		{
 		}
 
+		public override void OnStloc (Instruction instruction)
+		{
+			if (IsSkipped (instruction))
+				return;
+
+			PushVariableAssignement ((VariableReference) instruction.Operand);
+		}
+
 		public override void OnStloc_0 (Instruction instruction)
 		{
 			if (IsSkipped (instruction))
@@ -124,11 +132,6 @@ namespace Cecil.Decompiler {
 		bool IsSkipped (Instruction instruction)
 		{
 			return annotations.IsAnnotated (instruction, Annotation.Skip);
-		}
-
-		public override void OnStloc (Instruction instruction)
-		{
-			PushVariableAssignement ((VariableReference) instruction.Operand);
 		}
 
 		public override void OnStarg (Instruction instruction)
@@ -822,12 +825,34 @@ namespace Cecil.Decompiler {
 
 		public override void OnLdfld (Instruction instruction)
 		{
-			Push (new FieldReferenceExpression (Pop (), (FieldReference) instruction.Operand));
+			PushFieldReference (instruction, Pop ());
 		}
 
 		public override void OnLdsfld (Instruction instruction)
 		{
-			Push (new FieldReferenceExpression (null, (FieldReference) instruction.Operand));
+			PushFieldReference (instruction);
+		}
+
+		void PushFieldReference (Instruction instruction)
+		{
+			PushFieldReference (instruction, null);
+		}
+
+		void PushFieldReference (Instruction instruction, Expression target)
+		{
+			Push (new FieldReferenceExpression (target, (FieldReference) instruction.Operand));
+		}
+
+		public override void OnLdflda (Instruction instruction)
+		{
+			PushFieldReference (instruction, Pop ());
+			PushAddressOf ();
+		}
+
+		public override void OnLdsflda (Instruction instruction)
+		{
+			PushFieldReference (instruction);
+			PushAddressOf ();
 		}
 
 		public override void OnLdnull (Instruction instruction)
