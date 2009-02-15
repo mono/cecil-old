@@ -141,7 +141,10 @@ namespace Cecil.Decompiler.Pattern {
 
 		public object Value {
 			get { return value; }
-			set { this.value = value; check_value = true; }
+			set {
+				this.value = value;
+				check_value = true;
+			}
 		}
 
 		protected override bool OnMatch (MatchContext context, Ast.LiteralExpression node)
@@ -149,7 +152,7 @@ namespace Cecil.Decompiler.Pattern {
 			if (!check_value)
 				return true;
 
-			return value == null ? node.Value == null : value.Equals (node.Value);
+			return Object.Equals (value, node.Value);
 		}
 	}
 
@@ -173,7 +176,7 @@ namespace Cecil.Decompiler.Pattern {
 
 		public override bool Match (MatchContext context, object @object)
 		{
-			return Value == null ? @object == null : Value.Equals (@object);
+			return Object.Equals (Value, @object);
 		}
 	}
 
@@ -187,7 +190,7 @@ namespace Cecil.Decompiler.Pattern {
 			if (!context.TryGetData (Name, out data))
 				return false;
 
-			return data == null ? @object == null : data.Equals (@object);
+			return Object.Equals (data, @object);
 		}
 	}
 
