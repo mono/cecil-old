@@ -86,11 +86,11 @@ namespace Cecil.Decompiler {
 
 		IEnumerable<Statement> GetStatements ()
 		{
-			foreach (var list in statements) {
-				if (list == null)
+			foreach (var block_statements in statements) {
+				if (block_statements == null)
 					continue;
 
-				foreach (var statement in list)
+				foreach (var statement in block_statements)
 					yield return statement;
 			}
 		}
@@ -441,14 +441,13 @@ namespace Cecil.Decompiler {
 			for (int i = start.Index; i < limit.Index; i++) {
 				ProcessBlock (cfg.Blocks [i]);
 
-				var list = this.statements [i];
-
-				if (list == null)
+				var block_statements = this.statements [i];
+				if (block_statements == null)
 					continue;
 
-				AddRangeToBlock (block, list);
+				AddRangeToBlock (block, block_statements);
 
-				list.Clear ();
+				block_statements.Clear ();
 			}
 		}
 
@@ -623,9 +622,7 @@ namespace Cecil.Decompiler {
 
 		public override void OnRet (Instruction instruction)
 		{
-			Expression expression = GetStackBefore (instruction) == 1 ? Pop () : null;
-
-			Add (new ReturnStatement (expression));
+			Add (new ReturnStatement (GetStackBefore (instruction) == 1 ? Pop () : null));
 		}
 
 		public override void OnThrow (Instruction instruction)
@@ -798,7 +795,7 @@ namespace Cecil.Decompiler {
 
 		void ProcessExceptionData (ExceptionHandlerData data)
 		{
-			var list = GetOrCreateStatementListAt (data.TryRange.Start.Index);
+			var block_statements = GetOrCreateStatementListAt (data.TryRange.Start.Index);
 
 			var @try = new TryStatement ();
 			@try.Try = new BlockStatement ();
@@ -809,7 +806,7 @@ namespace Cecil.Decompiler {
 
 			ProcessFinallyHandler (data, @try);
 
-			list.Add (@try);
+			block_statements.Add (@try);
 		}
 
 		void ProcessFinallyHandler (ExceptionHandlerData data, TryStatement @try)
@@ -889,26 +886,26 @@ namespace Cecil.Decompiler {
 			if (statement == null)
 				throw new ArgumentNullException ("statement");
 
-			var list = GetOrCreateStatementListAt (current_block.Index);
+			var block_statements = GetOrCreateStatementListAt (current_block.Index);
 
 			if (current_label != null) {
 				var label = new LabeledStatement (current_label);
 				current_label = null;
-				list.Add (label);
+				block_statements.Add (label);
 			}
 
-			list.Add (statement);
+			block_statements.Add (statement);
 		}
 
 		List<Statement> GetOrCreateStatementListAt (int index)
 		{
-			var list = statements [index];
-			if (list != null)
-				return list;
+			var block_statements = statements [index];
+			if (block_statements != null)
+				return block_statements;
 
-			list = new List<Statement> (4);
-			statements [index] = list;
-			return list;
+			block_statements = new List<Statement> (4);
+			statements [index] = block_statements;
+			return block_statements;
 		}
 
 		Expression Pop ()
@@ -930,16 +927,6 @@ namespace Cecil.Decompiler {
 		bool WasProcessed (InstructionBlock block)
 		{
 			return processed.Contains (block);
-		}
-
-		static InstructionBlock GetThen (InstructionBlock block)
-		{
-			return block.Successors [0];
-		}
-
-		static InstructionBlock GetElse (InstructionBlock block)
-		{
-			return block.Successors [1];
 		}
 	}
 }
