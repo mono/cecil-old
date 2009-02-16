@@ -32,27 +32,28 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	class RebuildPropertyReferences : BaseCodeTransformer, IDecompilationStep {
+	class PropertyStep : BaseCodeTransformer, IDecompilationStep {
 
-		public static readonly IDecompilationStep Instance = new RebuildPropertyReferences ();
+		public static readonly IDecompilationStep Instance = new PropertyStep ();
 
 		public override ICodeNode VisitMethodInvocationExpression (MethodInvocationExpression node)
 		{
 			var method_ref = node.Method as MethodReferenceExpression;
 			if (method_ref == null)
-				return base.VisitMethodInvocationExpression (node);
+				goto skip;
 
 			//var method = method_ref.Method.Resolve ();
 			var method = method_ref.Method as MethodDefinition;
 			if (method == null)
-				return base.VisitMethodInvocationExpression (node);
+				goto skip;
 
 			if (method.IsGetter)
 				return ProcessGetter (method_ref, method);
-			else if (method.IsSetter)
+			if (method.IsSetter)
 				return ProcessSetter (node, method_ref, method);
-			else
-				return base.VisitMethodInvocationExpression (node);
+
+		skip:
+			return base.VisitMethodInvocationExpression (node);
 		}
 
 		static PropertyReferenceExpression ProcessGetter (MethodReferenceExpression method_ref, MethodDefinition method)
@@ -74,7 +75,7 @@ namespace Cecil.Decompiler.Steps {
 
 		static PropertyDefinition GetProperty (MethodDefinition accessor)
 		{
-			return GetProperty ((TypeDefinition) accessor.DeclaringType, accessor);
+			return GetProperty (accessor.DeclaringType, accessor);
 		}
 
 		static PropertyDefinition GetProperty (TypeDefinition type, MethodDefinition accessor)
