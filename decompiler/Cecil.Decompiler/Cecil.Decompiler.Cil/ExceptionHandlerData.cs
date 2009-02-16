@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using Mono.Cecil;
 
-namespace Cecil.Decompiler.ControlFlow {
+namespace Cecil.Decompiler.Cil {
 
 	public class CatchHandlerData {
 

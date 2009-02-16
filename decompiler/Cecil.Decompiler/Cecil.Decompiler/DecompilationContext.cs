@@ -29,7 +29,7 @@ using System;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Cecil.Decompiler.ControlFlow;
+using Cecil.Decompiler.Cil;
 
 namespace Cecil.Decompiler {
 

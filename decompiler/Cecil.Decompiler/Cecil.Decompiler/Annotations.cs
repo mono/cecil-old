@@ -32,7 +32,7 @@ using Mono.Cecil.Cil;
 
 using Cecil.Decompiler;
 using Cecil.Decompiler.Cil;
-using Cecil.Decompiler.ControlFlow;
+using Cecil.Decompiler.Cil;
 
 namespace Cecil.Decompiler {
 

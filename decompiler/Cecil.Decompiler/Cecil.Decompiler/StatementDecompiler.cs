@@ -33,7 +33,6 @@ using Mono.Cecil.Cil;
 
 using Cecil.Decompiler.Ast;
 using Cecil.Decompiler.Cil;
-using Cecil.Decompiler.ControlFlow;
 using Cecil.Decompiler.Steps;
 
 namespace Cecil.Decompiler {

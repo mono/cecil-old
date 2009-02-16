@@ -1,5 +1,6 @@
-﻿#region license
+#region license
 //
+//	(C) 2005 - 2007 db4objects Inc. http://www.db4o.com
 //	(C) 2007 - 2008 Novell, Inc. http://www.novell.com
 //	(C) 2007 - 2008 Jb Evain http://evain.net
 //
@@ -24,17 +25,17 @@
 //
 #endregion
 
-namespace Cecil.Decompiler.ControlFlow {
+namespace Cecil.Decompiler.Cil {
 
-	public class BlockRange {
+	public class InstructionData {
 
-		public readonly InstructionBlock Start;
-		public readonly InstructionBlock End;
+		public readonly int StackBefore;
+		public readonly int StackAfter;
 
-		public BlockRange (InstructionBlock start, InstructionBlock end)
+		public InstructionData (int before, int after)
 		{
-			Start = start;
-			End = end;
+			this.StackBefore = before;
+			this.StackAfter = after;
 		}
 	}
 }

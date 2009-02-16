@@ -31,9 +31,7 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-using Cecil.Decompiler.Cil;
-
-namespace Cecil.Decompiler.ControlFlow {
+namespace Cecil.Decompiler.Cil {
 
 	class ControlFlowGraphBuilder {
 
