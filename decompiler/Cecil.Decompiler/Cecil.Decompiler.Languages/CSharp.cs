@@ -76,14 +76,14 @@ namespace Cecil.Decompiler.Languages {
 			return new DecompilationPipeline (
 				new StatementDecompiler (BlockOptimization.Detailed),
 				RemoveLastReturn.Instance,
-				RebuildPropertyReferences.Instance,
+				PropertyStep.Instance,
 				CanCastStep.Instance,
 				RebuildForStatements.Instance,
 				RebuildForeachStatements.Instance,
 				DeclareVariablesOnFirstAssignment.Instance,
 				DeclareTopLevelVariables.Instance,
 				SelfAssignement.Instance,
-				RebuildOperators.Instance);
+				OperatorStep.Instance);
 		}
 	}
 
