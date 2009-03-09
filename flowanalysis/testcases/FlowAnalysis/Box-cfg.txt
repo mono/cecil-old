@@ -1,0 +1,10 @@
+block 1:
+	body:
+		IL_0000: nop
+		IL_0001: ldc.i4.s 42
+		IL_0003: box System.Int32
+		IL_0008: stloc.0
+		IL_0009: ldloc.0
+		IL_000a: call void System.Console::WriteLine(System.Object)
+		IL_000f: nop
+		IL_0010: ret

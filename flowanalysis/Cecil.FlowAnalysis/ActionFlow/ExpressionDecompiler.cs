@@ -124,6 +124,14 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			OnCall (instruction);
 		}
 
+		public override void OnBox (Instruction instruction)
+		{
+			Push(
+				new CastExpression (
+					Pop (),
+					(TypeReference) instruction.Operand));
+		}
+
 		public override void OnCastclass (Instruction instruction)
 		{
 			Push (

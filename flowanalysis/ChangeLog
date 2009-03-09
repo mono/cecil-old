@@ -1,3 +1,13 @@
+2009-03-09	Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
+
+	* Cecil.FlowAnalysis.Tests/ActionFlowTestFixture.cs
+	* Cecil.FlowAnalysis.Tests/ControlFlowTestFixture.cs
+	* Cecil.FlowAnalysis/ActionFlow/ExpressionDecompiler.cs
+	* testcases/FlowAnalysis/Box.il
+	* testcases/FlowAnalysis/Box-afg.txt
+	* testcases/FlowAnalysis/Box-cfg.txt
+		Interpret box instruction as CastExpression.
+	
 2008-02-07  Jb Evain  <jbevain@novell.com>
 
 	* Cecil.FlowAnalysis/ControlFlow/ControlFlowGraphBuilder.cs
