@@ -92,14 +92,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.core">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.core.interfaces">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Tools\Nunit\bin\nunit.core.interfaces.dll</HintPath>
-    </Reference>
+    <Reference Include="nunit.core" />
+    <Reference Include="nunit.core.interfaces" />
     <Reference Include="nunit.framework" />
     <Reference Include="System" />
     <Reference Include="System.Core">
