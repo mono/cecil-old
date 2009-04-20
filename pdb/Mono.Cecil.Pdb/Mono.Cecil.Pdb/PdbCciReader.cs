@@ -119,7 +119,7 @@ namespace Mono.Cecil.Pdb {
 
 		void ReadLines (PdbLine line, Document document, IDictionary instructions)
 		{
-			Instruction instruction = (Instruction) instructions [line.offset];
+			Instruction instruction = (Instruction) instructions [(int) line.offset];
 			if (instruction == null)
 				return;
 
