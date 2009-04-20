@@ -94,7 +94,11 @@ namespace Mono.Cecil.Pdb {
 			//	body.Scopes.Add (s);
 
 			foreach (PdbSlot slot in scope.slots) {
-				Cil.VariableDefinition variable = body.Variables [(int) slot.slot];
+				int index = (int) slot.slot;
+				if (index < 0 || index >= body.Variables.Count)
+					continue;
+
+				VariableDefinition variable = body.Variables [index];
 				variable.Name = slot.name;
 
 				//s.Variables.Add (variable);
