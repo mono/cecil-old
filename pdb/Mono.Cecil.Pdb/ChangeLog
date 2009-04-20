@@ -1,3 +1,8 @@
+2009-04-20  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil.Pdb/PdbCciReader.cs: managed pdb reader.
+	* Microsoft.Cci.Pdb: managed pdb reader implementation.
+
 2008-12-02  Rodrigo B. de Oliveira <rodrigobamboo@gmail.com>
 
 	* Mono.Cecil.Pdb/PdbWriter.cs:

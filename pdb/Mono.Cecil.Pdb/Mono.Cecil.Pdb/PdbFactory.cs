@@ -34,13 +34,21 @@ namespace Mono.Cecil.Pdb {
 
 		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFileName)
 		{
+#if MANAGED_PDB_READER
+			return new PdbCciReader (GetPdbFileName (assemblyFileName));
+#else
 			return new PdbReader (PdbHelper.CreateReader (assemblyFileName));
+#endif
 		}
 
 		public ISymbolWriter CreateWriter (ModuleDefinition module, string assemblyFileName)
 		{
-			string pdb = string.Concat (assemblyFileName.Substring (0, assemblyFileName.LastIndexOf (".")), ".pdb");
-			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, pdb), module, assemblyFileName);
+			return new PdbWriter (PdbHelper.CreateWriter (assemblyFileName, GetPdbFileName (assemblyFileName)), module, assemblyFileName);
+		}
+
+		static string GetPdbFileName (string assemblyFileName)
+		{
+			return assemblyFileName.Substring (0, assemblyFileName.LastIndexOf (".")) + ".pdb";
 		}
 	}
 }
