@@ -51,10 +51,10 @@ namespace Mono.Cecil.Pdb {
 
 		void PopulateFunctions (string file)
 		{
-			Stream pdb = File.OpenRead (file);
-
-			foreach (PdbFunction function in PdbFile.LoadFunctions (pdb, true))
-				functions.Add (function.token, function);
+			using (Stream pdb = File.OpenRead (file)) {
+				foreach (PdbFunction function in PdbFile.LoadFunctions (pdb, true))
+					functions.Add (function.token, function);
+			}
 		}
 
 		public void Read (MethodBody body, IDictionary instructions)
