@@ -144,7 +144,9 @@ namespace Pdb2Mdb {
 			if (!File.Exists (pdb))
 				Usage ();
 
-			Convert (assembly, File.OpenRead (pdb), new MonoSymbolWriter (asm));
+			using (var stream = File.OpenRead (pdb)) {
+				Convert (assembly, stream, new MonoSymbolWriter (asm));
+			}
 		}
 
 		static void Convert (AssemblyDefinition assembly, Stream pdb, MonoSymbolWriter mdb)
