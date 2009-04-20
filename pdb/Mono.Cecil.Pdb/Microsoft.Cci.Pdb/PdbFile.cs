@@ -13,12 +13,10 @@ namespace Microsoft.Cci.Pdb {
     {
     }
 
-    static int LoadPdbStream(BitAccess bits) {
+    static int LoadPdbStream(BitAccess bits, out int age, out Guid guid) {
       int nameStream = -1;
       int ver;
       int sig;
-      int age;
-      Guid guid;
       bits.ReadInt32(out ver);    //  0..3  Version
       bits.ReadInt32(out sig);    //  4..7  Signature
       bits.ReadInt32(out age);    //  8..11 Age
@@ -347,12 +345,12 @@ namespace Microsoft.Cci.Pdb {
       bits.Position = end;
     }
 
-    internal static PdbFunction[] LoadFunctions(Stream read, bool readAllStrings) {
+    internal static PdbFunction[] LoadFunctions(Stream read, bool readAllStrings, out int age, out Guid guid) {
       BitAccess bits = new BitAccess(512 * 1024);
-      return LoadFunctions(read, bits, readAllStrings);
+      return LoadFunctions(read, bits, readAllStrings, out age, out guid);
     }
 
-    internal static PdbFunction[] LoadFunctions(Stream read, BitAccess bits, bool readAllStrings) {
+    internal static PdbFunction[] LoadFunctions(Stream read, BitAccess bits, bool readAllStrings, out int age, out Guid guid) {
       PdbFileHeader head = new PdbFileHeader(read, bits);
       PdbReader reader = new PdbReader(read, head.pageSize);
       MsfDirectory dir = new MsfDirectory(reader, head, bits);
@@ -360,7 +358,7 @@ namespace Microsoft.Cci.Pdb {
       DbiDbgHdr header;
 
       dir.streams[1].Read(reader, bits);
-      int nameStream = LoadPdbStream(bits);
+      int nameStream = LoadPdbStream(bits, out age, out guid);
       if (nameStream <= 0) {
         throw new PdbException("No `name' stream");
       }

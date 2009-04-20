@@ -35,24 +35,45 @@ using Microsoft.Cci;
 using Microsoft.Cci.Pdb;
 
 using Mono.Cecil;
+using Mono.Cecil.Binary;
 using Mono.Cecil.Cil;
 
 namespace Mono.Cecil.Pdb {
 
 	public class PdbCciReader : ISymbolReader {
 
+		int age;
+		Guid guid;
+
 		Dictionary<string, Document> documents = new Dictionary<string, Document> ();
 		Dictionary<uint, PdbFunction> functions = new Dictionary<uint, PdbFunction> ();
 
-		internal PdbCciReader (string file)
+		internal PdbCciReader (ModuleDefinition module, string file)
 		{
+			DebugHeader header = module.Image.DebugHeader;
+			if (header != null) {
+				age = (int) header.Age;
+				guid = header.Signature;
+			}
+
 			PopulateFunctions (file);
 		}
 
 		void PopulateFunctions (string file)
 		{
 			using (Stream pdb = File.OpenRead (file)) {
-				foreach (PdbFunction function in PdbFile.LoadFunctions (pdb, true))
+				int age;
+				Guid guid;
+				PdbFunction [] funcs = PdbFile.LoadFunctions (pdb, true, out age, out guid);
+
+				if (this.age != 0) {
+					if (this.age != age)
+						throw new InvalidOperationException ();
+					if (this.guid != guid)
+						throw new InvalidOperationException ();
+				}
+
+				foreach (PdbFunction function in funcs)
 					functions.Add (function.token, function);
 			}
 		}
