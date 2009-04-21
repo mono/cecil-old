@@ -48,16 +48,24 @@ namespace Pdb2Mdb {
 
 			var builder = mdb.OpenMethod (file.CompilationUnit, 0, method);
 
+			ConvertSequencePoints (function, file, builder);
+
+			ConvertVariables (function);
+
+			mdb.CloseMethod ();
+		}
+
+		void ConvertSequencePoints (PdbFunction function, SourceFile file, SourceMethodBuilder builder)
+		{
+			if (function.lines == null)
+				return;
+
 			foreach (var line in function.lines.SelectMany (lines => lines.lines))
 				builder.MarkSequencePoint (
 					(int) line.offset,
 					file.CompilationUnit.SourceFile,
 					(int) line.lineBegin,
 					(int) line.colBegin, line.lineBegin == 0xfeefee);
-
-			ConvertVariables (function);
-
-			mdb.CloseMethod ();
 		}
 
 		void ConvertVariables (PdbFunction function)
