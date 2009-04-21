@@ -130,6 +130,9 @@ namespace Mono.Cecil.Pdb {
 
 		void ReadSequencePoints (PdbFunction function, IDictionary instructions)
 		{
+			if (function.lines == null)
+				return;
+
 			foreach (PdbLines lines in function.lines)
 				ReadLines (lines, instructions);
 		}
