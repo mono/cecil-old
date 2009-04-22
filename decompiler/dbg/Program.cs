@@ -8,7 +8,6 @@ using Mono.Cecil.Cil;
 using Cecil.Decompiler;
 using Cecil.Decompiler.Languages;
 using Cecil.Decompiler.Cil;
-using Cecil.Decompiler.ControlFlow;
 
 namespace Cecil.Decompiler.Debug {
 
