@@ -49,7 +49,9 @@ namespace Cecil.Decompiler.Steps {
 				return base.VisitBinaryExpression (node);
 
 			var safe_cast = (SafeCastExpression) result [SafeCastKey];
-			return new CanCastExpression (safe_cast.Expression, safe_cast.TargetType);
+			return new CanCastExpression (
+				(Expression) Visit (safe_cast.Expression),
+				safe_cast.TargetType);
 		}
 
 		public BlockStatement Process (DecompilationContext context, BlockStatement body)
