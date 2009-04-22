@@ -275,7 +275,7 @@ namespace Cecil.Decompiler.Cil {
 					return count;
 				}
 
-				if (code.Value == OpCodes.Ret.Value)
+				if (code.Code == Code.Ret)
 					return IsVoidMethod () ? 0 : 1;
 
 				break;
