@@ -32,7 +32,6 @@ using Mono.Cecil.Cil;
 
 using Cecil.Decompiler;
 using Cecil.Decompiler.Cil;
-using Cecil.Decompiler.Cil;
 
 namespace Cecil.Decompiler {
 
@@ -125,7 +124,7 @@ namespace Cecil.Decompiler {
 			return annotations.TryGetValue (instruction.Offset, out annotation);
 		}
 
-		public void RemoveAttotation (Instruction instruction, Annotation annotation)
+		public void RemoveAnnotation (Instruction instruction, Annotation annotation)
 		{
 			if (IsAnnotated (instruction, annotation)) {
 				annotations.Remove (instruction.Offset);
@@ -631,7 +630,7 @@ namespace Cecil.Decompiler {
 				return false;
 
 			if (block.Successors [0].Index + 1 == data.Body.End.Index - 1) {
-				store.RemoveAttotation (block.Last, Annotation.Skip);
+				store.RemoveAnnotation (block.Last, Annotation.Skip);
 				Annotate (block.Last, Annotation.Continue);
 				return true;
 			}
@@ -646,7 +645,7 @@ namespace Cecil.Decompiler {
 				return false;
 
 			if (block.Successors [0].Index == data.Body.End.Index) {
-				store.RemoveAttotation (block.Last, Annotation.Skip);
+				store.RemoveAnnotation (block.Last, Annotation.Skip);
 				Annotate (block.Last, Annotation.Break);
 				return true;
 			}
