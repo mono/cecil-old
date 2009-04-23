@@ -1,5 +1,5 @@
 ﻿//
-// TypeReference.cs
+// Driver.cs
 //
 // Author:
 //   Jb Evain (jbevain@novell.com)
@@ -16,6 +16,7 @@ using Microsoft.Cci;
 using Microsoft.Cci.Pdb;
 
 using Mono.Cecil;
+
 using Mono.CompilerServices.SymbolWriter;
 
 namespace Pdb2Mdb {
@@ -159,13 +160,25 @@ namespace Pdb2Mdb {
 
 		static void Convert (AssemblyDefinition assembly, Stream pdb, MonoSymbolWriter mdb)
 		{
-			Converter.Convert (assembly, PdbFile.LoadFunctions (pdb, true), mdb);
+			try {
+				Converter.Convert (assembly, PdbFile.LoadFunctions (pdb, true), mdb);
+			} catch (Exception e) {
+				Error (e);
+			}
 		}
 
 		static void Usage ()
 		{
-			Console.WriteLine ("pdb2mdb assembly");
+			Console.WriteLine ("Mono pdb to mdb debug symbol store converter");
+			Console.WriteLine ("Usage: pdb2mdb assembly");
+
 			Environment.Exit (1);
+		}
+
+		static void Error (Exception e)
+		{
+			Console.WriteLine ("Fatal error:");
+			Console.WriteLine (e);
 		}
 	}
 }
