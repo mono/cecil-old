@@ -34,10 +34,10 @@ namespace Mono.Cecil.Pdb {
 
 		public ISymbolReader CreateReader (ModuleDefinition module, string assemblyFileName)
 		{
-#if MANAGED_PDB_READER
-			return new PdbCciReader (module, GetPdbFileName (assemblyFileName));
-#else
+#if NATIVE_READER
 			return new PdbReader (PdbHelper.CreateReader (assemblyFileName));
+#else
+			return new PdbCciReader (module, GetPdbFileName (assemblyFileName));
 #endif
 		}
 

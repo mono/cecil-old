@@ -1,3 +1,7 @@
+2009-04-23  Jb Evain  <jbevain@novell.com>
+
+	* Mono.Cecil.Pdb/PdbFactory.cs: use the managed pdb reader by default.
+
 2009-04-20  Jb Evain  <jbevain@novell.com>
 
 	* Mono.Cecil.Pdb/PdbCciReader.cs: managed pdb reader.
