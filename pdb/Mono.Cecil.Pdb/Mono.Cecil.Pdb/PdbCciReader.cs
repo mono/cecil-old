@@ -139,7 +139,7 @@ namespace Mono.Cecil.Pdb {
 
 		void ReadLines (PdbLines lines, IDictionary instructions)
 		{
-			Document document = GetDocument (lines.file.name);
+			Document document = GetDocument (lines.file);
 
 			foreach (PdbLine line in lines.lines)
 				ReadLines (line, document, instructions);
@@ -160,13 +160,17 @@ namespace Mono.Cecil.Pdb {
 			instruction.SequencePoint = point;
 		}
 
-		Document GetDocument (string name)
+		Document GetDocument (PdbSource source)
 		{
+			string name = source.name;
 			Document document;
 			if (documents.TryGetValue (name, out document))
 				return document;
 
 			document = new Document (name);
+			document.Language = source.language;
+			document.LanguageVendor = source.vendor;
+			document.Type = source.doctype;
 			documents.Add (name, document);
 			return document;
 		}
