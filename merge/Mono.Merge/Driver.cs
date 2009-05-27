@@ -26,6 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.IO;
 using System.Collections;
 
 using Mono.Cecil;
@@ -84,12 +85,16 @@ namespace Mono.Merge {
 				}
 
 				if (token [0] == '-' || token [0] == '/') {
-					token = token.Substring (1);
-
-					if (token == "o" || token == "out")
+					if (token [1] == 'o' || token.Substring (1) == "out")
 						context.OutputPath = (string) q.Dequeue ();
-					else
-						Usage ();
+					else {
+						if (token [0] == '/') {
+							if (File.Exists (token) || token.Substring (1).IndexOf ("/") > -1)
+								context.Assemblies.Add (token);
+						} else {
+							Usage ();
+						}
+					}
 				} else {
 					context.Assemblies.Add (token);
 					while (q.Count > 0)
@@ -108,11 +113,16 @@ namespace Mono.Merge {
 
 		static void Process (MergeContext context)
 		{
-			AssemblyDefinition primary = AssemblyFactory.GetAssembly (context.Assemblies [0]);
-
-			for (int i = 1; i < context.Assemblies.Count; i++) {
-				AssemblyDefinition asm = AssemblyFactory.GetAssembly (context.Assemblies [i]);
-				asm.Accept (new StructureMerger (context, primary, asm));
+			AssemblyDefinition primary = null;
+			try {
+				primary = AssemblyFactory.GetAssembly (context.Assemblies [0]);
+	
+				for (int i = 1; i < context.Assemblies.Count; i++) {
+					AssemblyDefinition asm = AssemblyFactory.GetAssembly (context.Assemblies [i]);
+					asm.Accept (new StructureMerger (context, primary, asm));
+				}
+			} catch (FileNotFoundException e) {
+				Error (e.Message);
 			}
 
 			FixReflectionAfterMerge fix = new FixReflectionAfterMerge (context, primary, primary);
