@@ -1,4 +1,0 @@
-2009-05-28  Andrés G. Aragoneses  <aaragoneses@novell.com>
-
-	* FixReflectionAfterMerge.cs: Fix build with cecil trunk.
-
