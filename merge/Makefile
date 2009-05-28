@@ -10,4 +10,3 @@ all:
 
 clean:
 	rm -f $(MERGE)
-	rm -f $(MONO.CECIL.DLL)
