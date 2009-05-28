@@ -206,7 +206,7 @@ namespace Mono.Merge {
 
 		public override void VisitEventDefinition (EventDefinition evt)
 		{
-			evt.DeclaringType = GetTypeDefinition (evt.DeclaringType);
+			evt.DeclaringType = (TypeDefinition) GetTypeReference (evt.DeclaringType);
 
 			evt.EventType = GetTypeReference (evt.EventType);
 
@@ -227,7 +227,7 @@ namespace Mono.Merge {
 
 		public override void VisitFieldDefinition (FieldDefinition field)
 		{
-			field.DeclaringType = GetTypeDefinition (field.DeclaringType);
+			field.DeclaringType = (TypeDefinition) GetTypeReference (field.DeclaringType);
 			field.FieldType = GetTypeReference (field.FieldType);
 		}
 
@@ -238,7 +238,7 @@ namespace Mono.Merge {
 
 		public override void VisitPropertyDefinition (PropertyDefinition property)
 		{
-			property.DeclaringType = GetTypeDefinition (property.DeclaringType);
+			property.DeclaringType = (TypeDefinition) GetTypeReference (property.DeclaringType);
 			property.PropertyType = GetTypeReference (property.PropertyType);
 			VisitCollection (property.Parameters);
 			if (property.GetMethod != null)
