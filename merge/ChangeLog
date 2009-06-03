@@ -1,3 +1,12 @@
+2009-06-03  Andrés G. Aragoneses  <aaragoneses@novell.com>
+
+	* Makefile:
+	* Mono.Merge.csproj:
+	* monomerge.exe.sources: Update.
+
+	* Mono.Merge/Driver.cs:
+	* Mono.Merge/ConfigMerger.cs: Merge config files too.
+
 2009-05-28  Andrés G. Aragoneses  <aaragoneses@novell.com>
 
         * Mono.Merge/FixReflectionAfterMerge.cs: Fix for real (fix the last fix).

@@ -2,7 +2,7 @@
 MCS = gmcs
 KEY_FILE = ../../mcs/class/mono.snk
 MONO.CECIL.DLL = `pkg-config cecil  --variable=Libraries`
-MCS_FLAGS = -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL)
+MCS_FLAGS = -keyfile:$(KEY_FILE) -r:$(MONO.CECIL.DLL) -r:System.Data.dll
 MERGE = monomerge.exe
 
 all:

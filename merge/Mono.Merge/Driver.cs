@@ -129,6 +129,8 @@ namespace Mono.Merge {
 			fix.Process ();
 
 			AssemblyFactory.SaveAssembly (primary, context.OutputPath);
+			
+			ConfigMerger.Process (context.Assemblies, context.OutputPath);
 		}
 
 		static void Usage ()
