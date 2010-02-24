@@ -114,6 +114,9 @@ namespace Mono.Cecil.Pdb {
 			//else
 			//	body.Scopes.Add (s);
 
+			if (scope == null)
+				return;
+
 			foreach (PdbSlot slot in scope.slots) {
 				int index = (int) slot.slot;
 				if (index < 0 || index >= body.Variables.Count)
