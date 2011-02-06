@@ -206,7 +206,19 @@ namespace Cecil.Decompiler {
 		public override void OnNewobj (Instruction instruction)
 		{
 			var constructor = (MethodReference) instruction.Operand;
+			
+			//FIXME: There's prolly a better way to do this
+			if (instruction.Previous != null &&
+			   (instruction.Previous.OpCode == OpCodes.Ldftn ||
+			    instruction.Previous.OpCode == OpCodes.Ldvirtftn)) {
+				
+				var method = (MethodReference) instruction.Previous.Operand;
+				
+				Push (new DelegateCreationExpression (constructor.DeclaringType, method, Pop ()));
+				return;
+			}
 
+			
 			var arguments = PopRange (constructor.Parameters.Count);
 
 			var @new = new ObjectCreationExpression (constructor, null, null);
@@ -215,7 +227,19 @@ namespace Cecil.Decompiler {
 
 			Push (@new);
 		}
-
+					                                
+		public override void OnLdftn (Instruction instruction)
+		{
+			if (instruction.Next.OpCode != OpCodes.Newobj)
+				throw new NotImplementedException ();
+		}
+		
+		public override void OnLdvirtftn (Instruction instruction)
+		{
+			if (instruction.Next.OpCode != OpCodes.Newobj)
+				throw new NotImplementedException ();
+		}
+		
 		public override void OnInitobj (Instruction instruction)
 		{
 			var address = (AddressOfExpression) Pop ();
@@ -882,12 +906,14 @@ namespace Cecil.Decompiler {
 
 		public override void OnLdarg (Instruction instruction)
 		{
-			PushArgumentReference (((ParameterDefinition) instruction.Operand).Index + 1);
+			var index = ((ParameterDefinition) instruction.Operand).Index;
+			PushArgumentReference (index);
 		}
 
 		public override void OnLdarga (Instruction instruction)
 		{
-			PushArgumentReference (((ParameterDefinition) instruction.Operand).Index + 1);
+			var index = ((ParameterDefinition) instruction.Operand).Index;
+			PushArgumentReference (index);
 			PushAddressOf ();
 		}
 

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -171,6 +171,7 @@
     <Compile Include="Cecil.Decompiler.Steps\RebuildForeachStatements.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildForStatements.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RemoveLastReturn.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\DelegateInvokeStep.cs" />
     <Compile Include="Cecil.Decompiler\Annotations.cs" />
     <Compile Include="Cecil.Decompiler\BlockOptimizations.cs" />
     <Compile Include="Cecil.Decompiler\DecompilationContext.cs" />

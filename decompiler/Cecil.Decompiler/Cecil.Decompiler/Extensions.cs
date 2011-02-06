@@ -59,6 +59,13 @@ namespace Cecil.Decompiler {
 			pipeline.Run (body);
 			return pipeline.Body;
 		}
+		
+		public static bool IsDelegate(this TypeDefinition type)
+		{
+			  return type.BaseType != null &&
+					(type.BaseType.FullName == "System.Delegate"
+			      || type.BaseType.FullName == "System.MulticastDelegate");
+		}
 
 		internal static TElement First<TElement> (this IList<TElement> list)
 		{
