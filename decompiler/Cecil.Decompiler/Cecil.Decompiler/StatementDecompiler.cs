@@ -782,6 +782,11 @@ namespace Cecil.Decompiler {
 			AddStoreField (instruction);
 		}
 
+        public override void OnStind_Ref(Instruction instruction)
+        {
+            Add(new ExpressionStatement(Pop()));
+        }
+
 		public override void OnStsfld (Instruction instruction)
 		{
 			AddStoreField (instruction);
