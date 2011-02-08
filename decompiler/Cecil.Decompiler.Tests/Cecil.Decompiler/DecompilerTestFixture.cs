@@ -24,6 +24,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using Mono.Cecil;
@@ -78,10 +79,10 @@ namespace Cecil.Decompiler {
 		{
 			CompileTestCase (testCaseName);
 
-			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (TestAssemblyPath);
-			TypeDefinition type = assembly.MainModule.Types ["TestCase"];
+			AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly (TestAssemblyPath);
+			TypeDefinition type = assembly.MainModule.Types.Single (t => t.Name == "TestCase");
 			Assert.IsNotNull (type, "Type TestCase not found!");
-			MethodDefinition[] found = type.Methods.GetMethod ("Main");
+			MethodDefinition[] found = type.Methods.Where (m => m.Name == "Main").ToArray ();
 			Assert.AreEqual (1, found.Length, "Method TestCase.Main not found!");
 			return found [0];
 		}

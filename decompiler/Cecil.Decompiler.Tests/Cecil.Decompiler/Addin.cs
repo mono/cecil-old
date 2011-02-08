@@ -263,7 +263,7 @@ namespace Cecil.Decompiler {
 
 		AssemblyDefinition GetAssembly (CompilerResults result)
 		{
-			return AssemblyFactory.GetAssembly (result.PathToAssembly);
+			return AssemblyDefinition.ReadAssembly (result.PathToAssembly);
 		}
 
 		MethodDefinition GetMethod (AssemblyDefinition assembly)

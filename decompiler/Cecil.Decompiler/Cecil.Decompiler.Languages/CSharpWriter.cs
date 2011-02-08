@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -150,7 +151,7 @@ namespace Cecil.Decompiler.Languages {
 
 			WriteReference (variable.VariableType);
 			WriteSpace ();
-			Write (variable.Name);
+			Write (string.IsNullOrEmpty (node.Variable.Name)? ("V_" + node.Variable.Index) : node.Variable.Name);
 		}
 
 		public override void VisitAssignExpression (AssignExpression node)
@@ -167,7 +168,7 @@ namespace Cecil.Decompiler.Languages {
 
 		public override void VisitVariableReferenceExpression (VariableReferenceExpression node)
 		{
-			Write (node.Variable.Name);
+			Write (string.IsNullOrEmpty (node.Variable.Name)? ("V_" + node.Variable.Index) : node.Variable.Name);
 		}
 
 		public override void VisitLiteralExpression (LiteralExpression node)
