@@ -227,5 +227,6 @@ namespace Cecil.Decompiler.Cil {
 		void OnRethrow (Instruction instruction);
 		void OnSizeof (Instruction instruction);
 		void OnRefanytype (Instruction instruction);
+		void OnConstrained (Instruction instruction);
 	}
 }

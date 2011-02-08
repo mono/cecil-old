@@ -696,6 +696,10 @@ namespace Cecil.Decompiler {
 		public override void OnEndfilter (Instruction instruction)
 		{
 		}
+		
+		public override void OnConstrained (Instruction instruction)
+		{
+		}
 
 		public override void OnStloc_0 (Instruction instruction)
 		{
