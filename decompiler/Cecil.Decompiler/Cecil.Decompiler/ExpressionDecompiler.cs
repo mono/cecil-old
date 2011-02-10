@@ -129,6 +129,16 @@ namespace Cecil.Decompiler {
 			PushVariableAssignement (3);
 		}
 
+        public override void OnStind_Ref(Instruction instruction)
+        {
+            if(IsSkipped(instruction))
+                return;
+            var value = Pop();
+            var reference = Pop();
+            PushAssignment(reference, value);
+        }
+
+
 		bool IsSkipped (Instruction instruction)
 		{
 			return annotations.IsAnnotated (instruction, Annotation.Skip);
