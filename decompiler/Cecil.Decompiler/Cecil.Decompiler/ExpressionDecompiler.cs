@@ -207,18 +207,6 @@ namespace Cecil.Decompiler {
 		{
 			var constructor = (MethodReference) instruction.Operand;
 			
-			//FIXME: There's prolly a better way to do this
-			if (instruction.Previous != null &&
-			   (instruction.Previous.OpCode == OpCodes.Ldftn ||
-			    instruction.Previous.OpCode == OpCodes.Ldvirtftn)) {
-				
-				var method = (MethodReference) instruction.Previous.Operand;
-				
-				Push (new DelegateCreationExpression (constructor.DeclaringType, method, Pop ()));
-				return;
-			}
-
-			
 			var arguments = PopRange (constructor.Parameters.Count);
 
 			var @new = new ObjectCreationExpression (constructor, null, null);
@@ -230,14 +218,20 @@ namespace Cecil.Decompiler {
 					                                
 		public override void OnLdftn (Instruction instruction)
 		{
-			if (instruction.Next.OpCode != OpCodes.Newobj)
-				throw new NotImplementedException ();
+			var method = (MethodReference) instruction.Operand;
+			
+			var addressof = new MethodAddressExpression (method);
+			
+			Push (addressof);
 		}
 		
 		public override void OnLdvirtftn (Instruction instruction)
 		{
-			if (instruction.Next.OpCode != OpCodes.Newobj)
-				throw new NotImplementedException ();
+			var method = (MethodReference) instruction.Operand;
+			
+			var addressof = new MethodAddressExpression (method) { IsVirtual = true, Target = Pop () };
+			
+			Push (addressof);
 		}
 		
 		public override void OnInitobj (Instruction instruction)

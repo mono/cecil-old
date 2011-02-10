@@ -1,5 +1,7 @@
 ﻿using System;
 
+delegate void Test (string a, string b, string c);
+
 class Program {
 
 	public void Foo ()
@@ -38,5 +40,11 @@ class Program {
 	public int ArrayLength (int [] integers)
 	{
 		return integers.Length;
+	}
+	
+	public void Delegates ()
+	{
+		Test foo = new Test (this.Foo);
+		foo ("a", "b", "c");
 	}
 }

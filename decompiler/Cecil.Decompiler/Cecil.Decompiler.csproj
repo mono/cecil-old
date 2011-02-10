@@ -180,6 +180,8 @@
     <Compile Include="Cecil.Decompiler\Extensions.cs" />
     <Compile Include="Cecil.Decompiler\StatementDecompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Cecil.Decompiler.Ast\MethodAddressExpression.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\DelegateCreateStep.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\mcs\class\Mono.Cecil\Mono.Cecil.csproj">

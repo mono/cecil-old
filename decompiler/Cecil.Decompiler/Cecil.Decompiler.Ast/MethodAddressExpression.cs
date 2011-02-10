@@ -27,57 +27,54 @@
 
 // Warning: generated do not edit
 
+using System;
+using System.Collections.Generic;
+
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+
 namespace Cecil.Decompiler.Ast {
 
-	public enum CodeNodeType {
-		BlockStatement,
-		ReturnStatement,
-		GotoStatement,
-		LabeledStatement,
-		IfStatement,
-		ExpressionStatement,
-		ThrowStatement,
-		WhileStatement,
-		DoWhileStatement,
-		BreakStatement,
-		ContinueStatement,
-		ForStatement,
-		ForEachStatement,
-		ConditionCase,
-		DefaultCase,
-		SwitchStatement,
-		CatchClause,
-		TryStatement,
-		BlockExpression,
-		MethodAddressExpression,
-		MethodInvocationExpression,
-		MethodReferenceExpression,
-		DelegateCreationExpression,
-		DelegateInvocationExpression,
-		LiteralExpression,
-		UnaryExpression,
-		BinaryExpression,
-		AssignExpression,
-		ArgumentReferenceExpression,
-		VariableReferenceExpression,
-		VariableDeclarationExpression,
-		ThisReferenceExpression,
-		BaseReferenceExpression,
-		FieldReferenceExpression,
-		CastExpression,
-		SafeCastExpression,
-		CanCastExpression,
-		TypeOfExpression,
-		ConditionExpression,
-		NullCoalesceExpression,
-		AddressDereferenceExpression,
-		AddressReferenceExpression,
-		AddressOfExpression,
-		ArrayCreationExpression,
-		ArrayIndexerExpression,
-		ObjectCreationExpression,
-		PropertyReferenceExpression,
-		TypeReferenceExpression
+	public class MethodAddressExpression : Expression {
+
+		Expression target;
+		bool is_virtual;
+		MethodReference method;
+
+		public MethodAddressExpression ()
+		{
+		}
+		
+		public MethodAddressExpression (MethodReference method)
+		{
+			this.method = method;
+		}
+
+		public Expression Target
+		{
+			get { return target; }
+			set { this.target = value; }
+		}
+
+		public MethodReference Method
+		{
+			get { return method; }
+			set { this.method = value; }
+		}
+		
+		public bool IsVirtual
+		{
+			get { return is_virtual; }
+			set { this.is_virtual = value; }
+		}
+
+		public override CodeNodeType CodeNodeType
+		{
+			get { return CodeNodeType.MethodAddressExpression; }
+		}
+	}
+
+	public static partial class CodeNode {
+
 	}
 }
-

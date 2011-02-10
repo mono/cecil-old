@@ -170,6 +170,7 @@
     <None Include="TestCases\ControlFlow\TernaryExpression.il" />
     <None Include="TestCases\ControlFlow\ThreeReturns.il" />
     <None Include="TestCases\ControlFlow\TwoIfs.il" />
+    <None Include="TestCases\CSharp\MethodCalls.Delegates.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TestCases\ControlFlow\BoolAndGreaterOrEqualThan-cfg.txt" />

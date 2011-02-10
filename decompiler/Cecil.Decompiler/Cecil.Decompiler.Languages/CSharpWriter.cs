@@ -207,6 +207,14 @@ namespace Cecil.Decompiler.Languages {
 			VisitList (node.Arguments);
 			WriteToken (")");
 		}
+		
+		public override void VisitDelegateInvocationExpression (DelegateInvocationExpression node)
+		{
+			Visit (node.Target);
+			WriteToken ("(");
+			VisitList (node.Arguments);
+			WriteToken (")");
+		}
 
 		public override void VisitBlockExpression (BlockExpression node)
 		{
@@ -713,6 +721,27 @@ namespace Cecil.Decompiler.Languages {
 			WriteReference (node.Constructor != null ? node.Constructor.DeclaringType : node.Type);
 			WriteToken ("(");
 			Visit (node.Arguments);
+			WriteToken (")");
+		}
+		
+		public override void VisitDelegateCreationExpression (DelegateCreationExpression node)
+		{
+			WriteKeyword ("new");
+			WriteSpace ();
+			WriteReference (node.Type);
+			WriteToken ("(");
+			
+			if (node.Target != null) {
+				Visit (node.Target);
+				WriteToken (".");
+			}
+
+			if (!node.Method.HasThis) {
+				WriteReference (node.Method.DeclaringType);
+				WriteToken (".");
+			}
+
+			Write (node.Method.Name);
 			WriteToken (")");
 		}
 

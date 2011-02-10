@@ -1,0 +1,7 @@
+public void Delegates()
+{
+	Test V_0;
+	V_0 = new Test(this.Foo);
+	V_0("a", "b", "c");
+	return;
+}
