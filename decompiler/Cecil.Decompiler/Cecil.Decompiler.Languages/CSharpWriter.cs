@@ -55,6 +55,7 @@ namespace Cecil.Decompiler.Languages {
             }
 
             WriteMethodReturnType(method);
+            Formatter.WriteSpace();
 
             Formatter.WriteNameReference(method.Name, method);
 
@@ -64,15 +65,16 @@ namespace Cecil.Decompiler.Languages {
 
             Formatter.WriteParenthesisClose(")");
 
-            Formatter.WriteLine();
-
             if (method.HasBody)
+            {
+                Formatter.WriteLine();
                 Write(method.Body.Decompile(Language));
+            }
             else
             {
                 Formatter.WriteGenericToken(";");
-                Formatter.WriteLine();
             }
+            Formatter.WriteLine();
         }
 
         void WriteMethodVisibility (MethodDefinition method)
@@ -372,27 +374,30 @@ namespace Cecil.Decompiler.Languages {
         {
             var spec = type as TypeSpecification;
             if (spec != null)
+            {
                 WriteSpecification(spec);
+                return;
+            }
             else if (type.Namespace == "System")
             {
                 switch (type.Name)
                 {
-                    case "Decimal": Formatter.WriteAliasTypeKeyword("decimal", type); break;
-                    case "Single": Formatter.WriteAliasTypeKeyword("float", type); break;
-                    case "Byte": Formatter.WriteAliasTypeKeyword("byte", type); break;
-                    case "SByte": Formatter.WriteAliasTypeKeyword("sbyte", type); break;
-                    case "Char": Formatter.WriteAliasTypeKeyword("char", type); break;
-                    case "Double": Formatter.WriteAliasTypeKeyword("double", type); break;
-                    case "Boolean": Formatter.WriteAliasTypeKeyword("bool", type); break;
-                    case "Int16": Formatter.WriteAliasTypeKeyword("short", type); break;
-                    case "Int32": Formatter.WriteAliasTypeKeyword("int", type); break;
-                    case "Int64": Formatter.WriteAliasTypeKeyword("long", type); break;
-                    case "UInt16": Formatter.WriteAliasTypeKeyword("ushort", type); break;
-                    case "UInt32": Formatter.WriteAliasTypeKeyword("uint", type); break;
-                    case "UInt64": Formatter.WriteAliasTypeKeyword("ulong", type); break;
-                    case "String": Formatter.WriteAliasTypeKeyword("string", type); break;
-                    case "Void": Formatter.WriteAliasTypeKeyword("void", type); break;
-                    case "Object": Formatter.WriteAliasTypeKeyword("object", type); break;
+                    case "Decimal": Formatter.WriteAliasTypeKeyword("decimal", type); return;
+                    case "Single": Formatter.WriteAliasTypeKeyword("float", type); return;
+                    case "Byte": Formatter.WriteAliasTypeKeyword("byte", type); return;
+                    case "SByte": Formatter.WriteAliasTypeKeyword("sbyte", type); return;
+                    case "Char": Formatter.WriteAliasTypeKeyword("char", type); return;
+                    case "Double": Formatter.WriteAliasTypeKeyword("double", type); return;
+                    case "Boolean": Formatter.WriteAliasTypeKeyword("bool", type); return;
+                    case "Int16": Formatter.WriteAliasTypeKeyword("short", type); return;
+                    case "Int32": Formatter.WriteAliasTypeKeyword("int", type); return;
+                    case "Int64": Formatter.WriteAliasTypeKeyword("long", type); return;
+                    case "UInt16": Formatter.WriteAliasTypeKeyword("ushort", type); return;
+                    case "UInt32": Formatter.WriteAliasTypeKeyword("uint", type); return;
+                    case "UInt64": Formatter.WriteAliasTypeKeyword("ulong", type); return;
+                    case "String": Formatter.WriteAliasTypeKeyword("string", type); return;
+                    case "Void": Formatter.WriteAliasTypeKeyword("void", type); return;
+                    case "Object": Formatter.WriteAliasTypeKeyword("object", type); return;
                 }
             }
 

@@ -12,15 +12,19 @@ namespace Cecil.Decompiler.Languages
     {
         private bool _writeIndent; // Whether to write an indent next time WriteIndent is called.
         private int _indent; // The current indent level.
+        private bool _writingIndent = false;
 
         /// <summary>
         /// Writes the indent if required.
         /// </summary>
         private void WriteIndent()
         {
-            if (_writeIndent)
-                _writeIndent = false;
+            if (!_writeIndent)
+                return;
+            _writeIndent = false;
+            _writingIndent = true;
             OnWriteIndent(_indent);
+            _writingIndent = false;
         }
 
         protected abstract void OnWriteIndent(int indent);
@@ -31,7 +35,8 @@ namespace Cecil.Decompiler.Languages
         #region Interface Members
         public void WriteRaw(string value)
         {
-            WriteIndent();
+            if (!_writingIndent)
+                WriteIndent();
             OnWriteRaw(value);
         }
 

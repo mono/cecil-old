@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Cecil.Decompiler.Ast;
+using Mono.Cecil;
 
 namespace Cecil.Decompiler.Steps
 {
@@ -12,7 +13,7 @@ namespace Cecil.Decompiler.Steps
         {
             if(string.IsNullOrEmpty(node.Variable.Name))
             {
-                var variableBase = node.Variable.VariableType.Name;
+                var variableBase = ToString(node.Variable.VariableType);
                 variableBase = char.ToLower(variableBase[0]) + variableBase.Substring(1);
                 int sequence = 1;
                 while(usedIdentifiers.Contains(variableBase + sequence))
@@ -45,6 +46,51 @@ namespace Cecil.Decompiler.Steps
             {
                 usedIdentifiers.Add(method.Name);
             }
+        }
+
+        string ToString(TypeReference reference)
+        {
+            string name = reference.Name;
+            if (reference is TypeSpecification)
+                name = ToString((TypeSpecification)reference);
+            var index = name.LastIndexOf('`');
+            if (index > 0)
+                name = name.Substring(0, index);
+            return name;
+        }
+
+        string ToString(TypeSpecification specification)
+        {
+            var pointer = specification as PointerType;
+            if (pointer != null)
+            {
+                return ToString(specification.ElementType) + "Pointer";
+            }
+
+            var reference = specification as ByReferenceType;
+            if (reference != null)
+            {
+                return ToString(specification.ElementType) + "Reference";
+            }
+
+            var array = specification as ArrayType;
+            if (array != null)
+            {
+                return ToString(specification.ElementType) + "Array";
+            }
+
+            var generic = specification as GenericInstanceType;
+            if (generic != null)
+            {
+                return ToString(generic);
+            }
+
+            return specification.Name;
+        }
+
+        string ToString(GenericInstanceType generic)
+        {
+            return ToString(generic.ElementType);
         }
     }
 }

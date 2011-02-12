@@ -80,12 +80,12 @@ namespace Cecil.Decompiler.Languages {
 		        CanCastStep.Instance,
 		        RebuildForStatements.Instance,
 		        RebuildForeachStatements.Instance,
-		        DeclareVariablesOnFirstAssignment.Instance,
-		        DeclareTopLevelVariables.Instance,
+		        //DeclareVariablesOnFirstAssignment.Instance,
+                DeclareTopLevelVariables.Instance,
+                GenerateVariableNames.Instance,
 		        SelfAssignement.Instance,
 		        OperatorStep.Instance,
-		        RebuildBooleanReturns.Instance,
-		        GenerateVariableNames.Instance);
+		        RebuildBooleanReturns.Instance);
 		}
 	}
 
