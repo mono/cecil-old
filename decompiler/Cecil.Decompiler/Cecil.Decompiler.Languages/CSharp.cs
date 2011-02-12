@@ -73,23 +73,23 @@ namespace Cecil.Decompiler.Languages {
 
 		public override DecompilationPipeline CreatePipeline ()
 		{
-			return new DecompilationPipeline (
-				new StatementDecompiler (BlockOptimization.Detailed),
-				RemoveLastReturn.Instance,
-				PropertyStep.Instance,
-				CanCastStep.Instance,
-				RebuildForStatements.Instance,
-				RebuildForeachStatements.Instance,
-				DeclareVariablesOnFirstAssignment.Instance,
-				DeclareTopLevelVariables.Instance,
-				SelfAssignement.Instance,
-				OperatorStep.Instance,
-                RebuildBooleanReturns.Instance);
+		    return new DecompilationPipeline(
+		        new StatementDecompiler(BlockOptimization.Detailed),
+		        RemoveLastReturn.Instance,
+		        PropertyStep.Instance,
+		        CanCastStep.Instance,
+		        RebuildForStatements.Instance,
+		        RebuildForeachStatements.Instance,
+		        DeclareVariablesOnFirstAssignment.Instance,
+		        DeclareTopLevelVariables.Instance,
+		        SelfAssignement.Instance,
+		        OperatorStep.Instance,
+		        RebuildBooleanReturns.Instance,
+		        GenerateVariableNames.Instance);
 		}
 	}
 
 	public class CSharpV2 : CSharpV1 {
-
 		public override string Name { get { return "C#2"; } }
 	}
 
