@@ -172,12 +172,14 @@
     <Compile Include="Cecil.Decompiler.Languages\BaseLanguageWriter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\CSharp.cs" />
     <Compile Include="Cecil.Decompiler.Languages\CSharpWriter.cs" />
+    <Compile Include="Cecil.Decompiler.Languages\FormatterBase.cs" />
     <Compile Include="Cecil.Decompiler.Languages\IFormatter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\ILanguage.cs" />
     <Compile Include="Cecil.Decompiler.Languages\ILanguageWriter.cs" />
     <Compile Include="Cecil.Decompiler.Languages\PlainTextFormatter.cs" />
     <Compile Include="Cecil.Decompiler.Pattern\PatternMatching.cs" />
     <Compile Include="Cecil.Decompiler.Steps\CanCastStep.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\GenerateVariableNames.cs" />
     <Compile Include="Cecil.Decompiler.Steps\OperatorStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\PropertyStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildBooleanReturns.cs" />

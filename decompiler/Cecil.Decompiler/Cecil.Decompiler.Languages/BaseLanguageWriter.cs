@@ -30,74 +30,34 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Languages {
 
-	public abstract class BaseLanguageWriter : BaseCodeVisitor, ILanguageWriter {
+    public abstract class BaseLanguageWriter : BaseCodeVisitor, ILanguageWriter {
 
-		protected ILanguage language;
-		protected IFormatter formatter;
+        protected ILanguage _language;
+        public ILanguage Language
+        {
+            get
+            {
+                return _language;
+            }
+        }
 
-		public BaseLanguageWriter (ILanguage language, IFormatter formatter)
-		{
-			this.language = language;
-			this.formatter = formatter;
-		}
+        protected IFormatter _formatter;
+        public IFormatter Formatter
+        {
+            get
+            {
+                return _formatter;
+            }
+        }
 
-		protected void WriteToken (string token)
-		{
-			formatter.WriteToken (token);
-		}
+        public BaseLanguageWriter(ILanguage language, IFormatter formatter)
+        {
+            this._language = language;
+            this._formatter = formatter;
+        }
 
-		protected void WriteSpace ()
-		{
-			formatter.WriteSpace ();
-		}
-
-		protected void WriteLine ()
-		{
-			formatter.WriteLine ();
-		}
-
-		protected void WriteKeyword (string keyword)
-		{
-			formatter.WriteKeyword (keyword);
-		}
-
-		protected void Write (string str)
-		{
-			formatter.Write (str);
-		}
-
-		protected void WriteLiteral (string literal)
-		{
-			formatter.WriteLiteral (literal);
-		}
-
-		protected void WriteIdentifier (string name, object identifier)
-		{
-			formatter.WriteIdentifier (name, identifier);
-		}
-
-		protected void WriteDefinition (string name, object definition)
-		{
-			formatter.WriteDefinition (name, definition);
-		}
-
-		protected void WriteReference (string name, object reference)
-		{
-			formatter.WriteReference (name, reference);
-		}
-
-		protected void Indent ()
-		{
-			formatter.Indent ();
-		}
-
-		protected void Outdent ()
-		{
-			formatter.Outdent ();
-		}
-
-		public abstract void Write (MethodDefinition method);
-		public abstract void Write (Statement statement);
-		public abstract void Write (Expression expression);
-	}
+        public abstract void Write (MethodDefinition method);
+        public abstract void Write (Statement statement);
+        public abstract void Write (Expression expression);
+    }
 }

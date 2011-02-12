@@ -29,88 +29,36 @@ using System.IO;
 
 namespace Cecil.Decompiler.Languages {
 
-	public class PlainTextFormatter : IFormatter {
+    public class PlainTextFormatter : FormatterBase {
 
-		TextWriter writer;
-		bool write_indent;
-		int indent;
+        TextWriter _writer;
 
-		public PlainTextFormatter (TextWriter writer)
-		{
-			this.writer = writer;
-		}
+        public PlainTextFormatter (TextWriter writer)
+        {
+            this._writer = writer;
+        }
 
-		void WriteIndent ()
-		{
-			if (!write_indent)
-				return;
+        protected override void OnWriteIndent(int indent)
+        {
+            for (var i = 0; i < indent; i++)
+            {
+                WriteRaw("  ");
+            }
+        }
 
-			for (int i = 0; i < indent; i++)
-				writer.Write ("\t");
-		}
+        protected override void OnWriteRaw(string value)
+        {
+            _writer.Write(value);
+        }
 
-		public void Write (string str)
-		{
-			WriteIndent ();
-			writer.Write (str);
-			write_indent = false;
-		}
+        protected override void OnWriteLine()
+        {
+            _writer.WriteLine();
+        }
 
-		public void WriteLine ()
-		{
-			writer.WriteLine ();
-			write_indent = true;
-		}
-
-		public void WriteSpace ()
-		{
-			Write (" ");
-		}
-
-		public void WriteToken (string token)
-		{
-			Write (token);
-		}
-
-		public void WriteComment (string comment)
-		{
-			Write (comment);
-			WriteLine ();
-		}
-
-		public void WriteKeyword (string keyword)
-		{
-			Write (keyword);
-		}
-
-		public void WriteLiteral (string literal)
-		{
-			Write (literal);
-		}
-
-		public void WriteDefinition (string value, object definition)
-		{
-			Write (value);
-		}
-
-		public void WriteReference (string value, object reference)
-		{
-			Write (value);
-		}
-
-		public void WriteIdentifier (string value, object identifier)
-		{
-			Write (value);
-		}
-
-	    public void Indent ()
-		{
-			indent++;
-		}
-
-		public void Outdent ()
-		{
-			indent--;
-		}
-	}
+        protected override void OnWriteSpace()
+        {
+            _writer.Write(" ");
+        }
+    }
 }
