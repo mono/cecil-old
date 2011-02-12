@@ -399,7 +399,8 @@ namespace Cecil.Decompiler.Languages {
             // Remove generic arg count.
             var name = type.FullName;
             var index = name.LastIndexOf('`');
-            name = name.Substring(0, index);
+            if (index > 0)
+                name = name.Substring(0, index);
             Formatter.WriteNameReference(name, type);
         }
 
