@@ -710,8 +710,20 @@ namespace Cecil.Decompiler.Languages {
             Formatter.WriteSpace();
             WriteReference (node.Type);
             Formatter.WriteParenthesisOpen("[");
-            Visit (node.Dimensions);
+            if (node.Initializer.Expressions.Count == 0)
+            {
+                Visit(node.Dimensions);
+            }
             Formatter.WriteParenthesisClose("]");
+            if(node.Initializer.Expressions.Count != 0)
+            {
+                Formatter.WriteParenthesisOpen("{");
+                foreach (var expression in node.Initializer.Expressions)
+                {
+                    Visit(expression);
+                }
+                Formatter.WriteParenthesisClose("}");
+            }
         }
 
         public override void VisitArrayIndexerExpression (ArrayIndexerExpression node)
