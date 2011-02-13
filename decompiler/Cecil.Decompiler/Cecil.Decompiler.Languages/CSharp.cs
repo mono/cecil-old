@@ -86,7 +86,8 @@ namespace Cecil.Decompiler.Languages {
                 GenerateVariableNames.Instance,
 		        SelfAssignement.Instance,
 		        OperatorStep.Instance,
-		        RebuildBooleanReturns.Instance);
+		        RebuildBooleanReturns.Instance,
+                RebuildNullComparisons.Instance);
 		}
 	}
 
