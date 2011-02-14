@@ -30,7 +30,8 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Languages {
 
-    public abstract class BaseLanguageWriter : BaseCodeVisitor, ILanguageWriter {
+    public abstract class BaseLanguageWriter : BaseCodeVisitor, ILanguageWriter
+    {
 
         protected ILanguage _language;
         public ILanguage Language
@@ -50,14 +51,26 @@ namespace Cecil.Decompiler.Languages {
             }
         }
 
+        public bool IncludeMemberDissasembly
+        {
+            get;
+            set;
+        }
+
         public BaseLanguageWriter(ILanguage language, IFormatter formatter)
         {
             this._language = language;
             this._formatter = formatter;
         }
 
-        public abstract void Write (MethodDefinition method);
-        public abstract void Write (Statement statement);
-        public abstract void Write (Expression expression);
+        public abstract void Write(MethodDefinition method);
+        public abstract void Write(Statement statement);
+        public abstract void Write(Expression expression);
+        public abstract void Write(AssemblyDefinition assembly);
+        public abstract void Write(EventDefinition @event);
+        public abstract void Write(FieldDefinition field);
+        public abstract void Write(ModuleDefinition module);
+        public abstract void Write(PropertyDefinition property);
+        public abstract void Write(TypeDefinition type);
     }
 }

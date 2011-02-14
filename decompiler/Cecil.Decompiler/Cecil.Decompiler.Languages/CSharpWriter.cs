@@ -31,6 +31,7 @@ using System.Text;
 using Mono.Cecil;
 
 using Cecil.Decompiler.Ast;
+using System.IO;
 
 namespace Cecil.Decompiler.Languages {
 
@@ -45,12 +46,28 @@ namespace Cecil.Decompiler.Languages {
 
         public override void Write(MethodDefinition method)
         {
-            WriteMethodVisibility(method);
-            Formatter.WriteSpace();
-
-            if (method.IsStatic)
+            if (method.HasCustomAttributes)
             {
-                Formatter.WriteKeyword("static");
+                foreach (var attr in method.CustomAttributes)
+                {
+                    Write(attr, method, false);
+                    Formatter.WriteLine();
+                }
+            }
+            if (method.MethodReturnType.HasCustomAttributes)
+            {
+                foreach (var attr in method.MethodReturnType.CustomAttributes)
+                {
+                    Write(attr, method, true);
+                }
+            }
+
+            // No visibility for interface methods.
+            
+            WriteMemberAttributes((int)method.Attributes, method.DeclaringType.IsInterface);
+            if (method.IsAddOn)
+            {
+                Formatter.WriteKeyword("new");
                 Formatter.WriteSpace();
             }
 
@@ -77,29 +94,62 @@ namespace Cecil.Decompiler.Languages {
             Formatter.WriteLine();
         }
 
-        void WriteMethodVisibility (MethodDefinition method)
+        private void WriteMemberAttributes(int attributes, bool isInterface)
         {
-            if (method.IsPrivate)
-                Formatter.WriteKeyword("private");
-            else if (method.IsPublic)
-                Formatter.WriteKeyword("public");
-            else if (method.IsFamily)
-                Formatter.WriteKeyword("protected");
-            else if (method.IsAssembly)
-                Formatter.WriteKeyword("internal");
-            else if (method.IsFamilyOrAssembly)
+            if (!isInterface)
             {
-                Formatter.WriteKeyword("protected");
-                Formatter.WriteSpace();
-                Formatter.WriteKeyword("internal");
+                if ((attributes & (int)MethodAttributes.Private) == (int)MethodAttributes.Private)
+                    Formatter.WriteKeyword("private");
+                else if ((attributes & (int)MethodAttributes.Public) == (int)MethodAttributes.Public)
+                    Formatter.WriteKeyword("public");
+                else if ((attributes & (int)MethodAttributes.Family) == (int)MethodAttributes.Family)
+                    Formatter.WriteKeyword("protected");
+                else if ((attributes & (int)MethodAttributes.Assembly) == (int)MethodAttributes.Assembly)
+                    Formatter.WriteKeyword("internal");
+                else if ((attributes & (int)MethodAttributes.FamORAssem) == (int)MethodAttributes.FamORAssem)
+                {
+                    Formatter.WriteKeyword("protected");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("internal");
+                }
+                else
+                {
+                    Formatter.WriteComment("/* The IsFamilyAndAssembly visibility is not supported by C#. */");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("protected");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("internal");
+                }
             }
-            else
+            Formatter.WriteSpace();
+
+            if ((attributes & (int)MethodAttributes.Static) == (int)MethodAttributes.Static)
             {
-                Formatter.WriteComment("The IsFamilyAndAssembly visibility is not supported by C#.");
-                Formatter.WriteLine();
-                Formatter.WriteKeyword("protected");
+                Formatter.WriteKeyword("static");
                 Formatter.WriteSpace();
-                Formatter.WriteKeyword("internal");
+            }
+            if ((attributes & (int)MethodAttributes.Abstract) == (int)MethodAttributes.Abstract)
+            {
+                Formatter.WriteKeyword("abstract");
+                Formatter.WriteSpace();
+            }
+            if ((attributes & (int)MethodAttributes.Virtual) == (int)MethodAttributes.Virtual)
+            {
+                if ((attributes & (int)MethodAttributes.ReuseSlot) == (int)MethodAttributes.ReuseSlot)
+                {
+                    Formatter.WriteKeyword("override");
+                    Formatter.WriteSpace();
+                }
+                else
+                {
+                    Formatter.WriteKeyword("virtual");
+                    Formatter.WriteSpace();
+                }
+            }
+            else if ((attributes & (int)MethodAttributes.ReuseSlot) == (int)MethodAttributes.ReuseSlot)
+            {
+                Formatter.WriteKeyword("override");
+                Formatter.WriteSpace();
             }
         }
 
@@ -190,6 +240,11 @@ namespace Cecil.Decompiler.Languages {
         public override void VisitLiteralExpression(LiteralExpression node)
         {
             var value = node.Value;
+            WriteLiteral(value);
+        }
+
+        private void WriteLiteral(object value)
+        {
             if (value == null)
             {
                 Formatter.WriteNamedLiteral("null");
@@ -202,18 +257,14 @@ namespace Cecil.Decompiler.Languages {
                     Formatter.WriteNamedLiteral((bool)value ? "true" : "false");
                     return;
                 case TypeCode.Char:
-                    Formatter.WriteGenericToken("'");
-                    Formatter.WriteLiteralChar(value.ToString());
-                    Formatter.WriteGenericToken("'");
+                    WriteCharCode((char)value);
                     return;
                 case TypeCode.String:
-                    Formatter.WriteGenericToken("\"");
-                    Formatter.WriteLiteralString(value.ToString());
-                    Formatter.WriteGenericToken("\"");
+                    WriteStringCode((string)value);
                     return;
                 // complete
                 default:
-                    Formatter.WriteLiteralNumber(value.ToString());
+                    WriteNumberCode(value);
                     return;
             }
         }
@@ -786,6 +837,235 @@ namespace Cecil.Decompiler.Languages {
             Formatter.WriteGenericToken("(");
             WriteReference (node.Type);
             Formatter.WriteGenericToken(")");
+        }
+
+        public override void Write(AssemblyDefinition assembly)
+        {
+            Formatter.WriteComment(string.Format("// Assembly {0}", assembly.FullName));
+            Formatter.WriteLine();
+            if(assembly.HasCustomAttributes)
+                foreach (var attr in assembly.CustomAttributes)
+                {
+                    Write(attr, assembly, false);
+                    Formatter.WriteLine();
+                }
+        }
+
+        public override void Write(EventDefinition @event)
+        {
+
+            if (@event.HasCustomAttributes)
+            {
+                foreach (var attr in @event.CustomAttributes)
+                {
+                    Write(attr, @event, false);
+                    Formatter.WriteLine();
+                }
+            }
+
+            Formatter.WriteKeyword("event");
+            Formatter.WriteSpace();
+
+            // No visibility for interface methods.
+            WriteMemberAttributes((int)@event.Attributes, @event.DeclaringType.IsInterface);
+
+            Write(@event.EventType);
+            Formatter.WriteSpace();
+            Formatter.WriteNameReference(@event.Name, @event);
+            Formatter.WriteLine();
+            Formatter.WriteBlockStart("{");
+            Formatter.WriteLine();
+
+            Formatter.Indent();
+            Formatter.WriteLine();
+            if(@event.AddMethod != null)
+            {
+                WriteMemberAttributes((int)@event.AddMethod.Attributes, @event.DeclaringType.IsInterface);
+                Formatter.WriteKeyword("add");
+                Formatter.WriteLine();
+                if (@event.AddMethod.HasBody)
+                {
+                    Visit(@event.AddMethod.Body.Decompile(Language));
+                }
+                else
+                {
+                    Formatter.WriteGenericToken(";");
+                }
+            }
+            if (@event.RemoveMethod != null)
+            {
+                WriteMemberAttributes((int)@event.RemoveMethod.Attributes, @event.DeclaringType.IsInterface);
+                Formatter.WriteKeyword("remove");
+                Formatter.WriteLine();
+                if (@event.RemoveMethod.HasBody)
+                {
+                    Visit(@event.RemoveMethod.Body.Decompile(Language));
+                }
+                else
+                {
+                    Formatter.WriteGenericToken(";");
+                }
+            }
+
+
+            Formatter.WriteLine();
+        }
+
+        public override void Write(FieldDefinition field)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(ModuleDefinition module)
+        {
+            Formatter.WriteComment(string.Format("// {0}Module {1}", module.IsMain ? "Main " : "", module.FullyQualifiedName));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// TypeSystem: {0}", module.TypeSystem));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// Target Runtime: {0}", module.Runtime));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// Kind: {0}", module.Kind));
+            Formatter.WriteLine();
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// C# has no way to describe modules. As such only metadata information can be provided."));
+        }
+
+        public override void Write(PropertyDefinition property)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(TypeDefinition type)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void WriteStringCode(string value)
+        {
+            var length = 10;
+            if (value != null)
+                length = value.Length + 2;
+
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralString(sw.ToString());
+            }
+        }
+
+        private void WriteCharCode(char value)
+        {
+            var length = 3;
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralChar(sw.ToString());
+            }
+        }
+
+        private void WriteNumberCode(object value)
+        {
+            var length = 8;
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralNumber(sw.ToString());
+            }
+        }
+
+        public void Write(CustomAttribute attr, object on, bool isReturn)
+        {
+            var attrType = attr.AttributeType.Resolve();
+
+            Formatter.WriteParenthesisOpen("[");
+
+            if (on is AssemblyDefinition)
+                Formatter.WriteKeyword("assembly:");
+            else if (isReturn)
+                Formatter.WriteKeyword("return:");
+            
+            Write(attr.AttributeType);
+            if (attr.HasConstructorArguments || attr.HasFields || attr.HasProperties)
+            {
+                Formatter.WriteParenthesisOpen("(");
+                var first = true;
+
+                if (attr.HasConstructorArguments)
+                    foreach (var ctorArg in attr.ConstructorArguments)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+                        WriteLiteral(ctorArg.Value);
+                    }
+
+                if (attr.HasFields)
+                    foreach (var fieldArg in attr.Fields)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+
+                        MemberReference mr = null;
+                        if (attrType != null)
+                            foreach (var field in attrType.Fields)
+                            {
+                                if (field.Name == fieldArg.Name)
+                                {
+                                    mr = field;
+                                    break;
+                                }
+                            }
+                        Formatter.WriteNameReference(fieldArg.Name, mr);
+                        Formatter.WriteSpace();
+                        Formatter.WriteGenericToken("=");
+                        Formatter.WriteSpace();
+                        WriteLiteral(fieldArg.Argument.Value);
+                    }
+
+                if (attr.HasProperties)
+                    foreach (var propArg in attr.Properties)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+
+                        MemberReference mr = null;
+                        if (attrType != null)
+                            foreach (var prop in attrType.Properties)
+                            {
+                                if (prop.Name == propArg.Name)
+                                {
+                                    mr = prop;
+                                    break;
+                                }
+                            }
+                        Formatter.WriteNameReference(propArg.Name, mr);
+                        Formatter.WriteSpace();
+                        Formatter.WriteGenericToken("=");
+                        Formatter.WriteSpace();
+                        WriteLiteral(propArg.Argument.Value);
+                    }
+
+                Formatter.WriteParenthesisClose(")");
+            }
+
+            Formatter.WriteParenthesisClose("]");
         }
     }
 }
