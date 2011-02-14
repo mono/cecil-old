@@ -183,6 +183,7 @@
     <Compile Include="Cecil.Decompiler.Steps\OperatorStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\PropertyStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\RebuildBooleanReturns.cs" />
+    <Compile Include="Cecil.Decompiler.Steps\RebuildNullComparisons.cs" />
     <Compile Include="Cecil.Decompiler.Steps\TypeOfStep.cs" />
     <Compile Include="Cecil.Decompiler.Steps\SelfAssignment.cs" />
     <Compile Include="Cecil.Decompiler.Steps\DeclareTopLevelVariables.cs" />

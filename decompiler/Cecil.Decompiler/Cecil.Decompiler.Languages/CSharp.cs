@@ -33,81 +33,83 @@ using Cecil.Decompiler.Steps;
 
 namespace Cecil.Decompiler.Languages {
 
-    public class CSharp : ILanguage {
+	public class CSharp : ILanguage {
 
-        public virtual string Name { get { return "C# no transformation"; } }
+		public virtual string Name { get { return "C# no transformation"; } }
 
-        public ILanguageWriter GetWriter (IFormatter formatter)
-        {
-            return new CSharpWriter (this, formatter);
-        }
+		public ILanguageWriter GetWriter (IFormatter formatter)
+		{
+			return new CSharpWriter (this, formatter);
+		}
 
-        public virtual DecompilationPipeline CreatePipeline ()
-        {
-            return new DecompilationPipeline (
-                new StatementDecompiler (BlockOptimization.Basic),
+		public virtual DecompilationPipeline CreatePipeline ()
+		{
+			return new DecompilationPipeline (
+				new StatementDecompiler (BlockOptimization.Basic),
+				TypeOfStep.Instance,
+				DeclareTopLevelVariables.Instance);
+		}
+
+		public static ILanguage GetLanguage (CSharpVersion version)
+		{
+			switch (version) {
+			case CSharpVersion.None:
+				return new CSharp ();
+			case CSharpVersion.V1:
+				return new CSharpV1 ();
+			case CSharpVersion.V2:
+				return new CSharpV2 ();
+			case CSharpVersion.V3:
+				return new CSharpV3 ();
+			default:
+				throw new ArgumentException ();
+			}
+		}
+	}
+
+	public class CSharpV1 : CSharp {
+
+		public override string Name { get { return "C#1"; } }
+
+		public override DecompilationPipeline CreatePipeline ()
+		{
+		    return new DecompilationPipeline(
+		        new StatementDecompiler(BlockOptimization.Detailed),
+		        RemoveLastReturn.Instance,
                 TypeOfStep.Instance,
-                DeclareTopLevelVariables.Instance);
-        }
-
-        public static ILanguage GetLanguage (CSharpVersion version)
-        {
-            switch (version) {
-            case CSharpVersion.None:
-                return new CSharp ();
-            case CSharpVersion.V1:
-                return new CSharpV1 ();
-            case CSharpVersion.V2:
-                return new CSharpV2 ();
-            case CSharpVersion.V3:
-                return new CSharpV3 ();
-            default:
-                throw new ArgumentException ();
-            }
-        }
-    }
-
-    public class CSharpV1 : CSharp {
-
-        public override string Name { get { return "C#1"; } }
-
-        public override DecompilationPipeline CreatePipeline ()
-        {
-            return new DecompilationPipeline(
-                new StatementDecompiler(BlockOptimization.Detailed),
-                RemoveLastReturn.Instance,
-                PropertyStep.Instance,
-                CanCastStep.Instance,
-                RebuildForStatements.Instance,
-                RebuildForeachStatements.Instance,
-                //DeclareVariablesOnFirstAssignment.Instance,
+		        PropertyStep.Instance,
+		        CanCastStep.Instance,
+		        RebuildForStatements.Instance,
+		        RebuildForeachStatements.Instance,
+		        DeclareVariablesOnFirstAssignment.Instance,
                 DeclareTopLevelVariables.Instance,
                 GenerateVariableNames.Instance,
-                SelfAssignement.Instance,
-                OperatorStep.Instance,
-                RebuildBooleanReturns.Instance);
-        }
-    }
+		        SelfAssignement.Instance,
+		        OperatorStep.Instance,
+		        RebuildBooleanReturns.Instance,
+                RebuildNullComparisons.Instance);
+		}
+	}
 
-    public class CSharpV2 : CSharpV1 {
-        public override string Name { get { return "C#2"; } }
-    }
+	public class CSharpV2 : CSharpV1 {
+		public override string Name { get { return "C#2"; } }
+	}
 
-    public class CSharpV3 : CSharpV2 {
+	public class CSharpV3 : CSharpV2 {
 
-        public override string Name { get { return "C#3"; } }
-    }
+		public override string Name { get { return "C#3"; } }
+	}
 
-    public class CSharpV4 : CSharpV3 {
+	public class CSharpV4 : CSharpV3 {
 
-        public override string Name { get { return "C#4"; } }
-    }
+		public override string Name { get { return "C#4"; } }
+	}
 
-    public enum CSharpVersion {
-        None,
-        V1,
-        V2,
-        V3,
-        V4,
-    }
+	public enum CSharpVersion {
+		None,
+		V1,
+		V2,
+		V3,
+		V4,
+	}
 }
