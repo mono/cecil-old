@@ -1042,8 +1042,62 @@ namespace Cecil.Decompiler.Languages {
 
         public override void Write(TypeDefinition type)
         {
-            throw new NotImplementedException();
+					if (type.IsEnum) {
+						WriteEnum(type);
+					}
+					else {
+						throw new NotImplementedException();
+					}
         }
+
+				private void WriteEnum(TypeDefinition type) {
+
+					if (type.HasCustomAttributes) {
+						foreach (var attr in type.CustomAttributes) {
+							Write(attr, type, false);
+							Formatter.WriteLine();
+						}
+					}
+
+					Boolean inInterface = type.DeclaringType == null ? false : type.DeclaringType.IsInterface;
+
+					WriteMemberAttributes((int)type.Attributes, inInterface);
+
+					Formatter.WriteRaw("enum");
+					Formatter.WriteSpace();
+
+					Formatter.WriteNameReference(type.Name, type);
+					Formatter.WriteLine();
+					Formatter.WriteBlockStart("{");
+					Formatter.WriteLine();
+
+					Formatter.Indent();
+
+					foreach (FieldDefinition field in type.Fields) { // i'd use LINQ here, but not sure if that breaks Mono use.
+						if (!field.HasConstant) {
+							continue;
+						}
+
+						Formatter.WriteNameReference(field.Name, field);
+						Formatter.WriteSpace();
+
+						Formatter.WriteGenericToken("=");
+						Formatter.WriteSpace();
+
+						if (field.Constant is string) {
+							WriteStringCode(field.Constant.ToString());
+						}
+						else {
+							Formatter.WriteRaw(field.Constant.ToString());
+						}
+
+						Formatter.WriteRaw(",");
+						Formatter.WriteLine();
+					}
+
+					Formatter.Outdent();
+					Formatter.WriteBlockEnd("}");
+				}
 
         private void WriteStringCode(string value)
         {
