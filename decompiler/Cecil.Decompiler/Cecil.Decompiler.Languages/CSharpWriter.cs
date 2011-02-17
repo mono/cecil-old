@@ -94,6 +94,54 @@ namespace Cecil.Decompiler.Languages {
             Formatter.WriteLine();
         }
 
+				private void WriteMemberAttributes(FieldDefinition field) {
+
+					FieldAttributes attributes = field.Attributes;
+
+					if ((attributes & FieldAttributes.Private) == FieldAttributes.Private) {
+						Formatter.WriteKeyword("private");
+					}
+					else if ((attributes & FieldAttributes.Public) == FieldAttributes.Public) {
+						Formatter.WriteKeyword("public");
+					}
+					else if ((attributes & FieldAttributes.Family) == FieldAttributes.Family) {
+						Formatter.WriteKeyword("protected");
+					}
+					else if ((attributes & FieldAttributes.Assembly) == FieldAttributes.Assembly) {
+						Formatter.WriteKeyword("internal");
+					}
+					else if ((attributes & FieldAttributes.FamORAssem) == FieldAttributes.FamORAssem) {
+						Formatter.WriteKeyword("protected");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("internal");
+					}
+					else {
+						Formatter.WriteComment("/* The IsFamilyAndAssembly visibility is not supported by C#. */");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("protected");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("internal");
+					}
+
+					Formatter.WriteSpace();
+
+					if (!field.HasConstant) {
+						if ((attributes & FieldAttributes.Static) == FieldAttributes.Static) {
+							Formatter.WriteKeyword("static");
+							Formatter.WriteSpace();
+						}
+
+						if (field.IsInitOnly) {
+							Formatter.WriteKeyword("readonly");
+							Formatter.WriteSpace();
+						}
+					}
+					else {
+						Formatter.WriteKeyword("const");
+						Formatter.WriteSpace();
+					}
+				}
+
         private void WriteMemberAttributes(int attributes, bool isInterface)
         {
             if (!isInterface)
@@ -925,7 +973,52 @@ namespace Cecil.Decompiler.Languages {
 
         public override void Write(FieldDefinition field)
         {
-            throw new NotImplementedException();
+
+					if (field.HasCustomAttributes) {
+						foreach (var attr in field.CustomAttributes) {
+							Write(attr, field, false);
+							Formatter.WriteLine();
+						}
+					}
+
+					if (field.DeclaringType.IsEnum) {
+						Formatter.WriteNameReference(field.Name, field);
+						Formatter.WriteSpace();
+
+						Formatter.WriteGenericToken("=");
+						Formatter.WriteSpace();
+
+						if (field.Constant is string) {
+							WriteStringCode(field.Constant.ToString());
+						}
+						else {
+							Formatter.WriteRaw(field.Constant.ToString());
+						}
+					}
+					else {
+
+						WriteMemberAttributes(field);
+
+						WriteReference(field.FieldType);
+						Formatter.WriteSpace();
+
+						Formatter.WriteNameReference(field.Name, field);
+
+						if (field.HasConstant) {
+							Formatter.WriteSpace();
+							Formatter.WriteGenericToken("=");
+							Formatter.WriteSpace();
+
+							if (field.Constant is string) {
+								WriteStringCode(field.Constant.ToString());
+							}
+							else {
+								Formatter.WriteRaw(field.Constant.ToString());
+							}
+						}
+					}
+
+					Formatter.WriteGenericToken(";");
         }
 
         public override void Write(ModuleDefinition module)
