@@ -72,7 +72,7 @@ namespace Cecil.Decompiler.Languages {
             }
 
             WriteMethodReturnType(method);
-            Formatter.WriteSpace();
+            //Formatter.WriteSpace(); // WriteMethodReturnType already calls Formatter.WriteSpace(); redundant call here.
 
             Formatter.WriteNameReference(method.Name, method);
 
