@@ -61,6 +61,8 @@ namespace Cecil.Decompiler.Languages {
 				return new CSharpV2 ();
 			case CSharpVersion.V3:
 				return new CSharpV3 ();
+			case CSharpVersion.V4:
+				return new CSharpV4();
 			default:
 				throw new ArgumentException ();
 			}
