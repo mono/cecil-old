@@ -495,11 +495,7 @@ namespace Mono.Cecil {
 					ctor.LoadBody ();
 			}
 
-			if (m_controller.Reader.SymbolReader == null)
-				return;
-
-			m_controller.Reader.SymbolReader.Dispose ();
-			m_controller.Reader.SymbolReader = null;
+			CloseSymbols ();
 		}
 
 		public void LoadSymbols ()
@@ -510,6 +506,15 @@ namespace Mono.Cecil {
 		public void LoadSymbols (ISymbolReader reader)
 		{
 			m_controller.Reader.SymbolReader = reader;
+		}
+
+		public void CloseSymbols ()
+		{
+			if (m_controller.Reader.SymbolReader == null)
+				return;
+
+			m_controller.Reader.SymbolReader.Dispose ();
+			m_controller.Reader.SymbolReader = null;
 		}
 
 		public void SaveSymbols ()
