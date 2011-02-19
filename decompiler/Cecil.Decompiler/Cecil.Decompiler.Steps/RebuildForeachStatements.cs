@@ -6,7 +6,7 @@ using Mono.Cecil.Cil;
 
 namespace Cecil.Decompiler.Steps {
 
-	internal class RebuildForeachStatements : Ast.BaseCodeVisitor, IDecompilationStep {
+	public class RebuildForeachStatements : Ast.BaseCodeVisitor, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new RebuildForeachStatements ();
 

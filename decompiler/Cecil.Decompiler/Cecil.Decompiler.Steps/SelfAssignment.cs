@@ -67,7 +67,7 @@ namespace Cecil.Decompiler.Steps {
 		}
 	}
 
-	class SelfAssignement : BaseCodeTransformer, IDecompilationStep {
+	public class SelfAssignement : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new SelfAssignement ();
 
