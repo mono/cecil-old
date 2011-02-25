@@ -113,6 +113,11 @@ class MethodReferenceExpression (Expression):
 	Target as Expression
 	Method as MethodReference
 
+class MethodAddressExpression (Expression):
+	Target as Expression
+	Method as MethodReference
+	IsVirtual as bool
+
 class DelegateCreationExpression (Expression):
 	Type as TypeReference
 	Method as MethodReference
