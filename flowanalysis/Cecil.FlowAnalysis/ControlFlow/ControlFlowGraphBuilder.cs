@@ -29,6 +29,7 @@ using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Collections.Generic;
 
 namespace Cecil.FlowAnalysis.ControlFlow {
 
@@ -63,13 +64,13 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		void DelimitBlocks ()
 		{
-			InstructionCollection instructions = _body.Instructions;
+			var instructions = _body.Instructions;
 
 			MarkBlockStarts (instructions);
 			MarkBlockEnds (instructions);
 		}
 
-		void MarkBlockStarts (InstructionCollection instructions)
+		void MarkBlockStarts (Collection<Instruction> instructions)
 		{
 			Instruction instruction = instructions [0];
 
@@ -96,7 +97,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			}
 		}
 
-		void MarkBlockEnds (InstructionCollection instructions)
+		void MarkBlockEnds (Collection<Instruction> instructions)
 		{
 			InstructionBlock [] blocks = this.RegisteredBlocks;
 			InstructionBlock current = blocks [0];
@@ -192,7 +193,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			case StackBehaviour.Varpush:
 				if (code.FlowControl == FlowControl.Call) {
 					MethodReference method = (MethodReference)instruction.Operand;
-					return IsVoid (method.ReturnType.ReturnType) ? 0 : 1;
+					return IsVoid (method.ReturnType) ? 0 : 1;
 				}
 
 				break;
@@ -252,12 +253,12 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		bool IsVoidMethod ()
 		{
-			return IsVoid (_body.Method.ReturnType.ReturnType);
+			return IsVoid (_body.Method.ReturnType);
 		}
 
 		static bool IsVoid (TypeReference type)
 		{
-			return type.FullName == Constants.Void;
+			return type.MetadataType == MetadataType.Void;
 		}
 
 		Array ToArray (Array blocks)

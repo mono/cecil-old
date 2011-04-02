@@ -36,7 +36,6 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		Stack _expressionStack;
 		MethodDefinition _method;
-		TypeReference _SystemBoolean;
 
 		public int Count {
 			get { return _expressionStack.Count; }
@@ -46,7 +45,6 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		{
 			_method = method;
 			_expressionStack = new Stack ();
-			_SystemBoolean = _method.DeclaringType.Module.Import (typeof(bool));
 		}
 
 		public override void OnNop (Instruction instruction)
@@ -330,7 +328,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 				return IsComparisonOperator (((BinaryExpression) expression).Operator);
 			case CodeElementType.MethodInvocationExpression:
 				MethodReferenceExpression mre = ((MethodInvocationExpression) expression).Target as MethodReferenceExpression;
-				if (null != mre) return mre.Method.ReturnType.ReturnType == _SystemBoolean;
+				if (null != mre) return mre.Method.ReturnType.MetadataType == MetadataType.Boolean;
 				break;
 			}
 			return false;

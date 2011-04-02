@@ -26,6 +26,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Mono.Cecil;
 using NUnit.Framework;
 
@@ -78,12 +79,11 @@ namespace Cecil.FlowAnalysis.Tests {
 		{
 			CompileTestCase (testCaseName);
 
-			AssemblyDefinition assembly = AssemblyFactory.GetAssembly (TestAssemblyPath);
-			TypeDefinition type = assembly.MainModule.Types ["TestCase"];
+			AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly (TestAssemblyPath);
+			TypeDefinition type = assembly.MainModule.GetType ("TestCase");
 			Assert.IsNotNull (type, "Type TestCase not found!");
-			MethodDefinition[] found = type.Methods.GetMethod ("Main");
-			Assert.AreEqual (1, found.Length, "Method TestCase.Main not found!");
-			return found [0];
+			MethodDefinition found = type.Methods.First (m => m.Name == "Main");
+			return found;
 		}
 
 		public string TestCasesDirectory {
