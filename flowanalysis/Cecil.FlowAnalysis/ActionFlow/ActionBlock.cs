@@ -26,20 +26,22 @@
 using System;
 using Mono.Cecil.Cil;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.ActionFlow
 {
 	/// <summary>
 	/// </summary>
 	public abstract class ActionBlock {
 
-		ActionBlockCollection _predecessors = new ActionBlockCollection ();
+		Collection<ActionBlock> _predecessors = new Collection<ActionBlock> ();
 		Instruction _sourceInstruction;
 
 		public Instruction SourceInstruction {
 			get { return _sourceInstruction; }
 		}
 
-		public virtual ActionBlockCollection Predecessors {
+		public virtual Collection<ActionBlock> Predecessors {
 			get { return _predecessors; }
 		}
 

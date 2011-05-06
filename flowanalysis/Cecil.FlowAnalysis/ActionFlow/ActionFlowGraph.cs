@@ -27,14 +27,16 @@ using System;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.ActionFlow {
 
 	public class ActionFlowGraph {
 
-		ActionBlockCollection _blocks;
+		Collection<ActionBlock> _blocks;
 		ControlFlowGraph _cfg;
 
-		public ActionFlowGraph (ControlFlowGraph cfg, ActionBlockCollection blocks)
+		public ActionFlowGraph (ControlFlowGraph cfg, Collection<ActionBlock> blocks)
 		{
 			if (null == cfg) throw new ArgumentNullException ("cfg");
 			if (null == blocks) throw new ArgumentNullException ("blocks");
@@ -47,7 +49,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			get { return _cfg; }
 		}
 
-		public ActionBlockCollection Blocks {
+		public Collection<ActionBlock> Blocks {
 			get { return _blocks; }
 		}
 

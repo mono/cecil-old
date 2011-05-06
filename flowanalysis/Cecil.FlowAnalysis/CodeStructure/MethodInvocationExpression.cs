@@ -28,13 +28,15 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public class MethodInvocationExpression : Expression {
 		Expression _target;
-		ExpressionCollection _arguments;
+		Collection<Expression> _arguments;
 
-		public MethodInvocationExpression (Expression target, ExpressionCollection arguments)
+		public MethodInvocationExpression (Expression target, Collection<Expression> arguments)
 		{
 			_target = target;
 			_arguments = arguments;
@@ -45,7 +47,7 @@ namespace Cecil.FlowAnalysis.CodeStructure {
 			get	{ return _target; }
 		}
 
-		public ExpressionCollection Arguments
+		public Collection<Expression> Arguments
 		{
 			get	{ return _arguments; }
 		}

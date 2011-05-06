@@ -25,16 +25,61 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.CodeStructure;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Collections.Generic;
 
 namespace Cecil.FlowAnalysis.ActionFlow {
 
+	internal class Stack<T> : IEnumerable<T> {
+
+		readonly Collection<T> collection = new Collection<T> ();
+
+		public int Count {
+			get { return collection.Count; }
+		}
+
+		public T Peek ()
+		{
+			if (collection.Count == 0)
+				throw new InvalidOperationException ();
+
+			return collection [collection.Count - 1];
+		}
+
+		public void Push (T value)
+		{
+			collection.Add (value);
+		}
+
+		public T Pop ()
+		{
+			if (collection.Count == 0)
+				throw new InvalidOperationException ();
+
+			var top = collection.Count - 1;
+			var value = collection [top];
+			collection.RemoveAt (top);
+			return value;
+		}
+
+		public IEnumerator<T> GetEnumerator ()
+		{
+			return collection.GetEnumerator ();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return GetEnumerator ();
+		}
+	}
+
 	internal class ExpressionDecompiler : AbstractInstructionVisitor {
 
-		Stack _expressionStack;
+		Stack<Expression> _expressionStack;
 		MethodDefinition _method;
 
 		public int Count {
@@ -44,7 +89,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		public ExpressionDecompiler (MethodDefinition method)
 		{
 			_method = method;
-			_expressionStack = new Stack ();
+			_expressionStack = new Stack<Expression> ();
 		}
 
 		public override void OnNop (Instruction instruction)
@@ -150,7 +195,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		{
 			MethodReference method = (MethodReference) instruction.Operand;
 
-			ExpressionCollection args = PopRange (method.Parameters.Count);
+			Collection<Expression> args = PopRange (method.Parameters.Count);
 			Expression target = method.HasThis ? Pop () : null;
 
 			Push (
@@ -621,9 +666,9 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 			return (Expression) _expressionStack.Pop ();
 		}
 
-		ExpressionCollection PopRange (int count)
+		Collection<Expression> PopRange (int count)
 		{
-			ExpressionCollection range = new ExpressionCollection ();
+			Collection<Expression> range = new Collection<Expression> ();
 			for (int i=0; i < count; ++i) {
 				range.Insert (0, Pop ());
 			}

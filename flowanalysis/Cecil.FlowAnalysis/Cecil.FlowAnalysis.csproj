@@ -36,8 +36,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release\</OutputPath>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DebugSymbols>false</DebugSymbols>
@@ -57,10 +55,30 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'silverlight_Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\silverlight_Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NET_3_5;NET_4_0;SILVERLIGHT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'silverlight_Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\silverlight_Release\</OutputPath>
+    <DefineConstants>TRACE;NET_3_5;NET_4_0;SILVERLIGHT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="ActionFlow\AbstractFallThroughActionBlock.cs" />
     <Compile Include="ActionFlow\ActionBlock.cs" />
-    <Compile Include="ActionFlow\ActionBlockCollection.cs" />
     <Compile Include="ActionFlow\ActionFlowGraph.cs" />
     <Compile Include="ActionFlow\ActionFlowGraphBuilder.cs" />
     <Compile Include="ActionFlow\ActionType.cs">
@@ -90,7 +108,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeStructure\Expression.cs" />
-    <Compile Include="CodeStructure\ExpressionCollection.cs" />
     <Compile Include="CodeStructure\ExpressionPrinter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -107,7 +124,6 @@
     <Compile Include="CodeStructure\PropertyReferenceExpression.cs" />
     <Compile Include="CodeStructure\ReturnStatement.cs" />
     <Compile Include="CodeStructure\Statement.cs" />
-    <Compile Include="CodeStructure\StatementCollection.cs" />
     <Compile Include="CodeStructure\ThisReferenceExpression.cs" />
     <Compile Include="CodeStructure\TryCastExpression.cs" />
     <Compile Include="CodeStructure\UnaryExpression.cs" />
@@ -149,6 +165,9 @@
       <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
       <Name>Mono.Cecil</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

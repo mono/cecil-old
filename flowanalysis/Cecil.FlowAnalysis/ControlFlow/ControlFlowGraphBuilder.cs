@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cecil.FlowAnalysis.Utilities;
 using Cecil.FlowAnalysis.ControlFlow;
 using Mono.Cecil;
@@ -38,11 +39,11 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 	class ControlFlowGraphBuilder {
 
 		MethodBody _body;
-		Hashtable _instructionData;
-		Hashtable _blocks = new Hashtable ();
+		Dictionary<int, InstructionData> _instructionData;
+		Dictionary<int, InstructionBlock> _blocks = new Dictionary<int, InstructionBlock> ();
 
 		InstructionBlock [] RegisteredBlocks {
-			get { return (InstructionBlock []) ToArray (new InstructionBlock [BlockCount]); }
+			get { return ToArray (new InstructionBlock [BlockCount]); }
 		}
 
 		int BlockCount {
@@ -135,8 +136,8 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		void ComputeInstructionData ()
 		{
-			_instructionData = new Hashtable ();
-			Hashtable visited = new Hashtable ();
+			_instructionData = new Dictionary<int, InstructionData> ();
+			var visited = new HashSet<InstructionBlock> ();
 			ComputeInstructionData (visited, 0, GetFirstBlock ());
 		}
 
@@ -145,10 +146,10 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return GetBlock (_body.Instructions [0]);
 		}
 
-		void ComputeInstructionData (IDictionary visited, int stackHeight, InstructionBlock block)
+		void ComputeInstructionData (HashSet<InstructionBlock> visited, int stackHeight, InstructionBlock block)
 		{
 			if (visited.Contains (block)) return;
-			visited.Add (block, block);
+			visited.Add (block);
 
 			foreach (Instruction instruction in block) {
 				stackHeight = ComputeInstructionData (stackHeight, instruction);
@@ -261,7 +262,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			return type.MetadataType == MetadataType.Void;
 		}
 
-		Array ToArray (Array blocks)
+		InstructionBlock [] ToArray (InstructionBlock [] blocks)
 		{
 			_blocks.Values.CopyTo (blocks, 0);
 			Array.Sort (blocks);
@@ -277,7 +278,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 		void ConnectBlock (InstructionBlock block)
 		{
 			if (block.LastInstruction == null)
-				throw new ApplicationException ("Undelimited block at offset " + block.FirstInstruction.Offset);
+				throw new ArgumentException ("Undelimited block at offset " + block.FirstInstruction.Offset);
 
 			Instruction instruction = block.LastInstruction;
 			switch (instruction.OpCode.FlowControl) {
@@ -308,7 +309,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 			case FlowControl.Return:
 				break;
 			default:
-				throw new ApplicationException (
+				throw new ArgumentException (
 					string.Format ("Unhandled instruction flow behavior {0}: {1}",
 					               instruction.OpCode.FlowControl,
 					               Formatter.FormatInstruction (instruction)));
@@ -361,7 +362,9 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		InstructionBlock GetBlock (Instruction firstInstruction)
 		{
-			return (InstructionBlock)_blocks [firstInstruction.Offset];
+			InstructionBlock block;
+			_blocks.TryGetValue (firstInstruction.Offset, out block);
+			return block;
 		}
 	}
 }

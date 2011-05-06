@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 
 namespace Cecil.FlowAnalysis.Utilities {
@@ -42,7 +43,7 @@ namespace Cecil.FlowAnalysis.Utilities {
 
 		delegate void InstructionVisitorDelegate (IInstructionVisitor visitor, Instruction instruction);
 
-		static IDictionary _handlers = new Hashtable ();
+		static IDictionary _handlers = new Dictionary<short, InstructionVisitorDelegate> ();
 
 		static InstructionDispatcher ()
 		{

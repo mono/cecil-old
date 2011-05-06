@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cecil.FlowAnalysis.ActionFlow;
 using Cecil.FlowAnalysis.ControlFlow;
 using Cecil.FlowAnalysis.CodeStructure;
@@ -32,15 +33,17 @@ using Cecil.FlowAnalysis.Utilities;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.ActionFlow {
 
 	/// <summary>
 	/// </summary>
 	internal class ActionFlowGraphBuilder : AbstractInstructionVisitor {
 
-		ActionBlockCollection _blocks = new ActionBlockCollection ();
-		IDictionary _instruction2block = new Hashtable ();
-		IDictionary _processed = new Hashtable ();
+		Collection<ActionBlock> _blocks = new Collection<ActionBlock> ();
+		Dictionary<Instruction, ActionBlock> _instruction2block = new Dictionary<Instruction, ActionBlock> ();
+		HashSet<InstructionBlock> _processed = new HashSet<InstructionBlock> ();
 		ExpressionDecompiler _expressionDecompiler;
 		MethodDefinition _method;
 		ControlFlowGraph _cfg;
@@ -222,13 +225,13 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 		/// <returns></returns>
 		bool IsLogicalExpression (InstructionBlock block)
 		{
-			return IsLogicalExpression (new Hashtable (), block);
+			return IsLogicalExpression (new HashSet<InstructionBlock> (), block);
 		}
 
-		bool IsLogicalExpression (Hashtable visited, InstructionBlock block)
+		bool IsLogicalExpression (HashSet<InstructionBlock> visited, InstructionBlock block)
 		{
 			if (visited.Contains (block)) return false;
-			visited.Add (block, block);
+			visited.Add (block);
 			foreach (InstructionBlock successor in block.Successors) {
 				if (GetStackAfter (successor.LastInstruction) > 0) return true;
 				if (IsLogicalExpression (visited, successor)) return true;
@@ -482,7 +485,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		ActionBlock GetActionBlock (Instruction block)
 		{
-			return (ActionBlock) _instruction2block [block];
+			return _instruction2block [block];
 		}
 
 		Expression Pop ()
@@ -499,7 +502,7 @@ namespace Cecil.FlowAnalysis.ActionFlow {
 
 		void MarkProcessed (InstructionBlock block)
 		{
-			_processed [block] = block;
+			_processed.Add (block);
 		}
 
 		bool WasProcessed (InstructionBlock block)

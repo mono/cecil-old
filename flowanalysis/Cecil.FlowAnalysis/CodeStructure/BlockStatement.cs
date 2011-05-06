@@ -28,17 +28,19 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.CodeStructure {
 
 	public class BlockStatement : Statement {
-		StatementCollection _statements;
+		Collection<Statement> _statements;
 
-		public BlockStatement (StatementCollection statements)
+		public BlockStatement (Collection<Statement> statements)
 		{
 			_statements = statements;
 		}
 
-		public StatementCollection Statements
+		public Collection<Statement> Statements
 		{
 			get	{ return _statements; }
 		}

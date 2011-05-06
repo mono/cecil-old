@@ -27,6 +27,8 @@ using System;
 using System.Collections;
 using Mono.Cecil.Cil;
 
+using Mono.Collections.Generic;
+
 namespace Cecil.FlowAnalysis.ControlFlow {
 
 	public class InstructionBlock : IComparable, IEnumerable {
@@ -73,7 +75,7 @@ namespace Cecil.FlowAnalysis.ControlFlow {
 
 		public IEnumerator GetEnumerator ()
 		{
-			ArrayList instructions = new ArrayList ();
+			var instructions = new Collection<Instruction> ();
 			Instruction instruction = _firstInstruction;
 			while (true) {
 				instructions.Add (instruction);
