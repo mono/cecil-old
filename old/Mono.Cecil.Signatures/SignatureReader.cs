@@ -931,7 +931,8 @@ namespace Mono.Cecil.Signatures {
 			switch (ms.NativeInstrinsic) {
 			case NativeType.ARRAY:
 				MarshalSig.Array ar = new MarshalSig.Array ();
-				ar.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					ar.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
 					ar.ParamNum = Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
@@ -950,7 +951,8 @@ namespace Mono.Cecil.Signatures {
 				break;
 			case NativeType.FIXEDARRAY:
 				MarshalSig.FixedArray fa = new MarshalSig.FixedArray ();
-				fa.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
+				if (start < data.Length)
+					fa.NumElem = Utilities.ReadCompressedInteger (data, start, out start);
 				if (start < data.Length)
 					fa.ArrayElemType = (NativeType) Utilities.ReadCompressedInteger (data, start, out start);
 				ms.Spec = fa;
