@@ -31,712 +31,1200 @@ using System.Text;
 using Mono.Cecil;
 
 using Cecil.Decompiler.Ast;
+using System.IO;
 
 namespace Cecil.Decompiler.Languages {
 
-	public class CSharpWriter : BaseLanguageWriter {
+    public class CSharpWriter : BaseLanguageWriter {
 
-		bool inside_binary;
+        bool inside_binary;
 
-		public CSharpWriter (ILanguage language, IFormatter formatter)
-			: base (language, formatter)
-		{
-		}
+        public CSharpWriter (ILanguage language, IFormatter formatter)
+            : base (language, formatter)
+        {
+        }
 
-		public override void Write (MethodDefinition method)
-		{
-			WriteMethodVisibility (method);
-			WriteSpace ();
+        public override void Write(MethodDefinition method)
+        {
+            if (method.HasCustomAttributes)
+            {
+                foreach (var attr in method.CustomAttributes)
+                {
+                    Write(attr, method, false);
+                    Formatter.WriteLine();
+                }
+            }
+            if (method.MethodReturnType.HasCustomAttributes)
+            {
+                foreach (var attr in method.MethodReturnType.CustomAttributes)
+                {
+                    Write(attr, method, true);
+                }
+            }
+
+            // No visibility for interface methods.
             
-			if (method.IsStatic) {
-				WriteKeyword ("static");
-				WriteSpace ();
-			}
+            WriteMemberAttributes((int)method.Attributes, method.DeclaringType.IsInterface);
+            if (method.IsAddOn)
+            {
+                Formatter.WriteKeyword("new");
+                Formatter.WriteSpace();
+            }
 
-			WriteMethodReturnType (method);
+            WriteMethodReturnType(method);
+            //Formatter.WriteSpace(); // WriteMethodReturnType already calls Formatter.WriteSpace(); redundant call here.
 
-		    Write (method.Name);
+            Formatter.WriteNameReference(method.Name, method);
 
-		    WriteToken ("(");
+            Formatter.WriteParenthesisOpen("(");
 
-			WriteParameters (method);
+            WriteParameters(method);
 
-			WriteToken (")");
+            Formatter.WriteParenthesisClose(")");
 
-			WriteLine ();
+            if (method.HasBody)
+            {
+                Formatter.WriteLine();
+                Write(method.Body.Decompile(Language));
+            }
+            else
+            {
+                Formatter.WriteGenericToken(";");
+            }
+            Formatter.WriteLine();
+        }
 
-			Write (method.Body.Decompile (language));
-		}
+				private void WriteMemberAttributes(FieldDefinition field) {
 
-		void WriteMethodVisibility (MethodDefinition method)
-		{
-			if (method.IsPrivate)
-				WriteKeyword ("private");
-			else if (method.IsPublic)
-				WriteKeyword ("public");
-			else if (method.IsFamily)
-				WriteKeyword ("protected");
-			else if (method.IsAssembly)
-				WriteKeyword ("internal");
-			else if (method.IsFamilyOrAssembly) {
-				WriteKeyword ("protected");
-				WriteSpace ();
-				WriteKeyword ("internal");
-			} else
-				throw new NotSupportedException ();
-		}
+					FieldAttributes attributes = field.Attributes;
 
-		void WriteMethodReturnType (MethodDefinition method)
-		{
-			WriteReference (method.ReturnType);
-			WriteSpace ();
-		}
+					if ((attributes & FieldAttributes.Private) == FieldAttributes.Private) {
+						Formatter.WriteKeyword("private");
+					}
+					else if ((attributes & FieldAttributes.Public) == FieldAttributes.Public) {
+						Formatter.WriteKeyword("public");
+					}
+					else if ((attributes & FieldAttributes.Family) == FieldAttributes.Family) {
+						Formatter.WriteKeyword("protected");
+					}
+					else if ((attributes & FieldAttributes.Assembly) == FieldAttributes.Assembly) {
+						Formatter.WriteKeyword("internal");
+					}
+					else if ((attributes & FieldAttributes.FamORAssem) == FieldAttributes.FamORAssem) {
+						Formatter.WriteKeyword("protected");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("internal");
+					}
+					else {
+						Formatter.WriteComment("/* The IsFamilyAndAssembly visibility is not supported by C#. */");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("protected");
+						Formatter.WriteSpace();
+						Formatter.WriteKeyword("internal");
+					}
 
-		void WriteParameters (MethodDefinition method)
-		{
-			for (int i = 0; i < method.Parameters.Count; i++) {
-				var parameter = method.Parameters [i];
+					Formatter.WriteSpace();
 
-				if (i > 0) {
-					WriteToken (",");
-					WriteSpace ();
+					if (!field.HasConstant) {
+						if ((attributes & FieldAttributes.Static) == FieldAttributes.Static) {
+							Formatter.WriteKeyword("static");
+							Formatter.WriteSpace();
+						}
+
+						if (field.IsInitOnly) {
+							Formatter.WriteKeyword("readonly");
+							Formatter.WriteSpace();
+						}
+					}
+					else {
+						Formatter.WriteKeyword("const");
+						Formatter.WriteSpace();
+					}
 				}
 
-				WriteReference (parameter.ParameterType);
-				WriteSpace ();
-				Write (parameter.Name);
-			}
-		}
+        private void WriteMemberAttributes(int attributes, bool isInterface)
+        {
+            if (!isInterface)
+            {
+                if ((attributes & (int)MethodAttributes.Private) == (int)MethodAttributes.Private)
+                    Formatter.WriteKeyword("private");
+                else if ((attributes & (int)MethodAttributes.Public) == (int)MethodAttributes.Public)
+                    Formatter.WriteKeyword("public");
+                else if ((attributes & (int)MethodAttributes.Family) == (int)MethodAttributes.Family)
+                    Formatter.WriteKeyword("protected");
+                else if ((attributes & (int)MethodAttributes.Assembly) == (int)MethodAttributes.Assembly)
+                    Formatter.WriteKeyword("internal");
+                else if ((attributes & (int)MethodAttributes.FamORAssem) == (int)MethodAttributes.FamORAssem)
+                {
+                    Formatter.WriteKeyword("protected");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("internal");
+                }
+                else
+                {
+                    Formatter.WriteComment("/* The IsFamilyAndAssembly visibility is not supported by C#. */");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("protected");
+                    Formatter.WriteSpace();
+                    Formatter.WriteKeyword("internal");
+                }
+            }
+            Formatter.WriteSpace();
 
-		public override void Write (Statement statement)
-		{
-			Visit (statement);
-			WriteLine ();
-		}
+            if ((attributes & (int)MethodAttributes.Static) == (int)MethodAttributes.Static)
+            {
+                Formatter.WriteKeyword("static");
+                Formatter.WriteSpace();
+            }
+            if ((attributes & (int)MethodAttributes.Abstract) == (int)MethodAttributes.Abstract)
+            {
+                Formatter.WriteKeyword("abstract");
+                Formatter.WriteSpace();
+            }
+            if ((attributes & (int)MethodAttributes.Virtual) == (int)MethodAttributes.Virtual)
+            {
+                if ((attributes & (int)MethodAttributes.ReuseSlot) == (int)MethodAttributes.ReuseSlot)
+                {
+                    Formatter.WriteKeyword("override");
+                    Formatter.WriteSpace();
+                }
+                else
+                {
+                    Formatter.WriteKeyword("virtual");
+                    Formatter.WriteSpace();
+                }
+            }
+            else if ((attributes & (int)MethodAttributes.ReuseSlot) == (int)MethodAttributes.ReuseSlot)
+            {
+                Formatter.WriteKeyword("override");
+                Formatter.WriteSpace();
+            }
+        }
 
-		public override void Write (Expression expression)
-		{
-			Visit (expression);
-		}
+        void WriteMethodReturnType (MethodDefinition method)
+        {
+            WriteReference (method.ReturnType);
+            Formatter.WriteSpace();
+        }
 
-		public override void VisitBlockStatement (BlockStatement node)
-		{
-			WriteBlock (() => Visit (node.Statements));
-		}
+        void WriteParameters (MethodDefinition method)
+        {
+            for (int i = 0; i < method.Parameters.Count; i++) {
+                var parameter = method.Parameters [i];
 
-		void WriteBlock (Action action)
-		{
-			WriteToken ("{");
-			WriteLine ();
-			Indent ();
+                if (i > 0) {
+                    Formatter.WriteGenericToken(",");
+                    Formatter.WriteSpace();
+                }
 
-			action ();
+                WriteReference (parameter.ParameterType);
+                Formatter.WriteSpace();
+                Formatter.WriteParameterName(parameter.Name);
+            }
+        }
 
-			Outdent ();
-			WriteToken ("}");
-			WriteLine ();
-		}
+        public override void Write (Statement statement)
+        {
+            Visit (statement);
+            Formatter.WriteLine();
+        }
 
-		public override void VisitExpressionStatement (ExpressionStatement node)
-		{
-			Visit (node.Expression);
-			WriteToken (";");
-			WriteLine ();
-		}
+        public override void Write (Expression expression)
+        {
+            Visit (expression);
+        }
 
-		public override void VisitVariableDeclarationExpression (VariableDeclarationExpression node)
-		{
-			var variable = node.Variable;
+        public override void VisitBlockStatement (BlockStatement node)
+        {
+            WriteBlock (() => Visit (node.Statements));
+        }
 
-			WriteReference (variable.VariableType);
-			WriteSpace ();
-			Write (variable.Name);
-		}
+        void WriteBlock (Action action)
+        {
+            Formatter.WriteBlockStart("{");
+            Formatter.WriteLine();
+            Formatter.Indent();
 
-		public override void VisitAssignExpression (AssignExpression node)
-		{
-			Write (node.Target);
-			WriteTokenBetweenSpace ("=");
-			Write (node.Expression);
-		}
+            action ();
 
-		public override void VisitArgumentReferenceExpression (ArgumentReferenceExpression node)
-		{
-			Write (node.Parameter.Name);
-		}
+            Formatter.Outdent();
+            Formatter.WriteBlockEnd("}");
+            Formatter.WriteLine();
+        }
 
-		public override void VisitVariableReferenceExpression (VariableReferenceExpression node)
-		{
-			Write (node.Variable.Name);
-		}
+        public override void VisitExpressionStatement (ExpressionStatement node)
+        {
+            Visit (node.Expression);
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
 
-		public override void VisitLiteralExpression (LiteralExpression node)
-		{
-			var value = node.Value;
-			if (value == null) {
-				WriteKeyword ("null");
-				return;
-			}
+        public override void VisitVariableDeclarationExpression (VariableDeclarationExpression node)
+        {
+            var variable = node.Variable;
 
-			switch (Type.GetTypeCode (value.GetType ())) {
-			case TypeCode.Boolean:
-				WriteKeyword ((bool) value ? "true" : "false");
-				return;
-			case TypeCode.Char:
-				WriteLiteral ("'");
-				WriteLiteral (value.ToString ());
-				WriteLiteral ("'");
-				return;
-			case TypeCode.String:
-				WriteLiteral ("\"");
-				WriteLiteral (value.ToString ());
-				WriteLiteral ("\"");
-				return;
-			// complete
-			default:
-				WriteLiteral (value.ToString ());
-				return;
-			}
-		}
+            WriteReference(variable.VariableType);
+            Formatter.WriteSpace();
+            Formatter.WriteVariableReference(variable.Name);
+        }
 
-		public override void VisitMethodInvocationExpression (MethodInvocationExpression node)
-		{
-			Visit (node.Method);
-			WriteToken ("(");
-			VisitList (node.Arguments);
-			WriteToken (")");
-		}
+        public override void VisitAssignExpression (AssignExpression node)
+        {
+            Write (node.Target);
+            WriteOperatorBetweenSpace ("=");
+            Write (node.Expression);
+        }
 
-		public override void VisitBlockExpression (BlockExpression node)
-		{
-			VisitList (node.Expressions);
-		}
+        public override void VisitArgumentReferenceExpression (ArgumentReferenceExpression node)
+        {
+            Formatter.WriteVariableReference(node.Parameter.Name);
+        }
 
-		void VisitList (IList<Expression> list)
-		{
-			for (int i = 0; i < list.Count; i++) {
-				if (i > 0) {
-					WriteToken (",");
-					WriteSpace ();
+        public override void VisitVariableReferenceExpression (VariableReferenceExpression node)
+        {
+            Formatter.WriteVariableReference(node.Variable.Name);
+        }
+
+        public override void VisitLiteralExpression(LiteralExpression node)
+        {
+            var value = node.Value;
+            WriteLiteral(value);
+        }
+
+        private void WriteLiteral(object value)
+        {
+            if (value == null)
+            {
+                Formatter.WriteNamedLiteral("null");
+                return;
+            }
+
+            switch (Type.GetTypeCode(value.GetType()))
+            {
+                case TypeCode.Boolean:
+                    Formatter.WriteNamedLiteral((bool)value ? "true" : "false");
+                    return;
+                case TypeCode.Char:
+                    WriteCharCode((char)value);
+                    return;
+                case TypeCode.String:
+                    WriteStringCode((string)value);
+                    return;
+                // complete
+                default:
+                    WriteNumberCode(value);
+                    return;
+            }
+        }
+
+        public override void VisitMethodInvocationExpression (MethodInvocationExpression node)
+        {
+            Visit (node.Method);
+            Formatter.WriteParenthesisOpen("(");
+            VisitList (node.Arguments);
+            Formatter.WriteParenthesisClose(")");
+        }
+
+        public override void VisitBlockExpression (BlockExpression node)
+        {
+            VisitList (node.Expressions);
+        }
+
+        void VisitList (IList<Expression> list)
+        {
+            for (int i = 0; i < list.Count; i++) {
+                if (i > 0) {
+                    Formatter.WriteGenericToken(",");
+                    Formatter.WriteSpace();
+                }
+
+                Visit (list [i]);
+            }
+        }
+
+        public override void VisitMethodReferenceExpression (MethodReferenceExpression node)
+        {
+            if (node.Target != null) {
+                Visit (node.Target);
+                Formatter.WriteGenericToken(".");
+            }
+
+            if (!node.Method.HasThis) {
+                WriteReference(node.Method.DeclaringType);
+                Formatter.WriteGenericToken(".");
+            }
+
+            Formatter.WriteNameReference(node.Method.Name, node.Method);
+        }
+
+        public override void VisitThisReferenceExpression (ThisReferenceExpression node)
+        {
+            Formatter.WriteKeyword("this");
+        }
+
+        public override void VisitBaseReferenceExpression (BaseReferenceExpression node)
+        {
+            Formatter.WriteKeyword("base");
+        }
+
+        public override void VisitBinaryExpression (BinaryExpression node)
+        {
+            var was_inside = inside_binary;
+            inside_binary = true;
+
+            if (was_inside)
+                Formatter.WriteParenthesisOpen ("(");
+            Visit (node.Left);
+            Formatter.WriteSpace ();
+            Formatter.WriteGenericToken (ToString (node.Operator));
+            Formatter.WriteSpace ();
+            Visit (node.Right);
+            if (was_inside)
+                Formatter.WriteParenthesisClose (")");
+
+            inside_binary = was_inside;
+        }
+
+        public override void VisitFieldReferenceExpression (FieldReferenceExpression node)
+        {
+            if (node.Target != null)
+                Visit (node.Target);
+            else
+                WriteReference (node.Field.DeclaringType);
+
+            Formatter.WriteGenericToken(".");
+            Formatter.WriteNameReference(node.Field.Name, node.Field);
+        }
+
+        static string ToString (BinaryOperator op)
+        {
+            switch (op) {
+            case BinaryOperator.Add: return "+";
+            case BinaryOperator.BitwiseAnd: return "&";
+            case BinaryOperator.BitwiseOr: return "|";
+            case BinaryOperator.BitwiseXor: return "^";
+            case BinaryOperator.Divide: return "/";
+            case BinaryOperator.GreaterThan: return ">";
+            case BinaryOperator.GreaterThanOrEqual: return ">=";
+            case BinaryOperator.LeftShift: return "<<";
+            case BinaryOperator.LessThan: return "<";
+            case BinaryOperator.LessThanOrEqual: return "<=";
+            case BinaryOperator.LogicalAnd: return "&&";
+            case BinaryOperator.LogicalOr: return "||";
+            case BinaryOperator.Modulo: return "%";
+            case BinaryOperator.Multiply: return "*";
+            case BinaryOperator.RightShift: return ">>";
+            case BinaryOperator.Subtract: return "-";
+            case BinaryOperator.ValueEquality: return "==";
+            case BinaryOperator.ValueInequality: return "!=";
+            default: throw new ArgumentException ();
+            }
+        }
+
+        public override void VisitUnaryExpression(UnaryExpression node)
+        {
+            bool is_post_op = IsPostUnaryOperator(node.Operator);
+
+            if (!is_post_op)
+                Formatter.WriteOperator(ToString(node.Operator));
+
+            Visit(node.Operand);
+
+            if (is_post_op)
+                Formatter.WriteOperator(ToString(node.Operator));
+        }
+
+        static bool IsPostUnaryOperator (UnaryOperator op)
+        {
+            switch (op) {
+            case UnaryOperator.PostIncrement:
+            case UnaryOperator.PostDecrement:
+                return true;
+            default:
+                return false;
+            }
+        }
+
+        static string ToString (UnaryOperator op)
+        {
+            switch (op) {
+            case UnaryOperator.BitwiseNot:
+                return "~";
+            case UnaryOperator.LogicalNot:
+                return "!";
+            case UnaryOperator.Negate:
+                return "-";
+            case UnaryOperator.PostDecrement:
+            case UnaryOperator.PreDecrement:
+                return "--";
+            case UnaryOperator.PostIncrement:
+            case UnaryOperator.PreIncrement:
+                return "++";
+            default: throw new ArgumentException ();
+            }
+        }
+
+        void WriteReference(TypeReference reference)
+        {
+            Write(reference);
+        }
+
+        void Write(TypeReference type)
+        {
+            var spec = type as TypeSpecification;
+            if (spec != null)
+            {
+                WriteSpecification(spec);
+                return;
+            }
+            else if (type.Namespace == "System")
+            {
+                switch (type.Name)
+                {
+                    case "Decimal": Formatter.WriteAliasTypeKeyword("decimal", type); return;
+                    case "Single": Formatter.WriteAliasTypeKeyword("float", type); return;
+                    case "Byte": Formatter.WriteAliasTypeKeyword("byte", type); return;
+                    case "SByte": Formatter.WriteAliasTypeKeyword("sbyte", type); return;
+                    case "Char": Formatter.WriteAliasTypeKeyword("char", type); return;
+                    case "Double": Formatter.WriteAliasTypeKeyword("double", type); return;
+                    case "Boolean": Formatter.WriteAliasTypeKeyword("bool", type); return;
+                    case "Int16": Formatter.WriteAliasTypeKeyword("short", type); return;
+                    case "Int32": Formatter.WriteAliasTypeKeyword("int", type); return;
+                    case "Int64": Formatter.WriteAliasTypeKeyword("long", type); return;
+                    case "UInt16": Formatter.WriteAliasTypeKeyword("ushort", type); return;
+                    case "UInt32": Formatter.WriteAliasTypeKeyword("uint", type); return;
+                    case "UInt64": Formatter.WriteAliasTypeKeyword("ulong", type); return;
+                    case "String": Formatter.WriteAliasTypeKeyword("string", type); return;
+                    case "Void": Formatter.WriteAliasTypeKeyword("void", type); return;
+                    case "Object": Formatter.WriteAliasTypeKeyword("object", type); return;
+                }
+            }
+
+            // Remove generic arg count.
+            var name = type.FullName;
+            var index = name.LastIndexOf('`');
+            if (index > 0)
+                name = name.Substring(0, index);
+            Formatter.WriteNameReference(name, type);
+        }
+
+        void WriteSpecification(TypeSpecification specification)
+        {
+            var pointer = specification as PointerType;
+            if (pointer != null)
+            {
+                Write(specification.ElementType);
+                Formatter.WriteGenericToken("*");
+                return;
+            }
+
+            var reference = specification as ByReferenceType;
+            if (reference != null)
+            {
+                Write(specification.ElementType);
+                Formatter.WriteGenericToken("&");
+                return;
+            }
+
+            var array = specification as ArrayType;
+            if (array != null)
+            {
+                Write(specification.ElementType);
+                Formatter.WriteGenericToken("[]");
+                return;
+            }
+
+            var generic = specification as GenericInstanceType;
+            if (generic != null)
+            {
+                WriteGenericInstanceType(generic);
+                return;
+            }
+
+            throw new NotSupportedException();
+        }
+
+        void WriteGenericInstanceType(GenericInstanceType generic)
+        {
+            Write(generic.ElementType);
+            Formatter.WriteParenthesisOpen("<");
+
+            for (int i = 0; i < generic.GenericArguments.Count; i++)
+            {
+                if (i > 0)
+                {
+                    Formatter.WriteGenericToken(",");
+                    Formatter.WriteSpace();
+                }
+
+                Write(generic.GenericArguments[i]);
+            }
+
+            Formatter.WriteParenthesisClose(">");
+        }
+
+        public override void VisitGotoStatement (GotoStatement node)
+        {
+            Formatter.WriteKeyword("goto");            
+            Formatter.WriteLabelReference(node.Label);
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        public override void VisitLabeledStatement (LabeledStatement node)
+        {
+            Formatter.Outdent();
+            Formatter.WriteLabelReference(node.Label);
+            Formatter.WriteGenericToken(":");
+            Formatter.WriteLine();
+            Formatter.Indent();
+        }
+
+        public override void VisitIfStatement (IfStatement node)
+        {
+            Formatter.WriteKeyword("if");
+            Formatter.WriteSpace();
+            WriteBetweenParenthesis(node.Condition);
+            Formatter.WriteLine();
+
+            Visit(node.Then);
+
+            if (node.Else == null)
+                return;
+
+            Formatter.WriteKeyword("else");
+            Formatter.WriteLine();
+
+            Visit(node.Else);
+        }
+
+        public override void VisitContinueStatement (ContinueStatement node)
+        {
+            Formatter.WriteKeyword("continue");
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        public override void VisitBreakStatement (BreakStatement node)
+        {
+            Formatter.WriteKeyword("break");
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        void WriteBetweenParenthesis (Expression expression)
+        {
+            Formatter.WriteParenthesisOpen("(");
+            Visit(expression);
+            Formatter.WriteParenthesisClose(")");
+        }
+
+        public override void VisitConditionExpression (ConditionExpression node)
+        {
+            Formatter.WriteParenthesisOpen("(");
+            Visit (node.Condition);
+            WriteOperatorBetweenSpace("?");
+            Visit (node.Then);
+            WriteOperatorBetweenSpace(":");
+            Visit (node.Else);
+            Formatter.WriteParenthesisClose(")");
+        }
+
+        public override void VisitNullCoalesceExpression (NullCoalesceExpression node)
+        {
+            Visit (node.Condition);
+            WriteOperatorBetweenSpace("??");
+            Visit (node.Expression);
+        }
+
+        void WriteTokenBetweenSpace (string token)
+        {
+            Formatter.WriteSpace();
+            Formatter.WriteGenericToken(token);
+            Formatter.WriteSpace();
+        }
+
+        void WriteOperatorBetweenSpace(string token)
+        {
+            Formatter.WriteSpace();
+            Formatter.WriteOperator(token);
+            Formatter.WriteSpace();
+        }
+
+        public override void VisitThrowStatement (ThrowStatement node)
+        {
+            Formatter.WriteKeyword("throw");
+            if (node.Expression != null) {
+                Formatter.WriteSpace();
+                Visit (node.Expression);
+            }
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        public override void VisitReturnStatement (ReturnStatement node)
+        {
+            Formatter.WriteKeyword("return");
+
+            if (node.Expression != null) {
+                Formatter.WriteSpace();
+                Visit (node.Expression);
+            }
+
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        public override void VisitSwitchStatement (SwitchStatement node)
+        {
+            Formatter.WriteKeyword("switch");
+
+            Formatter.WriteSpace();
+
+            Formatter.WriteParenthesisOpen("(");
+            Visit (node.Expression);
+            Formatter.WriteParenthesisClose(")");
+            Formatter.WriteLine();
+
+            WriteBlock (() => Visit (node.Cases));
+        }
+
+        public override void VisitConditionCase (ConditionCase node)
+        {
+            Formatter.WriteKeyword("case");
+            Formatter.WriteSpace();
+            Visit (node.Condition);
+            Formatter.WriteGenericToken(":");
+            Formatter.WriteLine();
+
+            Visit (node.Body);
+        }
+
+        public override void VisitDefaultCase (DefaultCase node)
+        {
+            Formatter.WriteKeyword("default");
+            Formatter.WriteGenericToken(":");
+            Formatter.WriteLine();
+
+            Visit (node.Body);
+        }
+
+        public override void VisitWhileStatement (WhileStatement node)
+        {
+            Formatter.WriteKeyword("while");
+            Formatter.WriteSpace();
+            WriteBetweenParenthesis (node.Condition);
+            Formatter.WriteLine();
+            Visit (node.Body);
+        }
+
+        public override void VisitDoWhileStatement (DoWhileStatement node)
+        {
+            Formatter.WriteKeyword("do");
+            Formatter.WriteLine();
+            Visit (node.Body);
+            Formatter.WriteKeyword("while");
+            Formatter.WriteSpace();
+            WriteBetweenParenthesis (node.Condition);
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteLine();
+        }
+
+        void VisitExpressionStatementExpression (Statement statement)
+        {
+            var expression_statement = statement as ExpressionStatement;
+            if (expression_statement == null)
+                throw new ArgumentException ();
+
+            Visit (expression_statement.Expression);
+        }
+
+        public override void VisitForStatement (ForStatement node)
+        {
+            Formatter.WriteKeyword("for");
+            Formatter.WriteSpace();
+            Formatter.WriteParenthesisOpen("(");
+            VisitExpressionStatementExpression (node.Initializer);
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteSpace();
+            Visit (node.Condition);
+            Formatter.WriteGenericToken(";");
+            Formatter.WriteSpace();
+            VisitExpressionStatementExpression (node.Increment);
+            Formatter.WriteParenthesisClose(")");
+            Formatter.WriteLine();
+            Visit (node.Body);
+        }
+
+        public override void VisitForEachStatement(ForEachStatement node)
+        {
+            Formatter.WriteKeyword("foreach");
+            Formatter.WriteSpace();
+            Formatter.WriteParenthesisOpen("(");
+            Visit(node.Variable);
+            Formatter.WriteSpace();
+            Formatter.WriteKeyword("in");
+            Formatter.WriteSpace();
+            Visit(node.Expression);
+            Formatter.WriteParenthesisClose(")");
+            Formatter.WriteLine();
+            Visit(node.Body);
+        }
+
+        public override void VisitCatchClause (CatchClause node)
+        {
+            Formatter.WriteKeyword("catch");
+
+            if (node.Type.FullName != "System.Object") {
+                Formatter.WriteSpace();
+                Formatter.WriteParenthesisOpen("(");
+                if (node.Variable != null)
+                    Visit (node.Variable);
+                else
+                    WriteReference (node.Type);
+                Formatter.WriteParenthesisClose(")");
+            }
+
+            Formatter.WriteLine();
+            Visit (node.Body);
+        }
+
+        public override void VisitTryStatement (TryStatement node)
+        {
+            Formatter.WriteKeyword("try");
+            Formatter.WriteLine();
+            Visit (node.Try);
+            Visit (node.CatchClauses);
+
+            if (node.Finally != null) {
+                Formatter.WriteKeyword("finally");
+                Formatter.WriteLine();
+                Visit (node.Finally);
+            }
+        }
+
+        public override void VisitArrayCreationExpression (ArrayCreationExpression node)
+        {
+            Formatter.WriteOperatorWord("new");
+            Formatter.WriteSpace();
+            WriteReference (node.Type);
+            Formatter.WriteParenthesisOpen("[");
+            if (node.Initializer.Expressions.Count == 0)
+            {
+                Visit(node.Dimensions);
+            }
+            Formatter.WriteParenthesisClose("]");
+            if(node.Initializer.Expressions.Count != 0)
+            {
+                Formatter.WriteParenthesisOpen("{");
+                foreach (var expression in node.Initializer.Expressions)
+                {
+                    Visit(expression);
+                }
+                Formatter.WriteParenthesisClose("}");
+            }
+        }
+
+        public override void VisitArrayIndexerExpression (ArrayIndexerExpression node)
+        {
+            Visit(node.Target);
+            Formatter.WriteParenthesisOpen("[");
+            Visit(node.Indices);
+            Formatter.WriteParenthesisClose("]");
+        }
+
+        public override void VisitCastExpression (CastExpression node)
+        {
+            Formatter.WriteOperator("(");
+            WriteReference (node.TargetType);
+            Formatter.WriteOperator(")");
+            Visit (node.Expression);
+        }
+
+        public override void VisitSafeCastExpression (SafeCastExpression node)
+        {
+            Visit (node.Expression);
+            Formatter.WriteSpace ();
+            Formatter.WriteOperatorWord("as");
+            Formatter.WriteSpace();
+            WriteReference (node.TargetType);
+        }
+
+        public override void VisitCanCastExpression (CanCastExpression node)
+        {
+            Visit (node.Expression);
+            Formatter.WriteSpace();
+            Formatter.WriteOperatorWord("is");
+            Formatter.WriteSpace();
+            WriteReference (node.TargetType);
+        }
+
+        public override void VisitAddressOfExpression (AddressOfExpression node)
+        {
+            Formatter.WriteOperator("&");
+            Visit (node.Expression);
+        }
+
+        public override void VisitObjectCreationExpression (ObjectCreationExpression node)
+        {
+            Formatter.WriteKeyword("new");
+            Formatter.WriteSpace();
+            WriteReference (node.Constructor != null ? node.Constructor.DeclaringType : node.Type);
+            Formatter.WriteParenthesisOpen("(");
+            Visit (node.Arguments);
+            Formatter.WriteParenthesisClose(")");
+        }
+
+        public override void VisitPropertyReferenceExpression (PropertyReferenceExpression node)
+        {
+            if (node.Target != null)
+                Visit (node.Target);
+            else
+                WriteReference (node.Property.DeclaringType);
+
+            Formatter.WriteGenericToken(".");
+            Formatter.WriteNameReference(node.Property.Name, node.Property);
+        }
+
+        public override void VisitTypeReferenceExpression (TypeReferenceExpression node)
+        {
+            WriteReference (node.Type);
+        }
+
+        public override void VisitTypeOfExpression (TypeOfExpression node)
+        {
+            Formatter.WriteOperatorWord("typeof");
+            Formatter.WriteGenericToken("(");
+            WriteReference (node.Type);
+            Formatter.WriteGenericToken(")");
+        }
+
+        public override void Write(AssemblyDefinition assembly)
+        {
+            Formatter.WriteComment(string.Format("// Assembly {0}", assembly.FullName));
+            Formatter.WriteLine();
+            if(assembly.HasCustomAttributes)
+                foreach (var attr in assembly.CustomAttributes)
+                {
+                    Write(attr, assembly, false);
+                    Formatter.WriteLine();
+                }
+        }
+
+        public override void Write(EventDefinition @event)
+        {
+
+            if (@event.HasCustomAttributes)
+            {
+                foreach (var attr in @event.CustomAttributes)
+                {
+                    Write(attr, @event, false);
+                    Formatter.WriteLine();
+                }
+            }
+
+            Formatter.WriteKeyword("event");
+            Formatter.WriteSpace();
+
+            // No visibility for interface methods.
+            WriteMemberAttributes((int)@event.Attributes, @event.DeclaringType.IsInterface);
+
+            Write(@event.EventType);
+            Formatter.WriteSpace();
+            Formatter.WriteNameReference(@event.Name, @event);
+            Formatter.WriteLine();
+            Formatter.WriteBlockStart("{");
+            Formatter.WriteLine();
+
+            Formatter.Indent();
+            Formatter.WriteLine();
+            if(@event.AddMethod != null)
+            {
+                WriteMemberAttributes((int)@event.AddMethod.Attributes, @event.DeclaringType.IsInterface);
+                Formatter.WriteKeyword("add");
+                Formatter.WriteLine();
+                if (@event.AddMethod.HasBody)
+                {
+                    Visit(@event.AddMethod.Body.Decompile(Language));
+                }
+                else
+                {
+                    Formatter.WriteGenericToken(";");
+                }
+            }
+            if (@event.RemoveMethod != null)
+            {
+                WriteMemberAttributes((int)@event.RemoveMethod.Attributes, @event.DeclaringType.IsInterface);
+                Formatter.WriteKeyword("remove");
+                Formatter.WriteLine();
+                if (@event.RemoveMethod.HasBody)
+                {
+                    Visit(@event.RemoveMethod.Body.Decompile(Language));
+                }
+                else
+                {
+                    Formatter.WriteGenericToken(";");
+                }
+            }
+
+
+            Formatter.WriteLine();
+        }
+
+        public override void Write(FieldDefinition field)
+        {
+
+					if (field.HasCustomAttributes) {
+						foreach (var attr in field.CustomAttributes) {
+							Write(attr, field, false);
+							Formatter.WriteLine();
+						}
+					}
+
+					if (field.DeclaringType.IsEnum) {
+						Formatter.WriteNameReference(field.Name, field);
+						Formatter.WriteSpace();
+
+						Formatter.WriteGenericToken("=");
+						Formatter.WriteSpace();
+
+						if (field.Constant is string) {
+							WriteStringCode(field.Constant.ToString());
+						}
+						else {
+							Formatter.WriteRaw(field.Constant.ToString());
+						}
+					}
+					else {
+
+						WriteMemberAttributes(field);
+
+						WriteReference(field.FieldType);
+						Formatter.WriteSpace();
+
+						Formatter.WriteNameReference(field.Name, field);
+
+						if (field.HasConstant) {
+							Formatter.WriteSpace();
+							Formatter.WriteGenericToken("=");
+							Formatter.WriteSpace();
+
+							if (field.Constant is string) {
+								WriteStringCode(field.Constant.ToString());
+							}
+							else {
+								Formatter.WriteRaw(field.Constant.ToString());
+							}
+						}
+					}
+
+					Formatter.WriteGenericToken(";");
+        }
+
+        public override void Write(ModuleDefinition module)
+        {
+            Formatter.WriteComment(string.Format("// {0}Module {1}", module.IsMain ? "Main " : "", module.FullyQualifiedName));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// TypeSystem: {0}", module.TypeSystem));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// Target Runtime: {0}", module.Runtime));
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// Kind: {0}", module.Kind));
+            Formatter.WriteLine();
+            Formatter.WriteLine();
+            Formatter.WriteComment(string.Format("// C# has no way to describe modules. As such only metadata information can be provided."));
+        }
+
+        public override void Write(PropertyDefinition property)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(TypeDefinition type)
+        {
+					if (type.IsEnum) {
+						WriteEnum(type);
+					}
+					else {
+						throw new NotImplementedException();
+					}
+        }
+
+				private void WriteEnum(TypeDefinition type) {
+
+					if (type.HasCustomAttributes) {
+						foreach (var attr in type.CustomAttributes) {
+							Write(attr, type, false);
+							Formatter.WriteLine();
+						}
+					}
+
+					Boolean inInterface = type.DeclaringType == null ? false : type.DeclaringType.IsInterface;
+
+					WriteMemberAttributes((int)type.Attributes, inInterface);
+
+					Formatter.WriteRaw("enum");
+					Formatter.WriteSpace();
+
+					Formatter.WriteNameReference(type.Name, type);
+					Formatter.WriteLine();
+					Formatter.WriteBlockStart("{");
+					Formatter.WriteLine();
+
+					Formatter.Indent();
+
+					foreach (FieldDefinition field in type.Fields) { // i'd use LINQ here, but not sure if that breaks Mono use.
+						if (!field.HasConstant) {
+							continue;
+						}
+
+						Formatter.WriteNameReference(field.Name, field);
+						Formatter.WriteSpace();
+
+						Formatter.WriteGenericToken("=");
+						Formatter.WriteSpace();
+
+						if (field.Constant is string) {
+							WriteStringCode(field.Constant.ToString());
+						}
+						else {
+							Formatter.WriteRaw(field.Constant.ToString());
+						}
+
+						Formatter.WriteRaw(",");
+						Formatter.WriteLine();
+					}
+
+					Formatter.Outdent();
+					Formatter.WriteBlockEnd("}");
 				}
 
-				Visit (list [i]);
-			}
-		}
-
-		public override void VisitMethodReferenceExpression (MethodReferenceExpression node)
-		{
-			if (node.Target != null) {
-				Visit (node.Target);
-				WriteToken (".");
-			}
-
-			if (!node.Method.HasThis) {
-				WriteReference (node.Method.DeclaringType);
-				WriteToken (".");
-			}
-
-			Write (node.Method.Name);
-		}
-
-		public override void VisitThisReferenceExpression (ThisReferenceExpression node)
-		{
-			WriteKeyword ("this");
-		}
-
-		public override void VisitBaseReferenceExpression (BaseReferenceExpression node)
-		{
-			WriteKeyword ("base");
-		}
-
-		public override void VisitBinaryExpression (BinaryExpression node)
-		{
-			var was_inside = inside_binary;
-			inside_binary = true;
-
-			if (was_inside)
-				WriteToken ("(");
-			Visit (node.Left);
-			WriteSpace ();
-			Write (ToString (node.Operator));
-			WriteSpace ();
-			Visit (node.Right);
-			if (was_inside)
-				WriteToken (")");
-
-			inside_binary = was_inside;
-		}
-
-		public override void VisitFieldReferenceExpression (FieldReferenceExpression node)
-		{
-			if (node.Target != null)
-				Visit (node.Target);
-			else
-				WriteReference (node.Field.DeclaringType);
-
-			WriteToken (".");
-			Write (node.Field.Name);
-		}
-
-		static string ToString (BinaryOperator op)
-		{
-			switch (op) {
-			case BinaryOperator.Add: return "+";
-			case BinaryOperator.BitwiseAnd: return "&";
-			case BinaryOperator.BitwiseOr: return "|";
-			case BinaryOperator.BitwiseXor: return "^";
-			case BinaryOperator.Divide: return "/";
-			case BinaryOperator.GreaterThan: return ">";
-			case BinaryOperator.GreaterThanOrEqual: return ">=";
-			case BinaryOperator.LeftShift: return "<<";
-			case BinaryOperator.LessThan: return "<";
-			case BinaryOperator.LessThanOrEqual: return "<=";
-			case BinaryOperator.LogicalAnd: return "&&";
-			case BinaryOperator.LogicalOr: return "||";
-			case BinaryOperator.Modulo: return "%";
-			case BinaryOperator.Multiply: return "*";
-			case BinaryOperator.RightShift: return ">>";
-			case BinaryOperator.Subtract: return "-";
-			case BinaryOperator.ValueEquality: return "==";
-			case BinaryOperator.ValueInequality: return "!=";
-			default: throw new ArgumentException ();
-			}
-		}
-
-		public override void VisitUnaryExpression (UnaryExpression node)
-		{
-			bool is_post_op = IsPostUnaryOperator (node.Operator);
-
-			if (!is_post_op)
-				Write (ToString (node.Operator));
-			
-			Visit (node.Operand);
-
-			if (is_post_op)
-				Write (ToString (node.Operator));
-		}
-
-		static bool IsPostUnaryOperator (UnaryOperator op)
-		{
-			switch (op) {
-			case UnaryOperator.PostIncrement:
-			case UnaryOperator.PostDecrement:
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		static string ToString (UnaryOperator op)
-		{
-			switch (op) {
-			case UnaryOperator.BitwiseNot:
-				return "~";
-			case UnaryOperator.LogicalNot:
-				return "!";
-			case UnaryOperator.Negate:
-				return "-";
-			case UnaryOperator.PostDecrement:
-			case UnaryOperator.PreDecrement:
-				return "--";
-			case UnaryOperator.PostIncrement:
-			case UnaryOperator.PreIncrement:
-				return "++";
-			default: throw new ArgumentException ();
-			}
-		}
-
-		void WriteReference (TypeReference reference)
-		{
-			formatter.WriteReference (ToString (reference), reference);
-		}
-
-		static string ToString (TypeReference type)
-		{
-			var spec = type as TypeSpecification;
-			if (spec != null)
-				return ToString (spec);
-
-			if (type.Namespace != "System")
-				return type.Name;
-
-			switch (type.Name) {
-			case "Decimal": return "decimal";
-			case "Single": return "float";
-			case "Byte": return "byte";
-			case "SByte": return "sbyte";
-			case "Char": return "char";
-			case "Double": return "double";
-			case "Boolean": return "bool";
-			case "Int16": return "short";
-			case "Int32": return "int";
-			case "Int64": return "long";
-			case "UInt16": return "ushort";
-			case "UInt32": return "uint";
-			case "UInt64": return "ulong";
-			case "String": return "string";
-			case "Void": return "void";
-			case "Object": return "object";
-			default: return type.Name;
-			}
-		}
-
-		static string ToString (TypeSpecification specification)
-		{
-			var pointer = specification as PointerType;
-			if (pointer != null)
-				return ToString (specification.ElementType) + "*";
-
-			var reference = specification as ByReferenceType;
-			if (reference != null)
-				return ToString (specification.ElementType) + "&";
-
-			var array = specification as ArrayType;
-			if (array != null)
-				return ToString (specification.ElementType) + "[]";
-
-			var generic = specification as GenericInstanceType;
-			if (generic != null)
-				return ToString (generic);
-
-			throw new NotSupportedException ();
-		}
-
-		static string ToString (GenericInstanceType generic)
-		{
-			var name = ToString (generic.ElementType);
-
-			var signature = new StringBuilder ();
-			signature.Append (name.Substring (0, name.Length - 2));
-			signature.Append ("<");
-
-			for (int i = 0; i < generic.GenericArguments.Count; i++) {
-				if (i > 0)
-					signature.Append (", ");
-
-				signature.Append (ToString (generic.GenericArguments [i]));
-			}
-
-			signature.Append (">");
-			return signature.ToString ();
-		}
-
-		public override void VisitGotoStatement (GotoStatement node)
-		{
-			WriteKeyword ("goto");
-			WriteSpace ();
-			Write (node.Label);
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		public override void VisitLabeledStatement (LabeledStatement node)
-		{
-			Outdent ();
-			Write (node.Label);
-			WriteToken (":");
-			WriteLine ();
-			Indent ();
-		}
-
-		public override void VisitIfStatement (IfStatement node)
-		{
-			WriteKeyword ("if");
-			WriteSpace ();
-			WriteBetweenParenthesis (node.Condition);
-			WriteLine ();
-
-			Visit (node.Then);
-
-			if (node.Else == null)
-				return;
-
-			WriteKeyword ("else");
-			WriteLine ();
-
-			Visit (node.Else);
-		}
-
-		public override void VisitContinueStatement (ContinueStatement node)
-		{
-			WriteKeyword ("continue");
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		public override void VisitBreakStatement (BreakStatement node)
-		{
-			WriteKeyword ("break");
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		void WriteBetweenParenthesis (Expression expression)
-		{
-			WriteToken ("(");
-			Visit (expression);
-			WriteToken (")");
-		}
-
-		public override void VisitConditionExpression (ConditionExpression node)
-		{
-			WriteToken ("(");
-			Visit (node.Condition);
-			WriteTokenBetweenSpace ("?");
-			Visit (node.Then);
-			WriteTokenBetweenSpace (":");
-			Visit (node.Else);
-			WriteToken (")");
-		}
-
-		public override void VisitNullCoalesceExpression (NullCoalesceExpression node)
-		{
-			Visit (node.Condition);
-			WriteTokenBetweenSpace ("??");
-			Visit (node.Expression);
-		}
-
-		void WriteTokenBetweenSpace (string token)
-		{
-			WriteSpace ();
-			WriteToken (token);
-			WriteSpace ();
-		}
-
-		public override void VisitThrowStatement (ThrowStatement node)
-		{
-			WriteKeyword ("throw");
-			if (node.Expression != null) {
-				WriteSpace ();
-				Visit (node.Expression);
-			}
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		public override void VisitReturnStatement (ReturnStatement node)
-		{
-			WriteKeyword ("return");
-
-			if (node.Expression != null) {
-				WriteSpace ();
-				Visit (node.Expression);
-			}
-
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		public override void VisitSwitchStatement (SwitchStatement node)
-		{
-			WriteKeyword ("switch");
-
-			WriteSpace ();
-
-			WriteToken ("(");
-			Visit (node.Expression);
-			WriteToken (")");
-			WriteLine ();
-
-			WriteBlock (() => Visit (node.Cases));
-		}
-
-		public override void VisitConditionCase (ConditionCase node)
-		{
-			WriteKeyword ("case");
-			WriteSpace ();
-			Visit (node.Condition);
-			WriteToken (":");
-			WriteLine ();
-
-			Visit (node.Body);
-		}
-
-		public override void VisitDefaultCase (DefaultCase node)
-		{
-			WriteKeyword ("default");
-			WriteToken (":");
-			WriteLine ();
-
-			Visit (node.Body);
-		}
-
-		public override void VisitWhileStatement (WhileStatement node)
-		{
-			WriteKeyword ("while");
-			WriteSpace ();
-			WriteBetweenParenthesis (node.Condition);
-			WriteLine ();
-			Visit (node.Body);
-		}
-
-		public override void VisitDoWhileStatement (DoWhileStatement node)
-		{
-			WriteKeyword ("do");
-			WriteLine ();
-			Visit (node.Body);
-			WriteKeyword ("while");
-			WriteSpace ();
-			WriteBetweenParenthesis (node.Condition);
-			WriteToken (";");
-			WriteLine ();
-		}
-
-		void VisitExpressionStatementExpression (Statement statement)
-		{
-			var expression_statement = statement as ExpressionStatement;
-			if (expression_statement == null)
-				throw new ArgumentException ();
-
-			Visit (expression_statement.Expression);
-		}
-
-		public override void VisitForStatement (ForStatement node)
-		{
-			WriteKeyword ("for");
-			WriteSpace ();
-			WriteToken ("(");
-			VisitExpressionStatementExpression (node.Initializer);
-			WriteToken (";");
-			WriteSpace ();
-			Visit (node.Condition);
-			WriteToken (";");
-			WriteSpace ();
-			VisitExpressionStatementExpression (node.Increment);
-			WriteToken (")");
-			WriteLine ();
-			Visit (node.Body);
-		}
-
-		public override void VisitForEachStatement (ForEachStatement node)
-		{
-			WriteKeyword ("foreach");
-			WriteSpace ();
-			WriteToken ("(");
-			Visit (node.Variable);
-			WriteSpace ();
-			WriteKeyword ("in");
-			WriteSpace ();
-			Visit (node.Expression);
-			WriteToken (")");
-			WriteLine ();
-			Visit (node.Body);
-		}
-
-		public override void VisitCatchClause (CatchClause node)
-		{
-			WriteKeyword ("catch");
-
-			if (node.Type.FullName != "System.Object") {
-				WriteSpace ();
-				WriteToken ("(");
-				if (node.Variable != null)
-					Visit (node.Variable);
-				else
-					WriteReference (node.Type);
-				WriteToken (")");
-			}
-
-			WriteLine ();
-			Visit (node.Body);
-		}
-
-		public override void VisitTryStatement (TryStatement node)
-		{
-			WriteKeyword ("try");
-			WriteLine ();
-			Visit (node.Try);
-			Visit (node.CatchClauses);
-
-			if (node.Finally != null) {
-				WriteKeyword ("finally");
-				WriteLine ();
-				Visit (node.Finally);
-			}
-		}
-
-		public override void VisitArrayCreationExpression (ArrayCreationExpression node)
-		{
-			WriteKeyword ("new");
-			WriteSpace ();
-			WriteReference (node.Type);
-			WriteToken ("[");
-			Visit (node.Dimensions);
-			WriteToken ("]");
-		}
-
-		public override void VisitArrayIndexerExpression (ArrayIndexerExpression node)
-		{
-			Visit (node.Target);
-			WriteToken ("[");
-			Visit (node.Indices);
-			WriteToken ("]");
-		}
-
-		public override void VisitCastExpression (CastExpression node)
-		{
-			WriteToken ("(");
-			WriteReference (node.TargetType);
-			WriteToken (")");
-			Visit (node.Expression);
-		}
-
-		public override void VisitSafeCastExpression (SafeCastExpression node)
-		{
-			Visit (node.Expression);
-			WriteSpace ();
-			WriteKeyword ("as");
-			WriteSpace ();
-			WriteReference (node.TargetType);
-		}
-
-		public override void VisitCanCastExpression (CanCastExpression node)
-		{
-			Visit (node.Expression);
-			WriteSpace ();
-			WriteKeyword ("is");
-			WriteSpace ();
-			WriteReference (node.TargetType);
-		}
-
-		public override void VisitAddressOfExpression (AddressOfExpression node)
-		{
-			WriteToken ("&");
-			Visit (node.Expression);
-		}
-
-		public override void VisitObjectCreationExpression (ObjectCreationExpression node)
-		{
-			WriteKeyword ("new");
-			WriteSpace ();
-			WriteReference (node.Constructor != null ? node.Constructor.DeclaringType : node.Type);
-			WriteToken ("(");
-			Visit (node.Arguments);
-			WriteToken (")");
-		}
-
-		public override void VisitPropertyReferenceExpression (PropertyReferenceExpression node)
-		{
-			if (node.Target != null)
-				Visit (node.Target);
-			else
-				WriteReference (node.Property.DeclaringType);
-
-			WriteToken (".");
-			Write (node.Property.Name);
-		}
-
-		public override void VisitTypeReferenceExpression (TypeReferenceExpression node)
-		{
-			WriteReference (node.Type);
-		}
-
-		public override void VisitTypeOfExpression (TypeOfExpression node)
-		{
-			WriteKeyword ("typeof");
-			WriteToken ("(");
-			WriteReference (node.Type);
-			WriteToken (")");
-		}
-	}
+        private void WriteStringCode(string value)
+        {
+            var length = 10;
+            if (value != null)
+                length = value.Length + 2;
+
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralString(sw.ToString());
+            }
+        }
+
+        private void WriteCharCode(char value)
+        {
+            var length = 3;
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralChar(sw.ToString());
+            }
+        }
+
+        private void WriteNumberCode(object value)
+        {
+            var length = 8;
+            using (var sw = new StringWriter(new StringBuilder(length)))
+            {
+                var expr = new System.CodeDom.CodePrimitiveExpression(value);
+                new Microsoft.CSharp.CSharpCodeProvider()
+                    .GenerateCodeFromExpression(expr, sw, new System.CodeDom.Compiler.CodeGeneratorOptions());
+                Formatter.WriteLiteralNumber(sw.ToString());
+            }
+        }
+
+        public void Write(CustomAttribute attr, object on, bool isReturn)
+        {
+            var attrType = attr.AttributeType.Resolve();
+
+            Formatter.WriteParenthesisOpen("[");
+
+            if (on is AssemblyDefinition)
+                Formatter.WriteKeyword("assembly:");
+            else if (isReturn)
+                Formatter.WriteKeyword("return:");
+            
+            Write(attr.AttributeType);
+            if (attr.HasConstructorArguments || attr.HasFields || attr.HasProperties)
+            {
+                Formatter.WriteParenthesisOpen("(");
+                var first = true;
+
+                if (attr.HasConstructorArguments)
+                    foreach (var ctorArg in attr.ConstructorArguments)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+                        WriteLiteral(ctorArg.Value);
+                    }
+
+                if (attr.HasFields)
+                    foreach (var fieldArg in attr.Fields)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+
+                        MemberReference mr = null;
+                        if (attrType != null)
+                            foreach (var field in attrType.Fields)
+                            {
+                                if (field.Name == fieldArg.Name)
+                                {
+                                    mr = field;
+                                    break;
+                                }
+                            }
+                        Formatter.WriteNameReference(fieldArg.Name, mr);
+                        Formatter.WriteSpace();
+                        Formatter.WriteGenericToken("=");
+                        Formatter.WriteSpace();
+                        WriteLiteral(fieldArg.Argument.Value);
+                    }
+
+                if (attr.HasProperties)
+                    foreach (var propArg in attr.Properties)
+                    {
+                        if (!first)
+                        {
+                            Formatter.WriteGenericToken(",");
+                            Formatter.WriteSpace();
+                        }
+                        first = false;
+
+                        MemberReference mr = null;
+                        if (attrType != null)
+                            foreach (var prop in attrType.Properties)
+                            {
+                                if (prop.Name == propArg.Name)
+                                {
+                                    mr = prop;
+                                    break;
+                                }
+                            }
+                        Formatter.WriteNameReference(propArg.Name, mr);
+                        Formatter.WriteSpace();
+                        Formatter.WriteGenericToken("=");
+                        Formatter.WriteSpace();
+                        WriteLiteral(propArg.Argument.Value);
+                    }
+
+                Formatter.WriteParenthesisClose(")");
+            }
+
+            Formatter.WriteParenthesisClose("]");
+        }
+    }
 }

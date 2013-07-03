@@ -25,21 +25,53 @@
 #endregion
 
 using System;
+using Mono.Cecil;
 
 namespace Cecil.Decompiler.Languages {
 
-	public interface IFormatter {
-		void Write (string str);
-		void WriteLine ();
-		void WriteSpace ();
-		void WriteToken (string token);
-		void WriteComment (string comment);
-		void WriteKeyword (string keyword);
-		void WriteLiteral (string literal);
-		void WriteDefinition (string value, object definition);
-		void WriteReference (string value, object reference);
-		void WriteIdentifier (string value, object identifier);
-		void Indent ();
-		void Outdent ();
-	}
+    public interface IFormatter {
+        // Raw write.
+        void WriteRaw(string value);
+
+        // Pygments bc/bo
+        void WriteBlockStart(string value);
+        void WriteBlockEnd(string value);
+
+        // Pygments c1, cm, cp, cs
+        void WriteComment(string comment);
+        void WritePrepocComment(string comment);
+        void WriteMultilineComment(string comment);
+        void WriteDocComment(string comment);
+
+        // Pygments k, kt
+        void WriteKeyword(string keyword);
+        void WriteAliasTypeKeyword(string keyword, TypeReference type);
+
+        // Pygments m, s
+        void WriteLiteralNumber(string value);
+        void WriteLiteralString(string value);
+        void WriteLiteralChar(string value);
+        void WriteNamedLiteral(string value);
+
+        // Pygments names
+        void WriteNameReference(string name, MemberReference member);
+        void WriteLabelReference(string name);
+        void WriteVariableReference(string name);
+
+        // Pygments Tokens
+        void WriteOperator(string name);
+        void WriteOperatorWord(string name);
+        void WriteGenericToken(string name);
+
+        // Pygments method decl.
+        void WriteParenthesisOpen(string value);
+        void WriteParenthesisClose(string value);
+        void WriteParameterName(string value);
+
+        // Operations.
+        void Indent();
+        void Outdent();
+        void WriteLine();
+        void WriteSpace();
+    }
 }

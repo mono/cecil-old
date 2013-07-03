@@ -32,9 +32,21 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Languages {
 
-	public interface ILanguageWriter {
-		void Write (MethodDefinition method);
-		void Write (Statement statement);
-		void Write (Expression expression);
-	}
+    public interface ILanguageWriter {
+        bool IncludeMemberDissasembly { get; }
+
+        // These **really** shouldn't be here.
+        // But I have left them in for back-compat.
+        void Write (Statement statement);
+        void Write (Expression expression);
+
+        // Definition.
+        void Write(MethodDefinition method);
+        void Write(AssemblyDefinition assembly);
+        void Write(EventDefinition @event);
+        void Write(FieldDefinition field);
+        void Write(ModuleDefinition module);
+        void Write(PropertyDefinition property);
+        void Write(TypeDefinition type);
+    }
 }

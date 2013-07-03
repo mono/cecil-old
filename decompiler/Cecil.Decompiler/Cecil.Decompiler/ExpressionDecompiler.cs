@@ -129,6 +129,16 @@ namespace Cecil.Decompiler {
 			PushVariableAssignement (3);
 		}
 
+        public override void OnStind_Ref(Instruction instruction)
+        {
+            if(IsSkipped(instruction))
+                return;
+            var value = Pop();
+            var reference = Pop();
+            PushAssignment(reference, value);
+        }
+
+
 		bool IsSkipped (Instruction instruction)
 		{
 			return annotations.IsAnnotated (instruction, Annotation.Skip);
@@ -532,8 +542,19 @@ namespace Cecil.Decompiler {
 
 			assign.Target = Pop ();
 
-			Push (assign);
-		}
+		    var prev = Pop();
+            if(prev.CodeNodeType == CodeNodeType.AssignExpression && ((AssignExpression)prev).Expression.CodeNodeType == CodeNodeType.ArrayCreationExpression)
+            {
+                var arrayCreation = (ArrayCreationExpression)((AssignExpression) prev).Expression;
+                arrayCreation.Initializer.Expressions.Add(assign.Expression);
+                Push(prev);
+            }
+            else
+            {
+                Push(prev);
+                Push(assign);
+            }
+        }
 
 		void PushArrayIndexer ()
 		{

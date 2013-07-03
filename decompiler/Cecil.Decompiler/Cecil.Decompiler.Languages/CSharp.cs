@@ -61,6 +61,8 @@ namespace Cecil.Decompiler.Languages {
 				return new CSharpV2 ();
 			case CSharpVersion.V3:
 				return new CSharpV3 ();
+			case CSharpVersion.V4:
+				return new CSharpV4();
 			default:
 				throw new ArgumentException ();
 			}
@@ -73,22 +75,25 @@ namespace Cecil.Decompiler.Languages {
 
 		public override DecompilationPipeline CreatePipeline ()
 		{
-			return new DecompilationPipeline (
-				new StatementDecompiler (BlockOptimization.Detailed),
-				RemoveLastReturn.Instance,
-				PropertyStep.Instance,
-				CanCastStep.Instance,
-				RebuildForStatements.Instance,
-				RebuildForeachStatements.Instance,
-				DeclareVariablesOnFirstAssignment.Instance,
-				DeclareTopLevelVariables.Instance,
-				SelfAssignement.Instance,
-				OperatorStep.Instance);
+		    return new DecompilationPipeline(
+		        new StatementDecompiler(BlockOptimization.Detailed),
+		        RemoveLastReturn.Instance,
+                TypeOfStep.Instance,
+		        PropertyStep.Instance,
+		        CanCastStep.Instance,
+		        RebuildForStatements.Instance,
+		        RebuildForeachStatements.Instance,
+		        DeclareVariablesOnFirstAssignment.Instance,
+                DeclareTopLevelVariables.Instance,
+                GenerateVariableNames.Instance,
+		        SelfAssignement.Instance,
+		        OperatorStep.Instance,
+		        RebuildBooleanReturns.Instance,
+                RebuildNullComparisons.Instance);
 		}
 	}
 
 	public class CSharpV2 : CSharpV1 {
-
 		public override string Name { get { return "C#2"; } }
 	}
 
