@@ -448,7 +448,7 @@ namespace Cecil.Decompiler {
 			Annotate (last, Annotation.Switch);
 
 			foreach (var target in targets)
-				Annotate (target, Annotation.Labeled);
+				Labelize (target);
 
 			ProcessMultipleWayBlockSuccessors (block);
 		}

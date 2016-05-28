@@ -83,6 +83,8 @@ namespace Cecil.Decompiler.Ast {
 				return VisitMethodInvocationExpression ((MethodInvocationExpression) node);
 			case CodeNodeType.MethodReferenceExpression:
 				return VisitMethodReferenceExpression ((MethodReferenceExpression) node);
+			case CodeNodeType.MethodAddressExpression:
+				return VisitMethodAddressExpression ((MethodAddressExpression) node);
 			case CodeNodeType.DelegateCreationExpression:
 				return VisitDelegateCreationExpression ((DelegateCreationExpression) node);
 			case CodeNodeType.DelegateInvocationExpression:
@@ -320,6 +322,12 @@ namespace Cecil.Decompiler.Ast {
 		}
 
 		public virtual ICodeNode VisitMethodReferenceExpression (MethodReferenceExpression node)
+		{
+			node.Target = (Expression) Visit (node.Target);
+			return node;
+		}
+		
+		public virtual ICodeNode VisitMethodAddressExpression (MethodAddressExpression node)
 		{
 			node.Target = (Expression) Visit (node.Target);
 			return node;

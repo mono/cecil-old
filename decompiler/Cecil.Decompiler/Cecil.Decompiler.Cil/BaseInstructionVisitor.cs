@@ -1007,7 +1007,12 @@ namespace Cecil.Decompiler.Cil {
 		{
 			throw new NotImplementedException (Formatter.FormatInstruction (instruction));
 		}
-
+		
+		public virtual void OnConstrained (Instruction instruction)
+		{
+			throw new NotImplementedException (Formatter.FormatInstruction (instruction));
+		}
+		
 		public void Visit (Instruction instruction)
 		{
 			InstructionDispatcher.Dispatch (instruction, this);

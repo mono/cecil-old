@@ -5,7 +5,7 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	class OperatorStep : BaseCodeTransformer, IDecompilationStep {
+	public class OperatorStep : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new OperatorStep();
 

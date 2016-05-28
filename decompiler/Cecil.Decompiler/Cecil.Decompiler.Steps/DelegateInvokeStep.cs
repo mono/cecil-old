@@ -2,6 +2,7 @@
 //
 //	(C) 2007 - 2008 Novell, Inc. http://www.novell.com
 //	(C) 2007 - 2008 Jb Evain http://evain.net
+//  (C) 2010 Alexander Corrado http://nirvanai.com
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -26,30 +27,42 @@
 
 using System;
 
+using Mono.Cecil.Cil;
+
 using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	public class RemoveLastReturn : IDecompilationStep {
+	public class DelegateInvokeStep : BaseCodeTransformer, IDecompilationStep {
 
-		public static readonly IDecompilationStep Instance = new RemoveLastReturn ();
+		public static readonly IDecompilationStep Instance = new DelegateInvokeStep ();
 
-		public BlockStatement Process (DecompilationContext context, BlockStatement block)
+		public override ICodeNode VisitMethodInvocationExpression (MethodInvocationExpression node)
 		{
-			var index = block.Statements.Count - 1;
-			if (index == -1)
-				return block;
+			var method_ref = node.Method as MethodReferenceExpression;
+			if (method_ref == null)
+				goto skip;
 			
-			var ret = block.Statements [index] as ReturnStatement;
-			if (ret == null)
-				return block;
+			var method = method_ref.Method;
+			if (method.Name != "Invoke")
+				goto skip;
+			
+			if (!method.DeclaringType.Resolve ().IsDelegate ())
+				goto skip;
 
-			if (ret.Expression != null)
-				return block;
+			var invoke = new DelegateInvocationExpression (method_ref.Target);
+			
+			invoke.Arguments = node.Arguments;
+			
+			return invoke;
 
-			block.Statements.RemoveAt (index);
-
-			return block;
+		skip:
+			return base.VisitMethodInvocationExpression (node);
+		}
+		
+		public BlockStatement Process (DecompilationContext context, BlockStatement body)
+		{
+			return (BlockStatement) VisitBlockStatement (body);
 		}
 	}
 }

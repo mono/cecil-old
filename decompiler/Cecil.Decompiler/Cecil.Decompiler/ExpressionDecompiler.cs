@@ -206,7 +206,7 @@ namespace Cecil.Decompiler {
 		public override void OnNewobj (Instruction instruction)
 		{
 			var constructor = (MethodReference) instruction.Operand;
-
+			
 			var arguments = PopRange (constructor.Parameters.Count);
 
 			var @new = new ObjectCreationExpression (constructor, null, null);
@@ -215,7 +215,25 @@ namespace Cecil.Decompiler {
 
 			Push (@new);
 		}
-
+					                                
+		public override void OnLdftn (Instruction instruction)
+		{
+			var method = (MethodReference) instruction.Operand;
+			
+			var addressof = new MethodAddressExpression (method);
+			
+			Push (addressof);
+		}
+		
+		public override void OnLdvirtftn (Instruction instruction)
+		{
+			var method = (MethodReference) instruction.Operand;
+			
+			var addressof = new MethodAddressExpression (method) { IsVirtual = true, Target = Pop () };
+			
+			Push (addressof);
+		}
+		
 		public override void OnInitobj (Instruction instruction)
 		{
 			var address = (AddressOfExpression) Pop ();
@@ -882,12 +900,14 @@ namespace Cecil.Decompiler {
 
 		public override void OnLdarg (Instruction instruction)
 		{
-			PushArgumentReference (((ParameterDefinition) instruction.Operand).Index + 1);
+			var index = ((ParameterDefinition) instruction.Operand).Index;
+			PushArgumentReference (index);
 		}
 
 		public override void OnLdarga (Instruction instruction)
 		{
-			PushArgumentReference (((ParameterDefinition) instruction.Operand).Index + 1);
+			var index = ((ParameterDefinition) instruction.Operand).Index;
+			PushArgumentReference (index);
 			PushAddressOf ();
 		}
 

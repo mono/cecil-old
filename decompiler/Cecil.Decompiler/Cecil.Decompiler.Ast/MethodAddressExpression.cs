@@ -1,5 +1,6 @@
-﻿#region license
+#region license
 //
+//	(C) 2005 - 2007 db4objects Inc. http://www.db4o.com
 //	(C) 2007 - 2008 Novell, Inc. http://www.novell.com
 //	(C) 2007 - 2008 Jb Evain http://evain.net
 //
@@ -24,32 +25,56 @@
 //
 #endregion
 
+// Warning: generated do not edit
+
 using System;
+using System.Collections.Generic;
 
-using Cecil.Decompiler.Ast;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 
-namespace Cecil.Decompiler.Steps {
+namespace Cecil.Decompiler.Ast {
 
-	public class RemoveLastReturn : IDecompilationStep {
+	public class MethodAddressExpression : Expression {
 
-		public static readonly IDecompilationStep Instance = new RemoveLastReturn ();
+		Expression target;
+		bool is_virtual;
+		MethodReference method;
 
-		public BlockStatement Process (DecompilationContext context, BlockStatement block)
+		public MethodAddressExpression ()
 		{
-			var index = block.Statements.Count - 1;
-			if (index == -1)
-				return block;
-			
-			var ret = block.Statements [index] as ReturnStatement;
-			if (ret == null)
-				return block;
-
-			if (ret.Expression != null)
-				return block;
-
-			block.Statements.RemoveAt (index);
-
-			return block;
 		}
+		
+		public MethodAddressExpression (MethodReference method)
+		{
+			this.method = method;
+		}
+
+		public Expression Target
+		{
+			get { return target; }
+			set { this.target = value; }
+		}
+
+		public MethodReference Method
+		{
+			get { return method; }
+			set { this.method = value; }
+		}
+		
+		public bool IsVirtual
+		{
+			get { return is_virtual; }
+			set { this.is_virtual = value; }
+		}
+
+		public override CodeNodeType CodeNodeType
+		{
+			get { return CodeNodeType.MethodAddressExpression; }
+		}
+	}
+
+	public static partial class CodeNode {
+
 	}
 }

@@ -49,6 +49,7 @@ namespace Cecil.Decompiler.Ast {
 		CatchClause,
 		TryStatement,
 		BlockExpression,
+		MethodAddressExpression,
 		MethodInvocationExpression,
 		MethodReferenceExpression,
 		DelegateCreationExpression,

@@ -28,5 +28,10 @@ namespace Cecil.Decompiler.CSharp {
 		public void ArrayLength ()
 		{
 		}
+		
+		[CSharp]
+		public void Delegates ()
+		{
+		}
 	}
 }

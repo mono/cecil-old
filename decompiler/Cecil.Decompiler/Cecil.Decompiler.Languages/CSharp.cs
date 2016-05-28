@@ -46,6 +46,8 @@ namespace Cecil.Decompiler.Languages {
 		{
 			return new DecompilationPipeline (
 				new StatementDecompiler (BlockOptimization.Basic),
+				DelegateCreateStep.Instance,
+				DelegateInvokeStep.Instance,
 				TypeOfStep.Instance,
 				DeclareTopLevelVariables.Instance);
 		}
@@ -75,6 +77,8 @@ namespace Cecil.Decompiler.Languages {
 		{
 			return new DecompilationPipeline (
 				new StatementDecompiler (BlockOptimization.Detailed),
+				DelegateCreateStep.Instance,
+				DelegateInvokeStep.Instance,
 				RemoveLastReturn.Instance,
 				PropertyStep.Instance,
 				CanCastStep.Instance,

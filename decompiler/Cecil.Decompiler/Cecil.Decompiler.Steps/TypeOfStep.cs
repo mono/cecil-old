@@ -32,7 +32,7 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	class TypeOfStep : BaseCodeTransformer, IDecompilationStep {
+	public class TypeOfStep : BaseCodeTransformer, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new TypeOfStep ();
 

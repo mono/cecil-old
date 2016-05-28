@@ -32,7 +32,7 @@ using Cecil.Decompiler.Ast;
 
 namespace Cecil.Decompiler.Steps {
 
-	class RebuildForStatements : Ast.BaseCodeVisitor, IDecompilationStep {
+	public class RebuildForStatements : Ast.BaseCodeVisitor, IDecompilationStep {
 
 		public static readonly IDecompilationStep Instance = new RebuildForStatements ();
 

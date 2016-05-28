@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 
@@ -150,7 +151,7 @@ namespace Cecil.Decompiler.Languages {
 
 			WriteReference (variable.VariableType);
 			WriteSpace ();
-			Write (variable.Name);
+			Write (string.IsNullOrEmpty (node.Variable.Name)? ("V_" + node.Variable.Index) : node.Variable.Name);
 		}
 
 		public override void VisitAssignExpression (AssignExpression node)
@@ -167,7 +168,7 @@ namespace Cecil.Decompiler.Languages {
 
 		public override void VisitVariableReferenceExpression (VariableReferenceExpression node)
 		{
-			Write (node.Variable.Name);
+			Write (string.IsNullOrEmpty (node.Variable.Name)? ("V_" + node.Variable.Index) : node.Variable.Name);
 		}
 
 		public override void VisitLiteralExpression (LiteralExpression node)
@@ -202,6 +203,14 @@ namespace Cecil.Decompiler.Languages {
 		public override void VisitMethodInvocationExpression (MethodInvocationExpression node)
 		{
 			Visit (node.Method);
+			WriteToken ("(");
+			VisitList (node.Arguments);
+			WriteToken (")");
+		}
+		
+		public override void VisitDelegateInvocationExpression (DelegateInvocationExpression node)
+		{
+			Visit (node.Target);
 			WriteToken ("(");
 			VisitList (node.Arguments);
 			WriteToken (")");
@@ -712,6 +721,27 @@ namespace Cecil.Decompiler.Languages {
 			WriteReference (node.Constructor != null ? node.Constructor.DeclaringType : node.Type);
 			WriteToken ("(");
 			Visit (node.Arguments);
+			WriteToken (")");
+		}
+		
+		public override void VisitDelegateCreationExpression (DelegateCreationExpression node)
+		{
+			WriteKeyword ("new");
+			WriteSpace ();
+			WriteReference (node.Type);
+			WriteToken ("(");
+			
+			if (node.Target != null) {
+				Visit (node.Target);
+				WriteToken (".");
+			}
+
+			if (!node.Method.HasThis) {
+				WriteReference (node.Method.DeclaringType);
+				WriteToken (".");
+			}
+
+			Write (node.Method.Name);
 			WriteToken (")");
 		}
 

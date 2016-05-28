@@ -645,6 +645,9 @@ namespace Cecil.Decompiler.Cil {
 			case Code.Refanytype:
 				visitor.OnRefanytype (instruction);
 				return;
+			case Code.Constrained:
+				visitor.OnConstrained (instruction);
+				return;
 			default:
 				throw new ArgumentException (Formatter.FormatInstruction (instruction), "instruction");
 			}

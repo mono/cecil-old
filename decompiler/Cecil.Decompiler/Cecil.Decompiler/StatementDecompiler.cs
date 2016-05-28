@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Mono.Cecil;
@@ -220,10 +221,15 @@ namespace Cecil.Decompiler {
 
 		void CheckLabel (Instruction instruction)
 		{
+			current_label = GetLabelName (instruction) ?? current_label;
+		}
+		
+		string GetLabelName (Instruction instruction)
+		{
 			if (!annotations.IsAnnotated (instruction, Annotation.Labeled))
-				return;
+				return null;
 
-			current_label = annotations.GetData<string> (instruction);
+			return annotations.GetData<string> (instruction);
 		}
 
 		bool SkipExceptionObjectAction (Instruction instruction)
@@ -455,11 +461,11 @@ namespace Cecil.Decompiler {
 			MoveStatementsToBlock (range.Start, range.End, block);
 		}
 
-		/*
+		
 		public override void OnSwitch (Instruction instruction)
 		{
-			AddOptimizedSwitch (instruction);
-
+			//AddOptimizedSwitch (instruction);
+			
 			var @switch = new SwitchStatement (Pop ());
 
 			var targets = (Instruction []) instruction.Operand;
@@ -479,7 +485,8 @@ namespace Cecil.Decompiler {
 
 			Add (@switch);
 		}
-
+			
+		/*
 		void AddOptimizedSwitch (Instruction instruction)
 		{
 			RemoveSwitchTemporaryVariable ();
@@ -661,6 +668,7 @@ namespace Cecil.Decompiler {
 				return;
 
 			switch (annotation) {
+			case Annotation.Labeled:
 			case Annotation.Goto:
 				Add (new GotoStatement (annotations.GetData<string> (instruction)));
 				break;
@@ -686,6 +694,10 @@ namespace Cecil.Decompiler {
 		}
 
 		public override void OnEndfilter (Instruction instruction)
+		{
+		}
+		
+		public override void OnConstrained (Instruction instruction)
 		{
 		}
 

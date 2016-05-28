@@ -51,6 +51,7 @@ namespace Cecil.Decompiler.Ast {
 		void VisitBlockExpression (BlockExpression node);
 		void VisitMethodInvocationExpression (MethodInvocationExpression node);
 		void VisitMethodReferenceExpression (MethodReferenceExpression node);
+		void VisitMethodAddressExpression (MethodAddressExpression node);
 		void VisitDelegateCreationExpression (DelegateCreationExpression node);
 		void VisitDelegateInvocationExpression (DelegateInvocationExpression node);
 		void VisitLiteralExpression (LiteralExpression node);
